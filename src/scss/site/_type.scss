@@ -1,0 +1,115 @@
+.h1, h1 {
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-md;
+  @include type-style('display-01', false);
+}
+
+.h2, h2 {
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-md;
+  @include type-style('expressive-heading-05', false);
+}
+
+.h3, h3 {
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-md;
+  @include type-style('expressive-heading-04', false);
+}
+
+.h4, h4 {
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-md;
+  @include type-style('expressive-heading-03', false);
+}
+
+.h5, h5,
+.h6, h6 {
+  // h5 and h6 intentionally mimic one another
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-md;
+  @include type-style('productive-heading-02', false);
+}
+
+p {
+  @include type-style('body-long-02', false);
+  margin-bottom: $spacing-md;
+}
+
+p.lead {
+  margin-top: $spacing-md;
+  margin-bottom: $spacing-md;
+  @include type-style('expressive-paragraph-01', false);
+}
+
+p.feedback {
+  font-style: italic;
+  float: right;
+  margin: 1rem;
+  color: $gray-80;
+}
+
+p.reference {
+  padding: 1rem;
+  font-size: 0.9rem;
+  background-color: $gray-30;
+}
+
+blockquote {
+  p {
+    @include type-style('quotation-01', false);
+    margin-bottom: 0;
+    padding: 2rem 2rem 0;
+  }
+}
+
+figure {
+  margin: 2rem;
+  
+  figcaption {
+    color: $gray-70;
+    padding: 2rem;
+    @include type-style('body-short-02', false);
+  }
+
+  img {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  &.image {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &.quote {
+    background: $teal-20;
+
+    figcaption {
+      color: $gray-100;
+    }
+  }
+}
+
+@each $name, $value in $caladapt-colors {
+  .text-#{$name} {
+    color: $value;
+  }
+}
+
+$weights: (
+  light: 300,
+  normal: 400,
+  bold: 600,
+);
+
+@each $name, $value in $weights {
+  .font-weight-#{$name} {
+    font-weight: $value;
+  }
+}
+
+ul, ol {
+  @include type-style('body-long-02', false);
+  list-style: inherit;
+  line-height: 1.6;
+}

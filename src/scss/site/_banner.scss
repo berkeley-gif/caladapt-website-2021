@@ -1,0 +1,33 @@
+.banner {
+  color: $white;
+  padding: $carbon--layout-04;
+  
+  h1 {
+    margin-top: $carbon--spacing-02;
+    margin-bottom: 0;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+    font-weight: 300;
+    line-height: 1.19;
+    letter-spacing: 0;
+    font-size: 3.375;
+  }
+
+  .lead a {
+    color: $white;
+    text-decoration: solid underline #6be7ba 2px;
+  }
+}
+
+.banner-breadcrumbs {
+  padding: 1rem;
+  width: 100%;
+  background: $gray-100;
+  color: $white;
+
+  .bx--breadcrumb-item .bx--link,
+  .bx--breadcrumb-item .bx--link:visited,
+  .bx--breadcrumb-item::after {
+    color: $teal-10;
+  }
+}

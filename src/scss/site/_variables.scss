@@ -1,0 +1,229 @@
+// Colors
+$white: #FFFFFF;
+$black: #090F20;
+
+/* $gray-10: #F9FBFD;
+$gray-20: #F1F4F8;
+$gray-30: #D9E2EF;
+$gray-40: #C6D3E6;
+$gray-50: #ABBCD5;
+$gray-60: #869AB8;
+$gray-70: #506690;
+$gray-80: #384C74;
+$gray-90: #1B2A4E;
+$gray-100: #161C2D;
+
+$teal-20: #6be7ba;
+$teal-40: #2BA77A;
+$teal-60: #007447;
+
+$blue-50: #335EEA;
+$blue-60: #0D38C4;
+$blue-70: #001EAA; */
+
+
+$gray-10: #fafbfb;
+$gray-20: #dadee1;
+$gray-30: #bcc2c7;
+$gray-40: #9fa6ac;
+$gray-50: #838b92;
+$gray-60: #697178;
+$gray-70: #51585e;
+$gray-80: #3b4045;
+$gray-90: #26292c;
+$gray-100: #121416;
+
+$blue-40: #074e67;
+$blue-50: #003850;
+$blue-60: #002448;
+$blue-70: #001440;
+
+
+$teal-10: #cce4e4;
+$teal-20: #9ac9ca;
+$teal-30: #68aeb0;
+$teal-40: #369396;
+$teal-50: #1d8689;
+$teal-60: #04797c;
+$teal-70: #036063;
+$teal-80: #02484a;
+$teal-90: #013031;
+$teal-100: #001818;
+
+$caladapt-colors: (
+  'gray-10': $gray-10,
+  'gray-20': $gray-20,
+  'gray-30': $gray-30,
+  'gray-40': $gray-40,
+  'gray-50': $gray-50,
+  'gray-60': $gray-60,
+  'gray-70': $gray-70,
+  'gray-80': $gray-80,
+  'gray-90': $gray-90,
+  'gray-100': $gray-100,
+  'black': $black,
+  'white': $white,
+  'teal-10': $teal-10,
+  'teal-20': $teal-20,
+  'teal-30': $teal-30,
+  'teal-40': $teal-40,
+  'teal-50': $teal-50,
+  'teal-60': $teal-60,
+  'teal-70': $teal-70,
+  'teal-80': $teal-80,
+  'teal-90': $teal-90,
+  'teal-100': $teal-100,
+  'blue-40': $blue-40,
+  'blue-50': $blue-50,
+  'blue-60': $blue-60,
+  'blue-70': $blue-70,
+);
+
+
+
+$caladapt-carbon-theme: (
+  interactive-01: $teal-60,
+  interactive-02: $blue-60,
+  interactive-03: $teal-60,
+  interactive-04: $teal-60,
+  ui-background: rgba(250, 251, 251, 0.5),
+  ui-01: $white,
+  ui-02: $gray-10,
+  ui-03: $gray-20,
+  ui-04: $gray-50,
+  ui-05: $gray-100,
+  text-01: $gray-100,
+  text-02: $gray-70,
+  text-03: $gray-40,
+  text-04: $white,
+  icon-01: $gray-100,
+  icon-02: $gray-70,
+  icon-03: $white,
+  link-01: #0f62fe,
+  link-02: #0043ce,
+  field-01: $white,
+  field-02: $gray-10,
+  inverse-01: $white,
+  inverse-02: $gray-80,
+  support-01: #df4759,
+  support-02: #24a148,
+  support-03: #fdd13a,
+  support-04: $teal-60,
+  inverse-support-01: #fb4b53,
+  inverse-support-02: #3dbb61,
+  inverse-support-03: #fdd13a,
+  inverse-support-04: $teal-20,
+  overlay-01: rgba(23, 23, 23, 0.5),
+  focus: $blue-60,
+  hover-primary: $teal-70,
+  active-primary: $teal-70,
+  hover-primary-text: $gray-100,
+  hover-secondary: $blue-50,
+  active-secondary: $blue-70,
+  hover-tertiary: $teal-60,
+  active-tertiary: $teal-60,
+  hover-ui: $gray-10,
+  active-ui: $gray-30,
+  selected-ui: $gray-20,
+  hover-selected-ui: $gray-30,
+  hover-danger: #ba1b23,
+  active-danger: #750e13,
+  hover-row: $gray-10,
+  visited-link: #8a3ffc,
+  disabled-01: $white,
+  disabled-02: $gray-10,
+  disabled-03: $gray-50,
+  highlight: #c9deff,
+  skeleton-01: $gray-20,
+  skeleton-02: $gray-30, 
+  active-01: $teal-60,
+  hover-field: #e5e5e5,
+);
+
+/* $caladapt-colors: (
+  'gray-10': $gray-10,
+  'gray-20': $gray-20,
+  'gray-30': $gray-30,
+  'gray-40': $gray-40,
+  'gray-50': $gray-50,
+  'gray-60': $gray-60,
+  'gray-70': $gray-70,
+  'gray-80': $gray-80,
+  'gray-90': $gray-90,
+  'gray-100': $gray-100,
+  'black': $black,
+  'white': $white,
+  'teal-20': $teal-20,
+  'teal-40': $teal-40,
+  'teal-60': $teal-60,
+  'blue-50': $blue-50,
+  'blue-60': $blue-60,
+  'blue-70': $blue-70,
+); */
+
+/* $caladapt-carbon-theme: (
+  interactive-01: $teal-20,
+  interactive-02: $gray-80,
+  interactive-03: $teal-60,
+  interactive-04: $teal-40,
+  ui-background: $gray-10,
+  ui-01: $white,
+  ui-02: $gray-10,
+  ui-03: $gray-20,
+  ui-04: $gray-50,
+  ui-05: $gray-100,
+  text-01: $gray-100,
+  text-02: $gray-70,
+  text-03: $gray-40,
+  text-04: $white,
+  icon-01: $gray-100,
+  icon-02: $gray-70,
+  icon-03: $white,
+  link-01: $blue-60,
+  link-02: $blue-70,
+  field-01: $white,
+  field-02: $gray-10,
+  inverse-01: $white,
+  inverse-02: $gray-80,
+  support-01: #df4759,
+  support-02: #24a148,
+  support-03: #fdd13a,
+  support-04: $teal-60,
+  inverse-support-01: #fb4b53,
+  inverse-support-02: #3dbb61,
+  inverse-support-03: #fdd13a,
+  inverse-support-04: $teal-20,
+  overlay-01: rgba(23, 23, 23, 0.5),
+  focus: $blue-60,
+  hover-primary: $teal-40,
+  active-primary: $teal-40,
+  hover-primary-text: $gray-100,
+  hover-secondary: $gray-90,
+  active-secondary: $gray-90,
+  hover-tertiary: $teal-60,
+  active-tertiary: $teal-60,
+  hover-ui: $gray-10,
+  active-ui: $gray-30,
+  selected-ui: $gray-20,
+  hover-selected-ui: #cacaca,
+  hover-danger: #ba1b23,
+  active-danger: #750e13,
+  hover-row: #e5e5e5,
+  visited-link: #8a3ffc,
+  disabled-01: $white,
+  disabled-02: $gray-10,
+  disabled-03: $gray-50,
+  highlight: #c9deff,
+  skeleton-01: $gray-20,
+  skeleton-02: $gray-30,
+  brand-01: $teal-20,
+  brand-02: $gray-80,
+  brand-03: #0062ff,
+  active-01: $teal-60,
+  hover-field: #e5e5e5,
+); */
+
+$box-shadow: 0 .125rem .25rem rgba($black, .075);
+$box-shadow-lift: 0 1rem 2.5rem fade-out($black, .9), 0 .5rem 1rem -.75rem fade-out($black, .9);
+
+$border-radius: 0.175rem;

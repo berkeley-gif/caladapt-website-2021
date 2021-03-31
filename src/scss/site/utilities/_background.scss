@@ -1,0 +1,27 @@
+@each $name, $value in $caladapt-colors {
+  .bg-#{$name} {
+    background-color: $value;
+  }
+}
+
+.bg-gradient-gray-blue {
+  background-image: linear-gradient(
+    to bottom,
+    #26292c 0%,
+    #262b30 8.1%,
+    #262e33 15.5%,
+    #253037 22.5%,
+    #25333b 29%,
+    #24353f 35.3%,
+    #233743 41.2%,
+    #223a47 47.1%,
+    #213c4b 52.9%,
+    #1f3f4f 58.8%,
+    #1d4153 64.7%,
+    #1b4457 71%,
+    #18465b 77.5%,
+    #14495f 84.5%,
+    #0f4b63 91.9%,
+    #074e67 100%
+  );
+};

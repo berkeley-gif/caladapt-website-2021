@@ -1,0 +1,63 @@
+.overlay {
+  position: relative;
+  z-index: 2;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    border-radius: inherit;
+  }
+}
+
+// Colors
+@each $color, $value in $caladapt-colors {
+  // Solid
+  .overlay-#{$color} {
+    @include overlay($value);
+  }
+
+  // Gradient
+  .overlay-gradient-#{$color}-end {
+    @include overlay-gradient($value, right);
+  }
+  .overlay-gradient-#{$color}-down {
+    @include overlay-gradient($value, bottom);
+  }
+  .overlay-gradient-#{$color}-start {
+    @include overlay-gradient($value, left);
+  }
+}
+
+// Gradients
+.overlay-gradient-gray-blue::before {
+  background-image: linear-gradient(
+    to bottom,
+    #26292c 0%,
+    #262b30 8.1%,
+    #262e33 15.5%,
+    #253037 22.5%,
+    #25333b 29%,
+    #24353f 35.3%,
+    #233743 41.2%,
+    #223a47 47.1%,
+    #213c4b 52.9%,
+    #1f3f4f 58.8%,
+    #1d4153 64.7%,
+    #1b4457 71%,
+    #18465b 77.5%,
+    #14495f 84.5%,
+    #0f4b63 91.9%,
+    #074e67 100%
+  );
+};
+
+// Opacity
+@for $i from 1 through 9 {
+  .overlay-#{$i * 10} {
+
+    &::before {
+      opacity: #{$i / 10};
+    }
+  }
+}

@@ -1,0 +1,186 @@
+<script>
+  import {
+    SkeletonText,
+    SkeletonPlaceholder,
+    Select,
+    SelectItem,
+  } from 'carbon-components-svelte';
+  import { LayerCake, Svg, Html } from 'layercake';
+  import { scaleBand, scaleTime, scaleQuantile } from 'd3-scale';
+  import { utcParse, timeParse, timeFormat } from 'd3-time-format';
+  import { group, min, max, extent, range } from 'd3-array';
+  import { select } from 'd3-selection';
+  import { setContext } from 'svelte';
+  import { writable } from 'svelte/store';
+
+  import { closest } from '../../../../helpers/utilities';
+
+  import Heatmap from './Heatmap.svelte';
+  import AxisX from './AxisX.svelte';
+  import AxisY from './AxisY.svelte';
+  import Legend from './Legend.svelte';
+
+  export let data;
+  export let yAxis = {
+    key: 'day',
+    label: 'YAxis Label',
+    units: '',
+  }
+  export let xAxis = {
+    key: 'date',
+    label: 'XAxis Label',
+    tickFormat: timeFormat('%Y'),
+    units: '',
+  }
+
+  let chartContainer;
+  let series = [];
+  let dataByDate;
+  let selectedData;
+  const legendItems = writable(null);
+  let xmin;
+  let xmax;
+  let ymin;
+  let ymax;
+  let zmin;
+  let zmax;
+  let yDomain;
+  let zScale;
+  let colorScale;
+  let monthStartDays = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+
+  function filterData(e) {
+    if (!e.detail) {
+      selectedData = data[0];
+      return;
+    }
+    selectedData = data.find(d => d.key === e.detail);
+  }
+  
+  $: if (data) {
+    // Set X Domain
+    xmin = min(data, arr => min(arr.values, d => d.date));
+    xmax = max(data, arr => max(arr.values, d => d.date));
+
+    // Set Y Domain
+    ymin = min(data, arr => min(arr.values, d => d.day));
+    ymax = max(data, arr => max(arr.values, d => d.day));
+
+    // Find the closest month start day numbers to define yDomain
+    const extent = [closest(ymin, monthStartDays), closest(ymax, monthStartDays)];
+    yDomain = monthStartDays.filter(d => d >= extent[0] && d <= extent[1]);
+
+    // Set Color Domain
+    zmin = min(data, arr => min(arr.values, d => d.value));
+    zmax = max(data, arr => max(arr.values, d => d.value));
+    colorScale = scaleQuantile()
+      .domain([zmin, zmax])
+      .range(['#fed976', '#fd8d3c', '#e31a1c', '#800026']);
+
+    // Set Legend
+    const stopValues = [zmin, ...colorScale.quantiles()];
+    const legendItems = stopValues.map((val, i) => {
+      const start = val;
+      const stop = stopValues[i+1] || zmax;
+      return {
+        label: `${start.toFixed(1)}-${stop.toFixed(1)} °F`,
+        color: colorScale(start),
+      };
+    });
+    setContext('Legend', writable(legendItems));
+
+    // Set series
+    series = data.map((d) => {
+      return {
+        key: d.key,
+        label: d.label,
+      };
+    });
+
+    // Set data
+    selectedData = data.find(d => d.key !== 'observed');
+  }
+</script>
+
+<style>
+  .viz-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .series-select {
+    margin: 0.75rem 0;
+  }
+
+  .chart-container {
+    width: 100%;
+    flex: 2;
+    height: 100%;
+  }
+
+  .legend {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  :global(.select-series .bx--select--inline .bx--select-input) {
+    background-color: #f4f4f4;
+  }
+</style>
+
+{#if data}
+  <div class="viz-container">
+    <div class='series-select'>
+      <Select
+        class="select-series"
+        inline
+        labelText="Select Series"
+        selected={selectedData.key}
+        on:change={filterData}>
+        {#each series as s}
+          <SelectItem value={s.key} text={s.label} />
+        {/each}
+      </Select>
+    </div>
+    <Legend />
+    <div class="chart-container" bind:this={chartContainer}>
+      <LayerCake
+        padding={{ top: 10, right: 10, bottom: 30, left: 25 }}
+        x={xAxis.key}
+        y={yAxis.key}
+        xScale ={scaleTime()}
+        yScale={scaleBand()}
+        xDomain={[ xmin, xmax ]}
+        yDomain={range(ymin, ymax + 1)}
+        data={data}>
+          <Svg>
+            <AxisX
+              formatTick={xAxis.tickFormat}
+              baseline={true}
+              gridlines={false}
+              snapTicks={false}
+            />
+            <AxisY
+              ticks={yDomain}
+              gridlines={true}
+            />
+            <g class="heatmap-group">
+              <Heatmap series={selectedData} fill={colorScale} />
+            </g>
+          </Svg>
+        </LayerCake>
+    </div>
+  </div>
+{:else}
+  <div class="viz-container">
+    <div class="legend">
+      <SkeletonText />
+      <SkeletonText />
+    </div>
+    <div class="chart-container">
+      <SkeletonPlaceholder style="height:100%;width:100%;" />
+    </div>
+  </div>
+{/if}
+

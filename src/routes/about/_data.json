@@ -1,0 +1,262 @@
+{
+  "advisors": {
+    "current": [
+      {
+        "name": "David Altaire",
+        "org": "State Water Board",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Jamie Anderson",
+        "org": "DWR",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Steve Baule",
+        "org": "LADWP",
+        "tac": "SGC"
+      },
+      {
+        "name": "Nathan Bengtsson",
+        "org": "PG&E",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Gurdeep Bhattal",
+        "org": "Cal Trans",
+      "tac": "SGC"
+      },
+      {
+        "name": "Brian D'Agostino",
+        "org": "Sempra Energy, SDG&E",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Erik DeKok",
+        "org": "Ascent Environmental",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Owen Doherty",
+        "org": "Eagle Rock Analytics",
+        "tac": "Energy Commission, SGC"
+      },
+      {
+        "name": "Leah Fisher",
+        "org": "SGC",
+        "tac": "SGC"
+      },
+      {
+        "name": "Karen Gaffney",
+        "org": "North Coast Regional Partnership",
+        "tac": "SGC"
+      },
+      {
+        "name": "Tom Gates",
+        "org": "Cultural Resources Unit, CEC",
+        "tac": "SGC"
+      },
+      {
+        "name": "Ted Grantham",
+        "org": "UCANR",
+        "tac": "SGC"
+      },
+      {
+        "name": "Natalie Hernandez",
+        "org": "Climate Resolve",
+        "tac": "SGC"
+      },
+      {
+        "name": "Nuin-Tara Key",
+        "org": "OPR",
+        "tac": "Energy Commission, SGC"
+      },
+      {
+        "name": "Hiro Kuchida",
+        "org": "SoCalEdison",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Shelby MacNab",
+        "org": "City of Fresno",
+        "tac": "SGC"
+      },
+      {
+        "name": "Sona Mohnot",
+        "org": "Greenlining Institute",
+        "tac": "SGC"
+      },
+      {
+        "name": "Amber Motley",
+        "org": "CAISO",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Jenn Phillips",
+        "org": "OPR",
+        "tac": "Energy Commission, SGC"
+      },
+      {
+        "name": "Kristin Ralff-Douglas",
+        "org": "CPUC",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Kif Scheuer",
+        "org": "Local Government Commission",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Martine Schmidt-Poolman",
+        "org": "CEC",
+        "tac": "Energy Commission, SGC"
+      },
+      {
+        "name": "Jasneet Sharma",
+        "org": "San Mateo County",
+        "tac": "SGC"
+      },
+      {
+        "name": "Benjamin Sleeter",
+        "org": "USGS",
+        "tac": "SGC"
+      },
+      {
+        "name": "Alex Tardy",
+        "org": "NOAA",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Jason Vargo",
+        "org": "CADPH",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Megan Walton",
+        "org": "Cal OES",
+        "tac": "Energy Commission"
+      },
+      {
+        "name": "Susan Wilhelm",
+        "org": "CEC",
+        "tac": "Energy Commission, SGC"
+      },
+      {
+        "name": "Sasha Wisotsky",
+        "org": "Housing & Community Development",
+        "tac": "SGC"
+      }
+    ],
+    "prior": [
+      {
+        "name": "Andrew Schwarz",
+        "org": "California Department of Water Resources (DWR)"
+      },
+      {
+        "name": "Chris Benjamin",
+        "org": "PG&E"
+      },
+      {
+        "name": "Adam Smith",
+        "org": "SoCalEdison"
+      },
+      {
+        "name": "Kerry Timmer",
+        "org": "Sierra Business Council"
+      },
+      {
+        "name": "Kathleen Ave",
+        "org": "SMUD"
+      },
+      {
+        "name": "Jim Blatchford",
+        "org": "CAISO"
+      },
+      {
+        "name": "Guido Franco",
+        "org": "California Energy Commission"
+      },
+      {
+        "name": "Michael McCormick",
+        "org": "OPR"
+      },
+      {
+        "name": "Aaron Cuthbertson"
+      },
+      {
+        "name": "JR DeLaRosa"
+      },
+      {
+        "name": "Lesley Ewing"
+      },
+      {
+        "name": "Neil Maizlish"
+      },
+      {
+        "name": "Andrew Gunther"
+      },
+      {
+        "name": "Jonathan Parfrey"
+      },
+      {
+        "name": "Bruce Riordan"
+      },
+      {
+        "name": "LaNae Van Valen"
+      },
+      {
+        "name": "Carol Greenwood"
+      },
+      {
+        "name": "Sarah Pittiglio"
+      },
+      {
+        "name": "Kurt Malchow"
+      },
+      {
+        "name": "Amy Luers"
+      }
+    ]
+  },
+  "staff": {
+    "current": [
+      {
+        "name": "Nancy Thomas",
+        "org": "Executive Director (Project Lead)"
+      },
+      {
+        "name": "Maggi Kelly",
+        "org": "Faculty Director (Advisory Oversight)"
+      },
+      {
+        "name": "Brian Galey",
+        "org": "Senior Web Application Developer"
+      },
+      {
+        "name": "Shruti Mukhtyar",
+        "org": "Web Application Developer"
+      },
+      {
+        "name": "Eric Lehmer",
+        "org": "Web Application Developer"
+      }
+    ],
+    "prior": [
+      {
+        "name": "Kevin Koy"
+      },
+      {
+        "name": "Falk Schuetzenmeister"
+      },
+      {
+        "name": "Sarah Van Vart"
+      },
+      {
+        "name": "Ankita Goyal"
+      },
+      {
+        "name": "Mark O'Connor"
+      }
+    ]
+  }
+}

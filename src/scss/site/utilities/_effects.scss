@@ -1,0 +1,33 @@
+.shadow {
+  box-shadow: 0 .125rem .25rem rgba($black, .075);
+}
+
+// Lift
+.lift {
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.lift:hover,
+.lift:focus {
+  box-shadow: $box-shadow-lift;
+  transform: translate3d(0, -3px, 0);
+}
+
+.center {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
+hr {
+  background-color: transparent;
+  border-top: 1px solid $gray-20;
+  margin: 2rem 0;
+  color: $gray-20;
+}
+
+.is-sticky {
+  height: auto;
+  position: sticky;
+  top: 1rem;
+}
