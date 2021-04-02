@@ -15,20 +15,21 @@
   export let options = [
     {
       format: 'png',
-      text: `Download chart in image format that can be used in 
-      presentations or other documents`,
+      text: `Chart in image format. Use it in 
+      presentations or other documents.`,
     },
     {
       format: 'svg',
-      text: `Download chart in vector format that can be customized in graphic software like Adobe Illustrator`,
+      text: `Chart in vector format. Use it in 
+      documents or customize it further with graphic software like Inkscape or Adobe Illustrator`,
     },
     {
       format: 'csv',
-      text: `Download data used to create this chart`,
+      text: `Data used to create this chart. Use it for further analysis.`,
     },
     {
       format: 'pdf',
-      text: `Download chart, map and supporting text for printing or sharing`,
+      text: `Document with chart, map and supporting text for printing or sharing.`,
     },
   ];
 
@@ -36,7 +37,7 @@
 
   let selected = 'png';
 
-  function update() {
+  function download() {
     dispatch('download', selected);
   }
 </script>
@@ -47,7 +48,7 @@
   on:click:button--secondary={() => (open = false)}
   bind:open
   modalHeading="Download"
-  on:submit={update}
+  on:submit={download}
   on:open
   on:close>
   <StructuredList selection bind:selected>

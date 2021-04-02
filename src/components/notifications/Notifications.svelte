@@ -1,17 +1,64 @@
-<ul class="toasts">
-  {#each toasts as toast (toast.id)}
-    <li class="toast" style="background: {toast.background};" out:animateOut>
-      <div class="content">
-        {toast.msg}
-      </div>
-      <div 
-        class="progress" 
-        style="animation-duration: {toast.timeout}ms;"
-        on:animationend={() => removeToast(toast.id) }>
-      </div>
-    </li> 
-  {/each}
-</ul>
+<script>
+  import { notification } from './store.js'
+  import { onDestroy } from 'svelte'
+
+  export let themes = {
+    danger: '#df4759',
+    success: '#24a148',
+    warning: '#fdd13a',
+    info: '#0f62fe',
+    default: '#3b4045'
+  }
+
+  export let timeout = 3000
+
+  let count = 0
+  let toasts = [ ]
+  let unsubscribe
+
+  function animateOut(node, { delay = 0, duration = 1000 }) {
+/*    function vhTOpx (value) {
+      var w = window,
+        d = document,
+        e = d.documentElement,
+        g = d.getElementsByTagName('body')[0],
+        x = w.innerWidth || e.clientWidth || g.clientWidth,
+        y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+      return (y*value)/100;
+    }*/
+    
+    return {
+      delay,
+      duration,
+      css: t => `opacity: ${(t-.7) * 1}; transform-origin: top right;`
+    }
+  }
+
+  function createToast (msg, theme, to) {
+    const background = themes[theme] || themes['default']
+    toasts = [{
+      id: count,
+      msg, 
+      background, 
+      timeout: to || timeout,
+      width: '100%'
+    }, ...toasts];
+    count = count + 1
+  }
+  
+  unsubscribe = notification.subscribe(value => {
+    if (!value) { return }
+    createToast(value.message, value.type, value.timeout)
+    notification.set()
+  })
+  
+  onDestroy(unsubscribe)
+  
+  function removeToast (id) { 
+    toasts = toasts.filter(t => t.id != id)
+  }
+</script>
 
 <style>
   :global(.toasts) {
@@ -155,64 +202,19 @@
   }
 </style>
 
-<script>
-  import { notification } from './store.js'
-  import { onMount, onDestroy } from 'svelte'
+<ul class="toasts">
+  {#each toasts as toast (toast.id)}
+    <li class="toast" style="background: {toast.background};" out:animateOut>
+      <div class="content">
+        {toast.msg}
+      </div>
+      <div 
+        class="progress" 
+        style="animation-duration: {toast.timeout}ms;"
+        on:animationend={() => removeToast(toast.id) }>
+      </div>
+    </li> 
+  {/each}
+</ul>
 
-  export let themes = {
-    danger: '#bb2124',
-    success: '#22bb33',
-    warning: '#f0ad4e',
-    info: '#5bc0de',
-    default: '#aaaaaa'
-  }
 
-  export let timeout = 3000
-
-  let count = 0
-  let toasts = [ ]
-  let unsubscribe
-
-  function animateOut(node, { delay = 0, duration = 1000 }) {
-    function vhTOpx (value) {
-      var w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName('body')[0],
-        x = w.innerWidth || e.clientWidth || g.clientWidth,
-        y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-
-      return (y*value)/100;
-    }
-    
-    return {
-      delay,
-      duration,
-      css: t => `opacity: ${(t-.7) * 1}; transform-origin: top right;`
-    }
-  }
-
-  function createToast (msg, theme, to) {
-    const background = themes[theme] || themes['default']
-    toasts = [{
-      id: count,
-      msg, 
-      background, 
-      timeout: to || timeout,
-      width: '100%'
-    }, ...toasts];
-    count = count + 1
-  }
-  
-  unsubscribe = notification.subscribe(value => {
-    if (!value) { return }
-    createToast(value.message, value.type, value.timeout)
-    notification.set()
-  })
-  
-  onDestroy(unsubscribe)
-  
-  function removeToast (id) { 
-    toasts = toasts.filter(t => t.id != id)
-  }
-</script>
