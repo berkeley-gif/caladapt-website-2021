@@ -1,11 +1,9 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from 'carbon-components-svelte';
   import { LayerCake, Svg, Html } from 'layercake';
-  import { scaleOrdinal, scaleTime } from 'd3-scale';
-  import { utcParse, timeParse, timeFormat } from 'd3-time-format';
-  import { group, min, max, extent } from 'd3-array';
-  //import { format } from 'd3-format';
-  import { select } from 'd3-selection';
+  import { scaleTime } from 'd3-scale';
+  import { timeFormat } from 'd3-time-format';
+  import { min, max } from 'd3-array';
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
 
@@ -17,6 +15,7 @@
   import Legend from '../Shared/Legend.svelte';
 
   export let data;
+  export let dataByDate;
   export let tooltip = {
     title: '',
   };
@@ -36,7 +35,6 @@
   }
 
   let chartContainer;
-  let dataByDate;
   const legendItems = writable(null);
   let xmin;
   let xmax;
@@ -74,31 +72,6 @@
 
     lineData = data.filter((d) => d.type === 'line');
     areaData = data.filter((d) => d.type === 'area');
-
-    // Reorganize data array for Tooltip
-    const values = data.reduce((acc, series) => {
-      const seriesValues = series.values.map(d => {
-        return {
-          ...d,
-          key: series.key,
-        };
-      });
-      acc.push(...seriesValues);
-      return acc;
-    }, []);
-
-    dataByDate = Array.from(group(values, (d) => +d.date), ([dateKey, value]) => {
-      const result = {};
-      result.date = new Date(dateKey);
-      value.forEach(d => {
-        if (d.min) {
-          result[d.key] = [d['min'], d['max']];
-        } else {
-          result[d.key] = d['value'];
-        }
-      });
-      return result;
-    });
   }
 
   function getTooltipLabel(d) {

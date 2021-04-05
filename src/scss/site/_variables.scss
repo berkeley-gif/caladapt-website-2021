@@ -1,26 +1,7 @@
 // Colors
 $white: #FFFFFF;
 $black: #090F20;
-
-/* $gray-10: #F9FBFD;
-$gray-20: #F1F4F8;
-$gray-30: #D9E2EF;
-$gray-40: #C6D3E6;
-$gray-50: #ABBCD5;
-$gray-60: #869AB8;
-$gray-70: #506690;
-$gray-80: #384C74;
-$gray-90: #1B2A4E;
-$gray-100: #161C2D;
-
-$teal-20: #6be7ba;
-$teal-40: #2BA77A;
-$teal-60: #007447;
-
-$blue-50: #335EEA;
-$blue-60: #0D38C4;
-$blue-70: #001EAA; */
-
+$accent: #6be7ba;
 
 $gray-10: #fafbfb;
 $gray-20: #dadee1;
@@ -63,6 +44,7 @@ $caladapt-colors: (
   'gray-100': $gray-100,
   'black': $black,
   'white': $white,
+  'accent': $accent,
   'teal-10': $teal-10,
   'teal-20': $teal-20,
   'teal-30': $teal-30,

@@ -125,9 +125,88 @@ export async function exportPNG(container, ignoreArr=['chart-download']) {
 }
 
 export async function exportPDF(container, ignoreArr=['chart-download']) {
+  const headerEl = container.querySelector('.content-header');
+  const statsEls = container.querySelectorAll('.content-stats');
+  const chartEl = container.querySelector('.content-chart');
+  console.log('chartEl', chartEl);
 
+  const divHeight = container.offsetHeight;
+  const divWidth = container.offsetWidth;
+  const ignoreElements = (el) => {
+    let flag = false;
+    ignoreArr.forEach((cls) => {
+      if (el.classList.contains(cls)) {
+        flag = true;
+      }      
+    });
+    return flag;
+  }
+
+  const options = {
+    allowTaint: true,
+    useCORS: true,
+    width: divWidth,
+    height: divHeight,
+    scale: 2,
+    ignoreElements,
+  };
+
+  const doc = new jsPDF({
+    orientation: 'p',
+    unit: 'pt',
+    format: 'letter',
+  });
+
+  const docWidth = doc.internal.pageSize.getWidth();
+  const docHeight = doc.internal.pageSize.getHeight();
+
+  let yPos = 20;
+  let xPos = 20;
+
+  window.scrollTo(0,0);
+
+  const { headerRatio, header } = await html2canvas(headerEl, options)
+    .then((canvas) => {
+      const headerRatio = headerEl.offsetHeight / headerEl.offsetWidth;
+      console.log('header', headerRatio, headerEl.offsetHeight, headerEl.offsetWidth);
+      const header = canvas.toDataURL('image/png');
+      return { headerRatio, header };
+    })
+    .catch((err) => {
+      return err;
+    });
+
+  const { statsRatio, stats } = await html2canvas(statsEls[0], options)
+    .then((canvas) => {
+      const statsRatio = statsEls[0].offsetHeight / statsEls[0].offsetWidth;
+      console.log('stats', statsRatio, statsEls[0].offsetHeight, statsEls[0].offsetWidth);
+      const stats = canvas.toDataURL('image/png');
+      return { statsRatio, stats };
+    })
+    .catch((err) => {
+      return err;
+    });
+
+  const { imgRatio, img } = await html2canvas(chartEl, options)
+    .then((canvas) => {
+      const imgRatio = chartEl.offsetHeight / chartEl.offsetWidth;
+      console.log('header', headerRatio, headerEl.offsetHeight, headerEl.offsetWidth);
+      const img = canvas.toDataURL('image/png');
+      return { img, imgRatio };
+    })
+    .catch((err) => {
+      return err;
+    });
+
+  doc.addImage(header, 'png', xPos, yPos, docWidth, 200);
+  yPos =+ headerEl.offsetHeight + 20;
+  doc.addImage(stats, 'png', xPos, yPos, docWidth, docWidth * statsRatio);
+  yPos =+ 300 + 20;
+  doc.addImage(img, 'png', xPos, yPos, docWidth, docWidth * imgRatio);
+  doc.save('chart.pdf');
 }
 
-export async function exportCSV(data) {
-  console.log('csv', data);
+export async function exportCSV(csvData) {
+  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+  saveAs(blob, 'chart.csv');
 }

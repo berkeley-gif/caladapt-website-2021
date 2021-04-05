@@ -7,12 +7,14 @@
     Modal,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
+  import { csvFormat, csvFormatRows } from 'd3-dsv';
   import Upload16 from 'carbon-icons-svelte/lib/Upload16';
   import Download16 from 'carbon-icons-svelte/lib/Download16';
 
   // Helpers
   import { getLocation, searchLocation } from '../../../helpers/geocode';
   import { boundaryList } from './_helpers';
+   import { flattenData, getDataByDate, formatDataForExport } from './_data';
   import { exportSVG, exportPNG, exportCSV, exportPDF } from  '../../../helpers/export';
 
   // Components
@@ -39,6 +41,7 @@
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
+  let dataByDate;
   let observedSeries;
   let modelSeries;
   let mapReady = false;
@@ -54,10 +57,20 @@
     dispatch('ready');
   }
 
+  $: metadata = [
+    ['boundary', $boundary.id],
+    ['feature', `${$location.title}, ${$location.address}`],
+    ['center', `${$location.center[0]}, ${$location.center[1]}`],
+    ['scenario', $scenario.label],
+    ['units', `$climvar.units.imperial`],
+  ];
+
   $: formatFn = format(`.${$climvar.decimals}f`);
+
   $: if ($data) {
     observedSeries = $data.filter(d => d.key === 'observed');
     modelSeries = $data.filter(d => d.key !== 'observed');
+    dataByDate = getDataByDate(flattenData($data));
   }
 
   async function mapClick(e) {
@@ -117,10 +130,12 @@
         exportSVG(container);
         break;
       case 'csv':
-        exportCSV($data);
+        var csvData = formatDataForExport(dataByDate);
+        var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
+        exportCSV(csvWithMetadata);
         break;
       case 'pdf':
-        const gridContainer = document.querySelector('.content-grid');
+        var gridContainer = document.querySelector('.content-grid');
         exportPDF(gridContainer);
         break;
       default:
@@ -270,6 +285,7 @@
     <div style="height:450px;">
       <LineAreaChart
         data={$data}
+        dataByDate={dataByDate}
         yAxis = {{
           key: 'value',
           label: `${$climvar.title}`,
@@ -278,7 +294,10 @@
         }}
       /> 
     </div>
-
+    <div class="chart-notes">
+      <span>Source: Cal-Adapt. </span>
+      <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
+    </div>
     <div class="chart-download">
       <ShowDefinition
        topics={["chart"]}

@@ -30,7 +30,7 @@
   }
 
   .bx--header__menu-item[aria-current="page"]::after {
-    border-bottom: 3px solid #6be7ba;
+    border-bottom: 3px solid $accent;
   }
 
   .logo {

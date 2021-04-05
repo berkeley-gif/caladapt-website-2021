@@ -1,7 +1,5 @@
 // Node modules
-import { format } from 'd3-format';
-import { timeParse } from 'd3-time-format';
-import { merge, rollup, sort, min, max } from 'd3-array';
+import { merge, rollup, sort, group } from 'd3-array';
 
 // Helpers
 import config from '../../../helpers/api-config';
@@ -9,18 +7,11 @@ import {
   handleXHR,
   fetchData,
   transformResponse,
-  addPropsToValues,
-  createSeriesObject,
   pipe,
-  curry,
-  sanitizeString,
-  serialize,
 } from '../../../helpers/utilities';
 import { seriesList } from './_helpers';
 
 const { apiEndpoint } = config.env.production;
-const coordFormat = format('.4f');
-const parseDate = timeParse('%Y-01-01T00:00:00Z');
 
 const fetchTimeseries = async ({slug, params, method}) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
@@ -42,7 +33,7 @@ const buildEnvelope = (_data) => {
   return dataArr.map(([key, value]) => {
     const sortedArr = sort(value);
     return {
-      date: new Date(key, 0, 1),
+      date: new Date(key, 11, 31),
       min: sortedArr[0],
       max: sortedArr[1],
     };
@@ -128,4 +119,57 @@ export async function getEnvelope(config, params, method) {
     .catch((error) => {
       throw new Error(`Envelope: ${error.message}`);
     });
+}
+
+export  function flattenData(_data) {
+  return _data.reduce((acc, series) => {
+    const seriesValues = series.values.map(d => {
+      return {
+        ...d,
+        year: +d.date.getFullYear(),
+        key: series.key,
+        label: series.label,
+      };
+    });
+    acc.push(...seriesValues);
+    return acc;
+  }, []);
+}
+
+export function getDataByDate(_arr) {
+  return Array.from(group(_arr, (d) => d.year), ([year, values]) => {
+    const date = new Date(year, 11, 31);
+    const rows = values.map(d => {
+      if (d.min) {
+        return {
+          key: d.key,
+          label: d.label,
+          value: [d['min'], d['max']],
+        };
+      } else {
+        return {
+          key: d.key,
+          label: d.label,
+          value: d.value,
+        };
+      }
+    });
+    return { date, values:rows };
+  });
+}
+
+export function formatDataForExport(_arr) {
+  return _arr.map((item) => {
+    const row = {};
+    row.year = item.date.getFullYear();
+    item.values.forEach((d) => {
+      if (Array.isArray(d.value)) {
+        row[`${d.label} Min`] = d.value[0];
+        row[`${d.label} Max`] = d.value[1];
+      } else {
+        row[d.label] = d.value;
+      }
+    });
+    return row;
+  })
 }

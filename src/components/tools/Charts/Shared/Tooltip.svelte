@@ -3,12 +3,12 @@
   import { max } from 'd3-array';
   import QuadTree from './QuadTree.svelte';
 
-  const { width, yScale, config } = getContext('LayerCake');
+  const { width, yScale } = getContext('LayerCake');
   const legendItems = getContext('Legend');
 
   export let dataset;
-  export let w = 240;
-  export let title = (d) => d;
+  export let w = 250;
+  export let title = (d) => d.year;
   export let label = (d) => d;
   export let value = (d) => d;
   export let color = (d) => d;
@@ -27,14 +27,7 @@
   function setContents (result) {
     if (Object.keys(result).length === 0) return '';
     const year = result.date.getFullYear();    
-    const rows = Object.keys(result)
-      .filter(d => d !== $config.x) // remove date field
-      .map(key => {
-        return {
-          key,
-          value: result[key]
-        };
-      });
+    const rows = result.values;
 
     const visibleRows = rows.filter((row) => {
       const legend = $legendItems.find(d => d.key === row.key);
