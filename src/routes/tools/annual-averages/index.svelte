@@ -31,7 +31,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { Modal } from 'carbon-components-svelte';
+  import { Modal, Loading } from 'carbon-components-svelte';
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
@@ -41,6 +41,7 @@
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
+  import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
   import {
@@ -74,6 +75,7 @@
   let contentReady = false;
   let definitionText;
   let definitionTitle;
+  let appStatus = 'idle';
 
   async function initApp(config) {
     console.log('initApp', config);
@@ -101,6 +103,7 @@
 
   async function updateData() {
     if (!appReady) return;
+    appStatus = 'working';
     dataStore.set(null);
     try {
       const config = {
@@ -113,9 +116,11 @@
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
       dataStore.set([envelope, observed, ...modelsData]);
-      console.log('updateData', $data);      
+      console.log('updateData', $data);
+      appStatus = 'idle';      
     } catch(err) {
       console.log('updateData', err);
+      appStatus = 'idle';
     }
   }
 
@@ -166,6 +171,7 @@
   <div class="content" class:sidebarCollapsed>
     <!-- Content -->
     <Content
+      bind:appStatus
       bind:sidebarCollapsed
       on:ready={() => contentReady = true}
       on:define={showDefinition} />
@@ -174,6 +180,7 @@
   <aside class="sidebar" class:sidebarCollapsed>
     <div class="is-sticky">
       <Settings
+        bind:appStatus
         bind:sidebarCollapsed
         on:ready={() => settingsReady = true}
         on:define={showDefinition} />      
@@ -187,3 +194,9 @@
 <Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading={definitionTitle} on:open on:close>
   <div>{ @html definitionText }</div>
 </Modal>
+
+{#if appStatus === 'working'}
+  <Loading />
+{/if}
+
+<NotificationDisplay />

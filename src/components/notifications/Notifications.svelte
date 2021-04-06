@@ -1,14 +1,7 @@
 <script>
+  import { ToastNotification } from 'carbon-components-svelte';
   import { notification } from './store.js'
   import { onDestroy } from 'svelte'
-
-  export let themes = {
-    danger: '#df4759',
-    success: '#24a148',
-    warning: '#fdd13a',
-    info: '#0f62fe',
-    default: '#3b4045'
-  }
 
   export let timeout = 3000
 
@@ -35,7 +28,7 @@
     }
   }
 
-  function createToast (msg, theme, to) {
+/*  function createToast (msg, theme, to) {
     const background = themes[theme] || themes['default']
     toasts = [{
       id: count,
@@ -45,17 +38,31 @@
       width: '100%'
     }, ...toasts];
     count = count + 1
+  }*/
+
+  function createToast(kind, title, subtitle, caption, to) {
+    const newToast = {
+      id: count,
+      kind, 
+      title,
+      subtitle,
+      caption,
+      timeout: to || timeout,
+      width: '100%'
+    };
+    toasts = [newToast, ...toasts];
+    count = count + 1   
   }
   
   unsubscribe = notification.subscribe(value => {
     if (!value) { return }
-    createToast(value.message, value.type, value.timeout)
+    createToast(value.kind, value.title, value.subtitle, value.caption, value.to);
     notification.set()
   })
   
-  onDestroy(unsubscribe)
+  onDestroy(unsubscribe);
   
-  function removeToast (id) { 
+  function removeToast(id) { 
     toasts = toasts.filter(t => t.id != id)
   }
 </script>
@@ -64,7 +71,7 @@
   :global(.toasts) {
     list-style: none;
     position: fixed;
-    top: 0;
+    top: 80px;
     right: 0;
     padding: 0;
     margin: 0;
@@ -74,7 +81,6 @@
   :global(.toasts) > .toast {
     position: relative;
     margin: 1vh 1vw;
-    min-width: 40vw;
     position: relative;
     animation: animate-in 600ms forwards;
     color: #fff;
@@ -83,7 +89,6 @@
   :global(.toasts) > .toast > .content {
     padding: 1vw;
     display: block;
-    font-weight: 500;
   }
   
   :global(.toasts) > .toast > .progress {
@@ -202,7 +207,7 @@
   }
 </style>
 
-<ul class="toasts">
+<!-- <ul class="toasts">
   {#each toasts as toast (toast.id)}
     <li class="toast" style="background: {toast.background};" out:animateOut>
       <div class="content">
@@ -213,6 +218,22 @@
         style="animation-duration: {toast.timeout}ms;"
         on:animationend={() => removeToast(toast.id) }>
       </div>
+    </li> 
+  {/each}
+</ul> -->
+
+<ul class="toasts">
+  {#each toasts as toast (toast.id)}
+    <li class="toast" out:animateOut>
+      <ToastNotification
+        kind={toast.kind}
+        title={toast.title}
+        subtitle={toast.subtitle}
+        caption={new Date().toLocaleString()}
+        style="animation-duration: {toast.timeout}ms;"
+        on:click={() => removeToast(toast.id) }
+        on:animationend={() => removeToast(toast.id) }>
+      </ToastNotification>
     </li> 
   {/each}
 </ul>

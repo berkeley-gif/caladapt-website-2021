@@ -27,13 +27,13 @@
   import { LineAreaChart } from '../../../components/tools/Charts';
   import { MinMaxAvg } from '../../../components/tools/Stats';
   import DownloadChart from '../../../components/tools/DownloadChart.svelte';
-  import {
-    NotificationDisplay,
-    notifier,
-  } from '../../../components/notifications';
+  import { notifier } from '../../../components/notifications';
 
   // Store
   import { climvarStore, scenarioStore, locationStore, dataStore } from './_store';
+
+  export let sidebarCollapsed = false;
+  export let appStatus = 'ready';
 
   const dispatch = createEventDispatcher();
   const { location, boundary, lngLat } = locationStore;
@@ -111,7 +111,8 @@
     showUpload = false;
   }
 
-  function downloadViz(e) {
+  async function downloadViz(e) {
+    appStatus = 'working';
     const format = e.detail;
     console.log('format', format);
     showDownload = false;
@@ -136,7 +137,11 @@
         break;
       case 'pdf':
         var gridContainer = document.querySelector('.content-grid');
-        exportPDF(gridContainer);
+        var done = await exportPDF(gridContainer);
+        appStatus = 'idle';
+        if (done) {
+          notifier.success('Download PDF', 'Successfully created PDF file', '', 2000);
+        }
         break;
       default:
         // Do nothing
@@ -327,4 +332,4 @@
 
 <DownloadChart bind:open={showDownload} on:download={downloadViz} />
 
-<NotificationDisplay />
+

@@ -1,25 +1,21 @@
 import { notification } from './store.js'
 
-export function send (message, type = 'default', timeout) {
-  notification.set({ type, message, timeout })
+export function send(kind='info', title='Update', subtitle, caption='', timeout) {
+  notification.set({ kind, title, subtitle, caption, timeout });
 }
 
-export function danger (msg, timeout) {
-  send(msg, 'danger', timeout)
+export function error(title, subtitle, caption, timeout) {
+  send('error', title, subtitle, caption, timeout);
 }
 
-export function warning (msg, timeout) {
-  send(msg, 'warning', timeout)
+export function info(title, subtitle, caption, timeout) {
+  send('info', title, subtitle, caption, timeout);
 }
 
-export function info (msg, timeout) {
-  send(msg, 'info', timeout)
+export function success(title, subtitle, caption, timeout) {
+  send('success', title, subtitle, caption, timeout);
 }
 
-export function success (msg, timeout) {
-  send(msg, 'success', timeout)
-}
-
-export function reset () {
-  notification.set()
+export function warning(title, subtitle, caption, timeout) {
+  send('warning', title, subtitle, caption, timeout);
 }

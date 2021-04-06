@@ -116,8 +116,10 @@ export async function exportPNG(container, ignoreArr=['chart-download']) {
   // Convert to canvas
   return html2canvas(container, options)
     .then((canvas) => {
-      saveAs(canvas.toDataURL(), 'chart.png');
+      const img = canvas.toDataURL()
+      //saveAs(canvas.toDataURL(), 'chart.png');
       window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+      return img;
     })
     .catch((err) => {
       return err;
@@ -154,56 +156,82 @@ export async function exportPDF(container, ignoreArr=['chart-download']) {
   const doc = new jsPDF({
     orientation: 'p',
     unit: 'pt',
-    format: 'letter',
+    format: 'a4',
+    //hotfixes: ['hotfixes'],
   });
 
   const docWidth = doc.internal.pageSize.getWidth();
   const docHeight = doc.internal.pageSize.getHeight();
+
+  console.log('doc width & height', docWidth, docHeight);
 
   let yPos = 20;
   let xPos = 20;
 
   window.scrollTo(0,0);
 
-  const { headerRatio, header } = await html2canvas(headerEl, options)
+  const { headerWidth, headerHeight, headerRatio, header } = await html2canvas(headerEl, options)
     .then((canvas) => {
-      const headerRatio = headerEl.offsetHeight / headerEl.offsetWidth;
-      console.log('header', headerRatio, headerEl.offsetHeight, headerEl.offsetWidth);
+      const headerWidth = headerEl.offsetWidth;
+      const headerHeight = headerEl.offsetHeight;
+      const headerRatio = headerHeight / headerWidth;
+      console.log('header', headerRatio, headerHeight, headerWidth);
       const header = canvas.toDataURL('image/png');
-      return { headerRatio, header };
+      return { headerWidth, headerHeight, headerRatio, header };
     })
     .catch((err) => {
       return err;
     });
 
-  const { statsRatio, stats } = await html2canvas(statsEls[0], options)
+  const { statsWidth, statsHeight, statsRatio, stats } = await html2canvas(statsEls[0], options)
     .then((canvas) => {
-      const statsRatio = statsEls[0].offsetHeight / statsEls[0].offsetWidth;
-      console.log('stats', statsRatio, statsEls[0].offsetHeight, statsEls[0].offsetWidth);
+/*      const statsWidth = statsEls[0].offsetWidth;
+      const statsHeight = statsEls[0].offsetHeight;
+      const statsRatio = statsHeight / statsWidth;*/
+
+      const statsWidth = canvas.width;
+      const statsHeight = canvas.height;
+
+      let widthRatio = docWidth / canvas.width
+      let heightRatio = docHeight / canvas.height
+      let statsRatio = widthRatio > heightRatio ? heightRatio : widthRatio;
+
+      console.log('stats', statsRatio, statsHeight, statsWidth);
       const stats = canvas.toDataURL('image/png');
-      return { statsRatio, stats };
+      return { statsWidth, statsHeight, statsRatio, stats };
     })
     .catch((err) => {
       return err;
     });
 
-  const { imgRatio, img } = await html2canvas(chartEl, options)
+  const { imgWidth, imgHeight, imgRatio, img } = await html2canvas(chartEl, options)
     .then((canvas) => {
-      const imgRatio = chartEl.offsetHeight / chartEl.offsetWidth;
-      console.log('header', headerRatio, headerEl.offsetHeight, headerEl.offsetWidth);
+      /*const imgWidth = chartEl.offsetWidth;
+      const imgHeight = chartEl.offsetHeight;*/
+      //const imgRatio = imgHeight / imgWidth;
+
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+
+      let widthRatio = docWidth / canvas.width
+      let heightRatio = docHeight / canvas.height
+      let imgRatio = widthRatio > heightRatio ? heightRatio : widthRatio;
+
+      console.log('header', headerRatio, headerHeight, headerWidth);
       const img = canvas.toDataURL('image/png');
-      return { img, imgRatio };
+      return { imgWidth, imgHeight, imgRatio, img };
     })
     .catch((err) => {
       return err;
     });
 
-  doc.addImage(header, 'png', xPos, yPos, docWidth, 200);
-  yPos =+ headerEl.offsetHeight + 20;
-  doc.addImage(stats, 'png', xPos, yPos, docWidth, docWidth * statsRatio);
-  yPos =+ 300 + 20;
-  doc.addImage(img, 'png', xPos, yPos, docWidth, docWidth * imgRatio);
-  doc.save('chart.pdf');
+  doc.addImage(header, 'png', xPos, yPos, docWidth, docWidth * headerRatio);
+  yPos =+ headerHeight + 20;
+  doc.addImage(stats, 'png', xPos, yPos, statsWidth * statsRatio, statsHeight * statsRatio);
+  yPos =+ 165 + 20;
+  doc.addImage(img, 'png', xPos, yPos, imgWidth * imgRatio, imgHeight * imgRatio);
+  doc.save('screen.pdf');
+  return Promise.resolve(true);
 }
 
 export async function exportCSV(csvData) {
