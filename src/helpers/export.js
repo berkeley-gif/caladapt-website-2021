@@ -126,14 +126,7 @@ export async function exportPNG(container, ignoreArr=['chart-download']) {
     });
 }
 
-export async function exportPDF(container, ignoreArr=['chart-download']) {
-  const headerEl = container.querySelector('.content-header');
-  const statsEls = container.querySelectorAll('.content-stats');
-  const chartEl = container.querySelector('.content-chart');
-  console.log('chartEl', chartEl);
-
-  const divHeight = container.offsetHeight;
-  const divWidth = container.offsetWidth;
+async function addElementToPDF(el, docWidth, docHeight, ignoreArr=['chart-download']) {
   const ignoreElements = (el) => {
     let flag = false;
     ignoreArr.forEach((cls) => {
@@ -147,89 +140,68 @@ export async function exportPDF(container, ignoreArr=['chart-download']) {
   const options = {
     allowTaint: true,
     useCORS: true,
-    width: divWidth,
-    height: divHeight,
     scale: 2,
     ignoreElements,
+    background: '#fff',
   };
+
+  return await html2canvas(el, options)
+    .then((canvas) => {
+      const widthRatio = docWidth / canvas.width
+      const heightRatio = docHeight / canvas.height
+      const ratio = widthRatio > heightRatio ? heightRatio : widthRatio;
+      const img = canvas.toDataURL('image/png');
+      return { 
+        width: canvas.width * ratio,
+        height: canvas.height * ratio,
+        img,
+      };
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
+export async function exportPDF(container, ignoreArr=['chart-download']) {
+  const headerEl = container.querySelector('.content-header');
+  const statsEls = container.querySelectorAll('.content-stats');
+  const chartEl = container.querySelector('.content-chart');
 
   const doc = new jsPDF({
     orientation: 'p',
     unit: 'pt',
     format: 'a4',
-    //hotfixes: ['hotfixes'],
   });
 
-  const docWidth = doc.internal.pageSize.getWidth();
-  const docHeight = doc.internal.pageSize.getHeight();
-
-  console.log('doc width & height', docWidth, docHeight);
+  const docWidth = doc.internal.pageSize.getWidth() - 40;
+  const docHeight = doc.internal.pageSize.getHeight() - 40;
 
   let yPos = 20;
   let xPos = 20;
 
   window.scrollTo(0,0);
 
-  const { headerWidth, headerHeight, headerRatio, header } = await html2canvas(headerEl, options)
-    .then((canvas) => {
-      const headerWidth = headerEl.offsetWidth;
-      const headerHeight = headerEl.offsetHeight;
-      const headerRatio = headerHeight / headerWidth;
-      console.log('header', headerRatio, headerHeight, headerWidth);
-      const header = canvas.toDataURL('image/png');
-      return { headerWidth, headerHeight, headerRatio, header };
-    })
-    .catch((err) => {
-      return err;
-    });
+  const { width: headerW, height: headerH, img: headerImg } = await addElementToPDF(headerEl, docWidth * 2, docHeight);
+  doc.addImage(headerImg, 'png', xPos, yPos, headerW, headerH);
+  yPos += headerH + 10;
 
-  const { statsWidth, statsHeight, statsRatio, stats } = await html2canvas(statsEls[0], options)
-    .then((canvas) => {
-/*      const statsWidth = statsEls[0].offsetWidth;
-      const statsHeight = statsEls[0].offsetHeight;
-      const statsRatio = statsHeight / statsWidth;*/
+  const { width: statsW0, height: statsH0, img: statsImg0 } = await addElementToPDF(statsEls[0], docWidth/3, docHeight);
+  doc.addImage(statsImg0, 'png', xPos, yPos, statsW0, statsH0);
+  xPos += statsW0 + 5;
 
-      const statsWidth = canvas.width;
-      const statsHeight = canvas.height;
+  const { width: statsW1, height: statsH1, img: statsImg1 } = await addElementToPDF(statsEls[1], docWidth/3, docHeight);
+  doc.addImage(statsImg1, 'png', xPos, yPos, statsW1, statsH1);
+  xPos += statsW0 + 5;
 
-      let widthRatio = docWidth / canvas.width
-      let heightRatio = docHeight / canvas.height
-      let statsRatio = widthRatio > heightRatio ? heightRatio : widthRatio;
+  const { width: statsW2, height: statsH2, img: statsImg2 } = await addElementToPDF(statsEls[2], docWidth/3, docHeight);
+  doc.addImage(statsImg2, 'png', xPos, yPos, statsW2, statsH2);
 
-      console.log('stats', statsRatio, statsHeight, statsWidth);
-      const stats = canvas.toDataURL('image/png');
-      return { statsWidth, statsHeight, statsRatio, stats };
-    })
-    .catch((err) => {
-      return err;
-    });
+  xPos = 20;
+  yPos += statsH2 + 10;
 
-  const { imgWidth, imgHeight, imgRatio, img } = await html2canvas(chartEl, options)
-    .then((canvas) => {
-      /*const imgWidth = chartEl.offsetWidth;
-      const imgHeight = chartEl.offsetHeight;*/
-      //const imgRatio = imgHeight / imgWidth;
+  const { width: chartW, height: chartH, img: chartImg } = await addElementToPDF(chartEl, docWidth * 0.8, docHeight);
+  doc.addImage(chartImg, 'png', xPos, yPos, chartW, chartH);
 
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-
-      let widthRatio = docWidth / canvas.width
-      let heightRatio = docHeight / canvas.height
-      let imgRatio = widthRatio > heightRatio ? heightRatio : widthRatio;
-
-      console.log('header', headerRatio, headerHeight, headerWidth);
-      const img = canvas.toDataURL('image/png');
-      return { imgWidth, imgHeight, imgRatio, img };
-    })
-    .catch((err) => {
-      return err;
-    });
-
-  doc.addImage(header, 'png', xPos, yPos, docWidth, docWidth * headerRatio);
-  yPos =+ headerHeight + 20;
-  doc.addImage(stats, 'png', xPos, yPos, statsWidth * statsRatio, statsHeight * statsRatio);
-  yPos =+ 165 + 20;
-  doc.addImage(img, 'png', xPos, yPos, imgWidth * imgRatio, imgHeight * imgRatio);
   doc.save('screen.pdf');
   return Promise.resolve(true);
 }
