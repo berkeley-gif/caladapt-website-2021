@@ -1,6 +1,7 @@
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
+import 'svg2pdf.js';
 
 function serialize(svg) {
   const xmlns = 'http://www.w3.org/2000/xmlns/';
@@ -84,7 +85,12 @@ export function exportSVG(container, svgId='.layercake-layout-svg') {
   parseStyles(svg);
   // Serialize svg
   const blob = serialize(svg);
-  saveAs(blob, 'chart.svg');
+  if (blob) {
+    Promise.resovle({ status:'success' });
+    saveAs(blob, 'chart.svg');
+  } else {
+    Promise.resovle({ status:'error', msg: 'Unable to create an SVG file' });
+  }
 }
 
 export async function exportPNG(container, ignoreArr=['chart-download']) {
@@ -116,17 +122,16 @@ export async function exportPNG(container, ignoreArr=['chart-download']) {
   // Convert to canvas
   return html2canvas(container, options)
     .then((canvas) => {
-      const img = canvas.toDataURL()
-      //saveAs(canvas.toDataURL(), 'chart.png');
+      saveAs(canvas.toDataURL(), 'chart.png');
       window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-      return img;
+      return Promise.resolve({ status:'success' });
     })
     .catch((err) => {
-      return err;
+      return Promise.resolve({ status:'error', msg: err });
     });
 }
 
-async function addElementToPDF(el, docWidth, docHeight, ignoreArr=['chart-download']) {
+async function addElementToPDF(el, docWidth, docHeight, ignoreArr=['chart-download', 'bx--btn', 'bx--modal']) {
   const ignoreElements = (el) => {
     let flag = false;
     ignoreArr.forEach((cls) => {
@@ -162,7 +167,7 @@ async function addElementToPDF(el, docWidth, docHeight, ignoreArr=['chart-downlo
     });
 }
 
-export async function exportPDF(container, ignoreArr=['chart-download']) {
+export async function exportPDF(container, ignoreArr=['chart-download', 'bx--btn']) {
   const headerEl = container.querySelector('.content-header');
   const statsEls = container.querySelectorAll('.content-stats');
   const chartEl = container.querySelector('.content-chart');
@@ -185,13 +190,13 @@ export async function exportPDF(container, ignoreArr=['chart-download']) {
   doc.addImage(headerImg, 'png', xPos, yPos, headerW, headerH);
   yPos += headerH + 10;
 
-  const { width: statsW0, height: statsH0, img: statsImg0 } = await addElementToPDF(statsEls[0], docWidth/3, docHeight);
+/*  const { width: statsW0, height: statsH0, img: statsImg0 } = await addElementToPDF(statsEls[0], docWidth/3, docHeight);
   doc.addImage(statsImg0, 'png', xPos, yPos, statsW0, statsH0);
-  xPos += statsW0 + 5;
+  xPos += statsW0;
 
   const { width: statsW1, height: statsH1, img: statsImg1 } = await addElementToPDF(statsEls[1], docWidth/3, docHeight);
   doc.addImage(statsImg1, 'png', xPos, yPos, statsW1, statsH1);
-  xPos += statsW0 + 5;
+  xPos += statsW0 ;
 
   const { width: statsW2, height: statsH2, img: statsImg2 } = await addElementToPDF(statsEls[2], docWidth/3, docHeight);
   doc.addImage(statsImg2, 'png', xPos, yPos, statsW2, statsH2);
@@ -200,10 +205,10 @@ export async function exportPDF(container, ignoreArr=['chart-download']) {
   yPos += statsH2 + 10;
 
   const { width: chartW, height: chartH, img: chartImg } = await addElementToPDF(chartEl, docWidth * 0.8, docHeight);
-  doc.addImage(chartImg, 'png', xPos, yPos, chartW, chartH);
+  doc.addImage(chartImg, 'png', xPos, yPos, chartW, chartH);*/
 
   doc.save('screen.pdf');
-  return Promise.resolve(true);
+  return Promise.resolve({ status:'success' });
 }
 
 export async function exportCSV(csvData) {
