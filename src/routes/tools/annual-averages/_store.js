@@ -1,15 +1,9 @@
 import { writable, derived } from 'svelte/store';
-import { rollup, range, max, sum } from 'd3-array';
-import { timeFormat } from 'd3-time-format';
-
-import { serialize, groupConsecutiveDates } from '../../../helpers/utilities';
-import { apiConfig } from '../../../helpers/api-config';
-
-import { scenarioList, boundaryList, climvarList, seriesList } from './_helpers';
+import { scenarioList, boundaryList, climvarList } from './_helpers';
 
 export const climvarStore = (() => {
   const store = writable('tasmax');
-  const { set, subscribe, update } = store;
+  const { set, subscribe } = store;
   return {
     set,
     subscribe,
@@ -24,7 +18,7 @@ export const climvarStore = (() => {
 
 export const scenarioStore = (() => {
   const store = writable('rcp45');
-  const { set, subscribe, update } = store;
+  const { set, subscribe } = store;
   return {
     set,
     subscribe,
@@ -39,7 +33,7 @@ export const scenarioStore = (() => {
 
 export const modelsStore = (() => {
   const store = writable('HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5');
-  const { set, subscribe, update } = store;
+  const { set, subscribe } = store;
   return {
     set,
     subscribe,
@@ -83,7 +77,7 @@ export const locationStore = (() => {
     },
     isUpload: false,
   });
-  const { update, get, subscribe } = store;
+  const { update, subscribe } = store;
   return {
     subscribe,
     updateLocation: (location, isUpload=false) => update((store) => {
@@ -139,7 +133,7 @@ export const dataStore = (() => {
 export const queryParams = derived(
   [unitsStore, locationStore],
   ([$unitsStore, $locationStore]) => {
-  const { lng, lat, boundaryId, location, isUpload } = $locationStore;
+  const { lng, lat, boundaryId, location } = $locationStore;
   const { imperial } = $unitsStore;
   const params = {};
   let method = 'GET';

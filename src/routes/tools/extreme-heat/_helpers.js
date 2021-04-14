@@ -1,4 +1,4 @@
-import Sun from '../../../../static/img/icons/sun.svg';
+import { Sun } from '../../../components/icons';
 import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';

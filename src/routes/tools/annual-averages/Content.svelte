@@ -1,5 +1,5 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import {
     Search,
     SkeletonText,
@@ -14,7 +14,7 @@
   // Helpers
   import { getLocation, searchLocation } from '../../../helpers/geocode';
   import { boundaryList } from './_helpers';
-   import { flattenData, getDataByDate, formatDataForExport } from './_data';
+  import { flattenData, getDataByDate, formatDataForExport } from './_data';
   import { exportSVG, exportPNG, exportCSV, exportPDF } from  '../../../helpers/export';
 
   // Components
@@ -32,8 +32,8 @@
   // Store
   import { climvarStore, scenarioStore, locationStore, dataStore } from './_store';
 
-  export let sidebarCollapsed = false;
-  export let appStatus = 'ready';
+  export let sidebarCollapsed;
+  export let appStatus;
 
   const dispatch = createEventDispatcher();
   const { location, boundary, lngLat } = locationStore;
@@ -62,7 +62,7 @@
     ['feature', `${$location.title}, ${$location.address}`],
     ['center', `${$location.center[0]}, ${$location.center[1]}`],
     ['scenario', $scenario.label],
-    ['units', `$climvar.units.imperial`],
+    ['units', $climvar.units.imperial],
   ];
 
   $: formatFn = format(`.${$climvar.decimals}f`);
@@ -113,19 +113,20 @@
 
   async function downloadViz(e) {
     appStatus = 'working';
+    let done;
     const format = e.detail;
     console.log('format', format);
     showDownload = false;
     const container = document.querySelector('.content-chart');
     switch (format) {
       case 'png':
-        exportPNG(container)
-          .then(() => {
-            notifier.success('Successfull created PNG file...');
-          })
-          .catch(() => {
-            notifier.danger('Error creating PNG file');
-          });
+        done = await exportPNG(container);
+        appStatus = 'idle';
+        if (done) {
+          notifier.success('Download', 'Successfully created PNG file', '', 2000);
+        } else {
+          notifier.error('Download', 'Error creating PNG file', '', 2000);
+        }
         break;
       case 'svg':
         exportSVG(container);
@@ -137,21 +138,16 @@
         break;
       case 'pdf':
         var gridContainer = document.querySelector('.content-grid');
-        var done = await exportPDF(gridContainer);
+        done = await exportPDF(gridContainer, $location);
         appStatus = 'idle';
         if (done) {
-          notifier.success('Download PDF', 'Successfully created PDF file', '', 2000);
+          notifier.success('Download', 'Successfully created PDF file', '', 2000);
         }
         break;
       default:
         // Do nothing
     }
   }
-
-
-  onMount(() => {
-    console.log('mount content');
-  })
 </script>
 
 <style lang="scss">
@@ -165,7 +161,9 @@
   <!-- Climvar Header -->
   <div class="content-header block">
     {#if $climvar}
-      <span class="icon">{ @html $climvar.icon }</span>
+      <span class="icon">
+        <svelte:component this={$climvar.icon} />
+      </span>
       <h4 class="title">{$climvar.title}</h4>
     {:else}
       <SkeletonText heading />
@@ -303,7 +301,7 @@
       <span>Source: Cal-Adapt. </span>
       <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
     </div>
-    <div class="chart-download">
+    <div class="chart-download" data-html2canvas-ignore="true">
       <ShowDefinition
        topics={["chart"]}
        title="Chart"
@@ -316,8 +314,6 @@
       </Button> 
     </div>       
   </div> <!-- end content-chart -->
-
-
 </div>
 
 <Modal id="upload"

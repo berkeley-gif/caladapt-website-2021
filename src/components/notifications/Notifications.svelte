@@ -10,35 +10,12 @@
   let unsubscribe
 
   function animateOut(node, { delay = 0, duration = 1000 }) {
-/*    function vhTOpx (value) {
-      var w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName('body')[0],
-        x = w.innerWidth || e.clientWidth || g.clientWidth,
-        y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-
-      return (y*value)/100;
-    }*/
-    
     return {
       delay,
       duration,
       css: t => `opacity: ${(t-.7) * 1}; transform-origin: top right;`
     }
   }
-
-/*  function createToast (msg, theme, to) {
-    const background = themes[theme] || themes['default']
-    toasts = [{
-      id: count,
-      msg, 
-      background, 
-      timeout: to || timeout,
-      width: '100%'
-    }, ...toasts];
-    count = count + 1
-  }*/
 
   function createToast(kind, title, subtitle, caption, to) {
     const newToast = {
@@ -83,41 +60,6 @@
     margin: 1vh 1vw;
     position: relative;
     animation: animate-in 600ms forwards;
-    color: #fff;
-  }
-  
-  :global(.toasts) > .toast > .content {
-    padding: 1vw;
-    display: block;
-  }
-  
-  :global(.toasts) > .toast > .progress {
-    position: absolute;
-    bottom: 0;
-    background-color: rgb(0, 0, 0, 0.3);
-    height: 6px;
-    width: 100%;
-    animation-name: shrink;
-    animation-timing-function: linear;
-    animation-fill-mode: forwards;
-  }
-  
-  :global(.toasts) > .toast:before,
-  :global(.toasts) > .toast:after {
-      content:"";
-      position:absolute;
-      z-index:-1;
-      top:50%;
-      bottom:0;
-      left:1vw;
-      right:1vw;
-      border-radius:100px / 10px;
-  }
-  
-  :global(.toasts) > .toast:after {
-      right: 1vw;
-      left: auto;
-      transform:skew(8deg) rotate(3deg);
   }
 
   @keyframes animate-in {
@@ -206,21 +148,6 @@
     }
   }
 </style>
-
-<!-- <ul class="toasts">
-  {#each toasts as toast (toast.id)}
-    <li class="toast" style="background: {toast.background};" out:animateOut>
-      <div class="content">
-        {toast.msg}
-      </div>
-      <div 
-        class="progress" 
-        style="animation-duration: {toast.timeout}ms;"
-        on:animationend={() => removeToast(toast.id) }>
-      </div>
-    </li> 
-  {/each}
-</ul> -->
 
 <ul class="toasts">
   {#each toasts as toast (toast.id)}

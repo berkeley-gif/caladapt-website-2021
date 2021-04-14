@@ -301,3 +301,92 @@
   }
 }
 
+.content-grid2 {
+  display: grid;
+  grid-template-columns: repeat(12, [col] 1fr );
+  // The 150px row corresponds to height of Select Boundary block
+  // Without explicit height, the grid child items takes up too much space
+  grid-template-rows: min-content 150px min-content auto;
+  grid-gap: 1rem;
+
+  .block {
+    background-color: #FFFFFF;
+    box-shadow: 0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+    padding: 1rem;
+  }
+
+  .content-header {
+    grid-column: col / span 12;
+    grid-row: 1;
+
+    .icon {
+      display: block;
+      margin-right: 1rem;
+    }
+
+    .title {
+      margin: 0;
+      font-weight: 600;
+    }
+  }
+
+  .content-boundary {
+    grid-column: col / span 4;
+    grid-row: 2;
+    max-height: 150px;
+
+    .boundary-upload {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top: 1rem;
+    }
+  }
+
+  .content-map {
+    grid-column: col / span 4;
+    grid-row: 3;
+    height: 100%;
+    position: relative;
+    box-shadow: 0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  }
+
+  .content-chart {
+    grid-column: col 5 / span 8;
+    grid-row: 2 / span 2;
+
+    .chart-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      display: block;
+      line-height: 1.5;
+    }
+
+    .chart-subtitle {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      display: block;
+    }
+
+    .chart-notes {
+      color: $gray-60;
+      padding: 1rem 0;
+      font-size: 0.75rem;
+    }
+
+    .chart-download {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+  }
+
+  .content-stats {
+    grid-column: span 4;
+    grid-row: 5;
+  }
+}
+
+
+

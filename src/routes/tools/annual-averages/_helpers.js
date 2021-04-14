@@ -1,14 +1,11 @@
-import Sun from '../../../../static/img/icons/sun.svg';
 import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
-import { LineAreaChart, ScatterChart, HeatmapChart } from '../../../components/tools/Charts';
-
 
 export const climvarList = climvars.filter(d => ['tasmax', 'tasmin', 'pr'].includes(d.id));
 
-// List of series used in Extreme heat tool with additional props for
+// List of series used in tool with additional props for
 // symbolyzing these lines
 const series = [
   {
@@ -20,14 +17,12 @@ const series = [
   {
     key: 'rcp45',
     label: 'Modeled RCP 4.5 Range',
-    //color: 'rgba(129, 140, 158, 1)',
     color: 'rgba(218, 222, 225, 1)',
     mark: 'area',
   },
   {
     key: 'rcp85',
     label: 'Modeled RCP 8.5 Range',
-    //color: 'rgba(129, 140, 158, 1)',
     color: 'rgba(218, 222, 225, 1)',
     mark: 'area',
   },

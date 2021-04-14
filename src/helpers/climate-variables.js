@@ -3,11 +3,12 @@
  * @module climate-variables
  */
 
- import Sun from '../../static/img/icons/sun.svg';
- import Rainfall from '../../static/img/icons/rainfall.svg';
- import Wildfire from '../../static/img/icons/wildfire.svg';
- import Snowflake from '../../static/img/icons/snowflake.svg';
- import Sea from '../../static/img/icons/sea.svg';
+ //import Sun from '../../static/img/icons/sun.svg';
+ // import Rainfall from '../../static/img/icons/rainfall.svg';
+ // import Wildfire from '../../static/img/icons/wildfire.svg';
+ // import Snowflake from '../../static/img/icons/snowflake.svg';
+ // import Sea from '../../static/img/icons/sea.svg';
+ import { Sun, Rainfall, Wildfire, Snowflake } from '../components/icons';
 
 const variables = [
   {

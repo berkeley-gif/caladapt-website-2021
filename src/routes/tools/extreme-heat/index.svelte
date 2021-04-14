@@ -32,7 +32,7 @@
 
 <script>
   import { onMount, tick } from 'svelte';
-  import { Modal } from 'carbon-components-svelte';
+  import { Modal, Loading } from 'carbon-components-svelte';
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
@@ -42,6 +42,7 @@
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
+  import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
   import {
@@ -59,7 +60,6 @@
 
   export let initialConfig;
   export let glossary;
-  console.log('evaluate index');
 
   // Derived stores
   const { location } = locationStore;
@@ -79,6 +79,7 @@
   let contentReady = false;
   let definitionText;
   let definitionTitle;
+  let appStatus = 'idle';
 
   async function initApp(config) {
     console.log('initApp', config);
@@ -116,6 +117,7 @@
 
   async function updateThreshAndData() {
     if (!appReady) return;
+    appStatus = 'working';
     await tick();
     console.log('updateThreshAndData', $queryParams);
     const thresh98p = await get98pThreshold($climvarStore, $queryParams);
@@ -126,6 +128,7 @@
 
   async function updateData() {
     if (!appReady) return;
+    appStatus = 'working';
     dataStore.set(null);
     try {
       const config = {
@@ -139,10 +142,11 @@
       }
       const observed = await getObserved(config, params);
       const modelsData = await getModels(config, params);
-      //const modelsData = [];
-      dataStore.set([observed, ...modelsData]);   
+      dataStore.set([observed, ...modelsData]);
+      appStatus = 'idle';
     } catch (err) {
       console.log('updateData', err);
+      appStatus = 'idle';
     }
   }
 
@@ -170,7 +174,7 @@
         console.log('init is ready');
       })
       .catch((error) => {
-        console.log('init error');
+        console.log('init error', error);
       })
   })
 </script>
@@ -180,7 +184,6 @@
   <title>Extreme Heat</title>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
-
 
 {#if !initReady}
   <div style="height:50rem;">
@@ -195,6 +198,7 @@
     <!-- Content -->
     <div class="content" class:sidebarCollapsed>
       <Content
+        bind:appStatus
         bind:sidebarCollapsed
         on:ready={() => contentReady = true}
         on:define={showDefinition} />
@@ -203,6 +207,7 @@
     <aside class="sidebar" class:sidebarCollapsed>
       <div class="is-sticky">
         <Settings
+          bind:appStatus
           bind:sidebarCollapsed
           on:ready={() => settingsReady = true}
           on:define={showDefinition} />      
@@ -218,3 +223,8 @@
   <div>{ @html definitionText }</div>
 </Modal>
 
+{#if appStatus === 'working'}
+  <Loading />
+{/if}
+
+<NotificationDisplay />

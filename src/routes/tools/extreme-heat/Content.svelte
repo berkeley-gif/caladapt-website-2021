@@ -11,11 +11,14 @@
     TooltipDefinition,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
+  import { csvFormat, csvFormatRows } from 'd3-dsv';
   import Download16 from 'carbon-icons-svelte/lib/Download16';
 
   // Helpers
   import { getLocation, searchLocation } from '../../../helpers/geocode';
   import { indicatorList, boundaryList } from './_helpers';
+  import { flattenData, getDataByDate, formatDataForExport } from './_data';
+  import { exportSVG, exportPNG, exportCSV, exportPDF } from  '../../../helpers/export';
 
   // Components
   import {
@@ -24,9 +27,14 @@
   } from '../../../components/tools/Settings';
   import { Location } from '../../../components/tools/Location';
   import { MinMaxAvg } from '../../../components/tools/Stats';
+  import DownloadChart from '../../../components/tools/DownloadChart.svelte';
+  import { notifier } from '../../../components/notifications';
 
   // Store
   import { climvarStore, scenarioStore, locationStore, dataStore, thresholdStore, indicatorStore, periodStore } from './_store';
+
+  export let sidebarCollapsed;
+  export let appStatus;
 
   const dispatch = createEventDispatcher();
   const { location, boundary, lngLat } = locationStore;
@@ -36,6 +44,7 @@
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
+  let dataByDate;
   let observedSeries;
   let modelSeries;
   let mapReady = false;
@@ -50,10 +59,21 @@
     dispatch('ready');
   }
 
+  $: metadata = [
+    ['boundary', $boundary.id],
+    ['feature', `${$location.title}, ${$location.address}`],
+    ['center', `${$location.center[0]}, ${$location.center[1]}`],
+    ['scenario', $scenario.label],
+    ['units', $indicator.units],
+  ];
+
   $: formatFn = format(`.${$indicator.decimals}f`);
   $: if ($data) {
     observedSeries = $data.filter(d => d.key === 'observed');
     modelSeries = $data.filter(d => d.key !== 'observed');
+    console.log('data', $data);
+    dataByDate = getDataByDate(flattenData($data));
+    console.log('databydate', dataByDate);
   } else {
     observedSeries = null;
     modelSeries = null;
@@ -92,6 +112,44 @@
     }
     clearSearch();
   }
+
+  async function downloadViz(e) {
+    appStatus = 'working';
+    let done;
+    const format = e.detail;
+    console.log('format', format);
+    showDownload = false;
+    const container = document.querySelector('.content-chart');
+    switch (format) {
+      case 'png':
+        done = await exportPNG(container);
+        appStatus = 'idle';
+        if (done) {
+          notifier.success('Download', 'Successfully created PNG file', '', 2000);
+        } else {
+          notifier.error('Download', 'Error creating PNG file', '', 2000);
+        }
+        break;
+      case 'svg':
+        exportSVG(container);
+        break;
+      case 'csv':
+        var csvData = formatDataForExport(dataByDate);
+        var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
+        exportCSV(csvWithMetadata);
+        break;
+      case 'pdf':
+        var gridContainer = document.querySelector('.content-grid');
+        done = await exportPDF(gridContainer, $location);
+        appStatus = 'idle';
+        if (done) {
+          notifier.success('Download', 'Successfully created PDF file', '', 2000);
+        }
+        break;
+      default:
+        // Do nothing
+    }
+  }
 </script>
 
 <style>
@@ -99,13 +157,9 @@
     display: flex;
     align-items: center;
   }
-
-  :global(.bx--fieldset) {
-    margin-bottom: 1rem;
-  }
 </style>
 
-<div class="content-grid">
+<div class="content-grid2">
   <!-- Climvar Header -->
   <div class="content-header block">
     <FormGroup legendText="SELECT CHART">
@@ -117,7 +171,9 @@
     </FormGroup>
     {#if $climvar && $threshold}
       <div class="flex-header">
-        <span class="icon">{ @html $climvar.icon }</span>
+        <span class="icon">
+          <svelte:component this={$climvar.icon} />
+        </span>
         <div>
           <h4 class="title">{$indicator.title}</h4>
           {#if ($indicator.id === 'waves')}
@@ -258,6 +314,7 @@
       <svelte:component
         this={$indicator.component}
         data={$data}
+        dataByDate={dataByDate}
         yAxis = {{
           key: 'value',
           label: `${$indicator.title} above ${$threshold} °F`,
@@ -281,16 +338,6 @@
       </Button> 
     </div>       
   </div> <!-- end content-chart -->
-
-
 </div>
 
-<Modal id="download"
-  bind:open={showDownload}
-  modalHeading=""
-  passiveModal 
-  on:open
-  on:close
->
-  Show download options
-</Modal>
+<DownloadChart bind:open={showDownload} on:download={downloadViz} />

@@ -31,7 +31,8 @@
     periodStore,
   } from './_store';
 
-  export let sidebarCollapsed = false;
+  export let sidebarCollapsed;
+  export let appStatus;
 
   const dispatch = createEventDispatcher();
 

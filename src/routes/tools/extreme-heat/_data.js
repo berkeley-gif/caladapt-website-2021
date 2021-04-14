@@ -1,7 +1,7 @@
 // Node modules
 import { format } from 'd3-format';
 import { timeParse } from 'd3-time-format';
-import { merge, rollup } from 'd3-array';
+import { merge, rollup, sort, group } from 'd3-array';
 
 // Helpers
 import config from '../../../helpers/api-config';
@@ -107,4 +107,55 @@ export async function getModels(config, params) {
   const modelPromise = modelList.map(modelId => addModel(config, params, modelId));
   const modelData = await Promise.all(modelPromise);
   return modelData;
+}
+
+export  function flattenData(_data) {
+  return _data.reduce((acc, series) => {
+    const seriesValues = series.values.map(d => {
+      return {
+        ...d,
+        key: series.key,
+        label: series.label,
+      };
+    });
+    acc.push(...seriesValues);
+    return acc;
+  }, []);
+}
+
+export function getDataByDate(_arr) {
+  return Array.from(group(_arr, (d) => d.date), ([date, values]) => {
+    const rows = values.map(d => {
+      if (d.min) {
+        return {
+          key: d.key,
+          label: d.label,
+          value: [d['min'], d['max']],
+        };
+      } else {
+        return {
+          key: d.key,
+          label: d.label,
+          value: d.value,
+        };
+      }
+    });
+    return { date, values:rows };
+  });
+}
+
+export function formatDataForExport(_arr) {
+  return _arr.map((item) => {
+    const row = {};
+    row.year = item.date.getFullYear();
+    item.values.forEach((d) => {
+      if (Array.isArray(d.value)) {
+        row[`${d.label} Min`] = d.value[0];
+        row[`${d.label} Max`] = d.value[1];
+      } else {
+        row[d.label] = d.value;
+      }
+    });
+    return row;
+  })
 }
