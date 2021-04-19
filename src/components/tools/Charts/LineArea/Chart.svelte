@@ -15,6 +15,7 @@
   import Legend from '../Shared/Legend.svelte';
 
   export let data;
+  export let height = '350px';
   export let dataByDate;
   export let tooltip = {
     title: '',
@@ -93,7 +94,7 @@
   }
 
   function getTooltipValue(d) {
-    return `${yAxis.tickFormat(d)} ${yAxis.units}`;
+    return `${yAxis.tickFormat(d)}`;
   }
 
   function getTooltipTitle(d) {
@@ -101,91 +102,68 @@
   }
 </script>
 
-<style>
-  .viz-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .chart-container {
-    width: 100%;
-    flex: 2;
-    height: 100%;
-  }
-
-  .legend {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-</style>
-
 {#if data}
-  <div class="viz-container">
-    <div class="legend">
-      <Legend />
-    </div>
-    <div class="chart-container" bind:this={chartContainer}>
-      <LayerCake
-        padding={{ top: 10, right: 10, bottom: 30, left: 25 }}
-        x={xAxis.key}
-        y={yAxis.key}
-        xScale ={scaleTime()}
-        xDomain={[ xmin, xmax ]}
-        yDomain={[ ymin, ymax ]}
-        data={data}>
-          <Svg>
-            <AxisX
-              formatTick={xAxis.tickFormat}
-              baseline={true}
-              gridlines={false}
-              snapTicks={false}
-            />
-            <AxisY
-              formatTick={yAxis.tickFormat}
-              label={yAxis.label}
-              gridlines={true}
-            />
-            <g class="area-group">
-              {#if areaData}
-                {#each areaData as area}
-                  <Area
-                    series={area}
-                  />
-                {/each}
-              {/if}
-            </g>
-            <g class="line-group">
-              {#if lineData}
-                {#each lineData as line}
-                  <Line
-                    series={line}
-                  />
-                {/each}
-              {/if}
-            </g>
-          </Svg>
-          <Html>
-            <Tooltip
-              dataset={dataByDate}
-              title={getTooltipTitle}
-              label={getTooltipLabel}
-              value={getTooltipValue}
-              color={getTooltipColor}
-            />
-          </Html>
-        </LayerCake>
-    </div> 
+  <div class="chart-legend">
+    <Legend />
   </div>
+  <div style={`height:${height}`} bind:this={chartContainer}>
+    <LayerCake
+      padding={{ top: 20, right: 10, bottom: 30, left: 25 }}
+      x={xAxis.key}
+      y={yAxis.key}
+      xScale ={scaleTime()}
+      xDomain={[ xmin, xmax ]}
+      yDomain={[ ymin, ymax ]}
+      data={data}>
+        <Svg>
+          <AxisX
+            formatTick={xAxis.tickFormat}
+            baseline={true}
+            gridlines={false}
+            snapTicks={false}
+          />
+          <AxisY
+            formatTick={yAxis.tickFormat}
+            label={yAxis.label}
+            gridlines={true}
+          />
+          <g class="area-group">
+            {#if areaData}
+              {#each areaData as area}
+                <Area
+                  series={area}
+                />
+              {/each}
+            {/if}
+          </g>
+          <g class="line-group">
+            {#if lineData}
+              {#each lineData as line}
+                <Line
+                  series={line}
+                />
+              {/each}
+            {/if}
+          </g>
+        </Svg>
+        <Html>
+          <Tooltip
+            dataset={dataByDate}
+            title={getTooltipTitle}
+            label={getTooltipLabel}
+            value={getTooltipValue}
+            color={getTooltipColor}
+          />
+        </Html>
+      </LayerCake>
+  </div> 
 {:else}
-  <div class="viz-container">
-    <div class="legend">
-      <SkeletonText />
-      <SkeletonText />
-    </div>
-    <div class="chart-container">
-      <SkeletonPlaceholder style="height:100%;width:100%;" />
-    </div>
+  <div class="chart-legend">
+    <SkeletonText />
+    <SkeletonText />
+  </div>
+  <div style={`height:${height}`}>
+    <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
 {/if}
 

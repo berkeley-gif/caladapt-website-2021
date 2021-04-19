@@ -21,6 +21,7 @@
   import Legend from './Legend.svelte';
 
   export let data;
+  export let height = '350px';
   export let yAxis = {
     key: 'day',
     label: 'YAxis Label',
@@ -103,84 +104,61 @@
 </script>
 
 <style>
-  .viz-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .series-select {
-    margin: 0.75rem 0;
-  }
-
-  .chart-container {
-    width: 100%;
-    flex: 2;
-    height: 100%;
-  }
-
-  .legend {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  :global(.select-series .bx--select--inline .bx--select-input) {
+  .series-select :global(.bx--select--inline .bx--select-input) {
     background-color: #f4f4f4;
+    width: 250px;
   }
 </style>
 
 {#if data}
-  <div class="viz-container">
-    <div class='series-select'>
-      <Select
-        class="select-series"
-        inline
-        labelText="Select Series"
-        selected={selectedData.key}
-        on:change={filterData}>
-        {#each series as s}
-          <SelectItem value={s.key} text={s.label} />
-        {/each}
-      </Select>
-    </div>
+  <div class='series-select'>
+    <Select
+      inline
+      labelText="SELECT SERIES"
+      selected={selectedData.key}
+      on:change={filterData}>
+      {#each series as s}
+        <SelectItem value={s.key} text={s.label} />
+      {/each}
+    </Select>
+  </div>
+  <div class="chart-legend">
     <Legend />
-    <div class="chart-container" bind:this={chartContainer}>
-      <LayerCake
-        padding={{ top: 10, right: 10, bottom: 30, left: 25 }}
-        x={xAxis.key}
-        y={yAxis.key}
-        xScale ={scaleTime()}
-        yScale={scaleBand()}
-        xDomain={[ xmin, xmax ]}
-        yDomain={range(ymin, ymax + 1)}
-        data={data}>
-          <Svg>
-            <AxisX
-              formatTick={xAxis.tickFormat}
-              baseline={true}
-              gridlines={false}
-              snapTicks={false}
-            />
-            <AxisY
-              ticks={yDomain}
-              gridlines={true}
-            />
-            <g class="heatmap-group">
-              <Heatmap series={selectedData} fill={colorScale} />
-            </g>
-          </Svg>
-        </LayerCake>
-    </div>
+  </div>
+  <div style={`height:${height}`} bind:this={chartContainer}>
+    <LayerCake
+      padding={{ top: 10, right: 10, bottom: 30, left: 25 }}
+      x={xAxis.key}
+      y={yAxis.key}
+      xScale ={scaleTime()}
+      yScale={scaleBand()}
+      xDomain={[ xmin, xmax ]}
+      yDomain={range(ymin, ymax + 1)}
+      data={data}>
+        <Svg>
+          <AxisX
+            formatTick={xAxis.tickFormat}
+            baseline={true}
+            gridlines={false}
+            snapTicks={false}
+          />
+          <AxisY
+            ticks={yDomain}
+            gridlines={true}
+          />
+          <g class="heatmap-group">
+            <Heatmap series={selectedData} fill={colorScale} />
+          </g>
+        </Svg>
+      </LayerCake>
   </div>
 {:else}
-  <div class="viz-container">
-    <div class="legend">
-      <SkeletonText />
-      <SkeletonText />
-    </div>
-    <div class="chart-container">
-      <SkeletonPlaceholder style="height:100%;width:100%;" />
-    </div>
+  <div class="chart-legend">
+    <SkeletonText />
+    <SkeletonText />
+  </div>
+  <div style={`height:${height}`}>
+    <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
 {/if}
 
