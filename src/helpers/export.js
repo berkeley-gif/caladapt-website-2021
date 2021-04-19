@@ -3,23 +3,14 @@ import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import getStaticMapUrl from './mapbox-static-map';
 
-const skipNodes = function(classes) {
-  return function(el) {
-    classes.forEach((cls) => {
-      if (el.classList.contains(cls)) {
-        return true
-      }      
-    });
-    return false;   
-  }
-}
-
 const defaultOptions = {
-  allowTaint: true,
+  allowTaint: true, 
   useCORS: true,
-  scale: 2,
+  scale: 1.5,
   background: '#fff',
 };
+
+const defaultClassList = ['chart-download', 'bx--btn', 'bx--modal', 'bx--fieldset', 'bx--assistive-text', 'bx--tooltip--a11y'];
 
 function serialize(svg) {
   const xmlns = 'http://www.w3.org/2000/xmlns/';
@@ -96,7 +87,7 @@ function parseStyles(svg) {
 }
 
 function getDataUri(url) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     var image = new Image();
     image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
 
@@ -119,53 +110,72 @@ function getDataUri(url) {
   })
 }
 
-export function exportSVG(container, svgId='.layercake-layout-svg') {
-  const svgEl = container.querySelector(svgId);
+export function exportSVG(container, ignore=['chart-download']) {
   // Create a clone of our svg node
-  const svg = svgEl.cloneNode(true);
+  const clone = container.cloneNode(true);
+  // Remove children
+  ignore.forEach((cls) => {
+    const nodes = Array.from(clone.getElementsByClassName(cls));
+    console.log('nodes', nodes)
+    nodes.forEach((el) => clone.removeChild(el));
+  });
   // Parse the styles
-  parseStyles(svg);
+  parseStyles(clone);
   // Serialize svg
-  const blob = serialize(svg);
+  const blob = serialize(clone);
   if (blob) {
-    Promise.resovle({ status:'success' });
     saveAs(blob, 'chart.svg');
+    return { status:'success' };
   } else {
-    Promise.resovle({ status:'error', msg: 'Unable to create an SVG file' });
+    return { status:'error' };
   }
 }
 
-export async function exportPNG(container, ignore=['chart-download']) {
+export async function exportPNG(container, skipClassList=[]) {
   const divHeight = container.offsetHeight;
   const divWidth = container.offsetWidth;
+  const skipList = [...skipClassList, ...defaultClassList];
 
   const options = {
     ...defaultOptions,
     width: divWidth,
     height: divHeight,
-    ignoreElements: skipNodes(ignore)(container),
+    scrollY: -window.scrollY,
+    scrollX: -window.scrollX,
+    ignoreElements: (el) => {
+      const elClassList = Array.from(el.classList);
+      // Checks if an array contains any element of another array
+      const found = elClassList.some(d => skipList.includes(d));
+      return found;
+    },
+    logging: false,
   };
 
   // Hack to prevent html2canvas from moving image to middle of canvas
   // https://stackoverflow.com/questions/36213275/html2canvas-does-not-render-full-div-only-what-is-visible-on-screen
-  window.scrollTo(0,0);  
+  //window.scrollTo(0,0);  
 
   // Convert to canvas
   return html2canvas(container, options)
     .then((canvas) => {
       saveAs(canvas.toDataURL(), 'chart.png');
-      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-      return Promise.resolve({ status:'success' });
+      //window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+      return { status:'success' };
     })
     .catch((err) => {
-      return Promise.resolve({ status:'error', msg: err });
+      throw new Error(err);
     });
 }
 
-async function addElementToPDF(el, docWidth, docHeight, ignore) {
+async function addElementToPDF(el, docWidth, docHeight, skipList) {
   const options = {
     ...defaultOptions,
-    ignoreElements: skipNodes(ignore)(el),
+    ignoreElements: (el) => {
+      const elClassList = Array.from(el.classList);
+      // Checks if an array contains any element of another array
+      const found = elClassList.some(d => skipList.includes(d));
+      return found;
+    }
   };
 
   return await html2canvas(el, options)
@@ -181,14 +191,15 @@ async function addElementToPDF(el, docWidth, docHeight, ignore) {
       };
     })
     .catch((err) => {
-      return err;
+      throw new Error(err);
     });
 }
 
-export async function exportPDF(container, location, ignore=['chart-download', 'bx--btn', 'bx--modal']) {
+export async function exportPDF(container, location, skipClassList=[]) {
   const headerEl = container.querySelector('.content-header');
   const statsEls = container.querySelectorAll('.content-stats');
   const chartEl = container.querySelector('.content-chart');
+  const skipList = [...skipClassList, ...defaultClassList];
 
   const doc = new jsPDF({
     orientation: 'p',
@@ -209,7 +220,7 @@ export async function exportPDF(container, location, ignore=['chart-download', '
     width: headerW,
     height: headerH,
     img: headerImg,
-  } = await addElementToPDF(headerEl, docWidth * 1.2, docHeight, ignore);
+  } = await addElementToPDF(headerEl, docWidth * 1.2, docHeight, skipList);
   doc.addImage(headerImg, 'png', xPos, yPos, headerW, headerH);
   yPos += headerH + 10;
 
@@ -221,7 +232,7 @@ export async function exportPDF(container, location, ignore=['chart-download', '
     width: statsW0,
     height: statsH0,
     img: statsImg0,
-  } = await addElementToPDF(statsEls[0], docWidth/3, docHeight, ignore);
+  } = await addElementToPDF(statsEls[0], docWidth/3, docHeight, skipList);
   doc.addImage(statsImg0, 'png', xPos, yPos, statsW0, statsH0);
   xPos += statsW0;
 
@@ -229,7 +240,7 @@ export async function exportPDF(container, location, ignore=['chart-download', '
     width: statsW1,
     height: statsH1,
     img: statsImg1,
-  } = await addElementToPDF(statsEls[1], docWidth/3, docHeight, ignore);
+  } = await addElementToPDF(statsEls[1], docWidth/3, docHeight, skipList);
   doc.addImage(statsImg1, 'png', xPos, yPos, statsW1, statsH1);
   xPos += statsW1;
 
@@ -237,7 +248,7 @@ export async function exportPDF(container, location, ignore=['chart-download', '
     width: statsW2,
     height: statsH2,
     img: statsImg2,
-  } = await addElementToPDF(statsEls[2], docWidth/3, docHeight, ignore);
+  } = await addElementToPDF(statsEls[2], docWidth/3, docHeight, skipList);
   doc.addImage(statsImg2, 'png', xPos, yPos, statsW2, statsH2);
   
   xPos = 20;
@@ -247,15 +258,16 @@ export async function exportPDF(container, location, ignore=['chart-download', '
     width: chartW,
     height: chartH,
     img: chartImg,
-  } = await addElementToPDF(chartEl, docWidth * 0.8, docHeight, ignore);
+  } = await addElementToPDF(chartEl, docWidth * 0.8, docHeight, skipList);
   doc.addImage(chartImg, 'png', xPos, yPos, chartW, chartH);
 
-  doc.save('screen.pdf');
-  return Promise.resolve({ status:'success' });
+  doc.save('chart.pdf');
 }
 
 export async function exportCSV(csvData) {
   const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+  if (!blob) {
+    return { status:'error' };
+  }
   saveAs(blob, 'chart.csv');
-  return Promise.resolve({ status:'success' });
 }

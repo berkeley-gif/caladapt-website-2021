@@ -2,7 +2,6 @@
   import { createEventDispatcher } from 'svelte';
   import {
     Button,
-    Modal,
     Search,
     SkeletonText,
     FormGroup,
@@ -115,40 +114,35 @@
 
   async function downloadViz(e) {
     appStatus = 'working';
-    let done;
     const format = e.detail;
-    console.log('format', format);
     showDownload = false;
-    const container = document.querySelector('.content-chart');
-    switch (format) {
-      case 'png':
-        done = await exportPNG(container);
-        appStatus = 'idle';
-        if (done) {
-          notifier.success('Download', 'Successfully created PNG file', '', 2000);
-        } else {
-          notifier.error('Download', 'Error creating PNG file', '', 2000);
-        }
-        break;
-      case 'svg':
-        exportSVG(container);
-        break;
-      case 'csv':
-        var csvData = formatDataForExport(dataByDate);
-        var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
-        exportCSV(csvWithMetadata);
-        break;
-      case 'pdf':
-        var gridContainer = document.querySelector('.content-grid');
-        done = await exportPDF(gridContainer, $location);
-        appStatus = 'idle';
-        if (done) {
-          notifier.success('Download', 'Successfully created PDF file', '', 2000);
-        }
-        break;
-      default:
-        // Do nothing
+    try {
+      const container = document.querySelector('.content-chart');
+      switch (format) {
+        case 'png':
+          await exportPNG(container);
+          break;
+        case 'svg':
+          await exportSVG(container);
+          break;
+        case 'csv':
+          var csvData = formatDataForExport(dataByDate);
+          var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
+          await exportCSV(csvWithMetadata);
+          break;
+        case 'pdf':
+          var gridContainer = document.querySelector('.content-grid');
+          await exportPDF(gridContainer, $location);
+          break;
+        default:
+          // Do nothing
+      }
+      notifier.success('Download', `Successfully created ${format} file`, '', 2000);      
+    } catch (error) {
+      console.log('download', error);
+      notifier.error('Download', `Error creating ${format} file`, error.message, 2000);
     }
+    appStatus = 'idle';
   }
 </script>
 
@@ -159,13 +153,13 @@
   }
 </style>
 
-<div class="content-grid2">
+<div class="content-grid content-grid-alt1">
   <!-- Climvar Header -->
   <div class="content-header block">
     <FormGroup legendText="SELECT CHART">
       <RadioButtonGroup selected="frequency" on:change={changeIndicator}>
         {#each indicatorList as opt}
-          <RadioButton labelText={opt.name} value={opt.id} />
+          <RadioButton labelText={opt.label} value={opt.id} />
         {/each}
       </RadioButtonGroup>
     </FormGroup>
@@ -310,21 +304,22 @@
         <SkeletonText />
       {/if}
     </div>
-    <div style="height:450px;">
-      <svelte:component
-        this={$indicator.component}
-        data={$data}
-        dataByDate={dataByDate}
-        yAxis = {{
-          key: 'value',
-          label: `${$indicator.title} above ${$threshold} °F`,
-          baseValue: 0,
-          tickFormat: formatFn,
-          units: `${$indicator.units}`,
-        }}
-      /> 
+    <svelte:component
+      this={$indicator.component}
+      data={$data}
+      dataByDate={dataByDate}
+      yAxis = {{
+        key: 'value',
+        label: `${$indicator.title} above ${$threshold} °F`,
+        baseValue: 0,
+        tickFormat: formatFn,
+        units: `${$indicator.units}`,
+      }}
+    />
+    <div class="chart-notes">
+      <span>Source: Cal-Adapt.</span>
+      <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
     </div>
-
     <div class="chart-download">
       <ShowDefinition
        topics={["chart"]}
@@ -336,7 +331,7 @@
         on:click={() => showDownload = true}>
         Download
       </Button> 
-    </div>       
+    </div>     
   </div> <!-- end content-chart -->
 </div>
 

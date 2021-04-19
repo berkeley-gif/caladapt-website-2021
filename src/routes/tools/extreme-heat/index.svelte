@@ -108,7 +108,8 @@
   }
 
   $: $climvar, updateThreshAndData();
-  $: $location, updateThreshAndData();
+  $: $location, updateThreshAndData()
+      .then(() => updateData());
   $: if ($thresholdClick) {
     updateData();
   }
@@ -123,7 +124,7 @@
     const thresh98p = await get98pThreshold($climvarStore, $queryParams);
     console.log('threshold', thresh98p);
     thresholdStore.setDefault(thresh98p);
-    updateData();
+    //await updateData();
   }
 
   async function updateData() {

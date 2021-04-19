@@ -113,40 +113,34 @@
 
   async function downloadViz(e) {
     appStatus = 'working';
-    let done;
     const format = e.detail;
-    console.log('format', format);
     showDownload = false;
-    const container = document.querySelector('.content-chart');
-    switch (format) {
-      case 'png':
-        done = await exportPNG(container);
-        appStatus = 'idle';
-        if (done) {
-          notifier.success('Download', 'Successfully created PNG file', '', 2000);
-        } else {
-          notifier.error('Download', 'Error creating PNG file', '', 2000);
-        }
-        break;
-      case 'svg':
-        exportSVG(container);
-        break;
-      case 'csv':
-        var csvData = formatDataForExport(dataByDate);
-        var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
-        exportCSV(csvWithMetadata);
-        break;
-      case 'pdf':
-        var gridContainer = document.querySelector('.content-grid');
-        done = await exportPDF(gridContainer, $location);
-        appStatus = 'idle';
-        if (done) {
-          notifier.success('Download', 'Successfully created PDF file', '', 2000);
-        }
-        break;
-      default:
-        // Do nothing
+    try {
+      const container = document.querySelector('.content-chart');
+      switch (format) {
+        case 'png':
+          await exportPNG(container);
+          break;
+        case 'svg':
+          await exportSVG(container);
+          break;
+        case 'csv':
+          var csvData = formatDataForExport(dataByDate);
+          var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
+          await exportCSV(csvWithMetadata);
+          break;
+        case 'pdf':
+          var gridContainer = document.querySelector('.content-grid');
+          await exportPDF(gridContainer, $location);
+          break;
+        default:
+          // Do nothing
+      }
+      notifier.success('Download', `Successfully created ${format} file`, '', 2000);      
+    } catch (error) {
+      notifier.error('Download', `Error creating ${format} file`, error, 2000);
     }
+    appStatus = 'idle';
   }
 </script>
 
@@ -285,23 +279,21 @@
         <SkeletonText />
       {/if}
     </div>
-    <div style="height:450px;">
-      <LineAreaChart
-        data={$data}
-        dataByDate={dataByDate}
-        yAxis = {{
-          key: 'value',
-          label: `${$climvar.title}`,
-          tickFormat: formatFn,
-          units: `${$climvar.units.imperial}`,
-        }}
-      /> 
-    </div>
+    <LineAreaChart
+      data={$data}
+      dataByDate={dataByDate}
+      yAxis = {{
+        key: 'value',
+        label: `${$climvar.title} (${$climvar.units.imperial})`,
+        tickFormat: formatFn,
+        units: `${$climvar.units.imperial}`,
+      }}
+    /> 
     <div class="chart-notes">
       <span>Source: Cal-Adapt. </span>
       <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
     </div>
-    <div class="chart-download" data-html2canvas-ignore="true">
+    <div class="chart-download">
       <ShowDefinition
        topics={["chart"]}
        title="Chart"
