@@ -1,4 +1,5 @@
 import { Sun } from '../../../components/icons';
+import climvars from '../../../helpers/climate-variables';
 import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';
@@ -7,27 +8,15 @@ import { LineAreaChart, ScatterChart, HeatmapChart } from '../../../components/t
 // Create a new climvarList instead of using the default one
 // Needs to be an export so it can be used to intitialize SelectClimvar component
 // instead of the default climavarList
-export const climvarList = [
-  {
-    id: 'tasmax',
-    title: 'Extreme Heat Days',
-    desc: `Days in a year when daily maximum temperature is above a threshold temperature`,
-    icon: Sun,
-  },
-  {
-    id: 'tasmin',
-    title: 'Warm Nights',
-    desc: 'Nights in a year when daily minimum temperature is above a threshold temperature',
-    icon: Sun,
-  },
-];
+export const climvarList = climvars
+  .filter(d => ['tasmax', 'tasmin'].includes(d.id));
 
 // List of indicators (or chart views) used for Extreme Heat Tool
 export const indicatorList = [
   {
     id: 'frequency',
-    name: 'Frequency',
-    title: 'Number of Extreme Heat Days per year',
+    label: 'Frequency',
+    title: 'Number of Extreme Heat Days per Year',
     helperText: `Days in a year when daily maximum temperature is above a threshold temperature`,
     units: 'days per year',
     decimals: 0,
@@ -36,8 +25,8 @@ export const indicatorList = [
   },
   {
     id: 'timing',
-    name: 'Timing',
-    title: 'Timing of Extreme Heat Days per year',
+    label: 'Timing',
+    title: 'Timing of Extreme Heat Days per Year',
     helperText: `Days in a year when the daily maximum temperature is above a threshold temperature`,
     units: '',
     decimals: 0,
@@ -46,8 +35,8 @@ export const indicatorList = [
   },
   {
     id: 'duration',
-    name: 'Duration',
-    title: 'Longest stretch of consecutive Extreme Heat Days per year',
+    label: 'Duration',
+    title: 'Longest Stretch of Consecutive Extreme Heat Days per Year',
     helperText: `The longest stretch of consecutive days when daily maximum temperatures are above a threshold temperature`,
     units: 'days per year',
     decimals: 0,
@@ -56,8 +45,8 @@ export const indicatorList = [
   },
   {
     id: 'waves',
-    name: 'Heat Waves',
-    title: 'Number of Heat Wave Events per year',
+    label: 'Heat Waves',
+    title: 'Number of Heat Wave Events per Year',
     helperText: `Number of heat wave events in a year when daily maximum temperatures are above a threshold temperature`,
     units: 'events per year',
     decimals: 0,

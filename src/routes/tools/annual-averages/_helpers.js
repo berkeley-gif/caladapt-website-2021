@@ -3,7 +3,17 @@ import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
 
-export const climvarList = climvars.filter(d => ['tasmax', 'tasmin', 'pr'].includes(d.id));
+export const climvarList = climvars
+  .filter(d => ['tasmax', 'tasmin', 'pr'].includes(d.id))
+  .map((d) => {
+    let title;
+    if (d.id === 'pr') {
+      title = `Annual Total ${d.label}`;
+    } else {
+      title = `Annual Average ${d.label}`;
+    }
+    return { ...d, title };
+  });
 
 // List of series used in tool with additional props for
 // symbolyzing these lines

@@ -13,7 +13,7 @@
 const variables = [
   {
     id: 'tasmax',
-    title: 'Maximum Temperature',
+    label: 'Maximum Temperature',
     icon: Sun,
     text: 'Maximum daily temperature which typically occurs in the early afternoon.',
     units: {
@@ -24,7 +24,7 @@ const variables = [
   },
   {
     id: 'tasmin',
-    title: 'Minimum Temperature',
+    label: 'Minimum Temperature',
     icon: Sun,
     text: 'Minimum daily temperature which typically occurs in the early morning before sunrise.',
     units: {
@@ -35,7 +35,7 @@ const variables = [
   },
   {
     id: 'pr',
-    title: 'Precipitation',
+    label: 'Precipitation',
     icon: Rainfall,
     text: 'Accumulated rainfall and snowfall.',
     units: {
@@ -46,7 +46,7 @@ const variables = [
   },
   {
     id: 'cdd',
-    title: 'Cooling Degree Days',
+    label: 'Cooling Degree Days',
     icon: '',
     text: 'A Cooling Degree Day is defined as the number of degrees by which a daily average temperature exceeds a reference temperature.',
     units: {
@@ -57,7 +57,7 @@ const variables = [
   },
   {
     id: 'hdd',
-    title: 'Heating Degree Days',
+    label: 'Heating Degree Days',
     icon: '',
     text: 'A Heating Degree Day is defined as the number of degrees by which a daily average temperature is below a reference temperature.',
     units: {
@@ -68,7 +68,7 @@ const variables = [
   },
   {
     id: 'tair',
-    title: 'Tair',
+    label: 'Tair',
     icon: Sun,
     text: 'Average Temperature',
     units: {
@@ -79,7 +79,7 @@ const variables = [
   },
   {
     id: 'et',
-    title: 'Evapotranspiration',
+    label: 'Evapotranspiration',
     text: 'Water that is evaporated from the surfaces and transpired from plants.',
     icon: '',
     units: {
@@ -90,7 +90,7 @@ const variables = [
   },
   {
     id: 'swe',
-    title: 'Snow Water Equivalent',
+    label: 'Snow Water Equivalent',
     text: 'The amount of water that is stored in the snowpack.',
     icon: Snowflake,
     units: {
@@ -101,7 +101,7 @@ const variables = [
   },
   {
     id: 'baseflow',
-    title: 'Baseflow',
+    label: 'Baseflow',
     text: 'Portion of the stream flow that is not from precipitation and results from seepage of water from the ground.',
     icon: '',
     units: {
@@ -112,7 +112,7 @@ const variables = [
   },
   {
     id: 'runoff',
-    title: 'Runoff',
+    label: 'Runoff',
     text: 'Water that is discharged into the streams and largely results from precipitation and melting of snow.',
     icon: '',
     units: {
@@ -123,7 +123,7 @@ const variables = [
   },
   {
     id: 'soilmoist1',
-    title: 'Soil Moisture Layer 1',
+    label: 'Soil Moisture Layer 1',
     text: 'Soil Moisture Layer 1',
     icon: '',
     units: {
@@ -134,7 +134,7 @@ const variables = [
   },
   {
     id: 'soilmoist2',
-    title: 'Soil Moisture Layer 2',
+    label: 'Soil Moisture Layer 2',
     text: 'Soil Moisture Layer 2',
     icon: '',
     units: {
@@ -145,7 +145,7 @@ const variables = [
   },
   {
     id: 'soilmoist3',
-    title: 'Soil Moisture Layer 3',
+    label: 'Soil Moisture Layer 3',
     text: 'Soil Moisture Layer 3',
     icon: '',
     units: {
@@ -156,7 +156,7 @@ const variables = [
   },
   {
     id: 'fire',
-    title: 'Wildfire',
+    label: 'Wildfire',
     text: 'Area Burned',
     icon: Wildfire,
     units: {
@@ -167,7 +167,7 @@ const variables = [
   },
   {
     id: 'fireprob',
-    title: 'Wildfire Probability',
+    label: 'Wildfire Probability',
     text: 'Decadal Fire Probability',
     icon: Wildfire,
     units: {

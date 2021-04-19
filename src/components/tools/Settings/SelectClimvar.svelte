@@ -28,7 +28,7 @@
 {#if ready}
   <Select hideLabel labelText="Climate Variable" selected={selectedId} on:change={change}>
     {#each items as opt}
-      <SelectItem value={opt.id} text={opt.title} />
+      <SelectItem value={opt.id} text={opt.label} />
     {/each}
   </Select>
 {:else}
