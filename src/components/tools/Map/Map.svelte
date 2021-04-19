@@ -113,7 +113,7 @@
       });
 
       // Forward mouse events
-      el.on('mousemove', e => {
+      el.on('mousemove', (e) => {
         const features = map.queryRenderedFeatures(e.point);
         dispatch('mousemove', {
           event: e,
@@ -121,8 +121,10 @@
         });
       });
 
-      el.on('mouseleave', e => {
-        dispatch('mousemove');
+      el.on('mouseleave', (e) => {
+        dispatch('mouseleave', {
+          event: e,
+        });
       });
 
       // Forward map click event
@@ -133,7 +135,7 @@
       });
 
       // Forwarch zoom change event
-      el.on('zoomend', e => {
+      el.on('zoomend', () => {
         dispatch('zoom', el.getZoom());
       });
     }
