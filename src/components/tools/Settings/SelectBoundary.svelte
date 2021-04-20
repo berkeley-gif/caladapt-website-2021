@@ -43,7 +43,6 @@
   }
 
   let selected = items.find(d => d.id === selectedId);
-  let open = false;
   let ready = false;
 
   function change(e) {

@@ -26,7 +26,11 @@
 </script>
 
 {#if ready}
-  <Select hideLabel labelText="Climate Variable" selected={selectedId} on:change={change}>
+  <Select
+    hideLabel
+    labelText="Climate Variable"
+    selected={selectedId}
+    on:change={change}>
     {#each items as opt}
       <SelectItem value={opt.id} text={opt.label} />
     {/each}

@@ -1,7 +1,6 @@
 <script>
   import { onMount, createEventDispatcher } from 'svelte';
   import {
-    Tooltip,
     MultiSelect,
     SelectSkeleton,
   } from 'carbon-components-svelte';

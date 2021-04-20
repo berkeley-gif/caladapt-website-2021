@@ -1,7 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
   import {
-    FormGroup,
     RadioButtonGroup,
     RadioButton,
     RadioButtonSkeleton,
@@ -12,7 +11,6 @@
 
   const dispatch = createEventDispatcher();
   let selected = items.find(d => d.id === selectedId);
-  let open = false;
   let ready = false;
 
   function change(e) {
@@ -26,19 +24,18 @@
   });
 </script>
 
-<!-- <FormGroup style="margin-bottom:0;"> -->
-  {#if ready}
-    <RadioButtonGroup orientation="vertical" selected={selectedId} on:change={change}>
-      {#each items as opt}
-        <div class="d-flex align-items-center">
-          <RadioButton labelText={opt.label} value={opt.id}/>  
-        </div>
-      {/each}
-    </RadioButtonGroup>
-  {:else}
-    <RadioButtonGroup orientation="vertical">
-      <RadioButtonSkeleton />
-      <RadioButtonSkeleton />
-    </RadioButtonGroup>
-  {/if}
-<!-- </FormGroup> -->
+{#if ready}
+  <RadioButtonGroup
+    orientation="vertical"
+    selected={selectedId}
+    on:change={change}>
+    {#each items as opt}
+      <RadioButton labelText={opt.label} value={opt.id}/>  
+    {/each}
+  </RadioButtonGroup>
+{:else}
+  <RadioButtonGroup orientation="vertical">
+    <RadioButtonSkeleton />
+    <RadioButtonSkeleton />
+  </RadioButtonGroup>
+{/if}
