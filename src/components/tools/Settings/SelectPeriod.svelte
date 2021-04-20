@@ -26,16 +26,22 @@
   });
 </script>
 
-<style>
-  :global(.period .bx--number input[type='number']) {
-    min-width: 5rem;
-  }
-</style>
-
 {#if ready}
-  <div class="d-flex align-items-start mt-1">
-    <NumberInput class="period" bind:value {label} {min} {max} {helperText} />
-    <Button style="width:3rem;padding-right:12px;height:40px;margin-left:5px;" kind="secondary" size="small" on:click={update}>Set</Button>
+  <div style="display:flex;align-items:start;">
+    <NumberInput
+      class="period"
+      bind:value
+      {label}
+      {min}
+      {max}
+      {helperText} />
+    <Button
+      kind="tertiary"
+      size="small"
+      style="margin-left:10px;padding-right:12px;"
+      on:click={update}>
+      Set
+    </Button>
   </div>
 {:else}
   <NumberInputSkeleton />
