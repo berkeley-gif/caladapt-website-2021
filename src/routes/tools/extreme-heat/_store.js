@@ -2,16 +2,15 @@ import { writable, derived } from 'svelte/store';
 import { rollup, range, max, sum } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
 
-import { serialize, groupConsecutiveDates } from '../../../helpers/utilities';
-import { apiConfig } from '../../../helpers/api-config';
+import { groupConsecutiveDates } from '../../../helpers/utilities';
 
 import scenarioList from '../../../helpers/climate-scenarios';
 import boundaryList from '../../../helpers/mapbox-layers';
-import { climvarList, indicatorList, seriesList } from './_helpers';
+import { climvarList, indicatorList, thresholdList } from './_helpers';
 
 export const climvarStore = (() => {
   const store = writable('tasmax');
-  const { set, subscribe, update } = store;
+  const { set, subscribe } = store;
   return {
     set,
     subscribe,
@@ -26,7 +25,7 @@ export const climvarStore = (() => {
 
 export const scenarioStore = (() => {
   const store = writable('rcp45');
-  const { set, subscribe, update } = store;
+  const { set, subscribe } = store;
   return {
     set,
     subscribe,
@@ -41,7 +40,7 @@ export const scenarioStore = (() => {
 
 export const modelsStore = (() => {
   const store = writable('HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5');
-  const { set, subscribe, update } = store;
+  const { set, subscribe } = store;
   return {
     set,
     subscribe,
@@ -56,7 +55,7 @@ export const modelsStore = (() => {
 
 export const unitsStore = writable({ imperial: true });
 
-export const thresholdStore = (() => {
+/*export const thresholdStore = (() => {
   const store = writable({
     thresh98p: 103.9,
     threshCustom: null,
@@ -95,6 +94,27 @@ export const thresholdStore = (() => {
         return $store.userClick;
       });
     }
+  }
+})();*/
+
+export const thresholdStore = (() => {
+  const store = writable('default');
+  const { set, subscribe, update } = store;
+  return {
+    set,
+    subscribe,
+    setDefault: val => update((store) => {
+      const obj = thresholdList.find(d => d.id === 'custom');
+      obj.value = val;
+      store = obj;
+      return store;
+    }),
+    get threshold() {
+      return derived(store, $store => {
+        const selected = scenarioList.find(d => d.id === $store);
+        return selected;
+      });
+    },
   }
 })();
 
@@ -164,10 +184,10 @@ export const locationStore = (() => {
 // Indicator Store
 export const indicatorStore = (() => {
   const store = writable(indicatorList[0]);
-  const { get, subscribe, update } = store;
+  const { subscribe, update } = store;
   return {
     subscribe,
-    updateIndicator: val => update((store) => {
+    updateIndicator: val => update(() => {
       return indicatorList.find(d => d.id === val);
     }),
     get indicator() {

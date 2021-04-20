@@ -10,7 +10,7 @@
   import { fly } from 'svelte/transition';
 
   // Helpers
-  import { climvarList, modelList, scenarioList } from './_helpers';
+  import { climvarList, modelList, scenarioList, thresholdList } from './_helpers';
 
   // Components
   import {
@@ -52,12 +52,13 @@
   }
 
   function changeThreshold(e) {
-    if (e.detail.type === 'default') {
+    //thresholdStore.set(e.detail.id);
+/*    if (e.detail.id === 'default') {
       thresholdStore.useDefault(e.detail.value);
     } else {
       thresholdStore.useCustom(e.detail.value);
-    }
-    console.log('threshold change');
+    }*/
+    console.log('threshold change', e.detail);
   }
 
   function changePeriod(e) {
@@ -144,10 +145,15 @@
           topics={["climate-scenarios"]} />
       </AccordionItem>
       <AccordionItem open title="Threshold Temperature">
-        <SelectThreshold
+<!--         <SelectThreshold
           defaultValue={$thresholdStore.thresh98p}
           customValue={$thresholdStore.threshCustom}
           useCustom={$thresholdStore.useCustom}
+          on:change={changeThreshold}
+        /> -->
+        <SelectThreshold
+          selectedId={$thresholdStore}
+          items={thresholdList}
           on:change={changeThreshold}
         />
         <ShowDefinition

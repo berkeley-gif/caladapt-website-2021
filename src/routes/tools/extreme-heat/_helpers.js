@@ -123,3 +123,16 @@ export const modelList = models
 
 export const scenarioList = scenarios
   .filter(d => ['rcp45', 'rcp85'].includes(d.id));
+
+export const thresholdList = [
+  {
+    id: 'default',
+    label: '98th Percentile',
+    value: 103,
+  },
+  {
+    id: 'custom',
+    label: 'Custom',
+    value: 100,
+  },
+];
