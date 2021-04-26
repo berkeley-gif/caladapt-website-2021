@@ -273,6 +273,21 @@
     }
   }
 
+  .content-grid-animation {
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 500px;
+
+    .content-header {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    .content-animation {
+      grid-row: 2;
+      grid-column: 1;
+    }
+  }
+
   .suggestions {
     background-color: #fff;
     border-radius: 4px;
