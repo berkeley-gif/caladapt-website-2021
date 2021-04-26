@@ -1,10 +1,9 @@
 <script>
   // Node modules
   import { onMount, createEventDispatcher } from 'svelte';
-  import { format } from 'd3-format';
 
   // Components
-  import { Map, Popup, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, GeojsonDataLayer, LayerInfo } from './../Map';
+  import { Map, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, Animation } from './../Map';
   import Sidebar from './Sidebar.svelte';
   import { InlineLoading } from 'carbon-components-svelte';
 
@@ -24,6 +23,9 @@
   };
   export let boundary;
   export let location;
+  export let resize;
+  export let animationUrl;
+  export let animationShow = false;
 
 
   // Local variables
@@ -52,12 +54,17 @@
       message: mapError,
     });
   }
+
   $: if (!isMapLoading) {
     zoomToLocation();
     dispatch('ready');
   }
 
   $: location, zoomToLocation();
+
+  $: if (resize) {
+    mapComponent.resize();
+  }
 
 
   // Functions
@@ -213,6 +220,9 @@
         {:else}
           <BoundarySelection data={location.geometry} />
         {/if}
+      {/if}
+      {#if animationShow}
+        <Animation />
       {/if}
     </Map>
   </div>
