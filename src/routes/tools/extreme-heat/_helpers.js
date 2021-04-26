@@ -3,7 +3,9 @@ import climvars from '../../../helpers/climate-variables';
 import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';
+import { MinMaxAvg, MonthsCount } from '../../../components/tools/Stats';
 import { LineAreaChart, ScatterChart, HeatmapChart } from '../../../components/tools/Charts';
+import tools from '../../../../content/tools/data';
 
 // Create a new climvarList instead of using the default one
 // Needs to be an export so it can be used to intitialize SelectClimvar component
@@ -18,10 +20,11 @@ export const indicatorList = [
     label: 'Frequency',
     title: 'Number of Extreme Heat Days per Year',
     helperText: `Days in a year when daily maximum temperature is above a threshold temperature`,
-    units: 'days per year',
+    units: 'days/year',
     decimals: 0,
     icon: Sun,
-    component: LineAreaChart,
+    chartComponent: LineAreaChart,
+    statsComponent: MinMaxAvg,
   },
   {
     id: 'timing',
@@ -31,27 +34,30 @@ export const indicatorList = [
     units: '',
     decimals: 0,
     icon: Sun,
-    component: HeatmapChart,
+    chartComponent: HeatmapChart,
+    statsComponent: MonthsCount,
   },
   {
     id: 'duration',
     label: 'Duration',
     title: 'Longest Stretch of Consecutive Extreme Heat Days per Year',
     helperText: `The longest stretch of consecutive days when daily maximum temperatures are above a threshold temperature`,
-    units: 'days per year',
+    units: 'days/year',
     decimals: 0,
     icon: Sun,
-    component: ScatterChart,
+    chartComponent: ScatterChart,
+    statsComponent: MinMaxAvg,
   },
   {
     id: 'waves',
     label: 'Heat Waves',
     title: 'Number of Heat Wave Events per Year',
     helperText: `Number of heat wave events in a year when daily maximum temperatures are above a threshold temperature`,
-    units: 'events per year',
+    units: 'events/year',
     decimals: 0,
     icon: Sun,
-    component: ScatterChart,
+    chartComponent: ScatterChart,
+    statsComponent: MinMaxAvg,
   },
 ];
 
@@ -124,15 +130,43 @@ export const modelList = models
 export const scenarioList = scenarios
   .filter(d => ['rcp45', 'rcp85'].includes(d.id));
 
-export const thresholdList = [
+const toolsList =   ['Annual Averages', 'Maps of Projected Change', 'Cooling Degree Days and Heating Degree Days'];
+const relatedTools = tools.filter((tool) => {
+  if (toolsList.includes(tool.title)) {
+    tool.category = 'caladapt';
+    return true;
+  }
+});
+export const resources = [
+  ...relatedTools,
   {
-    id: 'default',
-    label: '98th Percentile',
-    value: 103,
+    title: 'California Heat Assessment Tool',
+    link: 'https://www.cal-heat.org/',
+    category: 'other',
+    image: 'logos/chat.jpg',
+    desc: `The California Heat Assessment Tool is a new tool funded by the Fourth 
+    Assessment to inform the planning efforts of local public health officials. The tool 
+    provides health-informed heat thresholds for communities across California and 
+    examines how the frequency and severity of local heat waves are expected to change 
+    over time due to climate change.`,
   },
   {
-    id: 'custom',
-    label: 'Custom',
-    value: 100,
+    title: "California's Adaptation Clearinghouse",
+    link: 'https://resilientca.org',
+    category: 'other',
+    image: 'logos/EJ_JRC_ccc_simulation-7094.jpg',
+    desc: `The Adaptation Clearinghouse is the State of California’s consolidated searchable 
+    database of resources for local, regional and statewide climate adaptation planning 
+    and decision-making.`,
+  },
+  {
+    title: "Regional Reports: California's 4th Climate Change Assessment",
+    link: 'https://www.climateassessment.ca.gov/regions/',
+    category: 'other',
+    image: 'logos/ccc4a.jpg',
+    desc: `California’s Fourth Climate Change Assessment provides information to 
+    build resilience to climate impacts, including temperature, wildfire, water, 
+    sea level rise, and governance. The assessment includes reports for nine regions 
+    of the state to support action at local and regional scales.`,
   },
 ];

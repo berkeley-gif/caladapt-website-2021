@@ -25,7 +25,6 @@
     ShowDefinition,
   } from '../../../components/tools/Settings';
   import { Location } from '../../../components/tools/Location';
-  import { MinMaxAvg } from '../../../components/tools/Stats';
   import DownloadChart from '../../../components/tools/DownloadChart.svelte';
   import { notifier } from '../../../components/notifications';
 
@@ -38,10 +37,11 @@
   const dispatch = createEventDispatcher();
   const { location, boundary, lngLat } = locationStore;
   const { data } = dataStore;
-  const { threshold } = thresholdStore;
   const { indicator } = indicatorStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
+
+  $: console.log('indicator', $indicator);
 
   let dataByDate;
   let observedSeries;
@@ -76,6 +76,7 @@
   } else {
     observedSeries = null;
     modelSeries = null;
+    dataByDate = null;
   }
 
   function changeIndicator(e) {
@@ -153,41 +154,43 @@
   }
 </style>
 
-<div class="content-grid content-grid-alt1">
+<div class="content-grid">
   <!-- Climvar Header -->
   <div class="content-header block">
-    <FormGroup legendText="SELECT CHART">
+    <FormGroup legendText="SELECT CHART" style="margin-bottom:1rem;">
       <RadioButtonGroup selected="frequency" on:change={changeIndicator}>
         {#each indicatorList as opt}
           <RadioButton labelText={opt.label} value={opt.id} />
         {/each}
       </RadioButtonGroup>
     </FormGroup>
-    {#if $climvar && $threshold}
+    {#if $climvar && $thresholdStore}
       <div class="flex-header">
         <span class="icon">
           <svelte:component this={$climvar.icon} />
         </span>
         <div>
           <h4 class="title">{$indicator.title}</h4>
-          {#if ($indicator.id === 'waves')}
-            <p>{$indicator.helperText} of
-              <TooltipDefinition
-                tooltipText="The default threshold temperature for this location is {$threshold} °F. It is defined as the 98th percentile value of historical daily maximum/minimum temperatures (from 1961–1990, between April and October)."
-              >
-                {$threshold} °F 
+          <p>
+            {$indicator.helperText} of
+            <TooltipDefinition>
+              <div slot="tooltip">
+                <p style="font-size:0.875rem;">The default threshold temperature for this location is {$thresholdStore} °F. It is defined as the 98th percentile value of historical daily maximum/minimum temperatures (from 1961–1990, between April and October).</p>
+                <p style="font-size:0.875rem;">Change this value in the Settings Panel under Threshold Temperature.</p>
+              </div>
+              {$thresholdStore} °F
+            </TooltipDefinition>
+            {#if ($indicator.id === 'waves')}
+              for a length of
+              <TooltipDefinition>
+                <div slot="tooltip">
+                  <p style="font-size:0.875rem;">By default, a heat wave is defined based on a period of 4 consecutive extreme heat days/warm nights when the daily max/min temperature is above the extreme heat threshold. Each 4 day/night period is counted, so that if extreme temperatures persist for 10 consecutive days/nights, it counts as 2 Heat Waves.</p>
+                  <p style="font-size:0.875rem;">Change this length in the Settings Panel under Heat Wave Length.</p>
+                </div>
+              { $periodStore} days.
               </TooltipDefinition>
-              for a period of {$periodStore} days.
-             </p>
-          {:else}
-            <p>{$indicator.helperText} of
-              <TooltipDefinition
-                tooltipText="The default threshold temperature for this location is {$threshold} °F. It is defined as the 98th percentile value of historical daily maximum/minimum temperatures (from 1961–1990, between April and October)."
-              >
-                {$threshold} °F
-              </TooltipDefinition>
-             </p>
-          {/if}
+            {/if}
+           </p>
         </div>
       </div>
     {:else}
@@ -198,10 +201,12 @@
 
   <!-- Stats -->
   <div class="content-stats block">
-    <MinMaxAvg
+    <svelte:component
+      this={$indicator.statsComponent}
       title={'Observed Data'}
       subtitle={'Baseline (1961-1990)'}
-      note={`Values in ${$indicator.units}`}
+      units={$indicator.units}
+      note=''
       data={observedSeries}
       historicalOnly={true}
       start={1961}
@@ -210,11 +215,13 @@
     />
   </div> <!-- end content-stats -->
 
-  <div class="content-stats block">    
-    <MinMaxAvg
+  <div class="content-stats block">
+    <svelte:component
+      this={$indicator.statsComponent}
       title={'Model Projections'}
       subtitle={'Mid-Century (2035-2064)'}
-      note={`Values in ${$indicator.units}`}
+      units={$indicator.units}
+      note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
       data={modelSeries}
       start={2035}
       end={2064}
@@ -222,16 +229,18 @@
     />
   </div> <!-- end content-stats -->
 
-  <div class="content-stats block">     
-    <MinMaxAvg
+  <div class="content-stats block">
+    <svelte:component
+      this={$indicator.statsComponent}
       title={'Model Projections'}
       subtitle={'End-Century (2070-2099)'}
-      note={`Values in ${$indicator.units}`}
+      units={$indicator.units}
+      note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
       data={modelSeries}
       start={2070}
       end={2099}
       format={formatFn}
-    />
+    /> 
   </div> <!-- end content-stats -->
 
   <!-- Boundary Selection -->
@@ -287,6 +296,7 @@
       lat={$locationStore.lat}
       boundary={$boundary}
       location={$location}
+      resize={sidebarCollapsed}
       on:mapclick={mapClick}
       on:ready={() => mapReady = true} />    
   </div> <!-- end content-map -->
@@ -305,12 +315,12 @@
       {/if}
     </div>
     <svelte:component
-      this={$indicator.component}
+      this={$indicator.chartComponent}
       data={$data}
       dataByDate={dataByDate}
       yAxis = {{
         key: 'value',
-        label: `${$indicator.title} above ${$threshold} °F`,
+        label: `${$indicator.title} above ${$thresholdStore} °F`,
         baseValue: 0,
         tickFormat: formatFn,
         units: `${$indicator.units}`,

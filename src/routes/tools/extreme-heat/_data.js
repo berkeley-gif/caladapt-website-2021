@@ -1,27 +1,18 @@
 // Node modules
-import { format } from 'd3-format';
-import { timeParse } from 'd3-time-format';
-import { merge, rollup, sort, group } from 'd3-array';
+import { merge, group } from 'd3-array';
 
 // Helpers
 import config from '../../../helpers/api-config';
 import {
   handleXHR,
   fetchData,
-  transformCounts,
   transformResponse,
-  addPropsToValues,
-  createSeriesObject,
   pipe,
-  curry,
-  sanitizeString,
   serialize,
 } from '../../../helpers/utilities';
 import { seriesList } from './_helpers';
 
 const { apiEndpoint } = config.env.production;
-const coordFormat = format('.4f');
-const parseDate = timeParse('%Y-01-01T00:00:00Z');
 
 const fetchTimeseries = async ({slug, params}) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
@@ -30,11 +21,6 @@ const fetchTimeseries = async ({slug, params}) => {
     throw new Error(error.message);
   }
   return response;
-};
-
-const countByYear = (values) => {
-  const counts = rollup(values, v => v.length, d => d.date.getFullYear());
-  return counts;
 };
 
 const addSeriesInfo = (series) => {

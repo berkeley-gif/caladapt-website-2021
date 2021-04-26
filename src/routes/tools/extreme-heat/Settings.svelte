@@ -10,7 +10,7 @@
   import { fly } from 'svelte/transition';
 
   // Helpers
-  import { climvarList, modelList, scenarioList, thresholdList } from './_helpers';
+  import { climvarList, modelList, scenarioList } from './_helpers';
 
   // Components
   import {
@@ -29,10 +29,12 @@
     modelsStore,
     thresholdStore,
     periodStore,
+    thresholdListStore,
   } from './_store';
 
   export let sidebarCollapsed;
-  export let appStatus;
+
+  const { climvar } = climvarStore;
 
   const dispatch = createEventDispatcher();
 
@@ -52,13 +54,13 @@
   }
 
   function changeThreshold(e) {
-    //thresholdStore.set(e.detail.id);
-/*    if (e.detail.id === 'default') {
-      thresholdStore.useDefault(e.detail.value);
-    } else {
-      thresholdStore.useCustom(e.detail.value);
-    }*/
-    console.log('threshold change', e.detail);
+    thresholdStore.set(e.detail);
+    console.log('threshold change');
+  }
+
+  function addThreshold(e) {
+    thresholdListStore.add(e.detail);
+    console.log('threshold add');
   }
 
   function changePeriod(e) {
@@ -145,16 +147,12 @@
           topics={["climate-scenarios"]} />
       </AccordionItem>
       <AccordionItem open title="Threshold Temperature">
-<!--         <SelectThreshold
-          defaultValue={$thresholdStore.thresh98p}
-          customValue={$thresholdStore.threshCustom}
-          useCustom={$thresholdStore.useCustom}
-          on:change={changeThreshold}
-        /> -->
         <SelectThreshold
-          selectedId={$thresholdStore}
-          items={thresholdList}
+          items={$thresholdListStore}
+          selected={$thresholdStore}
+          units={$climvar.units.imperial}
           on:change={changeThreshold}
+          on:add={addThreshold}
         />
         <ShowDefinition
           on:define

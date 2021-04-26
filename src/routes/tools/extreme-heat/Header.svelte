@@ -72,7 +72,7 @@
 <Modal passiveModal bind:open={showData} modalHeading="Data Sources" on:open on:close>
   <div class="bx--grid">
     <!-- Source -->
-    <div class="bx--row">
+    <div class="bx--row" style="background-color:#dadee1;margin:1rem 0;">
       <div class="bx--col-lg-3" style="display:flex;align-items:center;justify-content:center;">
         <img style="width:80px;" src="/img/logos/scripps_100x100.png" alt="scripps logo">
       </div>
@@ -93,7 +93,7 @@
       </div>
     </div>
     <!-- Source -->
-    <div class="bx--row">
+    <div class="bx--row" style="background-color:#dadee1;margin:1rem 0;">
       <div class="bx--col-lg-3" style="display:flex;align-items:center;justify-content:center;">
         <img style="width:80px;" src="/img/logos/u_colorado.png" alt="university of colorado boulder logo">
       </div>

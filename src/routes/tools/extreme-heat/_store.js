@@ -6,7 +6,7 @@ import { groupConsecutiveDates } from '../../../helpers/utilities';
 
 import scenarioList from '../../../helpers/climate-scenarios';
 import boundaryList from '../../../helpers/mapbox-layers';
-import { climvarList, indicatorList, thresholdList } from './_helpers';
+import { climvarList, indicatorList } from './_helpers';
 
 export const climvarStore = (() => {
   const store = writable('tasmax');
@@ -55,68 +55,79 @@ export const modelsStore = (() => {
 
 export const unitsStore = writable({ imperial: true });
 
-/*export const thresholdStore = (() => {
-  const store = writable({
-    thresh98p: 103.9,
-    threshCustom: null,
-    useCustom: false,
-    userClick: false,
-  });
-  const { get, subscribe, update } = store;
-  return {
-    subscribe,
-    setDefault: val => update((store) => {
-      store.thresh98p = val;
-      store.userClick = false;
-      return store;
-    }),
-    useDefault: val => update((store) => {
-      store.useCustom = false;
-      store.userClick = true;
-      return store;
-    }),
-    useCustom: (val) => update((store) => {
-      store.threshCustom = val;
-      store.useCustom = true;
-      store.userClick = true;
-      return store;
-    }),
-    get threshold() {
-      return derived(store, $store => {
-        if ($store.useCustom && $store.threshCustom) {
-          return $store.threshCustom;
-        }
-        return $store.thresh98p;
-      });
-    },
-    get thresholdClick() {
-      return derived(store, $store => {
-        return $store.userClick;
-      });
-    }
-  }
-})();*/
+export const thresholdStore = writable();
 
-export const thresholdStore = (() => {
-  const store = writable('default');
-  const { set, subscribe, update } = store;
+export const thresholdListStore = (() => {
+  let uid = 1;
+  const store = writable([]);
+  const { update, subscribe } = store;
   return {
-    set,
     subscribe,
-    setDefault: val => update((store) => {
-      const obj = thresholdList.find(d => d.id === 'custom');
-      obj.value = val;
-      store = obj;
-      return store;
-    }),
-    get threshold() {
-      return derived(store, $store => {
-        const selected = scenarioList.find(d => d.id === $store);
-        return selected;
-      });
+    reset(value, label) {
+      update((prev) => {
+        const next = prev.map((t) => {
+          if (t.label === label) {
+            t.value = value;
+          }
+          return t;
+        })
+        return next;
+      })      
+    },
+    add(value, label='Custom') {
+      const thresh = {
+        id: uid++,
+        label,
+        value,
+      };
+      update((prev) => {
+        return [...prev, thresh]  
+      })    
+    },
+    remove(thresh) {
+      update((prev) => {
+        return prev.filter(t => t !== thresh);
+      })
     },
   }
 })();
+
+// export function createThresholdListStore(initialValue = []) {
+//   let uid = 1;
+//   const { subscribe, update } = writable(initialValue.map((t) => {
+//     t.id = uid++;
+//     return t;
+//   }));
+//   return {
+//     subscribe,
+//     update(value, label) {
+//       update((prev) => {
+//         const next = prev.map((t) => {
+//           if (t.label === label) {
+//             t.value = value;
+//           }
+//           return t;
+//         })
+//         return next;
+//       })      
+//     },
+//     add(value, label='Custom') {
+//       const thresh = {
+//         id: uid++,
+//         label,
+//         value,
+//       };
+//       update((prev) => {
+//         return [...prev, thresh]  
+//       })    
+//     },
+//     remove(thresh) {
+//       update((prev) => {
+//         return prev.filter(t => t !== thresh);
+//       })
+//     },
+//   };
+// }
 
 export const periodStore = writable(4);
 
@@ -148,7 +159,7 @@ export const locationStore = (() => {
       ]
     }
   });
-  const { update, get, subscribe } = store;
+  const { update, subscribe } = store;
   return {
     subscribe,
     updateLocation: (loc) => update((store) => {

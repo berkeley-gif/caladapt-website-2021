@@ -31,7 +31,7 @@
 </script>
 
 <script>
-  import { onMount, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import { Modal, Loading } from 'carbon-components-svelte';
   
   // Helpers
@@ -42,6 +42,7 @@
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
+  import Footer from './Footer.svelte';
   import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
@@ -53,6 +54,7 @@
     locationStore,
     dataStore,
     thresholdStore,
+    thresholdListStore,
     periodStore,
     queryParams,
   } from './_store';
@@ -66,7 +68,6 @@
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { models } = modelsStore;
-  const { threshold } = thresholdStore;
 
   // Modals
   let showInfo = false;
@@ -83,8 +84,17 @@
 
   async function initApp(config) {
     console.log('initApp', config);
-    const { lat, lng, boundaryId, scenarioId, climvarId, thresh, modelIds, imperial, period } = config;
-
+    const {
+      lat,
+      lng,
+      boundaryId,
+      scenarioId,
+      climvarId,
+      thresh,
+      modelIds,
+      imperial,
+      period,
+    } = config;
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
@@ -94,11 +104,13 @@
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
     const thresh98p = await get98pThreshold(climvarId, $queryParams);
-    console.log('thresho98p', thresh98p);
-    //thresholdStore.setDefault(thresh98p);
+    thresholdListStore.add(thresh98p, '98th Percentile');
+    thresholdStore.set(thresh98p);
     if (thresh && (+thresh !== thresh98p)) {
-      //thresholdStore.setCustom(+thresh);
+      thresholdListStore.add(+thresh);
+      thresholdStore.set(+thresh);
     }
+    // Create threshold list store
     return;
   }
 
@@ -108,32 +120,15 @@
     update();
   }
 
-  $: $climvar, updateThreshAndData();
-  $: $location, updateThreshAndData();
-/*  $: if ($thresholdClick) {
-    update();
-  }*/
+  $: $climvar, updateThreshold();
+  $: $location, updateThreshold();
+  $: $thresholdStore, update();
   $: $scenario, update();
   $: $models, update();
 
   function update() {
+    if (!appReady) return;
     console.log('function update');
-    if (!appReady) return;
-/*    appStatus = 'working';
-    dataStore.set(null);
-    getData()
-      .then((_data) => {
-        dataStore.set(_data);
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-    appStatus = 'idle';*/
-  }
-
-  function updateThreshAndData() {
-    console.log('function update thresh & data');
-/*    if (!appReady) return;
     appStatus = 'working';
     dataStore.set(null);
     getData()
@@ -141,45 +136,27 @@
         dataStore.set(_data);
       })
       .catch((err) => {
-        throw new Error(err);
+        // handle error
+        console.log('error', err);
+        //throw new Error(err);
+      })
+      .finally(() => {
+        appStatus = 'idle';
       });
-    appStatus = 'idle';*/
   }
 
-/*  async function updateThreshAndData() {
+  function updateThreshold() {
     if (!appReady) return;
-    appStatus = 'working';
-    await tick();
-    console.log('updateThreshAndData', $queryParams);
-    const thresh98p = await get98pThreshold($climvarStore, $queryParams);
-    console.log('threshold', thresh98p);
-    thresholdStore.setDefault(thresh98p);
-    //await updateData();
-  }*/
-
-/*  async function updateData() {
-    if (!appReady) return;
+    console.log('function update threshold');
     appStatus = 'working';
     dataStore.set(null);
-    try {
-      const config = {
-        climvarId: $climvarStore,
-        scenarioId: $scenarioStore,
-        modelIds: $modelsStore,
-      };
-      const params = {
-        thresh: $threshold,
-        ...$queryParams,
-      }
-      const observed = await getObserved(config, params);
-      const modelsData = await getModels(config, params);
-      dataStore.set([observed, ...modelsData]);
-      appStatus = 'idle';
-    } catch (err) {
-      console.log('updateData', err);
-      appStatus = 'idle';
-    }
-  }*/
+    get98pThreshold($climvarStore, $queryParams)
+      .then((thresh98p) => {
+        thresholdListStore.reset(thresh98p, '98th Percentile');
+        thresholdStore.set(thresh98p);
+        // This threshold change triggers update() function
+      });
+  }
 
   async function getData() {
     const config = {
@@ -188,7 +165,7 @@
       modelIds: $modelsStore,
     };
     const params = {
-      thresh: $threshold,
+      thresh: $thresholdStore,
       ...$queryParams,
     }
     const observed = await getObserved(config, params);
@@ -217,11 +194,10 @@
     initApp(initialConfig)
       .then(() => {
         initReady = true;
-        console.log('init is ready');
       })
       .catch((error) => {
         console.log('init error', error);
-      })
+      });
   })
 </script>
 
@@ -253,14 +229,15 @@
     <aside class="sidebar" class:sidebarCollapsed>
       <div class="is-sticky">
         <Settings
-          bind:appStatus
           bind:sidebarCollapsed
           on:ready={() => settingsReady = true}
           on:define={showDefinition} />      
       </div>
     </aside>
     <!-- Footer -->
-    <div class="footer"></div>
+    <div class="footer">
+      <Footer />
+    </div>
   </div>
 {/if}
 
