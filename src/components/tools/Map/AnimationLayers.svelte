@@ -15,12 +15,9 @@
     [-124.60693359374999, 31.034108344903512]
   ];
   export let urls = [
-    `https://api.cal-adapt.org/api/series/swe_month_livneh/1960-1969/
-    4.png?style=swe&scale=10`,
-    `https://api.cal-adapt.org/api/series/swe_month_livneh/1970-1979/
-    4.png?style=swe&scale=10`,
-        `https://api.cal-adapt.org/api/series/swe_month_livneh/1980-1989/
-    4.png?style=swe&scale=10`,
+    `https://api.cal-adapt.org/api/series/swe_month_livneh/1960-1969/4.png?style=swe&scale=10`,
+    `https://api.cal-adapt.org/api/series/swe_month_livneh/1970-1979/4.png?style=swe&scale=10`,
+    `https://api.cal-adapt.org/api/series/swe_month_livneh/1980-1989/4.png?style=swe&scale=10`,
   ];
 
   let currentFrame = 0;
