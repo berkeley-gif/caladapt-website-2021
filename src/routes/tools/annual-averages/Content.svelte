@@ -69,7 +69,7 @@
 
   $: if ($data) {
     observedSeries = $data.filter(d => d.key === 'observed');
-    modelSeries = $data.filter(d => d.key !== 'observed');
+    modelSeries = $data.filter(d => d.key !== 'observed' && d.type !== 'area');
     dataByDate = getDataByDate(flattenData($data));
   }
 
@@ -151,7 +151,7 @@
   }
 </style>
 
-<div class="content-grid">
+<div class="content-grid content-grid-alt1">
   <!-- Climvar Header -->
   <div class="content-header block">
     {#if $climvar}
@@ -170,7 +170,8 @@
     <MinMaxAvg
       title={'Observed Data'}
       subtitle={'Baseline (1961-1990)'}
-      note={`Values in ${$climvar.units.imperial}`}
+      units={$climvar.units.imperial}
+      note={''}
       data={observedSeries}
       historicalOnly={true}
       start={1961}
@@ -183,7 +184,8 @@
     <MinMaxAvg
       title={'Model Projections'}
       subtitle={'Mid-Century (2035-2064)'}
-      note={`Values in ${$climvar.units.imperial}`}
+      units={$climvar.units.imperial}
+      note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
       data={modelSeries}
       start={2035}
       end={2064}
@@ -195,7 +197,8 @@
     <MinMaxAvg
       title={'Model Projections'}
       subtitle={'End-Century (2070-2099)'}
-      note={`Values in ${$climvar.units.imperial}`}
+      units={$climvar.units.imperial}
+      note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
       data={modelSeries}
       start={2070}
       end={2099}
@@ -262,6 +265,7 @@
       lat={$locationStore.lat}
       boundary={$boundary}
       location={$location}
+      resize={sidebarCollapsed}
       on:mapclick={mapClick}
       on:ready={() => mapReady = true} />    
   </div> <!-- end content-map -->

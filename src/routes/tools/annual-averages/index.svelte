@@ -40,6 +40,7 @@
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
+  import Footer from './Footer.svelte';
   import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
@@ -185,7 +186,11 @@
         on:define={showDefinition} />      
     </div>
   </aside>
-  <div class="footer"></div>
+  
+  <!-- Footer -->
+  <div class="footer">
+    <Footer />
+  </div>
 </div>
 {/if}
 
