@@ -5,15 +5,12 @@
     Select,
     SelectItem,
   } from 'carbon-components-svelte';
-  import { LayerCake, Svg, Html } from 'layercake';
+  import { LayerCake, Svg } from 'layercake';
   import { scaleBand, scaleTime, scaleQuantile } from 'd3-scale';
-  import { utcParse, timeParse, timeFormat } from 'd3-time-format';
-  import { group, min, max, extent, range } from 'd3-array';
-  import { select } from 'd3-selection';
+  import { timeFormat } from 'd3-time-format';
+  import { min, max, range } from 'd3-array';
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
-
-  import { closest } from '../../../../helpers/utilities';
 
   import Heatmap from './Heatmap.svelte';
   import AxisX from './AxisX.svelte';
@@ -36,9 +33,7 @@
 
   let chartContainer;
   let series = [];
-  let dataByDate;
   let selectedData;
-  const legendItems = writable(null);
   let xmin;
   let xmax;
   let ymin;
@@ -46,7 +41,6 @@
   let zmin;
   let zmax;
   let yDomain;
-  let zScale;
   let colorScale;
   let monthStartDays = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 
@@ -64,12 +58,13 @@
     xmax = max(data, arr => max(arr.values, d => d.date));
 
     // Set Y Domain
-    ymin = min(data, arr => min(arr.values, d => d.day));
-    ymax = max(data, arr => max(arr.values, d => d.day));
+    const yminMonth = min(data, arr => min(arr.values, d => parseInt(d.date.getMonth())));
+    const ymaxMonth = max(data, arr => max(arr.values, d => parseInt(d.date.getMonth())));
 
-    // Find the closest month start day numbers to define yDomain
-    const extent = [closest(ymin, monthStartDays), closest(ymax, monthStartDays)];
-    yDomain = monthStartDays.filter(d => d >= extent[0] && d <= extent[1]);
+    // Find the month start day number to define yDomain
+    ymin = monthStartDays[yminMonth];
+    ymax = monthStartDays[ymaxMonth + 1];
+    yDomain = monthStartDays.slice(yminMonth, ymaxMonth + 1);
 
     // Set Color Domain
     zmin = min(data, arr => min(arr.values, d => d.value));
@@ -133,7 +128,7 @@
       xScale ={scaleTime()}
       yScale={scaleBand()}
       xDomain={[ xmin, xmax ]}
-      yDomain={range(ymin, ymax + 1)}
+      yDomain={range(ymin, ymax)}
       data={data}>
         <Svg>
           <AxisX
