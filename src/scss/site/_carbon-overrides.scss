@@ -114,9 +114,8 @@
   }
 }
 
-:global(.bx--tooltip__trigger .bx--tooltip__trigger--definition) {
-  font-size: 1rem;
-  font-weight: 600;
+.bx--tooltip__trigger.bx--tooltip__trigger--definition {
+  font-size: inherit;
 }
 
 /* Following should exist but dont get compiled with current scss setup (??) */
