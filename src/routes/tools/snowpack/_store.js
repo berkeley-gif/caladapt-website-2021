@@ -189,3 +189,12 @@ export const bookmark = derived(
   }
   return null;
 });
+
+// Animation store 
+export const animationStore = derived(
+  [scenarioStore, modelsStore, monthStore],
+  ([$scenarioStore, $modelsStore, $monthStore]) => {
+  const url = `https://api.cal-adapt.org/api/series/swe_month_${$modelsStore[0]}_
+  ${$scenarioStore}/1960-1969/${$monthStore}.png?style=swe&scale=10`;
+  return url;
+});

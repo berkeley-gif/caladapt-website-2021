@@ -13,7 +13,7 @@
 
   <div class="bx--row">
     <div class="bx--col">
-      <h3>Cal-Adapt Tools</h3>
+      <h3>Other Cal-Adapt Tools</h3>
     </div>
   </div>
   <div class="bx--row">
@@ -27,9 +27,9 @@
                   <img src="{icon}" alt="icon" class="icon" style="width:60px;">
                 {/each}
               </div>
-              <h3>
+              <h4>
                 {opt.title}
-              </h3>
+              </h4>
               <p>
                 {opt.desc}
               </p>
