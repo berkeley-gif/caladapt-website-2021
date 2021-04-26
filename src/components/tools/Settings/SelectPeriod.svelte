@@ -1,10 +1,9 @@
 <script>
   import { onMount, createEventDispatcher } from 'svelte';
   import {
-    NumberInput,
     NumberInputSkeleton,
-    Button,
   } from 'carbon-components-svelte';
+  import DebouncedNumberInput from './DebouncedNumberInput.svelte';
 
   export let label = '';
   export let value = 4;
@@ -27,22 +26,14 @@
 </script>
 
 {#if ready}
-  <div style="display:flex;align-items:start;">
-    <NumberInput
-      class="period"
-      bind:value
-      {label}
-      {min}
-      {max}
-      {helperText} />
-    <Button
-      kind="tertiary"
-      size="small"
-      style="margin-left:10px;padding-right:12px;"
-      on:click={update}>
-      Set
-    </Button>
-  </div>
+  <DebouncedNumberInput
+    bind:value
+    showControls={true}
+    on:change={update}
+    {label}
+    {min}
+    {max}
+    {helperText} />
 {:else}
   <NumberInputSkeleton />
 {/if}

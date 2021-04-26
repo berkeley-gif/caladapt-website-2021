@@ -15,7 +15,7 @@
   let ready = false;
 
   function change(e) {
-    selected = items.find(d => d.id === e.detail);
+    selected = items.find(d => d.id === parseInt(e.detail));
     dispatch('change', selected);
   }
 
@@ -26,16 +26,16 @@
 </script>
 
 <style>
-  :global(.climvar-select .bx--select-input) {
+  :global(.month-select .bx--select-input) {
     background-color: #f4f4f4;
   }
 </style>
 
 {#if ready}
   <Select
-    class="climvar-select"
+    class="month-select"
     hideLabel
-    labelText="Climate Variable"
+    labelText="Month"
     selected={selectedId}
     on:change={change}>
     {#each items as opt}

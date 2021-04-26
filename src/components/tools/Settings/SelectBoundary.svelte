@@ -66,10 +66,18 @@
     margin-right: 3px;
     vertical-align: -25%;
   }
+
+  :global(.boundary-select .bx--select-input) {
+    background-color: #f4f4f4;
+  }
 </style>
 
 {#if ready}
-  <Select labelText="AGGREGATE DATA" selected={selectedId} on:change={change}>
+  <Select
+    class="boundary-select"
+    labelText="AGGREGATE DATA"
+    selected={selectedId}
+    on:change={change}>
     {#each items as opt}
       <SelectItem value={opt.id} text={opt.text} />
     {/each}
