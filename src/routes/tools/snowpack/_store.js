@@ -1,4 +1,5 @@
 import { writable, derived } from 'svelte/store';
+import { range } from 'd3-array';
 import { scenarioList, boundaryList, climvarList, monthsList } from './_helpers';
 
 export const climvarStore = (() => {
@@ -62,6 +63,23 @@ export const monthStore = (() => {
     },
   }
 })();
+
+// Ticks for time slider
+export const timeTicksStore = writable(range(1950, 2100, 10));
+
+// Overlay store 
+export const overlayStore = writable({
+  url: 'https://api.cal-adapt.org/api/series/swe_month_livneh/1960-1969/4.png?style=swe&scale=10',
+  show: 'false',
+  coordinates: [
+    [-124.60693359374999, 43.723474896114794],
+    [-113.291015625, 43.723474896114794],
+    [-113.291015625, 31.034108344903512],
+    [-124.60693359374999, 31.034108344903512]
+  ],
+});
+
+export const viewStore = writable('animation');
 
 export const locationStore = (() => {
   const store = writable({
@@ -188,13 +206,4 @@ export const bookmark = derived(
     return `${window.location.href}?${bookmark}`;
   }
   return null;
-});
-
-// Animation store 
-export const animationStore = derived(
-  [scenarioStore, modelsStore, monthStore],
-  ([$scenarioStore, $modelsStore, $monthStore]) => {
-  const url = `https://api.cal-adapt.org/api/series/swe_month_${$modelsStore[0]}_
-  ${$scenarioStore}/1960-1969/${$monthStore}.png?style=swe&scale=10`;
-  return url;
 });

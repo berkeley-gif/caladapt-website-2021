@@ -52,7 +52,7 @@ const categories = [
   {
     slug: 'tutorials',
     title: 'Tutorials & Webinars',
-    text: 'Tutorials and webniars on how to use Cal-Adapt',
+    text: 'Tutorials and webinars on how to use Cal-Adapt',
     dir: 'tutorials',
   },
   {
@@ -84,7 +84,7 @@ export default function get_data() {
     }
 
     // Sort vidoes by dates
-    if (d.slug === 'videos') {
+    if (d.slug === 'tutorials') {
       const sortedItems = items.sort(sortByDate);
       return { ...d, items:sortedItems };
     }

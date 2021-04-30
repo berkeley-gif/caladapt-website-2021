@@ -119,6 +119,11 @@
   .footer {
     grid-column: 1 / -1;
     grid-row: 3 / 4;
+
+    .title {
+      margin-top: 3rem;
+      font-weight: 600;
+    }
   }
 
   .sidebar {
@@ -274,17 +279,48 @@
   }
 
   .content-grid-animation {
-    grid-template-columns: 1fr;
-    grid-template-rows: min-content 500px;
+    grid-template-columns: 200px 2fr;
+    grid-template-rows: min-content min-content 600px;
+    grid-template-areas:
+    "content sidebar"
+    "footer footer";
 
     .content-header {
       grid-row: 1;
+      grid-column: 1/-1;
+    }
+
+    .content-select {
+      grid-row: 2;
       grid-column: 1;
     }
 
-    .content-animation {
+    .content-controls {
       grid-row: 2;
-      grid-column: 1;
+      grid-column: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .content-animation {
+      grid-row: 3;
+      grid-column: 1/-1;
+      position: relative;
+
+      .animation-title {
+        font-weight: 600;
+        font-size: 1.25rem;
+        display: block;
+        line-height: 1.5;
+      }
+
+      .animation-subtitle {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        display: block;
+      }
     }
   }
 

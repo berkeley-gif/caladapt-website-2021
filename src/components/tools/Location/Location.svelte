@@ -3,7 +3,7 @@
   import { onMount, createEventDispatcher } from 'svelte';
 
   // Components
-  import { Map, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, Animation } from './../Map';
+  import { Map, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, ImageOverlay } from './../Map';
   import Sidebar from './Sidebar.svelte';
   import { InlineLoading } from 'carbon-components-svelte';
 
@@ -24,8 +24,10 @@
   export let boundary;
   export let location;
   export let resize;
-  export let animationUrl;
-  export let animationShow = false;
+  export let imageOverlayUrl;
+  export let imageOverlayShow;
+  export let imageOverlayCoords;
+  export let zoomToLocationOnLoad = true;
 
 
   // Local variables
@@ -55,7 +57,7 @@
     });
   }
 
-  $: if (!isMapLoading) {
+  $: if (!isMapLoading && zoomToLocationOnLoad) {
     zoomToLocation();
     dispatch('ready');
   }
@@ -221,8 +223,8 @@
           <BoundarySelection data={location.geometry} />
         {/if}
       {/if}
-      {#if animationShow}
-        <Animation />
+      {#if imageOverlayShow}
+        <ImageOverlay coordinates={imageOverlayCoords} overlay={imageOverlayUrl} />
       {/if}
     </Map>
   </div>

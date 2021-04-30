@@ -3,6 +3,7 @@
     const { category } = params;
     const res = await this.fetch(`help/${category}.json`);
     const json = await res.json();
+    console.log('category', json);
 
     if (res.status === 200) {
       const { toc, data } = json;

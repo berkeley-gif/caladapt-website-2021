@@ -1,7 +1,7 @@
 <script>
   import simplifyGeom from '@turf/simplify';
 // Helpers
-  import { mapboxgl, contextKey } from './../../../helpers/mapbox';
+  import { mapboxgl } from './../../../helpers/mapbox';
 
   // Props
   //-------

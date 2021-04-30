@@ -33,7 +33,14 @@
   import { notifier } from '../../../components/notifications';
 
   // Store
-  import { climvarStore, scenarioStore, locationStore, dataStore, monthStore } from './_store';
+  import {
+    climvarStore,
+    scenarioStore,
+    locationStore,
+    dataStore,
+    monthStore,
+    viewStore,
+  } from './_store';
 
   export let sidebarCollapsed;
   export let appStatus;
@@ -114,8 +121,9 @@
     showUpload = false;
   }
 
-  function changeViz(e) {
+  function changeView(e) {
     dispatch('changeViz', e.detail);
+    viewStore.set(e.detail);
   }
 
   async function downloadViz(e) {
@@ -162,8 +170,8 @@
   <!-- Climvar Header -->
   <div class="content-header block">
     <FormGroup legendText="SELECT VISUALIZATION" style="margin-bottom:1rem;">
-      <RadioButtonGroup selected="vis" on:change={changeViz}>
-        <RadioButton labelText="Monthly Timeseries" value="timeseries" checked />
+      <RadioButtonGroup selected="timeseries" on:change={changeView}>
+        <RadioButton labelText="Monthly Timeseries" value="timeseries" />
         <RadioButton labelText="Map Animation" value="animation" />
       </RadioButtonGroup>
     </FormGroup>
@@ -278,8 +286,7 @@
       {/if}
     </div>
     <Location
-      animationUrl={"test"}
-      animationShow={false}
+      imageOverlayShow={false}
       lng={$locationStore.lng}
       lat={$locationStore.lat}
       boundary={$boundary}

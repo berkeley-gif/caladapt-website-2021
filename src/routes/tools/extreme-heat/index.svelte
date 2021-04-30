@@ -36,13 +36,14 @@
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
+  import { resources } from './_helpers';
 
   // Components
   import AppLoadingScreen from '../../../components/AppLoadingScreen';
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
-  import Footer from './Footer.svelte';
+  import ToolFooter from '../../../components/partials/FooterTool';
   import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
@@ -236,7 +237,7 @@
     </aside>
     <!-- Footer -->
     <div class="footer">
-      <Footer />
+      <ToolFooter {resources} />
     </div>
   </div>
 {/if}

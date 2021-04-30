@@ -130,15 +130,33 @@ export const modelList = models
 export const scenarioList = scenarios
   .filter(d => ['rcp45', 'rcp85'].includes(d.id));
 
-const toolsList =   ['Annual Averages', 'Maps of Projected Change', 'Cooling Degree Days and Heating Degree Days'];
-const relatedTools = tools.filter((tool) => {
+const toolsList =   ['Annual Averages', 'Cooling Degree Days and Heating Degree Days'];
+const caladaptTools = tools.filter((tool) => {
   if (toolsList.includes(tool.title)) {
     tool.category = 'caladapt';
     return true;
   }
 });
 export const resources = [
-  ...relatedTools,
+  ...caladaptTools,
+  {
+    title: 'Blog Post: Explore warm nights and heat waves with the Extreme Heat Tool on Cal-Adapt',
+    category: 'help',
+    link: '/blog/extreme-heat-tool-updates/',
+    icon: 'blog',
+  },
+  {
+    title: 'Get started with Cal-Adapt',
+    category: 'help',
+    link: '/help/get-started/',
+    icon: 'get-started',
+  },
+  {
+    title: 'Frequently Asked Questions',
+    category: 'help',
+    link: '/help/faqs/',
+    icon: 'faqs',
+  },
   {
     title: 'California Heat Assessment Tool',
     link: 'https://www.cal-heat.org/',

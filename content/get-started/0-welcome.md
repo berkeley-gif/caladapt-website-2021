@@ -10,12 +10,11 @@ Cal-Adapt is funded by the [California Energy Commission](http://www.energy.ca.g
 If you want to start exploring the data right away, our [Local Climate Change Snapshot](/tools/local-climate-change-snapshot) tool is a great place to start.
 
 In our getting started guide, you can get a background on climate change and working with climate data.
-- What is Climate Change
-- How does climate change affect California?
-- What is California doing to address climate change?
-- What are different types of climate data?
-- What are climate change projections?
-- Guidance on Using Climate Projections
-- Working with uncertainty
+- How is climate data relevant for decision-making in California?
+- What climate data does Cal-Adapt provide?
+- What are different types of climate data available on Cal-Adapt?
+- What are climate projections?
+- How do I use the climate data on Cal-Adapt?
+- What are some best practices for using climate projections?
 
 

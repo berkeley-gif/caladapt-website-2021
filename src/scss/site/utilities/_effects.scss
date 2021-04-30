@@ -31,3 +31,14 @@ hr {
   position: sticky;
   top: 1rem;
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-row {
+  display: flex;
+  align-items: center;
+}

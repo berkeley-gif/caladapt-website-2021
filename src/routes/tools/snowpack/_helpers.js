@@ -75,29 +75,37 @@ export const modelList = models
 export const scenarioList = scenarios
   .filter(d => ['rcp45', 'rcp85'].includes(d.id));
 
-const toolsList =   ['Streamflow', 'Annual Averages', 'Extreme Precipitation'];
-const relatedTools = tools.filter((tool) => {
+const toolsList =   ['Extreme Precipitation', 'Streamflow', 'Annual Averages'];
+const caladaptTools = tools.filter((tool) => {
   if (toolsList.includes(tool.title)) {
     tool.category = 'caladapt';
     return true;
   }
 });
+
 export const resources = [
-  ...relatedTools,
-  // {
-  //   title: 'California Heat Assessment Tool',
-  //   link: 'https://www.cal-heat.org/',
-  //   category: 'other',
-  //   image: 'logos/chat.jpg',
-  //   desc: `The California Heat Assessment Tool is a new tool funded by the Fourth 
-  //   Assessment to inform the planning efforts of local public health officials. The tool 
-  //   provides health-informed heat thresholds for communities across California and 
-  //   examines how the frequency and severity of local heat waves are expected to change 
-  //   over time due to climate change.`,
-  // },
+  ...caladaptTools,
+  {
+    title: 'Get started with Cal-Adapt',
+    category: 'help',
+    link: '/help/get-started/',
+    icon: 'get-started',
+  },
+  {
+    title: 'Tutorials & Webinars',
+    category: 'help',
+    link: '/help/tutorials/',
+    icon: 'tutorials',
+  },
+  {
+    title: 'Frequently Asked Questions',
+    category: 'help',
+    link: '/help/faqs/',
+    icon: 'faqs',
+  },
   {
     title: "California's Adaptation Clearinghouse",
-    link: 'https://resilientca.org/',
+    link: 'https://resilientca.org',
     category: 'other',
     image: 'logos/EJ_JRC_ccc_simulation-7094.jpg',
     desc: `The Adaptation Clearinghouse is the State of California’s consolidated searchable 
@@ -115,4 +123,19 @@ export const resources = [
     of the state to support action at local and regional scales.`,
   },
 ];
+
+export function getMapImages({ model, ticks, scenario, month }) {
+  console.log('getmapimages', model);
+  const urls = ticks.map((tick) => {
+    const start = parseInt(tick);
+    const end = start + 9;
+    const useScenario = tick < 2000 ? 'historical': scenario;
+    return {
+      id: start,
+      text: `${start}-${end}`,
+      src: `https://api.cal-adapt.org/api/series/swe_month_${model}_${useScenario}/${start}-${end}/${month}.png?style=swe&scale=10`,
+    };
+  });
+  return urls;
+}
 

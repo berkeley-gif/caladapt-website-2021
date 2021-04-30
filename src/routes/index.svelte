@@ -1,4 +1,7 @@
 <script>
+  import { Button } from 'carbon-components-svelte';
+  import ArrowRight16 from 'carbon-icons-svelte/lib/ArrowRight16';
+
   import Sun from '../../static/img/icons/sun.svg';
   import Rainfall from '../../static/img/icons/rainfall.svg';
   import Wildfire from '../../static/img/icons/wildfire.svg';
@@ -30,14 +33,12 @@
     <div class="bx--row">
       <div class="bx--col-lg-12">
         <h1 class="landing">
-          Cal-Adapt provides data and tools for exploring climate change in California
+          Cal-Adapt provides climate data from California’s scientific and research community and offers a view of how climate change might affect California at the state and local level.
         </h1>
         <p class="lead">
-          We process climate data from California's scientific &amp; research community. We make this data available through downloads, visualizations and the Cal-Adapt API for your research, outreach and adaptation planning needs.
+          We make this data available through downloads, visualizations, and the Cal-Adapt API for your research, outreach, and adaptation planning needs.
         </p>
-        <p class="lead">
-          <a href="/about/">Learn more about Cal-Adapt.</a>
-        </p>
+        <Button icon={ArrowRight16} href="/about/">Learn More about Cal-Adapt</Button>
       </div>
     </div>
   </div>
@@ -52,10 +53,10 @@
           New to Cal-Adapt?
         </h2>
         <p>
-          Learn how to use climate data and <a href="/help/getting-started/">best practices</a> for working with climate projections in Cal-Adapt.
+          Learn how to use climate data and <a href="/help/get-started/">best practices</a> for working with climate projections in Cal-Adapt.
         </p>
         <p>
-          Check out climate data and future projections for your area with our <a href="/tools/local-climate-change-snapshot-tool/">Local Climate Change Snapshot</a> tool.
+          Check out climate data and future projections for your area with our <a href="#">Local Climate Change Snapshot</a> tool.
         </p>
       </div>
     </div>

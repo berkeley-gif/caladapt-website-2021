@@ -35,6 +35,7 @@
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
+  import { resources } from './_helpers';
 
   // Components
   import AppLoadingScreen from '../../../components/AppLoadingScreen';
@@ -42,7 +43,7 @@
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
   import Animation from './Animation.svelte';
-  import Footer from './Footer.svelte';
+  import ToolFooter from '../../../components/partials/FooterTool';
   import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
@@ -55,6 +56,7 @@
     dataStore,
     monthStore,
     queryParams,
+    viewStore,
   } from './_store';
   import { getObserved, getModels } from './_data';
 
@@ -77,7 +79,6 @@
   let initReady = false;
   let settingsReady = false;
   let contentReady = false;
-  let viz = 'timeseries';
   let definitionText;
   let definitionTitle;
   let appStatus = 'idle';
@@ -147,11 +148,6 @@
     showInfo = true;
   }
 
-  function changeViz(e) {
-    console.log('index change vis', e.detail);
-    viz = e.detail;
-  }
-
   onMount(() => {
     console.log('mount index');
     initApp(initialConfig)
@@ -181,21 +177,18 @@
     <Header />
   </div>
   <div class="content" class:sidebarCollapsed>
-    {#if viz === 'timeseries'}
+    {#if $viewStore === 'timeseries'}
       <!-- Content -->
       <Content
         bind:appStatus
         bind:sidebarCollapsed
         on:ready={() => contentReady = true}
-        on:changeViz = {changeViz}
         on:define={showDefinition} />
     {:else}
       <!-- Animation -->
       <Animation
         bind:appStatus
         bind:sidebarCollapsed
-        on:ready={() => contentReady = true}
-        on:changeViz = {changeViz}
         on:define={showDefinition} />
     {/if}
   </div>
@@ -212,7 +205,7 @@
   
   <!-- Footer -->
   <div class="footer">
-    <Footer />
+    <ToolFooter {resources} />
   </div>
 </div>
 {/if}

@@ -80,28 +80,35 @@ export const modelList = models
 export const scenarioList = scenarios
   .filter(d => ['rcp45', 'rcp85'].includes(d.id));
 
-const toolsList =   ['Maps of Projected Change', 'Extreme Heat', 'Cooling Degree Days and Heating Degree Days'];
-const relatedTools = tools.filter((tool) => {
+const toolsList =   ['Maps of Projected Change', 'Extreme Heat'];
+const caladaptTools = tools.filter((tool) => {
   if (toolsList.includes(tool.title)) {
     tool.category = 'caladapt';
     return true;
   }
 });
 export const resources = [
-  ...relatedTools,
+  ...caladaptTools,
   {
-    title: 'California Heat Assessment Tool',
-    link: 'https://www.cal-heat.org/',
-    category: 'other',
-    image: 'logos/chat.jpg',
-    desc: `The California Heat Assessment Tool is a new tool funded by the Fourth 
-    Assessment to inform the planning efforts of local public health officials. The tool 
-    provides health-informed heat thresholds for communities across California and 
-    examines how the frequency and severity of local heat waves are expected to change 
-    over time due to climate change.`,
+    title: 'Video: Learn how to use the Annual Averages tool',
+    category: 'help',
+    link: '/help/tutorials/',
+    icon: 'tutorials',
   },
   {
-    title: "California's Adaptation Clearinghouse: Temperature Impacts",
+    title: 'Get started with Cal-Adapt',
+    category: 'help',
+    link: '/help/get-started/',
+    icon: 'get-started',
+  },
+  {
+    title: 'Frequently Asked Questions',
+    category: 'help',
+    link: '/help/faqs/',
+    icon: 'faqs',
+  },
+  {
+    title: "California's Adaptation Clearinghouse",
     link: 'https://resilientca.org',
     category: 'other',
     image: 'logos/EJ_JRC_ccc_simulation-7094.jpg',
