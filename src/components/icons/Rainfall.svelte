@@ -6,13 +6,14 @@
   export let focusable = false;
   export let title = undefined;
   export let style = undefined;
+  export let dimension = 60;
 
   $: ariaLabel = $$props['aria-label'];
   $: ariaLabelledBy = $$props['aria-labelledby'];
   $: labelled = ariaLabel || ariaLabelledBy || title;
   $: attributes = {
-    width: '62',
-    height: '62',
+    width: dimension,
+    height: dimension,
     role: labelled ? 'img' : undefined,
     focusable: tabindex === '0' ? true : focusable,
     tabindex

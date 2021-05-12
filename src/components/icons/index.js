@@ -5,3 +5,4 @@ export { default as Snowflake } from './Snowflake.svelte';
 export { default as Streamflow } from './Streamflow.svelte';
 export { default as Sun } from './Sun.svelte';
 export { default as Wildfire } from './Wildfire.svelte';
+export { default as App } from './App.svelte';
