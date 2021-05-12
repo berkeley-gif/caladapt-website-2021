@@ -145,30 +145,13 @@
 </script>
 
 <style lang="scss">
-  .content-header {
-    display: flex;
-    align-items: center;
-  }
 </style>
 
-<div class="content-grid content-grid-alt1">
-  <!-- Climvar Header -->
-  <div class="content-header block">
-    {#if $climvar}
-      <span class="icon">
-        <svelte:component this={$climvar.icon} />
-      </span>
-      <h4 class="title">{$climvar.title}</h4>
-    {:else}
-      <SkeletonText heading />
-      <SkeletonText />
-    {/if}         
-  </div> <!-- end content-header -->
-
+<div class="content-grid">
   <!-- Stats -->
   <div class="content-stats block">
     <MinMaxAvg
-      title={'Observed Data'}
+      title={`Observed Historical ${$climvar.title}`}
       subtitle={'Baseline (1961-1990)'}
       units={$climvar.units.imperial}
       note={''}
@@ -182,7 +165,7 @@
 
   <div class="content-stats block">    
     <MinMaxAvg
-      title={'Model Projections'}
+      title={`Future Projections of ${$climvar.title}`}
       subtitle={'Mid-Century (2035-2064)'}
       units={$climvar.units.imperial}
       note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
@@ -195,7 +178,7 @@
 
   <div class="content-stats block">     
     <MinMaxAvg
-      title={'Model Projections'}
+      title={`Future Projections of ${$climvar.title}`}
       subtitle={'End-Century (2070-2099)'}
       units={$climvar.units.imperial}
       note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
@@ -273,8 +256,16 @@
   <!-- Chart-->
   <div class="content-chart block">
     <div>
+      {#if $climvar}
+        <div class="center-row">
+          <span class="icon">
+            <svelte:component dimension="50" this={$climvar.icon} />
+          </span>
+          <span class="chart-title">{$climvar.title}</span>          
+        </div>
+      {/if}
       {#if $location}
-        <span class="chart-title">
+        <span class="chart-subtitle" style="margin-top:0.5rem;">
           {$location.title}, {$location.address}
         </span>
         <span class="chart-subtitle">{$scenario.labelLong}</span>

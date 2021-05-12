@@ -2,7 +2,7 @@ import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
-import tools from '../../../../content/tools/data';
+import { tools } from '../../../../content/tools/data';
 
 export const climvarList = climvars
   .filter(d => ['tasmax', 'tasmin', 'pr'].includes(d.id))

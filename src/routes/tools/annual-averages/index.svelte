@@ -3,7 +3,7 @@
     const glossary = await this.fetch(`help/glossary.json`)
       .then(r => r.json())
       .then(json => {
-        return json.data.find(d => d.slug === 'glossary');
+        return json.data;
       });
     if (Object.keys(query).length === 0) {
       return {
@@ -31,6 +31,7 @@
 <script>
   import { onMount } from 'svelte';
   import { Modal, Loading } from 'carbon-components-svelte';
+  import { inview } from 'svelte-inview/dist/';
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
@@ -39,9 +40,10 @@
   // Components
   import AppLoadingScreen from '../../../components/AppLoadingScreen';
   import Header from './Header.svelte';
-  import Settings from './Settings.svelte';
-  import Content from './Content.svelte';
-  import ToolFooter from '../../../components/partials/FooterTool';
+  import Explore from './Explore.svelte';
+  import About from './About.svelte';
+  import Data from './Data.svelte';
+  import Resources from './Resources.svelte';
   import { NotificationDisplay } from '../../../components/notifications';
 
   // Store
@@ -68,32 +70,25 @@
 
   // Modals
   let showInfo = false;
-  let sidebarCollapsed = false;
-
-  let appReady = false;
   let initReady = false;
-  let settingsReady = false;
-  let contentReady = false;
+  let mapReady = false;
+  let appReady = false;
   let definitionText;
   let definitionTitle;
   let appStatus = 'idle';
 
-  async function initApp(config) {
-    console.log('initApp', config);
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } = config;
-    climvarStore.set(climvarId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
-    unitsStore.set({ imperial });
-    const loc = await getLocation(lng, lat, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
-    return;
-  }
+  let inviewEl = 'explore';
+  const handleEntry = (e) => {
+    const { entry } = e.detail;
+    inviewEl = entry.target.id;
+  };
+  const entryOptions = {
+    threshold: 0.25,
+  };
 
-  $: if (initReady && contentReady && settingsReady) {
+  $: if (initReady) {
     appReady = true;
-    console.log('all ready');
+    console.log('app ready');
     updateData();
   }
 
@@ -127,7 +122,7 @@
 
   function showDefinition(e) {
     const { topics, title } = e.detail;
-    const items = glossary.items.filter(d => topics.includes(d.slug));
+    const items = glossary.filter(d => topics.includes(d.slug));
     definitionText = items.map((item) => {
       return `
       <div>
@@ -141,16 +136,29 @@
     showInfo = true;
   }
 
+  async function initApp(config) {
+    console.log('initApp', config);
+    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } = config;
+    climvarStore.set(climvarId);
+    scenarioStore.set(scenarioId);
+    modelsStore.set(modelIds);
+    unitsStore.set({ imperial });
+    const loc = await getLocation(lng, lat, boundaryId);
+    locationStore.updateLocation(loc);
+    locationStore.updateBoundary(boundaryId);
+    return;
+  }
+
   onMount(() => {
-    console.log('mount index');
+    window.scrollTo(0, 0);
     initApp(initialConfig)
       .then(() => {
         initReady = true;
-        console.log('init is ready');
+        console.log('init ready');
       })
       .catch((error) => {
         console.log('init error', error);
-      })
+      });
   })
 </script>
 
@@ -159,41 +167,61 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 
-{#if !initReady}
-<div style="height:50rem;">
-  <AppLoadingScreen />
-</div>
-{:else}
-<div class="page-grid page-grid--tool">
-  <div class="header">
-    <!-- Header -->
-    <Header />
-  </div>
-  <div class="content" class:sidebarCollapsed>
-    <!-- Content -->
-    <Content
-      bind:appStatus
-      bind:sidebarCollapsed
-      on:ready={() => contentReady = true}
-      on:define={showDefinition} />
+<style type="scss">
+  .section {
+    margin: 4rem 2rem;
+    min-height: 300px;
+  }
+</style>
+
+<div class="tool">
+  <!-- Header -->
+  <Header currentView={inviewEl} />
+  
+  <!-- Explore -->
+  <div
+    id="explore"
+    class="section"
+    use:inview={entryOptions}
+    on:enter={handleEntry}>
+    {#if !appReady}
+      <AppLoadingScreen />
+    {:else}
+      <Explore
+        bind:appStatus
+        on:define={showDefinition} />
+    {/if}  
   </div>
 
-  <aside class="sidebar" class:sidebarCollapsed>
-    <div class="is-sticky">
-      <Settings
-        bind:appStatus
-        bind:sidebarCollapsed
-        on:ready={() => settingsReady = true}
-        on:define={showDefinition} />      
+  <div class="bx--grid">
+    <!-- About -->
+    <div
+      id="about"
+      class="section"
+      use:inview={entryOptions}
+      on:enter={handleEntry}>
+      <About />
     </div>
-  </aside>
-  
-  <!-- Footer -->
-  <div class="footer">
-    <ToolFooter {resources} />
+
+    <!-- Data Sources -->
+    <div
+      id="data"
+      class="section"
+      use:inview={entryOptions}
+      on:enter={handleEntry}>
+      <Data />
+    </div>
+    
+    <!-- Resources -->
+    <div
+      id="resources"
+      class="section"
+      use:inview={entryOptions}
+      on:enter={handleEntry}>
+      <Resources {resources} />
+    </div>
   </div>
 </div>
-{/if}
 
 
 <Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading={definitionTitle} on:open on:close>
