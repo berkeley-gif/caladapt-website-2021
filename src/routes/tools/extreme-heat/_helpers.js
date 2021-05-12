@@ -5,7 +5,7 @@ import scenarios from '../../../helpers/climate-scenarios';
 import boundaries from '../../../helpers/mapbox-layers';
 import { MinMaxAvg, MonthsCount } from '../../../components/tools/Stats';
 import { LineAreaChart, ScatterChart, HeatmapChart } from '../../../components/tools/Charts';
-import tools from '../../../../content/tools/data';
+import { tools } from '../../../../content/tools/data';
 
 // Create a new climvarList instead of using the default one
 // Needs to be an export so it can be used to intitialize SelectClimvar component
