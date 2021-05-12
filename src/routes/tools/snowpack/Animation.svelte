@@ -44,6 +44,7 @@
   const { month } = monthStore;
   const { models } = modelsStore;
 
+  let width = 500;
   let searchOptions = [];
   let searchValue = '';
   let searchPlaceholder = 'Enter address or zipcode';
@@ -51,7 +52,6 @@
 
   let isLoading = true;
   let selectedModel = $models[0];
-  console.log('selectedModel', selectedModel);
   let isPlaying = false;
   let timer;
   let overlay;
@@ -83,8 +83,7 @@
     month: $month.id + 1,
     ticks: $timeTicksStore,
   });
-  $: overlay = urls.find(d => d.id === sliderValue)
-  $: console.log(overlay);
+  $: overlay = urls.find(d => d.id === sliderValue);
 
 
   function preloadImage(src) {
@@ -241,6 +240,7 @@
       {isPlaying ? "Pause" : "Play"}
     </Button>     
     <TimeSlider
+      {width}
       labelFn={multiLineLabel}
       bind:this={sliderComponent}
       on:change={updateSlider}

@@ -79,7 +79,7 @@ export const overlayStore = writable({
   ],
 });
 
-export const viewStore = writable('animation');
+export const viewStore = writable('timeseries');
 
 export const locationStore = (() => {
   const store = writable({

@@ -9,6 +9,7 @@
 
   // Props
   //------
+  export let width = 500;
   export let start = 1;
   export let end = 11;
   export let step = 1;
@@ -36,7 +37,6 @@
   // Local variables
   //-----------------
 	const dispatch = createEventDispatcher();
-  let width = 500;
   let coords  = spring({ x: 0, y: 0 }, {
     stiffness: 0.1,
     damping: 0.35,
@@ -96,6 +96,10 @@
     height: 50px;
   }
 
+  .range-slider {
+    width: 100%;
+  }
+
   .range-slider-track {
     stroke: #dadee1;
     stroke-width: 1;
@@ -133,9 +137,7 @@
   }
 </style>
 
-<div 
-  class="range-slider"
-	bind:clientWidth={width}>
+<div class="range-slider" bind:clientWidth={width}>
   <svg>
     <g transform={`translate(${margin.left}, ${margin.top})`}>
 			<g class="range-slider-ticks">

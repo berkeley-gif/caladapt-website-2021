@@ -3,7 +3,7 @@
     const glossary = await this.fetch(`help/glossary.json`)
       .then(r => r.json())
       .then(json => {
-        return json.data.find(d => d.slug === 'glossary');
+        return json.data;
       });
     if (Object.keys(query).length === 0) {
       return {
@@ -134,7 +134,7 @@
 
   function showDefinition(e) {
     const { topics, title } = e.detail;
-    const items = glossary.items.filter(d => topics.includes(d.slug));
+    const items = glossary.filter(d => topics.includes(d.slug));
     definitionText = items.map((item) => {
       return `
       <div>
