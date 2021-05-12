@@ -1,4 +1,7 @@
-const data = [
+
+const categories = ['All', 'Temperature', 'Precipitation', 'Snowpack', 'Sea Level Rise', 'Wildfire'];
+
+const tools = [
   {
     title: 'Local Climate Change Snapshot',
     desc: `A starting ppoint for users to get a quick sense of climate impacts for your location.`,
@@ -7,7 +10,7 @@ const data = [
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
-      'img/icons/rainfall.svg',
+      'img/icons/wildfire.svg',
     ],
   },
   {
@@ -122,4 +125,4 @@ const data = [
   },
 ];
 
-export default data;
+export { categories, tools };

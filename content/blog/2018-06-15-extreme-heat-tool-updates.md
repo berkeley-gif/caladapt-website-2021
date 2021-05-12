@@ -16,7 +16,7 @@ The [Extreme Heat Tool](cal-adapt.org/tools/extreme-heat/) on Cal-Adapt has alwa
 
 Minimum nighttime temperatures are also predicted to increase in California. In addition to the Extreme Heat Days, you can now see explore the frequency, timing and duration of Warm Nights. Select Warm Nights by clicking on the drop down select box.
 
-The tool utilizes [LOCA downscaled daily maximum and minimum temperatures](cal-adapt.org/data/loca/) to calculate Extreme Heat Days and Warm Nights respectively. For purposes of this tool, an extreme heat day or warm night is defined as a day in a year when the daily maximum/minimum temperature exceeds the 98th historical percentile of daily maximum/minimum temperatures based on observed historical data from 1961–1990 between April and October.
+The tool utilizes LOCA downscaled daily maximum and minimum temperatures to calculate Extreme Heat Days and Warm Nights respectively. For purposes of this tool, an extreme heat day or warm night is defined as a day in a year when the daily maximum/minimum temperature exceeds the 98th historical percentile of daily maximum/minimum temperatures based on observed historical data from 1961–1990 between April and October.
 
 ## Explore Heat Waves
 <figure class="image">
@@ -53,4 +53,4 @@ You can load data for additional GCMs by checking the corresponding box in the S
 Tooltips throughout the tool that provide additional context. Hover over the icon to see a popup with more information.
 
 ####  Feedback
-We would love to hear from you! Please send us your feedback on the new updates to the Extreme Heat Tool at [support@cal-adapt.org](support@cal-adapt.org). If you are interested in exploring the data more interactively, download [this Jupyter Notebook](https://github.com/berkeley-gif/caladapt-docs/blob/master/cookbook/daily_data_extreme_heat.ipynb) and open it in your own Python environment to get started.
+We would love to hear from you! Please send us your feedback on the new updates to the Extreme Heat Tool at support@cal-adapt.org. If you are interested in exploring the data more interactively, download [this Jupyter Notebook](https://github.com/berkeley-gif/caladapt-docs/blob/master/cookbook/daily_data_extreme_heat.ipynb) and open it in your own Python environment to get started.
