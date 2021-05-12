@@ -1,8 +1,8 @@
 <script>
   import {
     SideNavItems,
-    SideNavMenu,
-    SideNavMenuItem,
+    // SideNavMenu,
+    // SideNavMenuItem,
     SideNavLink,
   } from 'carbon-components-svelte';
   import { stores } from '@sapper/app';
@@ -10,23 +10,16 @@
   export let toc;
 
   const { page } = stores();
-  let gettingStartedData = toc.find(d => d.slug === 'get-started');
-  let gettingStartedToc = gettingStartedData.headings.slice(1);
-  let showItems;
+  // let showItems;
 
   $: category = $page.params.category;
   $: slug = $page.params.slug;
-  $: if (category === 'get-started') {
-    showItems = true;
-  } else {
-    showItems = false;
-  }
 </script>
 
 <nav class="is-sticky">
   <SideNavItems>
     {#each toc as opt}
-      {#if opt.slug === 'get-started' && showItems}
+<!--       {#if opt.slug === 'get-started' && showItems}
         <SideNavMenu
          text={opt.title}
          expanded={category === 'get-started'}
@@ -39,13 +32,13 @@
             />
           {/each}
         </SideNavMenu>
-      {:else}
+      {:else} -->
         <SideNavLink
           href={`help/${opt.slug}/`}
           text={opt.title}
           isSelected={opt.slug === category}
         />
-      {/if}
+<!--       {/if} -->
     {/each}
   </SideNavItems>
 </nav>

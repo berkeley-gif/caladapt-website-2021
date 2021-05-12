@@ -1,27 +1,13 @@
 import get_data from '../_help.js';
 
-const data = get_data();
-
-export function get(req, res, next) {
+export function get(req, res) {
   const { category, slug } = req.params;
+  const { toc, data } = get_data(category);
   let item;
 
-  const toc = data.map(({ slug, title, text, items }) => {
-    const headings = items.map(d => {
-      return {
-        title: d.metadata.title,
-        slug: d.slug,
-      }
-    });
-    return { slug, title, text, headings };
-  });
-
   data.forEach((d) => {
-    if (d.slug === category) {
-      const match = d.items.find((opt) => opt.slug === slug);
-      if (match) {
-        item = match;
-      }
+    if (d.slug === slug) {
+      item = d;
     }
   });
 

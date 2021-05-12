@@ -1,4 +1,4 @@
-import get_data from './_help.js';
+import categories from './_categories.js';
 
 let json;
 
@@ -8,9 +8,9 @@ export function get(req, res) {
   });
 
   if (!json || process.env.NODE_ENV !== 'production') {
-    const categories = get_data().map(({ slug, title, text }) => {
-      return { slug, title, text };
-    });
+    // const categories = get_data().map(({ slug, title, text }) => {
+    //   return { slug, title, text };
+    // });
     json = JSON.stringify(categories);
   }
 

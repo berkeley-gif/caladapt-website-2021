@@ -3,7 +3,6 @@
     const { category } = params;
     const res = await this.fetch(`help/${category}.json`);
     const json = await res.json();
-    console.log('category', json);
 
     if (res.status === 200) {
       const { toc, data } = json;
@@ -39,31 +38,25 @@
 
   const { page } = stores();
 
-  // Remove the first Welcome item
-  const gettingStartedData = data.find(d => d.slug === 'get-started');
-  const welcome = gettingStartedData.items[0];
-
-  let slug;
-  let activeCategory;
-  let filteredItems;
   let filter = '';
   let searchStr = '';
   
   $: slug = $page.params.category;
-  $: slug, updateItems();
+  $: activeCategory = toc.find(d => d.slug === slug);
+  $: filteredItems = data;
   $: items = [
     { href: '/', text: 'Home' },
     { href: '/help/', text: 'Help' },
     { href: `/help/${activeCategory.slug}`, text: `${activeCategory.title}` },
   ];
 
-  function updateItems() {
-    activeCategory = data.find(d => d.slug === slug);
-    filteredItems = activeCategory.items;
-  }
+  // function updateItems() {
+  //   activeCategory = data.find(d => d.slug === slug);
+  //   filteredItems = activeCategory.items;
+  // }
 
   function filterItems() {
-    filteredItems = activeCategory.items.filter(d => {
+    filteredItems = data.filter(d => {
       let hasFilter = false;
       let hasSearchStr = false;
       if ((filter === '') || d.metadata.tags.includes(filter)) {
@@ -166,7 +159,7 @@
       <!-- Row -->
       {#if slug === 'get-started'}
         <!-- Display detail for first item list -->
-        <ItemDetail item={welcome} />
+        <ItemDetail item={data[0]} />
       {:else if slug === 'glossary'}
         <!-- Display items as Accordion -->
         <ItemsAccordion items={filteredItems} />
