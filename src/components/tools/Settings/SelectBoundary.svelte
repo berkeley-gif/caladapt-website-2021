@@ -75,7 +75,7 @@
 {#if ready}
   <Select
     class="boundary-select"
-    labelText="AGGREGATE DATA"
+    labelText="AGGREGATE DATA BY BOUNDARY"
     selected={selectedId}
     on:change={change}>
     {#each items as opt}
