@@ -1,12 +1,12 @@
 <script>
   import { fade } from 'svelte/transition';
-  import tools from '../../../content/tools/data';
+  import { categories, tools } from '../../../content/tools/data';
 
   import FilterCategories from '../../components/partials/FilterCategories.svelte';
 
   $: toolsByCategory = tools;
 
-  const categories = ['All', 'Temperature', 'Precipitation', 'Snowpack', 'Sea Level Rise', 'Wildfire'];
+
   let seletedCategory;
 
   function getToolsByCategory(e) {
