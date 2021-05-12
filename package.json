@@ -41,7 +41,8 @@
     "polka": "next",
     "prettier": "^2.0.0",
     "shpjs": "^3.6.3",
-    "sirv": "^1.0.0"
+    "sirv": "^1.0.0",
+    "svelte-inview": "^2.0.1"
   },
   "devDependencies": {
     "@beyonk/svelte-carousel": "^2.8.0",
