@@ -51,10 +51,17 @@ p.feedback {
 p.reference {
   padding: 1rem;
   font-size: 0.9rem;
-  background-color: $gray-30;
+  background-color: $gray-20;
+
+  a {
+    color: #0147cb;
+  }
 }
 
 blockquote {
+  h3 {
+    padding: 2rem 2rem 0;
+  }
   p {
     @include type-style('quotation-01', false);
     margin-bottom: 0;

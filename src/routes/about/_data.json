@@ -42,9 +42,9 @@
         "tac": "Energy Commission, SGC"
       },
       {
-        "name": "Leah Fisher",
-        "org": "SGC",
-        "tac": "SGC"
+        "name": "Nuin-Tara Key",
+        "org": "OPR",
+        "tac": "Energy Commission, SGC"
       },
       {
         "name": "Karen Gaffney",
@@ -65,11 +65,6 @@
         "name": "Natalie Hernandez",
         "org": "Climate Resolve",
         "tac": "SGC"
-      },
-      {
-        "name": "Nuin-Tara Key",
-        "org": "OPR",
-        "tac": "Energy Commission, SGC"
       },
       {
         "name": "Hiro Kuchida",
@@ -107,11 +102,6 @@
         "tac": "Energy Commission"
       },
       {
-        "name": "Martine Schmidt-Poolman",
-        "org": "CEC",
-        "tac": "Energy Commission, SGC"
-      },
-      {
         "name": "Jasneet Sharma",
         "org": "San Mateo County",
         "tac": "SGC"
@@ -135,11 +125,6 @@
         "name": "Megan Walton",
         "org": "Cal OES",
         "tac": "Energy Commission"
-      },
-      {
-        "name": "Susan Wilhelm",
-        "org": "CEC",
-        "tac": "Energy Commission, SGC"
       },
       {
         "name": "Sasha Wisotsky",
@@ -171,10 +156,6 @@
       {
         "name": "Jim Blatchford",
         "org": "CAISO"
-      },
-      {
-        "name": "Guido Franco",
-        "org": "California Energy Commission"
       },
       {
         "name": "Michael McCormick",
@@ -239,6 +220,10 @@
       {
         "name": "Eric Lehmer",
         "org": "Web Application Developer"
+      },
+      {
+        "name": "Lucy Andrews",
+        "org": "Graduate Student Researcher"
       }
     ],
     "prior": [
@@ -258,5 +243,23 @@
         "name": "Mark O'Connor"
       }
     ]
-  }
+  },
+  "managers": [
+    {
+      "name": "Martine Schmidt-Poolman",
+      "org": "CEC"
+    },
+    {
+      "name": "Leah Fisher",
+      "org": "SGC"
+    },
+    {
+      "name": "Susan Wilhelm",
+      "org": "CEC"
+    },
+    {
+      "name": "Guido Franco",
+      "org": "CEC"
+    }
+  ]
 }

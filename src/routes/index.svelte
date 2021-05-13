@@ -11,7 +11,7 @@
   import ChevronLeft from 'carbon-icons-svelte/lib/ChevronLeft32';
   import ChevronRight from 'carbon-icons-svelte/lib/ChevronRight32';
   import Carousel from '@beyonk/svelte-carousel';
-  import tools from '../../content/tools/data';
+  import { tools } from '../../content/tools/data';
 
   const icons = [ Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
 </script>
@@ -21,7 +21,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section class="banner overlay overlay-black overlay-20" style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;">
+<section class="banner overlay overlay-black overlay-40" style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;">
   <div class="bx--grid">
     <div class="bx--row" style="padding: 0.5rem 1rem;">
       {#each icons as icon}
@@ -53,7 +53,7 @@
           New to Cal-Adapt?
         </h2>
         <p>
-          Learn how to use climate data and <a href="/help/get-started/">best practices</a> for working with climate projections in Cal-Adapt.
+          Learn how to <a href="/help/get-started">get started</a> using climate data on Cal-Adapt.
         </p>
         <p>
           Check out climate data and future projections for your area with our <a href="#">Local Climate Change Snapshot</a> tool.
@@ -66,7 +66,7 @@
           Explore
         </h2>
         <p>
-          Take a deeper dive into different climate change indicators via interactive graphs and charts with our suite of <a href="/tools/">Climate Tools</a>.
+          Take a deeper dive into different climate change indicators via interactive graphs and charts with our suite of <a href="/tools">Climate Tools</a>.
         </p>
       </div>
     </div>
@@ -76,10 +76,10 @@
           Get Data
         </h2>
         <p>
-          Download climate data in NetCDF, CSV or GeoTiff formats from our <a href="/data/">Download Tool</a>. 
+          Download climate data in NetCDF, CSV or GeoTiff formats from our <a href="/data">Download Tool</a>. 
         </p>
         <p>
-          Learn how to download <a href="/help/faqs/how-can-i-download-data/">data and graphics</a> from Cal-Adapt tools.
+          Learn how to download <a href="/help/faqs/how-can-i-download-data">data and graphics</a> from Cal-Adapt tools.
         </p>
       </div>
     </div>
@@ -92,13 +92,13 @@
     <div class="bx--col-lg-7">
       <div class="news-header">
         <h4>From the Cal-Adapt Blog</h4>
-        <a href="/blog/">See all Posts</a> 
+        <a href="/blog">See all Posts</a> 
       </div>
       <div class="post overlay overlay-black overlay-60" style="background-image:url('/img/blog/maps-projected-change-maxtemp.png')">
         <div class="post-body">
           <h3>Maps of Projected Change</h3>
           <p>
-            The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display. <a href="/blog/maps-projected-change /">Read more</a>
+            The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display. <a href="/blog/maps-projected-change">Read more</a>
           </p>
         </div>
       </div>
@@ -134,7 +134,7 @@
       <p>
         Subscribe to the Cal-Adapt Newsletter. 
       </p>      
-      <a href="/signup/" class="bx--btn bx--btn--primary">
+      <a href="/signup" class="bx--btn bx--btn--primary">
         Subscribe
       </a>  
     </div>
@@ -176,7 +176,7 @@
                 </div>
                 <h4>{opt.title}</h4>
                 <p class="truncate">{opt.desc}</p>
-                <a class="stretched-link" href="/tools/{opt.slug}/" title="Explore »"> </a>
+                <a class="stretched-link" href="/tools/{opt.slug}" title="Explore »"> </a>
               </div>
             </div>
           </div>
@@ -243,7 +243,7 @@
       <p>
         Learn how to integrate climate data on Cal-Adapt API with your own workflows using R, Python or JavaScript.
       </p>
-      <a href="/developers/" class="bx--btn bx--btn--secondary">Developers</a>
+      <a href="/developer" class="bx--btn bx--btn--secondary">Developers</a>
     </div>
     <div class="bx--col-lg-7">
       <h2>
@@ -252,7 +252,7 @@
       <p>
         Explore our Getting Started guide, frequently asked questions and tutorials to learn more about using Cal-Adapt.
       </p>
-      <a href="/help/" class="bx--btn bx--btn--secondary">Help</a>
+      <a href="/help" class="bx--btn bx--btn--secondary">Help</a>
     </div>
   </div> <!-- / end row -->
 </section> <!-- / end grid -->
