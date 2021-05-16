@@ -26,7 +26,7 @@
 
 <style lang="scss">
   .banner {
-    background-image: url(/img/banners/gif-workshop.jpg);
+    background-image: url(/img/banners/help.jpg);
     background-position: center 35%;
     background-size: cover;
     min-height: 350px;
@@ -56,7 +56,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section class="banner overlay overlay-black overlay-60">
+<section class="banner overlay overlay-black overlay-40">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
