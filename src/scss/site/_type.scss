@@ -95,6 +95,12 @@ figure {
       color: $gray-100;
     }
   }
+
+  .report {
+    max-height: 250px;
+    width:auto;
+    border: 4px solid $teal-20;  
+  }
 }
 
 @each $name, $value in $caladapt-colors {
