@@ -26,7 +26,7 @@
           title="California Energy Commission"
           alt="California Energy Commission logo"
         >
-          <img src="img/logos/cec_100x88.png" alt="logo for California Energy Commission" style="width:100px;" />
+          <img src="img/logos/cec_900x790.png" alt="logo for California Energy Commission" style="width:100px;" />
         </a>
         <a
             href="http://sgc.ca.gov/"
@@ -35,7 +35,7 @@
             alt="California Strategic Growth Council logo"
             style="background: transparent;"
           >
-            <img src="img/logos/SGC-Brand-Logos-White-11.png" alt="logo for Strategic Growth Council" style="width:200px;" />
+            <img src="img/logos/SGC-Brand-Logos-White-13.png" alt="logo for Strategic Growth Council" style="width:200px;" />
           </a>
       </div>
     </div>
