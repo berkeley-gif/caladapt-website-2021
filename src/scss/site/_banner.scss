@@ -18,6 +18,11 @@
     color: $white;
     text-decoration: solid underline $accent 2px;
   }
+
+  > div {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .banner-breadcrumbs {
@@ -39,21 +44,3 @@
     padding: $carbon--layout-02;
   }
 }
-/* 
-.banner {
-  color: $white;
-
-  h1 {
-    @include type-style('display-01', true);
-  }
-
-  .lead a {
-    color: $white;
-    text-decoration: solid underline $teal-20 2px;
-  }
-
-  > div {
-    position: relative;
-    z-index: 1;
-  }
-} */

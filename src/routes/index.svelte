@@ -8,10 +8,6 @@
   import Snowflake from '../../static/img/icons/snowflake.svg';
   import Sea from '../../static/img/icons/sea.svg';
   import Streamflow from '../../static/img/icons/streamflow.svg';
-  import ChevronLeft from 'carbon-icons-svelte/lib/ChevronLeft32';
-  import ChevronRight from 'carbon-icons-svelte/lib/ChevronRight32';
-  import Carousel from '@beyonk/svelte-carousel';
-  import { tools } from '../../content/tools/data';
 
   const icons = [ Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
 </script>
@@ -32,253 +28,92 @@
     </div>
     <div class="bx--row">
       <div class="bx--col-lg-12">
-        <h1 class="landing">
-          Cal-Adapt provides climate data from California’s scientific and research community and offers a view of how climate change might affect California at the state and local level.
+        <h1 style="font-size:2rem;">
+          Cal-Adapt provides a means of exploring peer-reviewed data portraying how climate change might affect California at the state and local level.
         </h1>
         <p class="lead">
           We make this data available through downloads, visualizations, and the Cal-Adapt API for your research, outreach, and adaptation planning needs.
         </p>
-        <Button icon={ArrowRight16} href="/about/">Learn More about Cal-Adapt</Button>
+        <Button icon={ArrowRight16} href="/about">LEARN MORE ABOUT CAL-ADAPT</Button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Quick Links -->
-<section class="bx--grid quick-links">
-  <div class="bx--row">
-    <div class="bx--col-lg-6">
-      <div>
-        <h2>
-          New to Cal-Adapt?
-        </h2>
-        <p>
-          Learn how to <a href="/help/get-started">get started</a> using climate data on Cal-Adapt.
-        </p>
-        <p>
-          Check out climate data and future projections for your area with our <a href="#">Local Climate Change Snapshot</a> tool.
-        </p>
-      </div>
+<section class="page-grid page-grid--home">
+  <div class="content">
+    <div class="content-block lift bg-teal-20">
+      <a href="/help/get-started"> </a>
+      <h3 class="content-block-title">New to Cal-Adapt?</h3>
+      <p class="content-block-text">
+        Learn how to get started using climate data
+      </p>
     </div>
-    <div class="bx--col-lg-5">
-      <div>
-        <h2>
-          Explore
-        </h2>
-        <p>
-          Take a deeper dive into different climate change indicators via interactive graphs and charts with our suite of <a href="/tools">Climate Tools</a>.
-        </p>
-      </div>
+    <div class="content-block lift inverse bg-blue-40">
+      <a href="/tools/local-climate-change-snapshot"> </a>
+      <h3 class="content-block-title">Local Climate Change Snapshot Tool</h3>
     </div>
-    <div class="bx--col-lg-5">
-      <div>
-        <h2>
-          Get Data
-        </h2>
-        <p>
-          Download climate data in NetCDF, CSV or GeoTiff formats from our <a href="/data">Download Tool</a>. 
-        </p>
-        <p>
-          Learn how to download <a href="/help/faqs/how-can-i-download-data">data and graphics</a> from Cal-Adapt tools.
-        </p>
-      </div>
+    <div class="content-block lift bg-gray-20" style="text-align:center;">
+      <a href="/tools"> </a>
+      <h3 class="content-block-title">Explore all Climate Tools</h3>
     </div>
-  </div>  <!-- / end row -->
-</section> <!-- / end grid -->
-
-<!-- News -->
-<section class="bx--grid news">
-  <div class="bx--row">
-    <div class="bx--col-lg-7">
-      <div class="news-header">
-        <h4>From the Cal-Adapt Blog</h4>
-        <a href="/blog">See all Posts</a> 
-      </div>
-      <div class="post overlay overlay-black overlay-60" style="background-image:url('/img/blog/maps-projected-change-maxtemp.png')">
-        <div class="post-body">
-          <h3>Maps of Projected Change</h3>
-          <p>
+    <div class="content-block lift bg-gray-30">
+      <a href="/data"> </a>
+      <h3 class="content-block-title">Download Data</h3>
+      <p class="content-block-text">
+        Download climate data in NetCDF, CSV and GeoTIFF formats for your area
+      </p>
+    </div>
+    <div class="content-block lift inverse bg-teal-70" style="text-align:center;">
+      <a href="/help/tutorials"> </a>
+      <h3 class="content-block-title">Tutorials &amp; Webinars</h3>
+    </div>
+    <div class="content-block lift bg-teal-10">
+      <a href="/developer"> </a>
+      <h3 class="content-block-title">Developers</h3>
+      <p class="content-block-text">
+        Integrate climate data in your workflows with the Cal-Adapt API
+      </p>
+    </div>
+  </div>
+  <div class="sidebar-right">
+    <div class="sidebar-block">
+      <h4 class="sidebar-block-title">Upcoming Events</h4>
+      <ul class="sidebar-block-list">
+        <li class="item">
+          <h5 class="item-title">Monday, May 10th</h5>
+          <p class="item-text">
+            <a href="blog/events/some-future-event">Some future event</a>
+          </p>
+          <p class="item-text">Online, 1:00 PM - 2:00 PM PST</p>
+        </li>
+      </ul>
+      <span class="sidebar-block-link">
+        <a href="/blog/events">See All Events</a>
+      </span>
+    </div>
+    <div class="sidebar-block">
+      <h4 class="sidebar-block-title">Latest on Cal-Adapt Blog</h4>
+      <ul class="sidebar-block-list">
+        <li class="item">
+          <h5 class="item-title">Maps of Projected Change</h5>
+          <p class="item-text">
             The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display. <a href="/blog/maps-projected-change">Read more</a>
           </p>
-        </div>
-      </div>
-    </div>
-    <div class="bx--col-lg-6">
-      <div class="news-header">
-        <h4>Upcoming Events</h4>
-        <a href="/blog/events">See all Events</a> 
-      </div>
-      <div class="events">
-        <ul class="list-event">
-          <li class="list-event-item">
-            <div class="event-date">
-              <span class="month">May</span>
-              <span class="date">10</span>
-              <span class="day">Monday</span>
-            </div>
-            <div class="event-details">
-              <p class="title">
-                <a href="blog/events/some-future-event">Some future event</a>
-              </p>
-              <p class="location">Online</p>
-              <p class="time">1:00 PM - 2:00 PM PST</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="bx--col-lg-3 contact">
-      <p>
-        Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox. 
-      </p>
-      <p>
-        Subscribe to the Cal-Adapt Newsletter. 
-      </p>      
-      <a href="/signup" class="bx--btn bx--btn--primary">
-        Subscribe
-      </a>  
-    </div>
-
-  </div>
-  <div class="bx--row">
-
-  </div> <!-- / end row -->
-</section> <!-- / end grid -->
-
-<!-- Tools -->
-<section class="bx--grid tools">
-  <div class="bx--row">
-    <div class="bx--offset-lg-1 bx--col-lg-7 tools-header">
-      <h2>
-        Explore climate data in greater detail with <a href="/tools" style="white-space:nowrap;">Cal-Adapt Tools</a>
-      </h2>
-    </div>
-    <div class="bx--col-lg-7 tools-text">
-      <p>
-        View interactive maps and charts showing climate projections for California. Aggregate data by common geographical boundaries or upload your own.
-      </p>
+        </li>
+      </ul>
+      <span class="sidebar-block-link">
+        <a href="/blog">See All Posts</a>
+      </span>
     </div>
   </div>
-  <div class="bx--row">
-    <div class="bx--offset-lg-1 bx--col-lg-14 tools-list">
-      <Carousel perPage={4}>
-        <span class="control" slot="left-control">
-          <ChevronLeft />
-        </span>
-        {#each tools as opt}
-          <div class="slide-content">
-            <div class="card shadow lift">
-              <div class="card-body">
-                <div>
-                  {#each opt.icons as icon}
-                    <img src="{icon}" alt="icon" style="width:60px;">
-                  {/each}
-                </div>
-                <h4>{opt.title}</h4>
-                <p class="truncate">{opt.desc}</p>
-                <a class="stretched-link" href="/tools/{opt.slug}" title="Explore »"> </a>
-              </div>
-            </div>
-          </div>
-        {/each}
-        <span class="control" slot="right-control">
-          <ChevronRight />
-        </span>
-      </Carousel>
-    </div>
-  </div> <!-- / end row -->
-</section> <!-- / end grid -->
+  <div class="footer">
+    <p class="lead">
+      Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox with the Cal-Adapt Newsletter.
+    </p>
+    <Button icon={ArrowRight16} href="/signup">SUBSCRIBE</Button>
+  </div>
+</section>
 
-<!-- Data -->
-<section class="bx--grid data">
-  <div class="bx--row">
-    <div class="bx--col-lg-8">
 
-      <!-- Image -->
-      <div class="device device-macbook">
-        <img src="/img/blog/data-download-search.png" class="device-screen" alt="...">
-        <img src="/img/devices/macbook.svg" class="img-fluid" alt="...">
-      </div>
-
-    </div>
-    <div class="bx--col-lg-8">
-      <h2>
-        Download Data
-      </h2>
-
-      <p class="lead">
-        Search climate datasets available on Cal-Adapt. <a href="/data" class="text-reset" style="text-decoration:solid underline #6be7ba 1px;text-underline-offset:2px;">Download data</a> for selected climate indicators.
-      </p>
-
-      <div class="bx--row">
-        <div class="bx--col-lg-8">
-          <p>
-            Select climate scenarios and global climate models.
-          </p>
-          <p>
-            Aggregate data by decadal, annual, monthly time steps.
-          </p>
-        </div>
-        <div class="bx--col-lg-8">
-          <p>
-            Get data in NetCDF, CSV or GeoTiff formats.
-          </p>
-          <p>
-            Aggregate gridded data by area.
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </div> <!-- / end row -->
-</section> <!-- / end grid -->
-
-<!-- API & Help -->
-<section class="bx--grid help bg-gray-60 text-white">
-  <div class="bx--row">
-    <div class="bx--offset-lg-1 bx--col-lg-7">
-      <h2>
-        For Developers
-      </h2>
-      <p>
-        Learn how to integrate climate data on Cal-Adapt API with your own workflows using R, Python or JavaScript.
-      </p>
-      <a href="/developer" class="bx--btn bx--btn--secondary">Developers</a>
-    </div>
-    <div class="bx--col-lg-7">
-      <h2>
-        Get Help
-      </h2>
-      <p>
-        Explore our Getting Started guide, frequently asked questions and tutorials to learn more about using Cal-Adapt.
-      </p>
-      <a href="/help" class="bx--btn bx--btn--secondary">Help</a>
-    </div>
-  </div> <!-- / end row -->
-</section> <!-- / end grid -->
-
-<!-- Collaborators -->
-<section class="bx--grid partners">
-  <div class="bx--row">
-    <div class="bx--col-lg-6 partners-text">
-      <p class="lead">Cal-Adapt synthesizes downscaled climate change projections and climate impact research from California&#39;s scientific and research community.</p>
-    </div>
-    <div class="bx--col-lg-10">
-      <div class="bx--grid">
-        <div class="bx--row partners-images">
-          <img src="/img/logos/scripps_logo.svg"  alt="...">
-          <img src="/img/logos/ca_dwr.png" class="mx-auto" alt="..." style="height:110px;width:110px;">
-          <img src="/img/logos/UCBerkeley_wordmark_blue.svg"  alt="...">
-          <img src="/img/logos/cec_900x790.png" class="mx-auto" alt="..." style="height:105px;width:120px;">
-          <img src="/img/logos/oehha.png"  alt="...">
-          <img src="/img/logos/OCOF-logo.png"  alt="...">
-          <img src="/img/logos/logo_UCLA_blue.svg"  alt="...">
-          <img src="/img/logos/USGS_ID_green.png" alt="...">
-          <img src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"  alt="...">
-          <img src="/img/logos/boulder-fl-vertical-a-2.png"  alt="...">
-        </div>
-      </div>
-    </div>  
-  </div> <!-- / end row -->  
-</section> <!-- / end grid -->
 

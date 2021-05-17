@@ -8,8 +8,8 @@
   }
 }
 
-.list-event {
-  .list-event-item {
+.events {
+  .event {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -49,8 +49,12 @@
       }
     }
 
-    .event-details {
+    .event-detail {
       flex: 1;
+
+      .date {
+        font-weight: 600;
+      }
 
       p {
        margin-bottom: 2px;
