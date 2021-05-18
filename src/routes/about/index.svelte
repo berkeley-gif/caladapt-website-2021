@@ -302,8 +302,7 @@
   <div class="bx--row">
     <div class="bx--col-lg-6">
       <figure class="image">
-        <img src="/img/banners/gif-workshop.jpg" style="padding:3rem;" alt="workshop at GIF">
-        <figcaption></figcaption>
+        <img src="/img/banners/gif-workshop.jpg" style="padding:1rem;" alt="workshop at GIF"> 
       </figure>
     </div>
     <div class="bx--col-lg-10">
