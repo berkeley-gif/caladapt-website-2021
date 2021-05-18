@@ -2,6 +2,7 @@
 title: Introducing the new Extreme Precipitation Tool on Cal-Adapt
 date: 2019-03-28
 location: Online
+time: "12:30 PM - 1:30 PM PST"
 ---
 
 ## Webinar Description

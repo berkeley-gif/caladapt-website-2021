@@ -2,6 +2,7 @@
 title: "California Wildfire Projections: Current Data, Future Efforts"
 date: 2020-10-20
 location: Online
+time: "1:00 PM - 2:00 PM PST"
 ---
 
 2020 has been a record-setting year for wildfire in California. As of the writing of this blog post, more than 4.1 million acres have burned, more than double the previous annual total of 1.7 million acres burned in 2018, and California’s 2020 wildfire season is not yet over.

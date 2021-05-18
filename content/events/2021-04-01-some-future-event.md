@@ -1,7 +1,8 @@
 ---
 title: "Some future event"
-date: 2021-05-11
+date: 2021-08-11
 location: Online
+time: "1:00 PM - 2:00 PM PST"
 ---
 
 ### Webinar Description
@@ -11,6 +12,6 @@ The goals of this webinar are to:
 
 ### Event Details
 
-<strong>Date</strong>: Thursday, May 5, 2021 <br/>
-<strong>Time</strong>: 1:00-2:00, Pacific Standard Time <br/>
+<strong>Date</strong>: Wednesday, August 11, 2021 <br/>
+<strong>Time</strong>: 1:00 PM - 2:00 PM PST <br/>
 <strong>Registration</strong>: [Please register at this link](https://berkeley.zoom.us/meeting/register/tJAqfuGrrjsuEtenFRP5pdPHuyfKBBlElOaf?utm_source=newsletter&utm_medium=email&utm_campaign=you_re_invited_cal_adapt_local_climate_change_snapshot_tool_webinar_on_march_11&utm_term=2021-03-02)

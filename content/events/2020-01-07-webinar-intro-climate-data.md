@@ -2,6 +2,7 @@
 title: Introduction to Climate Data
 date: 2020-01-23
 location: Online
+time: "12:30 PM - 1:30 PM PST"
 ---
 
 ## Webinar Description

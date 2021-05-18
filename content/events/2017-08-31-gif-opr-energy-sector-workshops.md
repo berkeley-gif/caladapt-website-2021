@@ -2,6 +2,7 @@
 title: Cal-Adapt and Climate Adaptation Clearinghouse Energy Sector User Needs Assessment Workshops
 date: 2017-09-12
 location: "Sacramento, CA"
+time: "9:30 AM - 12:00 PM PST"
 ---
 
 <u><a href="#materials">LINKS TO WORKSHOP MATERIALS</a></u><br/>

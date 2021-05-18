@@ -2,6 +2,7 @@
 title: "Working with Cal-Adapt Data in ArcGIS Pro and R"
 date: 2020-11-12
 location: Online
+time: "1:00 PM - 2:00 PM PST"
 ---
 
 Cal-Adapt contains a wealth of peer reviewed climate data for planners and researchers. The Cal-Adapt website offers a broad range of tools to visualize and download data, but some users would like to work with the data on their own for custom visualizations and analysis. Working with Cal-Adapt data in software like ArcGIS Pro or R can be tricky though. Just getting Cal-Adapt data into these platforms requires that you know how to specify the datasets you want and where to find them, navigate a download process, and deal with format and projection issues.

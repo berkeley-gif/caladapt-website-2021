@@ -2,6 +2,7 @@
 title: Southern Central Valley Climate Change Adaption
 date: 2020-05-27
 location: Online
+time: "1:00 PM - 2:30 PM PST"
 ---
 
 ## Workshop Description
