@@ -1,17 +1,21 @@
 <script context="module">
-  export function preload() {
-    return this.fetch(`blog.json`)
+  export async function preload() {
+    const posts = await this.fetch(`blog.json`)
       .then(r => r.json())
-      .then(posts => {
-        return { posts };
-      });
+      .then(posts => posts);
+    const events = await this.fetch(`blog/events.json`)
+      .then(r => r.json())
+      .then(events => events);
+    return { posts, events };
   }
 </script>
 
 <script>
   import BlogArticle from '../../components/partials/BlogArticle.svelte';
-  import SidebarRight from './_sidebarRight.svelte';
+  import SidebarRight from '../../components/partials/SidebarRight.svelte';
+  
   export let posts;
+  export let events;
 
   let filteredPosts = posts;
   let filter = '';
@@ -76,7 +80,6 @@
 
   <div class="content">
     <div class="bx--grid">
-      <!-- Row -->
       <div class="bx--row">
         {#each filteredPosts as post}
         <div class="bx--col-lg-8" style="padding:2rem;">
@@ -87,9 +90,14 @@
     </div>
   </div>
 
-  <aside class="sidebar">
-    <SidebarRight on:search={updateSearch} on:filter={updateFilter} />
-  </aside>
+  <div class="sidebar-right">
+    <SidebarRight
+      show={['events', 'search', 'filters']}
+      filters={['data', 'tools', 'other']}
+      {events}
+      on:search={updateSearch}
+      on:filter={updateFilter} />
+  </div>
 
   <div class="footer">
     <div class="bx--grid">

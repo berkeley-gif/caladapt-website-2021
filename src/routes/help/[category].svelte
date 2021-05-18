@@ -19,9 +19,9 @@
   import User32 from 'carbon-icons-svelte/lib/User32';
   import Video32 from 'carbon-icons-svelte/lib/Video32';
   import NavBreadcrumb from '../../components/partials/NavBreadcrumb.svelte';
+  import SidebarRight from '../../components/partials/SidebarRight.svelte';
   import { stores } from '@sapper/app';
   import SidebarLeft from './_SidebarLeft.svelte';
-  import SidebarRight from './_SidebarRight.svelte';
   import ItemsList from './_ItemsList.svelte';
   import ItemsAccordion from './_ItemsAccordion.svelte';
   import ItemDetail from './_ItemDetail.svelte';
@@ -40,6 +40,7 @@
 
   let filter = '';
   let searchStr = '';
+  let show;
   
   $: slug = $page.params.category;
   $: activeCategory = toc.find(d => d.slug === slug);
@@ -49,6 +50,13 @@
     { href: '/help/', text: 'Help' },
     { href: `/help/${activeCategory.slug}`, text: `${activeCategory.title}` },
   ];
+  $: if (activeCategory.slug === 'tutorials' || activeCategory.slug === 'faqs') {
+    show = ['search', 'filters'];
+  } else if (activeCategory.slug === 'glossary') {
+    show = ['search', 'glossary'];
+  } else {
+    show = [];
+  }
 
   // function updateItems() {
   //   activeCategory = data.find(d => d.slug === slug);
@@ -116,7 +124,7 @@
 </svelte:head>
 
 <div class="page-grid page-grid--help">
-  <aside class="sidebar">
+  <aside class="sidebar-left">
     <SidebarLeft {toc} />
   </aside>
 
@@ -175,7 +183,11 @@
   </div>
 
   <aside class="sidebar-right">
-    <SidebarRight on:search={updateSearch} on:filter={updateFilter} />
+    <SidebarRight
+      {show}
+      filters={['data', 'tools', 'other']}
+      on:search={updateSearch}
+      on:filter={updateFilter} />
   </aside>
 </div>
 

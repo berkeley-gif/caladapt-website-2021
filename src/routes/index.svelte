@@ -1,13 +1,26 @@
+<script context="module">
+  export function preload() {
+    return this.fetch(`blog/events.json`)
+      .then(r => r.json())
+      .then(events => {
+        return { events };
+      });
+  }
+</script>
+
 <script>
   import { Button } from 'carbon-components-svelte';
-  import ArrowRight16 from 'carbon-icons-svelte/lib/ArrowRight16';
+  import { ArrowRight16 } from 'carbon-icons-svelte';
 
+  import SidebarRight from '../components/partials/SidebarRight.svelte';
   import Sun from '../../static/img/icons/sun.svg';
   import Rainfall from '../../static/img/icons/rainfall.svg';
   import Wildfire from '../../static/img/icons/wildfire.svg';
   import Snowflake from '../../static/img/icons/snowflake.svg';
   import Sea from '../../static/img/icons/sea.svg';
   import Streamflow from '../../static/img/icons/streamflow.svg';
+
+  export let events;
 
   const icons = [ Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
 </script>
@@ -22,7 +35,9 @@
     <div class="bx--row" style="padding: 0.5rem 1rem;">
       {#each icons as icon}
         <div class="bx--col-1">
-          <div class="icon">{ @html icon }</div>
+          <a href="/tools">
+            <div class="icon">{ @html icon }</div>
+          </a>
         </div>  
       {/each}
     </div>
@@ -42,34 +57,34 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    <div class="content-block lift bg-teal-20">
-      <a href="/help/get-started"> </a>
+    <div class="content-block lift shadow bg-teal-40">
+      <a href="/help/get-started" aria-label="get started with climate data"> </a>
       <h3 class="content-block-title">New to Cal-Adapt?</h3>
       <p class="content-block-text">
         Learn how to get started using climate data
       </p>
     </div>
-    <div class="content-block lift inverse bg-blue-40">
-      <a href="/tools/local-climate-change-snapshot"> </a>
+    <div class="content-block lift shadow bg-blue-40 inverse">
+      <a href="/tools/local-climate-change-snapshot" aria-label="local climate change snapshot tool"> </a>
       <h3 class="content-block-title">Local Climate Change Snapshot Tool</h3>
     </div>
-    <div class="content-block lift bg-gray-20" style="text-align:center;">
-      <a href="/tools"> </a>
+    <div class="content-block lift shadow bg-blue-60 inverse" style="text-align:center;">
+      <a href="/tools" aria-label="explore all climate tools"> </a>
       <h3 class="content-block-title">Explore all Climate Tools</h3>
     </div>
-    <div class="content-block lift bg-gray-30">
-      <a href="/data"> </a>
+    <div class="content-block lift shadow bg-gray-70 inverse">
+      <a href="/data" aria-label="download data"> </a>
       <h3 class="content-block-title">Download Data</h3>
       <p class="content-block-text">
         Download climate data in NetCDF, CSV and GeoTIFF formats for your area
       </p>
     </div>
-    <div class="content-block lift inverse bg-teal-70" style="text-align:center;">
-      <a href="/help/tutorials"> </a>
+    <div class="content-block lift shadow bg-teal-20" style="text-align:center;">
+      <a href="/help/tutorials" aria-label="gtutorials and webinars">&nbsp;</a>
       <h3 class="content-block-title">Tutorials &amp; Webinars</h3>
     </div>
-    <div class="content-block lift bg-teal-10">
-      <a href="/developer"> </a>
+    <div class="content-block lift shadow bg-teal-80 inverse">
+      <a href="/developer" aria-label="developers"> </a>
       <h3 class="content-block-title">Developers</h3>
       <p class="content-block-text">
         Integrate climate data in your workflows with the Cal-Adapt API
@@ -77,40 +92,12 @@
     </div>
   </div>
   <div class="sidebar-right">
-    <div class="sidebar-block">
-      <h4 class="sidebar-block-title">Upcoming Events</h4>
-      <ul class="sidebar-block-list">
-        <li class="item">
-          <h5 class="item-title">Monday, May 10th</h5>
-          <p class="item-text">
-            <a href="blog/events/some-future-event">Some future event</a>
-          </p>
-          <p class="item-text">Online, 1:00 PM - 2:00 PM PST</p>
-        </li>
-      </ul>
-      <span class="sidebar-block-link">
-        <a href="/blog/events">See All Events</a>
-      </span>
-    </div>
-    <div class="sidebar-block">
-      <h4 class="sidebar-block-title">Latest on Cal-Adapt Blog</h4>
-      <ul class="sidebar-block-list">
-        <li class="item">
-          <h5 class="item-title">Maps of Projected Change</h5>
-          <p class="item-text">
-            The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display. <a href="/blog/maps-projected-change">Read more</a>
-          </p>
-        </li>
-      </ul>
-      <span class="sidebar-block-link">
-        <a href="/blog">See All Posts</a>
-      </span>
-    </div>
+    <SidebarRight show={['events', 'posts']} {events} />
   </div>
   <div class="footer">
     <p class="lead">
-      Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox with the Cal-Adapt Newsletter.
-    </p>
+      Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox. Subscribe to the Cal-Adapt Newsletter. 
+    </p>      
     <Button icon={ArrowRight16} href="/signup">SUBSCRIBE</Button>
   </div>
 </section>

@@ -54,7 +54,7 @@
                       <a href={`blog/events/${event.slug}`} >{event.metadata.title}</a>
                     </p>
                     <p class="location">{event.metadata.location}</p>
-                    <p class="time">1:00 PM - 2:00 PM PST</p>
+                    <p class="time">{event.metadata.time}</p>
                   </div>
                 </li>
               {/each}
@@ -111,7 +111,7 @@
         <p>
           Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox. Subscribe to the Cal-Adapt Newsletter. 
         </p>      
-        <a href="/signup/" class="bx--btn bx--btn--primary">Subscrbe</a>
+        <a href="/signup/" class="bx--btn bx--btn--primary">Subscribe</a>
       </div>
     </div>
   </aside>

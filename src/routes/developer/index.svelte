@@ -18,7 +18,7 @@
   </div>    
 </section>
 
-<section class="page-content">
+<section>
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--offset-lg-1 bx--col-lg-12">
@@ -63,9 +63,11 @@
         <img src="/img/logos/r-logo.jpg" alt="..." style="width:100%;"/>
       </div>
       <div class="bx--col-md-10 bx--col-lg-8">
-        <h4>R interface to Cal-Adapt API</h4>
+        <h4>
+          <a href="https://ucanr-igis.github.io/caladaptr/" target="_blank">caladaptR</a>
+        </h4>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          caladaptR  is an API client that makes it easier to work with data from Cal-Adapt.org in R.
         </p>
       </div>
     </div> <!-- end row -->
