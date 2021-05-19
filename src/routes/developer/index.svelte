@@ -44,7 +44,7 @@
           <div class="card-body">
             <h5 class="card-title">Code Samples</h5>
             <p>
-              Explore code samples developed by our developers for processing, downloading and visualizing Cal-Adapt data in <a href="https://berkeley-gif.github.io/caladapt-docs/cookbook.html" target="_blank" title='Explore'>Python</a> and <a class="stretched-link" href="https://observablehq.com/collection/@mukhtyar/cal-adapt" target="_blank" title='Explore'>JavaScript</a>.
+              Explore code samples developed by our developers for processing, downloading and visualizing Cal-Adapt data in <a href="https://berkeley-gif.github.io/caladapt-docs/cookbook.html" target="_blank" title='Explore'>Python</a> and <a href="https://observablehq.com/collection/@mukhtyar/cal-adapt" target="_blank" title='Explore'>JavaScript</a>.
             </p>
           </div>
         </div>
