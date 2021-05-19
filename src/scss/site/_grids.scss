@@ -422,7 +422,6 @@
   grid-template-areas:
   "content sidebar-right"
   "footer sidebar-right";
-  margin: 2rem 0;
 
   @media (max-width: 1000px) {
     grid-template-columns: 100%;
@@ -438,7 +437,7 @@
     flex-wrap: wrap;
 
     .content-block {
-      flex: 1 0 25%;
+      flex: 1 0 auto;
       margin: 1rem;
       padding: 1.5rem;
       aspect-ratio: 1;
@@ -446,6 +445,11 @@
       flex-direction: column;
       justify-content: center;
       position: relative;
+      width: calc(30% - 1rem);
+
+      @media (max-width: 1000px) {
+        width: calc(45% - 1rem);
+      }
 
       a:before {
         position: absolute;
@@ -457,6 +461,7 @@
       }
 
       .content-block-title {
+        margin-top: 1rem;
         font-weight: 600;
       }
 

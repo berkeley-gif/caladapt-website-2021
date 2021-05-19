@@ -126,3 +126,12 @@ ul, ol {
   list-style: inherit;
   line-height: 1.6;
 }
+
+a {
+  text-decoration: underline 0.1em rgba(0, 0, 0, 0);
+  transition: text-decoration-color 300ms;
+
+  &:hover {
+    text-decoration-color: #0043ce;
+  }
+}

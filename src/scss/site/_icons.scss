@@ -3,6 +3,10 @@
   display: inline-block;
 }
 
+@media (max-width: 1000px) {
+	width: 45px;
+}
+
 .icon-circle {
   display: inline-flex;
   align-items: center;
