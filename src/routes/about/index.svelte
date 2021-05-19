@@ -14,16 +14,16 @@
 
   let items = [
     {
-      id: 'partners',
-      label: 'Our Partners',
-    },
-    {
       id: 'mission',
       label: 'Our Mission',
     },
     {
       id: 'audience',
       label: 'Our Audience',
+    },
+    {
+      id: 'partners',
+      label: 'Our Partners',
     },
     {
       id: 'background',
@@ -34,7 +34,7 @@
       label: 'Our Team',
     },
   ];
-  let href = '/about/';
+  let href = '/about';
   let selected;
 
   const handleEntry = (e) => {
@@ -58,6 +58,15 @@
     margin: 2rem 4rem;
   }
 
+  .order-1 {
+    order: 0;
+  }
+
+  .contributor-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .contributor {
     display: flex;
     justify-content: center;
@@ -78,7 +87,6 @@
     height: 150px;
     background: #eaecee;
     justify-content: space-between;
-    margin: 0.25rem;
 
     img {
       width: 100px;
@@ -141,11 +149,11 @@
 
   @media (max-width: 1000px) {
     .content {
-      margin: 2rem 0;
+      margin: 2rem auto;
     }
 
-    #mission .quote {
-      display: none;
+    .order-1 {
+      order: 1;
     }
 
     figure {
@@ -183,78 +191,6 @@
 </section>
 
 <PageNav {href} {items} {selected} />
-
-<div
-  class="bx--grid content"
-  id="partners"
-  use:inview={entryOptions}
-  on:enter={handleEntry}>
-  <div class="bx--row">
-    <div class="bx--col center">
-      <h2>Our Partners</h2>
-    </div>
-  </div>
-  <div class="bx--row">
-    <div class="bx--col-lg-8">
-      <h4>Funding and Oversight</h4>
-      <div style="display:flex;flex-wrap:wrap;">
-        <div class="collaborator">
-          <img src="img/logos/cec_900x790.png" alt="logo for California Energy Commission"/>
-          <a href="http://www.energy.ca.gov/" target="_blank">California Energy Commission</a>
-        </div>
-        <div class="collaborator">
-          <img src="img/logos/SGC-Brand-Logos-03.png" alt="logo for California Strategic Growth Council" style="width:200px;" />
-          <a href="http://sgc.ca.gov/" target="_blank">California Strategic Growth Council</a>
-        </div>        
-      </div>
-    </div>
-    <div class="bx--col-lg-4">
-      <h4>Site Development</h4>
-      <div class="collaborator">
-        <img src="img/logos/gif_249x100.png"  style="width:200px;" alt="Geospatial Innovation Facility logo"/>
-        <a href="http://gif.berkeley.edu/" target="_blank">Geospatial Innovation Facility</a>
-      </div>
-    </div>
-    <div class="bx--col-lg-4">
-      <h4>Science Advisor</h4>
-      <div class="collaborator">
-        <img src="img/logos/eagle-rock-analytics-logo-black_3.png" alt="logo for Eagle Rock Analytics"/>
-        <a href="http://www.eaglerockanalytics.com/" target="_blank">Eagle Rock Analytics</a>
-      </div>
-    </div>
-  </div>
-  <div class="bx--row" style="margin-top:1rem;">
-    <div class="bx--col">
-      <h4>Data Contributors</h4>
-    </div>
-  </div>
-  <div class="bx--row">
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/scripps_logo.svg"  alt="logo for Scripps Institution of Oceanography">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/ca_dwr.png" alt="logo for California Department of Water Resources" style="height:100px;width:100px;">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/UCBerkeley_wordmark_blue.svg"  alt="logo for University of California Berkeley">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/OCOF-logo.png"  alt="logo for Our Coast Our Future">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/logo_UCLA_blue.svg"  alt="logo for University of California Los Angeles">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/USGS_ID_green.png" alt="logo for United States Geological Survey">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"  alt="logo for University of California Merced">
-    </div>
-    <div class="bx--col-lg-4 contributor">
-      <img src="/img/logos/boulder-fl-vertical-a-2.png"  alt="logo for University of Colorado Boulder">
-    </div>
-  </div>
-</div>
 
 <div
   class="bx--grid content"
@@ -300,7 +236,7 @@
   use:inview={entryOptions}
   on:enter={handleEntry}>
   <div class="bx--row">
-    <div class="bx--col-lg-6">
+    <div class="bx--col-lg-6 center order-1">
       <figure class="image">
         <img src="/img/banners/gif-workshop.jpg" style="padding:1rem;" alt="workshop at GIF"> 
       </figure>
@@ -317,11 +253,101 @@
 
 <div
   class="bx--grid content"
+  id="partners"
+  use:inview={entryOptions}
+  on:enter={handleEntry}>
+  <div class="bx--row">
+    <div class="bx--col-lg-6 center d-md-none">
+      <figure class="quote">
+        <blockquote cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf">
+          <p>The California Energy Commission will develop the Cal-Adapt Web site that will synthesize existing California climate change scenarios and climate impact research and to encourage its use in a way that is beneficial for local decision-makers.</p>
+        </blockquote>
+        <figcaption><cite>- A key recommendation of the 2009 California Climate Adaptation Strategy</cite></figcaption>
+      </figure>
+    </div>
+    <div class="bx--col-lg-10">
+      <hr />
+      <h2>Our Partners</h2>
+      <div class="bx--row">
+        <div class="bx--col">
+          <h3 class="h5">Funding and Oversight</h3>
+        </div>
+      </div>
+      <div class="bx--row">
+        <div class="bx--col-lg-8">
+          <div class="collaborator">
+            <img src="img/logos/cec_900x790.png" alt="logo for California Energy Commission"/>
+            <a href="http://www.energy.ca.gov/" target="_blank">California Energy Commission</a>
+          </div>
+        </div>
+        <div class="bx--col-lg-8">
+          <div class="collaborator">
+            <img src="img/logos/SGC-Brand-Logos-03.png" alt="logo for California Strategic Growth Council" style="width:200px;" />
+            <a href="http://sgc.ca.gov/" target="_blank">California Strategic Growth Council</a>
+          </div> 
+        </div> 
+      </div>
+      <div class="bx--row">
+        <div class="bx--col-lg-8">
+          <h3 class="h5">Site Development</h3>
+          <div class="collaborator">
+            <img src="img/logos/gif_249x100.png"  style="width:200px;" alt="Geospatial Innovation Facility logo"/>
+            <a href="http://gif.berkeley.edu/" target="_blank">Geospatial Innovation Facility</a>
+          </div> 
+        </div>
+        <div class="bx--col-lg-8">
+          <h3 class="h5">Science Advisor</h3>
+          <div class="collaborator">
+            <img src="img/logos/eagle-rock-analytics-logo-black_3.png" alt="logo for Eagle Rock Analytics"/>
+            <a href="http://www.eaglerockanalytics.com/" target="_blank">Eagle Rock Analytics</a>
+          </div> 
+        </div>
+      </div>
+      <div class="bx--row">
+
+      </div>
+      <div class="bx--row">
+        <div class="bx--col">
+          <h3 class="h5">Data Contributors</h3>
+          <div class="contributor-list">
+            <div class="contributor">
+              <img src="/img/logos/scripps_logo.svg"  alt="logo for Scripps Institution of Oceanography">
+            </div>
+            <div class="contributor">
+              <img src="/img/logos/ca_dwr.png" alt="logo for California Department of Water Resources" style="height:100px;width:100px;">
+            </div>
+            <div class="contributor">
+              <img src="/img/logos/UCBerkeley_wordmark_blue.svg"  alt="logo for University of California Berkeley">
+            </div>
+            <div class="contributor">
+              <img src="/img/logos/OCOF-logo.png"  alt="logo for Our Coast Our Future">
+            </div> 
+            <div class="contributor">
+              <img src="/img/logos/logo_UCLA_blue.svg"  alt="logo for University of California Los Angeles">
+            </div>
+            <div class="contributor">
+              <img src="/img/logos/USGS_ID_green.png" alt="logo for United States Geological Survey">
+            </div>
+            <div class="contributor">
+              <img src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"  alt="logo for University of California Merced">
+            </div>
+            <div class="contributor">
+              <img src="/img/logos/boulder-fl-vertical-a-2.png"  alt="logo for University of Colorado Boulder">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="bx--grid content"
   id="background"
   use:inview={entryOptions}
   on:enter={handleEntry}>
   <div class="bx--row">
-    <div class="bx--col-lg-6 center">
+    <div class="bx--col-lg-6 center order-1">
       <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf" target="_blank">
         <figure class="image">
           <img src="/img/illustrations/caladapt-report-cover.png" class="report shadow" alt="caladapt report cover">
