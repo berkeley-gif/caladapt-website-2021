@@ -42,7 +42,7 @@
       {/each}
     </div>
     <div class="bx--row">
-      <div class="bx--col-lg-12">
+      <div class="bx--col-md-16 bx--col-lg-12">
         <h1 style="font-size:2rem;">
           Cal-Adapt provides a means of exploring peer-reviewed data portraying how climate change might affect California at the state and local level.
         </h1>
