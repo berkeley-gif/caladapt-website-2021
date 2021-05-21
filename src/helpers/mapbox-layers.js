@@ -15,7 +15,7 @@ const data = [
     metadata: {
       group: 'Boundaries',
       title: 'LOCA Grid (1/16° - Approximately 6 km)',
-      placeholder: 'address or zipcode',
+      placeholder: 'address',
     },
     source: {
       type: 'vector',
