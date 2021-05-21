@@ -56,9 +56,7 @@
   const { scenario } = scenarioStore;
 
   let dataByDate;
-  let observedData;
-  let modeledData;
-  let modelCount = 0;
+  let statsData;
   let mapReady = false;
   let showUpload = false;
   let showDownload = false;
@@ -84,9 +82,7 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($data) {
-    observedData = $data.filter(d => d.key === 'observed');
-    modeledData = $data.filter(d => d.key !== 'observed' && d.type !== 'area');
-    modelCount = modeledData.length;
+    statsData = $data.filter(d => d.type !== 'area');
     dataByDate = getDataByDate(flattenData($data));
   }
 
@@ -412,40 +408,31 @@
   <div class="explore-stats">
     <div class="block small">
       <RangeAvg
-        title={'Observed Historical'}
-        subtitle={'Baseline (1961-1990)'}
         units={$climvar.units.imperial}
-        note={''}
-        data={observedData}
-        showRange={false}
-        selectedRange={[1961, 1990]}
+        data={statsData}
         isHistorical={true}
+        series={'historical'}
+        period={'baseline'}
         format={formatFn}
       />      
     </div>
     <div class="block">
       <RangeAvg
-        title={'Modeled Historical'}
-        subtitle={'Baseline (1961-1990)'}
         units={$climvar.units.imperial}
-        note={`Average of ${modelCount} models`}
-        data={modeledData}
-        showRange={true}
-        selectedRange={[1961, 1990]}
-        isHistorical={true}
+        data={statsData}
+        isHistorical={false}
+        series={'future'}
+        period={'mid-century'}
         format={formatFn}
       />    
     </div>
     <div class="block">
       <RangeAvg
-        title={'Future Projections'}
-        subtitle={'Mid-Century (2035-2064)'}
         units={$climvar.units.imperial}
-        note={`Average of ${modelCount} models`}
-        data={modeledData}
-        showRange={true}
-        selectedRange={[2035, 2064]}
+        data={statsData}
         isHistorical={false}
+        series={'future'}
+        period={'end-century'}
         format={formatFn}
       />      
     </div>
