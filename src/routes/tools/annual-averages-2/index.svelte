@@ -78,7 +78,7 @@
   let definitionTitle;
   let appStatus = 'idle';
 
-  let inviewEl = 'explore';
+  let inviewEl = 'select';
   const handleEntry = (e) => {
     const { entry } = e.detail;
     inviewEl = entry.target.id;
