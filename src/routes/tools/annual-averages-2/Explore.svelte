@@ -132,6 +132,10 @@
     padding: 1rem;
   }
 
+  .block-settings {
+    background-color: #dadee1;
+  }
+
   .block-title {
     font-weight: 600;
     margin: 0;
@@ -225,6 +229,10 @@
   .explore-settings :global(.bx--accordion__item) {
     background-color: #eaecee;
     margin: 0.5rem 0;
+  }
+
+  .explore-settings :global(.bx--accordion__heading:hover::before) {
+    background-color: #eaecee;
   }
 </style>
 

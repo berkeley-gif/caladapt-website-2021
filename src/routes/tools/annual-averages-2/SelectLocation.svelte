@@ -94,6 +94,10 @@
     padding: 1rem;
   }
 
+  .block-settings {
+    background-color: #eaecee;
+  }
+
   .block-title {
     font-weight: 600;
     margin: 0;
@@ -105,6 +109,7 @@
     grid-template-rows: auto;
     grid-template-areas:
     "tool-header tool-help"
+    "tool-map tool-current"
     "tool-map tool-search"
     "tool-map tool-boundary";
 
@@ -119,6 +124,14 @@
 
     h2 {
       margin-top: 0;
+    }
+  }
+
+  .select-location-current {
+    grid-area: tool-current;
+
+    p {
+      margin: 0;
     }
   }
 
@@ -230,8 +243,15 @@
     </ul>
   </div>
 
+  <!-- Current Selection -->
+  <div class="select-location-current block">
+    {#if location}
+      <p>{$location.title}, {$location.address}</p>
+    {/if}
+  </div>
+
   <!-- Boundary Selection -->
-  <div class="select-location-boundary block">
+  <div class="select-location-boundary block block-settings">
     <SelectBoundary 
       selectedId={$boundary.id}
       items={boundaryList}
@@ -253,7 +273,7 @@
   </div> <!-- end explore-boundary -->
 
   <!-- Location Search -->
-  <div class="select-location-search block">
+  <div class="select-location-search block block-settings">
     <label class="bx--label">SEARCH LOCATION</label>
     <Search
       size="lg"

@@ -23,7 +23,7 @@
     top: 0;
     border-bottom: 1px solid #dadee1;
     z-index: 3;
-    background: #dadee1;
+    background: #9fa6ac;
   }
 
   .secondary-nav ul {
@@ -38,7 +38,7 @@
     margin-right: 1rem;
     cursor: pointer;
     padding: 0.5rem;
-    color: #3b4045;
+    color: #000;
   }
 
   .secondary-nav ul li:hover {
@@ -46,7 +46,6 @@
   }
 
   .secondary-nav ul li.active {
-    color: #036063;
     font-weight: 600;
   }
 </style>

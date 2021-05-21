@@ -25,6 +25,17 @@ const tools = [
     ],
   },
   {
+    title: 'Annual Averages 2',
+    desc: `Explore projected annual averages of maximum temperature, minimum temperature and 
+    precipitation for your location.`,
+    categories: ['Temperature', 'Precipitation'],
+    slug: 'annual-averages-2',
+    icons: [
+      'img/icons/sun.svg',
+      'img/icons/rainfall.svg',
+    ],
+  },
+  {
     title: 'Maps of Projected Change',
     desc: `Explore maps of projected long-term (30 years) changes in annual average 
     temperature and precipitation.`,
