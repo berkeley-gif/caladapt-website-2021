@@ -15,8 +15,8 @@
 
 <script>
   import { stores } from '@sapper/app';
-  import SidebarLeft from './_SidebarLeft.svelte';
-  import ItemDetail from './_ItemDetail.svelte';
+  import SidebarLeft from '../_SidebarLeft.svelte';
+  import ItemDetail from '../_ItemDetail.svelte';
   import NavBreadcrumb from '../../../components/partials/NavBreadcrumb.svelte';
   
   export let item;
