@@ -66,3 +66,22 @@
     }
   }
 }
+
+.list-items {
+  list-style-type: none;
+
+  .item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .item-text {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+
+  .item-title {
+    margin-bottom: 4px;
+    margin-top: 1rem;
+  }
+}
