@@ -32,7 +32,7 @@
   <!-- Events -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Upcoming Events</h5>
-    <ul class="sidebar-block-list">
+    <ul class="sidebar-block-list list-items">
       {#each upcomingEvents as event}
         <li class="item">
           <p class="item-title">
@@ -53,7 +53,7 @@
   <!-- Posts -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Latest on Cal-Adapt Blog</h5>
-    <ul class="sidebar-block-list">
+    <ul class="sidebar-block-list list-items">
       <li class="item">
         <p class="item-title"><a href="/blog/maps-projected-change">Maps of Projected Change</a></p>
         <p class="item-text">

@@ -22,10 +22,7 @@ export default function get_events() {
       // Date of event
       attributes.eventdate = new Date(attributes.date);
       attributes.eventdatestring = timeFormat('%B %d, %Y')(attributes.eventdate);
-      attributes.month = timeFormat('%b')(attributes.eventdate);
-      attributes.dayName = timeFormat('%A')(attributes.eventdate);
-      attributes.dayNumber = attributes.eventdate.getDate();
-      attributes.year = attributes.eventdate.getFullYear();
+      attributes.tags = attributes.tags.split(',').map(d => d.trim());
       const html = marked(body).replace(/^\t{3}/gm, '');
 
       return {

@@ -11,7 +11,9 @@
 </script>
 
 <script>
-  import BlogArticle from '../../components/partials/BlogArticle.svelte';
+  import { Button } from 'carbon-components-svelte';
+  import { ArrowRight16 } from 'carbon-icons-svelte';
+  import PostStub from '../../components/partials/PostStub.svelte';
   import SidebarRight from '../../components/partials/SidebarRight.svelte';
   
   export let posts;
@@ -82,8 +84,8 @@
     <div class="bx--grid">
       <div class="bx--row">
         {#each filteredPosts as post}
-        <div class="bx--col-lg-8" style="padding:2rem;">
-          <BlogArticle {post} />
+          <div class="bx--col-lg-8" style="padding:2rem;">
+            <PostStub {post} />
           </div>
         {/each}
       </div>
@@ -91,25 +93,24 @@
   </div>
 
   <div class="sidebar-right">
-    <SidebarRight
-      show={['events', 'search', 'filters']}
-      filters={['data', 'tools', 'other']}
-      {events}
-      on:search={updateSearch}
-      on:filter={updateFilter} />
+    <div class="is-sticky">
+      <SidebarRight
+        show={['events', 'search', 'filters']}
+        filters={['data', 'tools', 'other']}
+        {events}
+        on:search={updateSearch}
+        on:filter={updateFilter} />      
+    </div>
   </div>
 
   <div class="footer">
     <div class="bx--grid">
-      <!-- Row -->
       <div class="bx--row">
-        <div class="bx--col-lg-10" style="padding:2rem;">
+        <div class="bx--col">
           <p class="lead">
             Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox. Subscribe to the Cal-Adapt Newsletter. 
           </p>      
-          <a href="/signup/" class="bx--btn bx--btn--primary">
-            Subscribe
-          </a>
+          <Button icon={ArrowRight16} href="/signup">SUBSCRIBE</Button>
         </div>
       </div>
     </div>
