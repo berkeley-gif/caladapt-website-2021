@@ -48,12 +48,12 @@
       },
       {
         "name": "Karen Gaffney",
-        "org": "North Coast Regional Partnership",
+        "org": "NCRP",
         "tac": "SGC"
       },
       {
         "name": "Tom Gates",
-        "org": "Cultural Resources Unit, CEC",
+        "org": "CEC",
         "tac": "SGC"
       },
       {
@@ -98,7 +98,7 @@
       },
       {
         "name": "Kif Scheuer",
-        "org": "Local Government Commission",
+        "org": "LGC",
         "tac": "Energy Commission"
       },
       {
@@ -123,19 +123,19 @@
       },
       {
         "name": "Megan Walton",
-        "org": "Cal OES",
+        "org": "CalOES",
         "tac": "Energy Commission"
       },
       {
         "name": "Sasha Wisotsky",
-        "org": "Housing & Community Development",
+        "org": "CAHCD",
         "tac": "SGC"
       }
     ],
     "prior": [
       {
         "name": "Andrew Schwarz",
-        "org": "California Department of Water Resources (DWR)"
+        "org": "CADWR"
       },
       {
         "name": "Chris Benjamin",
@@ -162,16 +162,19 @@
         "org": "OPR"
       },
       {
-        "name": "Aaron Cuthbertson"
+        "name": "Aaron Cuthbertson",
+        "org": "CADWR"
       },
       {
-        "name": "JR DeLaRosa"
+        "name": "JR DeLaRosa",
+        "org": "CalOES"
       },
       {
         "name": "Lesley Ewing"
       },
       {
-        "name": "Neil Maizlish"
+        "name": "Neil Maizlish",
+        "org": "UC Davis"
       },
       {
         "name": "Andrew Gunther"

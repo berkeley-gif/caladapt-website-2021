@@ -10,7 +10,6 @@
   import data from './_data.json';
 
   const { advisors, staff, managers } = data;
-  const tac = [...advisors.current, ...advisors.prior];
 
   let items = [
     {
@@ -408,7 +407,7 @@
               {/each}
             </div>
             <p class="team-text">
-              Previous contributors
+              Previous contributors:
             </p>
             <ul class="team-list">
               {#each staff.prior as opt}
@@ -436,10 +435,21 @@
           </TabContent>
           <TabContent>
             <p class="team-text">
-              We thank the following people for serving on our Technical Advisory Committees (TACs). If you are interested in serving on our TACs in the future, please email nethomas@berkeley.edu.
+              Our Technical Advisory Committee (TAC) is composed of experts from state and local government, utilities, consulting firms and academia. We thank the following people for serving on our TACs. If you are interested in serving on our TAC in the future, please email nethomas@berkeley.edu.
             </p>
             <ul class="team-list">
-              {#each tac as opt}
+              {#each advisors.current as opt}
+                <li>
+                  { opt.name }
+                  {#if opt.org}
+                    <br/><span class="small text-gray-70">{opt.org}</span>
+                  {/if}
+                </li>
+              {/each}
+            </ul>
+            <p class="team-text">Previous contributors:</p>
+            <ul class="team-list">
+              {#each advisors.prior as opt}
                 <li>
                   { opt.name }
                 </li>
