@@ -1,29 +1,74 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { extent, mean, merge } from 'd3-array';
   import {
     Button,
     SkeletonText,
-    Tooltip,
+    Modal,
   } from 'carbon-components-svelte';
-  import Settings from '.../../../static/img/icons/gear.svg';
+  import { SettingsAdjust16, Information16 } from 'carbon-icons-svelte';
   import ChangeTimePeriod from './ChangeTimePeriod2.svelte';
 
-  export let title = 'Observed Data';
-  export let subtitle = 'Baseline (1961-1990)';
   export let units = 'inches';
-  export let note = '';
   export let data;
-  export let showRange = false;
-  export let selectedRange = [1961, 1990];
-  export let isHistorical = true;
-
+  export let series = 'historical';
+  export let period = 'baseline';
   export let format = (d) => d;
 
+  const periodList = [
+    {
+      id: 'baseline',
+      label: 'Baseline (1961-1990)',
+      start: 1961,
+      end: 1990,
+      historical: true,
+    },
+    {
+      id: 'mid-century',
+      label: 'Mid-Century (2035-2064)',
+      start: 2035,
+      end: 2064,
+      historical: false,
+    },
+    {
+      id: 'end-century',
+      label: 'End-Century (2070-2099)',
+      start: 2070,
+      end: 2099,
+      historical: false,
+    },
+  ];
+
+  const seriesList = [
+    {
+      id: 'observed',
+      label: 'Observed Historical',
+      historical: true,
+    },
+    {
+      id: 'historical',
+      label: 'Modeled Historical',
+      historical: true,
+    },
+    {
+      id: 'future',
+      label: 'Future Projections',
+      historical: false,
+    }
+  ];
+
   const dispatch = createEventDispatcher();
-  let ready = false;
+  let isHistorical = series === 'historical' || series === 'observed';
+
+  let selectedSeries = seriesList.find(d => d.id === series);
+  let selectedPeriod = periodList.find(d => d.id === period);
+
   let showSettings = false;
+  let showInfo = false;
   let stats = null;
+  let showRange = true;
+  let modelCount;
+  let note = 'Learn More';
 
   function subsetByYearRange(range) {
     return function(d) {
@@ -32,16 +77,37 @@
   }
 
   function updateStats(e) {
-    const {period, range} = e.detail;
-    subtitle = `${period} (${range[0]}-${range[1]})`;
+    const { seriesId, periodId, range } = e.detail;
+    selectedSeries = seriesList.find(d => d.id === seriesId);
+    if (periodId === 'custom') {
+      selectedPeriod = {
+        id: 'custom',
+        label: `${range[0]}-${range[1]}`,
+        start: range[0],
+        end: range[1],
+      }
+    } else {
+      selectedPeriod = periodList.find(d => d.id === periodId);
+    }
     showSettings = false;
-    stats = calculateStats(data, range);
+    let dataForSeries;
+    if (seriesId === 'observed') {
+      dataForSeries = data.filter(d => d.key === 'observed');
+      modelCount = 0;
+      showRange = false;
+    } else {
+      dataForSeries = data.filter(d => d.key !== 'observed');
+      modelCount = dataForSeries.length;
+      showRange = true;
+    }
+    console.log('dataForSeries', showRange, dataForSeries);
+    stats = calculateStats(dataForSeries, range);
   }
 
   function calculateStats(_data, range) {
     const yearCount = range[1] - range[0] + 1;
     const content = [];
-    if (_data.length === 0) {
+    if (!_data || _data.length === 0) {
       content.push({ label: `${yearCount} YEAR AVG`, value: '–' });
       if (showRange) {
         content.push({ label: `${yearCount} YEAR RANGE`, value: '–' });
@@ -49,11 +115,11 @@
       return content;
     }
     const values = merge(_data.map(series => series.values));
-    const filteredData = values.filter(subsetByYearRange(range));
-    const avg = mean(filteredData, d => d.value);
+    const filteredValues = values.filter(subsetByYearRange(range));
+    const avg = mean(filteredValues, d => d.value);
     content.push({ label: `${yearCount} YEAR AVG`, value: format(avg) });
     if (showRange) {
-      const minmax = extent(filteredData, d => d.value);
+      const minmax = extent(filteredValues, d => d.value);
       content.push({
         label: `${yearCount} YEAR RANGE`,
         value: `${format(minmax[0])}–${format(minmax[1])}`
@@ -63,15 +129,10 @@
   }
 
   $: if (data) {
-    stats = calculateStats(data, selectedRange);
+    stats = calculateStats(data, [selectedPeriod.start, selectedPeriod.end]);
   } else {
     stats = null;
   }
-
-  onMount(() => {
-    ready = true;
-    dispatch('ready');
-  });
 </script>
 
 <style lang="scss">
@@ -81,18 +142,20 @@
     margin: 0.75rem 0;
   }
 
-  .stat-title {
-    font-size: 1rem;
-    font-weight: 600;
+  .stat {
+    position: relative;
   }
 
-  .stat-subtitle {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    color: #04797c;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
+  .stat-header {
+    margin-bottom: 1rem;
+
+    span {
+      display: block;
+      line-height: 1.29;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
   }
 
   .stat-data-label {
@@ -109,49 +172,26 @@
     font-size: 0.8rem;
   }
 
+  .stat-controls {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
   .stat-note {
-    margin-top: 1rem;
-    font-style: italic;
-    font-size: 0.75rem;
-    color: #51585e;
+    font-size: 0.875rem;
+    color: #0f62fe;
     display: flex;
     align-items: center;
   }
-
-  #stat-tooltip {
-    font-style: normal;
-  }
-
-  :global(.settings.bx--btn--sm) {
-    padding: calc(0.375rem - 3px);
-  }
-
-  :global(.settings #icon) {
-    height: 1rem;
-    width: 1rem;
-  }
 </style>
 
-{#if ready && stats}
+{#if stats}
   <div class="stat">
     <!-- title -->
     <div class="stat-header">
-      <div class="stat-title">{title}</div>
-      <div class="stat-subtitle">
-        {subtitle}
-        <span>
-          <Button
-            class="settings"
-            tooltipPosition="bottom"
-            tooltipAlignment="center"
-            iconDescription="Change Time Period"
-            size="small"
-            kind="ghost"
-            on:click={() => showSettings=true}>
-            { @html Settings }
-          </Button>
-        </span>
-      </div>      
+      <span>{selectedSeries.label}</span>
+      <span>{selectedPeriod.label}</span>      
     </div>
     <!-- values -->
     <div class="stat-data">
@@ -163,18 +203,25 @@
         </div>
       {/each}
     </div>
-    <!-- note -->
-    {#if note}
+    <!-- controls -->
+    <div class="stat-controls">
       <div class="stat-note">
-        {note}.
-        <Tooltip tooltipBodyId="stat-tooltip">
-          <div id="stat-tooltip">
-            <p>The range and average are calculated using data values from all selected models for the selected time period.</p>
-            <p>List of selected models can be changed in the Settings Panel under Models. Select preset or custom time periods in the Stats Panel.</p>
-          </div>
-        </Tooltip>
+        <Button
+          icon={Information16}
+          kind="ghost"
+          size="sm"
+          style="padding-left:0;"
+          on:click={() => showInfo = true}>
+          {note}
+        </Button>
       </div>
-    {/if}
+      <Button
+        icon={SettingsAdjust16}
+        size="small"
+        on:click={() => showSettings = true}>
+        Change
+      </Button> 
+    </div> 
   </div>
 {:else}
   <div class="stat">
@@ -186,5 +233,23 @@
 <ChangeTimePeriod
   open={showSettings}
   {isHistorical}
+  seriesList={seriesList.filter(d => d.historical === isHistorical)}
+  periodList={periodList.filter(d => d.historical === isHistorical)}
+  seriesId={selectedSeries.id}
+  periodId={selectedPeriod.id}
   on:change={updateStats}
   on:cancel={() => showSettings = false} />
+
+<Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading="Summary Statistics" on:open on:close={() => showInfo = false}>
+  <div>
+    {#if (selectedSeries.id === 'observed')}
+      <p>
+        The average is calculated using data values between {selectedPeriod.start} and {selectedPeriod.end} from the Observed Historical timeseries.
+      </p>
+    {:else}
+      <p>
+        The range and average are calculated using data values between {selectedPeriod.start} and {selectedPeriod.end} from the {modelCount} models shown in the chart below.
+      </p>
+    {/if}
+  </div>
+</Modal>
