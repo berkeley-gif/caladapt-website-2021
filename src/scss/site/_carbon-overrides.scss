@@ -144,12 +144,14 @@
 }
 
 .bx--modal-header {
-  padding-left: 1rem;
-  padding-top: 1rem;
+  padding: 1rem;
+  background: $gray-20;
+
+  h3 {
+    margin: 0;
+  }
 }
 
 .bx--modal-content {
-  padding-left: 1rem;
-  padding-top: 0.5rem;
-  margin-bottom: 3rem;
+  padding: 1rem;
 }
