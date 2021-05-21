@@ -3,6 +3,8 @@ title: Accessing Climate Data through Cal-Adapt
 date: 2019-03-28
 location: Online
 time: "12:30 PM - 1:30 PM PST"
+tags: webinar
+image: webinar.jpg
 ---
 
 ## Webinar Description

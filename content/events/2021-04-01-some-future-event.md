@@ -3,6 +3,8 @@ title: "Some future event"
 date: 2021-08-11
 location: Online
 time: "1:00 PM - 2:00 PM PST"
+tags: webinar
+image: webinar.jpg
 ---
 
 ### Webinar Description

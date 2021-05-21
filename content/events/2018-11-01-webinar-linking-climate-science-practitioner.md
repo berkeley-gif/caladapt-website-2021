@@ -3,6 +3,8 @@ title: Linking Climate Science with Practitioner Need
 date: 2018-12-06
 location: Online
 time: "12:00 PM - 1:00 PM PST"
+tags: webinar
+image: webinar.jpg
 ---
 
 ## Webinar Description
