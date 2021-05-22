@@ -43,7 +43,7 @@
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
-  import ToolFooter from '../../../components/partials/FooterTool';
+  import ToolFooter from '../../../partials/FooterTool';
   import { NotificationDisplay } from '../../../components/notifications';
 
   // Store

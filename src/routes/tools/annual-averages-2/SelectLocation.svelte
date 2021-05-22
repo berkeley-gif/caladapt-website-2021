@@ -26,12 +26,9 @@
     locationStore,
   } from './_store';
 
-  export let appStatus;
-
   const dispatch = createEventDispatcher();
   const { location, boundary, lngLat } = locationStore;
 
-  let mapReady = false;
   let showUpload = false;
 
   let searchOptions = [];
@@ -39,10 +36,6 @@
   let searchPlaceholder = 'Enter address or zipcode';
   let showSuggestions = false;
   let showShare = false;
-
-  $: if (mapReady) {
-    dispatch('ready');
-  }
 
   async function mapClick(e) {
     const loc = await getLocation(e.detail[0], e.detail[1], $boundary.id);
@@ -314,7 +307,7 @@
         location={$location}
         imageOverlayShow={false}
         on:mapclick={mapClick}
-        on:ready={() => mapReady = true} />
+        on:ready={() => dispatch('ready')} />
   </div> <!-- end explore-map -->
 </div>
 

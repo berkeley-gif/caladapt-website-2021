@@ -2,7 +2,7 @@
   import { fade } from 'svelte/transition';
   import { categories, tools } from '../../../content/tools/data';
 
-  import FilterCategories from '../../components/partials/FilterCategories.svelte';
+  import FilterCategories from '../../partials/FilterCategories.svelte';
 
   $: toolsByCategory = tools;
 

@@ -87,19 +87,13 @@
     threshold: 0.25,
   };
 
-  $: if (initReady) {
-    appReady = true;
-    console.log('app ready');
-    updateData();
-  }
-
   $: $climvar, updateData();
   $: $location, updateData();
   $: $scenario, updateData();
   $: $models, updateData();
 
   async function updateData() {
-    if (!appReady) return;
+    if (!initReady || !mapReady) return;
     appStatus = 'working';
     dataStore.set(null);
     try {
@@ -194,13 +188,9 @@
     class="section"
     use:inview={entryOptions}
     on:enter={handleEntry}>
-    {#if !appReady}
-      <AppLoadingScreen />
-    {:else}
-      <SelectLocation
-        bind:appStatus
-        on:define={showDefinition} />
-    {/if}  
+    <SelectLocation
+      on:ready={() => mapReady = true}
+      on:define={showDefinition} />
   </div>
   
   <!-- Explore -->

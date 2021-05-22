@@ -57,8 +57,10 @@
     });
   }
 
-  $: if (!isMapLoading && zoomToLocationOnLoad) {
-    zoomToLocation();
+  $: if (!isMapLoading) {
+    if (zoomToLocationOnLoad) {
+      zoomToLocation();
+    }
     dispatch('ready');
   }
 

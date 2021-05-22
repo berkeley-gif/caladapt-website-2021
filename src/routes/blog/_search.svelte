@@ -16,7 +16,7 @@
 </script>
 
 <script>
-  import PostStub from '../../components/partials/PostStub.svelte';
+  import PostStub from '../../partials/PostStub.svelte';
 
   export let posts;
   export let query;

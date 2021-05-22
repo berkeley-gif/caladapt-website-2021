@@ -12,7 +12,7 @@
   import { Button } from 'carbon-components-svelte';
   import { ArrowRight16 } from 'carbon-icons-svelte';
 
-  import SidebarRight from '../components/partials/SidebarRight.svelte';
+  import SidebarRight from '../partials/SidebarRight.svelte';
   import Sun from '../../static/img/icons/sun.svg';
   import Rainfall from '../../static/img/icons/rainfall.svg';
   import Wildfire from '../../static/img/icons/wildfire.svg';

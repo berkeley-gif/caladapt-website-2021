@@ -18,8 +18,8 @@
   import Catalog32 from 'carbon-icons-svelte/lib/Catalog32';
   import User32 from 'carbon-icons-svelte/lib/User32';
   import Video32 from 'carbon-icons-svelte/lib/Video32';
-  import NavBreadcrumb from '../../components/partials/NavBreadcrumb.svelte';
-  import SidebarRight from '../../components/partials/SidebarRight.svelte';
+  import NavBreadcrumb from '../../partials/NavBreadcrumb.svelte';
+  import SidebarRight from '../../partials/SidebarRight.svelte';
   import { stores } from '@sapper/app';
   import SidebarLeft from './_SidebarLeft.svelte';
   import ItemsList from './_ItemsList.svelte';

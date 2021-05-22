@@ -6,7 +6,7 @@
   } from 'carbon-components-svelte';
   import { inview } from 'svelte-inview/dist/';
 
-  import PageNav from '../../components/partials/PageNav.svelte';
+  import PageNav from '../../partials/PageNav.svelte';
   import data from './_data.json';
 
   const { advisors, staff, managers } = data;

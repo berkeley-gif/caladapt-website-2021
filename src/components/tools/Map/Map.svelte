@@ -109,7 +109,7 @@
         popupElem = popup.getElement();
         popupElem.style.display = 'none';
         canvas = map.getCanvas();
-        dispatch('ready')
+        dispatch('ready');
       });
 
       // Forward mouse events

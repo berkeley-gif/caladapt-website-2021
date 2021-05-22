@@ -11,9 +11,9 @@
 <script>
   import { Button } from 'carbon-components-svelte';
   import { ArrowRight16 } from 'carbon-icons-svelte';
-  import SidebarRight from '../../components/partials/SidebarRight.svelte';
-  import NavBreadcrumb from '../../components/partials/NavBreadcrumb.svelte';
-  import EventStub from '../../components/partials/EventStub.svelte';
+  import SidebarRight from '../../partials/SidebarRight.svelte';
+  import NavBreadcrumb from '../../partials/NavBreadcrumb.svelte';
+  import EventStub from '../../partials/EventStub.svelte';
 
   export let events;
 

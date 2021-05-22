@@ -13,8 +13,8 @@
 <script>
   import { Button } from 'carbon-components-svelte';
   import { ArrowRight16 } from 'carbon-icons-svelte';
-  import PostStub from '../../components/partials/PostStub.svelte';
-  import SidebarRight from '../../components/partials/SidebarRight.svelte';
+  import PostStub from '../../partials/PostStub.svelte';
+  import SidebarRight from '../../partials/SidebarRight.svelte';
   
   export let posts;
   export let events;

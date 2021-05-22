@@ -14,7 +14,7 @@
 </script>
 
 <script>
-  import NavBreadcrumb from '../../../components/partials/NavBreadcrumb.svelte';
+  import NavBreadcrumb from '../../../partials/NavBreadcrumb.svelte';
   import LogoTwitter32 from 'carbon-icons-svelte/lib/LogoTwitter32';
   import Email32 from 'carbon-icons-svelte/lib/Email32';
   export let event;
