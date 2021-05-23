@@ -38,7 +38,7 @@
   import { resources } from './_helpers';
 
   // Components
-  import AppLoadingScreen from '../../../components/AppLoadingScreen';
+  import DataLoading from '../../../components/tools/Loading/DataLoading.svelte';
   import Header from './Header.svelte';
   import Explore from './Explore.svelte';
   import About from './About.svelte';
@@ -185,7 +185,7 @@
     use:inview={entryOptions}
     on:enter={handleEntry}>
     {#if !appReady}
-      <AppLoadingScreen />
+      <DataLoading />
     {:else}
       <Explore
         bind:appStatus

@@ -1,7 +1,7 @@
 <script>
   import { Tag } from 'carbon-components-svelte';
   import { createEventDispatcher } from 'svelte';
-  import { Sun, Rainfall, Sea, Snowflake, Streamflow, Wildfire, App } from '../icons';
+  import { Sun, Rainfall, Sea, Snowflake, Streamflow, Wildfire, App } from '../components/icons';
 
   export let categories;
 

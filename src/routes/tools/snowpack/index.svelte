@@ -38,7 +38,7 @@
   import { resources } from './_helpers';
 
   // Components
-  import AppLoadingScreen from '../../../components/AppLoadingScreen';
+  import DataLoading from '../../../components/tools/Loading/DataLoading.svelte';
   import Header from './Header.svelte';
   import Settings from './Settings.svelte';
   import Content from './Content.svelte';
@@ -168,7 +168,7 @@
 
 {#if !initReady}
 <div style="height:50rem;">
-  <AppLoadingScreen />
+  <DataLoading />
 </div>
 {:else}
 <div class="page-grid page-grid--tool">

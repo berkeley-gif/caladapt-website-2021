@@ -38,7 +38,7 @@
   import { resources } from './_helpers';
 
   // Components
-  import AppLoadingScreen from '../../../components/AppLoadingScreen';
+  import DataLoading from '../../../components/tools/Loading/DataLoading.svelte';
   import Header from './Header.svelte';
   import SelectLocation from './SelectLocation.svelte';
   import Explore from './Explore.svelte';
@@ -87,13 +87,19 @@
     threshold: 0.25,
   };
 
+  $: if (mapReady && initReady) {
+    console.log('map ready');
+    appReady = true;
+    updateData();
+  } 
+
   $: $climvar, updateData();
   $: $location, updateData();
   $: $scenario, updateData();
   $: $models, updateData();
 
   async function updateData() {
-    if (!initReady || !mapReady) return;
+    if (!appReady) return;
     appStatus = 'working';
     dataStore.set(null);
     try {
@@ -171,13 +177,6 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 
-<style type="scss">
-  .section {
-    margin: 4rem 2rem;
-    min-height: 300px;
-  }
-</style>
-
 <div class="tool">
   <!-- Header -->
   <Header currentView={inviewEl} />
@@ -200,7 +199,7 @@
     use:inview={entryOptions}
     on:enter={handleEntry}>
     {#if !appReady}
-      <AppLoadingScreen />
+      <DataLoading />
     {:else}
       <Explore
         bind:appStatus

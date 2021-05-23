@@ -44,17 +44,13 @@
   export let appStatus;
 
   const dispatch = createEventDispatcher();
-  const { location, boundary, lngLat } = locationStore;
+  const { location, boundary } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
-  const { models } = modelsStore;
 
   let dataByDate;
-  let observedData;
-  let modeledData;
   let statsData;
-  let modelCount = 0;
   let showDownload = false;
   let showShare = false;
 
@@ -125,119 +121,7 @@
   })
 </script>
 
-<style lang="scss">
-  .block {
-    background-color: #FFFFFF;
-    box-shadow: 0 2px 3px rgba(22, 28, 45, 0.1);
-    padding: 1rem;
-  }
-
-  .block-settings {
-    background-color: #dadee1;
-  }
-
-  .block-title {
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .explore {
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-    "tool-header tool-settings"
-    "tool-stats tool-settings"
-    "tool-chart tool-settings";
-
-    grid-gap: 1rem;
-    max-width: 1400px;
-    min-height: 400px;
-
-  }
-
-  .explore-header {
-    grid-area: tool-header;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .explore-stats {
-    grid-area: tool-stats;
-
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-
-    div.block {
-      height: 100%;
-      flex: 1 0 auto;
-      margin: 0 0.5rem;
-    }
-
-    div.block:first-child {
-      margin-left: 0;
-    }
-
-    div.block:last-child {
-      margin-right: 0;
-    }
-  }
-
-  .explore-chart {
-    grid-area: tool-chart;
-
-    .chart-notes {
-      padding: 1rem 0;
-      font-size: 0.75rem;
-    }
-
-    .chart-download {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-  }
-
-  .explore-settings {
-    grid-area: tool-settings;
-
-    padding: 0;
-  }
-
-  :global(.bx--label::before),
-  :global(.bx--accordion__title::before) {
-    content: '';
-    background: url(img/icons/gear.svg);
-    display: inline-block;
-    height: 1rem;
-    width: 1rem;
-    margin-right: 3px;
-    vertical-align: -25%;
-  }
-
-  :global(.bx--label),
-  :global(.bx--accordion__title) {
-    color: #04797c;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-  }
-
-  .explore-settings :global(.bx--accordion__item) {
-    background-color: #eaecee;
-    margin: 0.5rem 0;
-  }
-
-  .explore-settings :global(.bx--accordion__heading:hover::before) {
-    background-color: #eaecee;
-  }
-</style>
-
 <div class="explore">
-
   <!-- Header -->
   <div class="explore-header block">
     {#if $climvar}
@@ -319,7 +203,7 @@
   </div> <!-- end explore-chart -->
 
   <div class="explore-settings"> 
-    <h5 class="block-title">Change Settings:</h5>
+    <h4 class="block-title">Change Settings:</h4>
     <Accordion class="settings-list">
       <AccordionItem open title="Select Climate Variable">
         <SelectClimvar

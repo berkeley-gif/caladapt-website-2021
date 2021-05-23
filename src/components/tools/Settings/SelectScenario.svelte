@@ -24,15 +24,24 @@
   });
 </script>
 
+<style>
+  :global(.scenario-select .bx--radio-button__appearance) {
+    background-color: #fff;
+  }
+</style>
+
 {#if ready}
-  <RadioButtonGroup
-    orientation="vertical"
-    selected={selectedId}
-    on:change={change}>
-    {#each items as opt}
-      <RadioButton labelText={opt.label} value={opt.id}/>  
-    {/each}
-  </RadioButtonGroup>
+  <div class="scenario-select">
+    <RadioButtonGroup
+      class="scenario-select"
+      orientation="vertical"
+      selected={selectedId}
+      on:change={change}>
+      {#each items as opt}
+        <RadioButton labelText={opt.label} value={opt.id}/>  
+      {/each}
+    </RadioButtonGroup>    
+  </div>
 {:else}
   <RadioButtonGroup orientation="vertical">
     <RadioButtonSkeleton />

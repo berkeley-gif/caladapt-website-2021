@@ -56,22 +56,6 @@
   });
 </script>
 
-<style>
-  :global(.bx--label::before) {
-    content: '';
-    background: url(img/icons/gear.svg);
-    display: inline-block;
-    height: 1rem;
-    width: 1rem;
-    margin-right: 3px;
-    vertical-align: -25%;
-  }
-
-  :global(.boundary-select .bx--select-input) {
-    background-color: #f4f4f4;
-  }
-</style>
-
 {#if ready}
   <Select
     class="boundary-select"

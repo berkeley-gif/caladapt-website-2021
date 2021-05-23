@@ -25,12 +25,6 @@
   });
 </script>
 
-<style>
-  :global(.climvar-select .bx--select-input) {
-    background-color: #f4f4f4;
-  }
-</style>
-
 {#if ready}
   <Select
     class="climvar-select"

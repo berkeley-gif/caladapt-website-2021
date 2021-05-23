@@ -80,143 +80,6 @@
   })
 </script>
 
-<style lang="scss">
-  .block {
-    background-color: #FFFFFF;
-    box-shadow: 0 2px 3px rgba(22, 28, 45, 0.1);
-    padding: 1rem;
-  }
-
-  .block-settings {
-    background-color: #eaecee;
-  }
-
-  .block-title {
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .select-location {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-    "tool-header tool-help"
-    "tool-map tool-current"
-    "tool-map tool-search"
-    "tool-map tool-boundary";
-
-    grid-gap: 1rem;
-    max-width: 1400px;
-    min-height: 200px;
-
-  }
-
-  .select-location-header {
-    grid-area: tool-header;
-
-    h2 {
-      margin-top: 0;
-    }
-  }
-
-  .select-location-current {
-    grid-area: tool-current;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .select-location-help {
-    grid-area: tool-help;
-    ul {
-      padding-left: 1rem;
-    }
-  }
-
-  .select-location-boundary {
-    grid-area: tool-boundary;
-
-    .boundary-upload {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-top: 1rem;
-    }
-  }
-
-  .select-location-search {
-    grid-area: tool-search;
-  }
-
-  .select-location-map {
-    grid-area: tool-map;
-  }
-
-  .suggestions {
-    background-color: #fff;
-    border-radius: 4px;
-    position: absolute;
-    width: 100%;
-    left: 0;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    z-index: 1000;
-    overflow: hidden;
-    font-size: 15px;
-    box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
-
-    .suggestion {
-      cursor: default;
-      display: block;
-      padding: 6px 12px;
-      color: #404040;
-    }
-
-    .suggestion:hover {
-      color: #404040;
-      background-color: #f3f3f3;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .suggestion-title, .suggestion-address {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .suggestion-title {
-      font-weight: bold;
-    }
-  }
-
-  :global(.bx--label::before),
-  :global(.bx--accordion__title::before) {
-    content: '';
-    background: url(img/icons/gear.svg);
-    display: inline-block;
-    height: 1rem;
-    width: 1rem;
-    margin-right: 3px;
-    vertical-align: -25%;
-  }
-
-  :global(.bx--label),
-  :global(.bx--accordion__title) {
-    color: #04797c;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-  }
-
-  :global(.bx--accordion__content) {
-    padding-right: 1rem;
-  }
-</style>
-
 <div class="select-location">
    <!-- Header -->
   <div class="select-location-header">
@@ -267,8 +130,9 @@
 
   <!-- Location Search -->
   <div class="select-location-search block block-settings">
-    <label class="bx--label">SEARCH LOCATION</label>
+    <label for="search" class="bx--label">Search Location</label>
     <Search
+      id="search"
       size="lg"
       placeholder={searchPlaceholder} 
       on:change={search}

@@ -7,8 +7,9 @@
 
 // Layout & components
 @import 'global';
-@import 'grids';
+@import 'carbon-overrides';
 @import 'footer';
+@import 'loader';
 @import 'nav';
 @import 'banner';
 @import 'type';
@@ -16,4 +17,5 @@
 @import 'device';
 @import 'icons';
 @import 'list';
-@import 'carbon-overrides';
+@import 'grids';
+@import 'tools';

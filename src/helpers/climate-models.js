@@ -46,7 +46,7 @@ const models = [
       'de Recherche et Formation Avancée en Calcul Scientifique',
     priority: true,
     color: 'rgba(23, 190, 207, 1)',
-    text: 'Cooler/Wetter',
+    text: 'Cool/Wet',
     order: 1,
   },
   {
@@ -70,7 +70,7 @@ const models = [
     org: 'Met Office Hadley Centre and Instituto Nacional de Pesquisas Espaciais',
     priority: true,
     color: 'rgba(214, 39, 40, 1)',
-    text: 'Warm/Drier',
+    text: 'Warm/Dry',
     order: 0,
   },
   {
