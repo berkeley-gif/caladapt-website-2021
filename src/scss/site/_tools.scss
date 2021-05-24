@@ -120,8 +120,18 @@
 
     .select-location-help {
       grid-area: tool-help;
-      ul {
-        padding-left: 1rem;
+
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .bx--tag {
+        padding: 0.25rem 0.75rem;
+        font-size: 1rem;
+        background-color: $blue-50;
+        color: $white;
+        margin: 0.5rem;
       }
     }
 
@@ -184,6 +194,84 @@
     .select-location-map {
       grid-area: tool-map;
     }
+  }
+
+  input[name*="ACCESS1-0"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="ACCESS1-0"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(31, 119, 180, 1);
+    border-color: rgba(31, 119, 180, 1);
+  }
+
+  input[name*="CanESM2"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="CanESM2"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(188, 189, 34, 1);
+    border-color: rgba(188, 189, 34, 1);
+  }
+
+  input[name*="CCSM4"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="CCSM4"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(44, 160, 44, 1);
+    border-color: rgba(44, 160, 44, 1);
+  }
+
+  input[name*="CESM1-BGC"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="CESM1-BGC"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(140, 86, 75, 1);
+    border-color: rgba(140, 86, 75, 1);
+  }
+
+  input[name*="CMCC-CMS"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="CMCC-CMS"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(227, 119, 194, 1);
+    border-color: rgba(227, 119, 194, 1);
+  }
+
+  input[name*="CNRM-CM5"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="CNRM-CM5"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(23, 190, 207, 1);
+    border-color: rgba(23, 190, 207, 1);
+  }
+
+  input[name*="GFDL-CM3"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="GFDL-CM3"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(255, 127, 14, 1);
+    border-color: rgba(255, 127, 14, 1);
+  }
+
+  input[name*="HadGEM2-CC"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="HadGEM2-CC"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(69, 68, 68, 1);
+    border-color: rgba(69, 68, 68, 1);
+  }
+
+  input[name*="HadGEM2-ES"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="HadGEM2-ES"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(214, 39, 40, 1);
+    border-color: rgba(214, 39, 40, 1);
+  }
+
+  input[name*="MIROC5"] + .bx--checkbox-label::before,
+  input.bx--checkbox[name*="MIROC5"]:checked + .bx--checkbox-label::before {
+    background-color: rgba(148, 103, 189, 1);
+    border-color: rgba(148, 103, 189, 1);
+  }
+
+  .bx--search-input, .bx--select-input {
+    border-bottom: 2px solid $teal-60;
+  }
+
+  .bx--radio-button__appearance {
+    background-color: #fff;
+    border: 2px solid $teal-60;
+  }
+
+  .bx--radio-button:checked + .bx--radio-button__label .bx--radio-button__appearance {
+    border-color: $teal-60;
+  }
+
+  .bx--radio-button:checked + .bx--radio-button__label .bx--radio-button__appearance::before {
+    background-color: $teal-60;
+    border-color: $teal-60;
   }
 
   .bx--accordion__item {

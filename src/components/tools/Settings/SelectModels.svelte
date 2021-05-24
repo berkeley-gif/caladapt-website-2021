@@ -31,6 +31,10 @@
   });
 </script>
 
+<style>
+
+</style>
+
 {#if ready}
   <MultiSelect
     bind:selectedIds={selectedIdsArr}

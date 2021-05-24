@@ -5,6 +5,7 @@
     SkeletonText,
     Button,
     Modal,
+    Tag,
   } from 'carbon-components-svelte';
   import Upload16 from 'carbon-icons-svelte/lib/Upload16';
 
@@ -88,15 +89,8 @@
   </div>
   <!-- Help -->
   <div class="select-location-help">
-    <h5 class="block-title">Help</h5>
-    <ul style="padding: 0.5rem 1rem 0;">
-      <li>
-        <a href="#!">Take a Tour</a>
-      </li>
-      <li>
-        <a href="/help/faqs">FAQs</a>
-      </li>
-    </ul>
+    <Tag interactive>Take a Tour</Tag>
+    <Tag interactive>Video Tutorial</Tag>
   </div>
 
   <!-- Current Selection -->

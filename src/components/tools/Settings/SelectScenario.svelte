@@ -24,12 +24,6 @@
   });
 </script>
 
-<style>
-  :global(.scenario-select .bx--radio-button__appearance) {
-    background-color: #fff;
-  }
-</style>
-
 {#if ready}
   <div class="scenario-select">
     <RadioButtonGroup
