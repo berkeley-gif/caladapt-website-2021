@@ -3,9 +3,9 @@
   import { Search, Select, SelectItem } from "carbon-components-svelte";
 
   export let show = ['events', 'posts'];
-  export let events;
-  export let posts;
-  export let filters;
+  export let events = [];
+  export let posts = [];
+  export let filters = [];
 
   const dispatch = createEventDispatcher();
   let upcomingEvents;
@@ -27,6 +27,9 @@
     return s.charAt(0).toUpperCase() + s.slice(1)
   }
 </script>
+
+<style>
+</style>
 
 {#if show.includes('events') && upcomingEvents.length > 0}
   <!-- Events -->

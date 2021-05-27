@@ -18,6 +18,7 @@
   import Catalog32 from 'carbon-icons-svelte/lib/Catalog32';
   import User32 from 'carbon-icons-svelte/lib/User32';
   import Video32 from 'carbon-icons-svelte/lib/Video32';
+  import { merge } from 'd3-array';
   import NavBreadcrumb from '../../partials/NavBreadcrumb.svelte';
   import SidebarRight from '../../partials/SidebarRight.svelte';
   import { stores } from '@sapper/app';
@@ -41,10 +42,20 @@
   let filter = '';
   let searchStr = '';
   let show;
+
+  function makeTopicList(tags) {
+    const filtered = tags.filter(tag => tag !== undefined);
+    if (filtered.length > 0) {
+      const unique = [...new Set(merge(filtered))];
+      return unique;
+    }
+    return [];
+  }
   
   $: slug = $page.params.category;
   $: activeCategory = toc.find(d => d.slug === slug);
   $: filteredItems = data;
+  $: topics = makeTopicList(data.map(d => d.metadata.tags));
   $: items = [
     { href: '/', text: 'Home' },
     { href: '/help/', text: 'Help' },
@@ -57,11 +68,6 @@
   } else {
     show = [];
   }
-
-  // function updateItems() {
-  //   activeCategory = data.find(d => d.slug === slug);
-  //   filteredItems = activeCategory.items;
-  // }
 
   function filterItems() {
     filteredItems = data.filter(d => {
@@ -185,7 +191,7 @@
   <aside class="sidebar-right">
     <SidebarRight
       {show}
-      filters={['data', 'tools', 'other']}
+      filters={topics}
       on:search={updateSearch}
       on:filter={updateFilter} />
   </aside>
