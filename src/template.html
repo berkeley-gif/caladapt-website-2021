@@ -40,32 +40,6 @@
   <!-- The application will be rendered inside this element,
        because `src/client.js` references it -->
   <div id="root">%sapper.html%</div>
-  <!-- <div class="scroll-indicator"><span></span></div> -->
-  <script type="text/javascript">
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    const footer = document.querySelector('footer');
-    function scrollToTop() {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    }
-    function handler(entries, observer) {
-      for (entry of entries) {
-        if (entry.isIntersecting) {
-          scrollIndicator.classList.add('up');
-          scrollIndicator.removeEventListener('click', scrollToTop);
-        } else {
-          scrollIndicator.classList.remove('up');
-          scrollIndicator.addEventListener('click', scrollToTop);
-        }
-      }
-    }
-    /* By default, invokes the handler whenever:
-       1. Any part of the target enters the viewport
-       2. The last part of the target leaves the viewport */
-    //let observer = new IntersectionObserver(handler);
-    //observer.observe(footer);
-
-  </script>
 </body>
 
 </html>
