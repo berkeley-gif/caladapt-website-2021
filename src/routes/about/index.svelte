@@ -41,7 +41,7 @@
     selected = entry.target.id;
   };
   const entryOptions = {
-    threshold: 0.9,
+    threshold: 0.5,
   };
 </script>
 
