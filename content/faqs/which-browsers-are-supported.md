@@ -1,6 +1,6 @@
 ---
 title: How can I get help?
-tags: tools
+tags: site
 ---
 
 We support recent versions of popular web browsers like Google Chrome, Mozilla Firefox, Apple Safari, and Microsoft Edge. In accordance with Microsoft's official retirement of Internet Explorer 11 we no longer support IE11.

@@ -1,6 +1,6 @@
 ---
 title: What time period should I select for my analysis?
-tags: tools, data
+tags: tools
 ---
 
 The specific time period you select will depend on the purpose of your analysis. However, regardless of the time period you select, it is recommended that you abide by a few principles:

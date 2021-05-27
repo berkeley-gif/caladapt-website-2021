@@ -1,6 +1,6 @@
 ---
 title: How can I get help?
-tags: tools, data, other
+tags: help
 ---
 
 All Cal-Adapt climate tools include **Learn More** links that provide explanations and more information about tool parameters and terminology. 
