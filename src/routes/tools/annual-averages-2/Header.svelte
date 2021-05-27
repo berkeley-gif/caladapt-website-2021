@@ -5,7 +5,7 @@
     currentView = e.target.dataset.section;
     const el = document.getElementById(currentView);
     window.scrollTo({
-      top: el.offsetTop - 100,
+      top: el.offsetTop - 50,
       behavior: 'smooth',
     });
   }

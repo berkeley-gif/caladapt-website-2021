@@ -1,8 +1,7 @@
 <script>
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import {
     Search,
-    SkeletonText,
     Button,
     Modal,
     Tag,
@@ -36,7 +35,6 @@
   let searchValue = '';
   let searchPlaceholder = 'Enter address or zipcode';
   let showSuggestions = false;
-  let showShare = false;
 
   async function mapClick(e) {
     const loc = await getLocation(e.detail[0], e.detail[1], $boundary.id);
@@ -75,10 +73,6 @@
     locationStore.updateLocation(e.detail.location, true);
     showUpload = false;
   }
-
-  onMount(() => {
-    console.log('mounted select')
-  })
 </script>
 
 <div class="select-location">

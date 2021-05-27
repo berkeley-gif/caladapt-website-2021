@@ -1,17 +1,19 @@
 <script>
-  import { createEventDispatcher, onMount } from 'svelte';
   import {
-    SkeletonText,
     Button,
     Modal,
     Accordion,
     AccordionItem,
     CodeSnippet,
+    Loading,
+    SkeletonText,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
   import { csvFormat, csvFormatRows } from 'd3-dsv';
-  import Download16 from 'carbon-icons-svelte/lib/Download16';
-  import Share16 from "carbon-icons-svelte/lib/Share16";
+  import {
+    Download16,
+    Share16,
+  } from 'carbon-icons-svelte';
   import copy from 'clipboard-copy';
 
   // Helpers
@@ -41,9 +43,8 @@
     bookmark,
   } from './_store';
 
-  export let appStatus;
+  let isWorking = false;
 
-  const dispatch = createEventDispatcher();
   const { location, boundary } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
@@ -67,10 +68,13 @@
   $: if ($data) {
     statsData = $data.filter(d => d.type !== 'area');
     dataByDate = getDataByDate(flattenData($data));
+  } else {
+    statsData = null;
+    dataByDate = null;
   }
 
   async function downloadViz(e) {
-    appStatus = 'working';
+    isWorking = true;
     const format = e.detail;
     showDownload = false;
     try {
@@ -98,7 +102,7 @@
     } catch (error) {
       notifier.error('Download', `Error creating ${format} file`, error, 2000);
     }
-    appStatus = 'idle';
+    isWorking = false;
   }
 
   function changeScenario(e) {
@@ -115,39 +119,38 @@
     climvarStore.set(e.detail.id);
     console.log('climvar change');
   }
-
-  onMount(() => {
-    console.log('mounted explore')
-  })
 </script>
 
 <div class="explore">
+  {#if isWorking}
+    <Loading />
+  {/if}
   <!-- Header -->
   <div class="explore-header block">
-    {#if $climvar}
-      <div class="center-row">
-        <span class="icon">
-          <svelte:component dimension="50" this={$climvar.icon} />
-        </span>
-        <div>
-          <h3 class="block-title">{$climvar.title}</h3>
-          {#if $location}
-            <h4 class="block-title">{$location.title}, {$location.address}</h4>
-            <h4 class="block-title">{$scenario.labelLong}</h4>
-          {:else}
-            <SkeletonText heading />
-            <SkeletonText />
-          {/if}
-        </div>
+    <div class="center-row">
+      <span class="icon">
+        <svelte:component dimension="50" this={$climvar.icon} />
+      </span>
+      <div>
+        <h3 class="block-title">{$climvar.title}</h3>
+        {#if $data}
+          <h4 class="block-title">
+            {$location.title}, {$location.address}
+          </h4>
+        {:else}
+          <SkeletonText heading />
+        {/if}
+        <h4 class="block-title">{$scenario.labelLong}</h4>
       </div>
-    {/if}
-    <div>
-      <Button  size="small" icon={Share16} kind="ghost" on:click={() => showShare = true}>
-        SHARE
-      </Button>      
-    </div> 
+    </div>
+    <Button
+      size="small"
+      icon={Share16}
+      kind="ghost"
+      on:click={() => showShare = true}>
+      SHARE
+    </Button>      
   </div>
-
   <!-- Stats -->
   <div class="explore-stats">
     <div class="block">
@@ -171,7 +174,6 @@
       />      
     </div>
   </div> <!-- end explore-stats -->
-
   <!-- Chart-->
   <div class="explore-chart block">
     <LineAreaChart
@@ -201,7 +203,7 @@
       </Button> 
     </div>       
   </div> <!-- end explore-chart -->
-
+  <!-- Settings-->
   <div class="explore-settings"> 
     <h4 class="block-title">Change Settings:</h4>
     <Accordion class="settings-list">
@@ -239,7 +241,7 @@
           title="Global Climate Models (GCMs)" />
       </AccordionItem>
     </Accordion>
-  </div>
+  </div> <!-- end explore-settings -->
 </div>
 
 <Modal id="share" passiveModal bind:open={showShare} modalHeading="Share Link" on:open on:close>

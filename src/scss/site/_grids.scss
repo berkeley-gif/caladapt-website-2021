@@ -63,6 +63,13 @@
       "footer";
   }
 
+  .sidebar-left {
+    .bx--side-nav__link-text {
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+  }
+
   .footer {
     padding: 0 2rem 1rem;
   }

@@ -6,7 +6,7 @@
 
   .block {
     background-color: #FFFFFF;
-    box-shadow: 0 2px 3px rgba(22, 28, 45, 0.1);
+    box-shadow: 0 2px 3px rgba(22, 28, 45, 0.2);
     padding: 1rem;
 
     &.block-settings {
@@ -17,6 +17,26 @@
       font-weight: 600;
       margin: 0;
     }
+  }
+
+  #explore {
+    position: relative;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: rgba($gray-20, .5);
+    z-index: 2;
+  }
+
+  .loading-overlay .load {
+    top: 40%;
+    left: 40%;
+    width: 15rem;
+    height: 4rem;
+    font-size: 1.25rem;
   }
 
   .explore {
@@ -115,6 +135,7 @@
 
       p {
         margin: 0;
+        font-weight: 600;
       }
     }
 
@@ -275,10 +296,15 @@
   }
 
   .bx--accordion__item {
-    box-shadow: 0 2px 3px rgba(22, 28, 45, 0.1);
+    box-shadow: 0 2px 3px rgba(22, 28, 45, 0.2);
     background-color: $gray-20;
     border-top: none;
     margin: 0.5rem 0;
+  }
+
+  .bx--accordion__arrow {
+    stroke: $teal-80;
+    stroke-width: 2;
   }
 
   .bx--label,

@@ -30,15 +30,15 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { Modal, Loading } from 'carbon-components-svelte';
+  import { Modal, Button } from 'carbon-components-svelte';
   import { inview } from 'svelte-inview/dist/';
+  import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
   import { resources } from './_helpers';
 
   // Components
-  import DataLoading from '../../../components/tools/Loading/DataLoading.svelte';
   import Header from './Header.svelte';
   import SelectLocation from './SelectLocation.svelte';
   import Explore from './Explore.svelte';
@@ -71,12 +71,9 @@
 
   // Modals
   let showInfo = false;
-  let initReady = false;
-  let mapReady = false;
-  let appReady = false;
   let definitionText;
   let definitionTitle;
-  let appStatus = 'idle';
+  let fetchData = false;
 
   let inviewEl = 'select';
   const handleEntry = (e) => {
@@ -84,24 +81,24 @@
     inviewEl = entry.target.id;
   };
   const entryOptions = {
-    threshold: 0.25,
+    threshold: 0.5,
   };
 
-  $: if (mapReady && initReady) {
-    console.log('map ready');
-    appReady = true;
-    updateData();
-  } 
+  $: $location, showLoader();
+  $: $climvar, $scenario, $models, update();
 
-  $: $climvar, updateData();
-  $: $location, updateData();
-  $: $scenario, updateData();
-  $: $models, updateData();
+  function hideLoader() {
+    fetchData = true;
+    update();
+  }
 
-  async function updateData() {
-    if (!appReady) return;
-    appStatus = 'working';
+  function showLoader() {
+    fetchData = false;
     dataStore.set(null);
+  }
+
+  async function update() {
+    if (!fetchData) return;
     try {
       const config = {
         climvarId: $climvarStore,
@@ -113,11 +110,9 @@
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
       dataStore.set([envelope, observed, ...modelsData]);
-      console.log('updateData', $data);
-      appStatus = 'idle';      
+      console.log('updateData', $data);  
     } catch(err) {
       console.log('updateData', err);
-      appStatus = 'idle';
     }
   }
 
@@ -147,7 +142,6 @@
   }
 
   async function initApp(config) {
-    console.log('initApp', config);
     const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } = config;
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
@@ -160,16 +154,12 @@
   }
 
   onMount(() => {
-    window.scrollTo(0, 0);
     initApp(initialConfig)
-      .then(() => {
-        initReady = true;
-        console.log('init ready');
-      })
       .catch((error) => {
         console.log('init error', error);
       });
-  })
+    window.scrollTo(0, 0);
+  });
 </script>
 
 <svelte:head>
@@ -188,7 +178,6 @@
     use:inview={entryOptions}
     on:enter={handleEntry}>
     <SelectLocation
-      on:ready={() => mapReady = true}
       on:define={showDefinition} />
   </div>
   
@@ -198,13 +187,14 @@
     class="section"
     use:inview={entryOptions}
     on:enter={handleEntry}>
-    {#if !appReady}
-      <DataLoading />
-    {:else}
-      <Explore
-        bind:appStatus
-        on:define={showDefinition} />
-    {/if}  
+    {#if !fetchData}
+      <div class="loading-overlay">
+        <Button icon={ChartLineData32} class="load" on:click={hideLoader}>
+          Explore the Data
+        </Button>          
+      </div> 
+    {/if}
+    <Explore on:define={showDefinition} />
   </div>
 
   <div class="bx--grid">
@@ -241,9 +231,5 @@
 <Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading={definitionTitle} on:open on:close>
   <div>{ @html definitionText }</div>
 </Modal>
-
-{#if appStatus === 'working'}
-  <Loading />
-{/if}
 
 <NotificationDisplay />
