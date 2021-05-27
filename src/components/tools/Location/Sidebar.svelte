@@ -69,37 +69,42 @@
     z-index: 3;
   }
 
-  .sidebar-heading {
-    padding: 5px;
+  .header {
+    padding: 10px 5px;
     background: #cad3d2;
   }
 
-  .sidebar-heading h6 {
-    margin-bottom: 0;
+  .header span {
+    margin: 0 0 0 5px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
   }
                  
-  .section {
+  .group {
     border-bottom: 1px solid #CCC;
     padding: 5px;
   }
 
-  .section-heading {
-    font-weight: 500;
-    padding-bottom: 10px;
+  .group-title {
+    font-weight: 600;
+    padding-bottom: 5px;
     font-size: 0.9rem;
+    display: block;
   }
 
-  .section-source {
-    font-size: 0.75rem;
-    font-style: italic;
-    margin: 10px 0;
+  .group-source span {
+    font-size: 0.8rem;
+    display: block;
+    margin: 5px 0;
+    line-height: 1.2;
   }
 </style>
 
 <div class="map-ui">
   <div class="layers-ui">
 
-    <div class="sidebar-heading">
+    <div class="header">
       <Button
         style="padding: 0 5px;min-height: 0;"
         type="button"
@@ -112,10 +117,10 @@
         }}>
         <span aria-hidden="true">&times;</span>
       </Button>
-      <h6>Map Layers</h6>
+      <span>Map Layers</span>
     </div>
-
-    <div class="section environmental">
+    <!-- Environmental Layers -->
+    <div class="group environmental">
       {#each environmental as opt, i}
         <Checkbox
           labelText={opt.metadata.title}
@@ -125,10 +130,10 @@
         />
       {/each}
     </div>
-
-    <div class="section utilities">
+   <!-- Electric Infrastructure Layers -->
+    <div class="group utilities">
       {#each utilities as [key, values]}
-        <span class="section-heading">{key}</span>
+        <span class="group-title">{key}</span>
         {#each values as opt, i}
           <Checkbox
             labelText={opt.metadata.title}
@@ -138,10 +143,21 @@
           />
         {/each}
       {/each}
-      <span class="section-source">
-        Source: California Energy Commission's <a href="https://cecgis-caenergy.opendata.arcgis.com/" target="_blank">GIS Open Data</a>.
-      </span>
+      <div class="group-source">
+        Source: <a href="https://cecgis-caenergy.opendata.arcgis.com/" target="_blank">CEC GIS Open Data</a>
+      </div>
     </div>
-
+    <!-- Natural Gas Layers -->
+    <div class="group utilities">
+      <span class="group-title">Natural Gas</span>
+      <div class="group-source">
+        <span>
+          View data for natural gas transmission & hazardous liuid pipelines, LNG plants and breakout tanks at <a href="https://pvnpms.phmsa.dot.gov/PublicViewer/" target="_blank">NPMS Public Map Viewer</a>          
+        </span>
+        <span>
+          For more information in accessing underlying data see <a href="https://www.npms.phmsa.dot.gov/DataMayAccess.aspx" target="_blank">What NPMS data may I access?</a>          
+        </span>
+      </div>
+    </div>
   </div>
 </div>
