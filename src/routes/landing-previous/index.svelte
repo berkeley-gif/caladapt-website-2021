@@ -56,7 +56,7 @@
           Learn how to <a href="/help/get-started">get started</a> using climate data on Cal-Adapt.
         </p>
         <p>
-          Check out climate data and future projections for your area with our <a href="#">Local Climate Change Snapshot</a> tool.
+          Check out climate data and future projections for your area with our <a href="/tools/local-climate-change-snashot">Local Climate Change Snapshot</a> tool.
         </p>
       </div>
     </div>
