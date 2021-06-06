@@ -2,7 +2,7 @@
 	"theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone"
-	"name": "Cal-Adapt",
+	"name": "CalAdapt",
 	"short_name": "caladapt",
 	"icons": [
 		{
