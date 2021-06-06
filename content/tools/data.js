@@ -36,6 +36,15 @@ const tools = [
     ],
   },
   {
+    title: 'Climate Extremes',
+    desc: `Explore extreme events`,
+    categories: ['Temperature'],
+    slug: 'climate-extremes',
+    icons: [
+      'img/icons/sun.svg',
+    ],
+  },
+  {
     title: 'Maps of Projected Change',
     desc: `Explore maps of projected long-term (30 years) changes in annual average 
     temperature and precipitation.`,
