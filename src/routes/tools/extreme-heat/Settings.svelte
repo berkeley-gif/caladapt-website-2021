@@ -4,6 +4,7 @@
     Button,
     Accordion,
     AccordionItem,
+    NumberInput,
   } from 'carbon-components-svelte';
   import ArrowRight16 from 'carbon-icons-svelte/lib/ArrowRight16';
   import ArrowLeft16 from 'carbon-icons-svelte/lib/ArrowLeft16';
@@ -11,6 +12,7 @@
 
   // Helpers
   import { climvarList, modelList, scenarioList } from './_helpers';
+  import { debounce } from '../../../helpers/utilities';
 
   // Components
   import {
@@ -18,7 +20,6 @@
     SelectModels,
     SelectClimvar,
     SelectThreshold,
-    SelectPeriod,
     ShowDefinition,
    } from '../../../components/tools/Settings';
 
@@ -63,10 +64,10 @@
     console.log('threshold add');
   }
 
-  function changePeriod(e) {
-    periodStore.set(e.detail);
+  const changePeriod = debounce((e) => {
     console.log('period change');
-  }
+    periodStore.set(e.detail)
+  }, 1000);
 
   onMount(() => {
     dispatch('ready');
@@ -159,11 +160,12 @@
           topics={["extreme-heat-threshold"]} />
       </AccordionItem>
       <AccordionItem title="Heat Wave Length">
-        <SelectPeriod
-          value={4}
+        <NumberInput
           min={2}
           max={7}
+          hideLabel
           helperText="Enter a number between 2-7"
+          value={$temperatureStore}
           on:change={changePeriod}
         />
         <ShowDefinition

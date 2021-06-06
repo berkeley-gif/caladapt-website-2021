@@ -4,7 +4,6 @@ export { default as SelectClimvar } from './SelectClimvar.svelte';
 export { default as SelectModels } from './SelectModels.svelte';
 export { default as SelectScenario } from './SelectScenario.svelte';
 export { default as SelectThreshold } from './SelectThreshold.svelte';
-export { default as SelectPeriod } from './SelectPeriod.svelte';
 export { default as ShowDefinition } from './ShowDefinition.svelte';
 export { default as SelectMonth } from './SelectMonth.svelte';
 export { default as SelectDayOfYear } from './SelectDayOfYear.svelte';
