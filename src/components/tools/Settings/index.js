@@ -7,4 +7,5 @@ export { default as SelectThreshold } from './SelectThreshold.svelte';
 export { default as SelectPeriod } from './SelectPeriod.svelte';
 export { default as ShowDefinition } from './ShowDefinition.svelte';
 export { default as SelectMonth } from './SelectMonth.svelte';
+export { default as SelectDayOfYear } from './SelectDayOfYear.svelte';
 export { default as TimeSlider } from './TimeSlider.svelte';
