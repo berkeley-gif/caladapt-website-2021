@@ -323,14 +323,13 @@ const data = [
     type: 'symbol',
     metadata: {
       group: 'Electric Infrastructure',
-      title: 'Substation',
+      title: 'Substations',
     },
     source: {
       type: 'geojson',
       data: 'https://opendata.arcgis.com/datasets/7f37f2535d3144e898a53b9385737ee0_0.geojson',
     },
     layout: {
-      visibility: 'none',
       'icon-image': 'square-stroked-11',
     },
     paint: {
@@ -348,9 +347,6 @@ const data = [
       type: 'geojson',
       data: 'https://opendata.arcgis.com/datasets/4a702cd67be24ae7ab8173423a768e1b_0.geojson',
     },
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'circle-radius': [
         'case',
@@ -365,47 +361,6 @@ const data = [
       'circle-stroke-color': '#B42222',
     },
   },
-  // {
-  //   id: 'stations',
-  //   type: 'circle',
-  //   metadata: {
-  //     group: 'Natural Gas',
-  //     title: 'Station',
-  //   },
-  //   source: {
-  //     type: 'geojson',
-  //     data: 'https://opendata.arcgis.com/datasets/148ae88aa97c4f559226d4e7e083e123_0.geojson',
-  //   },
-  //   layout: {
-  //     visibility: 'none',
-  //   },
-  //   paint: {
-  //     'circle-radius': 4,
-  //     'circle-color': '#ddd',
-  //   },
-  // },
-  // {
-  //   id: 'pipelines',
-  //   type: 'line',
-  //   metadata: {
-  //     group: 'Natural Gas',
-  //     title: 'Pipeline',
-  //   },
-  //   source: {
-  //     type: 'geojson',
-  //     data: 'https://opendata.arcgis.com/datasets/8e9de7b3d08b42078e40d9f40d2b807b_0.geojson',
-  //   },
-  //   layout: {
-  //     'line-cap': 'round',
-  //     'line-join': 'round',
-  //     visibility: 'none',
-  //   },
-  //   paint: {
-  //     'line-opacity': 0.75,
-  //     'line-color': '#ddd',
-  //     'line-width': 1,
-  //   },
-  // },
   {
     id: 'calenviroscreen',
     type: 'fill',
@@ -421,9 +376,6 @@ const data = [
       maxzoom: 20,
     },
     'source-layer': 'censustract',
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'fill-opacity': 0.4,
       'fill-color': [
@@ -471,6 +423,25 @@ const data = [
       ],
     },
   },
+  {
+    id: 'hadisdstations',
+    type: 'circle',
+    metadata: {
+      group: 'stations',
+      title: 'NCDC Weather Stations'
+    },
+    source: {
+      type: 'geojson',
+      data: 'https://api.cal-adapt.org/api/hadisdstations/?pagesize=39&format=json'
+    },
+    paint: {
+      'circle-radius': 6,
+      'circle-color': '#04797c',
+      'circle-opacity': 0.8,
+      'circle-stroke-color': '#fff',
+      'circle-stroke-width': 2,
+    }
+  }
 ];
 
 export default data;
