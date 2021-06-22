@@ -1,7 +1,6 @@
 <script>
   // Node modules
   import { createEventDispatcher } from 'svelte';
-  import { group } from 'd3-array';
 
   // Components
   import { Button, Checkbox } from 'carbon-components-svelte';
@@ -18,14 +17,15 @@
   //-----------------
   let dispatch = createEventDispatcher();
 
-  const utilityLayers = layers
-  .filter((d) => ['Electric Infrastructure', 'Natural Gas'].includes(d.metadata.group))
-  .map((d) => {
-    const layer = d;
-    layer.name = d.metadata.title;
-    return layer;
-  });
-  const utilities = Array.from(group(utilityLayers, (d) => d.metadata.group));
+  // Inlcudes Electric Infrastructure layers only
+  // Natural gas layers no longer available online for public download
+  const utilities = layers
+    .filter((d) => d.metadata.group === 'Electric Infrastructure')
+    .map((d) => {
+      const layer = d;
+      layer.name = d.metadata.title;
+      return layer;
+    });
 
   // Environmental layers
   const environmental = layers
@@ -38,22 +38,9 @@
 
   // Functions
   //------------
-  function toggleUtility(show, id) {
+  function toggleLayer(show, id) {
     let layer;
-    utilities.forEach(([key, values]) => {
-      values.forEach(d => {
-        if (d.id === id) {
-          layer = d;
-          return;
-        }
-      });
-    });
-    dispatch('toggleLayer', { layer, show }); 
-  }
-
-  function toggleEnvironmental(show, id) {
-    let layer;
-    environmental.forEach((d) => {
+    layers.forEach((d) => {
       if (d.id === id) {
         layer = d;
         return;
@@ -126,22 +113,20 @@
           labelText={opt.metadata.title}
           id={`toggle-${opt.id}`}
           size="sm"
-          on:check={({ detail }) => toggleEnvironmental(detail, opt.id)}
+          on:check={({ detail }) => toggleLayer(detail, opt.id)}
         />
       {/each}
     </div>
    <!-- Electric Infrastructure Layers -->
     <div class="group utilities">
-      {#each utilities as [key, values]}
-        <span class="group-title">{key}</span>
-        {#each values as opt, i}
-          <Checkbox
-            labelText={opt.metadata.title}
-            id={`toggle-${opt.id}`}
-            size="sm"
-            on:check={({ detail }) => toggleUtility(detail, opt.id)}
-          />
-        {/each}
+      <span class="group-title">Electric Infrastructure</span>
+      {#each utilities as opt, i}
+        <Checkbox
+          labelText={opt.metadata.title}
+          id={`toggle-${opt.id}`}
+          size="sm"
+          on:check={({ detail }) => toggleLayer(detail, opt.id)}
+        />
       {/each}
       <div class="group-source">
         Source: <a href="https://cecgis-caenergy.opendata.arcgis.com/" target="_blank">CEC GIS Open Data</a>

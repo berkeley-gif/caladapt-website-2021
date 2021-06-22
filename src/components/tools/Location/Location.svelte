@@ -1,9 +1,9 @@
 <script>
   // Node modules
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   // Components
-  import { Map, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, ImageOverlay } from './../Map';
+  import { Map, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, ImageOverlay, VectorLayer } from './../Map';
   import Sidebar from './Sidebar.svelte';
   import { InlineLoading } from 'carbon-components-svelte';
 
@@ -28,6 +28,7 @@
   export let imageOverlayShow;
   export let imageOverlayCoords;
   export let zoomToLocationOnLoad = true;
+  export let stations;
 
 
   // Local variables
@@ -47,7 +48,7 @@
   };
   let mapError = null;
   let isMapLoading = true;
-  const layerGroups = ['Boundaries', 'Natural Gas', 'Environmental', 'Electric Infrastructure'];
+  let overlays = [];
   
   // Reactive functionality
   //------------------------
@@ -76,11 +77,9 @@
   function toggleMapLayer(e) {
     const { layer, show } = e.detail;
     if (show) {
-      layer.layout.visibility = 'visible';
-      mapComponent.addLayer(layer);
+      overlays = [...overlays, layer];
     } else {
-      layer.layout.visibility = 'none';
-      mapComponent.removeLayer(layer);
+      overlays = overlays.filter(d => d === layer.id);
     }
   }
 
@@ -99,54 +98,9 @@
     dispatch('mapclick', [+lng, +lat]);
   }
 
-  function getLabel(feature) {
-    let label;
-    console.log(feature.layer.id, feature.properties);
-    switch (feature.layer.id) {
-      case 'substations':
-        label = `<strong>Substation:</strong> ${feature.properties.Substation_Name}`;
-        break;
-      case 'translines':
-        label = `<strong>Transmission Line:</strong> ${feature.properties.Name}`;
-        break;
-      case 'powerplants':
-        label = `<strong>Powerplant:</strong> ${feature.properties.Plant_Label}`;
-        break;
-      // following layers are missing from CEC ArcGIS Data Hub
-      // case 'stations':
-      //   label = `<strong>Transmission Line:</strong> ${feature.properties.Name}`;
-      //   break;
-      // case 'pipelines':
-      //   label = `<strong>Transmission Line:</strong> ${feature.properties.Name}`;
-      //   break;
-      case 'calenviroscreen':
-        label = `<strong>CalEnviroScreen 3.0 Percentile:</strong> ${feature.properties.ces_3_0_percentile_range}`;
-        break;
-      default:
-        const prop = feature.layer.metadata.nameField || 'name';
-        label = feature.properties[prop];
-    }
-    return label;
+  function handleOverlayClick(e) {
+    dispatch('overlayclick', e.detail);
   }
-
-  function handleMove(e) {
-    const features = e.detail.features.filter(d => d.layer.metadata && layerGroups.includes(d.layer.metadata.group));
-    if (features.length === 0) return;
-    // const { lngLat } = e.detail.event;
-    const labels = features.map((d) => getLabel(d));
-    const description = labels.join('<br/>');
-    mapComponent.updatePopup(e.detail.event, description);
-  }
-
-  function handleLeave() {
-    mapComponent.updatePopup();
-  }
-
-  // Lifecycle events
-  //------------------------
-  onMount(() => {
-
-  });
 </script>
 
 <style>
@@ -205,8 +159,6 @@
       {...options}
       {style}
       on:click={handleClick}
-      on:mousemove={handleMove}
-      on:mouseleave={handleLeave}
       on:ready={() => {
         isMapLoading = false;
       }}
@@ -217,7 +169,9 @@
       <NavigationControl />
       <AttributionControl options={attributionOptions} />
       <ScalingControl />
-      <BoundaryVectorLayer {boundary} />
+      {#if boundary}
+        <BoundaryVectorLayer {boundary} />
+      {/if}
       {#if location}
         {#if location.geometry.type === 'Point'}
           <Marker data={location.geometry.coordinates} label={location.title} />
@@ -228,6 +182,12 @@
       {#if imageOverlayShow}
         <ImageOverlay coordinates={imageOverlayCoords} overlay={imageOverlayUrl} />
       {/if}
+      {#if stations}
+        <VectorLayer layer={stations} enableClick={true} on:overlayclick={handleOverlayClick} />
+      {/if}
+      {#each overlays as overlay (overlay.id)}
+        <VectorLayer layer={overlay} />
+      {/each}
     </Map>
   </div>
 </div>
