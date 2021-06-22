@@ -7,7 +7,6 @@ export { default as LayerToggle } from './LayerToggle.svelte';
 export { default as BoundaryVectorLayer } from './BoundaryVectorLayer.svelte';
 export { default as VectorLayer } from './VectorLayer.svelte';
 export { default as BoundarySelection } from './BoundarySelection.svelte';
-export { default as GeojsonDataLayer } from './GeojsonDataLayer.svelte';
 export { default as LayerInfo } from './LayerInfo.svelte';
 export { default as ImageOverlay } from './ImageOverlay.svelte';
 

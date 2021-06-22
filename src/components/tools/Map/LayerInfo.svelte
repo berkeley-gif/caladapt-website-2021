@@ -7,7 +7,7 @@
   export let options = {};
 
   const dispatch = createEventDispatcher();
-  const { getMap, getMapbox } = getContext(contextKey);
+  const { getMap } = getContext(contextKey);
   const map = getMap();
 
   function layerInfoClick() {

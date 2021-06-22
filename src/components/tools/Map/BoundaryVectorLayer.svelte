@@ -9,7 +9,7 @@
 
   let lastBoundary = null;
 
-  function removeLastBoundary() {
+  function removePreviousSelection() {
     if (!lastBoundary) {
       return;
     }
@@ -21,12 +21,12 @@
   }
 
   function addBoundary() {
-    removeLastBoundary();
+    removePreviousSelection();
     if (!boundary || boundary.id === 'locagrid' || boundary.id === 'ca') {
       lastBoundary = null;
       return;
     }
-    boundary.layout.visibility = 'visible';
+    //boundary.layout.visibility = 'visible';
     map.addLayer(boundary);
     lastBoundary = boundary;
   }
