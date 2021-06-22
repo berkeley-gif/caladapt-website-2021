@@ -165,7 +165,7 @@
           max={7}
           hideLabel
           helperText="Enter a number between 2-7"
-          value={$temperatureStore}
+          value={$periodStore}
           on:change={changePeriod}
         />
         <ShowDefinition
