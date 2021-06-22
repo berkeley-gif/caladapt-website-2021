@@ -1,13 +1,13 @@
 import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
-import boundaries from '../../../helpers/mapbox-layers';
+import layers from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
 import { tools } from '../../../../content/tools/data';
 
 export const climvarList = climvars
   .filter(d => ['tasmax', 'tasmin'].includes(d.id))
   .map((d) => {
-    const title = `Annual Average ${d.label}`;
+    const title = `Return Level Estimates of ${d.label}`;
     return { ...d, title };
   });
 
@@ -18,7 +18,6 @@ const series = [
     key: 'observed',
     label: 'Observed',
     color: 'rgba(110, 110, 110, 1)',
-    mark: 'line',
   },
 ];
 
@@ -33,13 +32,15 @@ models.forEach((d) => {
     key: d.id,
     label,
     color: d.color,
-    mark: 'line',
   });
 });
 
 export const seriesList = series;
 
-export const boundaryList = boundaries
+export const stations = layers
+  .find(d => d.id === 'hadisdstations');
+
+export const boundaryList = layers
   .filter(d => d.metadata.group === 'Boundaries')
   .map(d => {
     let text;

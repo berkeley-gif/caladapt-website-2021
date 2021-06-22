@@ -19,7 +19,7 @@
 
   // Helpers
   import { climvarList, modelList, scenarioList } from './_helpers';
-  import { flattenData, getDataByDate, formatDataForExport } from './_data';
+  import { getReturnLevels, getProbabilities } from './_data';
   import { exportSVG, exportPNG, exportCSV, exportPDF } from  '../../../helpers/export';
   import { debounce } from '../../../helpers/utilities';
 
@@ -31,7 +31,7 @@
     SelectDayOfYear,
     ShowDefinition,
   } from '../../../components/tools/Settings';
-  import { LineAreaChart } from '../../../components/tools/Charts';
+  import { ReturnLevelCurveChart } from '../../../components/tools/Charts';
   import { RangeAvg } from '../../../components/tools/Stats';
   import DownloadChart from '../../../components/tools/DownloadChart.svelte';
   import { notifier } from '../../../components/notifications';
@@ -43,6 +43,8 @@
     locationStore,
     dataStore,
     modelsStore,
+    stationStore,
+    periodStore,
     bookmark,
     doyStore,
     temperatureStore,
@@ -50,20 +52,20 @@
 
   let isWorking = false;
 
-  const { location, boundary } = locationStore;
+  const { location } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
-  let dataByDate;
   let statsData;
+  let returnLevels;
+  let returnLevelByPeriod;
   let showDownload = false;
   let showShare = false;
 
   $: metadata = [
-    ['boundary', $boundary.id],
-    ['feature', `${$location.title}, ${$location.address}`],
-    ['center', `${$location.center[0]}, ${$location.center[1]}`],
+    ['station', $stationStore.title],
+    ['center', `${$stationStore.center[0]}, ${$stationStore.center[1]}`],
     ['scenario', $scenario.label],
     ['units', $climvar.units.imperial],
   ];
@@ -71,11 +73,15 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($data) {
-    statsData = $data.filter(d => d.type !== 'area');
-    dataByDate = getDataByDate(flattenData($data));
+    returnLevels = getReturnLevels($data);
+    returnLevelByPeriod = returnLevels.filter(d => d.period === $periodStore);
+    console.log('returnLevelByPeriod', returnLevelByPeriod);
+    statsData = getProbabilities($data);
+    console.log('stats data', statsData);
   } else {
+    returnLevels = null;
+    returnLevelByPeriod = null;
     statsData = null;
-    dataByDate = null;
   }
 
   async function downloadViz(e) {
@@ -92,7 +98,7 @@
           await exportSVG(container);
           break;
         case 'csv':
-          var csvData = formatDataForExport(dataByDate);
+          var csvData = formatDataForExport(data);
           var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
           await exportCSV(csvWithMetadata);
           break;
@@ -130,11 +136,15 @@
     console.log('doy change', e.detail);
   }
 
-  const changeTemperature = debounce((e) => {
-    temperatureStore.set(e.detail);
-    console.log('change temperature', e.detail);
+  const changePeriod = debounce((e) => {
+    console.log('period change');
+    periodStore.set(e.detail)
   }, 1000);
-  $: console.log('temp store', $temperatureStore);
+
+  const changeTemperature = debounce((e) => {
+    console.log('temperature change');
+    temperatureStore.set(e.detail)
+  }, 1000);
 </script>
 
 <div class="explore">
@@ -151,12 +161,13 @@
         <h3 class="block-title">{$climvar.title}</h3>
         {#if $data}
           <h4 class="block-title">
-            {$location.title}, {$location.address}
+            {$stationStore.title}
           </h4>
         {:else}
           <SkeletonText heading />
         {/if}
         <h4 class="block-title">{$scenario.labelLong}</h4>
+        <p></p>
       </div>
     </div>
     <Button
@@ -170,41 +181,55 @@
   <!-- Stats -->
   <div class="explore-stats">
     <div class="block">
-      <RangeAvg
+<!--       <RangeAvg
         units={$climvar.units.imperial}
         data={statsData}
         isHistorical={true}
         series={'historical'}
         period={'baseline'}
         format={formatFn}
-      />    
+      />  -->   
     </div>
     <div class="block">
-      <RangeAvg
+<!--       <RangeAvg
         units={$climvar.units.imperial}
         data={statsData}
         isHistorical={false}
         series={'future'}
         period={'mid-century'}
         format={formatFn}
-      />      
+      /> -->      
     </div>
   </div> <!-- end explore-stats -->
   <!-- Chart-->
   <div class="explore-chart block">
-    <LineAreaChart
-      data={$data}
-      dataByDate={dataByDate}
+<!--     <ReturnLevelBoxChart
+      data={returnLevelByPeriod}
       yAxis = {{
         key: 'value',
-        label: `${$climvar.title} (${$climvar.units.imperial})`,
+        label: `Return Level (${$climvar.units.imperial})`,
         tickFormat: formatFn,
         units: `${$climvar.units.imperial}`,
+      }}
+    />  -->
+    <ReturnLevelCurveChart
+      data={returnLevels}
+      yAxis = {{
+        key: 'value',
+        label: `Return Level (${$climvar.units.imperial})`,
+        tickFormat: formatFn,
+        units: `${$climvar.units.imperial}`,
+      }}
+      xAxis = {{
+        key: 'period',
+        label: `Return Period (years)`,
+        tickFormat: d => d,
+        units: 'year',
       }}
     /> 
     <div class="chart-notes">
       <span>Source: Cal-Adapt. </span>
-      <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
+      <span>Data: HadISD, LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego).</span>
     </div>
     <div class="chart-download">
       <ShowDefinition

@@ -46,54 +46,86 @@ export const modelsStore = (() => {
   }
 })();
 
+export const periodStore = writable(100);
+
 export const unitsStore = writable({ imperial: true });
 
-export const doyStore = writable('7/04');
+export const doyStore = (() => {
+  const store = writable('7/04');
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get doy() {
+      return derived(store, ($store) => {
+        return 180;
+      });
+    },
+  }
+})();
 
 export const temperatureStore = writable(100);
 
+export const stationStore = writable({
+  title: 'Weather Station: Arcata Airport',
+  address: 'Arcata, California',
+  geometry: {
+    type: 'Point',
+    coordinates: [
+      -124.109,
+      40.978
+    ]
+  },
+  center: [
+    -124.109,
+    40.978
+  ],
+  bbox: [
+    -124.109,
+    40.978,
+    -124.109,
+    40.978
+  ],
+  id: 31
+});
+
 export const locationStore = (() => {
   const store = writable({
-    lat: 38.59,
-    lng: -122.46,
+    lat: 40.978,
+    lng: -124.109,
     boundaryId: 'locagrid',
     location: {
-      id: null,
-      title: '850 Friesen Drive',
-      address: 'Angwin, California 94508, United States',
+      id: 31,
+      title: 'Weather Station: Arcata Airport',
+      address: 'Arcata, California',
       geometry: {
         type: 'Point',
         coordinates: [
-          -122.4587538,
-          38.5903761
+          -124.109,
+          40.978
         ]
       },
       center: [
-        -122.4587538,
-        38.5903761
+        -124.109,
+        40.978
       ],
       bbox: [
-        -122.4587538,
-        38.5903761,
-        -122.4587538,
-        38.5903761
-      ]
+        -124.109,
+        40.978,
+        -124.109,
+        40.978
+      ],
     },
     isUpload: false,
   });
   const { update, subscribe } = store;
   return {
     subscribe,
-    updateLocation: (location, isUpload=false) => update((store) => {
+    updateLocation: (location) => update((store) => {
       if (!location) return;
       store.lng = +location.center[0].toFixed(4);
       store.lat = +location.center[1].toFixed(4);
       store.location = location;
-      store.isUpload = isUpload;
-      return store;
-    }),
-    updateBoundary: (val) => update((store) => {
-      store.boundaryId = val;
       return store;
     }),
     get location() {
@@ -135,44 +167,27 @@ export const dataStore = (() => {
 // DERIVED STORES
 // Query params store
 export const queryParams = derived(
-  [unitsStore, locationStore],
-  ([$unitsStore, $locationStore]) => {
-  const { lng, lat, boundaryId, location } = $locationStore;
-  const { imperial } = $unitsStore;
-  const params = {};
-  let method = 'GET';
-  switch (boundaryId) {
-    case 'locagrid':
-      params.g = `Point(${lng} ${lat})`;
-      params.imperial = imperial;
-      break;
-    case 'ca':
-      params.ref = '/media/ca.json';
-      params.stat = 'mean';
-      params.imperial = imperial;
-      break;
-    case 'custom':
-      params.g = JSON.stringify(location.geometry);
-      params.stat = 'mean';
-      params.imperial = imperial;
-      method = 'POST';
-      break;
-    default:
-      params.ref = `/api/${boundaryId}/${location.id}/`;
-      params.stat = 'mean';
-      params.imperial = imperial;
-  }
-  return { params, method };
+  [doyStore, stationStore, periodStore],
+  ([$doyStore, $stationStore]) => {
+    const { doy } = $doyStore;
+    console.log('queryParams', doy);
+    const params = {
+      g: `POINT(${$stationStore.center[0]} ${$stationStore.center[1]})`,
+      doy: 180,
+    };
+    let method = 'GET';
+    return { params, method };
 });
 
 // Bookmark store
 export const bookmark = derived(
-  [climvarStore, scenarioStore, modelsStore, unitsStore, locationStore],
-  ([$climvarStore, $scenarioStore, $modelsStore, $unitsStore, $locationStore]) => {
-  const { lng, lat, boundaryId } = $locationStore;
+  [climvarStore, scenarioStore, modelsStore, unitsStore, stationStore, doyStore, periodStore],
+  ([$climvarStore, $scenarioStore, $modelsStore, $unitsStore, $stationStore, $doyStore, $periodStore]) => {
+  const id = $stationStore.id;
   const { imperial } = $unitsStore;
+  const { doy } = $doyStore;
   const bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}
-    &imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}`;
+    &imperial=${imperial}&station=${id}&doy=${doy}`;
   if (process.browser) {
     return `${window.location.href}?${bookmark}`;
   }

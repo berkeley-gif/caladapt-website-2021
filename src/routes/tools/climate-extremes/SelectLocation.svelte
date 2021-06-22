@@ -6,16 +6,13 @@
     Modal,
     Tag,
   } from 'carbon-components-svelte';
-  import Upload16 from 'carbon-icons-svelte/lib/Upload16';
 
   // Helpers
-  import { getLocation, searchLocation } from '../../../helpers/geocode';
-  import { boundaryList } from './_helpers';
+  import { getStation, searchStation } from '../../../helpers/geocode';
+  import { stations } from './_helpers';
 
   // Components
   import {
-    SelectBoundary,
-    UploadBoundary,
     ShowDefinition,
   } from '../../../components/tools/Settings';
   import { Location } from '../../../components/tools/Location';
@@ -24,21 +21,21 @@
   // Store
   import {
     locationStore,
+    stationStore,
   } from './_store';
 
   const dispatch = createEventDispatcher();
-  const { location, boundary, lngLat } = locationStore;
-
-  let showUpload = false;
+  const { location, boundary } = locationStore;
 
   let searchOptions = [];
   let searchValue = '';
   let searchPlaceholder = 'Enter address or zipcode';
   let showSuggestions = false;
 
-  async function mapClick(e) {
-    const loc = await getLocation(e.detail[0], e.detail[1], $boundary.id);
-    locationStore.updateLocation(loc);
+  async function stationClick(e) {
+    const station = await getStation(e.detail, stations.id);
+    locationStore.updateLocation(station);
+    stationStore.set(station);
   }
 
   function clearSearch() {
@@ -47,38 +44,26 @@
   }
 
   async function search(e) {
-    searchOptions = await searchLocation(e.target.value, $boundary.id);
+    searchOptions = await searchStation(e.target.value, stations.id);
     showSuggestions = true;
-  }
-
-  async function changeBoundary(e) {
-    locationStore.updateBoundary(e.detail.id);
-    searchPlaceholder = `Enter ${$boundary.metadata.placeholder}`;
-    const loc = await getLocation($lngLat[0], $lngLat[1], e.detail.id);
-    locationStore.updateLocation(loc);
   }
 
   function selectSuggestion(opt) {
     showSuggestions = false;
-    console.log('selectSuggestion', opt);
     if (opt) {
       locationStore.updateLocation(opt);
+      if (opt.title.includes('Weather Station')) {
+        stationStore.set(opt);
+      }
     }
     clearSearch();
-  }
-
-  function uploadBoundary(e) {
-    console.log('uploadBoundary', e.detail);
-    locationStore.updateBoundary('locagrid');
-    locationStore.updateLocation(e.detail.location, true);
-    showUpload = false;
   }
 </script>
 
 <div class="select-location">
    <!-- Header -->
   <div class="select-location-header">
-    <h2>Select Location</h2>
+    <h2>Select Station</h2>
     <p>Click on the map or enter an address in the search box. To explore data for a larger extent (e.g. county), select a boundary first. Scroll down to explore data for selected location.</p>
   </div>
   <!-- Help -->
@@ -89,36 +74,14 @@
 
   <!-- Current Selection -->
   <div class="select-location-current block">
-    {#if location}
-      <p>{$location.title}, {$location.address}</p>
+    {#if $stationStore}
+      <p>{$stationStore.title}</p>
     {/if}
   </div>
 
-  <!-- Boundary Selection -->
-  <div class="select-location-boundary block block-settings">
-    <SelectBoundary 
-      selectedId={$boundary.id}
-      items={boundaryList}
-      addStateBoundary={true}
-      on:change={changeBoundary}
-    />
-    <div class="boundary-upload">
-      <ShowDefinition
-       topics={["aggregation-boundary"]}
-       title="Aggregating Data by Boundary"
-       on:define />
-      <Button
-        icon={Upload16}
-        size="small"
-        on:click={() => showUpload = true}>
-        Upload
-      </Button>      
-    </div>
-  </div> <!-- end explore-boundary -->
-
   <!-- Location Search -->
   <div class="select-location-search block block-settings">
-    <label for="search" class="bx--label">Search Location</label>
+    <label for="search" class="bx--label">Search</label>
     <Search
       id="search"
       size="lg"
@@ -153,24 +116,17 @@
   <!-- Map-->
   <div class="select-location-map">
     <Location
-        lng={$locationStore.lng}
-        lat={$locationStore.lat}
-        boundary={$boundary}
-        location={$location}
-        imageOverlayShow={false}
-        on:mapclick={mapClick}
-        on:ready={() => dispatch('ready')} />
+      {stations}
+      lng={-122.5}
+      lat={36.5}
+      zoom={4}
+      boundary={$boundary}
+      location={$location}
+      zoomToLocationOnLoad={false}
+      imageOverlayShow={false}
+      on:overlayclick={stationClick}
+      on:ready={() => dispatch('ready')} />
   </div> <!-- end explore-map -->
 </div>
-
-<Modal id="upload"
-  bind:open={showUpload}
-  modalHeading=""
-  passiveModal 
-  on:open
-  on:close
->
-  <UploadBoundary bind:open={showUpload} on:upload={uploadBoundary} />
-</Modal>
 
 

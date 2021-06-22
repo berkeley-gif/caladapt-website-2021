@@ -8,13 +8,14 @@
     if (Object.keys(query).length === 0) {
       return {
         initialConfig: {
-          boundaryId: 'locagrid',
+          stationId: 31,
           scenarioId: 'rcp45',
           climvarId: 'tasmax',
-          modelIds: 'HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5',
+          //modelIds: 'HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5',
+          modelIds: 'HadGEM2-ES',
           imperial: true,
-          lat: 38.58,
-          lng: -121.46,
+          doy: 180,
+          period: 100,
         },
         glossary,
       };
@@ -35,7 +36,7 @@
   import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
   
   // Helpers
-  import { getLocation } from '../../../helpers/geocode';
+  import { getStation } from '../../../helpers/geocode';
   import { resources } from './_helpers';
 
   // Components
@@ -54,16 +55,19 @@
     modelsStore,
     unitsStore,
     locationStore,
+    stationStore,
     dataStore,
+    doyStore,
+    periodStore,
     queryParams,
+    temperatureStore,
   } from './_store';
-  import { getObserved, getModels, getEnvelope } from './_data';
+  import { getData } from './_data';
 
   export let initialConfig;
   export let glossary;
 
   // Derived stores
-  const { location } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -84,7 +88,7 @@
     threshold: 0.5,
   };
 
-  $: $location, showLoader();
+  $: $stationStore, showLoader();
   $: $climvar, $scenario, $models, update();
 
   function hideLoader() {
@@ -100,17 +104,16 @@
   async function update() {
     if (!fetchData) return;
     try {
-/*      const config = {
+      const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
       };
       const { params, method } = $queryParams;
-      const envelope = await getEnvelope(config, params, method);
-      const observed = await getObserved(config, params, method);
-      const modelsData = await getModels(config, params, method);
-      dataStore.set([envelope, observed, ...modelsData]);
-      console.log('updateData', $data);*/  
+      console.log('update', $stationStore, config, params, method );
+      const data = await getData(config, params, method);
+      dataStore.set(data);
+      console.log('updateData', data);  
     } catch(err) {
       console.log('updateData', err);
     }
@@ -142,14 +145,19 @@
   }
 
   async function initApp(config) {
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } = config;
+    const { stationId, scenarioId, climvarId, modelIds, imperial, period } = config;
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
-    const loc = await getLocation(lng, lat, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
+    periodStore.set(period);
+    const station = await getStation(stationId, 'hadisdstations');
+    locationStore.updateLocation(station);
+    stationStore.set(station);
+    // TODO update doyStore
+    // TODO update threshold
+    // thresholdListStore.add(69.5, '98th Percentile');
+    // thresholdStore.set(69.5);
     return;
   }
 
@@ -163,7 +171,7 @@
 </script>
 
 <svelte:head>
-  <title>Annual Averages</title>
+  <title>Climate Extremes</title>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 
