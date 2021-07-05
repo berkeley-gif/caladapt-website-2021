@@ -25,17 +25,6 @@ const tools = [
     ],
   },
   {
-    title: 'Annual Averages 2',
-    desc: `Explore projected annual averages of maximum temperature, minimum temperature and 
-    precipitation for your location.`,
-    categories: ['Temperature', 'Precipitation'],
-    slug: 'annual-averages-2',
-    icons: [
-      'img/icons/sun.svg',
-      'img/icons/rainfall.svg',
-    ],
-  },
-  {
     title: 'Climate Extremes',
     desc: `Explore extreme events`,
     categories: ['Temperature'],
