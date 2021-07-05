@@ -30,19 +30,20 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { Modal, Loading } from 'carbon-components-svelte';
+  import { Modal, Button } from 'carbon-components-svelte';
   import { inview } from 'svelte-inview/dist/';
+  import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
   
   // Helpers
   import { getLocation } from '../../../helpers/geocode';
   import { resources } from './_helpers';
 
   // Components
-  import DataLoading from '../../../components/tools/Loading/DataLoading.svelte';
   import Header from './Header.svelte';
-  import Explore from './Explore.svelte';
+  import SelectLocation from './SelectLocation.svelte';
+  import ExploreData from './ExploreData.svelte';
   import About from './About.svelte';
-  import Data from './Data.svelte';
+  import DataSources from './DataSources.svelte';
   import Resources from './Resources.svelte';
   import { NotificationDisplay } from '../../../components/notifications';
 
@@ -68,38 +69,54 @@
   const { scenario } = scenarioStore;
   const { models } = modelsStore;
 
-  // Modals
+  // Local props
   let showInfo = false;
-  let initReady = false;
-  let mapReady = false;
-  let appReady = false;
   let definitionText;
   let definitionTitle;
-  let appStatus = 'idle';
+  let dataLoaded = false;
 
-  let inviewEl = 'explore';
+  // Add chart explanation to glossary list
+  glossary = [
+    ...glossary,
+    {
+      slug: 'annual-averages-chart',
+      metadata: {
+      },
+      html: `
+        <div>
+          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The Observed data is represented by a gray line from 1950-2006.</p>
+          <p>Click on the legend button to highlight corresponding timeseries.</p>
+        </div>
+      `
+    }
+  ];
+
+  // Monitor sections as they enter & leave viewport
+  let inviewEl = 'select';
   const handleEntry = (e) => {
     const { entry } = e.detail;
     inviewEl = entry.target.id;
   };
   const entryOptions = {
-    threshold: 0.25,
+    threshold: 0.5,
   };
 
-  $: if (initReady) {
-    appReady = true;
-    console.log('app ready');
-    updateData();
+  // Reactive props
+  $: $location, showLoader();
+  $: $climvar, $scenario, $models, update();
+
+  function hideLoader() {
+    dataLoaded = true;
+    update();
   }
 
-  $: $climvar, updateData();
-  $: $location, updateData();
-  $: $scenario, updateData();
-  $: $models, updateData();
+  function showLoader() {
+    dataLoaded = false;
+    dataStore.set(null);
+  }
 
-  async function updateData() {
-    if (!appReady) return;
-    appStatus = 'working';
+  async function update() {
+    if (!dataLoaded) return;
     dataStore.set(null);
     try {
       const config = {
@@ -112,33 +129,40 @@
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
       dataStore.set([envelope, observed, ...modelsData]);
-      console.log('updateData', $data);
-      appStatus = 'idle';      
+      console.log('updateData', $data);  
     } catch(err) {
       console.log('updateData', err);
-      appStatus = 'idle';
     }
   }
 
+  // Populates an info modal when user clicks Learn More
   function showDefinition(e) {
     const { topics, title } = e.detail;
     const items = glossary.filter(d => topics.includes(d.slug));
+    console.log('filter', items, glossary);
     definitionText = items.map((item) => {
       return `
-      <div>
-        <h5>${item.metadata.title}</h5>
-        ${item.html}
-      </div>
-      `;
-    })
-    .join('<br/>');
+        <div>
+          <h5>${item.metadata.title}</h5>
+          ${item.html}
+        </div>
+        `;
+      })
+      .join('<br/>');
     definitionTitle = title;
     showInfo = true;
   }
 
   async function initApp(config) {
-    console.log('initApp', config);
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } = config;
+    const {
+      lat,
+      lng,
+      boundaryId,
+      scenarioId,
+      climvarId,
+      modelIds,
+      imperial,
+    } = config;
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
@@ -150,16 +174,12 @@
   }
 
   onMount(() => {
-    window.scrollTo(0, 0);
     initApp(initialConfig)
-      .then(() => {
-        initReady = true;
-        console.log('init ready');
-      })
       .catch((error) => {
         console.log('init error', error);
       });
-  })
+    window.scrollTo(0, 0);
+  });
 </script>
 
 <svelte:head>
@@ -167,16 +187,18 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 
-<style type="scss">
-  .section {
-    margin: 4rem 2rem;
-    min-height: 300px;
-  }
-</style>
-
 <div class="tool">
   <!-- Header -->
   <Header currentView={inviewEl} />
+
+  <!-- Select Location -->
+  <div
+    id="select"
+    class="section"
+    use:inview={entryOptions}
+    on:enter={handleEntry}>
+    <SelectLocation on:define={showDefinition} />
+  </div>
   
   <!-- Explore -->
   <div
@@ -184,13 +206,17 @@
     class="section"
     use:inview={entryOptions}
     on:enter={handleEntry}>
-    {#if !appReady}
-      <DataLoading />
-    {:else}
-      <Explore
-        bind:appStatus
-        on:define={showDefinition} />
-    {/if}  
+    {#if !dataLoaded}
+      <div class="loading-overlay">
+        <Button
+          icon={ChartLineData32}
+          class="load"
+          on:click={hideLoader}>
+          Explore the Data
+        </Button>          
+      </div> 
+    {/if}
+    <ExploreData on:define={showDefinition} />
   </div>
 
   <div class="bx--grid">
@@ -209,7 +235,7 @@
       class="section"
       use:inview={entryOptions}
       on:enter={handleEntry}>
-      <Data />
+      <DataSources />
     </div>
     
     <!-- Resources -->
@@ -224,12 +250,15 @@
 </div>
 
 
-<Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading={definitionTitle} on:open on:close>
-  <div>{ @html definitionText }</div>
+<Modal
+  id="definition"
+  size="sm"
+  passiveModal
+  bind:open={showInfo}
+  modalHeading={definitionTitle}
+  on:open
+  on:close>
+    <div>{ @html definitionText }</div>
 </Modal>
-
-{#if appStatus === 'working'}
-  <Loading />
-{/if}
 
 <NotificationDisplay />
