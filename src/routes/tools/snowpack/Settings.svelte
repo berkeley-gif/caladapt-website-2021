@@ -28,7 +28,6 @@
   } from './_store';
 
   export let sidebarCollapsed;
-  export let appStatus;
 
   const dispatch = createEventDispatcher();
 
