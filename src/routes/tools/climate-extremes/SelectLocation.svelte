@@ -2,17 +2,16 @@
   import { createEventDispatcher } from 'svelte';
   import {
     Search,
-    Button,
-    Modal,
     Tag,
   } from 'carbon-components-svelte';
 
   // Helpers
   import { getStation, searchStation } from '../../../helpers/geocode';
-  import { stations } from './_helpers';
+  import { stationsLayer } from './_helpers';
 
   // Components
   import {
+    SelectStation,
     ShowDefinition,
   } from '../../../components/tools/Settings';
   import { Location } from '../../../components/tools/Location';
@@ -24,8 +23,10 @@
     stationStore,
   } from './_store';
 
+  export let stationsList;
+
   const dispatch = createEventDispatcher();
-  const { location, boundary } = locationStore;
+  const { location } = locationStore;
 
   let searchOptions = [];
   let searchValue = '';
@@ -33,7 +34,7 @@
   let showSuggestions = false;
 
   async function stationClick(e) {
-    const station = await getStation(e.detail, stations.id);
+    const station = await getStation(e.detail, stationsLayer.id);
     locationStore.updateLocation(station);
     stationStore.set(station);
   }
@@ -44,8 +45,13 @@
   }
 
   async function search(e) {
-    searchOptions = await searchStation(e.target.value, stations.id);
+    searchOptions = await searchStation(e.target.value, stationsLayer.id);
     showSuggestions = true;
+  }
+
+  async function changeStation(e) {
+    stationStore.set(e.detail);
+    //locationStore.set(e.detail);
   }
 
   function selectSuggestion(opt) {
@@ -64,18 +70,18 @@
    <!-- Header -->
   <div class="select-location-header">
     <h2>Select Station</h2>
-    <p>Click on the map or enter an address in the search box. To explore data for a larger extent (e.g. county), select a boundary first. Scroll down to explore data for selected location.</p>
+    <p>Select a station from the dropdown list or click on a station location on the map. You can also enter an address in the search box to find the nearest station.</p>
   </div>
-  <!-- Help -->
-  <div class="select-location-help">
-    <Tag interactive>Take a Tour</Tag>
-    <Tag interactive>Video Tutorial</Tag>
+
+  <div class="select-location-blank">
   </div>
 
   <!-- Current Selection -->
   <div class="select-location-current block">
+    <h3>Selected Station</h3>
     {#if $stationStore}
-      <p>{$stationStore.title}</p>
+      <p>{$stationStore.properties.name}</p>
+      <p class="small">Elevation: {$stationStore.properties.elevation_m} m</p>
     {/if}
   </div>
 
@@ -113,14 +119,23 @@
     {/if}  
   </div> <!-- end search-location -->
 
+  <!-- Location Search -->
+  <div class="select-location-select block block-settings">
+    <SelectStation 
+      items={stationsList}
+      selectedId={$stationStore.id}
+      on:change={changeStation}
+    />
+  </div> <!-- end search-location -->
+
   <!-- Map-->
   <div class="select-location-map">
     <Location
-      {stations}
+      stations={stationsLayer}
       lng={-122.5}
       lat={36.5}
       zoom={4}
-      boundary={$boundary}
+      boundary={null}
       location={$location}
       zoomToLocationOnLoad={false}
       imageOverlayShow={false}

@@ -13,7 +13,6 @@ import { seriesList } from './_helpers';
 
 const { apiEndpoint } = config.env.production;
 const dateParse = timeParse('%Y-%m-%d');
-const dateFormat = timeFormat('%Y');
 
 const fetchReturnLevels = async ({slug, params, method}) => {
   const url = `${apiEndpoint}/series/${slug}/ams/`;
@@ -29,20 +28,35 @@ const addSeriesInfo = (series) => {
   return { ...series, ...item, visible: true, };
 }
 
-const transformResponse = response => response.returnlevels;
+const transformResponse = (response) => {
+  const returnlevels = response.returnlevels.map(d => {
+    const begin = +dateParse(d.begin).getFullYear();
+    const end = +dateParse(d.end).getFullYear();
+    let timestep;
+    if (begin < 2000) {
+      timestep = `Historical (${begin}-${end})`
+    } else if (begin > 2000 && begin < 2060) {
+      timestep = `Mid-Century (${begin}-${end})`
+    } else {
+      timestep = `End-Century (${begin}-${end})`
+    }
+    return { ...d, timestep };
+  });
+  return returnlevels;
+};
 
 export async function addModel(config, params, method, modelId) {
   try {
     const { climvarId, scenarioId } = config;
     const slug = `${climvarId}_day_${modelId}_${scenarioId}`;
     const promise = pipe(fetchReturnLevels, transformResponse)({slug, params, method});
-    const values = await promise;
-    if (values.length === 0) {
+    const returnlevels = await promise;
+    if (returnlevels.length === 0) {
       throw new Error('No Data');
     }
     const series = {
       key: modelId,
-      values,
+      returnlevels,
     };
     return addSeriesInfo(series);
   } catch (error) {
@@ -50,20 +64,29 @@ export async function addModel(config, params, method, modelId) {
   }
 }
 
+export async function getStations() {
+  const url = `${apiEndpoint}/hadisdstations/`;
+  const [response, error] = await handleXHR(fetchData(url, { pagesize:39 }));
+  if (error) {
+    throw new Error(error.message);
+  }
+  return response;
+}
+
 function extractHistoricaData(_data) {
-  const historicalInfo = seriesList.find(d => d.key === 'observed');
+  const historicalInfo = seriesList.find(d => d.key === 'historical');
   // Return levels for historical period are same for all models
   // Use the first GCM to filter out return levels for historical period
-  const historicalData = _data[0].values.find(d => +dateParse(d.begin).getFullYear() < 2000);
+  const historicalData = _data[0].returnlevels.find(d => +dateParse(d.begin).getFullYear() < 2000);
   // Filter out historical data from all model responses
   const filteredData = _data.map((series) => {
     return {
       ...series,
-      values: series.values.filter(d => +dateParse(d.begin).getFullYear() > 2000)
+      returnlevels: series.returnlevels.filter(d => +dateParse(d.begin).getFullYear() > 2000)
     }
   });
   // Add a new series for historical period
-  filteredData.unshift({ ...historicalInfo, values: [historicalData] });
+  filteredData.unshift({ ...historicalInfo, returnlevels: [historicalData] });
   return filteredData;
 }
 
@@ -79,7 +102,7 @@ export async function getData(config, params, method) {
 export function getReturnLevels(_data) {
   const arr = [];
   _data.forEach((series) => {
-    series.values.forEach((group) => {
+    series.returnlevels.forEach((group) => {
       const { begin, end, levels } = group;
       const updatedLevels = levels.map((level) => {
         return { 
@@ -99,7 +122,7 @@ export function getReturnLevels(_data) {
 export function getProbabilities(_data) {
   const arr = [];
   _data.forEach((series) => {
-    series.values.forEach((group) => {
+    series.returnlevels.forEach((group) => {
       const { begin, end, gevisf, threshold } = group;
       arr.push({
         key: series.key,
@@ -112,4 +135,8 @@ export function getProbabilities(_data) {
     });
   });
   return arr;
+}
+
+export function formatDataForExport(_data) {
+
 }

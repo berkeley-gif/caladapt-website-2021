@@ -1,8 +1,11 @@
+import { Sun } from '../../../components/icons';
 import models from '../../../helpers/climate-models';
 import scenarios from '../../../helpers/climate-scenarios';
 import layers from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
 import { tools } from '../../../../content/tools/data';
+import { MinMaxAvg, MonthsCount } from '../../../components/tools/Stats';
+import { ReturnLevelCurveChart } from '../../../components/tools/Charts';
 
 export const climvarList = climvars
   .filter(d => ['tasmax', 'tasmin'].includes(d.id))
@@ -11,12 +14,49 @@ export const climvarList = climvars
     return { ...d, title };
   });
 
+  // List of indicators (or chart views) used for Extreme Heat Tool
+export const indicatorList = [
+  {
+    id: 'observations',
+    label: 'Historical Observations',
+    title: 'Historical Observed Data',
+    helperText: `Helper text`,
+    units: '',
+    decimals: 0,
+    icon: Sun,
+    chartComponent: ReturnLevelCurveChart,
+    statsComponent: MinMaxAvg,
+  },
+  {
+    id: 'forecast',
+    label: 'Near Term Forecast',
+    title: 'Timing of Extreme Heat Days per Year',
+    helperText: `Helper text`,
+    units: '',
+    decimals: 0,
+    icon: Sun,
+    chartComponent: ReturnLevelCurveChart,
+    statsComponent: MonthsCount,
+  },
+  {
+    id: 'projections',
+    label: 'Future Climate Projections',
+    title: 'Return Level Estimates of Maximum Temperature for July 1',
+    helperText: `Helper text`,
+    units: '',
+    decimals: 0,
+    icon: Sun,
+    chartComponent: ReturnLevelCurveChart,
+    statsComponent: MinMaxAvg,
+  },
+];
+
 // List of series used in tool with additional props for
 // symbolyzing these lines
 const series = [
   {
-    key: 'observed',
-    label: 'Observed',
+    key: 'historical',
+    label: 'Historical',
     color: 'rgba(110, 110, 110, 1)',
   },
 ];
@@ -37,20 +77,8 @@ models.forEach((d) => {
 
 export const seriesList = series;
 
-export const stations = layers
+export const stationsLayer = layers
   .find(d => d.id === 'hadisdstations');
-
-export const boundaryList = layers
-  .filter(d => d.metadata.group === 'Boundaries')
-  .map(d => {
-    let text;
-    if (d.id === 'locagrid') {
-      text = 'None';
-    } else {
-      text = d.metadata.title;
-    }
-    return { ...d, text };
-  });
 
 export const modelList = models
   .map((d) => {

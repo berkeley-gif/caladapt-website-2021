@@ -63,14 +63,7 @@
       class="link"
       class:active={currentView === 'select' ? true : false}
       on:click={selectView} >
-      Select Location
-    </li>
-    <li
-      data-section="explore"
-      class="link"
-      class:active={currentView === 'explore' ? true : false}
-      on:click={selectView} >
-      Explore the Data
+      Explore Data
     </li>
     <li
       data-section="about"

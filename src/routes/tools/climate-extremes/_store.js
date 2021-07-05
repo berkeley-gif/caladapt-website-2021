@@ -1,5 +1,10 @@
 import { writable, derived } from 'svelte/store';
-import { scenarioList, boundaryList, climvarList } from './_helpers';
+import { timeFormat } from 'd3-time-format';
+import { scenarioList, climvarList, indicatorList } from './_helpers';
+
+const numberFormat = timeFormat('%j');
+const textFormat = timeFormat('%B %e');
+const today = new Date();
 
 export const climvarStore = (() => {
   const store = writable('tasmax');
@@ -46,19 +51,22 @@ export const modelsStore = (() => {
   }
 })();
 
-export const periodStore = writable(100);
-
 export const unitsStore = writable({ imperial: true });
 
 export const doyStore = (() => {
-  const store = writable('7/04');
+  const store = writable(today);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get doy() {
+    get doyNumber() {
       return derived(store, ($store) => {
-        return 180;
+        return +numberFormat($store);
+      });
+    },
+    get doyText() {
+      return derived(store, ($store) => {
+        return textFormat($store);
       });
     },
   }
@@ -67,7 +75,7 @@ export const doyStore = (() => {
 export const temperatureStore = writable(100);
 
 export const stationStore = writable({
-  title: 'Weather Station: Arcata Airport',
+  title: 'Arcata Airport',
   address: 'Arcata, California',
   geometry: {
     type: 'Point',
@@ -86,7 +94,16 @@ export const stationStore = writable({
     -124.109,
     40.978
   ],
-  id: 31
+  id: 31,
+  properties: {
+    name: 'Arcata Airport',
+    usaf: 725945,
+    wban: 24283,
+    elevation_m: 61.0,
+    icao: 'KACV',
+    city: 'Arcata',
+    climdiv: 1
+  },
 });
 
 export const locationStore = (() => {
@@ -96,7 +113,7 @@ export const locationStore = (() => {
     boundaryId: 'locagrid',
     location: {
       id: 31,
-      title: 'Weather Station: Arcata Airport',
+      title: 'Arcata Airport',
       address: 'Arcata, California',
       geometry: {
         type: 'Point',
@@ -112,36 +129,29 @@ export const locationStore = (() => {
       bbox: [
         -124.109,
         40.978,
-        -124.109,
+        -124.109,  
         40.978
       ],
     },
-    isUpload: false,
   });
   const { update, subscribe } = store;
   return {
     subscribe,
     updateLocation: (location) => update((store) => {
       if (!location) return;
-      store.lng = +location.center[0].toFixed(4);
-      store.lat = +location.center[1].toFixed(4);
+      if (location.geometry) {
+        store.lng = +location.geometry.coordinates[0].toFixed(4);
+        store.lat = +location.geometry.coordinates[1].toFixed(4);  
+      } else {
+        store.lng = +location.center[0].toFixed(4);
+        store.lat = +location.center[1].toFixed(4);  
+      }
       store.location = location;
       return store;
     }),
     get location() {
       return derived(store, $store => {
         return $store.location;
-      });
-    },
-    get boundary() {
-      return derived(store, $store => {
-        const selected = boundaryList.find(d => d.id === $store.boundaryId);
-        return selected;
-      });
-    },
-    get lngLat() {
-      return derived(store, $store => {
-        return [$store.lng, $store.lat];
       });
     },
   }
@@ -163,26 +173,51 @@ export const dataStore = (() => {
   }
 })();
 
+// Indicator Store
+export const indicatorStore = (() => {
+  const store = writable(indicatorList[0]);
+  const { subscribe, update } = store;
+  return {
+    subscribe,
+    updateIndicator: val => update(() => {
+      return indicatorList.find(d => d.id === val);
+    }),
+    get indicator() {
+      return derived([climvarStore, store], ([$climvarStore, $store]) => {
+        const indicator = $store;
+        if ($climvarStore === 'tasmin') {
+          // Replace text 'Extreme Heat Days' text with 'Warm Nights'
+/*          let helperText = indicator.helperText.replace('Days', 'Nights');
+          helperText = helperText.replace('maximum', 'minimum');*/
+          return {
+            ...indicator,
+            title: indicator.title.replace('Maximum', 'Minimum'),
+            //helperText,
+          }
+        }
+        return indicator;
+      });
+    },
+  }
+})();
+
 
 // DERIVED STORES
 // Query params store
 export const queryParams = derived(
-  [doyStore, stationStore, periodStore],
+  [doyStore, stationStore],
   ([$doyStore, $stationStore]) => {
-    const { doy } = $doyStore;
-    console.log('queryParams', doy);
     const params = {
-      g: `POINT(${$stationStore.center[0]} ${$stationStore.center[1]})`,
-      doy: 180,
+      g: `POINT(${$stationStore.geometry.coordinates[0]} ${$stationStore.geometry.coordinates[1]})`,
+      doy: numberFormat($doyStore),
     };
-    let method = 'GET';
-    return { params, method };
+    return { params, method: 'GET' };
 });
 
 // Bookmark store
 export const bookmark = derived(
-  [climvarStore, scenarioStore, modelsStore, unitsStore, stationStore, doyStore, periodStore],
-  ([$climvarStore, $scenarioStore, $modelsStore, $unitsStore, $stationStore, $doyStore, $periodStore]) => {
+  [climvarStore, scenarioStore, modelsStore, unitsStore, stationStore, doyStore],
+  ([$climvarStore, $scenarioStore, $modelsStore, $unitsStore, $stationStore, $doyStore]) => {
   const id = $stationStore.id;
   const { imperial } = $unitsStore;
   const { doy } = $doyStore;

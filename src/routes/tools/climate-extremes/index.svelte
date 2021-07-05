@@ -14,8 +14,6 @@
           //modelIds: 'HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5',
           modelIds: 'HadGEM2-ES',
           imperial: true,
-          doy: 180,
-          period: 100,
         },
         glossary,
       };
@@ -31,20 +29,19 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { Modal, Button } from 'carbon-components-svelte';
+  import { timeParse} from 'd3-time-format';
+  import { Modal, Tag } from 'carbon-components-svelte';
   import { inview } from 'svelte-inview/dist/';
-  import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
   
   // Helpers
-  import { getStation } from '../../../helpers/geocode';
   import { resources } from './_helpers';
 
   // Components
   import Header from './Header.svelte';
   import SelectLocation from './SelectLocation.svelte';
-  import Explore from './Explore.svelte';
+  import ExploreData from './ExploreData.svelte';
   import About from './About.svelte';
-  import Data from './Data.svelte';
+  import DataSources from './DataSources.svelte';
   import Resources from './Resources.svelte';
   import { NotificationDisplay } from '../../../components/notifications';
 
@@ -58,11 +55,10 @@
     stationStore,
     dataStore,
     doyStore,
-    periodStore,
     queryParams,
     temperatureStore,
   } from './_store';
-  import { getData } from './_data';
+  import { getData, getStations } from './_data';
 
   export let initialConfig;
   export let glossary;
@@ -73,12 +69,30 @@
   const { scenario } = scenarioStore;
   const { models } = modelsStore;
 
-  // Modals
+  // Local props
   let showInfo = false;
   let definitionText;
   let definitionTitle;
-  let fetchData = false;
+  let runUpdate = false;
+  let stations;
 
+  // Add chart explanation to glossary list
+  glossary = [
+    ...glossary,
+    {
+      slug: 'annual-averages-chart',
+      metadata: {
+      },
+      html: `
+        <div>
+          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The Observed data is represented by a gray line from 1950-2006.</p>
+          <p>Click on the legend button to highlight corresponding timeseries.</p>
+        </div>
+      `
+    }
+  ];
+
+  // Monitor sections as they enter & leave viewport
   let inviewEl = 'select';
   const handleEntry = (e) => {
     const { entry } = e.detail;
@@ -88,21 +102,22 @@
     threshold: 0.5,
   };
 
-  $: $stationStore, showLoader();
+  $: $stationStore, waitForUpdate();
   $: $climvar, $scenario, $models, update();
 
-  function hideLoader() {
-    fetchData = true;
+  function setRunUpdate() {
+    runUpdate = true;
     update();
   }
 
-  function showLoader() {
-    fetchData = false;
+  function waitForUpdate() {
+    runUpdate = false;
     dataStore.set(null);
   }
 
   async function update() {
-    if (!fetchData) return;
+    if (!runUpdate) return;
+    dataStore.set(null);
     try {
       const config = {
         climvarId: $climvarStore,
@@ -121,16 +136,9 @@
 
   function showDefinition(e) {
     const { topics, title } = e.detail;
-    if (topics.includes('chart')) {
-      definitionText = `
-        <div>
-          <p>Explain Chart</p>
-        </div>
-      `;
-    } else {
-      const items = glossary.filter(d => topics.includes(d.slug));
-      definitionText = items.map((item) => {
-        return `
+    const items = glossary.filter(d => topics.includes(d.slug));
+    definitionText = items.map((item) => {
+      return `
         <div>
           <h5>${item.metadata.title}</h5>
           ${item.html}
@@ -138,26 +146,35 @@
         `;
       })
       .join('<br/>');
-    }
-
     definitionTitle = title;
     showInfo = true;
   }
 
   async function initApp(config) {
-    const { stationId, scenarioId, climvarId, modelIds, imperial, period } = config;
+    const {
+      stationId,
+      scenarioId,
+      climvarId,
+      modelIds,
+      imperial,
+      doy,
+    } = config;
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
-    periodStore.set(period);
-    const station = await getStation(stationId, 'hadisdstations');
-    locationStore.updateLocation(station);
+    // Get a list of all stations
+    stations = await getStations();
+    // Set intial station
+    const station = stations.features.find(d => d.id === stationId);
     stationStore.set(station);
-    // TODO update doyStore
-    // TODO update threshold
-    // thresholdListStore.add(69.5, '98th Percentile');
-    // thresholdStore.set(69.5);
+    //locationStore.set(station);
+    // Set today's date as default
+    if (!doy) {
+      doyStore.set(new Date());
+    } else {
+      doyStore.set(timeParse('%j')(+doy));
+    }
     return;
   }
 
@@ -179,30 +196,35 @@
   <!-- Header -->
   <Header currentView={inviewEl} />
 
+  <div id="help" class="section">
+    <div class="help-info">
+      <p>To get started, first <strong>Select a Station</strong>. Next, scroll down to <strong>Explore Data</strong> for selected station.</p>
+      <p>Get help:
+        <Tag interactive>Watch a video on using the tool</Tag>
+        <Tag interactive>Explore our guide on climate data</Tag>
+        <Tag interactive>Search FAQs</Tag>
+      </p>
+    </div>
+  </div>
+
   <!-- Select Location -->
   <div
     id="select"
     class="section"
     use:inview={entryOptions}
     on:enter={handleEntry}>
-    <SelectLocation
-      on:define={showDefinition} />
+    {#if stations}
+      <SelectLocation
+        stationsList={stations.features}
+        on:define={showDefinition} />
+    {/if}
   </div>
   
   <!-- Explore -->
   <div
     id="explore"
-    class="section"
-    use:inview={entryOptions}
-    on:enter={handleEntry}>
-    {#if !fetchData}
-      <div class="loading-overlay">
-        <Button icon={ChartLineData32} class="load" on:click={hideLoader}>
-          Explore the Data
-        </Button>          
-      </div> 
-    {/if}
-    <Explore on:define={showDefinition} />
+    class="section">
+    <ExploreData {runUpdate} on:update={setRunUpdate} on:define={showDefinition} />
   </div>
 
   <div class="bx--grid">
@@ -221,7 +243,7 @@
       class="section"
       use:inview={entryOptions}
       on:enter={handleEntry}>
-      <Data />
+      <DataSources />
     </div>
     
     <!-- Resources -->
@@ -236,8 +258,15 @@
 </div>
 
 
-<Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading={definitionTitle} on:open on:close>
-  <div>{ @html definitionText }</div>
+<Modal
+  id="definition"
+  size="sm"
+  passiveModal
+  bind:open={showInfo}
+  modalHeading={definitionTitle}
+  on:open
+  on:close>
+    <div>{ @html definitionText }</div>
 </Modal>
 
 <NotificationDisplay />
