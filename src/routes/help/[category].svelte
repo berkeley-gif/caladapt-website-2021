@@ -41,7 +41,7 @@
 
   let filter = '';
   let searchStr = '';
-  let show;
+  let display;
 
   function makeTopicList(tags) {
     const filtered = tags.filter(tag => tag !== undefined);
@@ -62,11 +62,11 @@
     { href: `/help/${activeCategory.slug}`, text: `${activeCategory.title}` },
   ];
   $: if (activeCategory.slug === 'tutorials' || activeCategory.slug === 'faqs') {
-    show = ['search', 'filters'];
+    display = ['search', 'filters'];
   } else if (activeCategory.slug === 'glossary') {
-    show = ['search', 'glossary'];
+    display = ['search', 'glossary'];
   } else {
-    show = [];
+    display = [];
   }
 
   function filterItems() {
@@ -190,7 +190,7 @@
 
   <aside class="sidebar-right">
     <SidebarRight
-      {show}
+      {display}
       filters={topics}
       on:search={updateSearch}
       on:filter={updateFilter} />
