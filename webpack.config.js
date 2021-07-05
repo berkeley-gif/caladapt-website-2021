@@ -69,7 +69,7 @@ module.exports = {
         'process.env.NODE_ENV': JSON.stringify(mode)
       }),
     ].filter(Boolean),
-    devtool: dev && 'eval-cheap-source-map'
+    devtool: dev && 'inline-cheap-module-source-map'
   },
 
   server: {
