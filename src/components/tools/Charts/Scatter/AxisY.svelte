@@ -25,7 +25,7 @@
       {#if gridlines}
         <path class='gridline' d={d} style="stroke:#aaa;stroke-dasharray:2;"></path>
       {/if}
-      <text y='-4' style="font-size:12px;fill:#666">{formatTick(tick)}</text>
+      <text transform="rotate(-90)" y={0 - $padding.left} x={0 - $height/2} dy="4.5em" style="text-anchor: middle;">{formatTick(tick)}</text>
       {#if i === (+tickVals.length - 1)}
         <text y='-4' x={$padding.left + 10} class='label' style="font-size:14px;fill:#666">{label}</text>
       {/if}

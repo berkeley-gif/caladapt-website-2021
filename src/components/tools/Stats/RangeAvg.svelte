@@ -136,39 +136,40 @@
 </script>
 
 <style lang="scss">
-  .stat-data {
-    display: flex;
-    justify-content: space-around;
-    margin: 0.75rem 0;
-  }
-
   .stat {
     position: relative;
   }
 
   .stat-header {
     margin-bottom: 1rem;
-
-    span {
-      display: block;
-      line-height: 1.29;
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 2px;
-    }
   }
 
-  .stat-data-label {
+  .stat-data {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0.75rem 0;
+  }
+
+  .stat-title {
+    display: block;
+    line-height: 1.29;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .stat-text {
     font-size: 0.75rem;
     color: #51585e;
+    text-transform: uppercase;
   }
 
-  .stat-data-value {
+  .stat-value {
     font-size: 1.5rem;
     line-height: 1.5;
   }
 
-  .stat-data-units {
+  .stat-units {
     font-size: 0.8rem;
   }
 
@@ -190,16 +191,16 @@
   <div class="stat">
     <!-- title -->
     <div class="stat-header">
-      <span>{selectedSeries.label}</span>
-      <span>{selectedPeriod.label}</span>      
+      <span class="stat-text">{selectedSeries.label}</span>
+      <span class="stat-title">{selectedPeriod.label}</span>      
     </div>
     <!-- values -->
     <div class="stat-data">
       {#each stats as item}
         <div>
-          <div class="stat-data-label">{item.label}</div>
-          <div class="stat-data-value">{item.value}</div>
-          <div class="stat-data-units">{units}</div>
+          <div class="stat-text">{item.label}</div>
+          <div class="stat-value">{item.value}</div>
+          <div class="stat-units">{units}</div>
         </div>
       {/each}
     </div>
