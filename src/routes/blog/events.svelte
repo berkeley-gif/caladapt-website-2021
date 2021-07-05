@@ -98,7 +98,7 @@
   <div class="sidebar-right">
     <div class="is-sticky">
       <SidebarRight
-        show={['posts']} />      
+        display={['posts']} />      
     </div>
   </div>
 

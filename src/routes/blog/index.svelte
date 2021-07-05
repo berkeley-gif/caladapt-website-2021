@@ -95,7 +95,7 @@
   <div class="sidebar-right">
     <div class="is-sticky">
       <SidebarRight
-        show={['events', 'search', 'filters']}
+        display={['events', 'search', 'filters']}
         filters={['data', 'tools', 'other']}
         {events}
         on:search={updateSearch}

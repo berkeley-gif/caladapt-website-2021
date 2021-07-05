@@ -92,7 +92,7 @@
     </div>
   </div>
   <div class="sidebar-right">
-    <SidebarRight show={['events', 'posts']} {events} />
+    <SidebarRight display={['events', 'posts']} {events} />
   </div>
   <div class="footer">
     <p class="lead">

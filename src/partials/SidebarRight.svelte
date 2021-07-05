@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { Search, Select, SelectItem } from "carbon-components-svelte";
 
-  export let show = ['events', 'posts'];
+  export let display = ['events', 'posts'];
   export let events = [];
   export let posts = [];
   export let filters = [];
@@ -31,7 +31,7 @@
 <style>
 </style>
 
-{#if show.includes('events') && upcomingEvents.length > 0}
+{#if display.includes('events') && upcomingEvents.length > 0}
   <!-- Events -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Upcoming Events</h5>
@@ -52,17 +52,19 @@
   </div>
 {/if}
 
-{#if show.includes('posts')}
+{#if display.includes('posts')}
   <!-- Posts -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Latest on Cal-Adapt Blog</h5>
     <ul class="sidebar-block-list list-items">
-      <li class="item">
-        <p class="item-title"><a href="/blog/maps-projected-change">Maps of Projected Change</a></p>
-        <p class="item-text">
-          The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display.
-        </p>
-      </li>
+      {#each posts as post}
+        <li class="item">
+          <p class="item-title">
+            <a href={`blog/${post.slug}`}>{post.metadata.title}</a>
+          </p>
+          <p class="item-text">{post.metadata.snippet}</p>
+        </li>
+      {/each}
     </ul>
     <span class="sidebar-block-link">
       <a href="/blog">See All Posts</a>
@@ -70,7 +72,7 @@
   </div>
 {/if}
 
-{#if show.includes('search')}
+{#if display.includes('search')}
   <!-- Search -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Search</h5>
@@ -83,7 +85,7 @@
   </div>
 {/if}
 
-{#if show.includes('filters')}
+{#if display.includes('filters')}
   <!-- Search -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Filters</h5>
@@ -102,7 +104,7 @@
   </div>
 {/if}
 
-{#if show.includes('glossary')}
+{#if display.includes('glossary')}
   <!-- Glossary Link -->
   <div class="sidebar-block">
     <p class="item-text">
