@@ -19,203 +19,279 @@
     }
   }
 
-  #explore {
-    position: relative;
-  }
+  #help {
+    min-height: auto;
+    margin: 2rem 2rem 1rem;
 
-  .loading-overlay {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background: rgba($gray-20, .5);
-    z-index: 2;
-  }
-
-  .loading-overlay .load {
-    top: 40%;
-    left: 40%;
-    width: 15rem;
-    height: 4rem;
-    font-size: 1.25rem;
-  }
-
-  .explore {
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-    "tool-header tool-settings"
-    "tool-stats tool-settings"
-    "tool-chart tool-settings";
-
-    grid-gap: 1rem;
-    max-width: 1400px;
-    min-height: 400px;
-
-    .explore-header {
-      grid-area: tool-header;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    p {
+      font-size: 1.1rem;
+      line-height: 1.5;
     }
 
-    .explore-stats {
-      grid-area: tool-stats;
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-
-      div.block {
-        height: 100%;
-        flex: 1 0 auto;
-        margin: 0 0.5rem;
-      }
-
-      div.block:first-child {
-        margin-left: 0;
-      }
-
-      div.block:last-child {
-        margin-right: 0;
-      }
+    p:last-child {
+      margin-bottom: 0;
     }
 
-    .explore-chart {
-      grid-area: tool-chart;
-
-      .chart-notes {
-        padding: 1rem 0;
-        font-size: 0.75rem;
-      }
-
-      .chart-download {
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-      }
+    .help-info {
+      background: $teal-10;
+      border: 1px solid $blue-50;
+      padding: 1rem;
     }
 
-    .explore-settings {
-      grid-area: tool-settings;
-
-      padding: 0;
-
-      h4 {
-        font-weight: 600;
-      }
+    .bx--tag {
+      padding: 0.25rem 0.75rem;
+      font-size: 1rem;
+      background-color: $blue-50;
+      color: $white;
+      margin: 0 0.25rem;
     }
   }
 
-  .select-location {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-    "tool-header tool-help"
-    "tool-map tool-current"
-    "tool-map tool-search"
-    "tool-map tool-boundary";
+  #select {
+    margin-top: 3rem;
 
-    grid-gap: 1rem;
-    max-width: 1400px;
-    min-height: 200px;
+    .select-location {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+      "tool-header tool-blank"
+      "tool-map tool-current"
+      "tool-map tool-search"
+      "tool-map tool-boundary";
 
-    .select-location-header {
-      grid-area: tool-header;
+      grid-gap: 1rem;
+      max-width: 1400px;
+      min-height: 200px;
 
-      h2 {
-        margin-top: 0;
-      }
-    }
+      .select-location-header {
+        grid-area: tool-header;
 
-    .select-location-current {
-      grid-area: tool-current;
-
-      p {
-        margin: 0;
-        font-weight: 600;
-      }
-    }
-
-    .select-location-help {
-      grid-area: tool-help;
-
-      padding: 0.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .bx--tag {
-        padding: 0.25rem 0.75rem;
-        font-size: 1rem;
-        background-color: $blue-50;
-        color: $white;
-        margin: 0.5rem;
-      }
-    }
-
-    .select-location-boundary {
-      grid-area: tool-boundary;
-
-      .boundary-upload {
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-top: 1rem;
-      }
-    }
-
-    .select-location-search {
-      grid-area: tool-search;
-
-      position: relative;
-
-      .suggestions {
-        background-color: #fff;
-        border-radius: 4px;
-        position: absolute;
-        width: 100%;
-        left: 0;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        z-index: 1000;
-        overflow: hidden;
-        font-size: 15px;
-        box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
-
-        .suggestion {
-          cursor: default;
-          display: block;
-          padding: 6px 12px;
-          color: #404040;
+        h2 {
+          margin-top: 0;
         }
 
-        .suggestion:hover {
-          color: #404040;
-          background-color: #f3f3f3;
-          text-decoration: none;
-          cursor: pointer;
+        ul {
+          margin-left: 2rem;
+        }
+      }
+
+      .select-location-blank {
+        grid-area: tool-blank;
+      } 
+
+      .select-location-current {
+        grid-area: tool-current;
+
+        h3 {
+          margin-top: 0;
+          margin-bottom: 0.5rem;
+          font-weight: 400;
+          text-transform: uppercase;
+          color: $gray-70;
+          font-size: 0.75rem;
         }
 
-        .suggestion-title, .suggestion-address {
-          text-overflow: ellipsis;
+        p {
+          margin: 0;
+          font-weight: 600;
+        }
+      }
+
+      .select-location-help {
+        grid-area: tool-help;
+
+        padding: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .bx--tag {
+          padding: 0.25rem 0.75rem;
+          font-size: 1rem;
+          background-color: $blue-50;
+          color: $white;
+          margin: 0.5rem;
+        }
+      }
+
+      .select-location-boundary {
+        grid-area: tool-boundary;
+
+        .boundary-upload {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-top: 1rem;
+        }
+      }
+
+      .select-location-search {
+        grid-area: tool-search;
+
+        position: relative;
+
+        .suggestions {
+          background-color: #fff;
+          border-radius: 4px;
+          position: absolute;
+          width: 100%;
+          left: 0;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          z-index: 1000;
           overflow: hidden;
-          white-space: nowrap;
+          font-size: 15px;
+          box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
+
+          .suggestion {
+            cursor: default;
+            display: block;
+            padding: 6px 12px;
+            color: #404040;
+          }
+
+          .suggestion:hover {
+            color: #404040;
+            background-color: #f3f3f3;
+            text-decoration: none;
+            cursor: pointer;
+          }
+
+          .suggestion-title, .suggestion-address {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+
+          .suggestion-title {
+            font-weight: bold;
+          }
+        }
+      }
+
+      .select-location-map {
+        grid-area: tool-map;
+      }
+    }
+  }
+
+  #explore {
+
+    .explore {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+      "tool-header tool-controls"
+      "tool-title tool-settings"
+      "tool-stats tool-settings"
+      "tool-chart tool-settings";
+
+      grid-gap: 1rem;
+      max-width: 1400px;
+      min-height: 400px;
+
+      .explore-loading-overlay {
+        grid-row: 2 / -1;
+        grid-column: 1 / -1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        background: rgba($gray-20, .5);
+        z-index: 2;
+
+        .bx--btn {
+          font-size: 1.1rem;
+        }
+      }
+
+      .explore-header {
+        grid-area: tool-header;
+
+        h2 {
+          margin-top: 0;
+        }
+      }
+
+      .explore-controls {
+        grid-area: tool-controls;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        .bx--btn {
+          margin: 0.25rem 0;
+        }
+      }
+
+      .explore-title {
+        grid-area: tool-title;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .icon {
+          margin-right: 1rem;
+        }
+      }
+
+      .explore-stats {
+        grid-area: tool-stats;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        div.block {
+          height: 100%;
+          flex: 1 0 auto;
+          margin: 0 0.5rem;
         }
 
-        .suggestion-title {
-          font-weight: bold;
+        div.block:first-child {
+          margin-left: 0;
+        }
+
+        div.block:last-child {
+          margin-right: 0;
+        }
+      }
+
+      .explore-chart {
+        grid-area: tool-chart;
+
+        .chart-notes {
+          padding: 1rem 0;
+          font-size: 0.75rem;
+        }
+
+        .chart-download {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+        }
+      }
+
+      .explore-settings {
+        grid-area: tool-settings;
+
+        padding: 0;
+
+        h4 {
+          font-weight: 600;
         }
       }
     }
-
-    .select-location-map {
-      grid-area: tool-map;
-    }
   }
+
+
 
   input[name*="ACCESS1-0"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="ACCESS1-0"]:checked + .bx--checkbox-label::before {
