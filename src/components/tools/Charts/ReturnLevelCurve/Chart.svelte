@@ -3,7 +3,7 @@
   import { LayerCake, Svg, Html } from 'layercake';
   import { scaleBand, scalePoint } from 'd3-scale';
   import { timeFormat, timeParse } from 'd3-time-format';
-  import { min, max, groups } from 'd3-array';
+  import { min, max, group } from 'd3-array';
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
 
@@ -34,8 +34,8 @@
   const legendItems = writable(null);
   let dataByGroup = [];
 
-  let xKeys;
-  let xGroups;
+  let keys;
+  let groupKeys;
   let x0;
   let x1;
 
@@ -75,7 +75,7 @@
   
   $: if (data) {
     // Update Data
-    const groupedData = groups(data, d => d.timestep, d => d.key);
+    const groupedData = group(data, d => d.timestep, d => d.key);
     dataByGroup.length = 0;
     for (const timestep of [...groupedData]) {
       const [timestepKey, timestepValue] = timestep;
@@ -95,30 +95,26 @@
     console.log('chart data', dataByGroup);
 
     // Update X Axis
-    xKeys = [2, 5, 10, 20, 50, 100];
-    xGroups = dataByGroup.map(d => d.timestep);
+    keys = [2, 5, 10, 20, 50, 100];
+    groupKeys = dataByGroup.map(d => d.timestep);
 
-    x0 = scalePoint()
-      .domain(xGroups)
-      .range([0, 800])
-      .padding(1)
-      .round(true);
+    x0 = scaleBand()
+      .domain(groupKeys)
+      .padding(0.1);
     
     x1 = scaleBand()
-      .domain(xKeys)
-      .range([0, 10])
-      .padding(1)
-      .round(0);
+      .domain(keys)
+      .padding(0.05);
 
     // Update Y Domain
-    ymin = min(data, d => d.value);
-    ymax = max(data, d => d.value);
+    ymin = min(data, d => d.lowerci);
+    ymax = max(data, d => d.upperci);
     if (yAxis.baseValue === 0) {
       ymin = yAxis.baseValue;
     }
 
     // Update Legend
-    legendItems.set(xKeys.map(key => {
+    legendItems.set(keys.map(key => {
       return {};
       // const series = lineData.find(d => d.key === key);
       // return {
@@ -138,13 +134,13 @@
   </div>
   <div style={`height:${height}`} bind:this={chartContainer}>
     <LayerCake
-      padding={{ top: 20, right: 10, bottom: 30, left: 25 }}
+      padding={{ top: 20, right: 10, bottom: 60, left: 25 }}
       x={xAxis.key}
       y={yAxis.key}
       rScale={x0}
-      rDomain={xGroups}
+      rDomain={groupKeys}
       xScale={x1}
-      xDomain={xKeys}
+      xDomain={keys}
       yDomain={[ ymin, ymax ]}
       data={dataByGroup}>
         <Svg>
@@ -156,10 +152,10 @@
           <AxisY
             formatTick={yAxis.tickFormat}
             label={yAxis.label}
-            gridlines={true}
+            gridlines={false}
           />
-<!--           <ReturnLevels
-            data={dataByGroup}/> -->
+          <ReturnLevels
+            data={dataByGroup}/>
         </Svg>
 <!--         <Html pointerEvents={false}>
           {#if hideTooltip !== true}
