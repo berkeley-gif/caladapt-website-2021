@@ -17,6 +17,7 @@
   import { csvFormat, csvFormatRows } from 'd3-dsv';
   import { Download16, Share16 } from 'carbon-icons-svelte';
   import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
+  import { ReturnLevelCurveChart, Histogram } from '../../../components/tools/Charts';
   import copy from 'clipboard-copy';
 
   // Helpers
@@ -57,12 +58,14 @@
     doyStore,
     temperatureStore,
     indicatorStore,
+    observedStore,
   } from './_store';
 
   const dispatch = createEventDispatcher();
 
   const { location } = locationStore;
   const { data } = dataStore;
+  const { observed } = observedStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
@@ -73,10 +76,10 @@
   let isLoading = true;
   let statsData;
   let returnLevels;
-  let returnLevelByPeriod;
+  let timeseries;
+  let series;
   let showDownload = false;
   let showShare = false;
-  let showFetchButton = true;
 
   $: metadata = [
     ['station', $stationStore.title],
@@ -89,13 +92,21 @@
 
   $: if ($data) {
     returnLevels = getReturnLevels($data);
-    console.log('returnLevel', returnLevels);
+    console.log('returnlevels', returnLevels);
+    series = $data.map(d => ({ key: d.key, label: d.label, color: d.color }));
+    console.log('series', series);
     isLoading = false;
   } else {
     isLoading = true;
-    returnLevels = null; 
-    returnLevelByPeriod = null;
+    returnLevels = null;
     statsData = null;
+  }
+
+  $: if ($observed) {
+    timeseries = $observed.map(d => d.value);
+    console.log('timeseries', timeseries);
+  } else {
+    timeseries = null;
   }
 
   async function downloadViz(e) {
@@ -213,7 +224,7 @@
           <svelte:component dimension="50" this={$climvar.icon} />
         </span>
         <div>
-          <h3 class="block-title">{$climvar.title} for {$doyText}</h3>
+          <h3 class="block-title">{$indicator.title} of {$climvar.title} for {$doyText}</h3>
           <h4 class="block-title">{$stationStore.properties.name}</h4>
           <h4 class="block-title">{$scenario.labelLong}</h4>
           <p></p>
@@ -224,14 +235,14 @@
   <!-- Stats -->
   <div class="explore-stats">
     <div class="block">
-<!--       <RangeAvg
-        units={$climvar.units.imperial}
-        data={statsData}
-        isHistorical={true}
-        series={'historical'}
-        period={'baseline'}
-        format={formatFn}
-      />  -->   
+      <NumberInput
+        label="Select Temperature"
+        value={$temperatureStore}
+        on:change={changeTemperature}
+      />
+      <ShowDefinition
+        on:define
+        topics={["extreme-heat-threshold"]} />
     </div>
     <div class="block">
 <!--       <RangeAvg
@@ -246,37 +257,36 @@
   </div> <!-- end explore-stats -->
   <!-- Chart-->
   <div class="explore-chart block">
-<!--     <ReturnLevelCurveChart
-      data={returnLevels}
-      yAxis = {{
-        key: 'value',
-        label: `Return Level (${$climvar.units.imperial})`,
-        tickFormat: formatFn,
-        units: `${$climvar.units.imperial}`,
-      }}
-      xAxis = {{
-        key: 'period',
-        label: `Return Period (years)`,
-        tickFormat: d => d,
-        units: 'year',
-      }}
-    />  -->
-    <svelte:component
-      this={$indicator.chartComponent}
-      data={returnLevels}
-      yAxis = {{
-        key: 'value',
-        label: `Return Level (${$climvar.units.imperial})`,
-        tickFormat: formatFn,
-        units: `${$indicator.units}`,
-      }}
-      xAxis = {{
-        key: 'period',
-        label: `Return Period (years)`,
-        tickFormat: d => d,
-        units: 'year',
-      }}
-    />
+    {#if $indicator.id === 'observations'}
+      <Histogram
+        data={timeseries}
+        yAxis = {{
+          label: `Count of Days`,
+          tickFormat: d => d,
+        }}
+        xAxis = {{
+          label: `${$climvar.title} (${$climvar.units.imperial})`,
+          tickFormat: d => d,
+        }}
+      />
+    {:else if $indicator.id === 'projections'}
+      <ReturnLevelCurveChart
+        data={returnLevels}
+        legend={series}
+        yAxis = {{
+          key: 'value',
+          label: `Return Level (${$climvar.units.imperial})`,
+          tickFormat: formatFn,
+          units: `${$indicator.units}`,
+        }}
+        xAxis = {{
+          key: 'period',
+          label: `Return Period (years)`,
+          tickFormat: d => d,
+          units: 'year',
+        }}
+      />
+    {/if}
     <div class="chart-notes">
       <span>Source: Cal-Adapt. </span>
       <span>Data: HadISD, LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego).</span>
@@ -288,6 +298,7 @@
        on:define />
     </div>       
   </div> <!-- end explore-chart -->
+  
   <!-- Settings-->
   <div class="explore-settings"> 
     <h4 class="block-title">Change Settings:</h4>
@@ -324,16 +335,6 @@
           topics={["climate-scenarios"]}
           title="Day of Year" />
       </AccordionItem>
-<!--       <AccordionItem open title="Set Temperature">
-        <NumberInput
-          hideLabel
-          value={$temperatureStore}
-          on:change={changeTemperature}
-        />
-        <ShowDefinition
-          on:define
-          topics={["extreme-heat-threshold"]} />
-      </AccordionItem> -->
       <AccordionItem title="Select Models">
         <SelectModels 
           selectedIds={$modelsStore}

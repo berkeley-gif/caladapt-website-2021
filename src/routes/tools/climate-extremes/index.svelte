@@ -57,14 +57,14 @@
     doyStore,
     queryParams,
     temperatureStore,
+    observedStore,
   } from './_store';
-  import { getData, getStations } from './_data';
+  import { getData, getStations, getStationData } from './_data';
 
   export let initialConfig;
   export let glossary;
 
   // Derived stores
-  const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { models } = modelsStore;
@@ -125,10 +125,13 @@
         modelIds: $modelsStore,
       };
       const { params, method } = $queryParams;
-      console.log('update', $stationStore, config, params, method );
       const data = await getData(config, params, method);
+      console.log('updateData', data);
+      const historical = data.find(d => d.key === 'historical');
+      const { begin, end } = historical.returnlevels[0];
+      const stationData = await getStationData(config, params.g, begin, end);
       dataStore.set(data);
-      console.log('updateData', data);  
+      observedStore.set(stationData);
     } catch(err) {
       console.log('updateData', err);
     }

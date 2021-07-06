@@ -173,6 +173,22 @@ export const dataStore = (() => {
   }
 })();
 
+// Observed Data Store
+export const observedStore = (() => {
+  const store = writable();
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get observed() {
+      return derived(store, ($store) => {
+        if (!$store) return null;
+        return $store;
+      });
+    },
+  }
+})();
+
 // Indicator Store
 export const indicatorStore = (() => {
   const store = writable(indicatorList[0]);

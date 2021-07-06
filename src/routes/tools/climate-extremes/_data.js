@@ -1,11 +1,11 @@
 // Node modules
-import { timeParse, timeFormat } from 'd3-time-format';
-import { group } from 'd3-array';
+import { timeParse } from 'd3-time-format';
 
 // Helpers
 import config from '../../../helpers/api-config';
 import {
   handleXHR,
+  transformResponse,
   fetchData,
   pipe,
 } from '../../../helpers/utilities';
@@ -28,7 +28,7 @@ const addSeriesInfo = (series) => {
   return { ...series, ...item, visible: true, };
 }
 
-const transformResponse = (response) => {
+const transformReturnLevels = (response) => {
   const returnlevels = response.returnlevels.map(d => {
     const begin = +dateParse(d.begin).getFullYear();
     const end = +dateParse(d.end).getFullYear();
@@ -49,7 +49,7 @@ export async function addModel(config, params, method, modelId) {
   try {
     const { climvarId, scenarioId } = config;
     const slug = `${climvarId}_day_${modelId}_${scenarioId}`;
-    const promise = pipe(fetchReturnLevels, transformResponse)({slug, params, method});
+    const promise = pipe(fetchReturnLevels, transformReturnLevels)({slug, params, method});
     const returnlevels = await promise;
     if (returnlevels.length === 0) {
       throw new Error('No Data');
@@ -99,15 +99,50 @@ export async function getData(config, params, method) {
   return data;
 }
 
+export async function getStationData(config, g, begin, end) {
+  const { climvarId } = config;
+  const url = `${apiEndpoint}/series/${climvarId}_day_hadisd/events/`;
+  const [response, error] = await handleXHR(fetchData(url, { g }));
+  if (error) {
+    throw new Error(error.message);
+  }
+  const data = transformResponse(response);
+  // Get start and end dates to filter observed data
+  // TODO: check if API can provide subset instead of filtering client side
+  const beginDate = dateParse(begin);
+  const beginYear = +beginDate.getFullYear();
+  const endDate = dateParse(end);
+  const endYear = +endDate.getFullYear();
+
+  // Filter by 30 day period around selected date
+  const filterBy30DayPeriod = data.filter(d => {
+    const year = d.date.getFullYear();
+    const s = new Date(beginDate.setYear(year))
+    const e = new Date(endDate.setYear(year))
+    if ((d.date.getTime() >= s.getTime()) && (d.date.getTime() <= e.getTime())) {
+      return true
+    }
+    return false
+  });
+
+  // Filter by baseline period (30 years)
+  return filterBy30DayPeriod.filter(d => {
+    if ((+d.date.getFullYear() >= beginYear) && (+d.date.getFullYear() <= endYear)) {
+      return true
+    }
+    return false
+  })
+}
+
 export function getReturnLevels(_data) {
   const arr = [];
   _data.forEach((series) => {
     series.returnlevels.forEach((group) => {
-      const { begin, end, levels } = group;
+      const { levels } = group;
       const updatedLevels = levels.map((level) => {
         return { 
           ...level, 
-          timestep: `${begin}:${end}`,
+          timestep: group.timestep,
           key: series.key,
           color: series.color,
           label: series.label,

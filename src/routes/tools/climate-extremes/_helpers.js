@@ -5,12 +5,12 @@ import layers from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
 import { tools } from '../../../../content/tools/data';
 import { MinMaxAvg, MonthsCount } from '../../../components/tools/Stats';
-import { ReturnLevelCurveChart } from '../../../components/tools/Charts';
+import { ReturnLevelCurveChart, Histogram } from '../../../components/tools/Charts';
 
 export const climvarList = climvars
   .filter(d => ['tasmax', 'tasmin'].includes(d.id))
   .map((d) => {
-    const title = `Return Level Estimates of ${d.label}`;
+    const title = d.label;
     return { ...d, title };
   });
 
@@ -19,12 +19,12 @@ export const indicatorList = [
   {
     id: 'observations',
     label: 'Historical Observations',
-    title: 'Historical Observed Data',
+    title: 'Historical Observations',
     helperText: `Helper text`,
     units: '',
     decimals: 0,
     icon: Sun,
-    chartComponent: ReturnLevelCurveChart,
+    chartComponent: Histogram,
     statsComponent: MinMaxAvg,
   },
   {
@@ -41,7 +41,7 @@ export const indicatorList = [
   {
     id: 'projections',
     label: 'Future Climate Projections',
-    title: 'Return Level Estimates of Maximum Temperature for July 1',
+    title: 'Return Level Estimates',
     helperText: `Helper text`,
     units: '',
     decimals: 0,
