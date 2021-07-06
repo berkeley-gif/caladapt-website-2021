@@ -1,8 +1,7 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from 'carbon-components-svelte';
   import { LayerCake, Svg, Html } from 'layercake';
-  import { scaleBand, scalePoint } from 'd3-scale';
-  import { timeFormat, timeParse } from 'd3-time-format';
+  import { scaleBand } from 'd3-scale';
   import { min, max, group } from 'd3-array';
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
@@ -21,14 +20,15 @@
     baseValue: null,
     tickFormat: (d) => d,
     units: '',
-  }
+  };
   export let xAxis = {
     key: 'period',
     label: 'XAxis Label',
     baseValue: null,
     tickFormat: (d) => d,
     units: '',
-  }
+  };
+  export let legend;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -45,32 +45,24 @@
   let evt;
   let hideTooltip = true;
 
-  let dateParse = timeParse('%Y-%m-%d');
-  let dateFormat = timeFormat('%Y');
-
-  function formatGroup(group) {
-    const parts = group.split(':');
-    const years = parts.map(d => dateFormat(dateParse(d)));
-    return years.join('–');
-  }
-
   function createTooltip(d) {
-    // let tooltip;
-    // tooltip = `<span class="title">${formatGroup(d.timestep)}</span>`;
-    // tooltip += `<span class="title">
-    //   <span class="key" style="background:${d.color}"></span>
-    //   ${d.label}
-    // </span>`;
-    // const val = Math.round(d.value * 100) / 100;
-    // const lower = Math.round(d.lowerci * 100) / 100;
-    // const upper = Math.round(d.upperci * 100) / 100;
-    // tooltip += `<span>Return level: ${val} ${yAxis.units}</span>`;
-    // if (lower === 0 || upper === 0) {
-    //   tooltip += '<span>Insufficient observations to calculate CI</span>';
-    // } else {
-    //   tooltip += `<span>95% CI: ${lower} – ${upper} ${yAxis.units}</span>`;
-    // }
-    // return tooltip;
+    let tooltip;
+    tooltip = `<span class="title">${d.timestep}</span>`;
+    tooltip += `<span class="title">
+      <span class="key" style="background:${d.color}"></span>
+      ${d.label}
+    </span>`;
+    const val = Math.round(d.value * 100) / 100;
+    const lower = Math.round(d.lowerci * 100) / 100;
+    const upper = Math.round(d.upperci * 100) / 100;
+    tooltip += `<span>Return period: ${d.period} years</span>`;
+    tooltip += `<span>Return level: ${val} ${yAxis.units}</span>`;
+    if (lower === 0 || upper === 0) {
+      tooltip += '<span>Insufficient observations to calculate CI</span>';
+    } else {
+      tooltip += `<span>95% CI: ${lower} – ${upper} ${yAxis.units}</span>`;
+    }
+    return tooltip;
   }
   
   $: if (data) {
@@ -92,7 +84,6 @@
       }
       dataByGroup.push(obj);
     }
-    console.log('chart data', dataByGroup);
 
     // Update X Axis
     keys = [2, 5, 10, 20, 50, 100];
@@ -113,16 +104,14 @@
       ymin = yAxis.baseValue;
     }
 
+    console.log('egend', legend);
+
     // Update Legend
-    legendItems.set(keys.map(key => {
-      return {};
-      // const series = lineData.find(d => d.key === key);
-      // return {
-      //   key: series.key,
-      //   label: series.label,
-      //   color: series.color,
-      //   visible: true,
-      // };
+    legendItems.set(legend.map(key => {
+      return {
+        ...key,
+        visible: true,
+      };
     }));
     setContext('Legend', legendItems);
   }
@@ -152,18 +141,19 @@
           <AxisY
             formatTick={yAxis.tickFormat}
             label={yAxis.label}
-            gridlines={false}
           />
           <ReturnLevels
-            data={dataByGroup}/>
+            data={dataByGroup}
+            on:mousemove={event => evt = hideTooltip= event}
+            on:mouseout={() => hideTooltip = true}/>
         </Svg>
-<!--         <Html pointerEvents={false}>
+        <Html pointerEvents={false}>
           {#if hideTooltip !== true}
             <Tooltip {evt} let:detail>
               { @html createTooltip(detail.props)}
             </Tooltip>
           {/if}
-        </Html> -->
+        </Html>
       </LayerCake>
   </div>
 {:else}

@@ -18,7 +18,7 @@
         text-anchor='middle'
         dx="90"
         dy="20" 
-        style="font-size:12px;fill:#666">
+        style="font-size:13px;fill:#666">
         {formatTick(group)}
       </text>
       {#each $xScale.domain() as tick}

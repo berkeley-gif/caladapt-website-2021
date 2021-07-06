@@ -1,10 +1,9 @@
 <script>
   import { getContext } from 'svelte';
 
-  const { width, padding, yScale } = getContext('LayerCake');
+  const { width, height, padding, yScale, xScale, rScale } = getContext('LayerCake');
 
   export let ticks = undefined;
-  export let gridlines = false;
   export let formatTick = d => d;
   export let label = 'Axis Label';
 
@@ -16,19 +15,22 @@
     tickVals = $yScale.ticks();
   }
 
-  $: d = `M 0 0 L ${$width + $padding.left} 0`;
+  $: $rScale.rangeRound([0, $width]);
+  $: $xScale.rangeRound([0, $rScale.bandwidth()]);
 </script>
 
-<g class='axis y-axis' transform='translate(-{$padding.left}, 0)'>
+<g class='axis y-axis' transform='translate({$padding.left}, 0)'>
   {#each tickVals as tick, i}
     <g class='tick tick-{tick}' transform='translate(0, {$yScale(tick)})'>
-      {#if gridlines}
-        <path class='gridline' d={d} style="stroke:#aaa;stroke-dasharray:2;"></path>
-      {/if}
-      <text y='-4' style="font-size:12px;fill:#666">{formatTick(tick)}</text>
-      {#if i === (+tickVals.length - 1)}
-        <text y='-4' x={$padding.left + 10} class='label' style="font-size:14px;fill:#666">{label}</text>
-      {/if}
+      <text x='0' y='0' dx='-15' dy='3' style="font-size:12px;fill:#666">{formatTick(tick)}</text>
+      {#each $rScale.domain() as group}
+        {#each $xScale.domain() as x}
+          <line x1={$rScale(group) + $xScale(x) - 2} x2={$rScale(group) + $xScale(x) + 2} style="stroke:#aaa;"></line>
+        {/each}
+      {/each}
     </g>
   {/each}
+  <text transform='rotate(-90)' y={-$padding.left} x={-$height/2} class='label' text-anchor='middle' style="font-size:13px;fill:#666">
+    {label}
+  </text>
 </g>
