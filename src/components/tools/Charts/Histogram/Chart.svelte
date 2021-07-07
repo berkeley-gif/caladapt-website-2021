@@ -86,7 +86,7 @@ function thresholds (domain, count) {
 {#if data}
   <div style={`height:${height}`} bind:this={chartContainer}>
     <LayerCake
-      padding={{ top: 20, right: 10, bottom: 30, left: 25 }}
+      padding={{ top: 20, right: 10, bottom: 30, left: 65 }}
       x={xKey}
       y={yKey}
       yDomain={[0, null]}

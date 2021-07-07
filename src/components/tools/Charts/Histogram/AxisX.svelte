@@ -87,11 +87,9 @@
     <line class="baseline" y1='{$height + 0.5}' y2='{$height + 0.5}' x1='0' x2='{$width}'></line>
   {/if}
   <text
-    transform='translate($width/2, 0)'
-    y='16'
+    transform='translate({$width/2}, {$height})'
+    y='30'
     text-anchor='middle'
-    dx="90"
-    dy="20" 
     style="font-size:13px;fill:#666">
     {label}
   </text>

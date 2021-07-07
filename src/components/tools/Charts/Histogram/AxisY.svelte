@@ -55,7 +55,7 @@
   {/each}
   <text
     transform='rotate(-90)'
-    y={-$padding.left}
+    y={-5}
     x={-$height/2}
     class='label'
     text-anchor='middle'
