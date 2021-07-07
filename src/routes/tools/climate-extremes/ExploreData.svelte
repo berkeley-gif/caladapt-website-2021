@@ -11,6 +11,7 @@
     RadioButton,
     NumberInput,
     SkeletonText,
+    Slider,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
   import { timeFormat, timeParse } from 'd3-time-format';
@@ -50,7 +51,7 @@
   import {
     climvarStore,
     scenarioStore,
-    locationStore,
+/*    locationStore,*/
     dataStore,
     modelsStore,
     stationStore,
@@ -63,7 +64,7 @@
 
   const dispatch = createEventDispatcher();
 
-  const { location } = locationStore;
+/*  const { location } = locationStore;*/
   const { data } = dataStore;
   const { observed } = observedStore;
   const { climvar } = climvarStore;
@@ -224,7 +225,7 @@
           <svelte:component dimension="50" this={$climvar.icon} />
         </span>
         <div>
-          <h3 class="block-title">{$indicator.title} of {$climvar.title} for {$doyText}</h3>
+          <h3 class="block-title">{$indicator.title} of {$climvar.title} around {$doyText} (± 15 days) </h3>
           <h4 class="block-title">{$stationStore.properties.name}</h4>
           <h4 class="block-title">{$scenario.labelLong}</h4>
           <p></p>
@@ -234,15 +235,16 @@
   </div>
   <!-- Stats -->
   <div class="explore-stats">
-    <div class="block">
-      <NumberInput
-        label="Select Temperature"
-        value={$temperatureStore}
-        on:change={changeTemperature}
-      />
-      <ShowDefinition
-        on:define
-        topics={["extreme-heat-threshold"]} />
+    <div class="block temperature">
+
+        <NumberInput
+          label="Select Temperature"
+          value={$temperatureStore}
+          on:change={changeTemperature}
+        />
+        <ShowDefinition
+          on:define
+          topics={["extreme-heat-threshold"]} />
     </div>
     <div class="block">
 <!--       <RangeAvg

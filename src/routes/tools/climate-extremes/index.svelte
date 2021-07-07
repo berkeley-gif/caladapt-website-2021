@@ -51,7 +51,7 @@
     scenarioStore,
     modelsStore,
     unitsStore,
-    locationStore,
+/*    locationStore,*/
     stationStore,
     dataStore,
     doyStore,
@@ -171,7 +171,6 @@
     // Set intial station
     const station = stations.features.find(d => d.id === stationId);
     stationStore.set(station);
-    //locationStore.set(station);
     // Set today's date as default
     if (!doy) {
       doyStore.set(new Date());

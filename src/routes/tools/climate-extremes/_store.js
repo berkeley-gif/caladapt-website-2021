@@ -106,7 +106,7 @@ export const stationStore = writable({
   },
 });
 
-export const locationStore = (() => {
+/*export const locationStore = (() => {
   const store = writable({
     lat: 40.978,
     lng: -124.109,
@@ -155,7 +155,7 @@ export const locationStore = (() => {
       });
     },
   }
-})();
+})();*/
 
 // Data Store
 export const dataStore = (() => {

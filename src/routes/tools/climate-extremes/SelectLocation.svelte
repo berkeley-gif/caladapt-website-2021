@@ -19,14 +19,14 @@
 
   // Store
   import {
-    locationStore,
+/*    locationStore,*/
     stationStore,
   } from './_store';
 
   export let stationsList;
 
   const dispatch = createEventDispatcher();
-  const { location } = locationStore;
+/*  const { location } = locationStore;*/
 
   let searchOptions = [];
   let searchValue = '';
@@ -35,7 +35,6 @@
 
   async function stationClick(e) {
     const station = await getStation(e.detail, stationsLayer.id);
-    locationStore.updateLocation(station);
     stationStore.set(station);
   }
 
@@ -57,10 +56,7 @@
   function selectSuggestion(opt) {
     showSuggestions = false;
     if (opt) {
-      locationStore.updateLocation(opt);
-      if (opt.title.includes('Weather Station')) {
-        stationStore.set(opt);
-      }
+      console.log('opt', opt);
     }
     clearSearch();
   }
@@ -136,7 +132,7 @@
       lat={36.5}
       zoom={4}
       boundary={null}
-      location={$location}
+      location={null}
       zoomToLocationOnLoad={false}
       imageOverlayShow={false}
       on:overlayclick={stationClick}
