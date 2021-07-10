@@ -1,10 +1,12 @@
 <script context="module">
-  export function preload() {
-    return this.fetch(`blog/events.json`)
+  export async function preload() {
+    const posts = await this.fetch(`blog.json`)
       .then(r => r.json())
-      .then(events => {
-        return { events };
-      });
+      .then(posts => posts);
+    const events = await this.fetch(`blog/events.json`)
+      .then(r => r.json())
+      .then(events => events);
+    return { posts, events };
   }
 </script>
 
@@ -21,6 +23,7 @@
   import Streamflow from '../../static/img/icons/streamflow.svg';
 
   export let events;
+  export let posts;
 
   const icons = [ Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
 </script>
@@ -92,7 +95,7 @@
     </div>
   </div>
   <div class="sidebar-right">
-    <SidebarRight display={['events', 'posts']} {events} />
+    <SidebarRight display={['events', 'posts']} {events} posts={[posts[0]]} />
   </div>
   <div class="footer">
     <p class="lead">
