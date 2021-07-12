@@ -30,7 +30,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { Modal, Button } from 'carbon-components-svelte';
+  import { Modal, Button, Tag } from 'carbon-components-svelte';
   import { inview } from 'svelte-inview/dist/';
   import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
   
@@ -73,7 +73,7 @@
   let showInfo = false;
   let definitionText;
   let definitionTitle;
-  let dataLoaded = false;
+  let runUpdate = false;
 
   // Add chart explanation to glossary list
   glossary = [
@@ -102,21 +102,21 @@
   };
 
   // Reactive props
-  $: $location, showLoader();
+  $: $location, waitToUpdate();
   $: $climvar, $scenario, $models, update();
 
-  function hideLoader() {
-    dataLoaded = true;
+  function setRunUpdate() {
+    runUpdate = true;
     update();
   }
 
-  function showLoader() {
-    dataLoaded = false;
+  function waitToUpdate() {
+    runUpdate = false;
     dataStore.set(null);
   }
 
   async function update() {
-    if (!dataLoaded) return;
+    if (!runUpdate) return;
     dataStore.set(null);
     try {
       const config = {
@@ -128,9 +128,9 @@
       const envelope = await getEnvelope(config, params, method);
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
-      dataStore.set([envelope, observed, ...modelsData]);
-      console.log('updateData', $data);  
+      dataStore.set([envelope, observed, ...modelsData]); 
     } catch(err) {
+      // TODO: notify user of error
       console.log('updateData', err);
     }
   }
@@ -139,7 +139,6 @@
   function showDefinition(e) {
     const { topics, title } = e.detail;
     const items = glossary.filter(d => topics.includes(d.slug));
-    console.log('filter', items, glossary);
     definitionText = items.map((item) => {
       return `
         <div>
@@ -191,6 +190,17 @@
   <!-- Header -->
   <Header currentView={inviewEl} />
 
+  <div id="help" class="section">
+    <div class="help-info">
+      <p>To get started, first <strong>Select a Location</strong>. Next, scroll down to <strong>Explore Data</strong> for selected location.</p>
+      <p>Get help:
+        <Tag interactive>Watch a video on using the tool</Tag>
+        <Tag interactive>Explore our guide on climate data</Tag>
+        <Tag interactive>Search FAQs</Tag>
+      </p>
+    </div>
+  </div>
+
   <!-- Select Location -->
   <div
     id="select"
@@ -203,20 +213,8 @@
   <!-- Explore -->
   <div
     id="explore"
-    class="section"
-    use:inview={entryOptions}
-    on:enter={handleEntry}>
-    {#if !dataLoaded}
-      <div class="loading-overlay">
-        <Button
-          icon={ChartLineData32}
-          class="load"
-          on:click={hideLoader}>
-          Explore the Data
-        </Button>          
-      </div> 
-    {/if}
-    <ExploreData on:define={showDefinition} />
+    class="section">
+    <ExploreData {runUpdate} on:update={setRunUpdate} on:define={showDefinition} />
   </div>
 
   <div class="bx--grid">
@@ -248,7 +246,6 @@
     </div>
   </div>
 </div>
-
 
 <Modal
   id="definition"

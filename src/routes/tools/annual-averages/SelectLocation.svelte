@@ -76,15 +76,10 @@
 </script>
 
 <div class="select-location">
-   <!-- Header -->
+  <!-- Header -->
   <div class="select-location-header">
     <h2>Select Location</h2>
     <p>Click on the map or enter an address in the search box. To explore data for a larger extent (e.g. county), select a boundary first. Scroll down to explore data for selected location.</p>
-  </div>
-  <!-- Help -->
-  <div class="select-location-help">
-    <Tag interactive>Take a Tour</Tag>
-    <Tag interactive>Video Tutorial</Tag>
   </div>
 
   <!-- Current Selection -->

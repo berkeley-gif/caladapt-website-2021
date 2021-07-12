@@ -1,16 +1,16 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   import {
     Button,
     Modal,
     Accordion,
     AccordionItem,
     CodeSnippet,
-    Loading,
     SkeletonText,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
   import { csvFormat, csvFormatRows } from 'd3-dsv';
-  import { Download16, Share16 } from 'carbon-icons-svelte';
+  import { Download16, Share16, ChartLineData32 } from 'carbon-icons-svelte';
   import copy from 'clipboard-copy';
 
   // Helpers
@@ -45,13 +45,16 @@
     bookmark,
   } from './_store';
 
-  let isWorking = false;
+  export let runUpdate = false;
+
+  const dispatch = createEventDispatcher();
 
   const { location, boundary } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
+  let isLoading = true;
   let dataByDate;
   let statsData;
   let showDownload = false;
@@ -70,13 +73,15 @@
   $: if ($data) {
     statsData = $data.filter(d => d.type !== 'area');
     dataByDate = getDataByDate(flattenData($data));
+    isLoading = false;
   } else {
     statsData = null;
     dataByDate = null;
+    isLoading = true;
   }
 
   async function downloadViz(e) {
-    isWorking = true;
+    isLoading = true;
     const format = e.detail;
     showDownload = false;
     try {
@@ -104,7 +109,7 @@
     } catch (error) {
       notifier.error('Download', `Error creating ${format} file`, error, 2000);
     }
-    isWorking = false;
+    isLoading = false;
   }
 
   function changeScenario(e) {
@@ -124,18 +129,42 @@
 </script>
 
 <div class="explore">
-  {#if isWorking}
-    <Loading />
+  {#if isLoading}
+    <div class="explore-loading-overlay">
+    </div>
   {/if}
+
   <!-- Header -->
-  <div class="explore-header block">
+  <div class="explore-controls">
+    <Button
+      icon={ChartLineData32}
+      disabled={runUpdate}
+      on:click={() => dispatch('update')}>
+      FETCH DATA FOR LOCATION
+    </Button>
+    <div>
+      <Button
+        icon={Download16}
+        on:click={() => showDownload = true}>
+        DOWNLOAD
+      </Button> 
+      <Button
+        icon={Share16}
+        on:click={() => showShare = true}>
+        SHARE
+      </Button>      
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="explore-title block">
     <div class="center-row">
       <span class="icon">
         <svelte:component dimension="50" this={$climvar.icon} />
       </span>
       <div>
         <h3 class="block-title">{$climvar.title}</h3>
-        {#if $data}
+        {#if $location}
           <h4 class="block-title">
             {$location.title}, {$location.address}
           </h4>
@@ -144,15 +173,9 @@
         {/if}
         <h4 class="block-title">{$scenario.labelLong}</h4>
       </div>
-    </div>
-    <Button
-      size="small"
-      icon={Share16}
-      kind="ghost"
-      on:click={() => showShare = true}>
-      SHARE
-    </Button>      
+    </div>     
   </div>
+
   <!-- Stats -->
   <div class="explore-stats">
     <div class="block">
@@ -185,7 +208,8 @@
         format={formatFn}
       />      
     </div>
-  </div> <!-- end explore-stats -->
+  </div>
+
   <!-- Chart-->
   <div class="explore-chart block">
     <LineAreaChart
@@ -199,22 +223,18 @@
       }}
     /> 
     <div class="chart-notes">
-      <span>Source: Cal-Adapt. </span>
-      <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
+      <p>
+        Source: Cal-Adapt. Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).
+      </p>
     </div>
     <div class="chart-download">
       <ShowDefinition
        topics={["annual-averages-chart"]}
        title="Chart"
        on:define />
-      <Button
-        icon={Download16}
-        size="small"
-        on:click={() => showDownload = true}>
-        Download
-      </Button> 
     </div>       
-  </div> <!-- end explore-chart -->
+  </div>
+
   <!-- Settings-->
   <div class="explore-settings"> 
     <h4 class="block-title">Change Settings:</h4>
@@ -253,7 +273,7 @@
           title="Global Climate Models (GCMs)" />
       </AccordionItem>
     </Accordion>
-  </div> <!-- end explore-settings -->
+  </div>
 </div>
 
 <Modal id="share" passiveModal bind:open={showShare} modalHeading="Share Link" on:open on:close>
