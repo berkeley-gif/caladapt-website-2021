@@ -1,9 +1,11 @@
 <script>
-  import { getContext } from 'svelte';
+  import { getContext, createEventDispatcher } from 'svelte';
+  import { raise } from 'layercake';
 
-  const { data, xGet, yGet, yRange, xScale } = getContext('LayerCake');
+  const { padding, data, xGet, yGet, yRange, xScale } = getContext('LayerCake');
+  const dispatch = createEventDispatcher();
 
-  export let fill = '#00e047';
+  export let fill = 'steelblue';
   export let stroke = '';
   export let strokeWidth = 0;
  
@@ -15,9 +17,19 @@
   $: columnHeight = d => {
     return $yRange[0] - $yGet(d);
   };
+
+  function handleMousemove(feature) {
+    return function handleMousemoveFn(e) {
+      raise(this);
+      // When the element gets raised, it flashes 0,0 for a second so skip that
+      if (e.layerX !== 0 && e.layerY !== 0) {
+        dispatch('mousemove', { e, props: feature });
+      }
+    }
+  }
 </script>
 
-<g class="column-group">
+<g class="column-group" transform='translate({$padding.left}, 0)'>
   {#each $data as d, i}
     <rect
       class='group-rect'
@@ -29,6 +41,9 @@
       {fill}
       {stroke}
       stroke-width="{strokeWidth}"
+      on:mouseout={() => dispatch('mouseout')}
+      on:mouseover={(e) => dispatch('mousemove', { e, props: d })}
+      on:mousemove={handleMousemove(d)}
     />
   {/each}
 </g>

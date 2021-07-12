@@ -1,21 +1,15 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from 'carbon-components-svelte';
   import { LayerCake, Svg, Html } from 'layercake';
-  import { timeFormat } from 'd3-time-format';
   import { histogram, extent } from 'd3-array';
-  import { setContext } from 'svelte';
-  import { writable } from 'svelte/store';
 
   import Column from './Column.svelte';
   import AxisX from './AxisX.svelte';
   import AxisY from './AxisY.svelte';
-  import Tooltip from '../Shared/Tooltip.svelte';
+  import Tooltip from './Tooltip.svelte';
 
   export let data;
   export let height = '350px';
-  export let tooltip = {
-    title: '',
-  };
 
   export let yAxis = {
     label: 'YAxis Label',
@@ -23,7 +17,7 @@
   }
   export let xAxis = {
     label: 'XAxis Label',
-    tickFormat: timeFormat('%Y'),
+    tickFormat: (d) => d,
   }
 
   let chartContainer;
@@ -36,7 +30,8 @@
   let hist;
   let bins;
 
-  console.log('data from chart', data);
+  let evt;
+  let hideTooltip = true;
   
   $: if (data) {
     domain = extent(data);
@@ -56,37 +51,17 @@ function thresholds (domain, count) {
     return breaks;
   }
 
-  function getTooltipLabel(d) {
-    const item = data.find(series => series.key === d);
-    if (item) {
-      return item.label;
-    } else {
-      d;
-    }
-  }
-
-  function getTooltipColor(d) {
-    const item = data.find(series => series.key === d);
-    if (item) {
-      return item.color;
-    } else {
-      d;
-    }
-  }
-
-  function getTooltipValue(d) {
-    return `${yAxis.tickFormat(d)}`;
-  }
-
-  function getTooltipTitle(d) {
-    return `${d} ${tooltip.title}`;
+function createTooltip(d) {
+    let tooltip;
+    tooltip = `<span class="title">Tooltip</span>`;
+    return tooltip;
   }
 </script>
 
 {#if data}
   <div style={`height:${height}`} bind:this={chartContainer}>
     <LayerCake
-      padding={{ top: 20, right: 10, bottom: 30, left: 65 }}
+      padding={{ top: 20, right: 20, bottom: 30, left: 35 }}
       x={xKey}
       y={yKey}
       yDomain={[0, null]}
@@ -97,26 +72,26 @@ function thresholds (domain, count) {
             baseline={true}
             snapTicks={true}
             label={xAxis.label}
+            tickFormat={xAxis.tickFormat}
           />
           <AxisY
-            gridlines={false}
+            gridlines={true}
             ticks={3}
             label={yAxis.label}
+            tickFormat={yAxis.tickFormat}
           />
           <Column
-            fill={'steelblue'}
-            stroke={'#000'}
             strokeWidth={1}
+            on:mousemove={event => evt = hideTooltip= event}
+            on:mouseout={() => hideTooltip = true}
           />
         </Svg>
-        <Html>
-<!--           <Tooltip
-            dataset={dataByDate}
-            title={getTooltipTitle}
-            label={getTooltipLabel}
-            value={getTooltipValue}
-            color={getTooltipColor}
-          /> -->
+        <Html pointerEvents={false}>
+          {#if hideTooltip !== true}
+            <Tooltip {evt} let:detail>
+              { @html createTooltip(detail.props)}
+            </Tooltip>
+          {/if}
         </Html>
       </LayerCake>
   </div>

@@ -44,7 +44,7 @@
 {#if show}
   <g
     class={series.key}
-    on:mouseout={() => dispatch('mouseout')}>
+    >
     <path
       class={`path-area ${series.key}`}
       d='{areapath(series.values)}'
@@ -63,6 +63,7 @@
         r=3
         cx='{$xScale(d.period)}'
         cy='{$yScale(d.value)}'
+        on:mouseout={() => dispatch('mouseout')}
         on:mouseover={(e) => dispatch('mousemove', { e, props: d })}
         on:mousemove={handleMousemove(d)}>
       </circle>

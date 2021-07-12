@@ -104,8 +104,6 @@
       ymin = yAxis.baseValue;
     }
 
-    console.log('egend', legend);
-
     // Update Legend
     legendItems.set(legend.map(key => {
       return {

@@ -1,11 +1,11 @@
 <script>
   import { getContext } from 'svelte';
 
-  const { width, height, xScale, yRange } = getContext('LayerCake');
+  const { padding, width, height, xScale, yRange } = getContext('LayerCake');
 
   export let gridlines = true;
   export let tickMarks = false;
-  export let formatTick = d => d;
+  export let tickFormat = d => d;
   export let baseline = false;
   export let snapTicks = false;
   export let ticks = undefined;
@@ -57,7 +57,7 @@
   .baseline {
     stroke-dasharray: 0;
   }
-  /* This looks slightly better */
+
   .axis.snapTicks .tick:last-child text {
     transform: translateX(3px);
   }
@@ -66,7 +66,7 @@
   }
 </style>
 
-<g class='axis x-axis' class:snapTicks>
+<g class='axis x-axis' class:snapTicks transform='translate({$padding.left}, 0)'>
   {#each tickVals as tick, i}
     <g class='tick tick-{ i }' transform='translate({$xScale(tick)},{$yRange[0]})'>
       {#if gridlines !== false}
@@ -80,7 +80,7 @@
         y='{yTick}'
         dx='{dxTick}'
         dy='{dyTick}'
-        text-anchor='{textAnchor(i)}'>{formatTick(tick)}</text>
+        text-anchor='{textAnchor(i)}'>{tickFormat(tick)}</text>
     </g>
   {/each}
   {#if baseline === true}
