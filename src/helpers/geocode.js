@@ -144,22 +144,6 @@ export const formatBoundaryPolygon = (feature, boundaryId) => {
   }
 }
 
-export const formatStation = (feature, layerId) => {
-  const bbox = getBbox(feature.geometry);
-  const lng = feature.geometry.coordinates[0].toFixed(3);
-  const lat = feature.geometry.coordinates[1].toFixed(3);
-  const { title, address } = createAdditionalProps(feature, layerId);
-
-  return {
-    title,
-    address,
-    geometry: feature.geometry,
-    center: [+lng, +lat],
-    bbox,
-    id: feature.id || null,
-  }
-}
-
 export const getLocation = async (lng, lat, boundaryId) => {
   if (boundaryId === 'locagrid') {
     const geocodeResult = await reverseGeocode([lng, lat]);
@@ -182,7 +166,7 @@ export const getLocation = async (lng, lat, boundaryId) => {
 }
 
 export const searchLocation = async (searchStr, boundaryId) => {
-  if (boundaryId === 'locagrid') {
+  if (boundaryId === 'locagrid' || !boundaryId) {
     const geocodeResult = await geocode(searchStr);
     if (geocodeResult.features && geocodeResult.features.length > 0) {
       const data = geocodeResult.features.map(d => formatGeocodeResult(d));
@@ -198,21 +182,15 @@ export const searchLocation = async (searchStr, boundaryId) => {
   return null;
 }
 
-export const getStation = async (id, layerId) => {
-  const result = await getFeatureById(id, layerId);
-  return formatStation(result, layerId);
-}
-
-export const searchStation = async (searchStr, layerId) => {
-  const features = [];
-  const result = await searchBoundaryLayer(searchStr, layerId);
-  if (result.features && result.features.length > 0) {
-    features.push(...result.features.map(d => formatStation(d, layerId)));
+export const getNearestStation = async (lng, lat, layerId) => {
+  const url = `${apiEndpoint}/${layerId}/`;
+  const params = {
+    distance_to: `POINT(${lng} ${lat})`,
   }
-  const geocodeResult = await geocode(searchStr);
-  if (geocodeResult.features && geocodeResult.features.length > 0) {
-    const formattedResults = geocodeResult.features.map(d => formatGeocodeResult(d));
-    features.push(...formattedResults);
+  const [response, error] = await handleXHR(fetchData(url, params));
+  if (error) {
+    throw new Error(error.message);
   }
-  return features;
+  const nearest = response.features[0];
+  return nearest;
 }

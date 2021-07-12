@@ -6,7 +6,7 @@
   } from 'carbon-components-svelte';
 
   // Helpers
-  import { getStation, searchStation } from '../../../helpers/geocode';
+  import { searchLocation, getFeatureById, getNearestStation } from '../../../helpers/geocode';
   import { stationsLayer } from './_helpers';
 
   // Components
@@ -19,23 +19,22 @@
 
   // Store
   import {
-/*    locationStore,*/
     stationStore,
   } from './_store';
 
   export let stationsList;
 
   const dispatch = createEventDispatcher();
-/*  const { location } = locationStore;*/
+  const { station } = stationStore;
 
   let searchOptions = [];
   let searchValue = '';
-  let searchPlaceholder = 'Enter address or zipcode';
+  let searchPlaceholder = 'Enter address/zipcode/city';
   let showSuggestions = false;
 
   async function stationClick(e) {
-    const station = await getStation(e.detail, stationsLayer.id);
-    stationStore.set(station);
+    const station = await getFeatureById(e.detail, stationsLayer.id);
+    stationStore.updateStation(station);
   }
 
   function clearSearch() {
@@ -44,19 +43,22 @@
   }
 
   async function search(e) {
-    searchOptions = await searchStation(e.target.value, stationsLayer.id);
+    searchOptions = await searchLocation(e.target.value);
     showSuggestions = true;
   }
 
   async function changeStation(e) {
-    stationStore.set(e.detail);
-    //locationStore.set(e.detail);
+    stationStore.updateStation(e.detail);
   }
 
-  function selectSuggestion(opt) {
+  async function selectSuggestion(opt) {
     showSuggestions = false;
     if (opt) {
       console.log('opt', opt);
+      // Get nearest station
+      const nearest = await getNearestStation(opt.center[0], opt.center[1], stationsLayer.id)
+      console.log('nearest', nearest);
+      stationStore.updateStation(nearest);
     }
     clearSearch();
   }
@@ -66,7 +68,7 @@
    <!-- Header -->
   <div class="select-location-header">
     <h2>Select Station</h2>
-    <p>Select a station from the dropdown list or click on a station location on the map. You can also enter an address in the search box to find the nearest station.</p>
+    <p>Select a station from the dropdown list or click on a station location on the map. You can also enter an address/zipcode/city in the search box to find the nearest station.</p>
   </div>
 
   <div class="select-location-blank">
@@ -75,15 +77,15 @@
   <!-- Current Selection -->
   <div class="select-location-current block">
     <h3>Selected Station</h3>
-    {#if $stationStore}
-      <p>{$stationStore.properties.name}</p>
-      <p class="small">Elevation: {$stationStore.properties.elevation_m} m</p>
+    {#if $station}
+      <p>{$station.properties.name}</p>
+      <p class="small">Elevation: {$station.properties.elevation_m} m</p>
     {/if}
   </div>
 
   <!-- Location Search -->
   <div class="select-location-search block block-settings">
-    <label for="search" class="bx--label">Search</label>
+    <label for="search" class="bx--label">Find Nearest Station</label>
     <Search
       id="search"
       size="lg"
@@ -132,8 +134,8 @@
       lat={36.5}
       zoom={4}
       boundary={null}
-      location={null}
-      zoomToLocationOnLoad={false}
+      location={$station}
+      zoomToLocationOnLoad={true}
       imageOverlayShow={false}
       on:overlayclick={stationClick}
       on:ready={() => dispatch('ready')} />
