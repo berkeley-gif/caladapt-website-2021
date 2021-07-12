@@ -1,8 +1,8 @@
 import get_events from '../_events.js';
 
 const lookup = new Map();
-const events = get_events()
-  .map(event => {
+get_events()
+  .forEach(event => {
     lookup.set(event.slug, JSON.stringify(event));
   });
 

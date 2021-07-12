@@ -51,9 +51,9 @@
 </style>
 
 <div class="header">
-  <h1>Climate Extremes</h1>
+  <h1>Extreme Weather</h1>
   <p class="lead">
-    Explore extreme temperature events.
+    Explore extreme weather events for baseline and future climates.
   </p>
 </div>
 <div class="secondary-nav is-sticky">

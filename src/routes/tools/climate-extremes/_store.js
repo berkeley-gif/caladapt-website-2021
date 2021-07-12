@@ -1,10 +1,13 @@
 import { writable, derived } from 'svelte/store';
-import { timeFormat } from 'd3-time-format';
+import { timeFormat, timeParse } from 'd3-time-format';
+import { quantile } from 'd3-array';
+import getBbox from '@turf/bbox';
 import { scenarioList, climvarList, indicatorList } from './_helpers';
 
 const numberFormat = timeFormat('%j');
 const textFormat = timeFormat('%B %e');
 const today = new Date();
+const dateParse = timeParse('%Y-%m-%d'); 
 
 export const climvarStore = (() => {
   const store = writable('tasmax');
@@ -74,90 +77,46 @@ export const doyStore = (() => {
 
 export const temperatureStore = writable(100);
 
-export const stationStore = writable({
-  title: 'Arcata Airport',
-  address: 'Arcata, California',
-  geometry: {
-    type: 'Point',
-    coordinates: [
-      -124.109,
-      40.978
-    ]
-  },
-  center: [
-    -124.109,
-    40.978
-  ],
-  bbox: [
-    -124.109,
-    40.978,
-    -124.109,
-    40.978
-  ],
-  id: 31,
-  properties: {
-    name: 'Arcata Airport',
-    usaf: 725945,
-    wban: 24283,
-    elevation_m: 61.0,
-    icao: 'KACV',
-    city: 'Arcata',
-    climdiv: 1
-  },
-});
-
-/*export const locationStore = (() => {
+export const stationStore = (() => {
   const store = writable({
-    lat: 40.978,
-    lng: -124.109,
-    boundaryId: 'locagrid',
-    location: {
-      id: 31,
-      title: 'Arcata Airport',
-      address: 'Arcata, California',
-      geometry: {
-        type: 'Point',
-        coordinates: [
-          -124.109,
-          40.978
-        ]
-      },
-      center: [
+    geometry: {
+      type: 'Point',
+      coordinates: [
         -124.109,
         40.978
-      ],
-      bbox: [
-        -124.109,
-        40.978,
-        -124.109,  
-        40.978
-      ],
+      ]
+    },
+    id: 31,
+    properties: {
+      name: 'Arcata Airport',
+      usaf: 725945,
+      wban: 24283,
+      elevation_m: 61.0,
+      icao: 'KACV',
+      city: 'Arcata',
+      climdiv: 1
     },
   });
   const { update, subscribe } = store;
   return {
     subscribe,
-    updateLocation: (location) => update((store) => {
-      if (!location) return;
-      if (location.geometry) {
-        store.lng = +location.geometry.coordinates[0].toFixed(4);
-        store.lat = +location.geometry.coordinates[1].toFixed(4);  
-      } else {
-        store.lng = +location.center[0].toFixed(4);
-        store.lat = +location.center[1].toFixed(4);  
-      }
-      store.location = location;
+    updateStation: (station) => update((store) => {
+      if (!station) return;
+      store = station;
+      store.lng = +station.geometry.coordinates[0].toFixed(4);
+      store.lat = +station.geometry.coordinates[1].toFixed(4);
+      store.bbox = getBbox(station.geometry);
       return store;
     }),
-    get location() {
+    get station() {
       return derived(store, $store => {
-        return $store.location;
+        return $store;
       });
     },
   }
-})();*/
+})();
 
-// Data Store
+// Projections Data Store
 export const dataStore = (() => {
   const store = writable();
   const { set, subscribe } = store;
@@ -174,16 +133,69 @@ export const dataStore = (() => {
 })();
 
 // Observed Data Store
-export const observedStore = (() => {
+export const observationsStore = (() => {
   const store = writable();
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get observed() {
+    get observations() {
       return derived(store, ($store) => {
         if (!$store) return null;
         return $store;
+      });
+    },
+    get baseline() {
+      return derived([dataStore, store], ([$dataStore, $store]) => {
+        if (!$store || !$dataStore) return null;
+
+        // Get start and end dates to filter observations for 30 day period
+        const historical = $dataStore.find(d => d.key === 'historical');
+        const { begin, end } = historical.returnlevels[0];
+        const beginDate = dateParse(begin);
+        const beginYear = +beginDate.getFullYear();
+        const endDate = dateParse(end);
+        const endYear = +endDate.getFullYear();
+
+        // Filter by 30 day period around selected date
+        const filterBy30DayPeriod = $store.filter(d => {
+          const year = d.date.getFullYear();
+          const s = new Date(beginDate.setYear(year));
+          const e = new Date(endDate.setYear(year));
+          if ((d.date.getTime() >= s.getTime()) && (d.date.getTime() <= e.getTime())) {
+            return true;
+          }
+          return false;
+        });
+
+        // Filter by baseline period (30 years, e.g. 1991-2020)
+        return filterBy30DayPeriod.filter(d => {
+          if ((+d.date.getFullYear() >= beginYear) && (+d.date.getFullYear() <= endYear)) {
+            return true;
+          }
+          return false;
+        });
+      });
+    },
+  }
+})();
+
+// Foreacst data Store
+export const forecastStore = (() => {
+  const store = writable();
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get forecast() {
+      return derived(store, ($store) => {
+        if (!$store) return null;
+        const formatData = $store.map(d => {
+          const date = dateParse(d.startTime.substring(0, 10));
+          const day = `${d.name} ${textFormat(date)}`;
+          return { day, value: d.temperature };
+        });
+        return formatData;
       });
     },
   }
@@ -199,19 +211,8 @@ export const indicatorStore = (() => {
       return indicatorList.find(d => d.id === val);
     }),
     get indicator() {
-      return derived([climvarStore, store], ([$climvarStore, $store]) => {
-        const indicator = $store;
-        if ($climvarStore === 'tasmin') {
-          // Replace text 'Extreme Heat Days' text with 'Warm Nights'
-/*          let helperText = indicator.helperText.replace('Days', 'Nights');
-          helperText = helperText.replace('maximum', 'minimum');*/
-          return {
-            ...indicator,
-            title: indicator.title.replace('Maximum', 'Minimum'),
-            //helperText,
-          }
-        }
-        return indicator;
+      return derived(store, ($store) => {
+        return $store;
       });
     },
   }
@@ -224,7 +225,7 @@ export const queryParams = derived(
   [doyStore, stationStore],
   ([$doyStore, $stationStore]) => {
     const params = {
-      g: `POINT(${$stationStore.geometry.coordinates[0]} ${$stationStore.geometry.coordinates[1]})`,
+      g: `POINT(${$stationStore.lng} ${$stationStore.lat})`,
       doy: numberFormat($doyStore),
     };
     return { params, method: 'GET' };

@@ -4,8 +4,6 @@ import scenarios from '../../../helpers/climate-scenarios';
 import layers from '../../../helpers/mapbox-layers';
 import climvars from '../../../helpers/climate-variables';
 import { tools } from '../../../../content/tools/data';
-import { MinMaxAvg, MonthsCount } from '../../../components/tools/Stats';
-import { ReturnLevelCurveChart, Histogram } from '../../../components/tools/Charts';
 
 export const climvarList = climvars
   .filter(d => ['tasmax', 'tasmin'].includes(d.id))
@@ -19,35 +17,17 @@ export const indicatorList = [
   {
     id: 'observations',
     label: 'Historical Observations',
-    title: 'Historical Observations',
-    helperText: `Helper text`,
-    units: '',
-    decimals: 0,
     icon: Sun,
-    chartComponent: Histogram,
-    statsComponent: MinMaxAvg,
   },
   {
     id: 'forecast',
     label: 'Near Term Forecast',
-    title: 'Timing of Extreme Heat Days per Year',
-    helperText: `Helper text`,
-    units: '',
-    decimals: 0,
     icon: Sun,
-    chartComponent: ReturnLevelCurveChart,
-    statsComponent: MonthsCount,
   },
   {
     id: 'projections',
     label: 'Future Climate Projections',
-    title: 'Return Level Estimates',
-    helperText: `Helper text`,
-    units: '',
-    decimals: 0,
     icon: Sun,
-    chartComponent: ReturnLevelCurveChart,
-    statsComponent: MinMaxAvg,
   },
 ];
 

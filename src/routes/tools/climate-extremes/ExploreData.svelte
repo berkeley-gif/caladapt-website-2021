@@ -10,23 +10,22 @@
     RadioButtonGroup,
     RadioButton,
     NumberInput,
-    SkeletonText,
-    Slider,
+    Grid, Row, Column,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
-  import { timeFormat, timeParse } from 'd3-time-format';
   import { csvFormat, csvFormatRows } from 'd3-dsv';
-  import { Download16, Share16 } from 'carbon-icons-svelte';
-  import ChartLineData32 from 'carbon-icons-svelte/lib/ChartLineData32';
-  import { ReturnLevelCurveChart, Histogram } from '../../../components/tools/Charts';
+  import { Download16, Share16, ChartLineData32 } from 'carbon-icons-svelte';
   import copy from 'clipboard-copy';
+  import { ReturnLevelCurveChart, Histogram, Forecast } from '../../../components/tools/Charts';
 
   // Helpers
   import { climvarList, modelList, scenarioList, indicatorList } from './_helpers';
   import {
     getReturnLevels,
-    getProbabilities,
     formatDataForExport,
+    getObservationStats,
+    getBaselineStats,
+    getSeriesReturnPeriods,
   } from './_data';
   import {
     exportSVG,
@@ -44,6 +43,7 @@
     SelectDayOfYear,
     ShowDefinition,
   } from '../../../components/tools/Settings';
+  import { ValuesList } from '../../../components/tools/Stats';
   import DownloadChart from '../../../components/tools/DownloadChart.svelte';
   import { notifier } from '../../../components/notifications';
 
@@ -51,7 +51,6 @@
   import {
     climvarStore,
     scenarioStore,
-/*    locationStore,*/
     dataStore,
     modelsStore,
     stationStore,
@@ -59,32 +58,38 @@
     doyStore,
     temperatureStore,
     indicatorStore,
-    observedStore,
+    observationsStore,
+    forecastStore,
   } from './_store';
+
+  export let runUpdate = false;
 
   const dispatch = createEventDispatcher();
 
-/*  const { location } = locationStore;*/
   const { data } = dataStore;
-  const { observed } = observedStore;
+  const { baseline, observations } = observationsStore;
+  const { forecast } = forecastStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { doyText } = doyStore;
-
-  export let runUpdate = false;
+  const { station } = stationStore;
 
   let isLoading = true;
-  let statsData;
   let returnLevels;
-  let timeseries;
+  let histogramData;
   let series;
+  let statsData;
+  let tempRangeStart;
+  let returnPeriods;
+  let historicalReturnPeriod;
+  let projectedReturnPeriods;
   let showDownload = false;
   let showShare = false;
 
   $: metadata = [
-    ['station', $stationStore.title],
-    ['center', `${$stationStore.geometry.coordinates[0]}, ${$stationStore.geometry.coordinates[1]}`],
+    ['station', $station.properties.name],
+    ['center', `${$station.lng}, ${$station.lat}`],
     ['scenario', $scenario.label],
     ['units', $climvar.units.imperial],
   ];
@@ -93,21 +98,44 @@
 
   $: if ($data) {
     returnLevels = getReturnLevels($data);
-    console.log('returnlevels', returnLevels);
     series = $data.map(d => ({ key: d.key, label: d.label, color: d.color }));
-    console.log('series', series);
     isLoading = false;
   } else {
     isLoading = true;
     returnLevels = null;
-    statsData = null;
+    returnPeriods = null;
   }
 
-  $: if ($observed) {
-    timeseries = $observed.map(d => d.value);
-    console.log('timeseries', timeseries);
+  $: if ($baseline) {
+    histogramData = $baseline.map(d => d.value);
+    const observedStart = $observations[0].date.getFullYear();
+    const observedEnd = $observations[$observations.length - 1].date.getFullYear();
+    const observedStats = getObservationStats($observations);
+    const baselineStats = getBaselineStats($baseline);
+    statsData = [
+      {
+        title: `Full Record (${observedStart}-${observedEnd})`,
+        stats: observedStats,
+      },
+      {
+        title: `Baseline (1991-2020)`,
+        stats: baselineStats,
+      },
+    ];
+    tempRangeStart = baselineStats.find(d => d.label === '75th Percentile').value;
+    temperatureStore.set(tempRangeStart);
   } else {
-    timeseries = null;
+    histogramData = null;
+    statsData = null;
+    tempRangeStart = 70;
+    temperatureStore.set(tempRangeStart);
+  }
+
+  $: if ($temperatureStore && $data) {
+    returnPeriods = $data.map((series) => getSeriesReturnPeriods(series, $temperatureStore));
+    historicalReturnPeriod = returnPeriods.find(d => d.key === 'historical');
+    projectedReturnPeriods = returnPeriods.filter(d => d.key !== 'historical');
+    console.log('rp', returnPeriods, historicalReturnPeriod, projectedReturnPeriods);
   }
 
   async function downloadViz(e) {
@@ -130,7 +158,7 @@
           break;
         case 'pdf':
           var gridContainer = document.querySelector('.explore-grid');
-          await exportPDF(gridContainer, $location);
+          await exportPDF(gridContainer, $station);
           break;
         default:
           // Do nothing
@@ -168,100 +196,136 @@
 
   const changeTemperature = debounce((e) => {
     console.log('temperature change');
-    temperatureStore.set(e.detail)
+    temperatureStore.set(e.detail);
   }, 1000);
 </script>
 
 <div class="explore">
   {#if isLoading}
     <div class="explore-loading-overlay">
-      {#if !runUpdate}
-        <Button
-          icon={ChartLineData32}
-          class="load"
-          on:click={() => dispatch('update')}>
-          Fetch Data
-        </Button>
-      {/if}
     </div>
   {/if}
-
-  <!-- Header -->
-  <div class="explore-header">
-    <h2>Explore Data</h2>
-    {#if isLoading}
-      <p>Click on the Fetch Data button to download data for selected station.</p>
-    {/if}
-  </div>
 
   <!-- Controls -->
   <div class="explore-controls">
     <Button
-      icon={Download16}
-      size="small"
-      on:click={() => showDownload = true}>
-      DOWNLOAD
-    </Button> 
-    <Button
-      size="small"
-      icon={Share16}
-      on:click={() => showShare = true}>
-      SHARE
-    </Button> 
+      icon={ChartLineData32}
+      disabled={runUpdate}
+      on:click={() => dispatch('update')}>
+      FETCH DATA FOR LOCATION
+    </Button>
+    <div>
+      <Button
+        icon={Download16}
+        on:click={() => showDownload = true}>
+        DOWNLOAD
+      </Button> 
+      <Button
+        icon={Share16}
+        on:click={() => showShare = true}>
+        SHARE
+      </Button>      
+    </div>
   </div>
 
   <!-- Title -->
-  <div class="explore-title block">
-    <div>
-      <FormGroup legendText="SELECT VIEW" style="margin-bottom:1rem;">
+  <div class="explore-title">
+    <div class="block">
+      <FormGroup legendText="SELECT VIEW" style="margin-bottom:0;">
         <RadioButtonGroup selected="observations" on:change={changeIndicator}>
           {#each indicatorList as opt}
             <RadioButton labelText={opt.label} value={opt.id} />
           {/each}
         </RadioButtonGroup>
       </FormGroup>
+    </div>
+    <div class="block">
       <div class="center-row">
         <span class="icon">
           <svelte:component dimension="50" this={$climvar.icon} />
         </span>
         <div>
-          <h3 class="block-title">{$indicator.title} of {$climvar.title} around {$doyText} (± 15 days) </h3>
-          <h4 class="block-title">{$stationStore.properties.name}</h4>
+          {#if $indicator.id === 'observations'}
+            <h3 class="block-title">
+              Frequency of Observed Daily {$climvar.title}s for {$doyText} from 1991-2020
+            </h3>
+            <p class="block-note">Note: Using data for 30 days around selected date</p>
+          {:else if $indicator.id === 'forecast'}
+            <h3 class="block-title">
+              Near Term Forecast for {$climvar.title}
+            </h3>
+            <p class="block-note">Note: Showing forecast for next 7 days</p>
+          {:else}
+            <h3 class="block-title">
+              Return Level Estimates of {$climvar.title} for {$doyText} from Historical, Mid-Century and End-Century periods
+            </h3>
+            <p class="block-note">Note: Using data for 30 days around selected date</p>
+          {/if}
+          <h4 class="block-title">{$station.properties.name}</h4>
           <h4 class="block-title">{$scenario.labelLong}</h4>
-          <p></p>
         </div>
       </div>
     </div> 
   </div>
+
   <!-- Stats -->
   <div class="explore-stats">
-    <div class="block temperature">
-
-        <NumberInput
-          label="Select Temperature"
-          value={$temperatureStore}
-          on:change={changeTemperature}
-        />
-        <ShowDefinition
-          on:define
-          topics={["extreme-heat-threshold"]} />
+    <!-- TODO: remove inline styles -->
+    <div class="block"
+      style="width:100%;height:auto;display:flex;justify-content:space-around;margin:0 0 1rem;">
+      {#if statsData}
+        {#each statsData as opt}
+          <ValuesList
+            title={opt.title}
+            stats={opt.stats} 
+            units={$climvar.units.imperial}
+            on:change={changeTemperature}
+          />
+        {/each}
+      {/if}
     </div>
-    <div class="block">
-<!--       <RangeAvg
-        units={$climvar.units.imperial}
-        data={statsData}
-        isHistorical={false}
-        series={'future'}
-        period={'mid-century'}
-        format={formatFn}
-      /> -->      
+    <div class="block" style="width:100%;height:auto;margin:0;">
+      {#if historicalReturnPeriod}
+        <p>
+          A daily {$climvar.title} of <strong>{$temperatureStore}{$climvar.units.imperial}</strong> around  <strong>{$doyText}</strong> is estimated to be a <strong>1 in {historicalReturnPeriod.values[0].rp} year event</strong> using observed data for <strong>Baseline Period (1991-2020)</strong>.
+        </p>
+      {/if}
+      {#if $indicator.id === 'projections'}
+        <p>
+          From climate projections, a daily {$climvar.title} of <strong>{$temperatureStore}{$climvar.units.imperial}</strong> around  <strong>{$doyText}</strong> is estimated to change to a:
+        </p>
+        <Grid>
+          <Row style="font-size:0.8rem;color:#51585e;text-transform:uppercase;margin-bottom:0.5rem;">
+            <Column>Model</Column>
+            <Column>Mid-Century (2035-2064)</Column>
+            <Column>End-Century (2070-2099)</Column>
+          </Row>
+          {#each projectedReturnPeriods as series}
+            <Row style="margin-bottom:0.25rem;">
+              <Column>
+                <span  style="background:{series.color};width:10px;height:10px;display:inline-block;"></span>
+                {series.label}
+              </Column>
+              {#each series.values as opt}
+                <Column>
+                  <strong>1 in {opt.rp} year event</strong>
+                </Column>
+              {/each}
+            </Row>
+          {/each}
+        </Grid>
+      {/if}
+      <ShowDefinition
+        on:define
+        topics={["return-period"]} />
     </div>
-  </div> <!-- end explore-stats -->
+  </div>
+  
   <!-- Chart-->
   <div class="explore-chart block">
     {#if $indicator.id === 'observations'}
       <Histogram
-        data={timeseries}
+        data={histogramData}
         yAxis = {{
           label: `Count of Days`,
           tickFormat: d => d,
@@ -279,7 +343,7 @@
           key: 'value',
           label: `Return Level (${$climvar.units.imperial})`,
           tickFormat: formatFn,
-          units: `${$indicator.units}`,
+          units: `${$climvar.units.imperial}`,
         }}
         xAxis = {{
           key: 'period',
@@ -288,15 +352,21 @@
           units: 'year',
         }}
       />
+    {:else}
+      <Forecast
+        data={$forecast ? $forecast : null}
+        units={$climvar.units.imperial}
+      />
     {/if}
     <div class="chart-notes">
-      <span>Source: Cal-Adapt. </span>
-      <span>Data: HadISD, LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego).</span>
+      <p>
+        Source: Cal-Adapt. Data: HadISD, LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), National Weather Serivce.
+      </p>
     </div>
     <div class="chart-download">
       <ShowDefinition
-       topics={["chart"]}
-       title="Chart"
+       topics={[$indicator.id]}
+       title={$indicator.label}
        on:define />
     </div>       
   </div> <!-- end explore-chart -->
@@ -316,17 +386,6 @@
           topics={["annual-average-tasmax", "annual-average-tasmin", "annual-average-pr"]}
           title="Climate Variables" />
       </AccordionItem>
-      <AccordionItem open title="Choose Scenario">
-        <SelectScenario
-          selectedId={$scenarioStore}
-          items={scenarioList}
-          on:change={changeScenario}
-        />
-        <ShowDefinition
-          on:define
-          topics={["climate-scenarios"]}
-          title="RCP Scenarios" />
-      </AccordionItem>
       <AccordionItem open title="Choose Day of Year">
         <SelectDayOfYear
           value={$doyStore}
@@ -337,6 +396,29 @@
           topics={["climate-scenarios"]}
           title="Day of Year" />
       </AccordionItem>
+      <AccordionItem open title="Enter Temperature">
+        <NumberInput
+          min={tempRangeStart}
+          hideLabel
+          helperText="Select a temperature value from the stats panel or enter your own"
+          value={$temperatureStore}
+          on:change={changeTemperature}
+        />
+      </AccordionItem>
+      <!--  Show scenario only is on projection tab -->
+      {#if $indicator.id === 'projections'}
+        <AccordionItem open title="Choose Scenario">
+          <SelectScenario
+            selectedId={$scenarioStore}
+            items={scenarioList}
+            on:change={changeScenario}
+          />
+          <ShowDefinition
+            on:define
+            topics={["climate-scenarios"]}
+            title="RCP Scenarios" />
+        </AccordionItem>
+      {/if}
       <AccordionItem title="Select Models">
         <SelectModels 
           selectedIds={$modelsStore}

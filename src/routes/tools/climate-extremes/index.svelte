@@ -51,15 +51,14 @@
     scenarioStore,
     modelsStore,
     unitsStore,
-/*    locationStore,*/
     stationStore,
     dataStore,
     doyStore,
     queryParams,
-    temperatureStore,
-    observedStore,
+    observationsStore,
+    forecastStore,
   } from './_store';
-  import { getData, getStations, getStationData } from './_data';
+  import { getData, getStations, getObservedData, getForecastData } from './_data';
 
   export let initialConfig;
   export let glossary;
@@ -80,16 +79,52 @@
   glossary = [
     ...glossary,
     {
-      slug: 'annual-averages-chart',
+      slug: 'return-period',
       metadata: {
+        title: 'Return Period',
       },
       html: `
         <div>
-          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The Observed data is represented by a gray line from 1950-2006.</p>
-          <p>Click on the legend button to highlight corresponding timeseries.</p>
+          <p>The probability that an extreme weather event occurs is often expressed as a Return Period. A return period is the inverse of probability (generally expressed in %); it gives the estimated time interval between events of a similar size or intensity.</p>
+          <p>For example, the estimated return period of an event might be 1 in 10 years. This does not mean the event will occur every 10 years, it indicates probability of ocurrence being 10/100, or 10% in any one year.</p>
+          <p>For this tool, 30 years of data for the Baseline, Mid-Century and End-Century periods are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
         </div>
       `
-    }
+    },
+    {
+      slug: 'observations',
+      metadata: {
+        title: 'Frequency of Observations'
+      },
+      html: `
+        <div>
+          <p>This histogram indicates the frequency distribution of selected climate varibale and shows how often each different value occurs.</p>
+        </div>
+      `
+    },
+    {
+      slug: 'forecast',
+      metadata: {
+        title: 'Near Term Forecast'
+      },
+      html: `
+        <div>
+          <p>The data values represent the 9-day weather forecast from the National Weather Serivice for selected date and current year.</p>
+        </div>
+      `
+    },
+    {
+      slug: 'projections',
+      metadata: {
+        title: 'Return Level Estimates',
+      },
+      html: `
+        <div>
+          <p>The lines represent frequency curves that relate estimated values of selected climate variable to return periods (years) for historcal observed data and downscaled GCMs. The shaded areas represent 95% confidence intervals.</p>
+          <p>Data is presented for Baseline, Mid-Century and End-Century periods. Click on the legend button to highlight corresponding timeseries.</p>
+        </div>
+      `
+    },
   ];
 
   // Monitor sections as they enter & leave viewport
@@ -102,15 +137,15 @@
     threshold: 0.5,
   };
 
-  $: $stationStore, waitForUpdate();
-  $: $climvar, $scenario, $models, update();
+  $: $stationStore, waitToUpdate();
+  $: $climvar, $scenario, $models, $doyStore, update();
 
   function setRunUpdate() {
     runUpdate = true;
     update();
   }
 
-  function waitForUpdate() {
+  function waitToUpdate() {
     runUpdate = false;
     dataStore.set(null);
   }
@@ -125,14 +160,14 @@
         modelIds: $modelsStore,
       };
       const { params, method } = $queryParams;
-      const data = await getData(config, params, method);
-      console.log('updateData', data);
-      const historical = data.find(d => d.key === 'historical');
-      const { begin, end } = historical.returnlevels[0];
-      const stationData = await getStationData(config, params.g, begin, end);
-      dataStore.set(data);
-      observedStore.set(stationData);
+      const projections = await getData(config, params, method);
+      const observations = await getObservedData(config, params.g);
+      const forecast = await getForecastData(config, params.g);
+      dataStore.set(projections);
+      observationsStore.set(observations);
+      forecastStore.set(forecast);
     } catch(err) {
+      // TODO: notify user of error
       console.log('updateData', err);
     }
   }
@@ -170,7 +205,7 @@
     stations = await getStations();
     // Set intial station
     const station = stations.features.find(d => d.id === stationId);
-    stationStore.set(station);
+    stationStore.updateStation(station);
     // Set today's date as default
     if (!doy) {
       doyStore.set(new Date());
@@ -190,7 +225,7 @@
 </script>
 
 <svelte:head>
-  <title>Climate Extremes</title>
+  <title>Extreme Weather</title>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 

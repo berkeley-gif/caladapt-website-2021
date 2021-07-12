@@ -1,5 +1,7 @@
 // Node modules
-import { timeParse } from 'd3-time-format';
+import { timeParse, timeFormat } from 'd3-time-format';
+import { quantile, ascending } from 'd3-array';
+import { format } from 'd3-format';
 
 // Helpers
 import config from '../../../helpers/api-config';
@@ -8,11 +10,13 @@ import {
   transformResponse,
   fetchData,
   pipe,
+  closest,
 } from '../../../helpers/utilities';
 import { seriesList } from './_helpers';
 
 const { apiEndpoint } = config.env.production;
 const dateParse = timeParse('%Y-%m-%d');
+const dateFormat = timeFormat('%b %e, %Y');
 
 const fetchReturnLevels = async ({slug, params, method}) => {
   const url = `${apiEndpoint}/series/${slug}/ams/`;
@@ -90,7 +94,7 @@ function extractHistoricaData(_data) {
   return filteredData;
 }
 
-export async function getData(config, params, method) {
+export async function getData(config, params, method='GET') {
   const { modelIds } = config;
   const modelList = modelIds.split(',');
   const modelPromise = modelList.map(modelId => addModel(config, params, method, modelId));
@@ -99,39 +103,18 @@ export async function getData(config, params, method) {
   return data;
 }
 
-export async function getStationData(config, g, begin, end) {
+export async function getObservedData(config, g) {
   const { climvarId } = config;
   const url = `${apiEndpoint}/series/${climvarId}_day_hadisd/events/`;
-  const [response, error] = await handleXHR(fetchData(url, { g }));
+  const params = {
+    g,
+    imperial: true,
+  }
+  const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
     throw new Error(error.message);
   }
-  const data = transformResponse(response);
-  // Get start and end dates to filter observed data
-  // TODO: check if API can provide subset instead of filtering client side
-  const beginDate = dateParse(begin);
-  const beginYear = +beginDate.getFullYear();
-  const endDate = dateParse(end);
-  const endYear = +endDate.getFullYear();
-
-  // Filter by 30 day period around selected date
-  const filterBy30DayPeriod = data.filter(d => {
-    const year = d.date.getFullYear();
-    const s = new Date(beginDate.setYear(year))
-    const e = new Date(endDate.setYear(year))
-    if ((d.date.getTime() >= s.getTime()) && (d.date.getTime() <= e.getTime())) {
-      return true
-    }
-    return false
-  });
-
-  // Filter by baseline period (30 years)
-  return filterBy30DayPeriod.filter(d => {
-    if ((+d.date.getFullYear() >= beginYear) && (+d.date.getFullYear() <= endYear)) {
-      return true
-    }
-    return false
-  })
+  return transformResponse(response);
 }
 
 export function getReturnLevels(_data) {
@@ -158,20 +141,98 @@ export function getProbabilities(_data) {
   const arr = [];
   _data.forEach((series) => {
     series.returnlevels.forEach((group) => {
-      const { begin, end, gevisf, threshold } = group;
       arr.push({
+        timestep: group.timestep,
+        probabilites: group.gevisf,
         key: series.key,
         color: series.color,
         label: series.label,
-        timestep: `${begin}:${end}`,
-        gevisf,
-        threshold,
       });
     });
   });
   return arr;
 }
 
-export function formatDataForExport(_data) {
+function getReturnPeriod(returnlevel, level) {
+  const { gevisf, timestep } = returnlevel;
+  const gevisfMap = new Map(Object.entries(gevisf));
+  const valuesArr = Object.keys(gevisf).map(d => +d);
+  const closestValue = closest(+level, valuesArr);
+  const probability = +gevisfMap.get(String(closestValue));
+  return {
+    timestep,
+    probability,
+    rp: format('.0f')(1 / probability),
+  }
+}
+
+export function getSeriesReturnPeriods(series, level) {
+  const { key, label, color, returnlevels } = series;
+  const rps = returnlevels.map(d => getReturnPeriod(d, level));
+  return {
+    key,
+    label,
+    color,
+    values: rps,
+  }
+}
+
+export async function getForecastData(config, g) {
+  const { climvarId } = config;
+  const parts = g.split(' ');
+  const lon = parts[0].replace('POINT(', '');
+  const lat = parts[1].replace(')', '');
+  const url = `https://api.weather.gov/points/${lat},${lon}`;
+  const [response, error] = await handleXHR(fetchData(url, {}));
+  if (error) {
+    throw new Error(error.message);
+  }
+  const forecastUrl = response.properties.forecast;
+  const [data, dataError] = await handleXHR(fetchData(forecastUrl, {}));
+  if (error) {
+    throw new Error(dataError.message);
+  }
+  const periods = data.properties.periods;
+  if (climvarId === 'tasmin') {
+    return periods.filter(d => d.isDaytime === false)
+  }
+  return periods.filter(d => d.isDaytime === true)
+}
+
+export function getObservationStats(data, formatFn=d => format('.1f')(d)) {
+  const sorted = data.sort((a, b) => ascending(a.date, b.date))
+  const low = sorted[0];
+  const high = sorted[sorted.length - 1];
+  return [
+    {
+      label: `Record Low ${dateFormat(low.date)}`,
+      value: +formatFn(low.value),
+    },
+    {
+      label: `Record High ${dateFormat(high.date)}`,
+      value: +formatFn(high.value),
+    },
+  ];
+}
+
+export function getBaselineStats(data, formatFn=d => format('.1f')(d)) {
+  const values = data.map(d => d.value).sort();
+  return [
+    {
+      label: '75th Percentile',
+      value: +formatFn(quantile(values, 0.75)),
+    },
+    {
+      label: '90th Percentile',
+      value: +formatFn(quantile(values, 0.9)),
+    },
+    {
+      label: '99th Percentile',
+      value: +formatFn(quantile(values, 0.99)),
+    },
+  ];
+}
+
+export function formatDataForExport() {
 
 }

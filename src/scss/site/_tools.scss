@@ -184,7 +184,7 @@
       grid-template-columns: 3fr 1fr;
       grid-template-rows: auto;
       grid-template-areas:
-      "tool-header tool-controls"
+      "tool-header tool-header"
       "tool-title tool-settings"
       "tool-stats tool-settings"
       "tool-chart tool-settings";
@@ -200,30 +200,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
         background: rgba($gray-20, .5);
         z-index: 2;
-
-        .bx--btn {
-          font-size: 1.1rem;
-        }
-      }
-
-      .explore-header {
-        grid-area: tool-header;
-
-        h2 {
-          margin-top: 0;
-        }
       }
 
       .explore-controls {
-        grid-area: tool-controls;
+        grid-area: tool-header;
 
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: space-between;
 
         .bx--btn {
           margin: 0.25rem 0;
@@ -233,12 +219,20 @@
       .explore-title {
         grid-area: tool-title;
 
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
         .icon {
           margin-right: 1rem;
+        }
+
+        p.block-note {
+          margin: 0.25rem 0;
+        }
+
+        .block {
+          margin-bottom: 1rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
       }
 
@@ -353,7 +347,10 @@
     border-color: rgba(148, 103, 189, 1);
   }
 
-  .bx--search-input, .bx--select-input {
+  .bx--search-input,
+  .bx--select-input,
+  .bx--date-picker-input__wrapper,
+  .bx--number__input-wrapper {
     border-bottom: 2px solid $teal-60;
   }
 

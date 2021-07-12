@@ -25,8 +25,8 @@ const tools = [
     ],
   },
   {
-    title: 'Climate Extremes',
-    desc: `Explore extreme events`,
+    title: 'Extreme Weather',
+    desc: `Explore extreme weather events for baseline and future climates.`,
     categories: ['Temperature'],
     slug: 'climate-extremes',
     icons: [
