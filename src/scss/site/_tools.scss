@@ -22,6 +22,8 @@
   #help {
     min-height: auto;
     margin: 2rem 2rem 1rem;
+    background: $blue-10;
+    padding: 1rem;
 
     p {
       font-size: 1.1rem;
@@ -30,12 +32,6 @@
 
     p:last-child {
       margin-bottom: 0;
-    }
-
-    .help-info {
-      background: $teal-10;
-      border: 1px solid $blue-50;
-      padding: 1rem;
     }
 
     .bx--tag {

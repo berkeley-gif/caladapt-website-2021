@@ -30,7 +30,8 @@
 <script>
   import { onMount } from 'svelte';
   import { timeParse} from 'd3-time-format';
-  import { Modal, Tag } from 'carbon-components-svelte';
+  import { Modal, Link } from 'carbon-components-svelte';
+  import { Information32 } from 'carbon-icons-svelte';
   import { inview } from 'svelte-inview/dist/';
   
   // Helpers
@@ -75,7 +76,7 @@
   let runUpdate = false;
   let stations;
 
-  // Add chart explanation to glossary list
+  // Add tool specific content to glossary
   glossary = [
     ...glossary,
     {
@@ -233,14 +234,22 @@
   <!-- Header -->
   <Header currentView={inviewEl} />
 
-  <div id="help" class="section">
+  <div id="help" class="section center-row">
+    <Information32 />
     <div class="help-info">
       <p>To get started, first <strong>Select a Station</strong>. Next, scroll down to <strong>Explore Data</strong> for selected station.</p>
-      <p>Get help:
-        <Tag interactive>Watch a video on using the tool</Tag>
-        <Tag interactive>Explore our guide on climate data</Tag>
-        <Tag interactive>Search FAQs</Tag>
-      </p>
+      <p>Get help:</p>
+      <ul>
+        <li>
+          <a href="!#" target="_blank">Watch a video on using the tool</a>
+        </li>
+        <li>
+          <a href="/help/get-started/" target="_blank">Explore our guide on climate data</a>
+        </li>
+        <li>
+          <a href="/help/faqs/" target="_blank">Search FAQs</a>
+        </li>
+      </ul>
     </div>
   </div>
 
