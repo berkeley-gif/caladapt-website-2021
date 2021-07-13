@@ -1,5 +1,4 @@
-import { timeParse, utcParse } from 'd3-time-format';
-import { zip, transpose } from 'd3-array';
+import { utcParse } from 'd3-time-format';
 import { timeDay } from 'd3-time';
 import config from './api-config';
 import shp from 'shpjs';
