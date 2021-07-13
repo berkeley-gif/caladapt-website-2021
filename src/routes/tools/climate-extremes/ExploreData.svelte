@@ -20,7 +20,7 @@
   import { ReturnLevelCurveChart, Histogram, Forecast } from '../../../components/tools/Charts';
 
   // Helpers
-  import { climvarList, modelList, scenarioList, indicatorList } from './_helpers';
+  import { climvarList, modelList, scenarioList, indicatorList, classifyTemperatures } from './_helpers';
   import {
     getReturnLevels,
     formatDataForExport,
@@ -57,7 +57,7 @@
     stationStore,
     bookmark,
     doyStore,
-    temperatureStore,
+    thresholdStore,
     indicatorStore,
     observationsStore,
     forecastStore,
@@ -77,11 +77,13 @@
   const { station } = stationStore;
 
   let isLoading = true;
-  let returnLevels;
-  let histogramData;
+  let projectionsChartData;
+  let histogramChartData;
+  let forecastChartData;
+  let classificationExtents;
   let series;
   let statsData;
-  let tempRangeStart;
+  let thresholdProps;
   let returnPeriods;
   let historicalReturnPeriod;
   let projectedReturnPeriods;
@@ -98,21 +100,24 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($data) {
-    returnLevels = getReturnLevels($data);
+    projectionsChartData = getReturnLevels($data);
     series = $data.map(d => ({ key: d.key, label: d.label, color: d.color }));
     isLoading = false;
   } else {
     isLoading = true;
-    returnLevels = null;
+    projectionsChartData = null;
     returnPeriods = null;
   }
 
   $: if ($baseline) {
-    histogramData = $baseline.map(d => d.value);
+    histogramChartData = $baseline.map(d => d.value);
+    console.log('histogramChartData', histogramChartData);
+    classificationExtents = classifyTemperatures(histogramChartData);
+    console.log('classificationExtents', classificationExtents);
     const observedStart = $observations[0].date.getFullYear();
     const observedEnd = $observations[$observations.length - 1].date.getFullYear();
     const observedStats = getObservationStats($observations);
-    const baselineStats = getBaselineStats($baseline);
+    const baselineStats = getBaselineStats($baseline, $climvar.id);
     statsData = [
       {
         title: `Full Record (${observedStart}-${observedEnd})`,
@@ -123,17 +128,31 @@
         stats: baselineStats,
       },
     ];
-    tempRangeStart = baselineStats.find(d => d.label === '75th Percentile').value;
-    temperatureStore.set(tempRangeStart);
+    if ($climvar.title === 'tasmax') {
+      thresholdProps = {
+        min: baselineStats.find(d => d.label === '75th Percentile').value,
+        invalidText: 'Number must be >= 75th percentile value',
+      }
+    } else if ($climvar.title === 'tasmin') {
+      thresholdProps = {
+        min: baselineStats.find(d => d.label === '25th Percentile').value,
+        invalidText: 'Number must be <= 25th percentile value',
+      }
+    } else {
+      thresholdProps = {};
+    }
   } else {
-    histogramData = null;
+    histogramChartData = null;
     statsData = null;
-    tempRangeStart = 70;
-    temperatureStore.set(tempRangeStart);
   }
 
-  $: if ($temperatureStore && $data) {
-    returnPeriods = $data.map((series) => getSeriesReturnPeriods(series, $temperatureStore));
+  $: if ($forecast) {
+    forecastChartData = $forecast;
+    console.log('forecastData', forecastChartData);
+  }
+
+  $: if ($thresholdStore && $data) {
+    returnPeriods = $data.map((series) => getSeriesReturnPeriods(series, $thresholdStore));
     historicalReturnPeriod = returnPeriods.find(d => d.key === 'historical');
     projectedReturnPeriods = returnPeriods.filter(d => d.key !== 'historical');
     console.log('rp', returnPeriods, historicalReturnPeriod, projectedReturnPeriods);
@@ -195,9 +214,9 @@
     indicatorStore.updateIndicator(e.detail);
   }
 
-  const changeTemperature = debounce((e) => {
-    console.log('temperature change');
-    temperatureStore.set(e.detail);
+  const changeThreshold = debounce((e) => {
+    console.log('threshold change');
+    thresholdStore.set(e.detail);
   }, 500);
 </script>
 
@@ -218,18 +237,6 @@
       on:click={() => dispatch('update')}>
       FETCH DATA FOR LOCATION
     </Button>
-    <div>
-      <Button
-        icon={Download16}
-        on:click={() => showDownload = true}>
-        DOWNLOAD
-      </Button> 
-      <Button
-        icon={Share16}
-        on:click={() => showShare = true}>
-        SHARE
-      </Button>      
-    </div>
   </div>
 
   <!-- Title -->
@@ -254,19 +261,21 @@
               Frequency of Observed Daily {$climvar.title}s for {$doyText} from 1991-2020
             </h3>
             <p class="block-note">Note: Using data for 30 days around selected date from 30 year period</p>
+            <h4 class="block-title">{$station.properties.name}, {$station.properties.city} CA</h4>
           {:else if $indicator.id === 'forecast'}
             <h3 class="block-title">
               Near Term Forecast for {$climvar.title}
             </h3>
             <p class="block-note">Note: Forecast data from the National Weather Service is for next 7 days</p>
+            <h4 class="block-title">{$station.properties.name}, {$station.properties.city} CA</h4>
           {:else}
             <h3 class="block-title">
               Return Level Estimates of {$climvar.title} for {$doyText} from Baseline, Mid-Century and End-Century periods
             </h3>
             <p class="block-note">Note: Using data for 30 days around selected date from each 30 year period</p>
+            <h4 class="block-title">{$station.properties.name}, {$station.properties.city} CA</h4>
+            <h4 class="block-title">{$scenario.labelLong}</h4>
           {/if}
-          <h4 class="block-title">{$station.properties.name}, {$station.properties.city} CA</h4>
-          <h4 class="block-title">{$scenario.labelLong}</h4>
         </div>
       </div>
     </div> 
@@ -283,7 +292,7 @@
             title={opt.title}
             stats={opt.stats} 
             units={$climvar.units.imperial}
-            on:change={changeTemperature}
+            on:change={changeThreshold}
           />
         {/each}
       {/if}
@@ -291,7 +300,7 @@
     <div class="block" style="width:100%;height:auto;margin:0;">
       {#if historicalReturnPeriod}
         <p>
-          A daily {$climvar.title} of <strong>{$temperatureStore}{$climvar.units.imperial}</strong> around  <strong>{$doyText}</strong> is estimated to be a <strong>1 in {historicalReturnPeriod.values[0].rp} year event</strong> using observed data for <strong>Baseline Period (1991-2020)</strong>.
+          A daily {$climvar.title} of <strong>{$thresholdStore}{$climvar.units.imperial}</strong> around  <strong>{$doyText}</strong> is estimated to be a <strong>1 in {historicalReturnPeriod.values[0].rp} year event</strong> using observed data for <strong>Baseline Period (1991-2020)</strong>.
         </p>
       {/if}
       {#if $indicator.id === 'projections'}
@@ -329,7 +338,7 @@
   <div class="explore-chart block">
     {#if $indicator.id === 'observations'}
       <Histogram
-        data={histogramData}
+        data={histogramChartData}
         yAxis = {{
           label: `Count of Days`,
           tickFormat: d => d,
@@ -341,7 +350,7 @@
       />
     {:else if $indicator.id === 'projections'}
       <ReturnLevelCurveChart
-        data={returnLevels}
+        data={projectionsChartData}
         legend={series}
         yAxis = {{
           key: 'value',
@@ -358,7 +367,7 @@
       />
     {:else}
       <Forecast
-        data={$forecast ? $forecast : null}
+        data={forecastChartData}
         units={$climvar.units.imperial}
       />
     {/if}
@@ -372,6 +381,22 @@
        topics={[$indicator.id]}
        title={$indicator.label}
        on:define />
+      <div>
+        <Button
+          disabled
+          size="small"
+          icon={Download16}
+          on:click={() => showDownload = true}>
+          DOWNLOAD
+        </Button> 
+        <Button
+          disabled
+          size="small"
+          icon={Share16}
+          on:click={() => showShare = true}>
+          SHARE
+        </Button>
+      </div>
     </div>       
   </div> <!-- end explore-chart -->
   
@@ -400,14 +425,15 @@
           topics={["climate-scenarios"]}
           title="Day of Year" />
       </AccordionItem>
-      <AccordionItem open title="Enter Temperature">
+      <AccordionItem open title="Set Threshold" >
         <NumberInput
-          min={tempRangeStart}
-          hideLabel
-          helperText="Select a temperature value from the stats panel or enter your own"
-          value={$temperatureStore}
-          on:change={changeTemperature}
+          value={$thresholdStore}
+          on:change={changeThreshold}
         />
+        <ShowDefinition
+          on:define
+          topics={["threshold"]}
+          title="Threshold" />
       </AccordionItem>
       <!--  Show scenario only is on projection tab -->
       {#if $indicator.id === 'projections'}

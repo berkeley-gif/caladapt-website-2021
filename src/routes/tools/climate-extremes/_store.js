@@ -75,7 +75,7 @@ export const doyStore = (() => {
   }
 })();
 
-export const temperatureStore = writable(100);
+export const thresholdStore = writable(100);
 
 export const stationStore = (() => {
   const store = writable({

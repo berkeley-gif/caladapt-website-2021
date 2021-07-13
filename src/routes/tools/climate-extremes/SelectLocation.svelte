@@ -29,7 +29,7 @@
 
   let searchOptions = [];
   let searchValue = '';
-  let searchPlaceholder = 'Enter address/zipcode/city';
+  let searchPlaceholder = 'Street, ZIP code or city';
   let showSuggestions = false;
 
   async function stationClick(e) {

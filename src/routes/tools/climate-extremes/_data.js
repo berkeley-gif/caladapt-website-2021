@@ -12,7 +12,7 @@ import {
   pipe,
   closest,
 } from '../../../helpers/utilities';
-import { seriesList } from './_helpers';
+import { seriesList, classifyTemperatures } from './_helpers';
 
 const { apiEndpoint } = config.env.production;
 const dateParse = timeParse('%Y-%m-%d');
@@ -215,22 +215,41 @@ export function getObservationStats(data, formatFn=d => format('.1f')(d)) {
   ];
 }
 
-export function getBaselineStats(data, formatFn=d => format('.1f')(d)) {
+export function getBaselineStats(data, climvar, formatFn=d => format('.1f')(d)) {
   const values = data.map(d => d.value).sort();
-  return [
-    {
-      label: '75th Percentile',
-      value: +formatFn(quantile(values, 0.75)),
-    },
-    {
-      label: '90th Percentile',
-      value: +formatFn(quantile(values, 0.9)),
-    },
-    {
-      label: '99th Percentile',
-      value: +formatFn(quantile(values, 0.99)),
-    },
-  ];
+  if (climvar === 'tasmax') {
+    return [
+      {
+        label: '75th Percentile',
+        value: +formatFn(quantile(values, 0.75)),
+      },
+      {
+        label: '90th Percentile',
+        value: +formatFn(quantile(values, 0.9)),
+      },
+      {
+        label: '99th Percentile',
+        value: +formatFn(quantile(values, 0.99)),
+      },
+    ];
+  } else if (climvar === 'tasming') {
+    return [
+      {
+        label: '25th Percentile',
+        value: +formatFn(quantile(values, 0.25)),
+      },
+      {
+        label: '10th Percentile',
+        value: +formatFn(quantile(values, 0.1)),
+      },
+      {
+        label: '1st Percentile',
+        value: +formatFn(quantile(values, 0.01)),
+      },
+    ];
+  } else {
+    return [];
+  }
 }
 
 export function formatDataForExport() {

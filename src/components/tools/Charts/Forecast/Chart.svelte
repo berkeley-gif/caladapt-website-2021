@@ -45,6 +45,7 @@
         <div class="item">
           <span class="day">{opt.day}</span>
           <span class="value">{opt.value} {units}</span>
+          <span>{opt.label}</span>
         </div>
       {/each}
     </div>

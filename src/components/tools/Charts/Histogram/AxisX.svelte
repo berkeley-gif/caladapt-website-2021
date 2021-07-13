@@ -16,7 +16,7 @@
   export let label;
 
   $: isBandwidth = typeof $xScale.bandwidth === 'function';
-
+  $: $xScale.range($width);
   $: tickVals = Array.isArray(ticks) ? ticks :
     isBandwidth ?
       $xScale.domain() :
