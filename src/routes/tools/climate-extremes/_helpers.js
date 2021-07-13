@@ -36,7 +36,7 @@ export const indicatorList = [
 const series = [
   {
     key: 'historical',
-    label: 'Historical',
+    label: 'Baseline',
     color: 'rgba(110, 110, 110, 1)',
   },
 ];
