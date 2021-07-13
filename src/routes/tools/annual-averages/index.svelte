@@ -75,7 +75,7 @@
   let definitionTitle;
   let runUpdate = false;
 
-  // Add chart explanation to glossary list
+  // Add tool specific content to glossary
   glossary = [
     ...glossary,
     {

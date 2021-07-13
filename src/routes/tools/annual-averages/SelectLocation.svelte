@@ -33,7 +33,7 @@
 
   let searchOptions = [];
   let searchValue = '';
-  let searchPlaceholder = 'Enter address or zipcode';
+  let searchPlaceholder = 'Street, ZIP code or city';
   let showSuggestions = false;
 
   async function mapClick(e) {
