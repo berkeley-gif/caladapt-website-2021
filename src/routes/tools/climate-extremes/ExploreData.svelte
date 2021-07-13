@@ -10,6 +10,7 @@
     RadioButtonGroup,
     RadioButton,
     NumberInput,
+    Loading,
     Grid, Row, Column,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
@@ -197,12 +198,15 @@
   const changeTemperature = debounce((e) => {
     console.log('temperature change');
     temperatureStore.set(e.detail);
-  }, 1000);
+  }, 500);
 </script>
 
 <div class="explore">
   {#if isLoading}
     <div class="explore-loading-overlay">
+      {#if runUpdate}
+        <Loading withOverlay={false} />
+      {/if}
     </div>
   {/if}
 
@@ -249,19 +253,19 @@
             <h3 class="block-title">
               Frequency of Observed Daily {$climvar.title}s for {$doyText} from 1991-2020
             </h3>
-            <p class="block-note">Note: Using data for 30 days around selected date</p>
+            <p class="block-note">Note: Using data for 30 days around selected date from 30 year period</p>
           {:else if $indicator.id === 'forecast'}
             <h3 class="block-title">
               Near Term Forecast for {$climvar.title}
             </h3>
-            <p class="block-note">Note: Showing forecast for next 7 days</p>
+            <p class="block-note">Note: Forecast data from the National Weather Service is for next 7 days</p>
           {:else}
             <h3 class="block-title">
-              Return Level Estimates of {$climvar.title} for {$doyText} from Historical, Mid-Century and End-Century periods
+              Return Level Estimates of {$climvar.title} for {$doyText} from Baseline, Mid-Century and End-Century periods
             </h3>
-            <p class="block-note">Note: Using data for 30 days around selected date</p>
+            <p class="block-note">Note: Using data for 30 days around selected date from each 30 year period</p>
           {/if}
-          <h4 class="block-title">{$station.properties.name}</h4>
+          <h4 class="block-title">{$station.properties.name}, {$station.properties.city} CA</h4>
           <h4 class="block-title">{$scenario.labelLong}</h4>
         </div>
       </div>
@@ -292,7 +296,7 @@
       {/if}
       {#if $indicator.id === 'projections'}
         <p>
-          From climate projections, a daily {$climvar.title} of <strong>{$temperatureStore}{$climvar.units.imperial}</strong> around  <strong>{$doyText}</strong> is estimated to change to a:
+          From climate projections, it is estimated to change to a:
         </p>
         <Grid>
           <Row style="font-size:0.8rem;color:#51585e;text-transform:uppercase;margin-bottom:0.5rem;">
