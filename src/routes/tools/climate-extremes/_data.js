@@ -200,7 +200,7 @@ export async function getForecastData(config, g) {
 }
 
 export function getObservationStats(data, formatFn=d => format('.1f')(d)) {
-  const sorted = data.sort((a, b) => ascending(a.date, b.date))
+  const sorted = data.sort((a, b) => ascending(a.value, b.value))
   const low = sorted[0];
   const high = sorted[sorted.length - 1];
   return [
