@@ -142,18 +142,6 @@
       on:click={() => dispatch('update')}>
       FETCH DATA FOR LOCATION
     </Button>
-    <div>
-      <Button
-        icon={Download16}
-        on:click={() => showDownload = true}>
-        DOWNLOAD
-      </Button> 
-      <Button
-        icon={Share16}
-        on:click={() => showShare = true}>
-        SHARE
-      </Button>      
-    </div>
   </div>
 
   <!-- Title -->
@@ -232,6 +220,18 @@
        topics={["annual-averages-chart"]}
        title="Chart"
        on:define />
+      <div>
+        <Button
+          icon={Download16}
+          on:click={() => showDownload = true}>
+          DOWNLOAD
+        </Button> 
+        <Button
+          icon={Share16}
+          on:click={() => showShare = true}>
+          SHARE
+        </Button>      
+      </div>
     </div>       
   </div>
 
