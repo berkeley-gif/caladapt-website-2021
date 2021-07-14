@@ -11,16 +11,18 @@
     RadioButton,
     NumberInput,
     Loading,
+    SkeletonText,
     Grid, Row, Column,
   } from 'carbon-components-svelte';
   import { format } from 'd3-format';
+  import { timeFormat } from 'd3-time-format';
   import { csvFormat, csvFormatRows } from 'd3-dsv';
   import { Download16, Share16, ChartLineData32 } from 'carbon-icons-svelte';
   import copy from 'clipboard-copy';
   import { ReturnLevelCurveChart, Histogram, Forecast } from '../../../components/tools/Charts';
 
   // Helpers
-  import { climvarList, modelList, scenarioList, indicatorList, classifyTemperatures } from './_helpers';
+  import { climvarList, modelList, scenarioList, indicatorList } from './_helpers';
   import {
     getReturnLevels,
     formatDataForExport,
@@ -77,18 +79,25 @@
   const { station } = stationStore;
 
   let isLoading = true;
+  let showDownload = false;
+  let showShare = false;
+
   let projectionsChartData;
   let histogramChartData;
   let forecastChartData;
-  let classificationExtents;
+
   let series;
   let statsData;
-  let thresholdProps;
+
+  let thresholdBound;
+  let thresholdExtreme;
+  let thresholdInvalid;
+  let thresholdInvalidText;
+
   let returnPeriods;
   let historicalReturnPeriod;
   let projectedReturnPeriods;
-  let showDownload = false;
-  let showShare = false;
+
 
   $: metadata = [
     ['station', $station.properties.name],
@@ -97,7 +106,7 @@
     ['units', $climvar.units.imperial],
   ];
 
-  $: formatFn = format(`.${$climvar.decimals}f`);
+  $: valueFormat = format(`.${$climvar.decimals}f`);
 
   $: if ($data) {
     projectionsChartData = getReturnLevels($data);
@@ -111,13 +120,20 @@
 
   $: if ($baseline) {
     histogramChartData = $baseline.map(d => d.value);
-    console.log('histogramChartData', histogramChartData);
-    classificationExtents = classifyTemperatures(histogramChartData);
-    console.log('classificationExtents', classificationExtents);
     const observedStart = $observations[0].date.getFullYear();
     const observedEnd = $observations[$observations.length - 1].date.getFullYear();
     const observedStats = getObservationStats($observations);
     const baselineStats = getBaselineStats($baseline, $climvar.id);
+    if ($climvar.id === 'tasmax') {
+      thresholdBound = baselineStats.find(d => d.label === '75th Percentile').value;
+      thresholdExtreme = baselineStats.find(d => d.label === '90th Percentile').value;
+    } else if ($climvar.id === 'tasmin') {
+      thresholdBound = baselineStats.find(d => d.label === '25th Percentile').value;
+      thresholdExtreme = baselineStats.find(d => d.label === '10th Percentile').value;
+    } else {
+      thresholdBound = 0;
+      thresholdExtreme = 0;
+    }
     statsData = [
       {
         title: `Full Record (${observedStart}-${observedEnd})`,
@@ -128,22 +144,9 @@
         stats: baselineStats,
       },
     ];
-    if ($climvar.title === 'tasmax') {
-      thresholdProps = {
-        min: baselineStats.find(d => d.label === '75th Percentile').value,
-        invalidText: 'Number must be >= 75th percentile value',
-      }
-    } else if ($climvar.title === 'tasmin') {
-      thresholdProps = {
-        min: baselineStats.find(d => d.label === '25th Percentile').value,
-        invalidText: 'Number must be <= 25th percentile value',
-      }
-    } else {
-      thresholdProps = {};
-    }
   } else {
     histogramChartData = null;
-    statsData = null;
+    statsData = [];
   }
 
   $: if ($forecast) {
@@ -151,13 +154,28 @@
     console.log('forecastData', forecastChartData);
   }
 
+  // Reset user defined threshold value only when a new location is selected
+  $: if (runUpdate) {
+    thresholdStore.set(thresholdBound);
+  }
+
   $: if ($thresholdStore && $data) {
     returnPeriods = $data.map((series) => getSeriesReturnPeriods(series, $thresholdStore));
     historicalReturnPeriod = returnPeriods.find(d => d.key === 'historical');
     projectedReturnPeriods = returnPeriods.filter(d => d.key !== 'historical');
-    console.log('rp', returnPeriods, historicalReturnPeriod, projectedReturnPeriods);
+    if ($climvar.id === 'tasmax') {
+      thresholdInvalid = $thresholdStore < thresholdBound;
+      thresholdInvalidText = 'Number must be >= 75th percentile value';
+    } else if ($climvar.id === 'tasmin') {
+      thresholdInvalid = $thresholdStore > thresholdBound;
+      thresholdInvalidText = 'Number must be <= 25th percentile value';
+    } else {
+      thresholdInvalid = false;
+      thresholdInvalidText = '';
+    }
   }
 
+  // TODO: Fix downloads
   async function downloadViz(e) {
     isLoading = true;
     const format = e.detail;
@@ -232,6 +250,7 @@
   <!-- Controls -->
   <div class="explore-controls">
     <Button
+      size="lg"
       icon={ChartLineData32}
       disabled={runUpdate}
       on:click={() => dispatch('update')}>
@@ -298,35 +317,41 @@
       {/if}
     </div>
     <div class="block" style="width:100%;height:auto;margin:0;">
-      {#if historicalReturnPeriod}
+      {#if historicalReturnPeriod && !thresholdInvalid}
         <p>
           A daily {$climvar.title} of <strong>{$thresholdStore}{$climvar.units.imperial}</strong> around  <strong>{$doyText}</strong> is estimated to be a <strong>1 in {historicalReturnPeriod.values[0].rp} year event</strong> using observed data for <strong>Baseline Period (1991-2020)</strong>.
         </p>
+      {:else}
+        <SkeletonText />
       {/if}
       {#if $indicator.id === 'projections'}
-        <p>
-          From climate projections, it is estimated to change to a:
-        </p>
-        <Grid>
-          <Row style="font-size:0.8rem;color:#51585e;text-transform:uppercase;margin-bottom:0.5rem;">
-            <Column>Model</Column>
-            <Column>Mid-Century (2035-2064)</Column>
-            <Column>End-Century (2070-2099)</Column>
-          </Row>
-          {#each projectedReturnPeriods as series}
-            <Row style="margin-bottom:0.25rem;">
-              <Column>
-                <span  style="background:{series.color};width:10px;height:10px;display:inline-block;"></span>
-                {series.label}
-              </Column>
-              {#each series.values as opt}
-                <Column>
-                  <strong>1 in {opt.rp} year event</strong>
-                </Column>
-              {/each}
+        {#if !thresholdInvalid}
+          <p>
+            From climate projections, it is estimated to change to a:
+          </p>
+          <Grid>
+            <Row style="font-size:0.8rem;color:#51585e;text-transform:uppercase;margin-bottom:0.5rem;">
+              <Column>Model</Column>
+              <Column>Mid-Century (2035-2064)</Column>
+              <Column>End-Century (2070-2099)</Column>
             </Row>
-          {/each}
-        </Grid>
+            {#each projectedReturnPeriods as series}
+              <Row style="margin-bottom:0.25rem;">
+                <Column>
+                  <span  style="background:{series.color};width:10px;height:10px;display:inline-block;"></span>
+                  {series.label}
+                </Column>
+                {#each series.values as opt}
+                  <Column>
+                    <strong>1 in {opt.rp} year event</strong>
+                  </Column>
+                {/each}
+              </Row>
+            {/each}
+          </Grid>
+        {:else}
+          <SkeletonText paragraph />
+        {/if}
       {/if}
       <ShowDefinition
         on:define
@@ -339,6 +364,7 @@
     {#if $indicator.id === 'observations'}
       <Histogram
         data={histogramChartData}
+        labels={statsData.find(d => d.title.includes('Baseline'))}
         yAxis = {{
           label: `Count of Days`,
           tickFormat: d => d,
@@ -355,7 +381,7 @@
         yAxis = {{
           key: 'value',
           label: `Return Level (${$climvar.units.imperial})`,
-          tickFormat: formatFn,
+          tickFormat: valueFormat,
           units: `${$climvar.units.imperial}`,
         }}
         xAxis = {{
@@ -368,7 +394,17 @@
     {:else}
       <Forecast
         data={forecastChartData}
-        units={$climvar.units.imperial}
+        yAxis = {{
+          key: 'value',
+          label: `Forecasted ${$climvar.title} (${$climvar.units.imperial}) as of ${timeFormat('%Y-%m-%d')(new Date())}`,
+          tickFormat: valueFormat,
+          units: `${$climvar.units.imperial}`,
+        }}
+        xAxis = {{
+          key: 'date',
+          label: '',
+          tickFormat: d => timeFormat('%b %e, %Y')(d),
+        }}
       />
     {/if}
     <div class="chart-notes">
@@ -425,11 +461,13 @@
           topics={["climate-scenarios"]}
           title="Day of Year" />
       </AccordionItem>
-      <AccordionItem open title="Set Threshold" >
+      <AccordionItem open title="Enter Threshold" >
         <NumberInput
+          invalid={thresholdInvalid}
+          invalidText={thresholdInvalidText}
           value={$thresholdStore}
           on:change={changeThreshold}
-        />
+        /> 
         <ShowDefinition
           on:define
           topics={["threshold"]}

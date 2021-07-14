@@ -75,7 +75,7 @@ export const doyStore = (() => {
   }
 })();
 
-export const thresholdStore = writable(100);
+export const thresholdStore = writable();
 
 export const stationStore = (() => {
   const store = writable({
@@ -192,8 +192,7 @@ export const forecastStore = (() => {
         if (!$store) return null;
         const formatData = $store.map(d => {
           const date = dateParse(d.startTime.substring(0, 10));
-          const day = `${d.name} ${textFormat(date)}`;
-          return { day, value: d.temperature };
+          return { date, value: d.temperature };
         });
         return formatData;
       });

@@ -38,7 +38,7 @@ const transformReturnLevels = (response) => {
     const end = +dateParse(d.end).getFullYear();
     let timestep;
     if (begin < 2000) {
-      timestep = `Historical (${begin}-${end})`
+      timestep = `Baseline (${begin}-${end})`
     } else if (begin > 2000 && begin < 2060) {
       timestep = `Mid-Century (${begin}-${end})`
     } else {
@@ -232,7 +232,7 @@ export function getBaselineStats(data, climvar, formatFn=d => format('.1f')(d)) 
         value: +formatFn(quantile(values, 0.99)),
       },
     ];
-  } else if (climvar === 'tasming') {
+  } else if (climvar === 'tasmin') {
     return [
       {
         label: '25th Percentile',

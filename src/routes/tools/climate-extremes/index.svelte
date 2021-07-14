@@ -8,11 +8,10 @@
     if (Object.keys(query).length === 0) {
       return {
         initialConfig: {
-          stationId: 31,
+          stationId: 11,
           scenarioId: 'rcp45',
           climvarId: 'tasmax',
-          //modelIds: 'HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5',
-          modelIds: 'HadGEM2-ES',
+          modelIds: 'HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5',
           imperial: true,
         },
         glossary,
@@ -30,8 +29,11 @@
 <script>
   import { onMount } from 'svelte';
   import { timeParse} from 'd3-time-format';
-  import { Modal, Link } from 'carbon-components-svelte';
-  import { Information32 } from 'carbon-icons-svelte';
+  import {
+    Modal,
+    InlineNotification,
+    NotificationActionButton,
+  } from 'carbon-components-svelte';
   import { inview } from 'svelte-inview/dist/';
   
   // Helpers
@@ -71,6 +73,7 @@
 
   // Local props
   let showInfo = false;
+  let showHelp = false;
   let definitionText;
   let definitionTitle;
   let runUpdate = false;
@@ -189,6 +192,10 @@
     showInfo = true;
   }
 
+  function showHelpOptions() {
+    showHelp = true;
+  }
+
   async function initApp(config) {
     const {
       stationId,
@@ -234,23 +241,21 @@
   <!-- Header -->
   <Header currentView={inviewEl} />
 
-  <div id="help" class="section center-row">
-    <Information32 />
-    <div class="help-info">
-      <p>To get started, first <strong>Select a Station</strong>. Next, scroll down to <strong>Explore Data</strong> for selected station.</p>
-      <p>Get help:</p>
-      <ul>
-        <li>
-          <a href="!#" target="_blank">Watch a video on using the tool</a>
-        </li>
-        <li>
-          <a href="/help/get-started/" target="_blank">Explore our guide on climate data</a>
-        </li>
-        <li>
-          <a href="/help/faqs/" target="_blank">Search FAQs</a>
-        </li>
-      </ul>
-    </div>
+  <div id="help" class="section">
+    <InlineNotification
+      hideCloseButton
+      lowContrast
+      kind="info"
+      title="To get started:"
+      subtitle="First select a Station. Next, scroll down and click on the Fetch Data button."
+    >
+      <div slot="actions">
+        <NotificationActionButton
+          on:click={showHelpOptions}>
+          GET HELP
+        </NotificationActionButton>
+      </div>
+    </InlineNotification>
   </div>
 
   <!-- Select Location -->
@@ -313,6 +318,27 @@
   on:open
   on:close>
     <div>{ @html definitionText }</div>
+</Modal>
+
+<Modal
+  id="help-options"
+  size="sm"
+  passiveModal
+  bind:open={showHelp}
+  modalHeading="Get Help"
+  on:open
+  on:close>
+    <ul style="padding-left: 2rem;">
+      <li>
+        <a href="!#" target="_blank">Watch a video on using the tool</a>
+      </li>
+      <li>
+        <a href="/help/get-started/" target="_blank">Explore our guide on climate data</a>
+      </li>
+      <li>
+        <a href="/help/faqs/" target="_blank">Search FAQs</a>
+      </li>
+    </ul>
 </Modal>
 
 <NotificationDisplay />

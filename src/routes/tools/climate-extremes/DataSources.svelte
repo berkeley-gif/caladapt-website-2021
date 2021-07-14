@@ -1,6 +1,6 @@
 <script>
   import { Button } from 'carbon-components-svelte';
-  import Download16 from 'carbon-icons-svelte/lib/Download16';
+  import { Download16 } from 'carbon-icons-svelte';
 </script>
 <style>
   .source {
@@ -31,6 +31,23 @@
     <p>
       The following list of datasets were used to create this tool. Click on the Download Dataset buttons to download data in NetCDF, GeoTIFF or CSV formats. You can also download data visualized in Explore the Data section above in graphic and tabular formats by clicking on the Download Chart button.
     </p>
+  </div>
+</div>
+
+<!-- Source -->
+<div class="bx--row source">
+  <div class="bx--col-lg-2 source-logo">
+    <img src="/img/logos/scripps_100x100.png" alt="scripps logo">
+  </div>
+  <div class="bx--col-lg-10 source-text">
+    <h5>Hourly Observed Historical Data</h5>
+    <p>
+      <a href="https://www.metoffice.gov.uk/hadobs/hadisd/" target="_blank">U.K. Met Office Hadley Centre</a>
+    </p>
+    <p>
+      The Hourly Observed Historical Data product consists of 39 stations across the state (Figure 1), each with an observation period of greater than 30 years (1973 to present) from the HadISD global record.  Stations identified for use in this data product were chosen based on being considered high quality for temperature.
+    </p>
+    <Button size="field" kind="tertiary" icon={Download16} href="#!">Download Dataset</Button>
   </div>
 </div>
 

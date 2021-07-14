@@ -37,7 +37,7 @@ export const indicatorList = [
 const series = [
   {
     key: 'historical',
-    label: 'Baseline',
+    label: 'Historical',
     color: 'rgba(110, 110, 110, 1)',
   },
 ];
@@ -108,29 +108,29 @@ export const resources = [
   },
 ];
 
-export const classifyTemperatures = (values) => {
-  const sorted = values.sort();
-  return [
-    {
-      label: 'Much Warmer than Average',
-      extent: [quantile(sorted, 0.9), sorted[sorted.length - 1]],
-    },
-    {
-      label: 'Warmer than Average',
-      extent: [quantile(sorted, 0.67), quantile(sorted, 0.9)],
-    },
-    {
-      label: 'Near Average',
-      extent: [quantile(sorted, 0.33), quantile(sorted, 0.67)],
-    },
-    {
-      label: 'Cooler than Average',
-      extent: [quantile(sorted, 0.1), quantile(sorted, 0.33)],
-    },
-    {
-      label: 'Much Cooler than Average',
-      extent: [sorted[0], quantile(sorted, 0.1)],
-    },
-  ];
-}
+// export const classifyTemperatures = (values) => {
+//   const sorted = values.sort();
+//   return [
+//     {
+//       label: 'Much Warmer than Average',
+//       extent: [quantile(sorted, 0.9), sorted[sorted.length - 1]],
+//     },
+//     {
+//       label: 'Warmer than Average',
+//       extent: [quantile(sorted, 0.67), quantile(sorted, 0.9)],
+//     },
+//     {
+//       label: 'Near Average',
+//       extent: [quantile(sorted, 0.33), quantile(sorted, 0.67)],
+//     },
+//     {
+//       label: 'Cooler than Average',
+//       extent: [quantile(sorted, 0.1), quantile(sorted, 0.33)],
+//     },
+//     {
+//       label: 'Much Cooler than Average',
+//       extent: [sorted[0], quantile(sorted, 0.1)],
+//     },
+//   ];
+// }
 
