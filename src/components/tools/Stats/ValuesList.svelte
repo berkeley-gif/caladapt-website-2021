@@ -41,7 +41,7 @@
     font-size: 0.8rem;
     color: #51585e;
     text-transform: uppercase;
-    max-width: 14ch;
+    max-width: 13ch;
     line-height: 1.2;
   }
 
