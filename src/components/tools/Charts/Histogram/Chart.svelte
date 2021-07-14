@@ -4,11 +4,13 @@
   import { histogram, extent } from 'd3-array';
 
   import Column from './Column.svelte';
+  import Annotation from './Annotation.svelte';
   import AxisX from './AxisX.svelte';
   import AxisY from './AxisY.svelte';
   import Tooltip from './Tooltip.svelte';
 
   export let data;
+  export let labels;
   export let height = '350px';
 
   export let yAxis = {
@@ -24,7 +26,7 @@
   
   const xKey = ['x0', 'x1'];
   const yKey = 'length';
-  let binCount = 40;
+  let binCount = 30;
 
   let domain;
   let hist;
@@ -84,6 +86,9 @@ function createTooltip(d) {
             strokeWidth={1}
             on:mousemove={event => evt = hideTooltip= event}
             on:mouseout={() => hideTooltip = true}
+          />
+          <Annotation
+            data={labels.stats}
           />
         </Svg>
         <Html pointerEvents={false}>
