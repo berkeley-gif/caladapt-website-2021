@@ -1,0 +1,120 @@
+<style lang="scss">
+  .header {
+    color: #02484a;
+    .lead {
+      margin-top: 0;
+    }
+  }
+
+  .icon-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon-circle {
+      color: #cce4e4;
+      background: #04797c;
+    }
+  }
+</style>
+
+<svelte:head>
+  <title>Getting Started | Cal Adapt</title>
+</svelte:head>
+
+<div class="page-grid page-grid--help">
+  <aside class="sidebar-left">
+    <SidebarLeft toc="{toc}" />
+  </aside>
+
+  <nav class="nav" style="padding:1rem 0 0;">
+    <div class="bx--grid">
+      <!-- Row -->
+      <div class="bx--row">
+        <div class="bx--col">
+          <NavBreadcrumb items="{items}" />
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="header">
+    <div class="bx--grid">
+      <!-- Row -->
+      <div class="bx--row bg-teal-20" style="margin:0.5rem 0;">
+        <div class="bx--col-lg-12">
+          <h1>Getting Started</h1>
+          <p class="lead">
+            Explore the following topics to learn how to get started with Cal
+            Adapt.
+          </p>
+        </div>
+        <div class="bx--col-lg-4 icon-block">
+          <div class="icon-circle">
+            <svelte:component this="{icons['get-started']}" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- TODO: replace list items with tiles -->
+    <div class="bx--grid">
+      {#each topics as topic}
+        <div>
+          <h2>{topic.title}</h2>
+          <p>{topic.text}</p>
+        </div>
+      {/each}
+    </div>
+  </div>
+
+  <div class="footer">
+    <p class="feedback">
+      Email support@cal-adapt.org with your feedback on this topic
+    </p>
+  </div>
+</div>
+
+<script context="module">
+  export async function preload({ params }) {
+    const res = await this.fetch(`help/get-started.json`);
+    const json = await res.json();
+    if (res.status === 200) {
+      const { toc, topics } = json;
+      return { toc, topics };
+    } else {
+      this.error(res.status, json.message);
+    }
+  }
+</script>
+
+<script>
+  import { stores } from "@sapper/app";
+  import Catalog32 from "carbon-icons-svelte/lib/Catalog32";
+  import Help32 from "carbon-icons-svelte/lib/Help32";
+  import User32 from "carbon-icons-svelte/lib/User32";
+  import Video32 from "carbon-icons-svelte/lib/Video32";
+
+  import SidebarLeft from "../_SidebarLeft.svelte";
+  import NavBreadcrumb from "../../../partials/NavBreadcrumb.svelte";
+
+  export let toc;
+  export let topics;
+
+  let items = [
+    { href: "/", text: "Home" },
+    { href: "/help/", text: "Help" },
+    { href: "/help/get-started", text: "Get Started" },
+  ];
+
+  const { page } = stores();
+
+  const icons = {
+    "get-started": User32,
+    tutorials: Video32,
+    faqs: Help32,
+    glossary: Catalog32,
+  };
+</script>
