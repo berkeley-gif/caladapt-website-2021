@@ -51,7 +51,7 @@
         </div>
         <div class="bx--col-lg-4 icon-block">
           <div class="icon-circle">
-            <svelte:component this="{icons['get-started']}" />
+            <svelte:component this="{CATEGORY_ICONS['get-started']}" />
           </div>
         </div>
       </div>
@@ -88,14 +88,11 @@
 
 <script>
   import { stores } from "@sapper/app";
-  import Catalog32 from "carbon-icons-svelte/lib/Catalog32";
-  import Help32 from "carbon-icons-svelte/lib/Help32";
-  import User32 from "carbon-icons-svelte/lib/User32";
-  import Video32 from "carbon-icons-svelte/lib/Video32";
 
   import SidebarLeft from "../_SidebarLeft.svelte";
   import SupportFooter from "../_SupportFooter.svelte";
   import NavBreadcrumb from "../../../partials/NavBreadcrumb.svelte";
+  import { CATEGORY_ICONS } from "../_icons";
 
   export let toc;
   export let topics;
@@ -107,11 +104,4 @@
   ];
 
   const { page } = stores();
-
-  const icons = {
-    "get-started": User32,
-    tutorials: Video32,
-    faqs: Help32,
-    glossary: Catalog32,
-  };
 </script>
