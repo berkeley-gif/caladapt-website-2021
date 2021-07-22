@@ -70,11 +70,7 @@
     </div>
   </div>
 
-  <div class="footer">
-    <p class="feedback">
-      Email support@cal-adapt.org with your feedback on this topic
-    </p>
-  </div>
+  <SupportFooter />
 </div>
 
 <script context="module">
@@ -98,6 +94,7 @@
   import Video32 from "carbon-icons-svelte/lib/Video32";
 
   import SidebarLeft from "../_SidebarLeft.svelte";
+  import SupportFooter from "../_SupportFooter.svelte";
   import NavBreadcrumb from "../../../partials/NavBreadcrumb.svelte";
 
   export let toc;
