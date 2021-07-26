@@ -19,12 +19,18 @@
 
   .content-extended {
     grid-column: 2 / span 3;
+    margin-bottom: var(--spacing-13, 10rem);
+  }
+
+  p.intro-text {
+    max-width: 75ch;
+    padding: 1rem;
   }
 
   .tiles-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    grid-gap: 1rem;
+    grid-gap: 1.5rem;
     padding: 0;
     margin: 0;
     list-style: none;
@@ -64,7 +70,7 @@
         </div>
         <div class="bx--col-lg-4 icon-block">
           <div class="icon-circle">
-            <svelte:component this={iconGetStarted} />
+            <svelte:component this="{iconGetStarted}" />
           </div>
         </div>
       </div>
@@ -73,9 +79,16 @@
 
   <div class="content content-extended">
     <div class="bx--grid">
+      <p class="intro-text">
+        If you want to start exploring the data right away, our <a
+          href="/tools/local-climate-change-snapshot/"
+          >Local Climate Change Snapshot tool</a
+        > is a great place to begin. In this getting started guide, you can get a background
+        on climate change and working with climate data.
+      </p>
       <ul class="tiles-list">
         {#each topics as topic}
-          <TopicTile {topic} />
+          <TopicTile topic="{topic}" />
         {/each}
       </ul>
     </div>
@@ -114,7 +127,7 @@
     { href: "/help/", text: "Help" },
     { href: "/help/get-started", text: "Get Started" },
   ];
-  const iconGetStarted = CATEGORY_ICONS['get-started'];
+  const iconGetStarted = CATEGORY_ICONS["get-started"];
 
   const { page } = stores();
 </script>
