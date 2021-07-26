@@ -25,57 +25,6 @@
     display: flex;
     flex-wrap: wrap;
   }
-
-  .tile-wrapper {
-    display: block;
-    position: relative;
-    width: 225px;
-    margin: 1rem;
-  }
-
-  .tile-anchor {
-    text-decoration: none;
-    color: var(--gray-100);
-
-    &::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right: 0;
-    }
-  }
-
-  .tile--content {
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  h2,
-  p {
-    color: var(--gray-100);
-
-    &.tile--title:hover,
-    &.tile--description:hover {
-      text-decoration: none;
-    }
-
-    &.tile--title {
-      font-size: 1.125rem;
-      font-weight: bold;
-    }
-
-    &.tile--description {
-      font-size: 1rem;
-    }
-
-    &.learn-more {
-      margin: 0;
-    }
-  }
 </style>
 
 <svelte:head>
@@ -111,7 +60,7 @@
         </div>
         <div class="bx--col-lg-4 icon-block">
           <div class="icon-circle">
-            <svelte:component this="{CATEGORY_ICONS['get-started']}" />
+            <svelte:component this={iconGetStarted} />
           </div>
         </div>
       </div>
@@ -122,21 +71,7 @@
     <div class="bx--grid">
       <ul class="tiles-list tiles-container">
         {#each topics as topic}
-          <li class="tile-wrapper lift shadow">
-            <Tile>
-              <div class="tile--content">
-                <h2 class="tile--title">
-                  <a class="tile-anchor" href="help/get-started/{topic.slug}"
-                    >{topic.title}</a
-                  >
-                </h2>
-                <p class="tile--description">{topic.text}</p>
-                <Button kind="ghost" aria-hidden class="learn-more"
-                  >Learn more</Button
-                >
-              </div>
-            </Tile>
-          </li>
+          <TopicTile {topic} />
         {/each}
       </ul>
     </div>
@@ -160,22 +95,22 @@
 
 <script>
   import { stores } from "@sapper/app";
-  import { Tile } from "carbon-components-svelte";
-  import { Button } from "carbon-components-svelte";
 
   import SidebarLeft from "../_SidebarLeft.svelte";
   import SupportFooter from "../_SupportFooter.svelte";
+  import TopicTile from "../_TopicTile.svelte";
   import NavBreadcrumb from "../../../partials/NavBreadcrumb.svelte";
   import { CATEGORY_ICONS } from "../_icons";
 
   export let toc;
   export let topics;
 
-  let breadcrumbItems = [
+  const breadcrumbItems = [
     { href: "/", text: "Home" },
     { href: "/help/", text: "Help" },
     { href: "/help/get-started", text: "Get Started" },
   ];
+  const iconGetStarted = CATEGORY_ICONS['get-started'];
 
   const { page } = stores();
 </script>
