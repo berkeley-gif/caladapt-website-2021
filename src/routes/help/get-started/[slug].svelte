@@ -11,7 +11,7 @@
 </div>
 
 <script>
-  import SidebarLeft from "../_sidebarLeft.svelte";
+  import SidebarLeft from "../_SidebarLeft.svelte";
 
   let toc = [];
 </script>
