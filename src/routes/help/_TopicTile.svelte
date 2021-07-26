@@ -1,9 +1,18 @@
 <style lang="scss">
+  .tile-wrapper,
+  .tile--content {
+    display: flex;
+    flex-direction: column;
+  }
+
   .tile-wrapper {
-    display: block;
     position: relative;
-    width: 225px;
-    margin: 1rem;
+    padding: 1rem;
+    background-color: var(--white);
+
+    &:focus-within {
+      box-shadow: 0 0 0 0.25rem;
+    }
   }
 
   .tile-anchor {
@@ -21,10 +30,21 @@
   }
 
   .tile--content {
-    height: 200px;
-    display: flex;
-    flex-direction: column;
+    max-width: 60ch;
+    flex-grow: 1;
     justify-content: space-between;
+
+    & > * + * {
+      margin-top: 0.75rem;
+    }
+
+    &:last-child {
+      margin-top: auto;
+    }
+
+    &:nth-last-child(2) {
+      margin-bottom: 0.75rem;
+    }
   }
 
   h2,
@@ -41,27 +61,27 @@
   p {
     font-size: 1rem;
   }
+
+  small {
+    color: var(--link-01);
+  }
 </style>
 
 <li class="tile-wrapper lift shadow">
-  <Tile>
-    <div class="tile--content">
-      <h2>
-        <a class="tile-anchor" href="help/get-started/{topic.slug}"
-          >{topic.title}</a
-        >
-      </h2>
-      <p>{topic.text}</p>
-      <Button kind="ghost" aria-hidden class="learn-more">Learn more</Button>
-    </div>
-  </Tile>
+  <div class="tile--content">
+    <h2>
+      <a class="tile-anchor" href="help/get-started/{topic.slug}"
+        >{topic.title}</a
+      >
+    </h2>
+    <p>{topic.text}</p>
+    <small aria-hidden="true">Learn more</small>
+  </div>
 </li>
 
 <script>
-  import { Button, Tile } from "carbon-components-svelte";
-
   export let topic = {
-    title: "",
-    text: "",
+    title: "A Title",
+    text: "Some descriptive text",
   };
 </script>

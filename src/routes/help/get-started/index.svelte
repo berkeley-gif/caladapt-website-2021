@@ -21,9 +21,13 @@
     grid-column: 2 / span 3;
   }
 
-  .tiles-container {
-    display: flex;
-    flex-wrap: wrap;
+  .tiles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-gap: 1rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 </style>
 
@@ -69,7 +73,7 @@
 
   <div class="content content-extended">
     <div class="bx--grid">
-      <ul class="tiles-list tiles-container">
+      <ul class="tiles-list">
         {#each topics as topic}
           <TopicTile {topic} />
         {/each}
