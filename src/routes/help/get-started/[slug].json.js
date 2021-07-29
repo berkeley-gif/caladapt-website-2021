@@ -1,8 +1,9 @@
 import { getHtml } from "./_get-html";
+import categories from "../_categories";
 
 export async function get(req, res) {
   const { slug } = req.params;
-  const toc = [];
+  const toc = categories;
 
   try {
     const { html, topics, topic } = await getHtml(slug);
@@ -22,10 +23,7 @@ export async function get(req, res) {
         })
       );
     }
-
-  } catch(error) {
+  } catch (error) {
     throw new Error(error.message);
   }
-
-
 }
