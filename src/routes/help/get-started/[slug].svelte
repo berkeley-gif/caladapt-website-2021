@@ -50,6 +50,12 @@
       {@html html}
     </div>
   </div>
+
+  <aside class="sidebar-right">
+    <SidebarRight display="{['page-anchor-links']}" anchors="{topic.anchors}" />
+  </aside>
+
+  <SupportFooter />
 </div>
 
 <script context="module">
@@ -67,23 +73,28 @@
 <script>
   import SidebarLeft from "../_SidebarLeft.svelte";
   import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
+  import SidebarRight from "~/partials/SidebarRight.svelte";
+  import SupportFooter from "../_SupportFooter.svelte";
 
   export let toc = [];
   export let html = "";
   export let topic = "";
-  export let topics = [];
+  // export let topics = [];
 
-  const breadcrumbItems = [
+  let category;
+  let activeCategory;
+  let breadcrumbItems = [];
+  let title = "";
+
+  $: title = topic.title;
+  $: breadcrumbItems = [
     { href: "/", text: "Home" },
     { href: "/help/", text: "Help" },
     { href: "/help/get-started", text: "Get Started" },
     { href: `/help/get-started/${topic.slug}`, text: topic.title },
   ];
 
-  let category;
-  let activeCategory;
-  let items = [];
-  let title = "";
-
-  $: title = topic.title;
+  $: {
+    // console.log(topic.anchors);
+  }
 </script>
