@@ -1,4 +1,5 @@
 <script>
+  import { stores } from '@sapper/app';
   import { createEventDispatcher } from 'svelte';
   import { Search, Select, SelectItem } from "carbon-components-svelte";
 
@@ -6,6 +7,9 @@
   export let events = [];
   export let posts = [];
   export let filters = [];
+  export let anchors = [];
+
+  const { page } = stores();
 
   const dispatch = createEventDispatcher();
   let upcomingEvents;
@@ -28,7 +32,10 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  ul.page-anchor-links-list {
+    list-style: none;
+  }
 </style>
 
 {#if display.includes('events') && upcomingEvents.length > 0}
@@ -110,5 +117,15 @@
     <p class="item-text">
       For more climate adaptation terms visit the glossary on <a href="https://resilientca.org/">California Adaptation Clearinghouse</a>.
     </p>
+  </div>
+{/if}
+
+{#if display.includes('page-anchor-links') && anchors.length}
+  <div class="sidebar-block">
+    <ul class="page-anchor-links-list">
+      {#each anchors as anchor}
+        <li><a href="{$page.path}#{anchor.href}">{anchor.text}</a></li>
+      {/each}
+    </ul>
   </div>
 {/if}
