@@ -25,7 +25,8 @@
   import SidebarLeft from './_SidebarLeft.svelte';
   import ItemsList from './_ItemsList.svelte';
   import ItemsAccordion from './_ItemsAccordion.svelte';
-  import ItemDetail from './_ItemDetail.svelte';
+  import GetStartedPage from "./_GetStartedPage.svelte";
+  import SupportFooter from "./_SupportFooter.svelte";
   
   export let data;
   export let toc;
@@ -168,12 +169,11 @@
     </div>
   </div>
 
-  <div class="content">
+  <div class="content {slug === 'get-started' ? 'content-extended' : ''}">
     <div class="bx--grid">
       <!-- Row -->
       {#if slug === 'get-started'}
-        <!-- Display detail for first item list -->
-        <ItemDetail item={data[0]} />
+        <GetStartedPage />
       {:else if slug === 'glossary'}
         <!-- Display items as Accordion -->
         <ItemsAccordion items={filteredItems} />
@@ -184,9 +184,7 @@
     </div>
   </div>
 
-  <div class="footer">
-    <p class="feedback">Email support@cal-adapt.org with your feedback on this topic</p>
-  </div>
+  <SupportFooter />
 
   <aside class="sidebar-right">
     <SidebarRight
