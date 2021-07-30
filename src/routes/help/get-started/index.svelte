@@ -83,8 +83,8 @@
         If you want to start exploring the data right away, our <a
           href="/tools/local-climate-change-snapshot/"
           >Local Climate Change Snapshot tool</a
-        > is a great place to begin. In this getting started guide, you can get a background
-        on climate change and working with climate data.
+        > is a great place to begin. In this getting started guide, you can get a
+        background on climate change and working with climate data.
       </p>
       <ul class="tiles-list">
         {#each topics as topic}
@@ -116,7 +116,7 @@
   import SidebarLeft from "../_SidebarLeft.svelte";
   import SupportFooter from "../_SupportFooter.svelte";
   import TopicTile from "../_TopicTile.svelte";
-  import NavBreadcrumb from "../../../partials/NavBreadcrumb.svelte";
+  import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
   import { CATEGORY_ICONS } from "../_icons";
 
   export let toc;
