@@ -3,28 +3,11 @@ title: How is climate data relevant for decision-making in California?
 order: 1
 ---
 
-<style>
-table {
-  border-collapse: collapse;
-}
-
-td, th {
-  border: 1px solid #999;
-  padding: 0.5rem;
-  text-align: left;
-}
-
-td img {
-  margin: 0 auto;
-}
-</style>
-
 **Questions:**
 
 - [How is climate data relevant for decision-making?](#how-is-climate-data-relevant-for-decision-making)
   - California’s changing climate
   - Using climate data in adaptation planning
-
 
 ## <a href="#how-is-climate-data-relevant-for-decision-making"></a> How is climate data relevant for decision-making?
 
