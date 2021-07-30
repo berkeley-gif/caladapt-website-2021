@@ -41,6 +41,11 @@
   .content {
     grid-area: content;
   }
+
+  .content-extended {
+    grid-column: 2 / span 3;
+    margin-bottom: var(--spacing-13, 10rem);
+  }
 }
 
 .page-grid--help {
