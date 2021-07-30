@@ -5,8 +5,8 @@
     const json = await res.json();
 
     if (res.status === 200) {
-      const { toc, item } = json;
-      return { toc, item };
+      const { toc, item, getStartedData } = json;
+      return { toc, item, getStartedData };
     } else {
       this.error(res.status, json.message);
     }
@@ -15,17 +15,20 @@
 
 <script>
   import { stores } from '@sapper/app';
+  import SidebarRight from '~/partials/SidebarRight.svelte';
   import SidebarLeft from '../_SidebarLeft.svelte';
   import ItemDetail from '../_ItemDetail.svelte';
-  import NavBreadcrumb from '../../../partials/NavBreadcrumb.svelte';
+  import NavBreadcrumb from '~/partials/NavBreadcrumb.svelte';
   
   export let item;
   export let toc;
+  export let getStartedData;
 
   const { page } = stores();
 
   let category;
   let activeCategory;
+  let activeGetStartedTopic;
   let items = [];
   
   $: category = $page.params.category;
@@ -42,26 +45,25 @@
       text: `${item.metadata.title}`
     },
   ];
+  $: activeGetStartedTopic = getStartedData && getStartedData.activeTopic;
 
   function updateItems() {
     activeCategory = toc.find(d => d.slug === category);
   }
 </script>
 
-<style>
-
-</style>
+<style></style>
 
 <svelte:head>
   <title>Help</title>
 </svelte:head>
 
 <div class="page-grid page-grid--help">
-  <aside class="sidebar">
+  <aside class="sidebar-left">
     <SidebarLeft {toc} />
   </aside>
 
-  <nav class="nav" style="padding:1rem 0 0;">
+  <div class="nav" style="padding:1rem 0 0;">
     <div class="bx--grid bx--grid--condensed">
       <!-- Row -->
       <div class="bx--row">
@@ -72,7 +74,7 @@
         </div>
       </div>
     </div>
-  </nav>
+  </div>
 
   <div class="header">
     <div class="bx--grid">
@@ -87,7 +89,7 @@
               By <a href={item.metadata.link}>{item.metadata.author}</a>, {item.metadata.org}
             </p>
           {/if}
-          <hr>             
+          <hr>       
         </div>
       </div>
     </div>
@@ -105,5 +107,8 @@
   </div>
 
   <aside class="sidebar-right">
+    {#if category === 'get-started' && activeGetStartedTopic && activeGetStartedTopic.anchors}
+      <SidebarRight display="{['page-anchor-links']}" anchors="{activeGetStartedTopic.anchors}" />
+    {/if}
   </aside>
 </div>
