@@ -19,6 +19,7 @@
   import SidebarLeft from '../_SidebarLeft.svelte';
   import ItemDetail from '../_ItemDetail.svelte';
   import NavBreadcrumb from '~/partials/NavBreadcrumb.svelte';
+  import SupportFooter from '../_SupportFooter.svelte';
   
   export let item;
   export let toc;
@@ -102,9 +103,7 @@
     </div>
   </div>
 
-  <div class="footer">
-    <p class="feedback">Email support@cal-adapt.org with your feedback on this topic</p>
-  </div>
+  <SupportFooter borderTop={false} />
 
   <aside class="sidebar-right">
     {#if category === 'get-started' && activeGetStartedTopic && activeGetStartedTopic.anchors}
