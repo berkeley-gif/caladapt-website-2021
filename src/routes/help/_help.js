@@ -4,7 +4,7 @@ import frontMatter from "front-matter";
 import marked from "marked";
 import { timeParse } from "d3-time-format";
 import categories from "./_categories";
-import { getting_started_topics } from "./_get-started/_getting-started-topics";
+import { getting_started_topics } from "./_getting-started-topics";
 
 const dateParse = timeParse("%Y-%m-%d");
 

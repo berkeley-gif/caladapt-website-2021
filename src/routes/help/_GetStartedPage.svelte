@@ -35,5 +35,5 @@
 <script>
   import { Row, Column } from "carbon-components-svelte";
   import TopicTile from "./_TopicTile.svelte";
-  import { getting_started_topics } from "./_get-started/_getting-started-topics";
+  import { getting_started_topics } from "./_getting-started-topics";
 </script>
