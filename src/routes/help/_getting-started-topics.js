@@ -3,12 +3,6 @@ export const getting_started_topics = [
     slug: "climate-change-and-climate-data-in-california",
     title: "Climate change and climate data in California",
     text: "Why climate data is important for adaptation planning and how to use it.",
-    anchors: [
-      {
-        href: "how-is-climate-data-relevant-for-decision-making",
-        text: "How is climate data relevant for decision making?",
-      },
-    ],
   },
   {
     slug: "climate-data-and-other-data-on-caladapt",

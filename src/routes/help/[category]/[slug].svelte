@@ -105,9 +105,5 @@
 
   <SupportFooter borderTop={false} />
 
-  <aside class="sidebar-right">
-    {#if category === 'get-started' && activeGetStartedTopic && activeGetStartedTopic.anchors}
-      <SidebarRight display="{['page-anchor-links']}" anchors="{activeGetStartedTopic.anchors}" />
-    {/if}
-  </aside>
+  <aside class="sidebar-right"></aside>
 </div>
