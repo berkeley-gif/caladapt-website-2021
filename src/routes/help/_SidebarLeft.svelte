@@ -1,16 +1,16 @@
 <script>
   import {
     SideNavItems,
-    // SideNavMenu,
-    // SideNavMenuItem,
+    SideNavMenu,
+    SideNavMenuItem,
     SideNavLink,
   } from 'carbon-components-svelte';
   import { stores } from '@sapper/app';
 
   export let toc;
+  export let subToc;
 
   const { page } = stores();
-  // let showItems;
 
   $: category = $page.params.category;
   $: slug = $page.params.slug;
@@ -19,26 +19,26 @@
 <nav class="is-sticky">
   <SideNavItems>
     {#each toc as opt}
-<!--       {#if opt.slug === 'get-started' && showItems}
+      {#if opt.slug === category && Array.isArray(subToc) && subToc.length}
         <SideNavMenu
-         text={opt.title}
-         expanded={category === 'get-started'}
-         class={category === 'get-started' ? 'bx--side-nav__link--current': ''}>
-          {#each gettingStartedToc as item}
+         text={opt.title.toUpperCase()}
+         expanded
+         class='bx--side-nav__link--current'>
+          {#each subToc as item}
             <SideNavMenuItem
-              href={`help/get-started/${item.slug}/`}
+              href={`help/${opt.dir}/${item.slug}/`}
               text={item.title}
               isSelected={item.slug === slug}
             />
           {/each}
         </SideNavMenu>
-      {:else} -->
+      {:else}
         <SideNavLink
           href={`help/${opt.slug}/`}
           text={opt.title}
           isSelected={opt.slug === category}
         />
-<!--       {/if} -->
+      {/if}
     {/each}
   </SideNavItems>
 </nav>

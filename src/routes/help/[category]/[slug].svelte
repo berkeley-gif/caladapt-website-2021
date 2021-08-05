@@ -29,11 +29,12 @@
 
   let category;
   let activeCategory;
-  let activeGetStartedTopic;
+  let subToc;
   let items = [];
   
   $: category = $page.params.category;
   $: category, updateItems();
+  $: category, getSubToc();
   $: items = [
     { href: '/', text: 'Home' },
     { href: '/help/', text: 'Help' },
@@ -46,10 +47,19 @@
       text: `${item.metadata.title}`
     },
   ];
-  $: activeGetStartedTopic = getStartedData && getStartedData.activeTopic;
 
   function updateItems() {
     activeCategory = toc.find(d => d.slug === category);
+  }
+
+  function getSubToc() {
+    if (
+      activeCategory.slug === 'get-started' && 
+      getStartedData && 
+      getStartedData.allTopics
+    ) {
+      subToc = getStartedData.allTopics;
+    }
   }
 </script>
 
@@ -61,7 +71,7 @@
 
 <div class="page-grid page-grid--help">
   <aside class="sidebar-left">
-    <SidebarLeft {toc} />
+    <SidebarLeft {toc} {subToc} />
   </aside>
 
   <div class="nav" style="padding:1rem 0 0;">
