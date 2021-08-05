@@ -3,13 +3,13 @@ title: How is climate data relevant for decision-making in California?
 order: 1
 ---
 
-**Questions:**
+**Topics covered in this article:**
 
-- [How is climate data relevant for decision-making?](#how-is-climate-data-relevant-for-decision-making)
+- How is climate data relevant for decision-making?
   - California’s changing climate
   - Using climate data in adaptation planning
 
-## <a href="#how-is-climate-data-relevant-for-decision-making"></a> How is climate data relevant for decision-making?
+## How is climate data relevant for decision-making?
 
 Characterizing climate conditions is important when planning for the future in a variety of sectors, including municipal planning, natural resource stewardship, utility management, public health and safety programming, and private industry. By assessing the range of possible future conditions under a changing climate, you can plan adaptations that reduce the impacts of climate change and safeguard lives, livelihoods, and landscapes for decades to come.
 

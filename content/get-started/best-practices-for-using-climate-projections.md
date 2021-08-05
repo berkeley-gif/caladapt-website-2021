@@ -3,7 +3,7 @@ title: Best practices for using climate projections
 order: 6
 ---
 
-Questions:
+**Topics covered in this article:**
 
 - What are some best practices for using climate projections?
   - Understanding uncertainty

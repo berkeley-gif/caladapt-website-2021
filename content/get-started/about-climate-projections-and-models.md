@@ -3,7 +3,7 @@ title: About climate projections and models
 order: 4
 ---
 
-Questions:
+**Topics covered in this article:**
 
 - What are climate projections?
 - How are climate projections generated? What is a GCM?

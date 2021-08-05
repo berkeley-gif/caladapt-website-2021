@@ -3,7 +3,7 @@ title: Accessing Data on Cal Adapt
 order: 3
 ---
 
-Questions:
+**Topics covered in this article:**
 
 - How do I access, visualize, and download climate data on Cal-Adapt?
 - Examples of Cal-Adapt data used in adaptation planning

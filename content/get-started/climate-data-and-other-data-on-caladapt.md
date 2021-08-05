@@ -3,7 +3,7 @@ title: Climate data and other data on Cal-Adapt
 order: 2
 ---
 
-Questions
+**Topics covered in this article:**
 
 - What climate data does Cal-Adapt provide?
 - What other data does Cal-Adapt provide?
