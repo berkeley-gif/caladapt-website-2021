@@ -15,11 +15,12 @@
 
 <script>
   import { stores } from '@sapper/app';
-  import SidebarRight from '~/partials/SidebarRight.svelte';
+  import { Row, Column } from "carbon-components-svelte";
   import SidebarLeft from '../_SidebarLeft.svelte';
   import ItemDetail from '../_ItemDetail.svelte';
   import NavBreadcrumb from '~/partials/NavBreadcrumb.svelte';
   import SupportFooter from '../_SupportFooter.svelte';
+  import ItemsPrevNextNav from "../_ItemsPrevNextNav.svelte";
   
   export let item;
   export let toc;
@@ -31,10 +32,13 @@
   let activeCategory;
   let subToc;
   let items = [];
+  let prevArticle;
+  let nextArticle;
   
   $: category = $page.params.category;
   $: category, updateItems();
   $: category, getSubToc();
+  $: subToc, setPrevNext();
   $: items = [
     { href: '/', text: 'Home' },
     { href: '/help/', text: 'Help' },
@@ -60,6 +64,15 @@
     ) {
       subToc = getStartedData.allTopics;
     }
+  }
+
+  function setPrevNext() {
+    if (!subToc) return;
+    let index = subToc.findIndex(d => d.slug === $page.params.slug);
+    let prev = subToc[index - 1];
+    let next = subToc[index + 1];
+    prevArticle = prev ? { title: prev.title, href: `help/${category}/${prev.slug}` } : null;
+    nextArticle = next ? { title: next.title, href: `help/${category}/${next.slug}` } : null; 
   }
 </script>
 
@@ -110,6 +123,11 @@
     <div class="bx--grid">
       <!-- Row -->
       <ItemDetail {item} />
+      <Row>
+        <Column>
+          <ItemsPrevNextNav prev={prevArticle} next={nextArticle} />
+        </Column>
+      </Row>
     </div>
   </div>
 
