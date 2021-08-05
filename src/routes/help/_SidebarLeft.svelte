@@ -20,10 +20,7 @@
   <SideNavItems>
     {#each toc as opt}
       {#if opt.slug === category && Array.isArray(subToc) && subToc.length}
-        <SideNavMenu
-         text={opt.title.toUpperCase()}
-         expanded
-         class='bx--side-nav__link--current'>
+        <SideNavMenu text={opt.title} class="sidebar-left--sub-toc" expanded>
           {#each subToc as item}
             <SideNavMenuItem
               href={`help/${opt.dir}/${item.slug}/`}
