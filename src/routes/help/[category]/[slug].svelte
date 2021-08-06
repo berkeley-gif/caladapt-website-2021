@@ -20,7 +20,7 @@
   import ItemDetail from '../_ItemDetail.svelte';
   import NavBreadcrumb from '~/partials/NavBreadcrumb.svelte';
   import SupportFooter from '../_SupportFooter.svelte';
-  import ItemsPrevNextNav from "../_ItemsPrevNextNav.svelte";
+  import ItemsPrevNextNav from "../_ItemsNavPrevNext.svelte";
   
   export let item;
   export let toc;
