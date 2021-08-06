@@ -28,17 +28,17 @@
 
   const { page } = stores();
 
-  let category;
   let activeCategory;
   let subToc;
+  let subTocIdx;
   let items = [];
   let prevArticle;
   let nextArticle;
   
   $: category = $page.params.category;
-  $: category, updateItems();
-  $: category, getSubToc();
-  $: subToc, setPrevNext();
+  $: category, updateItems(), getSubToc();
+  $: subTocIdx = subToc && subToc.findIndex(d => d.slug === $page.params.slug);
+  $: subTocIdx, setPrevNext();
   $: items = [
     { href: '/', text: 'Home' },
     { href: '/help/', text: 'Help' },
@@ -68,9 +68,8 @@
 
   function setPrevNext() {
     if (!subToc) return;
-    let index = subToc.findIndex(d => d.slug === $page.params.slug);
-    let prev = subToc[index - 1];
-    let next = subToc[index + 1];
+    let prev = subToc[subTocIdx - 1];
+    let next = subToc[subTocIdx + 1];
     prevArticle = prev ? { title: prev.title, href: `help/${category}/${prev.slug}` } : null;
     nextArticle = next ? { title: next.title, href: `help/${category}/${next.slug}` } : null; 
   }

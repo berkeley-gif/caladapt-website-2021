@@ -8,7 +8,7 @@
   import { stores } from '@sapper/app';
 
   export let toc;
-  export let subToc;
+  export let subToc = [];
 
   const { page } = stores();
 
