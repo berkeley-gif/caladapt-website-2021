@@ -25,12 +25,13 @@
       height: 90px;
       flex: 0 0 75px;
 
-      .day, .month {
-        color: #FFFFFF;
+      .day,
+      .month {
+        color: #ffffff;
         display: block;
         font-size: 10px;
         line-height: 1;
-        letter-spacing: .5px;
+        letter-spacing: 0.5px;
         margin: 5px 0;
         text-transform: uppercase;
       }
@@ -41,7 +42,7 @@
       }
 
       .date {
-        color: #FFFFFF;
+        color: #ffffff;
         display: block;
         font-size: 35px;
         line-height: 1;
@@ -57,7 +58,7 @@
       }
 
       p {
-       margin-bottom: 2px;
+        margin-bottom: 2px;
       }
 
       .title {

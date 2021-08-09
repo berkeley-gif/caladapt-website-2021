@@ -14,14 +14,14 @@
 </script>
 
 <script>
-  import { stores } from '@sapper/app';
+  import { stores } from "@sapper/app";
   import { Row, Column } from "carbon-components-svelte";
-  import SidebarLeft from '../_SidebarLeft.svelte';
-  import ItemDetail from '../_ItemDetail.svelte';
-  import NavBreadcrumb from '~/partials/NavBreadcrumb.svelte';
-  import SupportFooter from '../_SupportFooter.svelte';
+  import SidebarLeft from "../_SidebarLeft.svelte";
+  import ItemDetail from "../_ItemDetail.svelte";
+  import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
+  import SupportFooter from "../_SupportFooter.svelte";
   import ItemsPrevNextNav from "../_ItemsNavPrevNext.svelte";
-  
+
   export let item;
   export let toc;
   export let getStartedData;
@@ -34,32 +34,33 @@
   let items = [];
   let prevArticle;
   let nextArticle;
-  
+
   $: category = $page.params.category;
   $: category, updateItems(), getSubToc();
-  $: subTocIdx = subToc && subToc.findIndex(d => d.slug === $page.params.slug);
+  $: subTocIdx =
+    subToc && subToc.findIndex((d) => d.slug === $page.params.slug);
   $: subTocIdx, setPrevNext();
   $: items = [
-    { href: '/', text: 'Home' },
-    { href: '/help/', text: 'Help' },
+    { href: "/", text: "Home" },
+    { href: "/help/", text: "Help" },
     {
       href: `/help/${activeCategory.slug}`,
-      text: `${activeCategory.title}`
+      text: `${activeCategory.title}`,
     },
     {
-      href: '',
-      text: `${item.metadata.title}`
+      href: "",
+      text: `${item.metadata.title}`,
     },
   ];
 
   function updateItems() {
-    activeCategory = toc.find(d => d.slug === category);
+    activeCategory = toc.find((d) => d.slug === category);
   }
 
   function getSubToc() {
     if (
-      activeCategory.slug === 'get-started' && 
-      getStartedData && 
+      activeCategory.slug === "get-started" &&
+      getStartedData &&
       getStartedData.allTopics
     ) {
       subToc = getStartedData.allTopics;
@@ -70,8 +71,12 @@
     if (!subToc) return;
     let prev = subToc[subTocIdx - 1];
     let next = subToc[subTocIdx + 1];
-    prevArticle = prev ? { title: prev.title, href: `help/${category}/${prev.slug}` } : null;
-    nextArticle = next ? { title: next.title, href: `help/${category}/${next.slug}` } : null; 
+    prevArticle = prev
+      ? { title: prev.title, href: `help/${category}/${prev.slug}` }
+      : null;
+    nextArticle = next
+      ? { title: next.title, href: `help/${category}/${next.slug}` }
+      : null;
   }
 </script>
 
@@ -83,7 +88,7 @@
 
 <div class="page-grid page-grid--help">
   <aside class="sidebar-left">
-    <SidebarLeft {toc} {subToc} />
+    <SidebarLeft toc="{toc}" subToc="{subToc}" />
   </aside>
 
   <div class="nav" style="padding:1rem 0 0;">
@@ -92,7 +97,7 @@
       <div class="bx--row">
         <div class="bx--col">
           {#if activeCategory}
-            <NavBreadcrumb {items} />
+            <NavBreadcrumb items="{items}" />
           {/if}
         </div>
       </div>
@@ -109,10 +114,11 @@
           </h1>
           {#if item.metadata.author}
             <p class="lead">
-              By <a href={item.metadata.link}>{item.metadata.author}</a>, {item.metadata.org}
+              By <a href="{item.metadata.link}">{item.metadata.author}</a>, {item
+                .metadata.org}
             </p>
           {/if}
-          <hr>       
+          <hr />
         </div>
       </div>
     </div>
@@ -121,16 +127,16 @@
   <div class="content">
     <div class="bx--grid">
       <!-- Row -->
-      <ItemDetail {item} />
+      <ItemDetail item="{item}" />
       <Row>
         <Column>
-          <ItemsPrevNextNav prev={prevArticle} next={nextArticle} />
+          <ItemsPrevNextNav prev="{prevArticle}" next="{nextArticle}" />
         </Column>
       </Row>
     </div>
   </div>
 
-  <SupportFooter borderTop={false} />
+  <SupportFooter borderTop="{false}" />
 
   <aside class="sidebar-right"></aside>
 </div>

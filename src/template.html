@@ -1,45 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  %sapper.base%
+    %sapper.base%
 
-  <meta name="description" content="Cal-Adapt provides a means of exploring peer-reviewed data portraying how climate change might affect California at the state and local level.">
-  <meta property="og:title" content="Cal-Adapt">
-  <meta property="og:description" content="Cal-Adapt provides a means of exploring peer-reviewed data portraying how climate change might affect California at the state and local level.">
-  <meta property="og:image" content="image.jpg">
+    <meta
+      name="description"
+      content="Cal-Adapt provides a means of exploring peer-reviewed data portraying how climate change might affect California at the state and local level."
+    />
+    <meta property="og:title" content="Cal-Adapt" />
+    <meta
+      property="og:description"
+      content="Cal-Adapt provides a means of exploring peer-reviewed data portraying how climate change might affect California at the state and local level."
+    />
+    <meta property="og:image" content="image.jpg" />
 
-  <link rel="icon" href="/favicon.ico"><!-- 32×32 -->
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png"><!-- 180×180 -->
-  <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#04797c">
+    <link rel="icon" href="/favicon.ico" />
+    <!-- 32×32 -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- 180×180 -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#04797c" />
 
-  <meta name='twitter:card' content='summary_large_image'>
-  <meta name="twitter:site" content="@Cal_Adapt">
-  <meta name="twitter:title" content="Cal-Adapt">
-  <meta name='twitter:image' content='https://cal-adapt.org/twitter-card.png'>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Cal_Adapt" />
+    <meta name="twitter:title" content="Cal-Adapt" />
+    <meta
+      name="twitter:image"
+      content="https://cal-adapt.org/twitter-card.png"
+    />
 
-  <!-- Sapper creates a <script> tag containing `src/client.js`
+    <!-- Sapper creates a <script> tag containing `src/client.js`
        and anything else it needs to hydrate the app and
        initialise the router -->
-  %sapper.scripts%
+    %sapper.scripts%
 
-  <!-- Sapper generates a <style> tag containing critical CSS
+    <!-- Sapper generates a <style> tag containing critical CSS
        for the current page. CSS for the rest of the app is
        lazily loaded when it precaches secondary pages -->
-  %sapper.styles%
+    %sapper.styles%
 
-  <!-- This contains the contents of the <svelte:head> component, if
+    <!-- This contains the contents of the <svelte:head> component, if
        the current page has one -->
-  %sapper.head%
-</head>
-<body>
-  <!-- The application will be rendered inside this element,
+    %sapper.head%
+  </head>
+  <body>
+    <!-- The application will be rendered inside this element,
        because `src/client.js` references it -->
-  <div id="root">%sapper.html%</div>
-</body>
-
+    <div id="root">%sapper.html%</div>
+  </body>
 </html>

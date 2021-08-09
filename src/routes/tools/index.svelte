@@ -1,20 +1,21 @@
 <script>
-  import { fade } from 'svelte/transition';
-  import { categories, tools } from '../../../content/tools/data';
+  import { fade } from "svelte/transition";
+  import { categories, tools } from "../../../content/tools/data";
 
-  import FilterCategories from '../../partials/FilterCategories.svelte';
+  import FilterCategories from "../../partials/FilterCategories.svelte";
 
   $: toolsByCategory = tools;
-
 
   let seletedCategory;
 
   function getToolsByCategory(e) {
     seletedCategory = e.detail.category;
-    if (seletedCategory === 'All') {
+    if (seletedCategory === "All") {
       toolsByCategory = tools;
     } else {
-      toolsByCategory = tools.filter(d => d.categories.includes(seletedCategory));
+      toolsByCategory = tools.filter((d) =>
+        d.categories.includes(seletedCategory)
+      );
     }
   }
 </script>
@@ -37,23 +38,27 @@
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
-        <h1>
-          Climate Tools
-        </h1>
+        <h1>Climate Tools</h1>
         <p class="lead">
-          New to climate data? Start with the <a href="/tools/local-climate-change-snapshot/">
-          Local Climate Change Snapshot Tool</a>
+          New to climate data? Start with the <a
+            href="/tools/local-climate-change-snapshot/"
+          >
+            Local Climate Change Snapshot Tool</a
+          >
         </p>
       </div>
     </div>
-  </div>    
+  </div>
 </section>
 
 <section>
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
-        <FilterCategories {categories} on:change={getToolsByCategory}/>
+        <FilterCategories
+          categories="{categories}"
+          on:change="{getToolsByCategory}"
+        />
       </div>
     </div>
     <div class="bx--row">
@@ -63,7 +68,12 @@
             <div class="card-body">
               <div>
                 {#each opt.icons as icon}
-                  <img src="{icon}" alt="icon" class="icon" style="width:60px;">
+                  <img
+                    src="{icon}"
+                    alt="icon"
+                    class="icon"
+                    style="width:60px;"
+                  />
                 {/each}
               </div>
               <h3>
@@ -72,7 +82,12 @@
               <p>
                 {opt.desc}
               </p>
-              <a class="stretched-link" href='/tools/{opt.slug}/' title='Explore »'> </a>
+              <a
+                class="stretched-link"
+                href="/tools/{opt.slug}/"
+                title="Explore »"
+              >
+              </a>
             </div>
           </div>
         </div>

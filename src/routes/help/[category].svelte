@@ -14,25 +14,25 @@
 </script>
 
 <script>
-  import Help32 from 'carbon-icons-svelte/lib/Help32';
-  import Catalog32 from 'carbon-icons-svelte/lib/Catalog32';
-  import User32 from 'carbon-icons-svelte/lib/User32';
-  import Video32 from 'carbon-icons-svelte/lib/Video32';
-  import { merge } from 'd3-array';
-  import NavBreadcrumb from '../../partials/NavBreadcrumb.svelte';
-  import SidebarRight from '../../partials/SidebarRight.svelte';
-  import { stores } from '@sapper/app';
-  import SidebarLeft from './_SidebarLeft.svelte';
-  import ItemsList from './_ItemsList.svelte';
-  import ItemsAccordion from './_ItemsAccordion.svelte';
+  import Help32 from "carbon-icons-svelte/lib/Help32";
+  import Catalog32 from "carbon-icons-svelte/lib/Catalog32";
+  import User32 from "carbon-icons-svelte/lib/User32";
+  import Video32 from "carbon-icons-svelte/lib/Video32";
+  import { merge } from "d3-array";
+  import NavBreadcrumb from "../../partials/NavBreadcrumb.svelte";
+  import SidebarRight from "../../partials/SidebarRight.svelte";
+  import { stores } from "@sapper/app";
+  import SidebarLeft from "./_SidebarLeft.svelte";
+  import ItemsList from "./_ItemsList.svelte";
+  import ItemsAccordion from "./_ItemsAccordion.svelte";
   import GetStartedPage from "./_GetStartedPage.svelte";
   import SupportFooter from "./_SupportFooter.svelte";
-  
+
   export let data;
   export let toc;
 
   const icons = {
-    'get-started': User32,
+    "get-started": User32,
     tutorials: Video32,
     faqs: Help32,
     glossary: Catalog32,
@@ -40,44 +40,47 @@
 
   const { page } = stores();
 
-  let filter = '';
-  let searchStr = '';
+  let filter = "";
+  let searchStr = "";
   let display;
 
   function makeTopicList(tags) {
-    const filtered = tags.filter(tag => tag !== undefined);
+    const filtered = tags.filter((tag) => tag !== undefined);
     if (filtered.length > 0) {
       const unique = [...new Set(merge(filtered))];
       return unique;
     }
     return [];
   }
-  
+
   $: slug = $page.params.category;
-  $: activeCategory = toc.find(d => d.slug === slug);
+  $: activeCategory = toc.find((d) => d.slug === slug);
   $: filteredItems = data;
-  $: topics = makeTopicList(data.map(d => d.metadata.tags));
+  $: topics = makeTopicList(data.map((d) => d.metadata.tags));
   $: items = [
-    { href: '/', text: 'Home' },
-    { href: '/help/', text: 'Help' },
+    { href: "/", text: "Home" },
+    { href: "/help/", text: "Help" },
     { href: `/help/${activeCategory.slug}`, text: `${activeCategory.title}` },
   ];
-  $: if (activeCategory.slug === 'tutorials' || activeCategory.slug === 'faqs') {
-    display = ['search', 'filters'];
-  } else if (activeCategory.slug === 'glossary') {
-    display = ['search', 'glossary'];
+  $: if (
+    activeCategory.slug === "tutorials" ||
+    activeCategory.slug === "faqs"
+  ) {
+    display = ["search", "filters"];
+  } else if (activeCategory.slug === "glossary") {
+    display = ["search", "glossary"];
   } else {
     display = [];
   }
 
   function filterItems() {
-    filteredItems = data.filter(d => {
+    filteredItems = data.filter((d) => {
       let hasFilter = false;
       let hasSearchStr = false;
-      if ((filter === '') || d.metadata.tags.includes(filter)) {
+      if (filter === "" || d.metadata.tags.includes(filter)) {
         hasFilter = true;
       }
-      if ((searchStr === '') || itemMatchesTerms(d, searchStr)) {
+      if (searchStr === "" || itemMatchesTerms(d, searchStr)) {
         hasSearchStr = true;
       }
       if (hasSearchStr && hasFilter) {
@@ -132,7 +135,7 @@
 
 <div class="page-grid page-grid--help">
   <aside class="sidebar-left">
-    <SidebarLeft {toc} />
+    <SidebarLeft toc="{toc}" />
   </aside>
 
   <nav class="nav" style="padding:1rem 0 0;">
@@ -141,7 +144,7 @@
       <div class="bx--row">
         <div class="bx--col">
           {#if activeCategory}
-            <NavBreadcrumb {items} />
+            <NavBreadcrumb items="{items}" />
           {/if}
         </div>
       </div>
@@ -158,12 +161,12 @@
           </h1>
           <p class="lead">
             {activeCategory.text}
-          </p>              
+          </p>
         </div>
         <div class="bx--col-lg-4 icon-block">
           <div class="icon-circle">
-            <svelte:component this={icons[activeCategory.slug]} /> 
-          </div>           
+            <svelte:component this="{icons[activeCategory.slug]}" />
+          </div>
         </div>
       </div>
     </div>
@@ -172,14 +175,14 @@
   <div class="content {slug === 'get-started' ? 'content-extended' : ''}">
     <div class="bx--grid">
       <!-- Row -->
-      {#if slug === 'get-started'}
+      {#if slug === "get-started"}
         <GetStartedPage />
-      {:else if slug === 'glossary'}
+      {:else if slug === "glossary"}
         <!-- Display items as Accordion -->
-        <ItemsAccordion items={filteredItems} />
+        <ItemsAccordion items="{filteredItems}" />
       {:else}
         <!-- Display items as list -->
-        <ItemsList items={filteredItems} />
+        <ItemsList items="{filteredItems}" />
       {/if}
     </div>
   </div>
@@ -188,12 +191,10 @@
 
   <aside class="sidebar-right">
     <SidebarRight
-      {display}
-      filters={topics}
-      on:search={updateSearch}
-      on:filter={updateFilter} />
+      display="{display}"
+      filters="{topics}"
+      on:search="{updateSearch}"
+      on:filter="{updateFilter}"
+    />
   </aside>
 </div>
-
-
-

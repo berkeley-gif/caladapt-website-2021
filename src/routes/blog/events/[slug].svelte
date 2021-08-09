@@ -14,18 +14,18 @@
 </script>
 
 <script>
-  import NavBreadcrumb from '../../../partials/NavBreadcrumb.svelte';
-  import LogoTwitter32 from 'carbon-icons-svelte/lib/LogoTwitter32';
-  import Email32 from 'carbon-icons-svelte/lib/Email32';
+  import NavBreadcrumb from "../../../partials/NavBreadcrumb.svelte";
+  import LogoTwitter32 from "carbon-icons-svelte/lib/LogoTwitter32";
+  import Email32 from "carbon-icons-svelte/lib/Email32";
   export let event;
 
   $: items = [
-    { href: '/', text: 'Home' },
-    { href: '/blog/', text: 'Blog' },
-    { href: '/blog/events/', text: 'Events' },
+    { href: "/", text: "Home" },
+    { href: "/blog/", text: "Blog" },
+    { href: "/blog/events/", text: "Events" },
     {
-      href: '',
-      text: `${event.metadata.title}`
+      href: "",
+      text: `${event.metadata.title}`,
     },
   ];
 </script>
@@ -65,11 +65,14 @@
 </svelte:head>
 
 <div class="banner-breadcrumbs">
-  <NavBreadcrumb {items} />
+  <NavBreadcrumb items="{items}" />
 </div>
 
 <!-- Banner -->
-<section class="banner overlay overlay-gradient-gray-blue overlay-60" style="background-image: url(/img/blog/webinar.jpg);">
+<section
+  class="banner overlay overlay-gradient-gray-blue overlay-60"
+  style="background-image: url(/img/blog/webinar.jpg);"
+>
   <div class="bx--grid">
     <!-- Row -->
     <div class="bx--row">
@@ -77,7 +80,7 @@
         <h1>{event.metadata.title}</h1>
       </div>
     </div>
-  </div>    
+  </div>
 </section>
 
 <div class="event">
@@ -85,9 +88,7 @@
     <!-- Row -->
     <div class="bx--row">
       <div class="bx--offset-lg-3 bx--col-lg-10 metadata">
-        <p><time class="lead time" datetime>
-          
-        </time></p>
+        <p><time class="lead time" datetime> </time></p>
       </div>
     </div>
     <!-- Row -->
@@ -99,10 +100,12 @@
     <!-- Row -->
     <div class="bx--row">
       <div class="bx--offset-lg-3 bx--col-lg-10">
-        <hr/>
+        <hr />
         <div class="share">
           <div class="social">
-            <span style="margin-bottom:0.75rem;">Interested in this event? Share it.</span>
+            <span style="margin-bottom:0.75rem;"
+              >Interested in this event? Share it.</span
+            >
             <ul class="list-social">
               <li>
                 <a href="https://twitter.com/cal_adapt" title="Twitter">
@@ -118,26 +121,9 @@
           </div>
           <div class="back">
             <p><a href="/blog/">Back to Cal-Adapt Blog</a></p>
-          </div>          
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

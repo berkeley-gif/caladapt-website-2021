@@ -6,7 +6,7 @@
     const el = document.getElementById(currentView);
     window.scrollTo({
       top: el.offsetTop - 50,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }
 </script>
@@ -53,7 +53,8 @@
 <div class="header">
   <h1>Annual Averages</h1>
   <p class="lead">
-    Explore projected changes in annual average Maximum Temperature, Minimum Temperature and Precipitation through end of this century for California.
+    Explore projected changes in annual average Maximum Temperature, Minimum
+    Temperature and Precipitation through end of this century for California.
   </p>
 </div>
 <div class="secondary-nav is-sticky">
@@ -61,31 +62,34 @@
     <li
       data-section="select"
       class="link"
-      class:active={currentView === 'select' ? true : false}
-      on:click={selectView} >
+      class:active="{currentView === 'select' ? true : false}"
+      on:click="{selectView}"
+    >
       Explore Data
     </li>
     <li
       data-section="about"
       class="link"
-      class:active={currentView === 'about' ? true : false}
-      on:click={selectView}>
+      class:active="{currentView === 'about' ? true : false}"
+      on:click="{selectView}"
+    >
       About the Tool
     </li>
     <li
       data-section="data"
       class="link"
-      class:active={currentView === 'data' ? true : false}
-      on:click={selectView}>
+      class:active="{currentView === 'data' ? true : false}"
+      on:click="{selectView}"
+    >
       Data Sources
     </li>
     <li
       data-section="resources"
       class="link"
-      class:active={currentView === 'resources' ? true : false}
-      on:click={selectView}>
+      class:active="{currentView === 'resources' ? true : false}"
+      on:click="{selectView}"
+    >
       Resources
     </li>
   </ul>
 </div>
-

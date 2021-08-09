@@ -1,7 +1,7 @@
 <script>
-  import Nav from '../partials/Nav.svelte';
-  import Footer from '../partials/Footer.svelte';
-  import BackToTop from '../partials/BackToTop.svelte';
+  import Nav from "../partials/Nav.svelte";
+  import Footer from "../partials/Footer.svelte";
+  import BackToTop from "../partials/BackToTop.svelte";
   export let segment;
 </script>
 
@@ -13,10 +13,10 @@
   <a href="#main-content">Skip to Main Content</a>
 </div>
 
-<Nav {segment}/>
+<Nav segment="{segment}" />
 
 <main id="main-content">
-  <slot></slot>
+  <slot />
 </main>
 
 <BackToTop />

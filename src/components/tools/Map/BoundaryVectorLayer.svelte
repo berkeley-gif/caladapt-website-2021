@@ -1,6 +1,6 @@
 <script>
-  import { getContext } from 'svelte';
-  import { contextKey } from './../../../helpers/mapbox';
+  import { getContext } from "svelte";
+  import { contextKey } from "./../../../helpers/mapbox";
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
@@ -13,7 +13,7 @@
     if (!lastBoundary) {
       return;
     }
-    lastBoundary.layout.visibility = 'none ';
+    lastBoundary.layout.visibility = "none ";
     map.removeLayer(lastBoundary.id);
     if (map.getSource(lastBoundary.id)) {
       map.removeSource(lastBoundary.id);
@@ -22,7 +22,7 @@
 
   function addBoundary() {
     removePreviousSelection();
-    if (!boundary || boundary.id === 'locagrid' || boundary.id === 'ca') {
+    if (!boundary || boundary.id === "locagrid" || boundary.id === "ca") {
       lastBoundary = null;
       return;
     }

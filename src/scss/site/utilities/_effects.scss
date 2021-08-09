@@ -1,10 +1,10 @@
 .shadow {
-  box-shadow: 0 .125rem .25rem rgba($black, .075);
+  box-shadow: 0 0.125rem 0.25rem rgba($black, 0.075);
 }
 
 // Lift
 .lift {
-  transition: box-shadow .25s ease, transform .25s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .lift:hover,
@@ -14,9 +14,9 @@
 }
 
 .center {
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 hr {

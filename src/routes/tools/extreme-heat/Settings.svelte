@@ -1,18 +1,18 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from "svelte";
   import {
     Button,
     Accordion,
     AccordionItem,
     NumberInput,
-  } from 'carbon-components-svelte';
-  import ArrowRight16 from 'carbon-icons-svelte/lib/ArrowRight16';
-  import ArrowLeft16 from 'carbon-icons-svelte/lib/ArrowLeft16';
-  import { fly } from 'svelte/transition';
+  } from "carbon-components-svelte";
+  import ArrowRight16 from "carbon-icons-svelte/lib/ArrowRight16";
+  import ArrowLeft16 from "carbon-icons-svelte/lib/ArrowLeft16";
+  import { fly } from "svelte/transition";
 
   // Helpers
-  import { climvarList, modelList, scenarioList } from './_helpers';
-  import { debounce } from '../../../helpers/utilities';
+  import { climvarList, modelList, scenarioList } from "./_helpers";
+  import { debounce } from "../../../helpers/utilities";
 
   // Components
   import {
@@ -21,7 +21,7 @@
     SelectClimvar,
     SelectThreshold,
     ShowDefinition,
-   } from '../../../components/tools/Settings';
+  } from "../../../components/tools/Settings";
 
   // Store
   import {
@@ -31,7 +31,7 @@
     thresholdStore,
     periodStore,
     thresholdListStore,
-  } from './_store';
+  } from "./_store";
 
   export let sidebarCollapsed;
 
@@ -41,37 +41,37 @@
 
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
-    console.log('scenario change');
+    console.log("scenario change");
   }
 
   function changeModels(e) {
-    modelsStore.set(e.detail.selectedIds.join(','));
-    console.log('models change');
+    modelsStore.set(e.detail.selectedIds.join(","));
+    console.log("models change");
   }
 
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
-    console.log('climvar change');
+    console.log("climvar change");
   }
 
   function changeThreshold(e) {
     thresholdStore.set(e.detail);
-    console.log('threshold change');
+    console.log("threshold change");
   }
 
   function addThreshold(e) {
     thresholdListStore.add(e.detail);
-    console.log('threshold add');
+    console.log("threshold add");
   }
 
   const changePeriod = debounce((e) => {
-    console.log('period change');
-    periodStore.set(e.detail)
+    console.log("period change");
+    periodStore.set(e.detail);
   }, 1000);
 
   onMount(() => {
-    dispatch('ready');
-  })
+    dispatch("ready");
+  });
 </script>
 
 <style lang="scss">
@@ -82,7 +82,7 @@
   }
 
   :global(.bx--accordion__title::before) {
-    content: '';
+    content: "";
     background: url(img/icons/gear.svg);
     display: inline-block;
     height: 1rem;
@@ -107,80 +107,73 @@
       tooltipPosition="left"
       tooltipAlignment="end"
       iconDescription="Show Settings Panel"
-      icon={ArrowLeft16}
+      icon="{ArrowLeft16}"
       kind="primary"
       size="sm"
-      on:click={() => sidebarCollapsed = false}>
-    </Button>
+      on:click="{() => (sidebarCollapsed = false)}"
+    />
   </div>
 {:else}
-  <div class="settings" transition:fly={{x: 250, opacity: 1}}> 
+  <div class="settings" transition:fly="{{ x: 250, opacity: 1 }}">
     <div class="settings-header">
       <h5>Settings</h5>
       <Button
         tooltipPosition="left"
         tooltipAlignment="end"
         iconDescription="Hide Settings Panel"
-        icon={ArrowRight16}
+        icon="{ArrowRight16}"
         kind="primary"
-        on:click={() => sidebarCollapsed = true}>
-      </Button>
+        on:click="{() => (sidebarCollapsed = true)}"
+      />
     </div>
     <Accordion class="settings-list">
       <AccordionItem open title="Climate Variable">
         <SelectClimvar
-          selectedId={$climvarStore}
-          items={climvarList}
-          on:change={changeClimvar}
+          selectedId="{$climvarStore}"
+          items="{climvarList}"
+          on:change="{changeClimvar}"
         />
         <ShowDefinition
           on:define
-          topics={["extreme-heat-day", "warm-night"]} />
+          topics="{['extreme-heat-day', 'warm-night']}"
+        />
       </AccordionItem>
       <AccordionItem open title="Scenario">
         <SelectScenario
-          selectedId={$scenarioStore}
-          items={scenarioList}
-          on:change={changeScenario}
+          selectedId="{$scenarioStore}"
+          items="{scenarioList}"
+          on:change="{changeScenario}"
         />
-        <ShowDefinition
-          on:define
-          topics={["climate-scenarios"]} />
+        <ShowDefinition on:define topics="{['climate-scenarios']}" />
       </AccordionItem>
       <AccordionItem open title="Threshold Temperature">
         <SelectThreshold
-          items={$thresholdListStore}
-          selected={$thresholdStore}
-          units={$climvar.units.imperial}
-          on:change={changeThreshold}
-          on:add={addThreshold}
+          items="{$thresholdListStore}"
+          selected="{$thresholdStore}"
+          units="{$climvar.units.imperial}"
+          on:change="{changeThreshold}"
+          on:add="{addThreshold}"
         />
-        <ShowDefinition
-          on:define
-          topics={["extreme-heat-threshold"]} />
+        <ShowDefinition on:define topics="{['extreme-heat-threshold']}" />
       </AccordionItem>
       <AccordionItem title="Heat Wave Length">
         <NumberInput
-          min={2}
-          max={7}
+          min="{2}"
+          max="{7}"
           hideLabel
           helperText="Enter a number between 2-7"
-          value={$periodStore}
-          on:change={changePeriod}
+          value="{$periodStore}"
+          on:change="{changePeriod}"
         />
-        <ShowDefinition
-          on:define
-          topics={["heat-wave-event"]} />
+        <ShowDefinition on:define topics="{['heat-wave-event']}" />
       </AccordionItem>
       <AccordionItem title="Models">
-        <SelectModels 
-          selectedIds={$modelsStore}
-          items={modelList}
-          on:change={changeModels}
+        <SelectModels
+          selectedIds="{$modelsStore}"
+          items="{modelList}"
+          on:change="{changeModels}"
         />
-        <ShowDefinition
-          on:define
-          topics={["gcms"]} />
+        <ShowDefinition on:define topics="{['gcms']}" />
       </AccordionItem>
     </Accordion>
   </div>

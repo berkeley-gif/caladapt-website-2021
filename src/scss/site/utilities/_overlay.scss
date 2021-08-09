@@ -5,7 +5,10 @@
   &::before {
     content: "";
     position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     border-radius: inherit;
   }
 }
@@ -50,12 +53,11 @@
     #0f4b63 91.9%,
     #074e67 100%
   );
-};
+}
 
 // Opacity
 @for $i from 1 through 9 {
   .overlay-#{$i * 10} {
-
     &::before {
       opacity: #{$i / 10};
     }

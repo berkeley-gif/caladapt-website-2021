@@ -1,17 +1,16 @@
 <script>
   // Node modules
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   // Components
-  import { Button, Checkbox } from 'carbon-components-svelte';
+  import { Button, Checkbox } from "carbon-components-svelte";
 
   // Helpers
-  import layers from './../../../helpers/mapbox-layers';
+  import layers from "./../../../helpers/mapbox-layers";
 
   // Props
   //-------
   export let open = true;
-
 
   // Local variables
   //-----------------
@@ -20,7 +19,7 @@
   // Inlcudes Electric Infrastructure layers only
   // Natural gas layers no longer available online for public download
   const utilities = layers
-    .filter((d) => d.metadata.group === 'Electric Infrastructure')
+    .filter((d) => d.metadata.group === "Electric Infrastructure")
     .map((d) => {
       const layer = d;
       layer.name = d.metadata.title;
@@ -29,7 +28,7 @@
 
   // Environmental layers
   const environmental = layers
-    .filter((d) => d.metadata.group === 'Environmental')
+    .filter((d) => d.metadata.group === "Environmental")
     .map((d) => {
       const layer = d;
       layer.name = d.metadata.title;
@@ -46,7 +45,7 @@
         return;
       }
     });
-    dispatch('toggleLayer', { layer, show }); 
+    dispatch("toggleLayer", { layer, show });
   }
 </script>
 
@@ -67,9 +66,9 @@
     font-size: 1rem;
     text-transform: uppercase;
   }
-                 
+
   .group {
-    border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid #ccc;
     padding: 5px;
   }
 
@@ -90,7 +89,6 @@
 
 <div class="map-ui">
   <div class="layers-ui">
-
     <div class="header">
       <Button
         style="padding: 0 5px;min-height: 0;"
@@ -98,10 +96,11 @@
         ariaLabel="Close"
         title="Close"
         class="close"
-        on:click={() => {
+        on:click="{() => {
           open = false;
           dispatch('close');
-        }}>
+        }}"
+      >
         <span aria-hidden="true">&times;</span>
       </Button>
       <span>Map Layers</span>
@@ -110,26 +109,29 @@
     <div class="group environmental">
       {#each environmental as opt, i}
         <Checkbox
-          labelText={opt.metadata.title}
-          id={`toggle-${opt.id}`}
+          labelText="{opt.metadata.title}"
+          id="{`toggle-${opt.id}`}"
           size="sm"
-          on:check={({ detail }) => toggleLayer(detail, opt.id)}
+          on:check="{({ detail }) => toggleLayer(detail, opt.id)}"
         />
       {/each}
     </div>
-   <!-- Electric Infrastructure Layers -->
+    <!-- Electric Infrastructure Layers -->
     <div class="group utilities">
       <span class="group-title">Electric Infrastructure</span>
       {#each utilities as opt, i}
         <Checkbox
-          labelText={opt.metadata.title}
-          id={`toggle-${opt.id}`}
+          labelText="{opt.metadata.title}"
+          id="{`toggle-${opt.id}`}"
           size="sm"
-          on:check={({ detail }) => toggleLayer(detail, opt.id)}
+          on:check="{({ detail }) => toggleLayer(detail, opt.id)}"
         />
       {/each}
       <div class="group-source">
-        Source: <a href="https://cecgis-caenergy.opendata.arcgis.com/" target="_blank">CEC GIS Open Data</a>
+        Source: <a
+          href="https://cecgis-caenergy.opendata.arcgis.com/"
+          target="_blank">CEC GIS Open Data</a
+        >
       </div>
     </div>
     <!-- Natural Gas Layers -->
@@ -137,10 +139,17 @@
       <span class="group-title">Natural Gas</span>
       <div class="group-source">
         <span>
-          View data for natural gas transmission & hazardous liuid pipelines, LNG plants and breakout tanks at <a href="https://pvnpms.phmsa.dot.gov/PublicViewer/" target="_blank">NPMS Public Map Viewer</a>          
+          View data for natural gas transmission & hazardous liuid pipelines,
+          LNG plants and breakout tanks at <a
+            href="https://pvnpms.phmsa.dot.gov/PublicViewer/"
+            target="_blank">NPMS Public Map Viewer</a
+          >
         </span>
         <span>
-          For more information in accessing underlying data see <a href="https://www.npms.phmsa.dot.gov/DataMayAccess.aspx" target="_blank">What NPMS data may I access?</a>          
+          For more information in accessing underlying data see <a
+            href="https://www.npms.phmsa.dot.gov/DataMayAccess.aspx"
+            target="_blank">What NPMS data may I access?</a
+          >
         </span>
       </div>
     </div>

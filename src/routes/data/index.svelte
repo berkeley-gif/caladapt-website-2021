@@ -1,5 +1,4 @@
 <script>
-
 </script>
 
 <style>
@@ -20,16 +19,15 @@
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
-        <h1>
-          Climate Data
-        </h1>
+        <h1>Climate Data</h1>
         <p class="lead">
-          We provide several ways to download data. <a href="/help/faqs/how-can-i-download-data/">Learn more</a>.
+          We provide several ways to download data. <a
+            href="/help/faqs/how-can-i-download-data/">Learn more</a
+          >.
         </p>
       </div>
     </div>
-  </div>    
+  </div>
 </section>
 
-<section class="page-content">
-</section>
+<section class="page-content"></section>

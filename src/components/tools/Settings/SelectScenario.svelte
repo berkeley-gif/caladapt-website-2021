@@ -1,26 +1,26 @@
 <script>
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher, onMount } from "svelte";
   import {
     RadioButtonGroup,
     RadioButton,
     RadioButtonSkeleton,
-  } from 'carbon-components-svelte';
+  } from "carbon-components-svelte";
 
   export let selectedId;
   export let items;
 
   const dispatch = createEventDispatcher();
-  let selected = items.find(d => d.id === selectedId);
+  let selected = items.find((d) => d.id === selectedId);
   let ready = false;
 
   function change(e) {
-    selected = items.find(d => d.id === e.detail);
-    dispatch('change', selected);
+    selected = items.find((d) => d.id === e.detail);
+    dispatch("change", selected);
   }
-  
+
   onMount(() => {
     ready = true;
-    dispatch('ready');
+    dispatch("ready");
   });
 </script>
 
@@ -29,12 +29,13 @@
     <RadioButtonGroup
       class="scenario-select"
       orientation="vertical"
-      selected={selectedId}
-      on:change={change}>
+      selected="{selectedId}"
+      on:change="{change}"
+    >
       {#each items as opt}
-        <RadioButton labelText={opt.label} value={opt.id}/>  
+        <RadioButton labelText="{opt.label}" value="{opt.id}" />
       {/each}
-    </RadioButtonGroup>    
+    </RadioButtonGroup>
   </div>
 {:else}
   <RadioButtonGroup orientation="vertical">

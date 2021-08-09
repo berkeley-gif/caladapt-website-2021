@@ -5,8 +5,8 @@
 export default class CustomControl {
   constructor(options = {}) {
     this.options = {
-      className: 'toggle-layers',
-      title: 'Layers',
+      className: "toggle-layers",
+      title: "Layers",
       // style: 'width:60px;font-size:0.9rem;',
       iconPath: `M32 10l-16-8-16 8 16 8 16-8zM16 4.655l10.689 5.345-10.689 
       5.345-10.689-5.345 10.689-5.345zM28.795 14.398l3.205 1.602-16 8-16-8 
@@ -19,18 +19,18 @@ export default class CustomControl {
   }
 
   onAdd(map) {
-    if (map && typeof map !== 'string') {
+    if (map && typeof map !== "string") {
       this.map = map;
     }
 
     if (!this.options.groupContainer) {
-      this.container = document.createElement('div');
-      this.container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+      this.container = document.createElement("div");
+      this.container.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
     } else {
       this.container = this.options.groupContainer;
     }
 
-    this.button = document.createElement('button');
+    this.button = document.createElement("button");
     this.button.className = `mapboxgl-ctrl-${this.options.className}`;
     this.button.title = this.options.title;
     this.button.onclick = this.options.eventHandler;
@@ -52,11 +52,11 @@ export default class CustomControl {
   }
 
   createIcon(path) {
-    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    icon.setAttribute('viewBox', '0 0 32 32');
-    icon.setAttribute('xml:space', 'preserve');
-    icon.setAttribute('width', 18);
-    icon.setAttribute('height', 18);
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("viewBox", "0 0 32 32");
+    icon.setAttribute("xml:space", "preserve");
+    icon.setAttribute("width", 18);
+    icon.setAttribute("height", 18);
     icon.innerHTML = path;
     return icon;
   }

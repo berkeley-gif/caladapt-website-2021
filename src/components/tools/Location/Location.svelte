@@ -1,12 +1,22 @@
 <script>
   // Node modules
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   // Components
-  import { Map, Marker, LayerToggle, NavigationControl, AttributionControl, ScalingControl, BoundaryVectorLayer, BoundarySelection, ImageOverlay, VectorLayer } from './../Map';
-  import Sidebar from './Sidebar.svelte';
-  import { InlineLoading } from 'carbon-components-svelte';
-
+  import {
+    Map,
+    Marker,
+    LayerToggle,
+    NavigationControl,
+    AttributionControl,
+    ScalingControl,
+    BoundaryVectorLayer,
+    BoundarySelection,
+    ImageOverlay,
+    VectorLayer,
+  } from "./../Map";
+  import Sidebar from "./Sidebar.svelte";
+  import { InlineLoading } from "carbon-components-svelte";
 
   // Props
   //------
@@ -17,9 +27,9 @@
   export let maxZoom = 22;
   export let flyToOnLoad = true;
   export let attributionControl = false;
-  export let style = 'mapbox://styles/cal-adapt/cjivy3e8o6d9y2rnnhsqo0sj0';
+  export let style = "mapbox://styles/cal-adapt/cjivy3e8o6d9y2rnnhsqo0sj0";
   export let attributionOptions = {
-    customAttribution: ['Cal-Adapt'],
+    customAttribution: ["Cal-Adapt"],
   };
   export let boundary;
   export let location;
@@ -29,7 +39,6 @@
   export let imageOverlayCoords;
   export let zoomToLocationOnLoad = true;
   export let stations;
-
 
   // Local variables
   //-----------------
@@ -49,11 +58,11 @@
   let mapError = null;
   let isMapLoading = true;
   let overlays = [];
-  
+
   // Reactive functionality
   //------------------------
   $: if (mapError) {
-    dispatch('error', {
+    dispatch("error", {
       message: mapError,
     });
   }
@@ -62,7 +71,7 @@
     if (zoomToLocationOnLoad) {
       zoomToLocation();
     }
-    dispatch('ready');
+    dispatch("ready");
   }
 
   $: location, zoomToLocation();
@@ -71,7 +80,6 @@
     mapComponent.resize();
   }
 
-
   // Functions
   //------------------------
   function toggleMapLayer(e) {
@@ -79,7 +87,7 @@
     if (show) {
       overlays = [...overlays, layer];
     } else {
-      overlays = overlays.filter(d => d === layer.id);
+      overlays = overlays.filter((d) => d === layer.id);
     }
   }
 
@@ -87,7 +95,7 @@
     if (!mapComponent || isMapLoading || !location) {
       return;
     }
-    mapComponent.zoomToExtent(location.bbox)
+    mapComponent.zoomToExtent(location.bbox);
   }
 
   function handleClick(e) {
@@ -95,11 +103,11 @@
     const { lngLat } = e.detail.event;
     const lng = lngLat.lng.toFixed(4);
     const lat = lngLat.lat.toFixed(4);
-    dispatch('mapclick', [+lng, +lat]);
+    dispatch("mapclick", [+lng, +lat]);
   }
 
   function handleOverlayClick(e) {
-    dispatch('overlayclick', e.detail);
+    dispatch("overlayclick", e.detail);
   }
 </script>
 
@@ -141,52 +149,64 @@
 </style>
 
 <div class="location">
-  <div class="location-sidebar" class:expand={sidebarOpen}>
+  <div class="location-sidebar" class:expand="{sidebarOpen}">
     <Sidebar
-      open={sidebarOpen}
-      on:close = {() => {
+      open="{sidebarOpen}"
+      on:close="{() => {
         sidebarOpen = false;
-      }}
-      on:toggleLayer={toggleMapLayer}
+      }}"
+      on:toggleLayer="{toggleMapLayer}"
     />
   </div>
-  <div class="location-content" class:shrink={sidebarOpen}>
+  <div class="location-content" class:shrink="{sidebarOpen}">
     {#if isMapLoading}
       <InlineLoading description="Loading map..." />
     {/if}
     <Map
-      bind:this={mapComponent}
+      bind:this="{mapComponent}"
       {...options}
-      {style}
-      on:click={handleClick}
-      on:ready={() => {
+      style="{style}"
+      on:click="{handleClick}"
+      on:ready="{() => {
         isMapLoading = false;
-      }}
-      >
-      <LayerToggle on:layerToggleClick={() => {
-        sidebarOpen = !sidebarOpen;
-      }} />
+      }}"
+    >
+      <LayerToggle
+        on:layerToggleClick="{() => {
+          sidebarOpen = !sidebarOpen;
+        }}"
+      />
       <NavigationControl />
-      <AttributionControl options={attributionOptions} />
+      <AttributionControl options="{attributionOptions}" />
       <ScalingControl />
       {#if boundary}
-        <BoundaryVectorLayer {boundary} />
+        <BoundaryVectorLayer boundary="{boundary}" />
       {/if}
       {#if location}
-        {#if location.geometry.type === 'Point'}
-          <Marker data={location.geometry.coordinates} label={location.title} />
+        {#if location.geometry.type === "Point"}
+          <Marker
+            data="{location.geometry.coordinates}"
+            label="{location.title}"
+          />
         {:else}
-          <BoundarySelection data={location.geometry} />
+          <BoundarySelection data="{location.geometry}" />
         {/if}
       {/if}
       {#if imageOverlayShow}
-        <ImageOverlay coordinates={imageOverlayCoords} overlay={imageOverlayUrl} />
+        <ImageOverlay
+          coordinates="{imageOverlayCoords}"
+          overlay="{imageOverlayUrl}"
+        />
       {/if}
       {#if stations}
-        <VectorLayer layer={stations} enableClick={true} on:overlayclick={handleOverlayClick} />
+        <VectorLayer
+          layer="{stations}"
+          enableClick="{true}"
+          on:overlayclick="{handleOverlayClick}"
+        />
       {/if}
       {#each overlays as overlay (overlay.id)}
-        <VectorLayer layer={overlay} />
+        <VectorLayer layer="{overlay}" />
       {/each}
     </Map>
   </div>

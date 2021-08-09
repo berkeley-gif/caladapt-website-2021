@@ -1,44 +1,50 @@
-.h1, h1 {
+.h1,
+h1 {
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style('display-01', false);
+  @include type-style("display-01", false);
 }
 
-.h2, h2 {
+.h2,
+h2 {
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style('expressive-heading-05', false);
+  @include type-style("expressive-heading-05", false);
 }
 
-.h3, h3 {
+.h3,
+h3 {
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style('expressive-heading-04', false);
+  @include type-style("expressive-heading-04", false);
 }
 
-.h4, h4 {
+.h4,
+h4 {
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style('expressive-heading-03', false);
+  @include type-style("expressive-heading-03", false);
 }
 
-.h5, h5,
-.h6, h6 {
+.h5,
+h5,
+.h6,
+h6 {
   // h5 and h6 intentionally mimic one another
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style('productive-heading-02', false);
+  @include type-style("productive-heading-02", false);
 }
 
 p {
-  @include type-style('body-long-02', false);
+  @include type-style("body-long-02", false);
   margin-bottom: $spacing-md;
 }
 
 p.lead {
   margin-top: $spacing-md;
   margin-bottom: $spacing-md;
-  @include type-style('expressive-paragraph-01', false);
+  @include type-style("expressive-paragraph-01", false);
 }
 
 p.feedback {
@@ -63,7 +69,7 @@ blockquote {
     padding: 2rem 2rem 0;
   }
   p {
-    @include type-style('quotation-01', false);
+    @include type-style("quotation-01", false);
     margin-bottom: 0;
     padding: 2rem 2rem 0;
   }
@@ -71,11 +77,11 @@ blockquote {
 
 figure {
   margin: 2rem;
-  
+
   figcaption {
     color: $gray-70;
     padding: 2rem;
-    @include type-style('body-short-02', false);
+    @include type-style("body-short-02", false);
   }
 
   img {
@@ -98,8 +104,8 @@ figure {
 
   .report {
     max-height: 250px;
-    width:auto;
-    border: 4px solid $teal-20;  
+    width: auto;
+    border: 4px solid $teal-20;
   }
 }
 
@@ -121,8 +127,9 @@ $weights: (
   }
 }
 
-ul, ol {
-  @include type-style('body-long-02', false);
+ul,
+ol {
+  @include type-style("body-long-02", false);
   list-style: inherit;
   line-height: 1.6;
 }

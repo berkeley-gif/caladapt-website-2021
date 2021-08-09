@@ -1,7 +1,7 @@
 <script>
-  import { getContext } from 'svelte';
+  import { getContext } from "svelte";
 
-  const { xGet, yGet, xScale, yScale } = getContext('LayerCake');
+  const { xGet, yGet, xScale, yScale } = getContext("LayerCake");
 
   export let series;
   export let r = 4;
@@ -9,9 +9,9 @@
   export let fillOpacity = 0.5;
   export let dx = 0;
   export let dy = 0;
- 
+
   let show = true;
-  const legendItems = getContext('Legend');
+  const legendItems = getContext("Legend");
 
   $: $legendItems.forEach((d) => {
     if (d.key === series.key) {
@@ -23,19 +23,16 @@
 </script>
 
 {#if show}
-  <g class={`${series.key}`}>
+  <g class="{`${series.key}`}">
     {#each data as d}
       <circle
-        cx={$xGet(d) + (typeof dx === 'function' ? dx($xScale) : dx)}
-        cy={$yGet(d) + (typeof dy === 'function' ? dy($yScale) : dy)}
-        {r}
-        fill={series.color}
-        fill-opacity={fillOpacity}
-        stroke={series.color}
-        stroke-width={strokeWidth}
-      />
+        cx="{$xGet(d) + (typeof dx === 'function' ? dx($xScale) : dx)}"
+        cy="{$yGet(d) + (typeof dy === 'function' ? dy($yScale) : dy)}"
+        r="{r}"
+        fill="{series.color}"
+        fill-opacity="{fillOpacity}"
+        stroke="{series.color}"
+        stroke-width="{strokeWidth}"></circle>
     {/each}
   </g>
 {/if}
-
-

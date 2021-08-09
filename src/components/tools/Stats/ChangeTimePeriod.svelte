@@ -1,18 +1,18 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import { range } from 'd3-array';
+  import { createEventDispatcher } from "svelte";
+  import { range } from "d3-array";
   import {
     FormGroup,
     RadioButtonGroup,
     RadioButton,
     ComboBox,
     Modal,
-  } from 'carbon-components-svelte';
+  } from "carbon-components-svelte";
 
   export let historicalOnly = false;
   export let open = false;
 
-  let selected = 'baseline';
+  let selected = "baseline";
   let yearRange;
 
   const dispatch = createEventDispatcher();
@@ -21,7 +21,7 @@
   } else {
     yearRange = range(1950, 2100, 1);
   }
-  const items = yearRange.map(d => ({ id: d, text: `${d}` }));
+  const items = yearRange.map((d) => ({ id: d, text: `${d}` }));
 
   let startYear_selectedIndex = -1;
   let endYear_selectedIndex = -1;
@@ -30,7 +30,7 @@
   function updateLinkedList() {
     if (startYear_selectedIndex < 0) {
       filteredItems = items;
-      endYear_selectedIndex = -1
+      endYear_selectedIndex = -1;
     } else {
       filteredItems = items.splice(startYear_selectedIndex + 1);
     }
@@ -48,29 +48,28 @@
     let start;
     let end;
     switch (selected) {
-      case 'midcentury':
-
+      case "midcentury":
         start = 2035;
         end = 2064;
-        period = 'Mid-Century';
+        period = "Mid-Century";
         break;
-      case 'endcentury':
+      case "endcentury":
         start = 2070;
         end = 2099;
-        period = 'End of Century';
-        break;  
-      case 'custom':
+        period = "End of Century";
+        break;
+      case "custom":
         start = items[startYear_selectedIndex].text;
         end = filteredItems[endYear_selectedIndex].text;
-        period = '';
+        period = "";
         break;
       default:
         start = 1961;
         end = 1990;
-        period = 'Baseline';
+        period = "Baseline";
     }
-    dispatch('change', { period, range: [start, end] });
-  };
+    dispatch("change", { period, range: [start, end] });
+  }
 </script>
 
 <style>
@@ -84,44 +83,50 @@
 <Modal
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (open = false)}
+  on:click:button--secondary="{() => (open = false)}"
   bind:open
   modalHeading="Change Time Period"
-  on:submit={update}
+  on:submit="{update}"
   on:open
-  on:close>
-    <RadioButtonGroup orientation="vertical" bind:selected>
-      <RadioButton labelText="Baseline (1961-1990)" value="baseline" />
-      {#if !historicalOnly}
+  on:close
+>
+  <RadioButtonGroup orientation="vertical" bind:selected>
+    <RadioButton labelText="Baseline (1961-1990)" value="baseline" />
+    {#if !historicalOnly}
       <RadioButton labelText="Mid-Century (2035-2064)" value="midcentury" />
       <RadioButton labelText="End-Century (2070-2099)" value="endcentury" />
-      {/if}
-      <RadioButton labelText="Enter custom year range" value="custom" />
-    </RadioButtonGroup>
-
-    {#if selected === 'custom'}
-      <div class='year-select'>
-        <ComboBox
-          bind:selectedIndex={startYear_selectedIndex}
-          titleText="Start"
-          placeholder="Select start year"
-          items={items}
-          {shouldFilterItem}
-        />
-        <ComboBox
-          bind:selectedIndex={endYear_selectedIndex}
-          titleText="End"
-          placeholder="Select end year"
-          items={filteredItems}
-        />
-      </div>
     {/if}
+    <RadioButton labelText="Enter custom year range" value="custom" />
+  </RadioButtonGroup>
 
-    <p style="margin-top:1.5rem;">
-      <strong>Scientists recommend looking at a period of at least a few decades like a 30 year period.</strong>
-    </p>
-    <p>
-      Future climate projections express natural climate variability. If you analyze just a few years of a future climate projection, you might happen to select years that are anomalous. Analyzing a longer time selected gives you a better sense of overall future conditions.
-    </p>  
+  {#if selected === "custom"}
+    <div class="year-select">
+      <ComboBox
+        bind:selectedIndex="{startYear_selectedIndex}"
+        titleText="Start"
+        placeholder="Select start year"
+        items="{items}"
+        shouldFilterItem="{shouldFilterItem}"
+      />
+      <ComboBox
+        bind:selectedIndex="{endYear_selectedIndex}"
+        titleText="End"
+        placeholder="Select end year"
+        items="{filteredItems}"
+      />
+    </div>
+  {/if}
+
+  <p style="margin-top:1.5rem;">
+    <strong
+      >Scientists recommend looking at a period of at least a few decades like a
+      30 year period.</strong
+    >
+  </p>
+  <p>
+    Future climate projections express natural climate variability. If you
+    analyze just a few years of a future climate projection, you might happen to
+    select years that are anomalous. Analyzing a longer time selected gives you
+    a better sense of overall future conditions.
+  </p>
 </Modal>
-

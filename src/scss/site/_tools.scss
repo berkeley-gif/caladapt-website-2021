@@ -1,11 +1,11 @@
 .tool {
-	.section {
+  .section {
     margin: 4rem 2rem;
     min-height: 300px;
   }
 
   .block {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0 2px 3px rgba(22, 28, 45, 0.2);
     padding: 1rem;
 
@@ -28,7 +28,8 @@
       max-width: 75%;
     }
 
-    .bx--inline-notification__title, .bx--inline-notification__subtitle {
+    .bx--inline-notification__title,
+    .bx--inline-notification__subtitle {
       font-size: 1rem;
     }
   }
@@ -41,10 +42,10 @@
       grid-template-columns: 2fr 1fr;
       grid-template-rows: auto;
       grid-template-areas:
-      "tool-header tool-blank"
-      "tool-map tool-current"
-      "tool-map tool-search"
-      "tool-map tool-boundary";
+        "tool-header tool-blank"
+        "tool-map tool-current"
+        "tool-map tool-search"
+        "tool-map tool-boundary";
 
       grid-gap: 1rem;
       max-width: 1400px;
@@ -64,7 +65,7 @@
 
       .select-location-blank {
         grid-area: tool-blank;
-      } 
+      }
 
       .select-location-current {
         grid-area: tool-current;
@@ -105,9 +106,9 @@
         grid-area: tool-boundary;
 
         .boundary-upload {
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           margin-top: 1rem;
         }
       }
@@ -129,7 +130,7 @@
           z-index: 1000;
           overflow: hidden;
           font-size: 15px;
-          box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
+          box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
 
           .suggestion {
             cursor: default;
@@ -145,7 +146,8 @@
             cursor: pointer;
           }
 
-          .suggestion-title, .suggestion-address {
+          .suggestion-title,
+          .suggestion-address {
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
@@ -164,16 +166,15 @@
   }
 
   #explore {
-
     .explore {
       display: grid;
       grid-template-columns: 3fr 1fr;
       grid-template-rows: auto;
       grid-template-areas:
-      "tool-header tool-header"
-      "tool-title tool-settings"
-      "tool-stats tool-settings"
-      "tool-chart tool-settings";
+        "tool-header tool-header"
+        "tool-title tool-settings"
+        "tool-stats tool-settings"
+        "tool-chart tool-settings";
 
       grid-gap: 1rem;
       max-width: 1400px;
@@ -186,7 +187,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba($gray-20, .5);
+        background: rgba($gray-20, 0.5);
         z-index: 2;
       }
 
@@ -252,9 +253,9 @@
         }
 
         .chart-download {
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
       }
 
@@ -269,8 +270,6 @@
       }
     }
   }
-
-
 
   input[name*="ACCESS1-0"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="ACCESS1-0"]:checked + .bx--checkbox-label::before {
@@ -344,11 +343,15 @@
     border: 2px solid $teal-60;
   }
 
-  .bx--radio-button:checked + .bx--radio-button__label .bx--radio-button__appearance {
+  .bx--radio-button:checked
+    + .bx--radio-button__label
+    .bx--radio-button__appearance {
     border-color: $teal-60;
   }
 
-  .bx--radio-button:checked + .bx--radio-button__label .bx--radio-button__appearance::before {
+  .bx--radio-button:checked
+    + .bx--radio-button__label
+    .bx--radio-button__appearance::before {
     background-color: $teal-60;
     border-color: $teal-60;
   }
