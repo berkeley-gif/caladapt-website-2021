@@ -1,6 +1,6 @@
 <script>
-  import { Button } from 'carbon-components-svelte';
-  import { ArrowUp32 } from 'carbon-icons-svelte';
+  import { Button } from "carbon-components-svelte";
+  import { ArrowUp32 } from "carbon-icons-svelte";
 
   export let showOnPx = 150;
   let hidden = false;
@@ -26,13 +26,13 @@
   }
 </script>
 
-<svelte:window on:scroll={handleOnScroll} />
+<svelte:window on:scroll="{handleOnScroll}" />
 
-<div class="back-to-top" on:click={goTop} class:hidden>
+<div class="back-to-top" on:click="{goTop}" class:hidden>
   <Button
     tooltipPosition="left"
     tooltipAlignment="end"
     iconDescription="Back to top"
-    icon={ArrowUp32}
+    icon="{ArrowUp32}"
   />
 </div>

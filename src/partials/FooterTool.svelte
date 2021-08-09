@@ -1,24 +1,22 @@
 <script>
-  import {
-    ClickableTile
-  } from 'carbon-components-svelte';
-  import Help32 from 'carbon-icons-svelte/lib/Help32';
-  import User32 from 'carbon-icons-svelte/lib/User32';
-  import Video32 from 'carbon-icons-svelte/lib/Video32';
-  import Blog32 from 'carbon-icons-svelte/lib/Blog32';
+  import { ClickableTile } from "carbon-components-svelte";
+  import Help32 from "carbon-icons-svelte/lib/Help32";
+  import User32 from "carbon-icons-svelte/lib/User32";
+  import Video32 from "carbon-icons-svelte/lib/Video32";
+  import Blog32 from "carbon-icons-svelte/lib/Blog32";
 
   export let resources;
-  
+
   const helpIcons = {
-    'get-started': User32,
+    "get-started": User32,
     tutorials: Video32,
     faqs: Help32,
     blog: Blog32,
   };
 
-  $: caladaptTools = resources.filter(d => d.category === 'caladapt');
-  $: caladaptHelp = resources.filter(d => d.category === 'help');
-  $: other = resources.filter(d => d.category === 'other');
+  $: caladaptTools = resources.filter((d) => d.category === "caladapt");
+  $: caladaptHelp = resources.filter((d) => d.category === "help");
+  $: other = resources.filter((d) => d.category === "other");
 </script>
 
 <style>
@@ -30,7 +28,7 @@
   }
 
   .help-tile :global(.bx--tile--clickable:hover) {
-    background-color: rgba(204, 228, 228, 0.5);;
+    background-color: rgba(204, 228, 228, 0.5);
   }
 
   .icon-circle {
@@ -53,10 +51,10 @@
   <div class="bx--row">
     {#each caladaptTools as opt}
       <div class="bx--col-lg-4">
-        <ClickableTile href={opt.link} style={"height:100%;"}>
+        <ClickableTile href="{opt.link}" style="{'height:100%;'}">
           <div>
             {#each opt.icons as icon}
-              <img src="{icon}" alt="icon" class="icon" style="width:60px;">
+              <img src="{icon}" alt="icon" class="icon" style="width:60px;" />
             {/each}
           </div>
           <h4>{opt.title}</h4>
@@ -74,9 +72,9 @@
   <div class="bx--row">
     {#each caladaptHelp as opt}
       <div class="bx--col help-tile">
-        <ClickableTile href={opt.link}>
+        <ClickableTile href="{opt.link}">
           <div class="icon-circle bg-teal-60 text-white">
-            <svelte:component this={helpIcons[opt.icon]} /> 
+            <svelte:component this="{helpIcons[opt.icon]}" />
           </div>
           <p>{opt.title}</p>
         </ClickableTile>
@@ -92,9 +90,13 @@
   {#each other as opt}
     <div class="bx--row" style="margin-bottom:1rem;">
       <div class="bx--col">
-        <ClickableTile href={opt.link} class="center-row">
+        <ClickableTile href="{opt.link}" class="center-row">
           <div class="center">
-            <img style="width:300px;" src="/img/{opt.image}" alt="scripps logo">
+            <img
+              style="width:300px;"
+              src="/img/{opt.image}"
+              alt="scripps logo"
+            />
           </div>
           <div style="padding:1rem 5rem 1rem 1rem;">
             <h4>{opt.title}</h4>

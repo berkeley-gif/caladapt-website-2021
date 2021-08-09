@@ -2,7 +2,9 @@
   export async function preload({ query }) {
     const parts = [];
     Object.keys(query).forEach((key) => {
-      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`);
+      parts.push(
+        `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`
+      );
     });
     const res = await this.fetch(`blog/search.json?${parts}`);
     const posts = await res.json();
@@ -16,7 +18,7 @@
 </script>
 
 <script>
-  import PostStub from '../../partials/PostStub.svelte';
+  import PostStub from "../../partials/PostStub.svelte";
 
   export let posts;
   export let query;
@@ -24,9 +26,9 @@
   $: searchTerm = query.q;
   $: numPosts = posts.length;
 
-  $: articles = posts.filter(d => d.metadata.category === 'articles');
-  $: webinars = posts.filter(d => d.metadata.category === 'webinars');
-  $: tutorials = posts.filter(d => d.metadata.category === 'tutorials');
+  $: articles = posts.filter((d) => d.metadata.category === "articles");
+  $: webinars = posts.filter((d) => d.metadata.category === "webinars");
+  $: tutorials = posts.filter((d) => d.metadata.category === "tutorials");
 </script>
 
 <svelte:head>
@@ -40,35 +42,30 @@
         <!-- Breadcrumb -->
         <ol class="breadcrumb breadcrumb-scroll">
           <li class="breadcrumb-item">
-            <a href="/" class="text-gray-700">
-              Home
-            </a>
+            <a href="/" class="text-gray-700"> Home </a>
           </li>
           <li class="breadcrumb-item">
-            <a href="/blog" class="text-gray-700">
-              Blog
-            </a>
+            <a href="/blog" class="text-gray-700"> Blog </a>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Search
-          </li>
+          <li class="breadcrumb-item active" aria-current="page">Search</li>
         </ol>
       </div>
-    </div> <!-- / .row -->
-  </div> <!-- / .container -->
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
 </nav>
 
 <section class="pt-6 pt-md-9 pb-6 pb-md-10 container">
   <div class="row">
     <!-- Content -->
     <div class="col-md-9">
-      <h1 class="display-4">
-        Search Results
-      </h1>
+      <h1 class="display-4">Search Results</h1>
       <p class="font-size-lg text-gray-700">
-        {numPosts} posts match your search terms <span class="text-info">{searchTerm}</span>
+        {numPosts} posts match your search terms
+        <span class="text-info">{searchTerm}</span>
       </p>
-      <hr class="my-4 my-md-6">
+      <hr class="my-4 my-md-6" />
       {#if articles.length > 0}
         <h3 class="mt-4">{articles.length} Articles</h3>
         <ul class="list p-2">
@@ -77,7 +74,9 @@
               <a href="blog/{post.slug}/" class="flex-grow-1">
                 {post.metadata.title}
               </a>
-              <time datetime="{post.metadata.pubdate}">{post.metadata.datestring}</time>
+              <time datetime="{post.metadata.pubdate}"
+                >{post.metadata.datestring}</time
+              >
             </li>
           {/each}
         </ul>
@@ -88,7 +87,9 @@
               <a href="blog/{post.slug}/" class="flex-grow-1">
                 {post.metadata.title}
               </a>
-              <time datetime="{post.metadata.pubdate}">{post.metadata.datestring}</time>
+              <time datetime="{post.metadata.pubdate}"
+                >{post.metadata.datestring}</time
+              >
             </li>
           {/each}
         </ul>
@@ -99,7 +100,9 @@
               <a href="blog/{post.slug}/" class="flex-grow-1">
                 {post.metadata.title}
               </a>
-              <time datetime="{post.metadata.pubdate}">{post.metadata.datestring}</time>
+              <time datetime="{post.metadata.pubdate}"
+                >{post.metadata.datestring}</time
+              >
             </li>
           {/each}
         </ul>
@@ -111,47 +114,58 @@
         <!-- Filter Card -->
         <div class="card shadow-light-lg">
           <div class="card-body">
-            <h5 class="mb-4">
-              Search Blog Posts
-            </h5>
+            <h5 class="mb-4">Search Blog Posts</h5>
             <form class="input-group" method="GET" action="/blog/search/">
-              <input name="q" id="q" required type="text" class="form-control" placeholder="Search" aria-label="Search blog">
+              <input
+                name="q"
+                id="q"
+                required
+                type="text"
+                class="form-control"
+                placeholder="Search"
+                aria-label="Search blog"
+              />
               <button type="submit" class="btn btn-primary">Search</button>
             </form>
           </div>
-        </div> <!-- end Filter Card -->
+        </div>
+        <!-- end Filter Card -->
 
         <!-- Help Card -->
         <div class="card shadow-light-lg mt-3">
           <div class="card-body">
-            <h5 class="mb-4">
-              Have a question?
-            </h5>
+            <h5 class="mb-4">Have a question?</h5>
             <h6 class="font-weight-bold text-uppercase text-gray-700 mb-1">
               Help
             </h6>
             <p class="font-size-sm">
-              Explore our collection of <a href="/help">frequently asked questions</a> to learn more about using Cal-Adapt.
+              Explore our collection of <a href="/help"
+                >frequently asked questions</a
+              > to learn more about using Cal-Adapt.
             </p>
             <h6 class="font-weight-bold text-uppercase text-gray-700 mb-1">
               Email us
             </h6>
             <p class="font-size-sm">
-              <a href="mailto:support@cal-adapt.org" class="text-reset">support@cal-adapt.org</a>
+              <a href="mailto:support@cal-adapt.org" class="text-reset"
+                >support@cal-adapt.org</a
+              >
             </p>
           </div>
-        </div> <!-- end Help Card -->
+        </div>
+        <!-- end Help Card -->
 
         <!-- Newsletter Card -->
         <div class="card shadow-light-lg mt-3">
           <div class="card-body">
             <p class="font-size-sm">
-              Keep up to date with new climate tools, data and resources on Cal-Adapt. Subscribe to the Cal-Adapt Newsletter.
+              Keep up to date with new climate tools, data and resources on
+              Cal-Adapt. Subscribe to the Cal-Adapt Newsletter.
             </p>
             <a href="/signup/" class="btn btn-primary">Subscribe</a>
           </div>
-        </div> <!-- end Newsletter Card -->       
-
+        </div>
+        <!-- end Newsletter Card -->
       </aside>
     </div>
   </div>

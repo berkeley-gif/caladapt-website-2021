@@ -28,7 +28,7 @@
         left: 0;
         width: 4px;
         background-color: #0f62fe;
-        content: '';
+        content: "";
       }
     }
   }
@@ -46,7 +46,8 @@
 }
 
 .content {
-  ul, ol {
+  ul,
+  ol {
     padding-left: 2rem;
     margin-bottom: 1rem;
   }
@@ -54,7 +55,7 @@
   .bx--accordion {
     padding-left: 0;
     padding-top: 1rem;
-    
+
     .bx--accordion__title {
       font-size: 1rem;
     }
@@ -64,7 +65,7 @@
     }
 
     .bx--accordion__content {
-      padding-right : 10%;
+      padding-right: 10%;
 
       p {
         font-size: 1rem;
@@ -109,7 +110,7 @@
     padding: 0.5rem 0;
 
     .bx--structured-list-td {
-      padding: 0.25rem 1rem .25rem 0.5rem;
+      padding: 0.25rem 1rem 0.25rem 0.5rem;
     }
   }
 }

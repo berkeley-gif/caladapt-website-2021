@@ -49,13 +49,13 @@
 }
 
 .page-grid--help {
-  grid-template-columns: minmax(200px, 1fr)  3fr minmax(150px, 1fr);
+  grid-template-columns: minmax(200px, 1fr) 3fr minmax(150px, 1fr);
   grid-template-rows: min-content min-content 1fr min-content;
   grid-template-areas:
-  "sidebar-left nav nav"
-  "sidebar-left header header"
-  "sidebar-left content sidebar-right"
-  "sidebar-left footer sidebar-right";
+    "sidebar-left nav nav"
+    "sidebar-left header header"
+    "sidebar-left content sidebar-right"
+    "sidebar-left footer sidebar-right";
 
   @media (max-width: 1000px) {
     grid-template-columns: 100%;
@@ -103,9 +103,9 @@
   @media (max-width: 1000px) {
     grid-template-columns: 100%;
     grid-template-areas:
-    "sidebar-right"
-    "content"
-    "footer";
+      "sidebar-right"
+      "content"
+      "footer";
   }
 }
 
@@ -164,8 +164,8 @@
     right: 0;
     margin-right: 0;
     padding: 0;
-    transform: translateY(-50%) ;
-    background: rgba(4,121,124,0.8);
+    transform: translateY(-50%);
+    background: rgba(4, 121, 124, 0.8);
     z-index: 10;
   }
 
@@ -181,14 +181,14 @@
 
   .content-grid {
     display: grid;
-    grid-template-columns: repeat(12, [col] 1fr );
+    grid-template-columns: repeat(12, [col] 1fr);
     // The 150px row corresponds to height of Select Boundary block
     // Without explicit height, the grid child items takes up too much space
     grid-template-rows: min-content min-content 150px auto;
     grid-gap: 1rem;
 
     .block {
-      background-color: #FFFFFF;
+      background-color: #ffffff;
       box-shadow: 0 2px 3px rgba(22, 28, 45, 0.1);
       padding: 1rem;
     }
@@ -218,9 +218,9 @@
       max-height: 150px;
 
       .boundary-upload {
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-top: 1rem;
       }
     }
@@ -251,7 +251,8 @@
         display: block;
       }
 
-      .chart-legend, .series-select {
+      .chart-legend,
+      .series-select {
         margin: 1rem 0;
       }
 
@@ -262,9 +263,9 @@
       }
 
       .chart-download {
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     }
   }
@@ -293,7 +294,7 @@
     .content-stats {
       grid-row: 4;
       grid-column: span 4;
-      
+
       .stat-title {
         font-size: 1.1rem;
         font-weight: bold;
@@ -317,8 +318,8 @@
     grid-template-columns: 200px 2fr;
     grid-template-rows: min-content min-content 600px;
     grid-template-areas:
-    "content sidebar"
-    "footer footer";
+      "content sidebar"
+      "footer footer";
 
     .content-header {
       grid-row: 1;
@@ -371,7 +372,7 @@
     z-index: 1000;
     overflow: hidden;
     font-size: 15px;
-    box-shadow: 0 0 10px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   }
 
   .suggestions .suggestion {
@@ -388,7 +389,8 @@
     cursor: pointer;
   }
 
-  .suggestion-title, .suggestion-address {
+  .suggestion-title,
+  .suggestion-address {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -409,7 +411,7 @@
 
   :global(.bx--label::before),
   :global(.bx--accordion__title::before) {
-    content: '';
+    content: "";
     background: url(img/icons/gear.svg);
     display: inline-block;
     height: 1rem;
@@ -423,8 +425,8 @@
   grid-template-columns: 3fr 1fr;
   grid-template-rows: auto;
   grid-template-areas:
-  "content sidebar-right"
-  "footer sidebar-right";
+    "content sidebar-right"
+    "footer sidebar-right";
 
   @media (max-width: 1000px) {
     grid-template-columns: 100%;
@@ -478,6 +480,3 @@
     }
   }
 }
-
-
-

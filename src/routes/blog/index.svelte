@@ -1,36 +1,36 @@
 <script context="module">
   export async function preload() {
     const posts = await this.fetch(`blog.json`)
-      .then(r => r.json())
-      .then(posts => posts);
+      .then((r) => r.json())
+      .then((posts) => posts);
     const events = await this.fetch(`blog/events.json`)
-      .then(r => r.json())
-      .then(events => events);
+      .then((r) => r.json())
+      .then((events) => events);
     return { posts, events };
   }
 </script>
 
 <script>
-  import { Button } from 'carbon-components-svelte';
-  import { ArrowRight16 } from 'carbon-icons-svelte';
-  import PostStub from '../../partials/PostStub.svelte';
-  import SidebarRight from '../../partials/SidebarRight.svelte';
-  
+  import { Button } from "carbon-components-svelte";
+  import { ArrowRight16 } from "carbon-icons-svelte";
+  import PostStub from "../../partials/PostStub.svelte";
+  import SidebarRight from "../../partials/SidebarRight.svelte";
+
   export let posts;
   export let events;
 
   let filteredPosts = posts;
-  let filter = '';
-  let searchStr = '';
+  let filter = "";
+  let searchStr = "";
 
   function filterItems() {
-    filteredPosts = posts.filter(d => {
+    filteredPosts = posts.filter((d) => {
       let hasFilter = false;
       let hasSearchStr = false;
-      if ((filter === '') || d.metadata.tags.includes(filter)) {
+      if (filter === "" || d.metadata.tags.includes(filter)) {
         hasFilter = true;
       }
-      if ((searchStr === '') || itemMatchesTerms(d, searchStr)) {
+      if (searchStr === "" || itemMatchesTerms(d, searchStr)) {
         hasSearchStr = true;
       }
       if (hasSearchStr && hasFilter) {
@@ -67,25 +67,20 @@
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
-        <h1>
-          Cal-Adapt Blog
-        </h1>
-        <p class="lead">
-          Read the latest Cal-Adapt news, updates &amp; events
-        </p>
+        <h1>Cal-Adapt Blog</h1>
+        <p class="lead">Read the latest Cal-Adapt news, updates &amp; events</p>
       </div>
     </div>
   </div>
 </section>
 
 <div class="page-grid page-grid--blog">
-
   <div class="content">
     <div class="bx--grid">
       <div class="bx--row">
         {#each filteredPosts as post}
           <div class="bx--col-lg-8" style="padding:2rem;">
-            <PostStub {post} />
+            <PostStub post="{post}" />
           </div>
         {/each}
       </div>
@@ -95,11 +90,12 @@
   <div class="sidebar-right">
     <div class="is-sticky">
       <SidebarRight
-        display={['events', 'search', 'filters']}
-        filters={['data', 'tools', 'other']}
-        {events}
-        on:search={updateSearch}
-        on:filter={updateFilter} />      
+        display="{['events', 'search', 'filters']}"
+        filters="{['data', 'tools', 'other']}"
+        events="{events}"
+        on:search="{updateSearch}"
+        on:filter="{updateFilter}"
+      />
     </div>
   </div>
 
@@ -108,12 +104,12 @@
       <div class="bx--row">
         <div class="bx--col">
           <p class="lead">
-            Get the latest Cal-Adapt news, updates &amp; events delivered to your inbox. Subscribe to the Cal-Adapt Newsletter. 
-          </p>      
-          <Button icon={ArrowRight16} href="/signup">SUBSCRIBE</Button>
+            Get the latest Cal-Adapt news, updates &amp; events delivered to
+            your inbox. Subscribe to the Cal-Adapt Newsletter.
+          </p>
+          <Button icon="{ArrowRight16}" href="/signup">SUBSCRIBE</Button>
         </div>
       </div>
     </div>
   </div>
-
 </div>

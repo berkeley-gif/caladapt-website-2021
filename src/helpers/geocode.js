@@ -1,14 +1,14 @@
-import getCenter from '@turf/center';
-import getBbox from '@turf/bbox';
+import getCenter from "@turf/center";
+import getBbox from "@turf/bbox";
 
-import { fetchData, handleXHR } from './utilities';
-import { mapboxgl } from './mapbox';
-import config from './api-config';
-import capoly from './california-boundary-feature';
+import { fetchData, handleXHR } from "./utilities";
+import { mapboxgl } from "./mapbox";
+import config from "./api-config";
+import capoly from "./california-boundary-feature";
 
 const { apiEndpoint } = config.env.production;
 const { accessToken } = mapboxgl;
-const geocodingService = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
+const geocodingService = "https://api.mapbox.com/geocoding/v5/mapbox.places";
 
 export const reverseGeocode = async (coords) => {
   const url = `${geocodingService}/${coords}.json`;
@@ -25,12 +25,12 @@ export const reverseGeocode = async (coords) => {
 export const geocode = async (searchStr) => {
   const url = `${geocodingService}/${searchStr}.json`;
   const geocodeParams = {
-    country: 'us',
-    bbox: '-125,31,-113,44',
+    country: "us",
+    bbox: "-125,31,-113,44",
     limit: 5,
-    proximity: '-122.25038599999999,37.53312300000002',
-    types: 'postcode,place,locality,neighborhood,address',
-    language: 'en',
+    proximity: "-122.25038599999999,37.53312300000002",
+    types: "postcode,place,locality,neighborhood,address",
+    language: "en",
     access_token: accessToken,
   };
   const [response, error] = await handleXHR(fetchData(url, geocodeParams));
@@ -59,7 +59,7 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
     srs: 4326,
     precision: 4,
     //intersects: `{"type":"Point","coordinates":[${coords[0]},${coords[1]}]}`,
-    intersects: `Point(${coords[0]} ${coords[1]})`
+    intersects: `Point(${coords[0]} ${coords[1]})`,
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
   if (error) {
@@ -79,42 +79,42 @@ export const getFeatureById = async (id, layerId) => {
 
 export const createAdditionalProps = (feature, layerId) => {
   let title;
-  let address = 'California';
+  let address = "California";
   switch (layerId) {
-    case 'counties':
+    case "counties":
       title = `${feature.properties.name} County`;
       address = feature.properties.state_name;
       break;
-    case 'censustracts':
+    case "censustracts":
       title = `Census Tract ${feature.properties.tract}`;
       break;
-    case 'hydrounits':
+    case "hydrounits":
       title = `${feature.properties.name} Watershed`;
       break;
-    case 'cdistricts':
+    case "cdistricts":
       title = `Congressional District ${feature.properties.cd114fp}`;
       break;
-    case 'custom':
-      title = 'Custom Boundary';
-      address = '';
+    case "custom":
+      title = "Custom Boundary";
+      address = "";
       break;
-    case 'ca':
-      title = 'State of California';
-      address = '';
+    case "ca":
+      title = "State of California";
+      address = "";
       break;
-    case 'hadisdstations':
+    case "hadisdstations":
       title = `Weather Station: ${feature.properties.name}`;
       address = `${feature.properties.city}, California`;
       break;
     default:
-      title = feature.properties.name ? feature.properties.name : 'No Title';
+      title = feature.properties.name ? feature.properties.name : "No Title";
   }
   return { title, address };
 };
 
 export const formatGeocodeResult = (feature) => {
-  const placeName = feature.place_name.split(',');
-  const address = placeName.splice(1, placeName.length).join(',');
+  const placeName = feature.place_name.split(",");
+  const address = placeName.splice(1, placeName.length).join(",");
   const bbox = getBbox(feature.geometry);
 
   return {
@@ -125,7 +125,7 @@ export const formatGeocodeResult = (feature) => {
     bbox,
     id: null,
   };
-}
+};
 
 export const formatBoundaryPolygon = (feature, boundaryId) => {
   const center = getCenter(feature.geometry);
@@ -141,17 +141,17 @@ export const formatBoundaryPolygon = (feature, boundaryId) => {
     center: [+lng, +lat],
     bbox,
     id: feature.id || null,
-  }
-}
+  };
+};
 
 export const getLocation = async (lng, lat, boundaryId) => {
-  if (boundaryId === 'locagrid') {
+  if (boundaryId === "locagrid") {
     const geocodeResult = await reverseGeocode([lng, lat]);
     if (geocodeResult.features && geocodeResult.features.length > 0) {
       const data = formatGeocodeResult(geocodeResult.features[0]);
       return data;
     }
-  } else if (boundaryId === 'ca') {
+  } else if (boundaryId === "ca") {
     const data = formatBoundaryPolygon(capoly, boundaryId);
     return data;
   } else {
@@ -163,34 +163,36 @@ export const getLocation = async (lng, lat, boundaryId) => {
     }
   }
   return null;
-}
+};
 
 export const searchLocation = async (searchStr, boundaryId) => {
-  if (boundaryId === 'locagrid' || !boundaryId) {
+  if (boundaryId === "locagrid" || !boundaryId) {
     const geocodeResult = await geocode(searchStr);
     if (geocodeResult.features && geocodeResult.features.length > 0) {
-      const data = geocodeResult.features.map(d => formatGeocodeResult(d));
+      const data = geocodeResult.features.map((d) => formatGeocodeResult(d));
       return data;
     }
   } else {
     const result = await searchBoundaryLayer(searchStr, boundaryId);
     if (result.features && result.features.length > 0) {
-      const data = result.features.map(d => formatBoundaryPolygon(d, boundaryId));
+      const data = result.features.map((d) =>
+        formatBoundaryPolygon(d, boundaryId)
+      );
       return data;
     }
   }
   return null;
-}
+};
 
 export const getNearestStation = async (lng, lat, layerId) => {
   const url = `${apiEndpoint}/${layerId}/`;
   const params = {
     distance_to: `POINT(${lng} ${lat})`,
-  }
+  };
   const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
     throw new Error(error.message);
   }
   const nearest = response.features[0];
   return nearest;
-}
+};

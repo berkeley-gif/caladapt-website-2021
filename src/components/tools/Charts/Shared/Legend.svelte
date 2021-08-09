@@ -1,12 +1,12 @@
 <script>
-  import { getContext } from 'svelte';
+  import { getContext } from "svelte";
 
-  const legendItems = getContext('Legend');
+  const legendItems = getContext("Legend");
 
   function onClick(e) {
     const target = e.target;
-    target.classList.toggle('show');
-    const key = target.getAttribute('data-value');
+    target.classList.toggle("show");
+    const key = target.getAttribute("data-value");
     $legendItems = $legendItems.map((d) => {
       if (d.key === key) {
         d.visible = !d.visible;
@@ -59,23 +59,26 @@
   }
 </style>
 
-
-<div class='legend-group'>
+<div class="legend-group">
   {#each $legendItems as item}
     <button
-      size={'sm'}
-      class='legend-item'
-      class:show={item.visible}
-      role={'button'}
-      tabindex={0}
-      data-value={item.key}
-      on:click={onClick}>
-      {#if item.mark === 'area'}
-        <span class="key area" style={`background:${item.color.replace(/[^,]+(?=\))/, '0.7')};`}></span>{item.label}
+      size="{'sm'}"
+      class="legend-item"
+      class:show="{item.visible}"
+      role="{'button'}"
+      tabindex="{0}"
+      data-value="{item.key}"
+      on:click="{onClick}"
+    >
+      {#if item.mark === "area"}
+        <span
+          class="key area"
+          style="{`background:${item.color.replace(/[^,]+(?=\))/, '0.7')};`}"
+        ></span>{item.label}
       {:else}
-        <span class="key line" style={`background:${item.color};`}></span>{item.label}
+        <span class="key line" style="{`background:${item.color};`}"
+        ></span>{item.label}
       {/if}
     </button>
   {/each}
 </div>
-

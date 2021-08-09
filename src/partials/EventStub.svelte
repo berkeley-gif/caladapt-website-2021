@@ -1,16 +1,16 @@
 <script>
-  import { Tag } from 'carbon-components-svelte';
+  import { Tag } from "carbon-components-svelte";
   export let event;
 
   const capitalize = (s) => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  }
+    if (typeof s !== "string") return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
 
   const tagTypes = {
-    data: 'purple',
-    tool: 'cyan',
-    webinar: 'blue',
+    data: "purple",
+    tool: "cyan",
+    webinar: "blue",
   };
 </script>
 
@@ -39,22 +39,29 @@
 </style>
 
 <article class="card card-post shadow lift">
-  <a class="stretched-link" rel='prefetch' href='blog/{event.slug}/' title='Read more'>
+  <a
+    class="stretched-link"
+    rel="prefetch"
+    href="blog/{event.slug}/"
+    title="Read more"
+  >
     <div class="card-img">
-      <img src="/img/blog/{event.metadata.image}" alt="...">
+      <img src="/img/blog/{event.metadata.image}" alt="..." />
     </div>
     <div class="card-body">
       <div>
         {#each event.metadata.tags as tag}
-          <Tag type={tagTypes[tag]} title={tag}>{capitalize(tag)}</Tag>    
+          <Tag type="{tagTypes[tag]}" title="{tag}">{capitalize(tag)}</Tag>
         {/each}
       </div>
       <h3>
         {event.metadata.title}
       </h3>
       <span class="card-meta">
-        <time datetime="{event.metadata.pubdate}">{event.metadata.eventdatestring}</time>
-        <p>{event.metadata.location}, {event.metadata.time}</p> 
+        <time datetime="{event.metadata.pubdate}"
+          >{event.metadata.eventdatestring}</time
+        >
+        <p>{event.metadata.location}, {event.metadata.time}</p>
       </span>
     </div>
   </a>

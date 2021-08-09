@@ -1,21 +1,18 @@
 <script>
-  import {
-    SideNavItems,
-    SideNavLink,
-  } from 'carbon-components-svelte';
+  import { SideNavItems, SideNavLink } from "carbon-components-svelte";
 
   export let selected;
   export let offset = 50;
-  export let href = '/about/';
+  export let href = "/about/";
   export let center = true;
   export let items = [
     {
-      id: 'section1',
-      label: 'Section 1',
+      id: "section1",
+      label: "Section 1",
     },
     {
-      id: 'section2',
-      label: 'Section 2',
+      id: "section2",
+      label: "Section 2",
     },
   ];
 
@@ -25,7 +22,7 @@
     const el = document.getElementById(selected);
     window.scrollTo({
       top: el.offsetTop - offset,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }
 </script>
@@ -55,7 +52,7 @@
     text-transform: uppercase;
   }
 
-  .page-nav :global(.bx--side-nav__link[aria-current="page"]::before), 
+  .page-nav :global(.bx--side-nav__link[aria-current="page"]::before),
   .page-nav :global(.bx--side-nav__link--current::before) {
     width: 100%;
     height: 2px;
@@ -69,14 +66,14 @@
   }
 </style>
 
-<div class="page-nav shadow is-sticky" class:center={center}>
+<div class="page-nav shadow is-sticky" class:center>
   <SideNavItems>
     {#each items as item}
       <SideNavLink
-        isSelected={selected === item.id}
-        href={`${href}#${item.id}`}
-        text={item.label}
-        on:click={(e) => scrollTo(e, item.id)}
+        isSelected="{selected === item.id}"
+        href="{`${href}#${item.id}`}"
+        text="{item.label}"
+        on:click="{(e) => scrollTo(e, item.id)}"
       />
     {/each}
   </SideNavItems>

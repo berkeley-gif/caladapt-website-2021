@@ -1,30 +1,23 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import {
-    Search,
-    Button,
-    Modal,
-    Tag,
-  } from 'carbon-components-svelte';
-  import Upload16 from 'carbon-icons-svelte/lib/Upload16';
+  import { createEventDispatcher } from "svelte";
+  import { Search, Button, Modal, Tag } from "carbon-components-svelte";
+  import Upload16 from "carbon-icons-svelte/lib/Upload16";
 
   // Helpers
-  import { getLocation, searchLocation } from '../../../helpers/geocode';
-  import { boundaryList } from './_helpers';
+  import { getLocation, searchLocation } from "../../../helpers/geocode";
+  import { boundaryList } from "./_helpers";
 
   // Components
   import {
     SelectBoundary,
     UploadBoundary,
     ShowDefinition,
-  } from '../../../components/tools/Settings';
-  import { Location } from '../../../components/tools/Location';
-  import { notifier } from '../../../components/notifications';
+  } from "../../../components/tools/Settings";
+  import { Location } from "../../../components/tools/Location";
+  import { notifier } from "../../../components/notifications";
 
   // Store
-  import {
-    locationStore,
-  } from './_store';
+  import { locationStore } from "./_store";
 
   const dispatch = createEventDispatcher();
   const { location, boundary, lngLat } = locationStore;
@@ -32,8 +25,8 @@
   let showUpload = false;
 
   let searchOptions = [];
-  let searchValue = '';
-  let searchPlaceholder = 'Street, ZIP code or city';
+  let searchValue = "";
+  let searchPlaceholder = "Street, ZIP code or city";
   let showSuggestions = false;
 
   async function mapClick(e) {
@@ -43,7 +36,7 @@
 
   function clearSearch() {
     searchOptions.length = 0;
-    searchValue = '';
+    searchValue = "";
   }
 
   async function search(e) {
@@ -60,7 +53,7 @@
 
   function selectSuggestion(opt) {
     showSuggestions = false;
-    console.log('selectSuggestion', opt);
+    console.log("selectSuggestion", opt);
     if (opt) {
       locationStore.updateLocation(opt);
     }
@@ -68,8 +61,8 @@
   }
 
   function uploadBoundary(e) {
-    console.log('uploadBoundary', e.detail);
-    locationStore.updateBoundary('locagrid');
+    console.log("uploadBoundary", e.detail);
+    locationStore.updateBoundary("locagrid");
     locationStore.updateLocation(e.detail.location, true);
     showUpload = false;
   }
@@ -79,7 +72,11 @@
   <!-- Header -->
   <div class="select-location-header">
     <h2>Select Location</h2>
-    <p>Click on the map or enter an address in the search box. To explore data for a larger extent (e.g. county), select a boundary first. Scroll down to explore data for selected location.</p>
+    <p>
+      Click on the map or enter an address in the search box. To explore data
+      for a larger extent (e.g. county), select a boundary first. Scroll down to
+      explore data for selected location.
+    </p>
   </div>
 
   <!-- Current Selection -->
@@ -92,25 +89,28 @@
 
   <!-- Boundary Selection -->
   <div class="select-location-boundary block block-settings">
-    <SelectBoundary 
-      selectedId={$boundary.id}
-      items={boundaryList}
-      addStateBoundary={true}
-      on:change={changeBoundary}
+    <SelectBoundary
+      selectedId="{$boundary.id}"
+      items="{boundaryList}"
+      addStateBoundary="{true}"
+      on:change="{changeBoundary}"
     />
     <div class="boundary-upload">
       <ShowDefinition
-       topics={["aggregation-boundary"]}
-       title="Aggregating Data by Boundary"
-       on:define />
+        topics="{['aggregation-boundary']}"
+        title="Aggregating Data by Boundary"
+        on:define
+      />
       <Button
-        icon={Upload16}
+        icon="{Upload16}"
         size="small"
-        on:click={() => showUpload = true}>
+        on:click="{() => (showUpload = true)}"
+      >
         Upload
-      </Button>      
+      </Button>
     </div>
-  </div> <!-- end explore-boundary -->
+  </div>
+  <!-- end explore-boundary -->
 
   <!-- Location Search -->
   <div class="select-location-search block block-settings">
@@ -118,17 +118,20 @@
     <Search
       id="search"
       size="lg"
-      placeholder={searchPlaceholder} 
-      on:change={search}
-      bind:value={searchValue}
+      placeholder="{searchPlaceholder}"
+      on:change="{search}"
+      bind:value="{searchValue}"
     />
-    {#if showSuggestions }
+    {#if showSuggestions}
       <div class="suggestions-wrapper">
         <ul class="suggestions">
           {#if searchOptions && searchOptions.length > 0}
             {#each searchOptions as opt}
               <li>
-                <div class="suggestion" on:click={() => selectSuggestion(opt)}>
+                <div
+                  class="suggestion"
+                  on:click="{() => selectSuggestion(opt)}"
+                >
                   <div class="suggestion-title">{opt.title}</div>
                   <div class="suggestion-address">{opt.address}</div>
                 </div>
@@ -136,37 +139,39 @@
             {/each}
           {:else}
             <li>
-              <div class="suggestion" on:click={() => selectSuggestion()}>
+              <div class="suggestion" on:click="{() => selectSuggestion()}">
                 <div class="suggestion-nodata">No Results Found</div>
               </div>
             </li>
           {/if}
         </ul>
       </div>
-    {/if}  
-  </div> <!-- end search-location -->
+    {/if}
+  </div>
+  <!-- end search-location -->
 
   <!-- Map-->
   <div class="select-location-map">
     <Location
-        lng={$locationStore.lng}
-        lat={$locationStore.lat}
-        boundary={$boundary}
-        location={$location}
-        imageOverlayShow={false}
-        on:mapclick={mapClick}
-        on:ready={() => dispatch('ready')} />
-  </div> <!-- end explore-map -->
+      lng="{$locationStore.lng}"
+      lat="{$locationStore.lat}"
+      boundary="{$boundary}"
+      location="{$location}"
+      imageOverlayShow="{false}"
+      on:mapclick="{mapClick}"
+      on:ready="{() => dispatch('ready')}"
+    />
+  </div>
+  <!-- end explore-map -->
 </div>
 
-<Modal id="upload"
-  bind:open={showUpload}
+<Modal
+  id="upload"
+  bind:open="{showUpload}"
   modalHeading=""
-  passiveModal 
+  passiveModal
   on:open
   on:close
 >
-  <UploadBoundary bind:open={showUpload} on:upload={uploadBoundary} />
+  <UploadBoundary bind:open="{showUpload}" on:upload="{uploadBoundary}" />
 </Modal>
-
-

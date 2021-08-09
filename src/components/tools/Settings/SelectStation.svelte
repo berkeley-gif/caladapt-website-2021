@@ -1,27 +1,27 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from "svelte";
   import {
     Select,
     SelectItem,
     SkeletonPlaceholder,
-  } from 'carbon-components-svelte';
+  } from "carbon-components-svelte";
 
   export let selectedId;
   export let items;
 
   const dispatch = createEventDispatcher();
 
-  let selected = items.find(d => d.id === selectedId);
+  let selected = items.find((d) => d.id === selectedId);
   let ready = false;
 
   function change(e) {
-    selected = items.find(d => d.id === +e.detail);
-    dispatch('change', selected);
+    selected = items.find((d) => d.id === +e.detail);
+    dispatch("change", selected);
   }
 
   onMount(() => {
     ready = true;
-    dispatch('ready');
+    dispatch("ready");
   });
 </script>
 
@@ -29,10 +29,11 @@
   <Select
     class="station-select"
     labelText="SELECT STATION"
-    selected={selectedId}
-    on:change={change}>
+    selected="{selectedId}"
+    on:change="{change}"
+  >
     {#each items as opt}
-      <SelectItem value={opt.id} text={opt.properties.name} />
+      <SelectItem value="{opt.id}" text="{opt.properties.name}" />
     {/each}
   </Select>
 {:else}

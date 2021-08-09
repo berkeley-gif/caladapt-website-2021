@@ -1,6 +1,6 @@
 // Colors
-$white: #FFFFFF;
-$black: #090F20;
+$white: #ffffff;
+$black: #090f20;
 $accent: #6be7ba;
 
 $gray-10: #fafbfb;
@@ -19,7 +19,6 @@ $blue-50: #003850;
 $blue-60: #002448;
 $blue-70: #001440;
 
-
 $teal-10: #cce4e4;
 $teal-20: #9ac9ca;
 $teal-30: #68aeb0;
@@ -32,35 +31,34 @@ $teal-90: #013031;
 $teal-100: #001818;
 
 $caladapt-colors: (
-  'gray-10': $gray-10,
-  'gray-20': $gray-20,
-  'gray-30': $gray-30,
-  'gray-40': $gray-40,
-  'gray-50': $gray-50,
-  'gray-60': $gray-60,
-  'gray-70': $gray-70,
-  'gray-80': $gray-80,
-  'gray-90': $gray-90,
-  'gray-100': $gray-100,
-  'black': $black,
-  'white': $white,
-  'accent': $accent,
-  'teal-10': $teal-10,
-  'teal-20': $teal-20,
-  'teal-30': $teal-30,
-  'teal-40': $teal-40,
-  'teal-50': $teal-50,
-  'teal-60': $teal-60,
-  'teal-70': $teal-70,
-  'teal-80': $teal-80,
-  'teal-90': $teal-90,
-  'teal-100': $teal-100,
-  'blue-40': $blue-40,
-  'blue-50': $blue-50,
-  'blue-60': $blue-60,
-  'blue-70': $blue-70,
+  "gray-10": $gray-10,
+  "gray-20": $gray-20,
+  "gray-30": $gray-30,
+  "gray-40": $gray-40,
+  "gray-50": $gray-50,
+  "gray-60": $gray-60,
+  "gray-70": $gray-70,
+  "gray-80": $gray-80,
+  "gray-90": $gray-90,
+  "gray-100": $gray-100,
+  "black": $black,
+  "white": $white,
+  "accent": $accent,
+  "teal-10": $teal-10,
+  "teal-20": $teal-20,
+  "teal-30": $teal-30,
+  "teal-40": $teal-40,
+  "teal-50": $teal-50,
+  "teal-60": $teal-60,
+  "teal-70": $teal-70,
+  "teal-80": $teal-80,
+  "teal-90": $teal-90,
+  "teal-100": $teal-100,
+  "blue-40": $blue-40,
+  "blue-50": $blue-50,
+  "blue-60": $blue-60,
+  "blue-70": $blue-70,
 );
-
 
 // Carbon theme colors for Cal Adapt
 $interactive-01: $teal-60;
@@ -80,7 +78,7 @@ $text-04: $white;
 $icon-01: $gray-100;
 $icon-02: $gray-70;
 $icon-03: $white;
-$link-01: #015AFE;
+$link-01: #015afe;
 $link-02: #0043ce;
 $field-01: $white;
 $field-02: $gray-10;
@@ -121,7 +119,6 @@ $skeleton-01: $gray-20;
 $skeleton-02: $gray-30;
 $active-01: $teal-60;
 $hover-field: #e5e5e5;
-
 
 $caladapt-carbon-theme: (
   interactive-01: $interactive-01,
@@ -182,8 +179,9 @@ $caladapt-carbon-theme: (
   hover-field: $hover-field,
 );
 
-$box-shadow: 0 .125rem .25rem rgba($black, .075);
-$box-shadow-lift: 0 1rem 2.5rem fade-out($black, .9), 0 .5rem 1rem -.75rem fade-out($black, .9);
+$box-shadow: 0 0.125rem 0.25rem rgba($black, 0.075);
+$box-shadow-lift: 0 1rem 2.5rem fade-out($black, 0.9),
+  0 0.5rem 1rem -0.75rem fade-out($black, 0.9);
 
 $border-radius: 0.175rem;
 
@@ -276,9 +274,9 @@ $border-radius: 0.175rem;
   --skeleton-02: #{$skeleton-02};
   --active-01: #{$active-01};
   --hover-field: #{$hover-field};
-  
+
   --box-shadow: #{$box-shadow};
   --box-shadow-lift: #{$box-shadow-lift};
-  
+
   --border-radius: #{$border-radius};
 }

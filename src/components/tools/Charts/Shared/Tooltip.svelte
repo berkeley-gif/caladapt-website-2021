@@ -1,10 +1,10 @@
 <script>
-  import { getContext } from 'svelte';
-  import { max } from 'd3-array';
-  import QuadTree from './QuadTree.svelte';
+  import { getContext } from "svelte";
+  import { max } from "d3-array";
+  import QuadTree from "./QuadTree.svelte";
 
-  const { width, yScale } = getContext('LayerCake');
-  const legendItems = getContext('Legend');
+  const { width, yScale } = getContext("LayerCake");
+  const legendItems = getContext("Legend");
 
   export let dataset;
   export let w = 250;
@@ -18,19 +18,19 @@
 
   function getValue(val) {
     if (Array.isArray(val)) {
-      return `${value(val[0])} ⁠–⁠ ${value(val[1])}`
+      return `${value(val[0])} ⁠–⁠ ${value(val[1])}`;
     } else {
       return value(val);
     }
   }
 
-  function setContents (result) {
-    if (Object.keys(result).length === 0) return '';
-    const year = result.date.getFullYear();    
+  function setContents(result) {
+    if (Object.keys(result).length === 0) return "";
+    const year = result.date.getFullYear();
     const rows = result.values;
 
     const visibleRows = rows.filter((row) => {
-      const legend = $legendItems.find(d => d.key === row.key);
+      const legend = $legendItems.find((d) => d.key === row.key);
       if (legend.visible) {
         return true;
       }
@@ -49,12 +49,16 @@
 
     return `
       <div style="font-weight:600;padding:5px 0;">${title(year)}</div>
-      ${visibleRows.map(row => {
-        return `<div style="padding:3px 0;">
-          <span style="background:${color(row.key)};width:10px;height:10px;display:inline-block;padding-right:1px;"></span>
+      ${visibleRows
+        .map((row) => {
+          return `<div style="padding:3px 0;">
+          <span style="background:${color(
+            row.key
+          )};width:10px;height:10px;display:inline-block;padding-right:1px;"></span>
           ${label(row.key)}: ${getValue(row.value)}
-        </div>`})
-      .join('')}`;
+        </div>`;
+        })
+        .join("")}`;
   }
 </script>
 
@@ -73,23 +77,15 @@
   }
 </style>
 
-<QuadTree
-  {dataset}
-  y='x'
-  let:x
-  let:y
-  let:visible
-  let:found
-  let:e
->
+<QuadTree dataset="{dataset}" y="x" let:x let:y let:visible let:found let:e>
   <div
     class="chart-tooltip"
     style="
       width:{w}px;
-      display: { visible ? 'block' : 'none' };
+      display: {visible ? 'block' : 'none'};
       top: {top}px;
       left: {Math.min(Math.max(w2, x), $width - w2)}px;"
-    >
+  >
     {@html setContents(found)}
   </div>
 </QuadTree>

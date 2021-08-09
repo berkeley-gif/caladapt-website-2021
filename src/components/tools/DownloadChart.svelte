@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
   import {
     Modal,
     StructuredList,
@@ -8,59 +8,60 @@
     StructuredListCell,
     StructuredListBody,
     StructuredListInput,
-  } from 'carbon-components-svelte';
-  import CheckmarkFilled16 from 'carbon-icons-svelte/lib/CheckmarkFilled16';
+  } from "carbon-components-svelte";
+  import CheckmarkFilled16 from "carbon-icons-svelte/lib/CheckmarkFilled16";
 
   export let open = false;
   export let options = [
     {
-      format: 'png',
+      format: "png",
       text: `Chart in image format. Use it in 
       presentations or other documents.`,
     },
     {
-      format: 'svg',
+      format: "svg",
       text: `Chart in vector format. Use it in 
       documents or customize it further with graphic software like Inkscape or Adobe Illustrator`,
     },
     {
-      format: 'csv',
+      format: "csv",
       text: `Data used to create this chart. Use it for further analysis.`,
     },
     {
-      format: 'pdf',
+      format: "pdf",
       text: `Document with chart, map and supporting text for printing or sharing.`,
     },
   ];
 
   const dispatch = createEventDispatcher();
 
-  let selected = 'png';
+  let selected = "png";
 
   function download() {
-    dispatch('download', selected);
+    dispatch("download", selected);
   }
 </script>
 
 <Modal
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (open = false)}
+  on:click:button--secondary="{() => (open = false)}"
   bind:open
   modalHeading="Download"
-  on:submit={download}
+  on:submit="{download}"
   on:open
-  on:close>
+  on:close
+>
   <StructuredList selection bind:selected>
     <StructuredListHead>
       <StructuredListRow head>
         <StructuredListCell head>Save as</StructuredListCell>
         <StructuredListCell head>How to Use</StructuredListCell>
-        <StructuredListCell head>{''}</StructuredListCell>
+        <StructuredListCell head>{""}</StructuredListCell>
       </StructuredListRow>
     </StructuredListHead>
     <StructuredListBody>
-      {#each options  as item}
+      {#each options as item}
         <StructuredListRow label for="row-{item.format}">
           <StructuredListCell>{item.format.toUpperCase()}</StructuredListCell>
           <StructuredListCell>{item.text}</StructuredListCell>

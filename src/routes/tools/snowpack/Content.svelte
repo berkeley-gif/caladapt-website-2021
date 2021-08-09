@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
   import {
     Search,
     SkeletonText,
@@ -8,29 +8,34 @@
     FormGroup,
     RadioButtonGroup,
     RadioButton,
-  } from 'carbon-components-svelte';
-  import { format } from 'd3-format';
-  import { csvFormat, csvFormatRows } from 'd3-dsv';
-  import Upload16 from 'carbon-icons-svelte/lib/Upload16';
-  import Download16 from 'carbon-icons-svelte/lib/Download16';
+  } from "carbon-components-svelte";
+  import { format } from "d3-format";
+  import { csvFormat, csvFormatRows } from "d3-dsv";
+  import Upload16 from "carbon-icons-svelte/lib/Upload16";
+  import Download16 from "carbon-icons-svelte/lib/Download16";
 
   // Helpers
-  import { getLocation, searchLocation } from '../../../helpers/geocode';
-  import { boundaryList } from './_helpers';
-  import { flattenData, getDataByDate, formatDataForExport } from './_data';
-  import { exportSVG, exportPNG, exportCSV, exportPDF } from  '../../../helpers/export';
+  import { getLocation, searchLocation } from "../../../helpers/geocode";
+  import { boundaryList } from "./_helpers";
+  import { flattenData, getDataByDate, formatDataForExport } from "./_data";
+  import {
+    exportSVG,
+    exportPNG,
+    exportCSV,
+    exportPDF,
+  } from "../../../helpers/export";
 
   // Components
   import {
     SelectBoundary,
     UploadBoundary,
     ShowDefinition,
-  } from '../../../components/tools/Settings';
-  import { Location } from '../../../components/tools/Location';
-  import { LineAreaChart } from '../../../components/tools/Charts';
-  import { MinMaxAvg } from '../../../components/tools/Stats';
-  import DownloadChart from '../../../components/tools/DownloadChart.svelte';
-  import { notifier } from '../../../components/notifications';
+  } from "../../../components/tools/Settings";
+  import { Location } from "../../../components/tools/Location";
+  import { LineAreaChart } from "../../../components/tools/Charts";
+  import { MinMaxAvg } from "../../../components/tools/Stats";
+  import DownloadChart from "../../../components/tools/DownloadChart.svelte";
+  import { notifier } from "../../../components/notifications";
 
   // Store
   import {
@@ -40,7 +45,7 @@
     dataStore,
     monthStore,
     viewStore,
-  } from './_store';
+  } from "./_store";
 
   export let sidebarCollapsed;
   export let appStatus;
@@ -60,27 +65,29 @@
   let showDownload = false;
 
   let searchOptions = [];
-  let searchValue = '';
-  let searchPlaceholder = 'Enter address or zipcode';
+  let searchValue = "";
+  let searchPlaceholder = "Enter address or zipcode";
   let showSuggestions = false;
 
   $: if (mapReady) {
-    dispatch('ready');
+    dispatch("ready");
   }
 
   $: metadata = [
-    ['boundary', $boundary.id],
-    ['feature', `${$location.title}, ${$location.address}`],
-    ['center', `${$location.center[0]}, ${$location.center[1]}`],
-    ['scenario', $scenario.label],
-    ['units', $climvar.units.imperial],
+    ["boundary", $boundary.id],
+    ["feature", `${$location.title}, ${$location.address}`],
+    ["center", `${$location.center[0]}, ${$location.center[1]}`],
+    ["scenario", $scenario.label],
+    ["units", $climvar.units.imperial],
   ];
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($data) {
-    observedSeries = $data.filter(d => d.key === 'observed');
-    modelSeries = $data.filter(d => d.key !== 'observed' && d.type !== 'area');
+    observedSeries = $data.filter((d) => d.key === "observed");
+    modelSeries = $data.filter(
+      (d) => d.key !== "observed" && d.type !== "area"
+    );
     dataByDate = getDataByDate(flattenData($data));
   }
 
@@ -91,7 +98,7 @@
 
   function clearSearch() {
     searchOptions.length = 0;
-    searchValue = '';
+    searchValue = "";
   }
 
   async function search(e) {
@@ -115,47 +122,54 @@
   }
 
   function uploadBoundary(e) {
-    console.log('uploadBoundary', e.detail);
-    locationStore.updateBoundary('locagrid');
+    console.log("uploadBoundary", e.detail);
+    locationStore.updateBoundary("locagrid");
     locationStore.updateLocation(e.detail.location, true);
     showUpload = false;
   }
 
   function changeView(e) {
-    dispatch('changeViz', e.detail);
+    dispatch("changeViz", e.detail);
     viewStore.set(e.detail);
   }
 
   async function downloadViz(e) {
-    appStatus = 'working';
+    appStatus = "working";
     const format = e.detail;
     showDownload = false;
     try {
-      const container = document.querySelector('.content-chart');
+      const container = document.querySelector(".content-chart");
       switch (format) {
-        case 'png':
+        case "png":
           await exportPNG(container);
           break;
-        case 'svg':
+        case "svg":
           await exportSVG(container);
           break;
-        case 'csv':
+        case "csv":
           var csvData = formatDataForExport(dataByDate);
-          var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(csvData)}`;
+          var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(
+            csvData
+          )}`;
           await exportCSV(csvWithMetadata);
           break;
-        case 'pdf':
-          var gridContainer = document.querySelector('.content-grid');
+        case "pdf":
+          var gridContainer = document.querySelector(".content-grid");
           await exportPDF(gridContainer, $location);
           break;
         default:
-          // Do nothing
+        // Do nothing
       }
-      notifier.success('Download', `Successfully created ${format} file`, '', 2000);      
+      notifier.success(
+        "Download",
+        `Successfully created ${format} file`,
+        "",
+        2000
+      );
     } catch (error) {
-      notifier.error('Download', `Error creating ${format} file`, error, 2000);
+      notifier.error("Download", `Error creating ${format} file`, error, 2000);
     }
-    appStatus = 'idle';
+    appStatus = "idle";
   }
 </script>
 
@@ -170,105 +184,115 @@
   <!-- Climvar Header -->
   <div class="content-header block">
     <FormGroup legendText="SELECT VISUALIZATION" style="margin-bottom:1rem;">
-      <RadioButtonGroup selected="timeseries" on:change={changeView}>
+      <RadioButtonGroup selected="timeseries" on:change="{changeView}">
         <RadioButton labelText="Monthly Timeseries" value="timeseries" />
         <RadioButton labelText="Map Animation" value="animation" />
       </RadioButtonGroup>
     </FormGroup>
     {#if $climvar}
-    <div class="flex-header">
-      <span class="icon">
-        <svelte:component this={$climvar.icon} />
-      </span>
-      <div>
-        <h4 class="title">{$month.label} {$climvar.title}</h4>
+      <div class="flex-header">
+        <span class="icon">
+          <svelte:component this="{$climvar.icon}" />
+        </span>
+        <div>
+          <h4 class="title">{$month.label} {$climvar.title}</h4>
+        </div>
       </div>
-    </div>
     {:else}
       <SkeletonText heading />
       <SkeletonText />
-    {/if}         
-  </div> <!-- end content-header -->
+    {/if}
+  </div>
+  <!-- end content-header -->
 
   <!-- Stats -->
   <div class="content-stats block">
     <MinMaxAvg
-      title={'Observed Data'}
-      subtitle={'Baseline (1961-1990)'}
-      units={$climvar.units.imperial}
-      note={''}
-      data={observedSeries}
-      historicalOnly={true}
-      start={1961}
-      end={1990}
-      format={formatFn}
+      title="{'Observed Data'}"
+      subtitle="{'Baseline (1961-1990)'}"
+      units="{$climvar.units.imperial}"
+      note="{''}"
+      data="{observedSeries}"
+      historicalOnly="{true}"
+      start="{1961}"
+      end="{1990}"
+      format="{formatFn}"
     />
-  </div> <!-- end content-stats -->
+  </div>
+  <!-- end content-stats -->
 
-  <div class="content-stats block">    
+  <div class="content-stats block">
     <MinMaxAvg
-      title={'Model Projections'}
-      subtitle={'Mid-Century (2035-2064)'}
-      units={$climvar.units.imperial}
-      note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
-      data={modelSeries}
-      start={2035}
-      end={2064}
-      format={formatFn}
+      title="{'Model Projections'}"
+      subtitle="{'Mid-Century (2035-2064)'}"
+      units="{$climvar.units.imperial}"
+      note="{`Average of ${modelSeries ? modelSeries.length : ''} models`}"
+      data="{modelSeries}"
+      start="{2035}"
+      end="{2064}"
+      format="{formatFn}"
     />
-  </div> <!-- end content-stats -->
+  </div>
+  <!-- end content-stats -->
 
-  <div class="content-stats block">     
+  <div class="content-stats block">
     <MinMaxAvg
-      title={'Model Projections'}
-      subtitle={'End-Century (2070-2099)'}
-      units={$climvar.units.imperial}
-      note={`Average of ${modelSeries ? modelSeries.length: ''} models`}
-      data={modelSeries}
-      start={2070}
-      end={2099}
-      format={formatFn}
+      title="{'Model Projections'}"
+      subtitle="{'End-Century (2070-2099)'}"
+      units="{$climvar.units.imperial}"
+      note="{`Average of ${modelSeries ? modelSeries.length : ''} models`}"
+      data="{modelSeries}"
+      start="{2070}"
+      end="{2099}"
+      format="{formatFn}"
     />
-  </div> <!-- end content-stats -->
+  </div>
+  <!-- end content-stats -->
 
   <!-- Boundary Selection -->
   <div class="content-boundary block">
-    <SelectBoundary 
-      selectedId={$boundary.id}
-      items={boundaryList}
-      addStateBoundary={true}
-      on:change={changeBoundary}
+    <SelectBoundary
+      selectedId="{$boundary.id}"
+      items="{boundaryList}"
+      addStateBoundary="{true}"
+      on:change="{changeBoundary}"
     />
     <div class="boundary-upload">
       <ShowDefinition
-       topics={["aggregation-boundary"]}
-       title="Aggregating Data by Boundary"
-       on:define />
+        topics="{['aggregation-boundary']}"
+        title="Aggregating Data by Boundary"
+        on:define
+      />
       <Button
-        icon={Upload16}
+        icon="{Upload16}"
         size="small"
-        on:click={() => showUpload = true}>
+        on:click="{() => (showUpload = true)}"
+      >
         Upload
-      </Button>      
+      </Button>
     </div>
-  </div> <!-- end content-boundary -->
+  </div>
+  <!-- end content-boundary -->
 
   <!-- Map-->
   <div class="content-map">
     <div class="location-search">
       <Search
         size="sm"
-        placeholder={searchPlaceholder} 
-        on:change={search}
-        bind:value={searchValue}
+        placeholder="{searchPlaceholder}"
+        on:change="{search}"
+        bind:value="{searchValue}"
       />
-      {#if showSuggestions }
+      {#if showSuggestions}
         <div class="suggestions-wrapper">
           <ul class="suggestions">
             {#if searchOptions && searchOptions.length > 0}
               {#each searchOptions as opt}
                 <li>
-                  <div class="suggestion" on:click={() => selectSuggestion(opt)}>
+                  <div
+                    class="suggestion"
+                    on:click="{() => selectSuggestion(opt)}"
+                  >
                     <div class="suggestion-title">{opt.title}</div>
                     <div class="suggestion-address">{opt.address}</div>
                   </div>
@@ -276,7 +300,7 @@
               {/each}
             {:else}
               <li>
-                <div class="suggestion" on:click={() => selectSuggestion()}>
+                <div class="suggestion" on:click="{() => selectSuggestion()}">
                   <div class="suggestion-nodata">No Results Found</div>
                 </div>
               </li>
@@ -286,15 +310,17 @@
       {/if}
     </div>
     <Location
-      imageOverlayShow={false}
-      lng={$locationStore.lng}
-      lat={$locationStore.lat}
-      boundary={$boundary}
-      location={$location}
-      resize={sidebarCollapsed}
-      on:mapclick={mapClick}
-      on:ready={() => mapReady = true} />    
-  </div> <!-- end content-map -->
+      imageOverlayShow="{false}"
+      lng="{$locationStore.lng}"
+      lat="{$locationStore.lat}"
+      boundary="{$boundary}"
+      location="{$location}"
+      resize="{sidebarCollapsed}"
+      on:mapclick="{mapClick}"
+      on:ready="{() => (mapReady = true)}"
+    />
+  </div>
+  <!-- end content-map -->
 
   <!-- Chart-->
   <div class="content-chart block">
@@ -310,44 +336,46 @@
       {/if}
     </div>
     <LineAreaChart
-      data={$data}
-      dataByDate={dataByDate}
-      yAxis = {{
+      data="{$data}"
+      dataByDate="{dataByDate}"
+      yAxis="{{
         key: 'value',
         label: `${$month.label} SWE (${$climvar.units.imperial})`,
         tickFormat: formatFn,
         units: `${$climvar.units.imperial}`,
-      }}
-    /> 
+      }}"
+    />
     <div class="chart-notes">
       <span>Source: Cal-Adapt. </span>
-      <span>Data: LOCA Downscaled Climate Projections (Scripps Institution Of Oceanography - University of California, San Diego), Gridded Observed Meteorological Data (University of Colorado, Boulder).</span>
+      <span
+        >Data: LOCA Downscaled Climate Projections (Scripps Institution Of
+        Oceanography - University of California, San Diego), Gridded Observed
+        Meteorological Data (University of Colorado, Boulder).</span
+      >
     </div>
     <div class="chart-download">
-      <ShowDefinition
-       topics={["chart"]}
-       title="Chart"
-       on:define />
+      <ShowDefinition topics="{['chart']}" title="Chart" on:define />
       <Button
-        icon={Download16}
+        icon="{Download16}"
         size="small"
-        on:click={() => showDownload = true}>
+        on:click="{() => (showDownload = true)}"
+      >
         Download
-      </Button> 
-    </div>       
-  </div> <!-- end content-chart -->
+      </Button>
+    </div>
+  </div>
+  <!-- end content-chart -->
 </div>
 
-<Modal id="upload"
-  bind:open={showUpload}
+<Modal
+  id="upload"
+  bind:open="{showUpload}"
   modalHeading=""
-  passiveModal 
+  passiveModal
   on:open
   on:close
 >
-  <UploadBoundary bind:open={showUpload} on:upload={uploadBoundary} />
+  <UploadBoundary bind:open="{showUpload}" on:upload="{uploadBoundary}" />
 </Modal>
 
-<DownloadChart bind:open={showDownload} on:download={downloadViz} />
-
-
+<DownloadChart bind:open="{showDownload}" on:download="{downloadViz}" />
