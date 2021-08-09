@@ -26,7 +26,7 @@
       flex: 0 0 75px;
 
       .day, .month {
-        color: #FFFFFF;
+        color: var(--white);
         display: block;
         font-size: 10px;
         line-height: 1;
@@ -41,7 +41,7 @@
       }
 
       .date {
-        color: #FFFFFF;
+        color: var(--white);
         display: block;
         font-size: 35px;
         line-height: 1;
