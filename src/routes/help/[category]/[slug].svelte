@@ -5,8 +5,8 @@
     const json = await res.json();
 
     if (res.status === 200) {
-      const { toc, item } = json;
-      return { toc, item };
+      const { toc, item, getStartedData } = json;
+      return { toc, item, getStartedData };
     } else {
       this.error(res.status, json.message);
     }
@@ -15,21 +15,30 @@
 
 <script>
   import { stores } from '@sapper/app';
+  import { Row, Column } from "carbon-components-svelte";
   import SidebarLeft from '../_SidebarLeft.svelte';
   import ItemDetail from '../_ItemDetail.svelte';
-  import NavBreadcrumb from '../../../partials/NavBreadcrumb.svelte';
+  import NavBreadcrumb from '~/partials/NavBreadcrumb.svelte';
+  import SupportFooter from '../_SupportFooter.svelte';
+  import ItemsPrevNextNav from "../_ItemsNavPrevNext.svelte";
   
   export let item;
   export let toc;
+  export let getStartedData;
 
   const { page } = stores();
 
-  let category;
   let activeCategory;
+  let subToc;
+  let subTocIdx;
   let items = [];
+  let prevArticle;
+  let nextArticle;
   
   $: category = $page.params.category;
-  $: category, updateItems();
+  $: category, updateItems(), getSubToc();
+  $: subTocIdx = subToc && subToc.findIndex(d => d.slug === $page.params.slug);
+  $: subTocIdx, setPrevNext();
   $: items = [
     { href: '/', text: 'Home' },
     { href: '/help/', text: 'Help' },
@@ -46,22 +55,38 @@
   function updateItems() {
     activeCategory = toc.find(d => d.slug === category);
   }
+
+  function getSubToc() {
+    if (
+      activeCategory.slug === 'get-started' && 
+      getStartedData && 
+      getStartedData.allTopics
+    ) {
+      subToc = getStartedData.allTopics;
+    }
+  }
+
+  function setPrevNext() {
+    if (!subToc) return;
+    let prev = subToc[subTocIdx - 1];
+    let next = subToc[subTocIdx + 1];
+    prevArticle = prev ? { title: prev.title, href: `help/${category}/${prev.slug}` } : null;
+    nextArticle = next ? { title: next.title, href: `help/${category}/${next.slug}` } : null; 
+  }
 </script>
 
-<style>
-
-</style>
+<style></style>
 
 <svelte:head>
   <title>Help</title>
 </svelte:head>
 
 <div class="page-grid page-grid--help">
-  <aside class="sidebar">
-    <SidebarLeft {toc} />
+  <aside class="sidebar-left">
+    <SidebarLeft {toc} {subToc} />
   </aside>
 
-  <nav class="nav" style="padding:1rem 0 0;">
+  <div class="nav" style="padding:1rem 0 0;">
     <div class="bx--grid bx--grid--condensed">
       <!-- Row -->
       <div class="bx--row">
@@ -72,7 +97,7 @@
         </div>
       </div>
     </div>
-  </nav>
+  </div>
 
   <div class="header">
     <div class="bx--grid">
@@ -87,7 +112,7 @@
               By <a href={item.metadata.link}>{item.metadata.author}</a>, {item.metadata.org}
             </p>
           {/if}
-          <hr>             
+          <hr>       
         </div>
       </div>
     </div>
@@ -97,13 +122,15 @@
     <div class="bx--grid">
       <!-- Row -->
       <ItemDetail {item} />
+      <Row>
+        <Column>
+          <ItemsPrevNextNav prev={prevArticle} next={nextArticle} />
+        </Column>
+      </Row>
     </div>
   </div>
 
-  <div class="footer">
-    <p class="feedback">Email support@cal-adapt.org with your feedback on this topic</p>
-  </div>
+  <SupportFooter borderTop={false} />
 
-  <aside class="sidebar-right">
-  </aside>
+  <aside class="sidebar-right"></aside>
 </div>
