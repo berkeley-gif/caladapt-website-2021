@@ -84,7 +84,7 @@
     align-items: center;
     padding: 1rem;
     height: 150px;
-    background: #eaecee;
+    background: var(--gray-20);
     justify-content: space-between;
 
     img {
@@ -93,7 +93,7 @@
   }
 
   #team {
-    background: #eaecee;
+    background: var(--gray-20);
     padding: 2rem 0;
 
     :global(.bx--tabs__nav) {

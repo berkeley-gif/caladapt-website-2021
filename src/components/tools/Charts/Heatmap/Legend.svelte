@@ -1,7 +1,7 @@
 <script>
-  import { getContext } from 'svelte';
+  import { getContext } from "svelte";
 
-  const legendItems = getContext('Legend');
+  const legendItems = getContext("Legend");
 </script>
 
 <style>
@@ -17,7 +17,7 @@
   }
 
   .legend-item {
-/*    opacity: 0.4;*/
+    /*    opacity: 0.4;*/
     opacity: 1;
     padding: 0.1rem 0.5rem;
     font-size: 0.9rem;
@@ -25,14 +25,14 @@
     background: #fff;
     border: 1px solid #dadee1;
     border-radius: 0.975rem;
-/*    cursor: pointer;*/
+    /*    cursor: pointer;*/
   }
 
-/*  .legend-item:hover {
-    background: #bcc2c7;
+  /*  .legend-item:hover {
+    background: var(--gray-30);
   }*/
 
-/*  .legend-item.show {
+  /*  .legend-item.show {
     opacity: 1;
   }*/
 
@@ -44,15 +44,11 @@
   }
 </style>
 
-<div class='legend-group'>
+<div class="legend-group">
   {#each $legendItems as item}
-    <button
-      size={'sm'}
-      class='legend-item'
-      role={'button'}
-      tabindex={0}>
-        <span class="key" style={`background:${item.color};`}></span>{item.label}
+    <button size="{'sm'}" class="legend-item" role="{'button'}" tabindex="{0}">
+      <span class="key" style="{`background:${item.color};`}"
+      ></span>{item.label}
     </button>
   {/each}
 </div>
-
