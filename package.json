@@ -13,7 +13,8 @@
     "format:single": "npm run format --file=$npm_config_file",
     "pretest": "npm run lint",
     "transfer-dev": "rsync -avz __sapper__/export/ gitdev@api.cal-adapt.org:/var/www/dev.cal-adapt.org/",
-    "deploy-dev": "npm run export && npm run transfer-dev"
+    "deploy-dev": "npm run export && npm run transfer-dev",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@mapbox/togeojson": "^0.16.0",
@@ -41,10 +42,9 @@
     "install": "^0.13.0",
     "jspdf": "^2.3.1",
     "mapbox-gl": "^2.0.1",
-    "node-sass": "^6.0.0",
+    "node-sass": "^6.0.1",
     "npm": "^7.7.6",
     "polka": "next",
-    "prettier": "^2.0.0",
     "shpjs": "^3.6.3",
     "sirv": "^1.0.0",
     "svelte-inview": "^2.0.1"
@@ -59,8 +59,11 @@
     "file-loader": "^6.0.0",
     "front-matter": "^4.0.2",
     "html-loader": "^2.1.2",
+    "husky": "^7.0.1",
     "layercake": "^4.0.3",
+    "lint-staged": "^11.1.2",
     "marked": "^1.2.7",
+    "prettier": "^2.0.0",
     "prettier-plugin-svelte": "^2.1.6",
     "raw-loader": "^4.0.2",
     "sapper": "^0.28.0",
@@ -69,5 +72,9 @@
     "svelte-preprocess": "^4.6.1",
     "webpack": "^4.7.0",
     "webpack-modules": "^1.0.0"
+  },
+  "lint-staged": {
+    "*.{js,svelte}": "eslint --cache --fix",
+    "*.--write": "prettier --write"
   }
 }
