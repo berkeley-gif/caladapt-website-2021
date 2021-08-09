@@ -1,6 +1,9 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-  import { Button, SkeletonText } from "carbon-components-svelte";
+  import { createEventDispatcher } from 'svelte';
+  import {
+    Button,
+    SkeletonText,
+  } from 'carbon-components-svelte';
 
   export let title;
   export let stats;
@@ -9,7 +12,7 @@
   const dispatch = createEventDispatcher();
 
   function update(value) {
-    dispatch("change", value);
+    dispatch('change', value);
   }
 </script>
 
@@ -36,7 +39,7 @@
 
   .stat-text {
     font-size: 0.8rem;
-    color: var(--gray-70);
+    color: #51585e;
     text-transform: uppercase;
     max-width: 13ch;
     line-height: 1.2;
@@ -53,7 +56,7 @@
   <div class="stat">
     <!-- title -->
     <div class="stat-header">
-      <span class="stat-title">{title}</span>
+      <span class="stat-title">{title}</span>    
     </div>
     <!-- group -->
     <div class="stat-group">
@@ -61,9 +64,10 @@
         <div class="stat-data">
           <div class="stat-text">{item.label}</div>
           <div class="stat-value">
-            <Button kind="tertiary" on:click="{() => update(item.value)}">
-              {item.value}
-              {units}
+            <Button
+              kind="tertiary"
+              on:click={() => update(item.value)}>
+              {item.value} {units}
             </Button>
           </div>
         </div>
@@ -72,6 +76,6 @@
   </div>
 {:else}
   <div class="stat">
-    <SkeletonText paragraph lines="{2}" />
+    <SkeletonText paragraph lines={2} />
   </div>
 {/if}
