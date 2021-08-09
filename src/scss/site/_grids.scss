@@ -41,6 +41,11 @@
   .content {
     grid-area: content;
   }
+
+  .content-extended {
+    grid-column: 2 / span 3;
+    margin-bottom: var(--spacing-13, 10rem);
+  }
 }
 
 .page-grid--help {
@@ -64,9 +69,14 @@
   }
 
   .sidebar-left {
-    .bx--side-nav__link-text {
+    .bx--side-nav__link-text,
+    .sidebar-left--sub-toc {
       font-size: 1rem;
       text-transform: uppercase;
+    }
+
+    .bx--side-nav__menu-item .bx--side-nav__link-text {
+      text-transform: none;
     }
   }
 

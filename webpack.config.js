@@ -8,7 +8,11 @@ const sveltePreprocess = require('svelte-preprocess');
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 
-const alias = { svelte: path.resolve('node_modules', 'svelte') };
+const alias = {
+  content: path.resolve(__dirname, 'content'),
+  svelte: path.resolve('node_modules', 'svelte'),
+  "~": path.resolve(__dirname, "src/")
+};
 const extensions = ['.mjs', '.js', '.json', '.svelte', '.html'];
 const mainFields = ['svelte', 'module', 'browser', 'main'];
 const fileLoaderRule = {
@@ -22,6 +26,13 @@ const svgLoaderRule = {
   use: [
     'raw-loader',
   ]
+};
+const htmlLoaderRule = {
+  test: /\.html$/i,
+  loader: "html-loader",
+  options: {
+    esModule: false
+  }
 };
 const { optimizeCarbonImports } = require("carbon-components-svelte/preprocess");
 
@@ -57,7 +68,8 @@ module.exports = {
           }
         },
         fileLoaderRule,
-        svgLoaderRule
+        svgLoaderRule,
+        htmlLoaderRule
       ]
     },
     mode,

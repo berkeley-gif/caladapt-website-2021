@@ -1,10 +1,11 @@
-import get_data from '../_help.js';
+import get_data, { fetchGetStartedData } from "../_help.js";
 
 export function get(req, res) {
   const { category, slug } = req.params;
   const { toc, data } = get_data(category);
-  let item;
+  const getStartedData = fetchGetStartedData(slug);
 
+  let item;
   data.forEach((d) => {
     if (d.slug === slug) {
       item = d;
@@ -13,15 +14,17 @@ export function get(req, res) {
 
   if (item) {
     res.writeHead(200, {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     });
-    res.end(JSON.stringify({ item, toc }));
+    res.end(JSON.stringify({ item, toc, getStartedData }));
   } else {
     res.writeHead(404, {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     });
-    res.end(JSON.stringify({
-      message: `Not found`
-    }));
+    res.end(
+      JSON.stringify({
+        message: `Not found`,
+      })
+    );
   }
 }
