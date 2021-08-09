@@ -8,7 +8,9 @@
     "export": "sapper export --timeout=10000 --concurrent 1",
     "start": "node __sapper__/build",
     "lint": "eslint src --ext .js,.svelte",
-    "format": "prettier --write .",
+    "format": "prettier --write",
+    "format:all": "npm run format -- .",
+    "format:single": "npm run format --file=$npm_config_file",
     "pretest": "npm run lint",
     "transfer-dev": "rsync -avz __sapper__/export/ gitdev@api.cal-adapt.org:/var/www/dev.cal-adapt.org/",
     "deploy-dev": "npm run export && npm run transfer-dev"
