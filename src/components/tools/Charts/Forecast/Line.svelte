@@ -18,7 +18,7 @@
 <path
   class="{`path-line forecast`}"
   d="{path($data)}"
-  stroke="#9fa6ac"
+  stroke="var(--gray-40)"
   fill="none"
   stroke-width="1px"
 >
