@@ -2,6 +2,6 @@ module.exports = {
   svelteSortOrder: "scripts-styles-markup",
   svelteStrictMode: true,
   svelteBracketNewLine: true,
-  svelteAllowShorthand: false,
+  svelteAllowShorthand: true,
   plugins: ["prettier-plugin-svelte"],
 };

@@ -1,46 +1,54 @@
 <script>
-  import { ToastNotification } from 'carbon-components-svelte';
-  import { notification } from './store.js'
-  import { onDestroy } from 'svelte'
+  import { ToastNotification } from "carbon-components-svelte";
+  import { notification } from "./store.js";
+  import { onDestroy } from "svelte";
 
-  export let timeout = 3000
+  export let timeout = 3000;
 
-  let count = 0
-  let toasts = [ ]
-  let unsubscribe
+  let count = 0;
+  let toasts = [];
+  let unsubscribe;
 
   function animateOut(node, { delay = 0, duration = 1000 }) {
     return {
       delay,
       duration,
-      css: t => `opacity: ${(t-.7) * 1}; transform-origin: top right;`
-    }
+      css: (t) => `opacity: ${(t - 0.7) * 1}; transform-origin: top right;`,
+    };
   }
 
   function createToast(kind, title, subtitle, caption, to) {
     const newToast = {
       id: count,
-      kind, 
+      kind,
       title,
       subtitle,
       caption,
       timeout: to || timeout,
-      width: '100%'
+      width: "100%",
     };
     toasts = [newToast, ...toasts];
-    count = count + 1   
+    count = count + 1;
   }
-  
-  unsubscribe = notification.subscribe(value => {
-    if (!value) { return }
-    createToast(value.kind, value.title, value.subtitle, value.caption, value.to);
-    notification.set()
-  })
-  
+
+  unsubscribe = notification.subscribe((value) => {
+    if (!value) {
+      return;
+    }
+    createToast(
+      value.kind,
+      value.title,
+      value.subtitle,
+      value.caption,
+      value.to
+    );
+    notification.set();
+  });
+
   onDestroy(unsubscribe);
-  
-  function removeToast(id) { 
-    toasts = toasts.filter(t => t.id != id)
+
+  function removeToast(id) {
+    toasts = toasts.filter((t) => t.id != id);
   }
 </script>
 
@@ -54,7 +62,7 @@
     margin: 0;
     z-index: 9999;
   }
-  
+
   :global(.toasts) > .toast {
     position: relative;
     margin: 1vh 1vw;
@@ -68,8 +76,8 @@
     75%,
     90%,
     to {
-      -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
-      animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+      -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
     }
 
     0% {
@@ -95,12 +103,12 @@
     }
   }
 
-  @keyframes shrink { 
-    0% { 
-      width: 98vw; 
+  @keyframes shrink {
+    0% {
+      width: 98vw;
     }
-    100% { 
-      width: 0; 
+    100% {
+      width: 0;
     }
   }
 
@@ -111,8 +119,8 @@
       75%,
       90%,
       to {
-        -webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
-        animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+        -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
       }
 
       0% {
@@ -137,13 +145,13 @@
         transform: none;
       }
     }
-  
-    @keyframes shrink { 
-      0% { 
+
+    @keyframes shrink {
+      0% {
         width: 40vw;
       }
-      100% { 
-        width: 0; 
+      100% {
+        width: 0;
       }
     }
   }
@@ -153,16 +161,14 @@
   {#each toasts as toast (toast.id)}
     <li class="toast" out:animateOut>
       <ToastNotification
-        kind={toast.kind}
-        title={toast.title}
-        subtitle={toast.subtitle}
-        caption={new Date().toLocaleString()}
+        kind="{toast.kind}"
+        title="{toast.title}"
+        subtitle="{toast.subtitle}"
+        caption="{new Date().toLocaleString()}"
         style="animation-duration: {toast.timeout}ms;"
-        on:click={() => removeToast(toast.id) }
-        on:animationend={() => removeToast(toast.id) }>
-      </ToastNotification>
-    </li> 
+        on:click="{() => removeToast(toast.id)}"
+        on:animationend="{() => removeToast(toast.id)}"
+      />
+    </li>
   {/each}
 </ul>
-
-

@@ -1,9 +1,9 @@
 <script>
-  import { stores } from '@sapper/app';
-  import { createEventDispatcher } from 'svelte';
+  import { stores } from "@sapper/app";
+  import { createEventDispatcher } from "svelte";
   import { Search, Select, SelectItem } from "carbon-components-svelte";
 
-  export let display = ['events', 'posts'];
+  export let display = ["events", "posts"];
   export let events = [];
   export let posts = [];
   export let filters = [];
@@ -15,21 +15,23 @@
   let upcomingEvents;
   $: if (events && events.length > 0) {
     const today = new Date();
-    upcomingEvents = events.filter(d => new Date(d.metadata.eventdate) >= today);
-  } 
+    upcomingEvents = events.filter(
+      (d) => new Date(d.metadata.eventdate) >= today
+    );
+  }
 
   function updateSearch(e) {
-    dispatch('search', e.target.value);
+    dispatch("search", e.target.value);
   }
 
   function updateFilter(e) {
-    dispatch('filter', e.detail);
+    dispatch("filter", e.detail);
   }
 
   const capitalize = (s) => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  }
+    if (typeof s !== "string") return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
 </script>
 
 <style lang="scss">
@@ -38,7 +40,7 @@
   }
 </style>
 
-{#if display.includes('events') && upcomingEvents.length > 0}
+{#if display.includes("events") && upcomingEvents.length > 0}
   <!-- Events -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Upcoming Events</h5>
@@ -46,10 +48,12 @@
       {#each upcomingEvents as event}
         <li class="item">
           <p class="item-title">
-            <a href={`blog/events/${event.slug}`}>{event.metadata.title}</a>
+            <a href="{`blog/events/${event.slug}`}">{event.metadata.title}</a>
           </p>
           <p class="item-text">{event.metadata.eventdatestring}</p>
-          <p class="item-text">{event.metadata.location}, {event.metadata.time}</p>
+          <p class="item-text">
+            {event.metadata.location}, {event.metadata.time}
+          </p>
         </li>
       {/each}
     </ul>
@@ -59,7 +63,7 @@
   </div>
 {/if}
 
-{#if display.includes('posts')}
+{#if display.includes("posts")}
   <!-- Posts -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Latest on Cal-Adapt Blog</h5>
@@ -67,7 +71,7 @@
       {#each posts as post}
         <li class="item">
           <p class="item-title">
-            <a href={`blog/${post.slug}`}>{post.metadata.title}</a>
+            <a href="{`blog/${post.slug}`}">{post.metadata.title}</a>
           </p>
           <p class="item-text">{post.metadata.snippet}</p>
         </li>
@@ -79,20 +83,21 @@
   </div>
 {/if}
 
-{#if display.includes('search')}
+{#if display.includes("search")}
   <!-- Search -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Search</h5>
     <div class="sidebar-search">
       <Search
-       style="padding-left: 1.5rem;"
-       on:change={updateSearch}
-       on:clear={() => dispatch('search', '')} />        
+        style="padding-left: 1.5rem;"
+        on:change="{updateSearch}"
+        on:clear="{() => dispatch('search', '')}"
+      />
     </div>
   </div>
 {/if}
 
-{#if display.includes('filters')}
+{#if display.includes("filters")}
   <!-- Search -->
   <div class="sidebar-block">
     <h5 class="sidebar-block-title">Filters</h5>
@@ -101,26 +106,29 @@
         hideLabel
         labelText="Select Topics"
         selected=""
-        on:change={updateFilter}>
+        on:change="{updateFilter}"
+      >
         <SelectItem value="" text="All Topics" />
         {#each filters as opt}
-          <SelectItem value={opt} text={capitalize(opt)} />
+          <SelectItem value="{opt}" text="{capitalize(opt)}" />
         {/each}
       </Select>
     </div>
   </div>
 {/if}
 
-{#if display.includes('glossary')}
+{#if display.includes("glossary")}
   <!-- Glossary Link -->
   <div class="sidebar-block">
     <p class="item-text">
-      For more climate adaptation terms visit the glossary on <a href="https://resilientca.org/">California Adaptation Clearinghouse</a>.
+      For more climate adaptation terms visit the glossary on <a
+        href="https://resilientca.org/">California Adaptation Clearinghouse</a
+      >.
     </p>
   </div>
 {/if}
 
-{#if display.includes('page-anchor-links') && anchors.length}
+{#if display.includes("page-anchor-links") && anchors.length}
   <div class="sidebar-block">
     <ul class="page-anchor-links-list">
       {#each anchors as anchor}

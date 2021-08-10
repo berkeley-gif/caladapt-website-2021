@@ -1,16 +1,12 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
-  import {
-    Button,
-    Accordion,
-    AccordionItem,
-  } from 'carbon-components-svelte';
-  import ArrowRight16 from 'carbon-icons-svelte/lib/ArrowRight16';
-  import ArrowLeft16 from 'carbon-icons-svelte/lib/ArrowLeft16';
-  import { fly } from 'svelte/transition';
+  import { onMount, createEventDispatcher } from "svelte";
+  import { Button, Accordion, AccordionItem } from "carbon-components-svelte";
+  import ArrowRight16 from "carbon-icons-svelte/lib/ArrowRight16";
+  import ArrowLeft16 from "carbon-icons-svelte/lib/ArrowLeft16";
+  import { fly } from "svelte/transition";
 
   // Helpers
-  import { modelList, scenarioList, monthsList } from './_helpers';
+  import { modelList, scenarioList, monthsList } from "./_helpers";
 
   // Components
   import {
@@ -18,14 +14,10 @@
     SelectModels,
     SelectMonth,
     ShowDefinition,
-   } from '../../../components/tools/Settings';
+  } from "../../../components/tools/Settings";
 
   // Store
-  import {
-    scenarioStore,
-    modelsStore,
-    monthStore,
-  } from './_store';
+  import { scenarioStore, modelsStore, monthStore } from "./_store";
 
   export let sidebarCollapsed;
 
@@ -33,22 +25,22 @@
 
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
-    console.log('scenario change');
+    console.log("scenario change");
   }
 
   function changeModels(e) {
-    modelsStore.set(e.detail.selectedIds.join(','));
-    console.log('models change');
+    modelsStore.set(e.detail.selectedIds.join(","));
+    console.log("models change");
   }
 
   function changeMonth(e) {
     monthStore.set(e.detail.id);
-    console.log('month change');
+    console.log("month change");
   }
 
   onMount(() => {
-    dispatch('ready');
-  })
+    dispatch("ready");
+  });
 </script>
 
 <style lang="scss">
@@ -59,7 +51,7 @@
   }
 
   :global(.bx--accordion__title::before) {
-    content: '';
+    content: "";
     background: url(img/icons/gear.svg);
     display: inline-block;
     height: 1rem;
@@ -84,58 +76,61 @@
       tooltipPosition="left"
       tooltipAlignment="end"
       iconDescription="Show Settings Panel"
-      icon={ArrowLeft16}
+      icon="{ArrowLeft16}"
       kind="primary"
       size="sm"
-      on:click={() => sidebarCollapsed = false}>
-    </Button>
+      on:click="{() => (sidebarCollapsed = false)}"
+    />
   </div>
 {:else}
-  <div class="settings" transition:fly={{x: 250, opacity: 1}}> 
+  <div class="settings" transition:fly="{{ x: 250, opacity: 1 }}">
     <div class="settings-header">
       <h5>Settings</h5>
       <Button
         tooltipPosition="left"
         tooltipAlignment="end"
         iconDescription="Hide Settings Panel"
-        icon={ArrowRight16}
+        icon="{ArrowRight16}"
         kind="primary"
-        on:click={() => sidebarCollapsed = true}>
-      </Button>
+        on:click="{() => (sidebarCollapsed = true)}"
+      />
     </div>
     <Accordion class="settings-list">
       <AccordionItem open title="Month">
         <SelectMonth
-          selectedId={$monthStore}
-          items={monthsList}
-          on:change={changeMonth}
+          selectedId="{$monthStore}"
+          items="{monthsList}"
+          on:change="{changeMonth}"
         />
         <ShowDefinition
           on:define
-          topics={["snow-water-equivalent"]}
-          title="Climate Variables" />
+          topics="{['snow-water-equivalent']}"
+          title="Climate Variables"
+        />
       </AccordionItem>
       <AccordionItem open title="Scenario">
         <SelectScenario
-          selectedId={$scenarioStore}
-          items={scenarioList}
-          on:change={changeScenario}
+          selectedId="{$scenarioStore}"
+          items="{scenarioList}"
+          on:change="{changeScenario}"
         />
         <ShowDefinition
           on:define
-          topics={["climate-scenarios"]}
-          title="RCP Scenarios" />
+          topics="{['climate-scenarios']}"
+          title="RCP Scenarios"
+        />
       </AccordionItem>
       <AccordionItem title="Models">
-        <SelectModels 
-          selectedIds={$modelsStore}
-          items={modelList}
-          on:change={changeModels}
+        <SelectModels
+          selectedIds="{$modelsStore}"
+          items="{modelList}"
+          on:change="{changeModels}"
         />
         <ShowDefinition
           on:define
-          topics={["gcms"]}
-          title="Global Climate Models (GCMs)" />
+          topics="{['gcms']}"
+          title="Global Climate Models (GCMs)"
+        />
       </AccordionItem>
     </Accordion>
   </div>

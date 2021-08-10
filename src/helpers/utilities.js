@@ -1,8 +1,8 @@
-import { utcParse } from 'd3-time-format';
-import { timeDay } from 'd3-time';
-import config from './api-config';
-import shp from 'shpjs';
-import tj from '@mapbox/togeojson';
+import { utcParse } from "d3-time-format";
+import { timeDay } from "d3-time";
+import config from "./api-config";
+import shp from "shpjs";
+import tj from "@mapbox/togeojson";
 
 const { apiEndpoint } = config.env.production;
 
@@ -13,15 +13,15 @@ const { apiEndpoint } = config.env.production;
  * @return {object} - key value pair e.g. { climatevar: 'swe', scenario: 'rcp45' }
  */
 export function deserialize(paramsStr) {
-  const pieces = paramsStr.split('&');
+  const pieces = paramsStr.split("&");
   const params = {};
   let i;
   let parts;
   // process each query pair
   for (i = 0; i < pieces.length; i += 1) {
-    parts = pieces[i].split('=');
+    parts = pieces[i].split("=");
     if (parts.length < 2) {
-      parts.push('');
+      parts.push("");
     }
     params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
   }
@@ -39,7 +39,7 @@ export function serialize(params) {
   Object.keys(params).forEach((key) => {
     parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
   });
-  return `${parts.join('&')}`;
+  return `${parts.join("&")}`;
 }
 
 /**
@@ -49,8 +49,8 @@ export function serialize(params) {
  * @return {string} messageStr - error message
  */
 function getError(json) {
-  let errorStr = '';
-  let messageStr = '';
+  let errorStr = "";
+  let messageStr = "";
   // Error returned from API can be in various configs
   if (json.g && json.g[0]) {
     [errorStr] = json.g;
@@ -63,10 +63,10 @@ function getError(json) {
   }
 
   // Generate user friendly error message
-  if (errorStr.indexOf('Max area of 5.7 exceeded') > -1) {
+  if (errorStr.indexOf("Max area of 5.7 exceeded") > -1) {
     messageStr = `Area of uploaded feature is too large. Maximum
           area supported is 20,000 sq. miles.`;
-  } else if (errorStr.indexOf('Upload a valid data source') > -1) {
+  } else if (errorStr.indexOf("Upload a valid data source") > -1) {
     messageStr = `File is corrupted or not a valid data source`;
   } else {
     messageStr = errorStr;
@@ -142,9 +142,9 @@ export const handle = (promise) => {
  * @param {object} params - query parameters
  * @return {Promise}
  */
-export function fetchData(url, params, method='GET') {
+export function fetchData(url, params, method = "GET") {
   let request;
-  if (method === 'POST') {
+  if (method === "POST") {
     const formData = new FormData();
     Object.keys(params).forEach((key) => {
       formData.append(key, params[key]);
@@ -152,7 +152,7 @@ export function fetchData(url, params, method='GET') {
     request = fetch(url, {
       method,
       headers: {
-        Accept: 'application/json',
+        Accept: "application/json",
       },
       body: formData,
     });
@@ -160,7 +160,7 @@ export function fetchData(url, params, method='GET') {
     request = fetch(`${url}?${serialize(params)}`, {
       method,
       headers: {
-        Accept: 'application/json',
+        Accept: "application/json",
       },
     });
   }
@@ -174,11 +174,11 @@ export function fetchData(url, params, method='GET') {
  * @return {array} values
  */
 export function transformResponse(response) {
-  const parseDate = utcParse('%Y-%m-%dT%H:%M:%S%Z');
+  const parseDate = utcParse("%Y-%m-%dT%H:%M:%S%Z");
   const { columns, index, data } = response;
 
   if (!data) {
-    throw new Error('No data for this location');
+    throw new Error("No data for this location");
   }
 
   const values = data.map((row, i) => {
@@ -203,11 +203,11 @@ export function transformResponse(response) {
  * @return {array} values
  */
 export function transformCounts(response) {
-  const parseDate = utcParse('%Y-%m-%dT%H:%M:%S%Z');
+  const parseDate = utcParse("%Y-%m-%dT%H:%M:%S%Z");
   const { counts, ...threshold } = response;
 
   if (!counts) {
-    throw new Error('No data for this location');
+    throw new Error("No data for this location");
   }
 
   const entries = Object.entries(counts);
@@ -231,14 +231,18 @@ export function transformCounts(response) {
  */
 export function makeEnvelope(minArray, maxArray, slug) {
   const values = minArray.map((row, i) => {
-    return { date: row.date, key: row.key, min: row.value, max: maxArray[i].value };
+    return {
+      date: row.date,
+      key: row.key,
+      min: row.value,
+      max: maxArray[i].value,
+    };
   });
   return {
     slug,
     values,
   };
 }
-
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
 export function createSeriesObject(props, values) {
@@ -267,12 +271,16 @@ export function addPropsToValues(props, values) {
  * @return {function}
  */
 export const pipe = function pipe() {
-  for (var _len = arguments.length, functions = Array(_len), _key = 0; _key < _len; _key++) {
+  for (
+    var _len = arguments.length, functions = Array(_len), _key = 0;
+    _key < _len;
+    _key++
+  ) {
     functions[_key] = arguments[_key];
   }
 
-  return function(input) {
-    return functions.reduce(function(chain, func) {
+  return function (input) {
+    return functions.reduce(function (chain, func) {
       return chain.then(func);
     }, Promise.resolve(input));
   };
@@ -287,12 +295,16 @@ export const pipe = function pipe() {
  * @return {function}
  */
 export const compose = function compose() {
-  for (var _len = arguments.length, functions = Array(_len), _key = 0; _key < _len; _key++) {
+  for (
+    var _len = arguments.length, functions = Array(_len), _key = 0;
+    _key < _len;
+    _key++
+  ) {
     functions[_key] = arguments[_key];
   }
 
-  return function(input) {
-    return functions.reduceRight(function(chain, func) {
+  return function (input) {
+    return functions.reduceRight(function (chain, func) {
       return chain.then(func);
     }, Promise.resolve(input));
   };
@@ -304,7 +316,7 @@ export const compose = function compose() {
  * https://github.com/msn0/dead-simple-curry
  *
  */
-export const curry = function(fn) {
+export const curry = function (fn) {
   return function curried(...args) {
     return args.length >= fn.length
       ? fn.call(this, ...args)
@@ -316,7 +328,7 @@ export const curry = function(fn) {
  * Sort dates, dates will be cast to numbers
  *
  */
-export const sortByDateAscending = function(a, b) {
+export const sortByDateAscending = function (a, b) {
   return a.date - b.date;
 };
 
@@ -324,7 +336,7 @@ export const sortByDateAscending = function(a, b) {
  * Sort ascending numeric array
  *
  */
-export const sortAscending = function(a, b) {
+export const sortAscending = function (a, b) {
   return a - b;
 };
 
@@ -332,8 +344,8 @@ export const sortAscending = function(a, b) {
  * Sanitize string
  *
  */
-export const sanitizeString = function(str) {
-  str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim, '');
+export const sanitizeString = function (str) {
+  str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim, "");
   return str.trim();
 };
 
@@ -354,7 +366,7 @@ export function getSiblings(elem) {
     sibling = sibling.nextSibling;
   }
   return siblings;
-};
+}
 
 /**
  * Group consecutive dates
@@ -395,15 +407,15 @@ export function groupConsecutiveDates(arr) {
 export async function validateShape(file) {
   const formData = new FormData();
   if (file instanceof File) {
-    formData.append('upload', file);
+    formData.append("upload", file);
   } else {
-    formData.append('g', JSON.stringify(file));
+    formData.append("g", JSON.stringify(file));
   }
-  formData.append('stat', 'mean');
+  formData.append("stat", "mean");
   const request = fetch(`${apiEndpoint}/series/tasmax_year_livneh/rasters/`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Accept: 'application/json',
+      Accept: "application/json",
     },
     body: formData,
   });
@@ -418,14 +430,14 @@ export async function validateShape(file) {
  */
 export async function convertFileToGeojson(file) {
   const { name } = file;
-  const extension = name.split('.')[1];
+  const extension = name.split(".")[1];
   let data;
-  if (extension === 'zip') {
+  if (extension === "zip") {
     const archive = await file.arrayBuffer();
     data = await shp(archive);
-  } else if (extension === 'kml') {
+  } else if (extension === "kml") {
     const text = await file.text();
-    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    const xml = new DOMParser().parseFromString(text, "text/xml");
     data = tj.kml(xml);
   } else {
     const text = await file.text();
@@ -447,9 +459,9 @@ export function closest(needle, haystack) {
     let bDiff = Math.abs(b - needle);
 
     if (aDiff == bDiff) {
-        return a > b ? a : b;
+      return a > b ? a : b;
     } else {
-        return bDiff < aDiff ? b : a;
+      return bDiff < aDiff ? b : a;
     }
   });
 }
@@ -458,12 +470,13 @@ export function closest(needle, haystack) {
  * Returns a function, that, as long as it continues to be invoked, will not
  * be triggered. The function will be called after it stops being called for
  * wait` milliseconds.
-*/
+ */
 export function debounce(func, wait, immediate) {
   let timeout;
-  return function() {
-    const context = this, args = arguments;
-    const later = function() {
+  return function () {
+    const context = this,
+      args = arguments;
+    const later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };
@@ -472,4 +485,4 @@ export function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
-};
+}

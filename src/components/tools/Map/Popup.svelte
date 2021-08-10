@@ -1,6 +1,6 @@
 <script>
-  import { getContext } from 'svelte';
-  import { contextKey } from './../../../helpers/mapbox';
+  import { getContext } from "svelte";
+  import { contextKey } from "./../../../helpers/mapbox";
 
   const { getMap, getMapbox } = getContext(contextKey);
   const map = getMap();
@@ -10,7 +10,7 @@
   export let lon;
   export let label;
   export let options = {
-    closeOnMove: true, 
+    closeOnMove: true,
   };
   export function remove() {
     if (popup.isOpen()) {
@@ -19,7 +19,7 @@
     }
   }
 
-  const popup = new mapboxgl.Popup(options)
+  let popup = new mapboxgl.Popup(options)
     .setLngLat([lon, lat])
     .setHTML(label)
     .addTo(map);

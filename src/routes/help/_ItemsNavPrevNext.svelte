@@ -1,3 +1,8 @@
+<script>
+  export let prev;
+  export let next;
+</script>
+
 <style lang="scss">
   .prev-next--container {
     display: grid;
@@ -60,8 +65,3 @@
     </li>
   </ul>
 </nav>
-
-<script>
-  export let prev;
-  export let next;
-</script>

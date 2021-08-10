@@ -1,7 +1,15 @@
 <script>
-  import { Tag } from 'carbon-components-svelte';
-  import { createEventDispatcher } from 'svelte';
-  import { Sun, Rainfall, Sea, Snowflake, Streamflow, Wildfire, App } from '../components/icons';
+  import { Tag } from "carbon-components-svelte";
+  import { createEventDispatcher } from "svelte";
+  import {
+    Sun,
+    Rainfall,
+    Sea,
+    Snowflake,
+    Streamflow,
+    Wildfire,
+    App,
+  } from "../components/icons";
 
   export let categories;
 
@@ -10,19 +18,19 @@
   let selected = categories[0];
 
   const icons = [
-    ['All', [App]],
-    ['Temperature', [Sun]],
-    ['Precipitation', [Rainfall, Streamflow]],
-    ['Snowpack', [Snowflake]],
-    ['Sea Level Rise', [Sea]],
-    ['Wildfire', [Wildfire]],
+    ["All", [App]],
+    ["Temperature", [Sun]],
+    ["Precipitation", [Rainfall, Streamflow]],
+    ["Snowpack", [Snowflake]],
+    ["Sea Level Rise", [Sea]],
+    ["Wildfire", [Wildfire]],
   ];
 
   const iconsMap = new Map(icons);
 
   function selectCategory(category) {
     selected = category;
-    dispatch('change', { category });
+    dispatch("change", { category });
   }
 </script>
 
@@ -46,18 +54,21 @@
 </style>
 
 <div class="filter-tags">
-  {#each categories as category,i }
+  {#each categories as category, i}
     <Tag
       style="font-size:1rem;margin:0.5rem;"
       interactive
       type="cool-gray"
-      class={selected === category ? 'active': ''}
-      on:click={() => selectCategory(category)}
+      class="{selected === category ? 'active' : ''}"
+      on:click="{() => selectCategory(category)}"
     >
       <div class="center">
         {#each iconsMap.get(category) as icon, i}
           <span class="filter-icon">
-            <svelte:component dimension={25} this={iconsMap.get(category)[i]} />
+            <svelte:component
+              this="{iconsMap.get(category)[i]}"
+              dimension="{25}"
+            />
           </span>
         {/each}
         <span class="filter-label">

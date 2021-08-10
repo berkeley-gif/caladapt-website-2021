@@ -1,3 +1,10 @@
+<script>
+  export let topic = {
+    title: "A Title",
+    text: "Some descriptive text",
+  };
+</script>
+
 <style lang="scss">
   .tile-wrapper,
   .tile--content {
@@ -78,10 +85,3 @@
     <small aria-hidden="true">Learn more</small>
   </div>
 </li>
-
-<script>
-  export let topic = {
-    title: "A Title",
-    text: "Some descriptive text",
-  };
-</script>

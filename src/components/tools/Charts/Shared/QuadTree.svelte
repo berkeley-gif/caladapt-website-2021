@@ -1,32 +1,39 @@
 <script>
-  import { getContext } from 'svelte';
-  import { quadtree } from 'd3-quadtree';
+  import { getContext } from "svelte";
+  import { quadtree } from "d3-quadtree";
 
-  const { data, xGet, yGet, width, height } = getContext('LayerCake');
+  const { data, xGet, yGet, width, height } = getContext("LayerCake");
 
   let visible = false;
   let found = {};
   let e = {};
 
   export let dataset = undefined;
-  export let x = 'x';
-  export let y = 'y';
+  export let x = "x";
+  export let y = "y";
 
-  $: xGetter = x === 'x' ? $xGet : $yGet;
-  $: yGetter = y === 'y' ? $yGet : $xGet;
+  $: xGetter = x === "x" ? $xGet : $yGet;
+  $: yGetter = y === "y" ? $yGet : $xGet;
 
-  function findItem (evt) {
+  function findItem(evt) {
     e = evt;
-    found = finder.find(evt[`layer${x.toUpperCase()}`], evt[`layer${y.toUpperCase()}`], 300) || {};
+    found =
+      finder.find(
+        evt[`layer${x.toUpperCase()}`],
+        evt[`layer${y.toUpperCase()}`],
+        300
+      ) || {};
     visible = Object.keys(found).length > 0;
   }
 
   $: finder = quadtree()
-    .extent([[-1, -1], [$width + 1, $height + 1]])
+    .extent([
+      [-1, -1],
+      [$width + 1, $height + 1],
+    ])
     .x(xGetter)
     .y(yGetter)
     .addAll(dataset || $data);
-
 </script>
 
 <style>
@@ -42,13 +49,12 @@
 <div
   class="bg"
   on:mousemove="{findItem}"
-  on:mouseout="{() => visible = false}"
+  on:mouseout="{() => (visible = false)}"
 ></div>
 <slot
-  x={xGetter(found) || 0}
-  y={yGetter(found) || 0}
-  {found}
-  {visible}
-  {e}
-></slot>
-
+  x="{xGetter(found) || 0}"
+  y="{yGetter(found) || 0}"
+  found="{found}"
+  visible="{visible}"
+  e="{e}"
+/>

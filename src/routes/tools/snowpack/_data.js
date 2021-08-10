@@ -1,19 +1,19 @@
 // Node modules
-import { merge, rollup, sort, group } from 'd3-array';
+import { merge, rollup, sort, group } from "d3-array";
 
 // Helpers
-import config from '../../../helpers/api-config';
+import config from "../../../helpers/api-config";
 import {
   handleXHR,
   fetchData,
   transformResponse,
   pipe,
-} from '../../../helpers/utilities';
-import { seriesList } from './_helpers';
+} from "../../../helpers/utilities";
+import { seriesList } from "./_helpers";
 
 const { apiEndpoint } = config.env.production;
 
-const fetchTimeseries = async ({slug, params, method}) => {
+const fetchTimeseries = async ({ slug, params, method }) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
   const [response, error] = await handleXHR(fetchData(url, params, method));
   if (error) {
@@ -23,12 +23,16 @@ const fetchTimeseries = async ({slug, params, method}) => {
 };
 
 const addSeriesInfo = (series) => {
-  const item = seriesList.find(d => d.key === series.key);
-  return { ...series, ...item, visible: true, };
-}
+  const item = seriesList.find((d) => d.key === series.key);
+  return { ...series, ...item, visible: true };
+};
 
 const buildEnvelope = (_data) => {
-  const dataMap = rollup(_data, v => v.map(i => i.value), d => d.date.getFullYear());
+  const dataMap = rollup(
+    _data,
+    (v) => v.map((i) => i.value),
+    (d) => d.date.getFullYear()
+  );
   const dataArr = Array.from(dataMap);
   return dataArr.map(([key, value]) => {
     const sortedArr = sort(value);
@@ -38,7 +42,7 @@ const buildEnvelope = (_data) => {
       max: sortedArr[1],
     };
   });
-}
+};
 
 export async function addModel(config, params, method, modelId) {
   const { climvarId, scenarioId } = config;
@@ -46,18 +50,18 @@ export async function addModel(config, params, method, modelId) {
     `${climvarId}_month_${modelId}_historical`,
     `${climvarId}_month_${modelId}_${scenarioId}`,
   ];
-  const promises = slugs.map(slug => {
-    return pipe(fetchTimeseries, transformResponse)({slug, params, method})
+  const promises = slugs.map((slug) => {
+    return pipe(fetchTimeseries, transformResponse)({ slug, params, method });
   });
   return Promise.all(promises)
     .then((results) => {
       const values = merge(results);
       if (values.length === 0) {
-        throw new Error('No Data');
+        throw new Error("No Data");
       }
       const series = {
         key: modelId,
-        type: 'line',
+        type: "line",
         values,
       };
       return addSeriesInfo(series);
@@ -71,15 +75,18 @@ export async function getObserved(config, params, method) {
   try {
     const { climvarId } = config;
     const slug = `${climvarId}_month_livneh`;
-    const promise = pipe(fetchTimeseries, transformResponse)({slug, params, method});
+    const promise = pipe(
+      fetchTimeseries,
+      transformResponse
+    )({ slug, params, method });
     const values = await promise;
     if (values.length === 0) {
-      throw new Error('No Data');
+      throw new Error("No Data");
     }
     const observed = {
-      key: 'observed',
-      type: 'line',
-      values: values.filter(d => d.date.getFullYear() < 2007),
+      key: "observed",
+      type: "line",
+      values: values.filter((d) => d.date.getFullYear() < 2007),
     };
     return addSeriesInfo(observed);
   } catch (error) {
@@ -89,8 +96,10 @@ export async function getObserved(config, params, method) {
 
 export async function getModels(config, params, method) {
   const { modelIds } = config;
-  const modelList = modelIds.split(',');
-  const modelPromise = modelList.map(modelId => addModel(config, params, method, modelId));
+  const modelList = modelIds.split(",");
+  const modelPromise = modelList.map((modelId) =>
+    addModel(config, params, method, modelId)
+  );
   const modelData = await Promise.all(modelPromise);
   return modelData;
 }
@@ -103,15 +112,15 @@ export async function getEnvelope(config, params, method) {
     `${climvarId}_year_models-max_historical`,
     `${climvarId}_year_models-max_${scenarioId}`,
   ];
-  const promises = slugs.map(slug => {
-    return pipe(fetchTimeseries, transformResponse)({slug, params, method})
+  const promises = slugs.map((slug) => {
+    return pipe(fetchTimeseries, transformResponse)({ slug, params, method });
   });
   return Promise.all(promises)
     .then((results) => {
       const values = buildEnvelope(merge(results));
       const series = {
         key: scenarioId,
-        type: 'area',
+        type: "area",
         values,
       };
       return addSeriesInfo(series);
@@ -121,9 +130,9 @@ export async function getEnvelope(config, params, method) {
     });
 }
 
-export  function flattenData(_data) {
+export function flattenData(_data) {
   return _data.reduce((acc, series) => {
-    const seriesValues = series.values.map(d => {
+    const seriesValues = series.values.map((d) => {
       return {
         ...d,
         year: +d.date.getFullYear(),
@@ -137,25 +146,28 @@ export  function flattenData(_data) {
 }
 
 export function getDataByDate(_arr) {
-  return Array.from(group(_arr, (d) => d.year), ([year, values]) => {
-    const date = new Date(year, 11, 31);
-    const rows = values.map(d => {
-      if (d.min) {
-        return {
-          key: d.key,
-          label: d.label,
-          value: [d['min'], d['max']],
-        };
-      } else {
-        return {
-          key: d.key,
-          label: d.label,
-          value: d.value,
-        };
-      }
-    });
-    return { date, values:rows };
-  });
+  return Array.from(
+    group(_arr, (d) => d.year),
+    ([year, values]) => {
+      const date = new Date(year, 11, 31);
+      const rows = values.map((d) => {
+        if (d.min) {
+          return {
+            key: d.key,
+            label: d.label,
+            value: [d["min"], d["max"]],
+          };
+        } else {
+          return {
+            key: d.key,
+            label: d.label,
+            value: d.value,
+          };
+        }
+      });
+      return { date, values: rows };
+    }
+  );
 }
 
 export function formatDataForExport(_arr) {
@@ -171,5 +183,5 @@ export function formatDataForExport(_arr) {
       }
     });
     return row;
-  })
+  });
 }

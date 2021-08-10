@@ -1,3 +1,9 @@
+<script>
+  import { Row, Column } from "carbon-components-svelte";
+  import TopicTile from "./_TopicTile.svelte";
+  import { getting_started_topics } from "./_getting-started-topics";
+</script>
+
 <style lang="scss">
   p.intro-text {
     max-width: 75ch;
@@ -31,9 +37,3 @@
     </ul>
   </Column>
 </Row>
-
-<script>
-  import { Row, Column } from "carbon-components-svelte";
-  import TopicTile from "./_TopicTile.svelte";
-  import { getting_started_topics } from "./_getting-started-topics";
-</script>

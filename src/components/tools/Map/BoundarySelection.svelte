@@ -1,12 +1,12 @@
 <script>
-  import { getContext, onDestroy } from 'svelte';
-  import { contextKey } from './../../../helpers/mapbox';
+  import { getContext, onDestroy } from "svelte";
+  import { contextKey } from "./../../../helpers/mapbox";
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
   export let data;
-  export let id = 'boundary-selection';
+  export let id = "boundary-selection";
 
   $: if (data) {
     if (map.getLayer(id)) {
@@ -14,16 +14,16 @@
     } else {
       map.addLayer({
         id,
-        type: 'line',
+        type: "line",
         source: {
-          type: 'geojson',
+          type: "geojson",
           data,
         },
         layout: {},
         paint: {
-          'line-opacity': 1,
-          'line-width': 3,
-          'line-color': 'black',
+          "line-opacity": 1,
+          "line-width": 3,
+          "line-color": "black",
         },
       });
     }

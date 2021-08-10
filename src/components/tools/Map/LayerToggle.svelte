@@ -1,9 +1,9 @@
 <script>
-	import { onMount, createEventDispatcher, getContext } from 'svelte';
-  import MapboxCustomControl from './../../../helpers/mapbox-gl-custom-control';
-  import { contextKey } from './../../../helpers/mapbox';
-	
-  export let position = 'top-right';
+  import { onMount, createEventDispatcher, getContext } from "svelte";
+  import MapboxCustomControl from "./../../../helpers/mapbox-gl-custom-control";
+  import { contextKey } from "./../../../helpers/mapbox";
+
+  export let position = "top-right";
   export let options = {};
 
   const dispatch = createEventDispatcher();
@@ -11,12 +11,15 @@
   const map = getMap();
 
   function layerToggleClick() {
-    dispatch('layerToggleClick');
+    dispatch("layerToggleClick");
   }
 
-  const optionsWithDefaults = Object.assign({
-    eventHandler: layerToggleClick,
-  }, options);
+  const optionsWithDefaults = Object.assign(
+    {
+      eventHandler: layerToggleClick,
+    },
+    options
+  );
 
   onMount(() => {
     const layerToggle = new MapboxCustomControl(optionsWithDefaults);

@@ -1,10 +1,9 @@
-import get_posts from './_posts.js';
+import get_posts from "./_posts.js";
 
 const lookup = new Map();
-const posts = get_posts()
-  .map(post => {
-    lookup.set(post.slug, JSON.stringify(post));
-  });
+const posts = get_posts().map((post) => {
+  lookup.set(post.slug, JSON.stringify(post));
+});
 
 export function get(req, res, next) {
   // the `slug` parameter is available because
@@ -13,17 +12,19 @@ export function get(req, res, next) {
 
   if (lookup.has(slug)) {
     res.writeHead(200, {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     });
 
     res.end(lookup.get(slug));
   } else {
     res.writeHead(404, {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     });
 
-    res.end(JSON.stringify({
-      message: `Not found`
-    }));
+    res.end(
+      JSON.stringify({
+        message: `Not found`,
+      })
+    );
   }
 }

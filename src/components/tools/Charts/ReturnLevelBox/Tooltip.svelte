@@ -42,6 +42,6 @@
       left:{evt.detail.e.layerX}px;
     "
   >
-    <slot detail={evt.detail}></slot>
+    <slot detail="{evt.detail}" />
   </div>
 {/if}

@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher, onMount } from "svelte";
   import {
     Search,
     SkeletonText,
@@ -9,30 +9,30 @@
     FormGroup,
     RadioButtonGroup,
     RadioButton,
-  } from 'carbon-components-svelte';
-  import PlayFilledAlt16 from 'carbon-icons-svelte/lib/PlayFilledAlt16';
-  import PauseFilled16 from 'carbon-icons-svelte/lib/PauseFilled16';
-  import Location32 from 'carbon-icons-svelte/lib/Location32';
+  } from "carbon-components-svelte";
+  import PlayFilledAlt16 from "carbon-icons-svelte/lib/PlayFilledAlt16";
+  import PauseFilled16 from "carbon-icons-svelte/lib/PauseFilled16";
+  import Location32 from "carbon-icons-svelte/lib/Location32";
 
   // Helpers
-  import { getLocation, searchLocation } from '../../../helpers/geocode';
-  import { getMapImages } from './_helpers';
+  import { getLocation, searchLocation } from "../../../helpers/geocode";
+  import { getMapImages } from "./_helpers";
 
   // Components
-  import { TimeSlider } from '../../../components/tools/Settings';
-  import { Location } from '../../../components/tools/Location';
-  import { notifier } from '../../../components/notifications';
+  import { TimeSlider } from "../../../components/tools/Settings";
+  import { Location } from "../../../components/tools/Location";
+  import { notifier } from "../../../components/notifications";
 
   // Store
-  import { 
+  import {
     climvarStore,
     scenarioStore,
-    locationStore, 
+    locationStore,
     monthStore,
     timeTicksStore,
     modelsStore,
     viewStore,
-  } from './_store';
+  } from "./_store";
 
   export let sidebarCollapsed;
   export let appStatus;
@@ -46,8 +46,8 @@
 
   let width = 500;
   let searchOptions = [];
-  let searchValue = '';
-  let searchPlaceholder = 'Enter address or zipcode';
+  let searchValue = "";
+  let searchPlaceholder = "Enter address or zipcode";
   let showSuggestions = false;
 
   let isLoading = true;
@@ -59,23 +59,23 @@
     [-124.60693359374999, 43.723474896114794],
     [-113.291015625, 43.723474896114794],
     [-113.291015625, 31.034108344903512],
-    [-124.60693359374999, 31.034108344903512]
+    [-124.60693359374999, 31.034108344903512],
   ];
   let sliderComponent;
   let multiLineLabel = (sel, d) => {
     sel
-      .append('tspan')
-        .text(d)
-      .append('tspan')
-        .attr('dy', 12)
-        .attr('x', 0)
-        .text(`-${d + 9}`);
-  }
+      .append("tspan")
+      .text(d)
+      .append("tspan")
+      .attr("dy", 12)
+      .attr("x", 0)
+      .text(`-${d + 9}`);
+  };
   $: sliderProps = {
     start: 1950,
     end: 2100,
     step: 10,
-  }
+  };
   $: sliderValue = $timeTicksStore[0];
   $: urls = getMapImages({
     model: selectedModel,
@@ -83,26 +83,25 @@
     month: $month.id + 1,
     ticks: $timeTicksStore,
   });
-  $: overlay = urls.find(d => d.id === sliderValue);
-
+  $: overlay = urls.find((d) => d.id === sliderValue);
 
   function preloadImage(src) {
-    return new Promise(r => {
-      const image = new Image()
-      image.onload = r
-      image.onerror = r
-      image.src = src
+    return new Promise((r) => {
+      const image = new Image();
+      image.onload = r;
+      image.onerror = r;
+      image.src = src;
     });
   }
 
   function updateSlider(e) {
     sliderValue = e.detail;
   }
-  
+
   function playSlider() {
     isPlaying = !isPlaying;
     if (isPlaying) {
-      timer = setInterval(sliderComponent.next, 1000)
+      timer = setInterval(sliderComponent.next, 1000);
     } else {
       clearInterval(timer);
     }
@@ -115,7 +114,7 @@
 
   function clearSearch() {
     searchOptions.length = 0;
-    searchValue = '';
+    searchValue = "";
   }
 
   async function search(e) {
@@ -132,7 +131,7 @@
   }
 
   function changeViz(e) {
-    dispatch('changeViz', e.detail);
+    dispatch("changeViz", e.detail);
     viewStore.set(e.detail);
   }
 
@@ -140,21 +139,21 @@
     selectedModel = e.detail;
     await update();
   }
-  
+
   async function update() {
     isLoading = true;
-    appStatus === 'working'
-    // Preload map images in parallel 
-    await Promise.all(urls.map(x => preloadImage(x.src)))
+    appStatus === "working";
+    // Preload map images in parallel
+    await Promise.all(urls.map((x) => preloadImage(x.src)));
     isLoading = false;
-    appStatus === 'idle'
-    console.log('load all images');
+    appStatus === "idle";
+    console.log("load all images");
   }
 
-  onMount(async() => {
-    console.log('mount component');
+  onMount(async () => {
+    console.log("mount component");
     await update();
-  })
+  });
 </script>
 
 <style lang="scss">
@@ -191,7 +190,7 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     border-radius: 3px;
   }
- 
+
   .location-search {
     top: 10px;
     left: calc(100% - 275px);
@@ -202,50 +201,55 @@
   <!-- Climvar Header -->
   <div class="content-header block">
     <FormGroup legendText="SELECT VISUALIZATION" style="margin-bottom:1rem;">
-      <RadioButtonGroup selected="animation" on:change={changeViz}>
+      <RadioButtonGroup selected="animation" on:change="{changeViz}">
         <RadioButton labelText="Monthly Timeseries" value="timeseries" />
         <RadioButton labelText="Map Animation" value="animation" />
       </RadioButtonGroup>
     </FormGroup>
     {#if $climvar}
-    <div class="flex-header">
-      <span class="icon">
-        <svelte:component this={$climvar.icon} />
-      </span>
-      <div>
-        <h4 class="title">{$month.label} {$climvar.title}</h4>
+      <div class="flex-header">
+        <span class="icon">
+          <svelte:component this="{$climvar.icon}" />
+        </span>
+        <div>
+          <h4 class="title">{$month.label} {$climvar.title}</h4>
+        </div>
       </div>
-    </div>
     {:else}
       <SkeletonText heading />
       <SkeletonText />
-    {/if}         
-  </div> <!-- end content-header -->
-
+    {/if}
+  </div>
+  <!-- end content-header -->
 
   <div class="content-select block">
-    <Select labelText="SELECT MODEL" selected={$models[0]} on:change={changeModel}>
+    <Select
+      labelText="SELECT MODEL"
+      selected="{$models[0]}"
+      on:change="{changeModel}"
+    >
       {#each $models as opt}
-        <SelectItem value={opt} text={opt} />
+        <SelectItem value="{opt}" text="{opt}" />
       {/each}
     </Select>
   </div>
 
   <div class="content-controls block">
     <Button
-      disabled={isLoading}
+      disabled="{isLoading}"
       style="width:7rem;margin-right:10px;"
-      icon={ isPlaying ? PauseFilled16 : PlayFilledAlt16 }
-      on:click={playSlider}>
+      icon="{isPlaying ? PauseFilled16 : PlayFilledAlt16}"
+      on:click="{playSlider}"
+    >
       {isPlaying ? "Pause" : "Play"}
-    </Button>     
+    </Button>
     <TimeSlider
-      {width}
-      labelFn={multiLineLabel}
-      bind:this={sliderComponent}
-      on:change={updateSlider}
-      {...sliderProps}>
-    </TimeSlider>
+      width="{width}"
+      labelFn="{multiLineLabel}"
+      bind:this="{sliderComponent}"
+      on:change="{updateSlider}"
+      {...sliderProps}
+    />
   </div>
 
   <!-- Map-->
@@ -253,7 +257,9 @@
     <div class="map-overlay top">
       <div class="map-overlay-inner">
         <span class="animation-title">
-          Decadal {$month.label} {$climvar.title} {overlay.text}
+          Decadal {$month.label}
+          {$climvar.title}
+          {overlay.text}
         </span>
         <span class="animation-subtitle">
           {$scenario.labelLong}
@@ -305,17 +311,20 @@
     <div class="location-search">
       <Search
         size="sm"
-        placeholder={searchPlaceholder} 
-        on:change={search}
-        bind:value={searchValue}
+        placeholder="{searchPlaceholder}"
+        on:change="{search}"
+        bind:value="{searchValue}"
       />
-      {#if showSuggestions }
+      {#if showSuggestions}
         <div class="suggestions-wrapper">
           <ul class="suggestions">
             {#if searchOptions && searchOptions.length > 0}
               {#each searchOptions as opt}
                 <li>
-                  <div class="suggestion" on:click={() => selectSuggestion(opt)}>
+                  <div
+                    class="suggestion"
+                    on:click="{() => selectSuggestion(opt)}"
+                  >
                     <div class="suggestion-title">{opt.title}</div>
                     <div class="suggestion-address">{opt.address}</div>
                   </div>
@@ -323,7 +332,7 @@
               {/each}
             {:else}
               <li>
-                <div class="suggestion" on:click={() => selectSuggestion()}>
+                <div class="suggestion" on:click="{() => selectSuggestion()}">
                   <div class="suggestion-nodata">No Results Found</div>
                 </div>
               </li>
@@ -333,17 +342,17 @@
       {/if}
     </div>
     <Location
-      imageOverlayUrl={overlay.src}
-      imageOverlayShow={true}
-      imageOverlayCoords={overlayCoordinates}
-      lng={$locationStore.lng}
-      lat={$locationStore.lat}
-      boundary={$boundary}
-      location={$location}
-      resize={sidebarCollapsed}
-      zoomToLocationOnLoad={false}
-      on:mapclick={mapClick}/>    
-  </div> <!-- end content-map -->
-
-
+      imageOverlayUrl="{overlay.src}"
+      imageOverlayShow="{true}"
+      imageOverlayCoords="{overlayCoordinates}"
+      lng="{$locationStore.lng}"
+      lat="{$locationStore.lat}"
+      boundary="{$boundary}"
+      location="{$location}"
+      resize="{sidebarCollapsed}"
+      zoomToLocationOnLoad="{false}"
+      on:mapclick="{mapClick}"
+    />
+  </div>
+  <!-- end content-map -->
 </div>

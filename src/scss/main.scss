@@ -1,9 +1,9 @@
-@import './src/scss/site/variables';
-@import 'carbon-components/scss/globals/scss/vendor/@carbon/themes/scss/themes.scss';
+@import "./src/scss/site/variables";
+@import "carbon-components/scss/globals/scss/vendor/@carbon/themes/scss/themes.scss";
 
 $feature-flags: (
   ui-shell: true,
-  grid-columns-16: true
+  grid-columns-16: true,
 );
 
 $css--font-face: true;
@@ -15,22 +15,22 @@ $css--default-type: true;
 $css--plex: true;
 
 // Use the 'g10' (Gray 10) Carbon theme
-@import 'carbon-components/scss/globals/scss/component-tokens';
-@import 'carbon-components/src/components/tag/tag';
-@import 'carbon-components/src/components/notification/inline-notification';
-@import 'carbon-components/src/components/notification/toast-notification';
+@import "carbon-components/scss/globals/scss/component-tokens";
+@import "carbon-components/src/components/tag/tag";
+@import "carbon-components/src/components/notification/inline-notification";
+@import "carbon-components/src/components/notification/toast-notification";
 
 $carbon--theme: $caladapt-carbon-theme;
 @include carbon--theme();
 
-@import 'carbon-components/scss/globals/scss/_css--reset';
-@import 'carbon-components/scss/globals/scss/_css--font-face';
-@import 'carbon-components/scss/globals/scss/_css--helpers';
-@import 'carbon-components/scss/globals/scss/_css--body';
-@import 'carbon-components/scss/globals/grid/grid';
+@import "carbon-components/scss/globals/scss/_css--reset";
+@import "carbon-components/scss/globals/scss/_css--font-face";
+@import "carbon-components/scss/globals/scss/_css--helpers";
+@import "carbon-components/scss/globals/scss/_css--body";
+@import "carbon-components/scss/globals/grid/grid";
 
 // Import all component styles
-@import 'carbon-components/scss/globals/scss/styles';
+@import "carbon-components/scss/globals/scss/styles";
 
 // Import all site specific styles
-@import './src/scss/site/theme';
+@import "./src/scss/site/theme";

@@ -1,17 +1,17 @@
 <script context="module">
   export async function preload({ query }) {
     const glossary = await this.fetch(`help/glossary.json`)
-      .then(r => r.json())
-      .then(json => {
+      .then((r) => r.json())
+      .then((json) => {
         return json.data;
       });
     if (Object.keys(query).length === 0) {
       return {
         initialConfig: {
-          boundaryId: 'locagrid',
-          scenarioId: 'rcp45',
-          climvarId: 'tasmax',
-          modelIds: 'HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5',
+          boundaryId: "locagrid",
+          scenarioId: "rcp45",
+          climvarId: "tasmax",
+          modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
           imperial: true,
           lat: 38.58,
           lng: -121.46,
@@ -23,28 +23,28 @@
     }
     // TODO: validate bookmark, move imperial parsing to validation code
     let imperial = true;
-    if (imperial && imperial === 'false') {
+    if (imperial && imperial === "false") {
       imperial = false;
     }
-    return { initialConfig: {...query, imperial }, glossary };
+    return { initialConfig: { ...query, imperial }, glossary };
   }
 </script>
 
 <script>
-  import { onMount } from 'svelte';
-  import { Modal, Loading } from 'carbon-components-svelte';
-  
+  import { onMount } from "svelte";
+  import { Modal, Loading } from "carbon-components-svelte";
+
   // Helpers
-  import { getLocation } from '../../../helpers/geocode';
-  import { resources } from './_helpers';
+  import { getLocation } from "../../../helpers/geocode";
+  import { resources } from "./_helpers";
 
   // Components
-  import DataLoading from '../../../components/tools/Loading/DataLoading.svelte';
-  import Header from './Header.svelte';
-  import Settings from './Settings.svelte';
-  import Content from './Content.svelte';
-  import ToolFooter from '../../../partials/FooterTool';
-  import { NotificationDisplay } from '../../../components/notifications';
+  import DataLoading from "../../../components/tools/Loading/DataLoading.svelte";
+  import Header from "./Header.svelte";
+  import Settings from "./Settings.svelte";
+  import Content from "./Content.svelte";
+  import ToolFooter from "../../../partials/FooterTool";
+  import { NotificationDisplay } from "../../../components/notifications";
 
   // Store
   import {
@@ -58,8 +58,8 @@
     thresholdListStore,
     periodStore,
     queryParams,
-  } from './_store';
-  import { get98pThreshold, getObserved, getModels } from './_data';
+  } from "./_store";
+  import { get98pThreshold, getObserved, getModels } from "./_data";
 
   export let initialConfig;
   export let glossary;
@@ -81,10 +81,10 @@
   let contentReady = false;
   let definitionText;
   let definitionTitle;
-  let appStatus = 'idle';
+  let appStatus = "idle";
 
   async function initApp(config) {
-    console.log('initApp', config);
+    console.log("initApp", config);
     const {
       lat,
       lng,
@@ -105,9 +105,9 @@
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
     const thresh98p = await get98pThreshold(climvarId, $queryParams);
-    thresholdListStore.add(thresh98p, '98th Percentile');
+    thresholdListStore.add(thresh98p, "98th Percentile");
     thresholdStore.set(thresh98p);
-    if (thresh && (+thresh !== thresh98p)) {
+    if (thresh && +thresh !== thresh98p) {
       thresholdListStore.add(+thresh);
       thresholdStore.set(+thresh);
     }
@@ -117,7 +117,7 @@
 
   $: if (initReady && contentReady && settingsReady) {
     appReady = true;
-    console.log('all ready');
+    console.log("all ready");
     update();
   }
 
@@ -129,8 +129,8 @@
 
   function update() {
     if (!appReady) return;
-    console.log('function update');
-    appStatus = 'working';
+    console.log("function update");
+    appStatus = "working";
     dataStore.set(null);
     getData()
       .then((_data) => {
@@ -138,25 +138,24 @@
       })
       .catch((err) => {
         // handle error
-        console.log('error', err);
+        console.log("error", err);
         //throw new Error(err);
       })
       .finally(() => {
-        appStatus = 'idle';
+        appStatus = "idle";
       });
   }
 
   function updateThreshold() {
     if (!appReady) return;
-    console.log('function update threshold');
-    appStatus = 'working';
+    console.log("function update threshold");
+    appStatus = "working";
     dataStore.set(null);
-    get98pThreshold($climvarStore, $queryParams)
-      .then((thresh98p) => {
-        thresholdListStore.reset(thresh98p, '98th Percentile');
-        thresholdStore.set(thresh98p);
-        // This threshold change triggers update() function
-      });
+    get98pThreshold($climvarStore, $queryParams).then((thresh98p) => {
+      thresholdListStore.reset(thresh98p, "98th Percentile");
+      thresholdStore.set(thresh98p);
+      // This threshold change triggers update() function
+    });
   }
 
   async function getData() {
@@ -168,7 +167,7 @@
     const params = {
       thresh: $thresholdStore,
       ...$queryParams,
-    }
+    };
     const observed = await getObserved(config, params);
     const modelsData = await getModels(config, params);
     return [observed, ...modelsData];
@@ -176,41 +175,44 @@
 
   function showDefinition(e) {
     const { topics, title } = e.detail;
-    const items = glossary.filter(d => topics.includes(d.slug));
-    definitionText = items.map((item) => {
-      return `
+    const items = glossary.filter((d) => topics.includes(d.slug));
+    definitionText = items
+      .map((item) => {
+        return `
       <div>
         <h5>${item.metadata.title}</h5>
         ${item.html}
       </div>
       `;
-    })
-    .join('<br/>');
+      })
+      .join("<br/>");
     definitionTitle = title;
     showInfo = true;
   }
 
   onMount(() => {
-    console.log('mount index');
+    console.log("mount index");
     initApp(initialConfig)
       .then(() => {
         initReady = true;
       })
       .catch((error) => {
-        console.log('init error', error);
+        console.log("init error", error);
       });
-  })
+  });
 </script>
-
 
 <svelte:head>
   <title>Extreme Heat</title>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
+    rel="stylesheet"
+  />
 </svelte:head>
 
 {#if !initReady}
   <div style="height:50rem;">
-  <DataLoading />
+    <DataLoading />
   </div>
 {:else}
   <div class="page-grid page-grid--tool">
@@ -223,31 +225,40 @@
       <Content
         bind:appStatus
         bind:sidebarCollapsed
-        on:ready={() => contentReady = true}
-        on:define={showDefinition} />
+        on:ready="{() => (contentReady = true)}"
+        on:define="{showDefinition}"
+      />
     </div>
     <!-- Sidebar -->
     <aside class="sidebar" class:sidebarCollapsed>
       <div class="is-sticky">
         <Settings
           bind:sidebarCollapsed
-          on:ready={() => settingsReady = true}
-          on:define={showDefinition} />      
+          on:ready="{() => (settingsReady = true)}"
+          on:define="{showDefinition}"
+        />
       </div>
     </aside>
     <!-- Footer -->
     <div class="footer">
-      <ToolFooter {resources} />
+      <ToolFooter resources="{resources}" />
     </div>
   </div>
 {/if}
 
-
-<Modal id="definition" size="sm" passiveModal bind:open={showInfo} modalHeading={definitionTitle} on:open on:close>
-  <div>{ @html definitionText }</div>
+<Modal
+  id="definition"
+  size="sm"
+  passiveModal
+  bind:open="{showInfo}"
+  modalHeading="{definitionTitle}"
+  on:open
+  on:close
+>
+  <div>{@html definitionText}</div>
 </Modal>
 
-{#if appStatus === 'working'}
+{#if appStatus === "working"}
   <Loading />
 {/if}
 
