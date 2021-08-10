@@ -36,7 +36,7 @@
 
   .stat-text {
     font-size: 0.8rem;
-    color: #51585e;
+    color: var(--gray-70);
     text-transform: uppercase;
     max-width: 13ch;
     line-height: 1.2;

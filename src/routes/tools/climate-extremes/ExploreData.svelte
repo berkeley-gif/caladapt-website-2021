@@ -382,7 +382,7 @@
           <p>From climate projections, it is estimated to change to a:</p>
           <Grid>
             <Row
-              style="font-size:0.8rem;color:#51585e;text-transform:uppercase;margin-bottom:0.5rem;"
+              style="font-size:0.8rem;color:var(--gray-70);text-transform:uppercase;margin-bottom:0.5rem;"
             >
               <Column>Model</Column>
               <Column>Mid-Century (2035-2064)</Column>

@@ -5,7 +5,7 @@
   }
 
   .block {
-    background-color: #ffffff;
+    background-color: var(--white);
     box-shadow: 0 2px 3px rgba(22, 28, 45, 0.2);
     padding: 1rem;
 
@@ -378,7 +378,7 @@
 
   .bx--accordion__heading:hover::before,
   .bx--btn--ghost:hover {
-    background-color: #eaecee;
+    background-color: var(--gray-20);
   }
 
   .bx--accordion__content {

@@ -188,7 +188,7 @@
     grid-gap: 1rem;
 
     .block {
-      background-color: #ffffff;
+      background-color: var(--white);
       box-shadow: 0 2px 3px rgba(22, 28, 45, 0.1);
       padding: 1rem;
     }
@@ -304,12 +304,12 @@
       .stat-subtitle {
         text-transform: uppercase;
         line-height: 1.5;
-        color: #04797c;
+        color: var(--teal-60);
         margin: 0.5rem 0;
       }
 
       .stat-note {
-        color: #51585e;
+        color: var(--gray-70);
       }
     }
   }

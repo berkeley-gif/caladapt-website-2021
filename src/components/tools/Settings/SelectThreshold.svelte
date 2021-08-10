@@ -45,7 +45,7 @@
     letter-spacing: 0.32px;
     display: inline-block;
     margin: 0.5rem 0;
-    color: #51585e;
+    color: var(--gray-70);
     font-weight: 400;
     line-height: 1rem;
     vertical-align: baseline;

@@ -46,7 +46,7 @@
 <style lang="scss">
   :global(.bx--accordion__title) {
     font-size: 0.75rem;
-    color: #51585e;
+    color: var(--gray-70);
     text-transform: uppercase;
   }
 

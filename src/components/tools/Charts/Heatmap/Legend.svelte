@@ -29,7 +29,7 @@
   }
 
   /*  .legend-item:hover {
-    background: #bcc2c7;
+    background: var(--gray-30);
   }*/
 
   /*  .legend-item.show {

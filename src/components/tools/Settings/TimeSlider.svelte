@@ -104,7 +104,7 @@
   }
 
   .range-slider-progress {
-    stroke: #68aeb0;
+    stroke: var(--teal-30);
     stroke-width: 3;
     stroke-linecap: "square";
   }
@@ -114,11 +114,11 @@
   }
 
   .range-slider-thumb circle {
-    fill: #04797c;
+    fill: var(--teal-60);
   }
 
   .range-slider-thumb line {
-    stroke: #04797c;
+    stroke: var(--teal-60);
     stroke-width: 2;
     stroke-linecap: "round";
   }

@@ -113,7 +113,7 @@
 
   .stat-data-label {
     font-size: 0.8rem;
-    color: #51585e; //$gray-70
+    color: var(--gray-70);
   }
 
   .stat-data-value {
@@ -125,7 +125,7 @@
     margin-top: 1rem;
     font-style: italic;
     font-size: 0.75rem;
-    color: #04797c; // $teal-60
+    color: var(--teal-60);
     display: flex;
     align-items: center;
     line-height: 1;

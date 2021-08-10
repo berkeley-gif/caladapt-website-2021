@@ -107,8 +107,6 @@ $hover-ui: $gray-10;
 $active-ui: $gray-30;
 $selected-ui: $gray-20;
 $hover-selected-ui: $gray-30;
-$hover-danger: #ba1b23;
-$active-danger: #750e13;
 $hover-row: $gray-10;
 $visited-link: #8a3ffc;
 $disabled-01: $white;
@@ -184,6 +182,22 @@ $box-shadow-lift: 0 1rem 2.5rem fade-out($black, 0.9),
   0 0.5rem 1rem -0.75rem fade-out($black, 0.9);
 
 $border-radius: 0.175rem;
+
+// Carbon design system spacing
+// number corresponds to equivalent pixel units in rem
+$spacing-1: $spacing-4xs;
+$spacing-2: $spacing-3xs;
+$spacing-4: $spacing-2xs;
+$spacing-8: $spacing-xs;
+$spacing-12: $spacing-sm;
+$spacing-16: $spacing-md;
+$spacing-24: $spacing-lg;
+$spacing-32: $spacing-xl;
+$spacing-40: $spacing-2xl;
+$spacing-48: $spacing-3xl;
+$spacing-64: $layout-lg;
+$spacing-96: $layout-xl;
+$spacing-160: $layout-2xl;
 
 // Sass variables as CSS Custom Properties to fix variables in .svelte components
 :root {
@@ -279,4 +293,18 @@ $border-radius: 0.175rem;
   --box-shadow-lift: #{$box-shadow-lift};
 
   --border-radius: #{$border-radius};
+
+  --spacing-1: #{$spacing-1};
+  --spacing-2: #{$spacing-2};
+  --spacing-4: #{$spacing-4};
+  --spacing-8: #{$spacing-8};
+  --spacing-12: #{$spacing-12};
+  --spacing-16: #{$spacing-16};
+  --spacing-24: #{$spacing-24};
+  --spacing-32: #{$spacing-32};
+  --spacing-40: #{$spacing-40};
+  --spacing-48: #{$spacing-48};
+  --spacing-64: #{$spacing-64};
+  --spacing-96: #{$spacing-96};
+  --spacing-160: #{$spacing-160};
 }

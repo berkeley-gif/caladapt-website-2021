@@ -111,7 +111,7 @@
 
 <style lang="scss">
   .header {
-    color: #02484a;
+    color: var(--teal-80);
     .lead {
       margin-top: 0;
     }
@@ -123,8 +123,8 @@
     justify-content: center;
 
     .icon-circle {
-      color: #cce4e4;
-      background: #04797c;
+      color: var(--teal-10);
+      background: var(--teal-60);
     }
   }
 </style>

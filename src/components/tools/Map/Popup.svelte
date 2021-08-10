@@ -19,7 +19,7 @@
     }
   }
 
-  const popup = new mapboxgl.Popup(options)
+  let popup = new mapboxgl.Popup(options)
     .setLngLat([lon, lat])
     .setHTML(label)
     .addTo(map);

@@ -11,6 +11,7 @@
     "format": "prettier --write",
     "format:all": "npm run format -- .",
     "format:single": "npm run format --file=$npm_config_file",
+    "sass:test-build": "node-sass --quiet --include-path ./node_modules src/scss/main.scss > /dev/null",
     "pretest": "npm run lint",
     "transfer-dev": "rsync -avz __sapper__/export/ gitdev@api.cal-adapt.org:/var/www/dev.cal-adapt.org/",
     "deploy-dev": "npm run export && npm run transfer-dev",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@beyonk/svelte-carousel": "^2.8.0",
+    "babel-eslint": "^10.1.0",
     "carbon-components": "^10.30.0",
     "carbon-components-svelte": "^0.30.0",
     "eslint": "^7.21.0",

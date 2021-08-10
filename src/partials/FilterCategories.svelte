@@ -44,7 +44,7 @@
   }
 
   .filter-tags :global(.bx--tag.active) {
-    background: #074e67;
+    background: var(--blue-40);
     color: white;
   }
 

@@ -37,7 +37,7 @@
         >
           <line
             class="ci"
-            stroke="#bcc2c7"
+            stroke="var(--gray-30)"
             stroke-width="{2}"
             y1="{$yScale(d.lowerci)}"
             y2="{$yScale(d.upperci)}"
