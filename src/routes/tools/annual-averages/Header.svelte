@@ -23,7 +23,7 @@
     top: 0;
     border-bottom: 1px solid #dadee1;
     z-index: 3;
-    background: #var(--gray-30);
+    background: var(--gray-30);
   }
 
   .secondary-nav ul {

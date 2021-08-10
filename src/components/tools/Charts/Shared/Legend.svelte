@@ -40,7 +40,7 @@
   }
 
   .legend-item:hover {
-    background: #var(--gray-30);
+    background: var(--gray-30);
   }
 
   span.key {
