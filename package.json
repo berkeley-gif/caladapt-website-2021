@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@beyonk/svelte-carousel": "^2.8.0",
+    "babel-eslint": "^10.1.0",
     "carbon-components": "^10.30.0",
     "carbon-components-svelte": "^0.30.0",
     "eslint": "^7.21.0",
