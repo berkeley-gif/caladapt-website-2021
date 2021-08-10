@@ -38,7 +38,7 @@
       cx="{$xGet(d)}"
       cy="{$yGet(d)}"
       r="{4}"
-      fill="#002448"
+      fill="var(--blue-60, #002448)"
       fill-opacity="{0.8}"
       stroke="blue"
       stroke-width="{1}"></circle>

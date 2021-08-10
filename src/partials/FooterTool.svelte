@@ -21,7 +21,7 @@
 
 <style>
   .help-tile :global(.bx--tile--clickable) {
-    background-color: #cce4e4;
+    background-color: var(--teal-10);
     height: 100%;
     display: flex;
     align-items: center;
