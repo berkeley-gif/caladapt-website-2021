@@ -2,21 +2,34 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { MultiSelect, SelectSkeleton } from "carbon-components-svelte";
 
+  import { debounce } from "../../../helpers/utilities";
+
   export let selectedIds;
   export let items;
 
   let selectedIdsArr = selectedIds.split(",");
   let ready = false;
+  let invalid = false;
   const dispatch = createEventDispatcher();
   const sortItem = (a, b) => a.order - b.order;
 
-  const formatSelected = (i) =>
-    i.length === 0 ? "No models selected" : i.join(", ");
+  const formatSelected = (arr) => {
+    if (arr.length === 0) {
+      return "No models selected"
+    } 
+    return arr.join(", ");
+  };
 
-  function select(e) {
+  const changeSelection = debounce((e) => {
     selectedIdsArr = e.detail.selectedIds;
-    dispatch("change", e.detail);
-  }
+    if (selectedIdsArr.length === 0) {
+      invalid = true;
+    } else {
+      invalid = false;
+      
+      dispatch("change", e.detail);
+    }
+  }, 1000);
 
   $: feedback = formatSelected(selectedIdsArr);
 
@@ -31,12 +44,14 @@
 
 {#if ready}
   <MultiSelect
-    bind:selectedIds="{selectedIdsArr}"
+    {invalid}
+    invalidText="Choose atleast 1 GCM"
+    selectedIds={selectedIdsArr}
     titleText=""
     label="Select..."
-    items="{items}"
-    sortItem="{sortItem}"
-    on:select="{select}"
+    items={items}
+    sortItem={sortItem}
+    on:select={changeSelection}
   />
 {:else}
   <SelectSkeleton />
