@@ -171,8 +171,8 @@
       grid-template-columns: 3fr 1fr;
       grid-template-rows: auto;
       grid-template-areas:
-        "tool-header tool-header"
-        "tool-title tool-settings"
+        "tool-controls tool-settings"
+        "tool-header tool-settings"
         "tool-stats tool-settings"
         "tool-chart tool-settings";
 
@@ -192,21 +192,32 @@
       }
 
       .explore-controls {
+        grid-area: tool-controls;
+      }
+
+      .explore-header {
         grid-area: tool-header;
 
         display: flex;
-        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
 
-        .bx--btn {
-          margin: 0.25rem 0;
+        .explore-header-title {
+          padding: 1rem;
+          flex: 1;
+
+          > * {
+            margin: 0.5rem 0;
+          }
         }
-      }
 
-      .explore-title {
-        grid-area: tool-title;
+        .static-map {
+          width: 25%;
+          max-width: 300px;
 
-        .icon {
-          margin-right: 1rem;
+          img {
+            width: 100%;
+          }
         }
 
         p.block-note {
@@ -329,13 +340,6 @@
   input.bx--checkbox[name*="MIROC5"]:checked + .bx--checkbox-label::before {
     background-color: rgba(148, 103, 189, 1);
     border-color: rgba(148, 103, 189, 1);
-  }
-
-  .bx--search-input,
-  .bx--select-input,
-  .bx--date-picker-input__wrapper,
-  .bx--number__input-wrapper {
-    border-bottom: 2px solid $teal-60;
   }
 
   .bx--radio-button__appearance {
