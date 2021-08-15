@@ -4,7 +4,7 @@
   import { Link16 } from "carbon-icons-svelte";
 
   // Helpers
-  import { getDatasets } from "./_data";
+  import { getDataset } from "../../../helpers/utilities";
 
   // Store
   import { datasetStore } from "./_store";
@@ -13,13 +13,8 @@
 
   async function fetchDatasets() {
     try {
-      const results = await getDatasets(datasets.map(d => d.slug));
-      const data = results.map((result) => {
-        const id = result.url.split("datasets")[1].replaceAll("/", "");
-        const info = datasets.find(d => d.slug === id);
-        return { ...result, ...info };
-      });
-      return data;
+      const results = await Promise.all(datasets.map(d => getDataset(d)));
+      return results;
     } catch (error) {
       throw new Error(error);
     }

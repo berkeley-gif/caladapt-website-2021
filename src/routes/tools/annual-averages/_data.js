@@ -185,18 +185,3 @@ export function formatDataForExport(_arr) {
     return row;
   });
 }
-
-export async function getDatasets(slugs) {
-  const promises = slugs.map((slug) => {
-    const url = `${apiEndpoint}/datasets/${slug}`;
-    return fetchData(url)
-      .then((data) => data.json())
-      .catch((error) => error);
-  });
-
-  return Promise.all(promises)
-    .then((results) => results)
-    .catch((error) => {
-      throw new Error(error.message);
-    });
-}

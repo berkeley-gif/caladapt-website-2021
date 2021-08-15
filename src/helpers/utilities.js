@@ -486,3 +486,20 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 }
+
+/**
+ * Get dataset info from Cal-Adapt API and add extra props
+
+ * @param {object} opt - object with slug and logo props
+ * @return {object}
+ */
+export async function getDataset(opt) {
+  try {
+    const response = await fetchData(`${apiEndpoint}/datasets/${opt.slug}`);
+    const dataset = await response.json();
+    const id = dataset.url.split("datasets")[1].replaceAll("/", "");
+    return { ...dataset, id, ...opt };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
