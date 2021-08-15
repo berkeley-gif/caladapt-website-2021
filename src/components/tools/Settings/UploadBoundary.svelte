@@ -1,8 +1,6 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { FileUploader } from "carbon-components-svelte";
-  import calculateArea from "@turf/area";
-  import { convertArea } from "@turf/helpers";
 
   // Helpers
   import {
@@ -18,10 +16,10 @@
   let ready = false;
   let fileUploader;
   const fileUploadProps = {
-    labelTitle: "Upload Boundary",
-    labelDescription: "Supported formats - zipped shapefile, GeoJSON, KML, WKT",
-    buttonLabel: "Select file",
-    accept: [".zip", ".json", ".kml", ".wkt"],
+    labelTitle: "",
+    labelDescription: "Select a boundary from the dropdown list or upload your project area. Supported formats - zipped shapefile, GeoJSON, KML, WKT.",
+    buttonLabel: "Upload File",
+    accept: [".zip", ".json", ".geojson", ".kml", ".wkt"],
     id: "Upload",
   };
 
@@ -50,14 +48,14 @@
     if (geojsonError) {
       fileUploadProps.errorSubject = "Warning";
       fileUploadProps.errorBody =
-        "Unable to display shape on map. File is valid and will be used to display spatially aggregated data.";
+        "File is valid but unable to display shape on map.";
     }
     const { features } = geojson;
     if (features.length > 1) {
       fileUploadProps.status = "edit";
       fileUploadProps.invalid = true;
       fileUploadProps.errorSubject = "Error";
-      fileUploadProps.errorBody = "The uploaded file has more than 1 polygons";
+      fileUploadProps.errorBody = "The uploaded file has more than 1 polygon";
     }
     console.log("feature", features);
     const location = formatBoundaryPolygon(features[0], "custom");
