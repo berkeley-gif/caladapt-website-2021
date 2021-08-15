@@ -254,7 +254,7 @@
   on:close="{() => (showInfo = false)}"
 >
   <div>
-    {#if selectedSeries.id === "observed"}
+    {#if isHistorical}
       <p>
         The average is calculated using data values between {selectedPeriod.start}
         and {selectedPeriod.end} from the Observed Historical timeseries.
