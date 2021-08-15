@@ -15,10 +15,8 @@
   import { climvarList, modelList, scenarioList } from "./_helpers";
   import { flattenData, getDataByDate, formatDataForExport } from "./_data";
   import {
-    exportSVG,
     exportPNG,
     exportCSV,
-    exportPDF,
   } from "../../../helpers/export";
 
   // Components
@@ -135,6 +133,7 @@
       locationStore.updateBoundary(e.detail.boundaryId);
       locationStore.updateLocation(e.detail.location);
     }
+    console.log("location change");
   }
 </script>
 

@@ -32,7 +32,6 @@
     const addresses = await reverseGeocode(`${e.detail[0]}, ${e.detail[1]}`);
     const feature = addresses.features[0];
     currentLoc = await getFeature(feature, currentBoundary.id);
-    console.log(currentLoc.title, currentBoundary.id);
   }
 
   function clearSearch() {
@@ -63,7 +62,6 @@
     currentBoundary = e.detail;
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
     currentLoc = await getFeature(currentLoc, currentBoundary.id);
-    console.log(currentLoc.title, currentBoundary.id);
   }
 
   async function selectSuggestion(opt) {
