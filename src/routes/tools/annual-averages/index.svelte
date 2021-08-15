@@ -101,11 +101,13 @@
     ...glossary,
     {
       slug: "annual-averages-chart",
-      metadata: {},
+      metadata: {
+        title: "Annual Averages"
+      },
       html: `
         <div>
-          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The Observed data is represented by a gray line from 1950-2006.</p>
-          <p>Click on the legend button to highlight corresponding timeseries.</p>
+          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The historical observed data is represented by a gray line from 1950-2006.</p>
+          <p>Click on any of the legend keys to highlight corresponding timeseries.</p>
         </div>
       `,
     },
