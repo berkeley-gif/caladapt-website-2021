@@ -81,6 +81,9 @@ export const createAdditionalProps = (feature, layerId) => {
   let title;
   let address = "California";
   switch (layerId) {
+    case "locagrid":
+      title = feature.properties.name;
+      break;
     case "counties":
       title = `${feature.properties.name} County`;
       address = feature.properties.state_name;
@@ -110,6 +113,39 @@ export const createAdditionalProps = (feature, layerId) => {
       title = feature.properties.name ? feature.properties.name : "No Title";
   }
   return { title, address };
+};
+
+export const getTitle = (feature, layerId, placeName) => {
+  let title;
+  switch (layerId) {
+    case "locagrid":
+      title = placeName.replace(", United States", "");
+      break;
+    case "counties":
+      title = `${feature.properties.name} County, ${feature.properties.state_name}`;
+      break;
+    case "censustracts":
+      title = `Census Tract ${feature.properties.tract}, California`;
+      break;
+    case "hydrounits":
+      title = `${feature.properties.name} Watershed, California`;
+      break;
+    case "cdistricts":
+      title = `Congressional District ${feature.properties.cd114fp}, California`;
+      break;
+    case "custom":
+      title = "Custom Boundary";
+      break;
+    case "ca":
+      title = "State of California";
+      break;
+    case "hadisdstations":
+      title = `${feature.properties.name} Weather Station at ${feature.properties.city}, California`;
+      break;
+    default:
+      title = placeName;
+  }
+  return title;
 };
 
 export const formatGeocodeResult = (feature) => {
@@ -195,4 +231,66 @@ export const getNearestStation = async (lng, lat, layerId) => {
   }
   const nearest = response.features[0];
   return nearest;
+};
+
+export const formatFeature = (feature, boundaryId, placeName = "") => {
+  const center = feature.center || getCenter(feature.geometry);
+  const lng = center.geometry.coordinates[0].toFixed(4);
+  const lat = center.geometry.coordinates[1].toFixed(4);
+  const bbox = getBbox(feature.geometry);
+  const title = getTitle(feature, boundaryId, placeName);
+
+  return {
+    title,
+    geometry: feature.geometry,
+    center: [+lng, +lat],
+    bbox,
+    id: feature.id || "",
+  };
+};
+
+export const getFeature = async (feature, boundaryId) => {
+  let location = null;
+  if (boundaryId === "ca") {
+    location = formatFeature(capoly, boundaryId);
+  } else {
+    const response = await getBoundaryPolygon(feature.center, boundaryId);
+    if (response.features.length > 0) {
+      location = formatFeature(
+        response.features[0],
+        boundaryId,
+        feature.place_name
+      );
+    }
+  }
+  return location;
+};
+
+export const searchFeature = async (searchStr, boundaryId) => {
+  const results = [];
+  if (boundaryId && boundaryId !== "locagrid") {
+    const boundaryResults = await searchBoundaryLayer(searchStr, boundaryId);
+    if (boundaryResults.features && boundaryResults.features.length > 0) {
+      const data = boundaryResults.features.map((d) =>
+        formatFeature(d, boundaryId)
+      );
+      results.push({
+        geocoder: "caladapt",
+        data,
+      });
+    }
+  }
+  const geocodeResults = await geocode(searchStr);
+  if (geocodeResults.features && geocodeResults.features.length > 0) {
+    results.push({
+      geocoder: "mapbox",
+      data: geocodeResults.features.map((d) => ({ ...d, title: d.place_name })),
+    });
+  } else {
+    results.push({
+      geocoder: "mapbox",
+      data: [],
+    });
+  }
+  return results;
 };
