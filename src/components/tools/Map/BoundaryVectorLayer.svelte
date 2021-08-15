@@ -7,28 +7,28 @@
 
   export let boundary;
 
-  let lastBoundary = null;
+  let selection = null;
 
   function removePreviousSelection() {
-    if (!lastBoundary) {
+    if (!selection) {
       return;
     }
-    lastBoundary.layout.visibility = "none ";
-    map.removeLayer(lastBoundary.id);
-    if (map.getSource(lastBoundary.id)) {
-      map.removeSource(lastBoundary.id);
+    selection.layout.visibility = "none";
+    map.removeLayer(selection.id);
+    if (map.getSource(selection.id)) {
+      map.removeSource(selection.id);
     }
   }
 
   function addBoundary() {
     removePreviousSelection();
     if (!boundary || boundary.id === "locagrid" || boundary.id === "ca") {
-      lastBoundary = null;
+      selection = null;
       return;
     }
-    //boundary.layout.visibility = 'visible';
+    boundary.layout.visibility = 'visible';
     map.addLayer(boundary);
-    lastBoundary = boundary;
+    selection = boundary;
   }
 
   $: boundary, addBoundary();
