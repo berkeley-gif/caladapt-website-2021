@@ -142,7 +142,7 @@ export const handle = (promise) => {
  * @param {object} params - query parameters
  * @return {Promise}
  */
-export function fetchData(url, params, method = "GET") {
+export function fetchData(url, params = {}, method = "GET") {
   let request;
   if (method === "POST") {
     const formData = new FormData();
