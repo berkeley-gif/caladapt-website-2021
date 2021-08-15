@@ -99,7 +99,6 @@ export const locationStore = (() => {
     },
     get center() {
       return derived(store, ($store) => {
-        console.log("from store", $store);
         return $store.center;
       });
     },
@@ -131,7 +130,6 @@ export const datasetStore = (() => {
     subscribe,
     get titles() {
       return derived(store, ($store) => {
-        console.log("dataset", $store);
         if (!$store || $store.length === 0) return [];
         return $store.map((d) => d.title);
       });
