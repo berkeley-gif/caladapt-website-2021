@@ -50,19 +50,24 @@ export const unitsStore = writable({ imperial: true });
 
 export const locationStore = (() => {
   const store = writable({
-    lat: 38.59,
-    lng: -122.46,
     boundaryId: "locagrid",
     location: {
-      id: null,
-      title: "850 Friesen Drive",
-      address: "Angwin, California 94508, United States",
+      id: "37907",
+      title: "240 32nd Street, Sacramento, California 95816",
       geometry: {
-        type: "Point",
-        coordinates: [-122.4587538, 38.5903761],
+        type: "Polygon",
+        coordinates: [
+          [
+            [-121.5, 38.625],
+            [-121.4375, 38.625],
+            [-121.4375, 38.5625],
+            [-121.5, 38.5625],
+            [-121.5, 38.625],
+          ],
+        ],
       },
-      center: [-122.4587538, 38.5903761],
-      bbox: [-122.4587538, 38.5903761, -122.4587538, 38.5903761],
+      center: [-121.4688, 38.5938],
+      bbox: [-121.5, 38.5625, -121.4375, 38.625],
     },
     isUpload: false,
   });
@@ -72,8 +77,6 @@ export const locationStore = (() => {
     updateLocation: (location, isUpload = false) =>
       update((store) => {
         if (!location) return;
-        store.lng = +location.center[0].toFixed(4);
-        store.lat = +location.center[1].toFixed(4);
         store.location = location;
         store.isUpload = isUpload;
         return store;
@@ -94,9 +97,10 @@ export const locationStore = (() => {
         return selected;
       });
     },
-    get lngLat() {
+    get center() {
       return derived(store, ($store) => {
-        return [$store.lng, $store.lat];
+        console.log("from store", $store);
+        return $store.center;
       });
     },
   };
@@ -118,18 +122,35 @@ export const dataStore = (() => {
   };
 })();
 
+// Datasets store
+export const datasetStore = (() => {
+  const store = writable([]);
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get titles() {
+      return derived(store, ($store) => {
+        console.log("dataset", $store);
+        if (!$store || $store.length === 0) return [];
+        return $store.map((d) => d.title);
+      });
+    },
+  };
+})();
+
 // DERIVED STORES
 // Query params store
 export const queryParams = derived(
   [unitsStore, locationStore],
   ([$unitsStore, $locationStore]) => {
-    const { lng, lat, boundaryId, location } = $locationStore;
+    const { boundaryId, location } = $locationStore;
     const { imperial } = $unitsStore;
     const params = {};
     let method = "GET";
     switch (boundaryId) {
       case "locagrid":
-        params.g = `Point(${lng} ${lat})`;
+        params.g = `Point(${location.center[0]} ${location.center[1]})`;
         params.imperial = imperial;
         break;
       case "ca":
@@ -162,8 +183,9 @@ export const bookmark = derived(
     $unitsStore,
     $locationStore,
   ]) => {
-    const { lng, lat, boundaryId } = $locationStore;
+    const { location, boundaryId } = $locationStore;
     const { imperial } = $unitsStore;
+    const [lng, lat] = location.center;
     const bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}
     &imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}`;
     if (process.browser) {

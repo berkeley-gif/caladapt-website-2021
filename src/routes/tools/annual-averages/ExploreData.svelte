@@ -1,16 +1,14 @@
 <script>
-  import { createEventDispatcher } from "svelte";
   import {
     Button,
     Modal,
     Accordion,
     AccordionItem,
     CodeSnippet,
-    SkeletonText,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { csvFormat, csvFormatRows } from "d3-dsv";
-  import { Download16, Share16, ChartLineData32 } from "carbon-icons-svelte";
+  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
   import copy from "clipboard-copy";
 
   // Helpers
@@ -24,12 +22,14 @@
   } from "../../../helpers/export";
 
   // Components
+  import ChangeLocation from "./ChangeLocation.svelte";
   import {
     SelectScenario,
     SelectModels,
     SelectClimvar,
     ShowDefinition,
   } from "../../../components/tools/Settings";
+  import { StaticMap } from "../../../components/tools/Location"
   import { LineAreaChart } from "../../../components/tools/Charts";
   import { RangeAvg } from "../../../components/tools/Stats";
   import DownloadChart from "../../../components/tools/DownloadChart.svelte";
@@ -43,26 +43,25 @@
     dataStore,
     modelsStore,
     bookmark,
+    datasetStore,
   } from "./_store";
-
-  export let runUpdate = false;
-
-  const dispatch = createEventDispatcher();
 
   const { location, boundary } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
+  const { titles } = datasetStore;
 
   let isLoading = true;
   let dataByDate;
   let statsData;
   let showDownload = false;
   let showShare = false;
+  let showChangeLocation = false;
 
   $: metadata = [
     ["boundary", $boundary.id],
-    ["feature", `${$location.title}, ${$location.address}`],
+    ["feature", $location.title],
     ["center", `${$location.center[0]}, ${$location.center[1]}`],
     ["scenario", $scenario.label],
     ["units", $climvar.units.imperial],
@@ -85,13 +84,10 @@
     const format = e.detail;
     showDownload = false;
     try {
-      const container = document.querySelector(".explore-chart");
+      const container = document.querySelector(".explore");
       switch (format) {
         case "png":
-          await exportPNG(container);
-          break;
-        case "svg":
-          await exportSVG(container);
+          await exportPNG(container, ["explore-settings"]);
           break;
         case "csv":
           var csvData = formatDataForExport(dataByDate);
@@ -99,10 +95,6 @@
             csvData
           )}`;
           await exportCSV(csvWithMetadata);
-          break;
-        case "pdf":
-          var gridContainer = document.querySelector(".explore-grid");
-          await exportPDF(gridContainer, $location);
           break;
         default:
         // Do nothing
@@ -133,6 +125,17 @@
     climvarStore.set(e.detail.id);
     console.log("climvar change");
   }
+
+  function changeLocation(e) {
+    showChangeLocation = false;
+    if (e.detail.boundaryId === "custom") {
+      locationStore.updateBoundary("locagrid");
+      locationStore.updateLocation(e.detail.location, true);
+    } else {
+      locationStore.updateBoundary(e.detail.boundaryId);
+      locationStore.updateLocation(e.detail.location);
+    }
+  }
 </script>
 
 <div class="explore">
@@ -140,34 +143,24 @@
     <div class="explore-loading-overlay"></div>
   {/if}
 
-  <!-- Header -->
+  <!-- Controls -->
   <div class="explore-controls">
-    <Button
-      icon="{ChartLineData32}"
-      disabled="{runUpdate}"
-      on:click="{() => dispatch('update')}"
-    >
-      FETCH DATA FOR LOCATION
-    </Button>
   </div>
 
   <!-- Title -->
-  <div class="explore-title block">
-    <div class="center-row">
-      <span class="icon">
-        <svelte:component this="{$climvar.icon}" dimension="50" />
-      </span>
-      <div>
-        <h3 class="block-title">{$climvar.title}</h3>
-        {#if $location}
-          <h4 class="block-title">
-            {$location.title}, {$location.address}
-          </h4>
-        {:else}
-          <SkeletonText heading />
-        {/if}
-        <h4 class="block-title">{$scenario.labelLong}</h4>
-      </div>
+  <div class="explore-header block">
+    <StaticMap location={$location} width={500} height={500} />
+    <div class="explore-header-title">
+      <h3><span class="block-title">{$location.title}</span></h3>
+      <h4>
+        Projected changes in <span class="block-title">{$climvar.title}</span> under a <span class="block-title">{$scenario.labelLong}</span>.
+      </h4>
+      <Button
+        size="small"
+        icon="{Location16}"
+        on:click="{() => (showChangeLocation = true)}">
+        Change Location
+      </Button>    
     </div>
   </div>
 
@@ -219,9 +212,7 @@
     />
     <div class="chart-notes">
       <p>
-        Source: Cal-Adapt. Data: LOCA Downscaled Climate Projections (Scripps
-        Institution Of Oceanography - University of California, San Diego),
-        Gridded Observed Meteorological Data (University of Colorado, Boulder).
+        Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
     <div class="chart-download">
@@ -231,11 +222,11 @@
         on:define
       />
       <div>
-        <Button icon="{Download16}" on:click="{() => (showDownload = true)}">
-          DOWNLOAD
+        <Button size="small" icon="{Download16}" on:click="{() => (showDownload = true)}">
+          Download
         </Button>
-        <Button icon="{Share16}" on:click="{() => (showShare = true)}">
-          SHARE
+        <Button size="small" icon="{Share16}" on:click="{() => (showShare = true)}">
+          Share
         </Button>
       </div>
     </div>
@@ -304,5 +295,7 @@
     on:click="{() => copy($bookmark)}"
   />
 </Modal>
+
+<ChangeLocation bind:open="{showChangeLocation}" on:change="{changeLocation}" />
 
 <DownloadChart bind:open="{showDownload}" on:download="{downloadViz}" />

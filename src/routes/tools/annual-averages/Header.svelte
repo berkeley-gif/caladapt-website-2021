@@ -51,21 +51,37 @@
 </style>
 
 <div class="header">
-  <h1>Annual Averages</h1>
-  <p class="lead">
-    Explore projected changes in annual average Maximum Temperature, Minimum
-    Temperature and Precipitation through end of this century for California.
-  </p>
+  <div class="center-row">
+    <span class="icon">
+      <!-- <svelte:component this="{$climvar.icon}" dimension="50" /> -->
+    </span>
+    <div>
+      <h1>Annual Averages</h1>
+      <p class="lead">
+        Explore projected changes in annual average Maximum Temperature, Minimum
+        Temperature and Precipitation through end of this century for California.
+      </p>
+    </div>
+  </div>
 </div>
+
 <div class="secondary-nav is-sticky">
   <ul>
     <li
-      data-section="select"
+      data-section="explore"
       class="link"
-      class:active="{currentView === 'select' ? true : false}"
+      class:active="{currentView === 'explore' ? true : false}"
       on:click="{selectView}"
     >
       Explore Data
+    </li>
+    <li
+      data-section="help"
+      class="link"
+      class:active="{currentView === 'help' ? true : false}"
+      on:click="{selectView}"
+    >
+      Help
     </li>
     <li
       data-section="about"
@@ -73,15 +89,7 @@
       class:active="{currentView === 'about' ? true : false}"
       on:click="{selectView}"
     >
-      About the Tool
-    </li>
-    <li
-      data-section="data"
-      class="link"
-      class:active="{currentView === 'data' ? true : false}"
-      on:click="{selectView}"
-    >
-      Data Sources
+      About
     </li>
     <li
       data-section="resources"
