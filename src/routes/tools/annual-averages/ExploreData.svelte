@@ -27,7 +27,7 @@
     SelectClimvar,
     ShowDefinition,
   } from "../../../components/tools/Settings";
-  import { StaticMap } from "../../../components/tools/Location"
+  import { StaticMap } from "../../../components/tools/Location";
   import { LineAreaChart } from "../../../components/tools/Charts";
   import { RangeAvg } from "../../../components/tools/Stats";
   import DownloadChart from "../../../components/tools/DownloadChart.svelte";
@@ -62,6 +62,7 @@
     ["feature", $location.title],
     ["center", `${$location.center[0]}, ${$location.center[1]}`],
     ["scenario", $scenario.label],
+    ["climate indicator", $climvar.label],
     ["units", $climvar.units.imperial],
   ];
 
