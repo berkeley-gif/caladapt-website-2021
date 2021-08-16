@@ -114,7 +114,7 @@
   ];
 
   // Monitor sections as they enter & leave viewport
-  let inviewEl = "select";
+  let inviewEl = "explore";
   const handleEntry = (e) => {
     const { entry } = e.detail;
     inviewEl = entry.target.id;
@@ -176,8 +176,8 @@
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const feature = addresses.features[0];
-    const loc = await getFeature(feature, boundaryId);
+    const nearest = addresses.features[0];
+    const loc = await getFeature(nearest, boundaryId);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
     return;
