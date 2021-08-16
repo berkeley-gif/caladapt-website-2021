@@ -53,18 +53,26 @@
 <div class="header">
   <h1>Extreme Weather</h1>
   <p class="lead">
-    Explore extreme weather events for baseline and future climates.
+    Explore extreme temperatures for past weather and present day at 39 weather stations across California, utilizing a quality-controlled data base for hourly weather observations for 1973-2019 produced for use by the energy sector.
   </p>
 </div>
 <div class="secondary-nav is-sticky">
   <ul>
     <li
-      data-section="select"
+      data-section="explore"
       class="link"
-      class:active="{currentView === 'select' ? true : false}"
+      class:active="{currentView === 'explore' ? true : false}"
       on:click="{selectView}"
     >
       Explore Data
+    </li>
+    <li
+      data-section="help"
+      class="link"
+      class:active="{currentView === 'help' ? true : false}"
+      on:click="{selectView}"
+    >
+      Help
     </li>
     <li
       data-section="about"
@@ -72,15 +80,7 @@
       class:active="{currentView === 'about' ? true : false}"
       on:click="{selectView}"
     >
-      About the Tool
-    </li>
-    <li
-      data-section="data"
-      class="link"
-      class:active="{currentView === 'data' ? true : false}"
-      on:click="{selectView}"
-    >
-      Data Sources
+      About
     </li>
     <li
       data-section="resources"

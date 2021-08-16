@@ -4,7 +4,7 @@
   export let resources;
 
   $: tools = resources.filter((d) => d.category === "caladapt");
-  $: other = resources.filter((d) => d.category === "other");
+  $: other = resources.filter((d) => d.category === "external");
 </script>
 
 <!-- Resources -->
@@ -30,9 +30,9 @@
 {/each}
 
 <!-- Related Cal-Adapt Tools -->
-<div class="bx--row" style="margin-top:2rem;">
+<div class="bx--row">
   <div class="bx--col">
-    <h2>Related Cal-Adapt Tools</h2>
+    <h3>Related Cal-Adapt Tools</h3>
   </div>
 </div>
 <div class="bx--row">
