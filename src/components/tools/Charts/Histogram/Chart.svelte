@@ -1,7 +1,7 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
-  import { histogram, extent } from "d3-array";
+  import { bin, thresholdFreedmanDiaconis, extent } from "d3-array";
 
   import Column from "./Column.svelte";
   import Annotation from "./Annotation.svelte";
@@ -11,7 +11,7 @@
 
   export let data;
   export let labels;
-  export let height = "350px";
+  export let height = "400px";
 
   export let yAxis = {
     label: "YAxis Label",
@@ -26,7 +26,6 @@
 
   const xKey = ["x0", "x1"];
   const yKey = "length";
-  let binCount = 30;
 
   let domain;
   let hist;
@@ -37,23 +36,14 @@
 
   $: if (data) {
     domain = extent(data);
-    hist = histogram().domain(domain).thresholds(thresholds(domain, binCount));
+    hist = bin().domain(domain).thresholds(thresholdFreedmanDiaconis);
     bins = hist(data);
-  }
-
-  function thresholds(domain, count) {
-    const breaks = [domain[0]];
-    const brek = (domain[1] - domain[0]) / count;
-    while (breaks[breaks.length - 1] < domain[1]) {
-      const node = breaks[breaks.length - 1] + brek;
-      breaks.push(node);
-    }
-    return breaks;
   }
 
   function createTooltip(d) {
     let tooltip;
-    tooltip = `<span class="title">Tooltip</span>`;
+    tooltip = `<span class="title">${d.length} occurrences</span>`;
+    tooltip += `${d.x0}–${d.x1} ${xAxis.units}`
     return tooltip;
   }
 </script>
@@ -61,10 +51,9 @@
 {#if data}
   <div style="{`height:${height}`}" bind:this="{chartContainer}">
     <LayerCake
-      padding="{{ top: 20, right: 20, bottom: 30, left: 35 }}"
+      padding="{{ top: 100, right: 30, bottom: 30, left: 35 }}"
       x="{xKey}"
       y="{yKey}"
-      yDomain="{[0, null]}"
       data="{bins}"
     >
       <Svg>
@@ -86,7 +75,7 @@
           on:mousemove="{(event) => (evt = hideTooltip = event)}"
           on:mouseout="{() => (hideTooltip = true)}"
         />
-        <Annotation data="{labels.stats}" />
+        <Annotation data="{labels}" />
       </Svg>
       <Html pointerEvents="{false}">
         {#if hideTooltip !== true}

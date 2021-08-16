@@ -2,12 +2,13 @@
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
 
-  const { padding, data, xGet, yGet, yRange, xScale } = getContext("LayerCake");
+  const { data, xGet, yGet, yRange, xScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
-  export let fill = "steelblue";
-  export let stroke = "";
-  export let strokeWidth = 0;
+  export let fill = "#aaa";
+  export let fillOpacity = 0.2;
+  export let stroke = "#aaa";
+  export let strokeWidth = 1;
 
   $: columnWidth = (d) => {
     const vals = $xGet(d);
@@ -29,7 +30,7 @@
   }
 </script>
 
-<g class="column-group" transform="translate({$padding.left}, 0)">
+<g class="column-group">
   {#each $data as d, i}
     <rect
       class="group-rect"
@@ -39,6 +40,7 @@
       width="{$xScale.bandwidth ? $xScale.bandwidth() : columnWidth(d)}"
       height="{columnHeight(d)}"
       fill="{fill}"
+      fill-opacity="{fillOpacity}"
       stroke="{stroke}"
       stroke-width="{strokeWidth}"
       on:mouseout="{() => dispatch('mouseout')}"
