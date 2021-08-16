@@ -43,7 +43,7 @@
   async function search(e) {
     isSearching = true
     showSuggestions = false;
-    geocodeResults.lenght = 0;
+    geocodeResults.length = 0;
     geocodeResults = await searchFeature(e.target.value, currentBoundary.id);
     // Add groupname for results from all geocoders
     geocodeResults.forEach((item) => {
