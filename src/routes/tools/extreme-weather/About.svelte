@@ -56,41 +56,8 @@
   <div class="bx--col-lg-12">
     <h2>About the Tool</h2>
     <p>
-      Overall temperatures are projected to rise substantially throughout this
-      century. These projections differ depending on the time of year and the
-      type of measurement (highs vs. lows), all of which have different
-      potential effects to the state's ecosystem health, agricultural
-      production, water use and availability, and energy demand. On average, the
-      projections show little change in total annual precipitation in
-      California. Furthermore, among several models, precipitation projections
-      do not show a consistent trend during the next century. The Mediterranean
-      seasonal precipitation pattern is expected to continue, with most
-      precipitation falling during winter from North Pacific storms. However,
-      even modest changes would have a significant impact because California
-      ecosystems are conditioned to historical precipitation levels and water
-      resources are nearly fully utilized.
-    </p>
-    <p>
-      With this tool you can explore projections of annually averaged maximum
-      temperature, minimum temperature and precipitation. These climate
-      projections have been downscaled from global climate models from the <a
-        href="https://pcmdi.llnl.gov/mips/cmip5/"
-        target="_blank">CMIP5</a
-      >
-      archive, using the
-      <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
-        >Localized Constructed Analogs</a
-      > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
-      LOCA is a statistical downscaling technique that uses past history to add improved
-      fine-scale detail to global climate models.
-    </p>
-    <p>
-      On average, the projections show little change in total annual
-      precipitation in California. Furthermore, among several models,
-      precipitation projections do not show a consistent trend during the next
-      century. However, even modest changes would have a significant impact
-      because California ecosystems are conditioned to historical precipitation
-      levels and water resources are nearly fully utilized.
+      Explore extreme temperatures for past weather, present day, and future
+      climate projections.
     </p>
   </div>
 </div>
@@ -151,3 +118,31 @@
     subtitle="An internal server error occurred while loading dataset descriptions."
   />
 {/await}
+
+<!-- Source -->
+<div class="bx--row source">
+  <div class="bx--col-lg-2 source-logo">
+    <img
+      style="width:80px;"
+      src="/img/logos/gif_80x80.png"
+      alt="data provider logo"
+    />
+  </div>
+  <div class="bx--col-lg-10 source-text">
+    <h4>Near Term Forecast</h4>
+    <h5>National Weather Service</h5>
+    <p>
+      The National Weather Service (NWS) is an agency of the United States
+      federal government that is tasked with providing weather forecasts,
+      warnings of hazardous weather, and other weather-related products to
+      organizations and the public for the purposes of protection, safety, and
+      general information.
+    </p>
+    <p>Download dataset:</p>
+    <ul>
+      <li>
+        <a href="#!" target="_blank">API</a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -142,7 +142,7 @@ export const handle = (promise) => {
  * @param {object} params - query parameters
  * @return {Promise}
  */
-export function fetchData(url, params, method = "GET") {
+export function fetchData(url, params = {}, method = "GET") {
   let request;
   if (method === "POST") {
     const formData = new FormData();
@@ -485,4 +485,21 @@ export function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
+}
+
+/**
+ * Get dataset info from Cal-Adapt API and add extra props
+
+ * @param {object} opt - object with slug and logo props
+ * @return {object}
+ */
+export async function getDataset(opt) {
+  try {
+    const response = await fetchData(`${apiEndpoint}/datasets/${opt.slug}`);
+    const dataset = await response.json();
+    const id = dataset.url.split("datasets")[1].replaceAll("/", "");
+    return { ...dataset, id, ...opt };
+  } catch (error) {
+    throw new Error(error);
+  }
 }

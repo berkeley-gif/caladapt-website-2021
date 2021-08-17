@@ -1,92 +1,109 @@
 <script context="module">
+  // The preload function takes a
+  // `{ path, params, query }` object and turns it into
+  // the data we need to render the page. It only runs once
+  // during export.
   export async function preload({ query }) {
+    // Get tools metadata
+    const toolsList = await this.fetch("tools.json")
+      .then((r) => r.json())
+      .then((data) => {
+        const { tools } = data;
+        return tools;
+      });
+
+    // Filter metadata for current tool
+    const tool = toolsList.find((d) => d.slug === "extreme-weather");
+    const related = toolsList.filter((d) => tool.related.includes(d.slug));
+
     const glossary = await this.fetch(`help/glossary.json`)
       .then((r) => r.json())
       .then((json) => {
         return json.data;
       });
-    if (Object.keys(query).length === 0) {
-      return {
-        initialConfig: {
-          stationId: 11,
-          scenarioId: "rcp45",
-          climvarId: "tasmax",
-          modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
-          imperial: true,
-        },
-        glossary,
+
+    // Set intitial config for tool
+    let initialConfig;
+    if (Object.keys(query).length > 0) {
+      // TODO: validate bookmark
+      let imperial;
+      if (query.imperial && query.imperial === "false") {
+        imperial = false;
+      } else {
+        imperial = true;
+      }
+      initialConfig = { ...query, imperial };
+    } else {
+      initialConfig = {
+        stationId: 11,
+        climvarId: "tasmax",
+        imperial: true,
       };
     }
-    // TODO: validate bookmark, move imperial parsing to validation code
-    let imperial = true;
-    if (imperial && imperial === "false") {
-      imperial = false;
-    }
-    return { initialConfig: { ...query, imperial }, glossary };
+
+    return { initialConfig, glossary, tool, related };
   }
 </script>
 
 <script>
   import { onMount } from "svelte";
   import { timeParse } from "d3-time-format";
-  import {
-    Modal,
-    InlineNotification,
-    NotificationActionButton,
-  } from "carbon-components-svelte";
+  import { Modal } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
-  import { resources } from "./_helpers";
+  import { getStation } from "../../../helpers/geocode";
 
   // Components
   import Header from "./Header.svelte";
-  import SelectLocation from "./SelectLocation.svelte";
   import ExploreData from "./ExploreData.svelte";
   import About from "./About.svelte";
-  import DataSources from "./DataSources.svelte";
   import Resources from "./Resources.svelte";
+  import Help from "./Help.svelte";
   import { NotificationDisplay } from "../../../components/notifications";
 
   // Store
   import {
     climvarStore,
-    scenarioStore,
-    modelsStore,
     unitsStore,
-    stationStore,
+    locationStore,
     dataStore,
     doyStore,
     queryParams,
     observationsStore,
     forecastStore,
+    extremesStore,
   } from "./_store";
-  import {
-    getData,
-    getStations,
-    getObservedData,
-    getForecastData,
-  } from "./_data";
+  import { getObservedValues, getObservedReturnLevels } from "./_data";
 
   export let initialConfig;
   export let glossary;
+  export let tool;
+  export let related;
 
   // Derived stores
   const { climvar } = climvarStore;
-  const { scenario } = scenarioStore;
-  const { models } = modelsStore;
 
   // Local props
   let showInfo = false;
-  let showHelp = false;
   let definitionText;
   let definitionTitle;
-  let runUpdate = false;
-  let stations;
+  let appReady = false;
 
   // Add tool specific content to glossary
   glossary = [
     ...glossary,
+    {
+      slug: "threshold",
+      metadata: {
+        title: "Threshold",
+      },
+      html: `
+        <div>
+          <p>Due to the nature of the extreme value statistics, only threshold values at or above the 90th percentile for Maximum Temperature, and at or above the 10th percentile for Minimum Temperature, are allowed for this input.</p>
+        </div>
+      `,
+    },
     {
       slug: "return-period",
       metadata: {
@@ -97,6 +114,28 @@
           <p>The probability that an extreme weather event occurs is often expressed as a Return Period. A return period is the inverse of probability (generally expressed in %); it gives the estimated time interval between events of a similar size or intensity.</p>
           <p>For example, the estimated return period of an event might be 1 in 10 years. This does not mean the event will occur every 10 years, it indicates probability of ocurrence being 10/100, or 10% in any one year.</p>
           <p>For this tool, 30 years of data for the Baseline, Mid-Century and End-Century periods are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
+        </div>
+      `,
+    },
+    {
+      slug: "doy",
+      metadata: {
+        title: "",
+      },
+      html: `
+        <div>
+          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast if for today's date only and does not change if you select a different day of year.</p>
+        </div>
+      `,
+    },
+    {
+      slug: "extremes",
+      metadata: {
+        title: "",
+      },
+      html: `
+        <div>
+          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast if for today's date only and does not change if you select a different day of year.</p>
         </div>
       `,
     },
@@ -137,7 +176,7 @@
   ];
 
   // Monitor sections as they enter & leave viewport
-  let inviewEl = "select";
+  let inviewEl = "explore";
   const handleEntry = (e) => {
     const { entry } = e.detail;
     inviewEl = entry.target.id;
@@ -146,35 +185,32 @@
     threshold: 0.5,
   };
 
-  $: $stationStore, waitToUpdate();
-  $: $climvar, $scenario, $models, $doyStore, update();
-
-  function setRunUpdate() {
-    runUpdate = true;
-    update();
-  }
-
-  function waitToUpdate() {
-    runUpdate = false;
-    dataStore.set(null);
-  }
+  // Reactive props
+  $: datasets = tool.datasets;
+  $: resources = [...tool.resources, ...related];
+  $: $climvar, $doyStore, $locationStore, $extremesStore, update();
+  $: $locationStore, forecastStore.reset();
 
   async function update() {
-    if (!runUpdate) return;
-    dataStore.set(null);
+    if (!appReady) return;
     try {
+      dataStore.set(null);
       const config = {
         climvarId: $climvarStore,
-        scenarioId: $scenarioStore,
-        modelIds: $modelsStore,
       };
-      const { params, method } = $queryParams;
-      const projections = await getData(config, params, method);
-      const observations = await getObservedData(config, params.g);
-      const forecast = await getForecastData(config, params.g);
-      dataStore.set(projections);
-      observationsStore.set(observations);
-      forecastStore.set(forecast);
+      const { params } = $queryParams;
+      const observedValues = await getObservedValues(config, {
+        g: params.g,
+        imperial: params.imperial,
+      });
+      const observedReturnLevels = await getObservedReturnLevels(
+        config,
+        params
+      );
+      observationsStore.set({
+        values: observedValues,
+        returnLevels: observedReturnLevels[0],
+      });
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
@@ -198,22 +234,13 @@
     showInfo = true;
   }
 
-  function showHelpOptions() {
-    showHelp = true;
-  }
-
   async function initApp(config) {
-    const { stationId, scenarioId, climvarId, modelIds, imperial, doy } =
-      config;
+    const { stationId, climvarId, imperial, doy } = config;
     climvarStore.set(climvarId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
     unitsStore.set({ imperial });
-    // Get a list of all stations
-    stations = await getStations();
     // Set intial station
-    const station = stations.features.find((d) => d.id === stationId);
-    stationStore.updateStation(station);
+    const station = await getStation(stationId, "hadisdstations");
+    locationStore.updateLocation(station);
     // Set today's date as default
     if (!doy) {
       doyStore.set(new Date());
@@ -224,9 +251,15 @@
   }
 
   onMount(() => {
-    initApp(initialConfig).catch((error) => {
-      console.log("init error", error);
-    });
+    initApp(initialConfig)
+      .then(() => {
+        appReady = true;
+        console.log("app ready");
+        update();
+      })
+      .catch((error) => {
+        console.log("init error", error);
+      });
     window.scrollTo(0, 0);
   });
 </script>
@@ -243,47 +276,22 @@
   <!-- Header -->
   <Header currentView="{inviewEl}" />
 
-  <div id="help" class="section">
-    <InlineNotification
-      hideCloseButton
-      lowContrast
-      kind="info"
-      title="To get started:"
-      subtitle="First select a Station. Next, scroll down and click on the Fetch Data button."
-    >
-      <div slot="actions">
-        <NotificationActionButton on:click="{showHelpOptions}">
-          GET HELP
-        </NotificationActionButton>
-      </div>
-    </InlineNotification>
-  </div>
-
-  <!-- Select Location -->
-  <div
-    id="select"
-    class="section"
-    use:inview="{entryOptions}"
-    on:enter="{handleEntry}"
-  >
-    {#if stations}
-      <SelectLocation
-        stationsList="{stations.features}"
-        on:define="{showDefinition}"
-      />
-    {/if}
-  </div>
-
   <!-- Explore -->
   <div id="explore" class="section">
-    <ExploreData
-      runUpdate="{runUpdate}"
-      on:update="{setRunUpdate}"
-      on:define="{showDefinition}"
-    />
+    <ExploreData on:define="{showDefinition}" />
   </div>
 
   <div class="bx--grid">
+    <!-- Help -->
+    <div
+      id="help"
+      class="section"
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
+    >
+      <Help />
+    </div>
+
     <!-- About -->
     <div
       id="about"
@@ -291,17 +299,7 @@
       use:inview="{entryOptions}"
       on:enter="{handleEntry}"
     >
-      <About />
-    </div>
-
-    <!-- Data Sources -->
-    <div
-      id="data"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <DataSources />
+      <About datasets="{datasets}" />
     </div>
 
     <!-- Resources -->
@@ -326,30 +324,6 @@
   on:close
 >
   <div>{@html definitionText}</div>
-</Modal>
-
-<Modal
-  id="help-options"
-  size="sm"
-  passiveModal
-  bind:open="{showHelp}"
-  modalHeading="Get Help"
-  on:open
-  on:close
->
-  <ul style="padding-left: 2rem;">
-    <li>
-      <a href="!#" target="_blank">Watch a video on using the tool</a>
-    </li>
-    <li>
-      <a href="/help/get-started/" target="_blank"
-        >Explore our guide on climate data</a
-      >
-    </li>
-    <li>
-      <a href="/help/faqs/" target="_blank">Search FAQs</a>
-    </li>
-  </ul>
 </Modal>
 
 <NotificationDisplay />

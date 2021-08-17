@@ -15,7 +15,7 @@
     transition: left 250ms ease-out, top 250ms ease-out;
     z-index: 15;
     color: #fff;
-    width: 200px;
+    width: 125px;
   }
 
   :global(.chart-tooltip > span) {

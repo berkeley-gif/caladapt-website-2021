@@ -1,8 +1,20 @@
+<script context="module">
+  export async function preload() {
+    const data = await this.fetch(`tools.json`)
+      .then((r) => r.json())
+      .then((data) => data);
+
+    return { data };
+  }
+</script>
+
 <script>
   import { fade } from "svelte/transition";
-  import { categories, tools } from "../../../content/tools/data";
-
   import FilterCategories from "../../partials/FilterCategories.svelte";
+
+  export let data;
+
+  const { categories, tools } = data;
 
   $: toolsByCategory = tools;
 

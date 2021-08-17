@@ -4,9 +4,9 @@
   const { padding, width, height, xScale, yRange } = getContext("LayerCake");
 
   export let gridlines = true;
-  export let tickMarks = false;
+  export let tickMarks = true;
   export let tickFormat = (d) => d;
-  export let baseline = false;
+  export let baseline = true;
   export let snapTicks = false;
   export let ticks = undefined;
   export let xTick = undefined;
@@ -39,11 +39,6 @@
 </script>
 
 <style>
-  .tick {
-    font-size: 0.725em;
-    font-weight: 200;
-  }
-
   line,
   .tick line {
     stroke: #aaa;
@@ -56,6 +51,7 @@
 
   .tick .tick-mark,
   .baseline {
+    stroke: #aaa;
     stroke-dasharray: 0;
   }
 
@@ -67,11 +63,7 @@
   }
 </style>
 
-<g
-  class="axis x-axis"
-  class:snapTicks
-  transform="translate({$padding.left}, 0)"
->
+<g class="axis x-axis" class:snapTicks>
   {#each tickVals as tick, i}
     <g
       class="tick tick-{i}"
@@ -93,7 +85,7 @@
         y="{yTick}"
         dx="{dxTick}"
         dy="{dyTick}"
-        text-anchor="{textAnchor(i)}">{tickFormat(tick)}</text
+        text-anchor="middle">{tickFormat(tick)}</text
       >
     </g>
   {/each}

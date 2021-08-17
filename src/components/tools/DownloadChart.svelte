@@ -12,7 +12,9 @@
   import CheckmarkFilled16 from "carbon-icons-svelte/lib/CheckmarkFilled16";
 
   export let open = false;
-  export let options = [
+  export let formats = ["png", "csv"];
+
+  const items = [
     {
       format: "png",
       text: `Chart in image format. Use it in 
@@ -33,6 +35,7 @@
     },
   ];
 
+  $: options = items.filter((d) => formats.includes(d.format));
   const dispatch = createEventDispatcher();
 
   let selected = "png";

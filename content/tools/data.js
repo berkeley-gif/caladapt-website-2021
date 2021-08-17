@@ -1,3 +1,4 @@
+import externalResources from './resources';
 
 const categories = ['All', 'Temperature', 'Precipitation', 'Snowpack', 'Sea Level Rise', 'Wildfire'];
 
@@ -23,15 +24,47 @@ const tools = [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
     ],
+    datasets: [
+      {
+        slug: 'cb0c5f49-59d2-4f8e-8d9c-a047833f6081',
+        logo: 'scripps_100x100.png',
+      },
+      {
+        slug: '0887cba6-695c-403a-a757-674075799ea5',
+        logo: 'u_colorado.png',
+      },
+      {
+        slug: 'b8bee9f9-31c1-40d9-89a3-2dad814ba7da',
+        logo: 'gif_80x80.png'
+      }
+    ],
+    related: [
+      'maps-of-projected-change',
+    ],
+    resources: [
+      ...externalResources,
+    ]
   },
   {
     title: 'Extreme Weather',
     desc: `Explore extreme weather events for baseline and future climates.`,
     categories: ['Temperature'],
-    slug: 'climate-extremes',
+    slug: 'extreme-weather',
     icons: [
       'img/icons/sun.svg',
     ],
+    datasets: [
+      {
+        slug: '5e555315-da6a-4a49-a2a2-53408720ce08',
+        logo: 'scripps_100x100.png',
+      },
+    ],
+    related: [
+      'extreme-heat',
+    ],
+    resources: [
+      ...externalResources,
+    ]
   },
   {
     title: 'Maps of Projected Change',

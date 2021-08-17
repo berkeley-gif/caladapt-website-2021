@@ -1,50 +1,70 @@
 <script context="module">
+  // The preload function takes a
+  // `{ path, params, query }` object and turns it into
+  // the data we need to render the page. It only runs once
+  // during export.
   export async function preload({ query }) {
-    const glossary = await this.fetch(`help/glossary.json`)
+    // Get tools metadata
+    const toolsList = await this.fetch("tools.json")
+      .then((r) => r.json())
+      .then((data) => {
+        const { tools } = data;
+        return tools;
+      });
+
+    // Filter metadata for current tool
+    const tool = toolsList.find((d) => d.slug === "annual-averages");
+    const related = toolsList.filter((d) => tool.related.includes(d.slug));
+
+    // Get glossary items
+    const glossary = await this.fetch("help/glossary.json")
       .then((r) => r.json())
       .then((json) => {
         return json.data;
       });
-    if (Object.keys(query).length === 0) {
-      return {
-        initialConfig: {
-          boundaryId: "locagrid",
-          scenarioId: "rcp45",
-          climvarId: "tasmax",
-          modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
-          imperial: true,
-          lat: 38.58,
-          lng: -121.46,
-        },
-        glossary,
+
+    // Set intitial config for tool
+    let initialConfig;
+
+    if (Object.keys(query).length > 0) {
+      // TODO: validate bookmark
+      let imperial;
+      if (query.imperial && query.imperial === "false") {
+        imperial = false;
+      } else {
+        imperial = true;
+      }
+      initialConfig = { ...query, imperial };
+    } else {
+      initialConfig = {
+        boundaryId: "locagrid",
+        scenarioId: "rcp45",
+        climvarId: "tasmax",
+        modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
+        imperial: true,
+        lat: 38.58,
+        lng: -121.46,
       };
     }
-    // TODO: validate bookmark, move imperial parsing to validation code
-    let imperial = true;
-    if (imperial && imperial === "false") {
-      imperial = false;
-    }
-    return { initialConfig: { ...query, imperial }, glossary };
+
+    return { initialConfig, glossary, tool, related };
   }
 </script>
 
 <script>
   import { onMount } from "svelte";
-  import { Modal, Button, Tag } from "carbon-components-svelte";
+  import { Modal } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
-  import ChartLineData32 from "carbon-icons-svelte/lib/ChartLineData32";
 
   // Helpers
-  import { getLocation } from "../../../helpers/geocode";
-  import { resources } from "./_helpers";
+  import { getFeature, reverseGeocode } from "../../../helpers/geocode";
 
   // Components
   import Header from "./Header.svelte";
-  import SelectLocation from "./SelectLocation.svelte";
   import ExploreData from "./ExploreData.svelte";
   import About from "./About.svelte";
-  import DataSources from "./DataSources.svelte";
   import Resources from "./Resources.svelte";
+  import Help from "./Help.svelte";
   import { NotificationDisplay } from "../../../components/notifications";
 
   // Store
@@ -61,10 +81,11 @@
 
   export let initialConfig;
   export let glossary;
+  export let tool;
+  export let related;
 
   // Derived stores
   const { location } = locationStore;
-  const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { models } = modelsStore;
@@ -73,25 +94,27 @@
   let showInfo = false;
   let definitionText;
   let definitionTitle;
-  let runUpdate = false;
+  let appReady = false;
 
   // Add tool specific content to glossary
   glossary = [
     ...glossary,
     {
       slug: "annual-averages-chart",
-      metadata: {},
+      metadata: {
+        title: "Annual Averages",
+      },
       html: `
         <div>
-          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The Observed data is represented by a gray line from 1950-2006.</p>
-          <p>Click on the legend button to highlight corresponding timeseries.</p>
+          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The historical observed data is represented by a gray line from 1950-2006.</p>
+          <p>Click on any of the legend keys to highlight corresponding timeseries.</p>
         </div>
       `,
     },
   ];
 
   // Monitor sections as they enter & leave viewport
-  let inviewEl = "select";
+  let inviewEl = "explore";
   const handleEntry = (e) => {
     const { entry } = e.detail;
     inviewEl = entry.target.id;
@@ -101,23 +124,15 @@
   };
 
   // Reactive props
-  $: $location, waitToUpdate();
-  $: $climvar, $scenario, $models, update();
-
-  function setRunUpdate() {
-    runUpdate = true;
-    update();
-  }
-
-  function waitToUpdate() {
-    runUpdate = false;
-    dataStore.set(null);
-  }
+  $: datasets = tool.datasets;
+  $: resources = [...tool.resources, ...related];
+  $: $climvar, $scenario, $models, $location, update();
 
   async function update() {
-    if (!runUpdate) return;
-    dataStore.set(null);
+    if (!appReady) return;
+    if ($models.length === 0) return;
     try {
+      dataStore.set(null);
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -159,16 +174,24 @@
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
-    const loc = await getLocation(lng, lat, boundaryId);
+    const addresses = await reverseGeocode(`${lng}, ${lat}`);
+    const nearest = addresses.features[0];
+    const loc = await getFeature(nearest, boundaryId);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
     return;
   }
 
   onMount(() => {
-    initApp(initialConfig).catch((error) => {
-      console.log("init error", error);
-    });
+    initApp(initialConfig)
+      .then(() => {
+        appReady = true;
+        console.log("app ready");
+        update();
+      })
+      .catch((error) => {
+        console.log("init error", error);
+      });
     window.scrollTo(0, 0);
   });
 </script>
@@ -185,41 +208,22 @@
   <!-- Header -->
   <Header currentView="{inviewEl}" />
 
-  <div id="help" class="section">
-    <div class="help-info">
-      <p>
-        To get started, first <strong>Select a Location</strong>. Next, scroll
-        down to <strong>Explore Data</strong> for selected location.
-      </p>
-      <p>
-        Get help:
-        <Tag interactive>Watch a video on using the tool</Tag>
-        <Tag interactive>Explore our guide on climate data</Tag>
-        <Tag interactive>Search FAQs</Tag>
-      </p>
-    </div>
-  </div>
-
-  <!-- Select Location -->
-  <div
-    id="select"
-    class="section"
-    use:inview="{entryOptions}"
-    on:enter="{handleEntry}"
-  >
-    <SelectLocation on:define="{showDefinition}" />
-  </div>
-
   <!-- Explore -->
   <div id="explore" class="section">
-    <ExploreData
-      runUpdate="{runUpdate}"
-      on:update="{setRunUpdate}"
-      on:define="{showDefinition}"
-    />
+    <ExploreData on:define="{showDefinition}" />
   </div>
 
   <div class="bx--grid">
+    <!-- Help -->
+    <div
+      id="help"
+      class="section"
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
+    >
+      <Help />
+    </div>
+
     <!-- About -->
     <div
       id="about"
@@ -227,17 +231,7 @@
       use:inview="{entryOptions}"
       on:enter="{handleEntry}"
     >
-      <About />
-    </div>
-
-    <!-- Data Sources -->
-    <div
-      id="data"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <DataSources />
+      <About datasets="{datasets}" />
     </div>
 
     <!-- Resources -->

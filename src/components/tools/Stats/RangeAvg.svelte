@@ -63,8 +63,12 @@
   let showInfo = false;
   let stats = null;
   let showRange = true;
-  let modelCount;
   let note = "Learn More";
+  let modelCount = 0;
+
+  $: if (data && !isHistorical) {
+    modelCount = data.filter((d) => d.key !== "observed").length;
+  }
 
   function subsetByYearRange(range) {
     return function (d) {
@@ -89,18 +93,15 @@
       selectedPeriod = periodList.find((d) => d.id === periodId);
     }
     showSettings = false;
-    let dataForSeries;
+    let filteredData;
     if (seriesId === "observed") {
-      dataForSeries = data.filter((d) => d.key === "observed");
-      modelCount = 0;
+      filteredData = data.filter((d) => d.key === "observed");
       showRange = false;
     } else {
-      dataForSeries = data.filter((d) => d.key !== "observed");
-      modelCount = dataForSeries.length;
+      filteredData = data.filter((d) => d.key !== "observed");
       showRange = true;
     }
-    console.log("dataForSeries", showRange, dataForSeries);
-    stats = calculateStats(dataForSeries, range);
+    stats = calculateStats(filteredData, range);
   }
 
   function calculateStats(_data, range) {
@@ -253,7 +254,7 @@
   on:close="{() => (showInfo = false)}"
 >
   <div>
-    {#if selectedSeries.id === "observed"}
+    {#if isHistorical}
       <p>
         The average is calculated using data values between {selectedPeriod.start}
         and {selectedPeriod.end} from the Observed Historical timeseries.
