@@ -3,7 +3,11 @@
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
 
   // Helpers
-  import { getFeature, searchFeature, reverseGeocode } from "../../../helpers/geocode";
+  import {
+    getFeature,
+    searchFeature,
+    reverseGeocode,
+  } from "../../../helpers/geocode";
   import { boundaryList } from "./_helpers";
 
   import {
@@ -41,7 +45,7 @@
   }
 
   async function search(e) {
-    isSearching = true
+    isSearching = true;
     showSuggestions = false;
     geocodeResults.length = 0;
     geocodeResults = await searchFeature(e.target.value, currentBoundary.id);
@@ -168,11 +172,11 @@
   preventCloseOnClickOutside
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={cancel}
+  on:click:button--secondary="{cancel}"
   bind:open
   modalHeading="Change Location"
-  shouldSubmitOnEnter={false}
-  on:submit={change}
+  shouldSubmitOnEnter="{false}"
+  on:submit="{change}"
   on:open
   on:close
 >
@@ -184,13 +188,13 @@
     <div class="change-boundary">
       <!-- Boundary Selection -->
       <SelectBoundary
-        selectedId={currentBoundary.id}
-        items={boundaryList}
-        addStateBoundary={true}
-        on:change={updateBoundary}
+        selectedId="{currentBoundary.id}"
+        items="{boundaryList}"
+        addStateBoundary="{true}"
+        on:change="{updateBoundary}"
       />
       <!-- Upload Boundary -->
-      <UploadBoundary on:upload={uploadBoundary} />      
+      <UploadBoundary on:upload="{uploadBoundary}" />
     </div>
     <div class="change-location">
       <!-- Search -->
@@ -198,10 +202,10 @@
         <Search
           size="sm"
           id="search"
-          placeholder={searchPlaceholder}
-          on:change={search}
-          on:clear={clearSearch}
-          bind:value={searchValue}
+          placeholder="{searchPlaceholder}"
+          on:change="{search}"
+          on:clear="{clearSearch}"
+          bind:value="{searchValue}"
         />
         {#if showSuggestions}
           <div class="suggestions-wrapper">
@@ -213,14 +217,22 @@
                     <li>
                       <div
                         class="suggestion"
-                        on:click="{() => selectSuggestion({...opt, geocoder: item.geocoder})}">
+                        on:click="{() =>
+                          selectSuggestion({
+                            ...opt,
+                            geocoder: item.geocoder,
+                          })}"
+                      >
                         <div class="suggestion-text">{opt.title}</div>
                       </div>
                     </li>
                   {/each}
                 {:else}
                   <li>
-                    <div class="suggestion" on:click="{() => selectSuggestion()}">
+                    <div
+                      class="suggestion"
+                      on:click="{() => selectSuggestion()}"
+                    >
                       <div class="suggestion-nodata">No Results Found</div>
                     </div>
                   </li>
@@ -237,12 +249,12 @@
       {/if}
       <!-- Map-->
       <Location
-        lng={currentLoc.center[0]}
-        lat={currentLoc.center[1]}
-        boundary={currentBoundary}
-        location={currentLoc}
-        imageOverlayShow={false}
-        on:mapclick={mapClick}
+        lng="{currentLoc.center[0]}"
+        lat="{currentLoc.center[1]}"
+        boundary="{currentBoundary}"
+        location="{currentLoc}"
+        imageOverlayShow="{false}"
+        on:mapclick="{mapClick}"
         on:ready="{() => dispatch('ready')}"
       />
     </div>

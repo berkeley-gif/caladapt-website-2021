@@ -15,8 +15,8 @@
 
   const formatSelected = (arr) => {
     if (arr.length === 0) {
-      return "No models selected"
-    } 
+      return "No models selected";
+    }
     return arr.join(", ");
   };
 
@@ -26,7 +26,7 @@
       invalid = true;
     } else {
       invalid = false;
-      
+
       dispatch("change", e.detail);
     }
   }, 1000);
@@ -44,14 +44,14 @@
 
 {#if ready}
   <MultiSelect
-    {invalid}
+    invalid="{invalid}"
     invalidText="Choose atleast 1 GCM"
-    selectedIds={selectedIdsArr}
+    selectedIds="{selectedIdsArr}"
     titleText=""
     label="Select..."
-    items={items}
-    sortItem={sortItem}
-    on:select={changeSelection}
+    items="{items}"
+    sortItem="{sortItem}"
+    on:select="{changeSelection}"
   />
 {:else}
   <SelectSkeleton />

@@ -4,7 +4,11 @@
   import getBbox from "@turf/bbox";
 
   // Helpers
-  import { getNearestStation, getStation, searchFeature } from "../../../helpers/geocode";
+  import {
+    getNearestStation,
+    getStation,
+    searchFeature,
+  } from "../../../helpers/geocode";
   import { stationsLayer } from "./_helpers";
 
   import { Location } from "../../../components/tools/Location";
@@ -24,13 +28,17 @@
   let showSuggestions = false;
 
   async function mapClick(e) {
-    currentLoc = await getNearestStation(e.detail[0], e.detail[0], "hadisdstations");
+    currentLoc = await getNearestStation(
+      e.detail[0],
+      e.detail[0],
+      "hadisdstations"
+    );
   }
 
   async function overlayClick(e) {
     currentLoc = await getStation(e.detail, "hadisdstations");
     currentLoc.bbox = getBbox(currentLoc.geometry);
-    console.log('overlay result', currentLoc)
+    console.log("overlay result", currentLoc);
   }
 
   function clearSearch() {
@@ -40,7 +48,7 @@
   }
 
   async function search(e) {
-    isSearching = true
+    isSearching = true;
     showSuggestions = false;
     geocodeResults.length = 0;
     geocodeResults = await searchFeature(e.target.value);
@@ -56,7 +64,11 @@
 
   async function selectSuggestion(opt) {
     if (opt) {
-      currentLoc = await getNearestStation(opt.center[0], opt.center[1], stationsLayer.id);
+      currentLoc = await getNearestStation(
+        opt.center[0],
+        opt.center[1],
+        stationsLayer.id
+      );
     }
     clearSearch();
   }
@@ -141,17 +153,18 @@
   preventCloseOnClickOutside
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={cancel}
+  on:click:button--secondary="{cancel}"
   bind:open
   modalHeading="Change Location"
-  shouldSubmitOnEnter={false}
-  on:submit={change}
+  shouldSubmitOnEnter="{false}"
+  on:submit="{change}"
   on:open
   on:close
 >
   <div>
     <p>
-      Select a station on the map or enter an address in the search box to select the nearest station.
+      Select a station on the map or enter an address in the search box to
+      select the nearest station.
     </p>
     <div class="change-location">
       <!-- Search -->
@@ -159,10 +172,10 @@
         <Search
           size="sm"
           id="search"
-          placeholder={searchPlaceholder}
-          on:change={search}
-          on:clear={clearSearch}
-          bind:value={searchValue}
+          placeholder="{searchPlaceholder}"
+          on:change="{search}"
+          on:clear="{clearSearch}"
+          bind:value="{searchValue}"
         />
         {#if showSuggestions}
           <div class="suggestions-wrapper">
@@ -174,14 +187,22 @@
                     <li>
                       <div
                         class="suggestion"
-                        on:click="{() => selectSuggestion({...opt, geocoder: item.geocoder})}">
+                        on:click="{() =>
+                          selectSuggestion({
+                            ...opt,
+                            geocoder: item.geocoder,
+                          })}"
+                      >
                         <div class="suggestion-text">{opt.title}</div>
                       </div>
                     </li>
                   {/each}
                 {:else}
                   <li>
-                    <div class="suggestion" on:click="{() => selectSuggestion()}">
+                    <div
+                      class="suggestion"
+                      on:click="{() => selectSuggestion()}"
+                    >
                       <div class="suggestion-nodata">No Results Found</div>
                     </div>
                   </li>
@@ -198,10 +219,10 @@
       {/if}
       <!-- Map-->
       <Location
-        stations={stationsLayer}
-        location={currentLoc}
-        imageOverlayShow={false}
-        on:overlayclick={overlayClick}
+        stations="{stationsLayer}"
+        location="{currentLoc}"
+        imageOverlayShow="{false}"
+        on:overlayclick="{overlayClick}"
         on:ready="{() => dispatch('ready')}"
       />
     </div>

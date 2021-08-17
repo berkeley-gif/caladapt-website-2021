@@ -13,7 +13,7 @@
 
   async function fetchDatasets() {
     try {
-      const results = await Promise.all(datasets.map(d => getDataset(d)));
+      const results = await Promise.all(datasets.map((d) => getDataset(d)));
       return results;
     } catch (error) {
       throw new Error(error);
@@ -21,10 +21,9 @@
   }
 
   onMount(() => {
-    fetchDatasets()
-      .then((results) => {
-        datasetStore.set(results);
-      })
+    fetchDatasets().then((results) => {
+      datasetStore.set(results);
+    });
   });
 </script>
 
@@ -56,7 +55,10 @@
 <div class="bx--row">
   <div class="bx--col-lg-12">
     <h2>About the Tool</h2>
-    <p>Explore extreme temperatures for past weather, present day, and future climate projections.</p>
+    <p>
+      Explore extreme temperatures for past weather, present day, and future
+      climate projections.
+    </p>
   </div>
 </div>
 
@@ -88,9 +90,11 @@
         <p>Download dataset:</p>
         <ul>
           <li>
-            <a href="/data/download/{item.id}" target="_blank">Cal-Adapt Data Download tool</a>
+            <a href="/data/download/{item.id}" target="_blank"
+              >Cal-Adapt Data Download tool</a
+            >
           </li>
-          {#each item.resources.filter(d => d.format !== "reference") as ref}
+          {#each item.resources.filter((d) => d.format !== "reference") as ref}
             <li>
               <a href="{ref.url}" target="_blank">{ref.name} ({ref.format})</a>
             </li>
@@ -98,7 +102,7 @@
         </ul>
         <p>References:</p>
         <ul>
-          {#each item.resources.filter(d => d.format === "reference") as ref}
+          {#each item.resources.filter((d) => d.format === "reference") as ref}
             <li>
               {ref.name} <a href="{ref.url}" target="_blank"><Link16 /></a>
             </li>
@@ -127,9 +131,7 @@
   <div class="bx--col-lg-10 source-text">
     <h4>Forecast</h4>
     <h5>National Weather Service</h5>
-    <p>
-      A brief description.
-    </p>
+    <p>A brief description.</p>
     <p>Download dataset:</p>
     <ul>
       <li>

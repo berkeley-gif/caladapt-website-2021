@@ -127,3 +127,25 @@ export function getReturnPeriod(_data, threshold) {
 export function formatDataForExport(_data) {
   return _data;
 }
+
+export async function getForecastData({ lng, lat }) {
+  const url = `https://api.weather.gov/points/${lat},${lng}`;
+  const [response, error] = await handleXHR(fetchData(url, {}));
+  if (error) {
+    throw new Error(error.message);
+  }
+  const forecastUrl = response.properties.forecast;
+  const [data, dataError] = await handleXHR(fetchData(forecastUrl, {}));
+  if (error) {
+    throw new Error(dataError.message);
+  }
+  return data.properties.periods.map((d) => {
+    let label;
+    if (d.name.includes("This")) {
+      label = "Today";
+    } else {
+      label = d.name.substring(0, 3);
+    }
+    return { ...d, label };
+  });
+}

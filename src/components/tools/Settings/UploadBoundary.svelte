@@ -17,7 +17,8 @@
   let fileUploader;
   const fileUploadProps = {
     labelTitle: "",
-    labelDescription: "Select a boundary from the dropdown list or upload your project area. Supported formats - zipped shapefile, GeoJSON, KML, WKT.",
+    labelDescription:
+      "Select a boundary from the dropdown list or upload your project area. Supported formats - zipped shapefile, GeoJSON, KML, WKT.",
     buttonLabel: "Upload File",
     accept: [".zip", ".json", ".geojson", ".kml", ".wkt"],
     id: "Upload",

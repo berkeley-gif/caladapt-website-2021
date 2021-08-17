@@ -13,7 +13,7 @@
   import FilterCategories from "../../partials/FilterCategories.svelte";
 
   export let data;
-  
+
   const { categories, tools } = data;
 
   $: toolsByCategory = tools;

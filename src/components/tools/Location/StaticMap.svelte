@@ -27,13 +27,15 @@
     } else {
       geometry = simplifyGeom(geometry, { tolerance: 0.01, mutate: true });
       bounds = "auto";
-      overlay = encodeURIComponent(JSON.stringify({
-        type: "Feature",
-        properties: {
-          "fill-opacity": 0,
-        },
-        geometry,
-      }));
+      overlay = encodeURIComponent(
+        JSON.stringify({
+          type: "Feature",
+          properties: {
+            "fill-opacity": 0,
+          },
+          geometry,
+        })
+      );
       src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}@2x?padding=${padding}&access_token=${mapboxgl.accessToken}`;
     }
   }
@@ -46,7 +48,7 @@
   //   bounds = `${geometry.coordinates[0]},${geometry.coordinates[1]},${zoom}`;
   //   console.log('bounds', bounds);
   // }
-  // $: 
+  // $:
 
   // $: src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}@2x?padding=${padding}&access_token=${mapboxgl.accessToken}`;
 

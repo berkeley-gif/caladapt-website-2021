@@ -63,10 +63,7 @@
   }
 </style>
 
-<g
-  class="axis x-axis"
-  class:snapTicks
->
+<g class="axis x-axis" class:snapTicks>
   {#each tickVals as tick, i}
     <g
       class="tick tick-{i}"

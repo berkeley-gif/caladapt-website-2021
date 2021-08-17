@@ -53,7 +53,10 @@
 <div class="header">
   <h1>Extreme Weather</h1>
   <p class="lead">
-    Explore extreme temperatures for past weather and present day at 39 weather stations across California, utilizing a quality-controlled data base for hourly weather observations for 1973-2019 produced for use by the energy sector.
+    Explore extreme temperatures for past weather and present day at 39 weather
+    stations across California, utilizing a quality-controlled data base for
+    hourly weather observations for 1973-2019 produced for use by the energy
+    sector.
   </p>
 </div>
 <div class="secondary-nav is-sticky">

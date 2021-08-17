@@ -13,19 +13,11 @@
 
 <g class="annotation-group">
   <g class="records">
-    <text
-      x="{40}"
-      y="{-70}"
-      style="font-weight:600;"
-    >
+    <text x="{40}" y="{-70}" style="font-weight:600;">
       <tspan dy="{0}">Record Low</tspan>
       <tspan x="{40}" dy="{20}">{low.value} on {low.date}</tspan>
     </text>
-    <text
-      x="{225}"
-      y="{-70}"
-      style="font-weight:600;"
-    >
+    <text x="{225}" y="{-70}" style="font-weight:600;">
       <tspan dy="{0}">Record High</tspan>
       <tspan x="{225}" dy="{20}">{high.value} on {high.date}</tspan>
     </text>
@@ -51,7 +43,7 @@
       </text>
     {/each}
   </g>
-<!--   <g class="threshold">
+  <!--   <g class="threshold">
     <line
       x1="{$xScale(+threshold)}"
       x2="{$xScale(+threshold)}"
@@ -69,6 +61,5 @@
       {threshold} °F
     </text>
   </g> -->
-  <g class="forecast">
-  </g>
+  <g class="forecast"> </g>
 </g>

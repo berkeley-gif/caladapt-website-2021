@@ -14,10 +14,7 @@
   // Helpers
   import { climvarList, modelList, scenarioList } from "./_helpers";
   import { flattenData, getDataByDate, formatDataForExport } from "./_data";
-  import {
-    exportPNG,
-    exportCSV,
-  } from "../../../helpers/export";
+  import { exportPNG, exportCSV } from "../../../helpers/export";
 
   // Components
   import ChangeLocation from "./ChangeLocation.svelte";
@@ -144,23 +141,24 @@
   {/if}
 
   <!-- Controls -->
-  <div class="explore-controls">
-  </div>
+  <div class="explore-controls"></div>
 
   <!-- Title -->
   <div class="explore-header block">
-    <StaticMap location={$location} width={500} height={500} />
+    <StaticMap location="{$location}" width="{500}" height="{500}" />
     <div class="explore-header-title">
       <h3><span class="block-title">{$location.title}</span></h3>
       <h4>
-        Projected changes in <span class="block-title">{$climvar.title}</span> under a <span class="block-title">{$scenario.labelLong}</span>.
+        Projected changes in <span class="block-title">{$climvar.title}</span>
+        under a <span class="block-title">{$scenario.labelLong}</span>.
       </h4>
       <Button
         size="small"
         icon="{Location16}"
-        on:click="{() => (showChangeLocation = true)}">
+        on:click="{() => (showChangeLocation = true)}"
+      >
         Change Location
-      </Button>    
+      </Button>
     </div>
   </div>
 
@@ -222,10 +220,18 @@
         on:define
       />
       <div>
-        <Button size="small" icon="{Download16}" on:click="{() => (showDownload = true)}">
+        <Button
+          size="small"
+          icon="{Download16}"
+          on:click="{() => (showDownload = true)}"
+        >
           Download
         </Button>
-        <Button size="small" icon="{Share16}" on:click="{() => (showShare = true)}">
+        <Button
+          size="small"
+          icon="{Share16}"
+          on:click="{() => (showShare = true)}"
+        >
           Share
         </Button>
       </div>

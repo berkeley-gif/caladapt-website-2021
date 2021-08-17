@@ -59,7 +59,8 @@
       <h1>Annual Averages</h1>
       <p class="lead">
         Explore projected changes in annual average Maximum Temperature, Minimum
-        Temperature and Precipitation through end of this century for California.
+        Temperature and Precipitation through end of this century for
+        California.
       </p>
     </div>
   </div>

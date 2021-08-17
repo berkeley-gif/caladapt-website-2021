@@ -209,24 +209,28 @@ export const observationsStore = (() => {
 })();
 
 // Foreacst data Store
-// export const forecastStore = (() => {
-//   const store = writable();
-//   const { set, subscribe } = store;
-//   return {
-//     set,
-//     subscribe,
-//     get forecast() {
-//       return derived(store, ($store) => {
-//         if (!$store) return null;
-//         const formatData = $store.map((d) => {
-//           const date = dateParse(d.startTime.substring(0, 10));
-//           return { date, value: d.temperature };
-//         });
-//         return formatData;
-//       });
-//     },
-//   };
-// })();
+export const forecastStore = (() => {
+  const store = writable(null);
+  const { set, subscribe, update } = store;
+  return {
+    set,
+    subscribe,
+    reset: () =>
+      update((store) => {
+        store = null;
+        return store;
+      }),
+    get forecast() {
+      return derived([climvarStore, store], ([$climvarStore, $store]) => {
+        if (!$store) return null;
+        if ($climvarStore.id === "tasmin") {
+          return $store.filter((d) => d.isDaytime === false);
+        }
+        return $store.filter((d) => d.isDaytime === true);
+      });
+    },
+  };
+})();
 
 // Datasets store
 export const datasetStore = (() => {

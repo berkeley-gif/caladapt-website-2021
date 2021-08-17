@@ -13,7 +13,7 @@
 
   async function fetchDatasets() {
     try {
-      const results = await Promise.all(datasets.map(d => getDataset(d)));
+      const results = await Promise.all(datasets.map((d) => getDataset(d)));
       return results;
     } catch (error) {
       throw new Error(error);
@@ -21,10 +21,9 @@
   }
 
   onMount(() => {
-    fetchDatasets()
-      .then((results) => {
-        datasetStore.set(results);
-      })
+    fetchDatasets().then((results) => {
+      datasetStore.set(results);
+    });
   });
 </script>
 
@@ -124,9 +123,11 @@
         <p>Download dataset:</p>
         <ul>
           <li>
-            <a href="/data/download/{item.id}" target="_blank">Cal-Adapt Data Download tool</a>
+            <a href="/data/download/{item.id}" target="_blank"
+              >Cal-Adapt Data Download tool</a
+            >
           </li>
-          {#each item.resources.filter(d => d.format !== "reference") as ref}
+          {#each item.resources.filter((d) => d.format !== "reference") as ref}
             <li>
               <a href="{ref.url}" target="_blank">{ref.name} ({ref.format})</a>
             </li>
@@ -134,7 +135,7 @@
         </ul>
         <p>References:</p>
         <ul>
-          {#each item.resources.filter(d => d.format === "reference") as ref}
+          {#each item.resources.filter((d) => d.format === "reference") as ref}
             <li>
               {ref.name} <a href="{ref.url}" target="_blank"><Link16 /></a>
             </li>

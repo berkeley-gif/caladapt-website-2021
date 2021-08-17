@@ -44,7 +44,7 @@
         imperial: true,
         lat: 38.58,
         lng: -121.46,
-      };      
+      };
     }
 
     return { initialConfig, glossary, tool, related };
@@ -102,7 +102,7 @@
     {
       slug: "annual-averages-chart",
       metadata: {
-        title: "Annual Averages"
+        title: "Annual Averages",
       },
       html: `
         <div>
@@ -143,7 +143,6 @@
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
       dataStore.set([envelope, observed, ...modelsData]);
-
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
@@ -187,7 +186,7 @@
     initApp(initialConfig)
       .then(() => {
         appReady = true;
-        console.log('app ready');
+        console.log("app ready");
         update();
       })
       .catch((error) => {
@@ -211,7 +210,7 @@
 
   <!-- Explore -->
   <div id="explore" class="section">
-    <ExploreData on:define={showDefinition}/>
+    <ExploreData on:define="{showDefinition}" />
   </div>
 
   <div class="bx--grid">
@@ -219,8 +218,8 @@
     <div
       id="help"
       class="section"
-      use:inview={entryOptions}
-      on:enter={handleEntry}
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
     >
       <Help />
     </div>
@@ -229,20 +228,20 @@
     <div
       id="about"
       class="section"
-      use:inview={entryOptions}
-      on:enter={handleEntry}
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
     >
-      <About {datasets} />
+      <About datasets="{datasets}" />
     </div>
 
     <!-- Resources -->
     <div
       id="resources"
       class="section"
-      use:inview={entryOptions}
-      on:enter={handleEntry}
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
     >
-      <Resources {resources} />
+      <Resources resources="{resources}" />
     </div>
   </div>
 </div>

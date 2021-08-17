@@ -9,6 +9,7 @@
     RadioButtonGroup,
     RadioButton,
     Checkbox,
+    InlineLoading,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { timeFormat } from "d3-time-format";
@@ -17,14 +18,13 @@
   import copy from "clipboard-copy";
 
   // Helpers
-  import {
-    climvarList,
-  } from "./_helpers";
+  import { climvarList } from "./_helpers";
   import {
     getBaselineStats,
     getThreshold,
     getReturnPeriod,
     formatDataForExport,
+    getForecastData,
   } from "./_data";
   import { exportPNG, exportCSV } from "../../../helpers/export";
   import { debounce } from "../../../helpers/utilities";
@@ -52,6 +52,7 @@
     datasetStore,
     extremesStore,
     forecastDate,
+    forecastStore,
   } from "./_store";
 
   const { baseline, returnLevels, doyRange } = observationsStore;
@@ -59,6 +60,7 @@
   const { doyText } = doyStore;
   const { titles } = datasetStore;
   const { location } = locationStore;
+  const { forecast } = forecastStore;
 
   let isLoading = true;
   let showDownload = false;
@@ -85,15 +87,14 @@
     baselineLabels = getBaselineStats($baseline, $extremesStore);
     thresholdOpts = getThreshold(baselineLabels, $extremesStore);
     thresholdStore.set(thresholdOpts.bound);
-    isLoading = false;    
+    isLoading = false;
   } else {
     isLoading = true;
   }
 
   $: if ($extremesStore === "high") {
     thresholdInvalid = $thresholdStore < thresholdOpts.bound;
-  }
-  else {
+  } else {
     thresholdInvalid = $thresholdStore > thresholdOpts.bound;
   }
 
@@ -149,7 +150,7 @@
     console.log("threshold change");
     thresholdStore.set(e.detail);
     thresholdReturnPeriod = getReturnPeriod($returnLevels, $thresholdStore);
-    console.log('return period', thresholdReturnPeriod);
+    console.log("return period", thresholdReturnPeriod);
   }, 500);
 
   function changeLocation(e) {
@@ -158,6 +159,28 @@
     console.log("location change");
   }
 
+  async function getForecast() {
+    console.log("get forecast");
+    const data = await getForecastData({
+      lng: $location.geometry.coordinates[0],
+      lat: $location.geometry.coordinates[1],
+    });
+    forecastStore.set(data);
+    console.log("forecast ", $forecast);
+  }
+
+  function toggleForecastDisplay() {
+    showForecast = !showForecast;
+    console.log("toggle 2", showForecast);
+    if (showForecast) {
+      if (!$forecast) {
+        console.log("dont have forecast, get it and show it");
+        getForecast();
+      }
+    } else {
+      console.log("hide forecast");
+    }
+  }
 </script>
 
 <div class="explore">
@@ -166,67 +189,80 @@
   {/if}
 
   <!-- Controls -->
-  <div class="explore-controls">
-  </div>
+  <div class="explore-controls"></div>
 
   <!-- Title -->
   <div class="explore-header block">
-    <StaticMap location={$location} width={500} height={500} />
+    <StaticMap location="{$location}" width="{500}" height="{500}" />
     <div class="explore-header-title">
       <h3><span class="block-title">{$location.title}</span></h3>
       <h4>
-        Distribution of <span class="block-title">{$climvar.title}</span> on <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
+        Distribution of <span class="block-title">{$climvar.title}</span> on
+        <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
       </h4>
       <div>
         <Button
           size="small"
           icon="{Location16}"
-          on:click="{() => (showChangeLocation = true)}">
+          on:click="{() => (showChangeLocation = true)}"
+        >
           Change Location
-        </Button> 
-      </div>   
+        </Button>
+      </div>
     </div>
   </div>
 
   <!-- Stats -->
-  <div class="explore-stats">
-  </div>
+  <div class="explore-stats"></div>
 
   <!-- Chart-->
   <div class="explore-chart block">
-      <div class="chart-controls">
-        <Checkbox style="align-items:flex-end;" labelText={`Show 7-Day Forecast for ${$forecastDate}`} checked={showForecast} />
-      </div>
-      <Histogram
-        data="{baselineData}"
-        labels="{baselineLabels}"
-        yAxis="{{
-          label: `Count of Days`,
-          tickFormat: formatFn,
-          units: `${$climvar.units.imperial}`,
-        }}"
-        xAxis="{{
-          label: `${$climvar.title} (${$climvar.units.imperial})`,
-          tickFormat: formatFn,
-          units: `${$climvar.units.imperial}`,
-        }}"
-      />
+    <div class="chart-controls">
+      {#if showForecast && !$forecast}
+        <InlineLoading description="Fetching forecast from NWS..." />
+      {:else}
+        <Checkbox
+          labelText="{`Show 7-Day Forecast for ${$forecastDate}`}"
+          checked="{showForecast}"
+          on:check="{toggleForecastDisplay}"
+        />
+      {/if}
+    </div>
+    <Histogram
+      data="{baselineData}"
+      labels="{baselineLabels}"
+      forecast="{showForecast ? $forecast : null}"
+      yAxis="{{
+        label: `Count of Days`,
+        tickFormat: formatFn,
+        units: `${$climvar.units.imperial}`,
+      }}"
+      xAxis="{{
+        label: `${$climvar.title} (${$climvar.units.imperial})`,
+        tickFormat: formatFn,
+        units: `${$climvar.units.imperial}`,
+      }}"
+    />
     <div class="chart-notes">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
     <div class="chart-download">
-      <ShowDefinition
-        topics="{['histogram-chart']}"
-        title="Chart"
-        on:define
-      />
+      <ShowDefinition topics="{['histogram-chart']}" title="Chart" on:define />
       <div>
-        <Button size="small" icon="{Download16}" on:click="{() => (showDownload = true)}">
+        <Button
+          size="small"
+          icon="{Download16}"
+          on:click="{() => (showDownload = true)}"
+        >
           Download
         </Button>
-        <Button size="small" icon="{Share16}" on:click="{() => (showShare = true)}">
+        <Button
+          size="small"
+          icon="{Share16}"
+          on:click="{() => (showShare = true)}"
+        >
           Share
         </Button>
       </div>
@@ -245,10 +281,7 @@
         />
         <ShowDefinition
           on:define
-          topics="{[
-            'annual-average-tasmax',
-            'annual-average-tasmin',
-          ]}"
+          topics="{['annual-average-tasmax', 'annual-average-tasmin']}"
           title="Climate Variables"
         />
       </AccordionItem>
@@ -258,15 +291,12 @@
           selected="high"
           on:change="{changeExtremes}"
         >
-          <RadioButton labelText="High Extremes" value="high" />
-          <RadioButton labelText="Low Extremes" value="low" />
+          <RadioButton labelText="Highs" value="high" />
+          <RadioButton labelText="Lows" value="low" />
         </RadioButtonGroup>
         <ShowDefinition
           on:define
-          topics="{[
-            'annual-average-tasmax',
-            'annual-average-tasmin',
-          ]}"
+          topics="{['annual-average-tasmax', 'annual-average-tasmin']}"
           title="Climate Variables"
         />
       </AccordionItem>
@@ -310,6 +340,3 @@
 <ChangeLocation bind:open="{showChangeLocation}" on:change="{changeLocation}" />
 
 <DownloadChart bind:open="{showDownload}" on:download="{downloadViz}" />
-
-
- 

@@ -21,7 +21,7 @@
       .then((json) => {
         return json.data;
       });
-    
+
     // Set intitial config for tool
     let initialConfig;
     if (Object.keys(query).length > 0) {
@@ -38,7 +38,7 @@
         stationId: 11,
         climvarId: "tasmax",
         imperial: true,
-      };      
+      };
     }
 
     return { initialConfig, glossary, tool, related };
@@ -71,6 +71,7 @@
     doyStore,
     queryParams,
     observationsStore,
+    forecastStore,
   } from "./_store";
   import {
     getObservedValues,
@@ -158,6 +159,7 @@
   $: datasets = tool.datasets;
   $: resources = [...tool.resources, ...related];
   $: $climvar, $doyStore, $locationStore, update();
+  $: $locationStore, forecastStore.reset();
 
   async function update() {
     if (!appReady) return;
@@ -171,8 +173,11 @@
         g: params.g,
         imperial: params.imperial,
       });
-      const observedReturnLevels = await getObservedReturnLevels(config, params);
-      console.log('observations', observedValues, observedReturnLevels);
+      const observedReturnLevels = await getObservedReturnLevels(
+        config,
+        params
+      );
+      console.log("observations", observedValues, observedReturnLevels);
       observationsStore.set({
         values: observedValues,
         returnLevels: observedReturnLevels[0],
@@ -201,8 +206,7 @@
   }
 
   async function initApp(config) {
-    const { stationId, climvarId, imperial, doy } =
-      config;
+    const { stationId, climvarId, imperial, doy } = config;
     climvarStore.set(climvarId);
     unitsStore.set({ imperial });
     // Set intial station
@@ -221,7 +225,7 @@
     initApp(initialConfig)
       .then(() => {
         appReady = true;
-        console.log('app ready');
+        console.log("app ready");
         update();
       })
       .catch((error) => {
@@ -245,7 +249,7 @@
 
   <!-- Explore -->
   <div id="explore" class="section">
-    <ExploreData on:define={showDefinition}/>
+    <ExploreData on:define="{showDefinition}" />
   </div>
 
   <div class="bx--grid">
@@ -253,8 +257,8 @@
     <div
       id="help"
       class="section"
-      use:inview={entryOptions}
-      on:enter={handleEntry}
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
     >
       <Help />
     </div>
@@ -263,20 +267,20 @@
     <div
       id="about"
       class="section"
-      use:inview={entryOptions}
-      on:enter={handleEntry}
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
     >
-      <About {datasets} />
+      <About datasets="{datasets}" />
     </div>
 
     <!-- Resources -->
     <div
       id="resources"
       class="section"
-      use:inview={entryOptions}
-      on:enter={handleEntry}
+      use:inview="{entryOptions}"
+      on:enter="{handleEntry}"
     >
-      <Resources {resources} />
+      <Resources resources="{resources}" />
     </div>
   </div>
 </div>
