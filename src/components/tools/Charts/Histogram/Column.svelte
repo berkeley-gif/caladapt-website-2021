@@ -6,7 +6,6 @@
   const dispatch = createEventDispatcher();
 
   export let fill = "#aaa";
-  export let fillOpacity = 0.2;
   export let stroke = "#aaa";
   export let strokeWidth = 1;
 
@@ -40,7 +39,7 @@
       width="{$xScale.bandwidth ? $xScale.bandwidth() : columnWidth(d)}"
       height="{columnHeight(d)}"
       fill="{fill}"
-      fill-opacity="{fillOpacity}"
+      fill-opacity="{0.2}"
       stroke="{stroke}"
       stroke-width="{strokeWidth}"
       on:mouseout="{() => dispatch('mouseout')}"

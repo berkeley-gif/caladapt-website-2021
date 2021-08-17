@@ -1,7 +1,7 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
-  import { bin, thresholdFreedmanDiaconis, extent } from "d3-array";
+  import { bin, thresholdFreedmanDiaconis, extent, min } from "d3-array";
 
   import Column from "./Column.svelte";
   import Annotation from "./Annotation.svelte";
@@ -12,8 +12,9 @@
 
   export let data;
   export let labels;
-  export let height = "400px";
+  export let height = 400;
   export let forecast;
+  export let threshold;
 
   export let yAxis = {
     label: "YAxis Label",
@@ -36,6 +37,8 @@
   let evt;
   let hideTooltip = true;
 
+  $: style = `height:${height}px`;
+
   $: if (data) {
     domain = extent(data);
     hist = bin().domain(domain).thresholds(thresholdFreedmanDiaconis);
@@ -57,26 +60,25 @@
   }
 
   function createTooltip(d) {
-    console.log("tooltip", d);
     let tooltip;
     if (d.detailedForecast) {
       tooltip = labelForecast(d);
-    } else if (d.groupedForecast) {
-      tooltip = d.groupedForecast.map((item) => {
+    } else if (d.x0) {
+      tooltip = labelColumn(d);
+    } else {
+      tooltip = d.map((item) => {
         return `
           ${labelForecast(item)}
           <br />
         `;
       });
-    } else {
-      tooltip = labelColumn(d);
     }
     return tooltip;
   }
 </script>
 
 {#if data}
-  <div style="{`height:${height}`}" bind:this="{chartContainer}">
+  <div style="{style}" bind:this="{chartContainer}">
     <LayerCake
       padding="{{ top: 100, right: 30, bottom: 30, left: 35 }}"
       x="{xKey}"
@@ -102,7 +104,7 @@
           on:mousemove="{(event) => (evt = hideTooltip = event)}"
           on:mouseout="{() => (hideTooltip = true)}"
         />
-        <Annotation data="{labels}" />
+        <Annotation data="{labels}" threshold="{threshold}" />
         {#if forecast}
           <Forecast
             data="{forecast}"

@@ -1,11 +1,15 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
+  import { groups } from "d3-array";
 
   const { xScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
   export let data;
+
+  $: circles = groups(data, (d) => d.temperature);
+  $: console.log(circles);
 
   function handleMousemove(feature) {
     return function handleMousemoveFn(e) {
@@ -23,28 +27,40 @@
     fill: var(--teal-60);
     fill-opacity: 1;
     stroke: var(--teal-60);
-    stroke-width: 3;
-    stroke-opacity: 0.5;
+    stroke-width: 7;
+    stroke-opacity: 0.2;
+  }
+
+  .label {
+    fill: var(--teal-60);
+    font-weight: 600;
   }
 </style>
 
 <g class="forecast-group">
-  {#each data as d}
+  {#each circles as group}
     <circle
       cy="{100}"
-      cx="{$xScale(d.temperature)}"
+      cx="{$xScale(group[0])}"
       class="circle"
-      r="{10}"
+      r="{5}"
       on:mouseout="{() => dispatch('mouseout')}"
-      on:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
-      on:mousemove="{handleMousemove(d)}"></circle>
-    <text
-      y="{90}"
-      x="{$xScale(d.temperature)}"
-      text-anchor="middle"
-      class="label"
+      on:mouseover="{(e) => dispatch('mousemove', { e, props: group[1] })}"
+      on:mousemove="{handleMousemove(group[1])}"
     >
-      {d.label}
+    </circle>
+    <text y="{120}" x="{$xScale(group[0])}" text-anchor="middle" class="label">
+      {group[0]}
     </text>
+    {#each group[1] as d, i}
+      <text
+        y="{90 - 12 * i}"
+        x="{$xScale(d.temperature)}"
+        text-anchor="middle"
+        class="label"
+      >
+        {d.label}
+      </text>
+    {/each}
   {/each}
 </g>

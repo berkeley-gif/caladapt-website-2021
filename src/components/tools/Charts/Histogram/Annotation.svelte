@@ -4,22 +4,22 @@
   const { yScale, xScale } = getContext("LayerCake");
 
   export let data;
+  export let threshold;
 
   $: percentiles = data.percentiles;
   $: low = data.low;
   $: high = data.high;
-  // $: threshold = data.threshold;
 </script>
 
 <g class="annotation-group">
   <g class="records">
-    <text x="{40}" y="{-70}" style="font-weight:600;">
+    <text x="{0}" y="{-70}" style="font-weight:600;">
       <tspan dy="{0}">Record Low</tspan>
-      <tspan x="{40}" dy="{20}">{low.value} on {low.date}</tspan>
+      <tspan x="{0}" dy="{20}">{low.value} on {low.date}</tspan>
     </text>
-    <text x="{225}" y="{-70}" style="font-weight:600;">
+    <text x="{200}" y="{-70}" style="font-weight:600;">
       <tspan dy="{0}">Record High</tspan>
-      <tspan x="{225}" dy="{20}">{high.value} on {high.date}</tspan>
+      <tspan x="{200}" dy="{20}">{high.value} on {high.date}</tspan>
     </text>
   </g>
   <g class="percentiles">
@@ -43,23 +43,15 @@
       </text>
     {/each}
   </g>
-  <!--   <g class="threshold">
-    <line
-      x1="{$xScale(+threshold)}"
-      x2="{$xScale(+threshold)}"
-      y1="{$yScale(0)}"
-      y2="{25}"
-      stroke-dasharray="3,3"
-      stroke="var(--teal-60)"
-      stroke-width="3px"></line>
+  <g class="threshold">
+    <circle cy="{30}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
     <text
-      x="{$xScale(+threshold)}"
-      y="{0}"
-      text-anchor="middle"
-      style="font-weight:600;fill:var(--teal-60);"
+      x="{$xScale(+threshold) + 10}"
+      y="{35}"
+      style="font-weight:600;fill:red;"
     >
       {threshold} °F
     </text>
-  </g> -->
+  </g>
   <g class="forecast"> </g>
 </g>
