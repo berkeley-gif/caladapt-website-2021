@@ -72,12 +72,9 @@
     queryParams,
     observationsStore,
     forecastStore,
+    extremesStore,
   } from "./_store";
-  import {
-    getObservedValues,
-    getObservedReturnLevels,
-    //getForecastData,
-  } from "./_data";
+  import { getObservedValues, getObservedReturnLevels } from "./_data";
 
   export let initialConfig;
   export let glossary;
@@ -97,6 +94,17 @@
   glossary = [
     ...glossary,
     {
+      slug: "threshold",
+      metadata: {
+        title: "Threshold",
+      },
+      html: `
+        <div>
+          <p>Due to the nature of the extreme value statistics, only threshold values at or above the 90th percentile for Maximum Temperature, and at or above the 10th percentile for Minimum Temperature, are allowed for this input.</p>
+        </div>
+      `,
+    },
+    {
       slug: "return-period",
       metadata: {
         title: "Return Period",
@@ -106,6 +114,28 @@
           <p>The probability that an extreme weather event occurs is often expressed as a Return Period. A return period is the inverse of probability (generally expressed in %); it gives the estimated time interval between events of a similar size or intensity.</p>
           <p>For example, the estimated return period of an event might be 1 in 10 years. This does not mean the event will occur every 10 years, it indicates probability of ocurrence being 10/100, or 10% in any one year.</p>
           <p>For this tool, 30 years of data for the Baseline, Mid-Century and End-Century periods are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
+        </div>
+      `,
+    },
+    {
+      slug: "doy",
+      metadata: {
+        title: "",
+      },
+      html: `
+        <div>
+          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast if for today's date only and does not change if you select a different day of year.</p>
+        </div>
+      `,
+    },
+    {
+      slug: "extremes",
+      metadata: {
+        title: "",
+      },
+      html: `
+        <div>
+          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast if for today's date only and does not change if you select a different day of year.</p>
         </div>
       `,
     },
@@ -158,7 +188,7 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...tool.resources, ...related];
-  $: $climvar, $doyStore, $locationStore, update();
+  $: $climvar, $doyStore, $locationStore, $extremesStore, update();
   $: $locationStore, forecastStore.reset();
 
   async function update() {
@@ -177,7 +207,6 @@
         config,
         params
       );
-      console.log("observations", observedValues, observedReturnLevels);
       observationsStore.set({
         values: observedValues,
         returnLevels: observedReturnLevels[0],

@@ -106,21 +106,30 @@ export function getThreshold(_data, extremes) {
   const percentile = _data.percentiles.find((d) => d.percentile === 10);
   return {
     bound: percentile.value,
-    text: "Number must be <= 25th percentile value",
+    text: "Number must be <= 10th percentile value",
   };
 }
 
 export function getReturnPeriod(_data, threshold) {
-  console.log("get return period", _data);
   const { gevisf, timestep } = _data;
   const gevisfMap = new Map(Object.entries(gevisf));
   const valuesArr = Object.keys(gevisf).map((d) => +d);
   const closestValue = closest(+threshold, valuesArr);
   const probability = +gevisfMap.get(String(closestValue));
+  const rp = +format(".0f")(1 / probability);
+  let label;
+  if (rp > 50) {
+    label = "Extreme";
+  } else if (rp >= 5 && rp < 50) {
+    label = "Rare";
+  } else {
+    label = "Common";
+  }
   return {
     timestep,
-    probability,
-    rp: format(".0f")(1 / probability),
+    probability: +format(".0f")(probability * 100),
+    rp,
+    label,
   };
 }
 
@@ -141,11 +150,18 @@ export async function getForecastData({ lng, lat }) {
   }
   return data.properties.periods.map((d) => {
     let label;
-    if (d.name.includes("This")) {
+    if (d.name.includes(["This", "Tonight"])) {
       label = "Today";
     } else {
       label = d.name.substring(0, 3);
     }
     return { ...d, label };
   });
+}
+
+export function filterForecast(climvarId, forecast) {
+  if (climvarId === "tasmin") {
+    return forecast.filter((d) => d.isDaytime === false);
+  }
+  return forecast.filter((d) => d.isDaytime === true);
 }

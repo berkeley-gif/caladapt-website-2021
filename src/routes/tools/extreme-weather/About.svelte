@@ -129,9 +129,15 @@
     />
   </div>
   <div class="bx--col-lg-10 source-text">
-    <h4>Forecast</h4>
+    <h4>Near Term Forecast</h4>
     <h5>National Weather Service</h5>
-    <p>A brief description.</p>
+    <p>
+      The National Weather Service (NWS) is an agency of the United States
+      federal government that is tasked with providing weather forecasts,
+      warnings of hazardous weather, and other weather-related products to
+      organizations and the public for the purposes of protection, safety, and
+      general information.
+    </p>
     <p>Download dataset:</p>
     <ul>
       <li>

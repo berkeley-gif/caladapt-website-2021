@@ -11,7 +11,7 @@ const today = new Date();
 const dateParse = timeParse("%Y-%m-%d");
 const dateFormat = timeFormat("%b %e, %Y");
 
-const percentiles = [1, 10, 50, 90, 99];
+const percentiles = [1, 10, 90, 99];
 const formatFn = format(".1f");
 
 function formatRecord(d) {
@@ -220,15 +220,15 @@ export const forecastStore = (() => {
         store = null;
         return store;
       }),
-    get forecast() {
-      return derived([climvarStore, store], ([$climvarStore, $store]) => {
-        if (!$store) return null;
-        if ($climvarStore.id === "tasmin") {
-          return $store.filter((d) => d.isDaytime === false);
-        }
-        return $store.filter((d) => d.isDaytime === true);
-      });
-    },
+    // get forecast() {
+    //   return derived([climvarStore, store], ([$climvarStore, $store]) => {
+    //     if (!$store) return null;
+    //     if ($climvarStore.id === "tasmin") {
+    //       return $store.filter((d) => d.isDaytime === false);
+    //     }
+    //     return $store.filter((d) => d.isDaytime === true);
+    //   });
+    // },
   };
 })();
 
@@ -251,12 +251,13 @@ export const datasetStore = (() => {
 // DERIVED STORES
 // Query params store
 export const queryParams = derived(
-  [doyStore, locationStore],
-  ([$doyStore, $locationStore]) => {
+  [doyStore, locationStore, extremesStore],
+  ([$doyStore, $locationStore, $extremesStore]) => {
     const params = {
       g: `POINT(${$locationStore.geometry.coordinates[0]} ${$locationStore.geometry.coordinates[1]})`,
       doy: numberFormat($doyStore),
       imperial: true,
+      extype: $extremesStore,
     };
     return { params, method: "GET" };
   }

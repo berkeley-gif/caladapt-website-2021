@@ -25,6 +25,7 @@
     getReturnPeriod,
     formatDataForExport,
     getForecastData,
+    filterForecast,
   } from "./_data";
   import { exportPNG, exportCSV } from "../../../helpers/export";
   import { debounce } from "../../../helpers/utilities";
@@ -60,25 +61,30 @@
   const { doyText } = doyStore;
   const { titles } = datasetStore;
   const { location } = locationStore;
-  const { forecast } = forecastStore;
 
   let isLoading = true;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
   let showForecast = false;
+  let forecast = null;
 
   let baselineData;
   let baselineLabels;
   let thresholdOpts = {};
   let thresholdInvalid;
-  let thresholdReturnPeriod;
+  let thresholdProbability;
 
   $: metadata = [
     ["station", $location.title],
     ["variable", $climvar.label],
     ["units", $climvar.units.imperial],
   ];
+
+  $: if (!$forecastStore) {
+    showForecast = false;
+    forecast = null;
+  }
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
@@ -132,6 +138,9 @@
 
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
+    if ($forecastStore) {
+      forecast = filterForecast(e.detail.id, $forecastStore);
+    }
     console.log("climvar change");
   }
 
@@ -142,15 +151,14 @@
 
   function changeDayOfYear(e) {
     doyStore.set(e.detail);
-    console.log("doy change", e.detail);
+    console.log("doy change");
   }
 
   const changeThreshold = debounce((e) => {
     if (!e || !e.detail) return;
     console.log("threshold change");
     thresholdStore.set(e.detail);
-    thresholdReturnPeriod = getReturnPeriod($returnLevels, $thresholdStore);
-    console.log("return period", thresholdReturnPeriod);
+    thresholdProbability = getReturnPeriod($returnLevels, $thresholdStore);
   }, 500);
 
   function changeLocation(e) {
@@ -166,15 +174,15 @@
       lat: $location.geometry.coordinates[1],
     });
     forecastStore.set(data);
-    console.log("forecast ", $forecast);
+    forecast = filterForecast($climvar.id, data);
+    console.log("forecast ", forecast);
   }
 
   function toggleForecastDisplay() {
     showForecast = !showForecast;
     console.log("toggle 2", showForecast);
     if (showForecast) {
-      if (!$forecast) {
-        console.log("dont have forecast, get it and show it");
+      if (!$forecastStore) {
         getForecast();
       }
     } else {
@@ -197,9 +205,24 @@
     <div class="explore-header-title">
       <h3><span class="block-title">{$location.title}</span></h3>
       <h4>
-        Distribution of <span class="block-title">{$climvar.title}</span> on
+        Distribution of daily <span class="block-title">{$climvar.title}s</span>
+        around
         <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
       </h4>
+      {#if !thresholdInvalid && thresholdProbability}
+        <p>
+          A daily <span class="block-title">{$climvar.title}</span> of
+          <span class="block-title">{$thresholdStore} °F</span>
+          around <span class="block-title">{$doyText}</span> is a
+          <span class="block-title">{thresholdProbability.label}</span>
+          event. The probability of exceeding
+          <span class="block-title">{$thresholdStore} °F</span>
+          is
+          <span class="block-title">{thresholdProbability.probability}%</span>
+          and is estimated to be a
+          <span class="block-title">1 in {thresholdProbability.rp}</span> year event.
+        </p>
+      {/if}
       <div>
         <Button
           size="small"
@@ -218,7 +241,7 @@
   <!-- Chart-->
   <div class="explore-chart block">
     <div class="chart-controls">
-      {#if showForecast && !$forecast}
+      {#if showForecast && !forecast}
         <InlineLoading description="Fetching forecast from NWS..." />
       {:else}
         <Checkbox
@@ -231,7 +254,8 @@
     <Histogram
       data="{baselineData}"
       labels="{baselineLabels}"
-      forecast="{showForecast ? $forecast : null}"
+      forecast="{forecast}"
+      threshold="{thresholdInvalid ? null : $thresholdStore}"
       yAxis="{{
         label: `Count of Days`,
         tickFormat: formatFn,
@@ -281,7 +305,7 @@
         />
         <ShowDefinition
           on:define
-          topics="{['annual-average-tasmax', 'annual-average-tasmin']}"
+          topics="{['tasmax', 'tasmin']}"
           title="Climate Variables"
         />
       </AccordionItem>
@@ -291,22 +315,18 @@
           selected="high"
           on:change="{changeExtremes}"
         >
-          <RadioButton labelText="Highs" value="high" />
-          <RadioButton labelText="Lows" value="low" />
+          <RadioButton labelText="High Extremes" value="high" />
+          <RadioButton labelText="Low Extremes" value="low" />
         </RadioButtonGroup>
         <ShowDefinition
           on:define
-          topics="{['annual-average-tasmax', 'annual-average-tasmin']}"
-          title="Climate Variables"
+          topics="{['extremes']}"
+          title="Type of Extremes"
         />
       </AccordionItem>
       <AccordionItem open title="Choose Day of Year">
         <SelectDayOfYear value="{$doyStore}" on:change="{changeDayOfYear}" />
-        <ShowDefinition
-          on:define
-          topics="{['climate-scenarios']}"
-          title="Day of Year"
-        />
+        <ShowDefinition on:define topics="{['doy']}" title="Day of Year" />
       </AccordionItem>
       <AccordionItem open title="Enter Threshold">
         <NumberInput
