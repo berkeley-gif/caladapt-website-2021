@@ -116,36 +116,26 @@ export const createAdditionalProps = (feature, layerId) => {
 };
 
 export const getTitle = (feature, layerId, placeName) => {
-  let title;
   switch (layerId) {
     case "locagrid":
-      title = placeName.replace(", United States", "");
-      break;
+      return placeName.replace(", United States", "");
     case "counties":
-      title = `${feature.properties.name} County, ${feature.properties.state_name}`;
-      break;
+      return `${feature.properties.name} County, ${feature.properties.state_name}`;
     case "censustracts":
-      title = `Census Tract ${feature.properties.tract}, California`;
-      break;
+      return `Census Tract ${feature.properties.tract}, California`;
     case "hydrounits":
-      title = `${feature.properties.name} Watershed, California`;
-      break;
+      return `${feature.properties.name} Watershed, California`;
     case "cdistricts":
-      title = `Congressional District ${feature.properties.cd114fp}, California`;
-      break;
+      return `Congressional District ${feature.properties.cd114fp}, California`;
     case "custom":
-      title = "Custom Boundary";
-      break;
+      return "Custom Boundary";
     case "ca":
-      title = "State of California";
-      break;
+      return "State of California";
     case "hadisdstations":
-      title = `${feature.properties.name} Weather Station at ${feature.properties.city}, California`;
-      break;
+      return `${feature.properties.name} Weather Station at ${feature.properties.city}, California`;
     default:
-      title = placeName;
+      return placeName;
   }
-  return title;
 };
 
 export const formatGeocodeResult = (feature) => {
