@@ -19,18 +19,44 @@
     }
   }
 
-  #help {
-    min-height: auto;
-    margin: 2rem 2rem 1rem;
+  .header {
+    padding: 2rem;
+    background: rgba(218, 222, 225, 0.25);
 
-    .bx--inline-notification {
-      align-items: center;
-      max-width: 75%;
+    .lead {
+      max-width: 70vw;
+    }
+  }
+
+  .secondary-nav {
+    width: 100%;
+    background: rgba(250, 251, 251, 1);
+    top: 0;
+    border-bottom: 1px solid #dadee1;
+    z-index: 3;
+    background: var(--gray-30);
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      list-style-type: none;
+      text-transform: uppercase;
+      margin: 0 2rem;
     }
 
-    .bx--inline-notification__title,
-    .bx--inline-notification__subtitle {
-      font-size: 1rem;
+    ul li {
+      margin-right: 1rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      color: #000;
+    }
+
+    ul li:hover {
+      background: rgba(154, 201, 202, 0.5);
+    }
+
+    ul li.active {
+      font-weight: 600;
     }
   }
 
