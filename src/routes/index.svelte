@@ -108,7 +108,7 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    <CardContainer>
+    <CardContainer gridGap="{2}">
       {#each cardData as cardDatum}
         <Card height="{cardHeight}" {...cardDatum} />
       {/each}
