@@ -9,12 +9,14 @@
 </script>
 
 <script>
-  import { fade } from "svelte/transition";
+  import { Card, CardsContainer } from "~/components/cards";
   import FilterCategories from "../../partials/FilterCategories.svelte";
 
   export let data;
 
   const { categories, tools } = data;
+  const cardHeight = 20;
+  const cardWidth = 18;
 
   $: toolsByCategory = tools;
 
@@ -74,36 +76,20 @@
       </div>
     </div>
     <div class="bx--row">
-      {#each toolsByCategory as opt}
-        <div class="bx--col-lg-4" style="padding:1rem;">
-          <div transition:fade class="card shadow lift">
-            <div class="card-body">
-              <div>
-                {#each opt.icons as icon}
-                  <img
-                    src="{icon}"
-                    alt="icon"
-                    class="icon"
-                    style="width:60px;"
-                  />
-                {/each}
-              </div>
-              <h3>
-                {opt.title}
-              </h3>
-              <p>
-                {opt.desc}
-              </p>
-              <a
-                class="stretched-link"
-                href="/tools/{opt.slug}/"
-                title="Explore »"
-              >
-              </a>
-            </div>
-          </div>
-        </div>
-      {/each}
+      <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+        {#each toolsByCategory as { icons, title, desc, slug }}
+          <Card
+            card="{{
+              titleText: title,
+              description: desc,
+              height: cardHeight,
+              linkPath: `/tools/${slug}`,
+              iconPaths: icons,
+              ctaText: 'Explore',
+            }}"
+          />
+        {/each}
+      </CardsContainer>
     </div>
   </div>
 </section>
