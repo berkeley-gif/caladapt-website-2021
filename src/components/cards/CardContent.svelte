@@ -16,22 +16,25 @@
     flex-grow: 1;
     justify-content: space-between;
     padding: 1rem;
+    overflow: hidden;
 
-    & > * + * {
-      margin-top: 0.75rem;
-    }
+    // & > * + * {
+    //   margin-top: 0.75rem;
+    // }
 
-    &:last-child {
-      margin-top: auto;
-    }
+    // &:last-child {
+    //   margin-top: auto;
+    // }
 
-    &:nth-last-child(2) {
-      margin-bottom: 0.75rem;
-    }
+    // &:nth-last-child(2) {
+    //   margin-bottom: 0.75rem;
+    // }
   }
 
   p {
     font-size: 1.125rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
   }
 
   small {
@@ -43,7 +46,6 @@
 <div class="card--content-container">
   <CardTitle {...{ titleText, headingLevel, linkPath }} />
 
-  <!-- TODO: truncate description text using CSS -->
   <p>{description}</p>
 
   {#if ctaText}

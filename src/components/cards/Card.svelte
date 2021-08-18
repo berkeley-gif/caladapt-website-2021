@@ -1,5 +1,6 @@
 <script>
   import CardContent from "./CardContent.svelte";
+  import CardIcons from "./CardIcons.svelte";
   import CardImage from "./CardImage.svelte";
   import { CARD_DEFAULT_HEIGHT } from "./Card.constants";
 
@@ -11,6 +12,7 @@
     linkPath: "#",
     ctaText: "Learn more",
     imgSrc: null,
+    iconPaths: [],
   };
 
   $: varCardHeight =
@@ -45,5 +47,10 @@
   {#if card.imgSrc}
     <CardImage imgSrc="{card.imgSrc}" />
   {/if}
+
+  {#if Array.isArray(card.iconPaths) && card.iconPaths.length}
+    <CardIcons iconPaths="{card.iconPaths}" />
+  {/if}
+
   <CardContent {...card} />
 </li>
