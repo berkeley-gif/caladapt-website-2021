@@ -1,5 +1,5 @@
 <script>
-  import CardTitle from "./CardTitle.svelte";
+  import CardContent from "./CardContent.svelte";
   import CardImage from "./CardImage.svelte";
 
   export let height = "auto";
@@ -12,18 +12,14 @@
   export let description =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
   export let ctaText = "Learn more";
-  export let variant = "default"; // "icon", "author"?
   export let imgSrc = null;
+  //   export let variant = "default"; // "icon", "author"?
 </script>
 
 <style lang="scss">
-  li,
-  .card--content-container {
+  li {
     display: flex;
     flex-direction: column;
-  }
-
-  li {
     height: var(--card-height, auto);
     width: var(--card-width, auto);
     box-sizing: border-box;
@@ -41,39 +37,13 @@
       box-shadow: 0 0 0 0.25rem;
     }
   }
-
-  .card--content-container {
-    max-width: 60ch;
-    flex-grow: 1;
-    justify-content: space-between;
-    padding: 1rem;
-
-    & > * + * {
-      margin-top: 0.75rem;
-    }
-
-    &:last-child {
-      margin-top: auto;
-    }
-
-    &:nth-last-child(2) {
-      margin-bottom: 0.75rem;
-    }
-  }
-
-  small {
-    color: var(--link-01);
-  }
 </style>
 
 <li class="shadow lift" style="--card-height:{height}; --card-width:{width}">
   {#if imgSrc}
     <CardImage imgSrc="{imgSrc}" />
   {/if}
-  <div class="card--content-container">
-    <!-- TODO: create CardContents child component -->
-    <CardTitle {...{ titleText, headingLevel, linkPath }} />
-    <p>{description}</p>
-    <small aria-hidden="true">{ctaText}</small>
-  </div>
+  <CardContent
+    {...{ headingLevel, titleText, linkPath, description, ctaText }}
+  />
 </li>
