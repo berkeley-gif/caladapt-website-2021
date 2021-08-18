@@ -14,7 +14,7 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
 
-  import { Card, CardContainer } from "~/components/cards";
+  import { Card, CardsContainer } from "~/components/cards";
   import SidebarRight from "../partials/SidebarRight.svelte";
   import Sun from "../../static/img/icons/sun.svg";
   import Rainfall from "../../static/img/icons/rainfall.svg";
@@ -113,11 +113,13 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    <CardContainer gridGap="{2}" cardWidth="{cardWidth}">
+    <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
       {#each cardData as cardDatum}
-        <Card card="{{ ...cardDatum, height: cardHeight }}" />
+        <Card
+          card="{{ ...cardDatum, height: cardHeight, ctaText: 'Learn more' }}"
+        />
       {/each}
-    </CardContainer>
+    </CardsContainer>
   </div>
 
   <div class="sidebar-right">
