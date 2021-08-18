@@ -30,13 +30,19 @@
     }
   }
 
+  p {
+    font-size: 1.125rem;
+  }
+
   small {
+    font-size: 1rem;
     color: var(--link-01);
   }
 </style>
 
 <div class="card--content-container">
   <CardTitle {...{ titleText, headingLevel, linkPath }} />
+
   <!-- TODO: truncate description text using CSS -->
   <p>{description}</p>
 

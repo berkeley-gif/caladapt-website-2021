@@ -11,9 +11,9 @@
   h5,
   h6 {
     font-weight: 600;
-    font-size: 1.125rem;
+    font-size: 1.375rem;
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   a {
