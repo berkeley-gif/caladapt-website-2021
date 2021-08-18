@@ -1,10 +1,10 @@
 <script>
   import CardContent from "./CardContent.svelte";
   import CardImage from "./CardImage.svelte";
+  import { CARD_DEFAULT_HEIGHT } from "./Card.constants";
 
   export let card = {
-    height: "auto",
-    width: "auto",
+    height: CARD_DEFAULT_HEIGHT,
     headingLevel: 2,
     titleText: "Title me",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -12,6 +12,11 @@
     ctaText: "Learn more",
     imgSrc: null,
   };
+
+  $: varCardHeight =
+    card.height && typeof card.height === "number"
+      ? `${card.height}rem`
+      : CARD_DEFAULT_HEIGHT;
 </script>
 
 <style lang="scss">
@@ -19,7 +24,6 @@
     display: flex;
     flex-direction: column;
     height: var(--card-height, auto);
-    width: var(--card-width, auto);
     box-sizing: border-box;
     position: relative;
     background-color: var(--white);
@@ -37,10 +41,7 @@
   }
 </style>
 
-<li
-  class="shadow lift"
-  style="--card-height:{card.height}; --card-width:{card.width}"
->
+<li class="shadow lift" style="--card-height:{varCardHeight}">
   {#if card.imgSrc}
     <CardImage imgSrc="{card.imgSrc}" />
   {/if}

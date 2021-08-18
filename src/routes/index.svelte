@@ -27,7 +27,8 @@
   export let posts;
 
   const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
-  const cardHeight = `${16 * 18}px`;
+  const cardHeight = 18;
+  const cardWidth = 16;
   const cardData = [
     {
       titleText: "New to Cal Adapt?",
@@ -112,7 +113,7 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    <CardContainer gridGap="{2}">
+    <CardContainer gridGap="{2}" cardWidth="{cardWidth}">
       {#each cardData as cardDatum}
         <Card card="{{ ...cardDatum, height: cardHeight }}" />
       {/each}
