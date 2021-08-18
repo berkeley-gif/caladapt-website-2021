@@ -2,18 +2,16 @@
   import CardContent from "./CardContent.svelte";
   import CardImage from "./CardImage.svelte";
 
-  export let height = "auto";
-  export let width = "auto";
-
-  export let headingLevel = 2;
-  export let titleText = "Title me";
-  export let linkPath = "#";
-
-  export let description =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-  export let ctaText = "Learn more";
-  export let imgSrc = null;
-  //   export let variant = "default"; // "icon", "author"?
+  export let card = {
+    height: "auto",
+    width: "auto",
+    headingLevel: 2,
+    titleText: "Title me",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    linkPath: "#",
+    ctaText: "Learn more",
+    imgSrc: null,
+  };
 </script>
 
 <style lang="scss">
@@ -39,11 +37,12 @@
   }
 </style>
 
-<li class="shadow lift" style="--card-height:{height}; --card-width:{width}">
-  {#if imgSrc}
-    <CardImage imgSrc="{imgSrc}" />
+<li
+  class="shadow lift"
+  style="--card-height:{card.height}; --card-width:{card.width}"
+>
+  {#if card.imgSrc}
+    <CardImage imgSrc="{card.imgSrc}" />
   {/if}
-  <CardContent
-    {...{ headingLevel, titleText, linkPath, description, ctaText }}
-  />
+  <CardContent {...card} />
 </li>
