@@ -1,5 +1,6 @@
 <script>
   import CardTitle from "./CardTitle.svelte";
+  import CardRule from "./CardRule.svelte";
 
   export let headingLevel = 2;
   export let titleText = "Title Me";
@@ -35,18 +36,25 @@
     font-size: 1.125rem;
     line-height: 1.3;
     margin-bottom: 1rem;
+    color: var(--text-color, --gray-80);
   }
 
   small {
     font-size: 1rem;
-    color: var(--link-01);
+    color: var(--text-color, --link-01);
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.01rem;
   }
 </style>
 
 <div class="card--content-container">
   <CardTitle {...{ titleText, headingLevel, linkPath }} />
 
-  <p>{description}</p>
+  <div>
+    <CardRule />
+    <p>{description}</p>
+  </div>
 
   {#if ctaText}
     <small aria-hidden="true">{ctaText}</small>

@@ -13,6 +13,8 @@
     ctaText: "Learn more",
     imgSrc: null,
     iconPaths: [],
+    textColor: null,
+    bgColor: null,
   };
 
   $: varCardHeight =
@@ -28,7 +30,7 @@
     height: var(--card-height, auto);
     box-sizing: border-box;
     position: relative;
-    background-color: var(--white);
+    background-color: var(--card-bg-color, --white);
     border: 1px solid var(--gray-20);
 
     // a11y fix for Safari
@@ -43,7 +45,10 @@
   }
 </style>
 
-<li class="shadow lift" style="--card-height:{varCardHeight}">
+<li
+  class="shadow lift"
+  style="--card-height:{varCardHeight};--text-color:{card.textColor}; --card-bg-color:{card.bgColor}"
+>
   {#if card.imgSrc}
     <CardImage imgSrc="{card.imgSrc}" />
   {/if}
