@@ -4,9 +4,23 @@
 
 <style>
   .card--image-container {
-    height: 8.375rem;
+    aspect-ratio: 16 / 9;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  @supports not (aspect-ratio: 16 / 9) {
+    .card--image-container::before {
+      float: left;
+      padding-top: 56.25%;
+      content: "";
+    }
+
+    .card--image-container::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
   }
 </style>
 
