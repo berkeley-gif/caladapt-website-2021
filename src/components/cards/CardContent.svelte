@@ -7,6 +7,7 @@
   export let linkPath = "#";
   export let description = "";
   export let ctaText = "";
+  export let useRule = false;
 </script>
 
 <style lang="scss">
@@ -52,7 +53,9 @@
   <CardTitle {...{ titleText, headingLevel, linkPath }} />
 
   <div>
-    <CardRule />
+    {#if useRule}
+      <CardRule />
+    {/if}
     <p>{description}</p>
   </div>
 

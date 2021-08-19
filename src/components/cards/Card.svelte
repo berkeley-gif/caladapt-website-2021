@@ -12,8 +12,9 @@
   export let ctaText = "Learn more";
   export let imgSrc = null;
   export let iconPaths = [];
-  export let textColor = "inherit";
-  export let bgColor = "inherit";
+  export let textColor = null;
+  export let bgColor = null;
+  export let useRule = false;
 
   $: varCardHeight =
     height && typeof height === "number" ? `${height}rem` : CARD_DEFAULT_HEIGHT;
@@ -54,6 +55,6 @@
   {/if}
 
   <CardContent
-    {...{ headingLevel, titleText, description, linkPath, ctaText }}
+    {...{ headingLevel, titleText, description, linkPath, ctaText, useRule }}
   />
 </li>

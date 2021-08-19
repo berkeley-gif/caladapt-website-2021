@@ -139,6 +139,7 @@
               ctaText: "Learn more",
               textColor: "white",
               bgColor: getCardBgColor(index),
+              useRule: true,
             }}
           />
         {/each}
