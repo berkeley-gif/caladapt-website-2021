@@ -4,23 +4,19 @@
   import CardImage from "./CardImage.svelte";
   import { CARD_DEFAULT_HEIGHT } from "./Card.constants";
 
-  export let card = {
-    height: CARD_DEFAULT_HEIGHT,
-    headingLevel: 2,
-    titleText: "Title me",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    linkPath: "#",
-    ctaText: "Learn more",
-    imgSrc: null,
-    iconPaths: [],
-    textColor: null,
-    bgColor: null,
-  };
+  export let height = CARD_DEFAULT_HEIGHT;
+  export let headingLevel = 2;
+  export let titleText = "Title me";
+  export let description = "...";
+  export let linkPath = "#";
+  export let ctaText = "Learn more";
+  export let imgSrc = null;
+  export let iconPaths = [];
+  export let textColor = "inherit";
+  export let bgColor = "inherit";
 
   $: varCardHeight =
-    card.height && typeof card.height === "number"
-      ? `${card.height}rem`
-      : CARD_DEFAULT_HEIGHT;
+    height && typeof height === "number" ? `${height}rem` : CARD_DEFAULT_HEIGHT;
 </script>
 
 <style lang="scss">
@@ -47,15 +43,17 @@
 
 <li
   class="shadow lift"
-  style="--card-height:{varCardHeight};--text-color:{card.textColor}; --card-bg-color:{card.bgColor}"
+  style="--card-height:{varCardHeight};--text-color:{textColor}; --card-bg-color:{bgColor}"
 >
-  {#if card.imgSrc}
-    <CardImage imgSrc="{card.imgSrc}" />
+  {#if imgSrc}
+    <CardImage imgSrc="{imgSrc}" />
   {/if}
 
-  {#if Array.isArray(card.iconPaths) && card.iconPaths.length}
-    <CardIcons iconPaths="{card.iconPaths}" />
+  {#if Array.isArray(iconPaths) && iconPaths.length}
+    <CardIcons iconPaths="{iconPaths}" />
   {/if}
 
-  <CardContent {...card} />
+  <CardContent
+    {...{ headingLevel, titleText, description, linkPath, ctaText }}
+  />
 </li>

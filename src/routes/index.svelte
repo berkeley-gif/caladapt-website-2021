@@ -133,13 +133,13 @@
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
         {#each cardData as cardDatum, index}
           <Card
-            card="{{
+            {...{
               ...cardDatum,
               height: cardHeight,
-              ctaText: 'Learn more',
-              textColor: 'white',
+              ctaText: "Learn more",
+              textColor: "white",
               bgColor: getCardBgColor(index),
-            }}"
+            }}
           />
         {/each}
       </CardsContainer>

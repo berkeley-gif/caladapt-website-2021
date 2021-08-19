@@ -79,14 +79,14 @@
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
         {#each toolsByCategory as { icons, title, desc, slug }}
           <Card
-            card="{{
+            {...{
               titleText: title,
               description: desc,
               height: cardHeight,
               linkPath: `/tools/${slug}`,
               iconPaths: icons,
-              ctaText: 'Explore',
-            }}"
+              ctaText: "Explore",
+            }}
           />
         {/each}
       </CardsContainer>
