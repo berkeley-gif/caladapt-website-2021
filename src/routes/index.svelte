@@ -11,6 +11,7 @@
 </script>
 
 <script>
+  import { onMount } from "svelte";
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
 
@@ -27,8 +28,14 @@
   export let posts;
 
   const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
+
   const cardHeight = 18;
   const cardWidth = 16;
+  $: cardBgColors = [];
+  const getCardBgColor = (index) =>
+    index < 3 ? cardBgColors[index % 3] : cardBgColors[(index + 2) % 3];
+
+  // TODO: store this in content/homepage ?
   const cardData = [
     {
       titleText: "New to Cal Adapt?",
@@ -67,6 +74,15 @@
         "Integrate climate data in your workflows with the Cal-Adapt API.",
     },
   ];
+
+  onMount(() => {
+    const styles = getComputedStyle(document.documentElement);
+    cardBgColors = [
+      styles.getPropertyValue("--card-bg-color-02"),
+      styles.getPropertyValue("--card-bg-color-01"),
+      styles.getPropertyValue("--card-bg-color-03"),
+    ];
+  });
 </script>
 
 <svelte:head>
@@ -113,13 +129,21 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-      {#each cardData as cardDatum}
-        <Card
-          card="{{ ...cardDatum, height: cardHeight, ctaText: 'Learn more' }}"
-        />
-      {/each}
-    </CardsContainer>
+    {#if cardBgColors.length}
+      <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+        {#each cardData as cardDatum, index}
+          <Card
+            card="{{
+              ...cardDatum,
+              height: cardHeight,
+              ctaText: 'Learn more',
+              textColor: 'white',
+              bgColor: getCardBgColor(index),
+            }}"
+          />
+        {/each}
+      </CardsContainer>
+    {/if}
   </div>
 
   <div class="sidebar-right">
