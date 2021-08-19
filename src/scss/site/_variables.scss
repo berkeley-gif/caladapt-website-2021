@@ -30,6 +30,10 @@ $teal-80: #02484a;
 $teal-90: #013031;
 $teal-100: #001818;
 
+$card-bg-color-01: saturate($teal-60, 5);
+$card-bg-color-02: adjust-hue($card-bg-color-01, -10deg);
+$card-bg-color-03: adjust-hue($card-bg-color-01, 10deg);
+
 $caladapt-colors: (
   "gray-10": $gray-10,
   "gray-20": $gray-20,
@@ -58,6 +62,9 @@ $caladapt-colors: (
   "blue-50": $blue-50,
   "blue-60": $blue-60,
   "blue-70": $blue-70,
+  "card-bg-color-01": $card-bg-color-01,
+  "card-bg-color-02": $card-bg-color-02,
+  "card-bg-color-03": $card-bg-color-03,
 );
 
 // Carbon theme colors for Cal Adapt
@@ -231,6 +238,10 @@ $spacing-160: $layout-2xl;
   --teal-80: #{$teal-80};
   --teal-90: #{$teal-90};
   --teal-100: #{$teal-100};
+
+  --card-bg-color-01: #{$card-bg-color-01};
+  --card-bg-color-02: #{$card-bg-color-02};
+  --card-bg-color-03: #{$card-bg-color-03};
 
   --interactive-01: #{$interactive-01};
   --interactive-02: #{$interactive-02};
