@@ -8,6 +8,10 @@
   export let headingLevel = 2;
   export let titleText = "Title me";
   export let description = "...";
+  export let author = null;
+  export let pubDate = null;
+  export let pubDateStr = "";
+  export let tags = [];
   export let linkPath = "#";
   export let ctaText = "Learn more";
   export let imgSrc = null;
@@ -34,6 +38,8 @@
     // see: https://developer.mozilla.org/en-US/docs/Web/CSS/list-style#accessibility_concerns
     &::before {
       content: "\200B";
+      width: 0;
+      height: 0;
     }
 
     &:focus-within {
@@ -55,6 +61,17 @@
   {/if}
 
   <CardContent
-    {...{ headingLevel, titleText, description, linkPath, ctaText, useRule }}
+    {...{
+      headingLevel,
+      titleText,
+      description,
+      author,
+      pubDate,
+      pubDateStr,
+      tags,
+      linkPath,
+      ctaText,
+      useRule,
+    }}
   />
 </li>

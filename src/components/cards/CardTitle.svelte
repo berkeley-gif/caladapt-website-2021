@@ -13,7 +13,7 @@
     font-weight: 600;
     font-size: 1.375rem;
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   a {

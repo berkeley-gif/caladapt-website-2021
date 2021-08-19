@@ -1,6 +1,8 @@
 <script>
   import CardTitle from "./CardTitle.svelte";
   import CardRule from "./CardRule.svelte";
+  import CardTags from "./CardTags.svelte";
+  import CardDateAuthor from "./CardDateAuthor.svelte";
 
   export let headingLevel = 2;
   export let titleText = "Title Me";
@@ -8,6 +10,10 @@
   export let description = "";
   export let ctaText = "";
   export let useRule = false;
+  export let author = null;
+  export let pubDate = null;
+  export let pubDateStr = "";
+  export let tags = [];
 </script>
 
 <style lang="scss">
@@ -46,11 +52,18 @@
     opacity: 0.8;
     text-transform: uppercase;
     letter-spacing: 0.01rem;
+    pointer-events: none;
   }
 </style>
 
 <div class="card--content-container">
-  <CardTitle {...{ titleText, headingLevel, linkPath }} />
+  <div>
+    <CardTitle {...{ titleText, headingLevel, linkPath }} />
+
+    {#if pubDate || author}
+      <CardDateAuthor {...{ pubDate, pubDateStr, author }} />
+    {/if}
+  </div>
 
   <div>
     {#if useRule}
@@ -59,7 +72,13 @@
     <p>{description}</p>
   </div>
 
-  {#if ctaText}
-    <small aria-hidden="true">{ctaText}</small>
-  {/if}
+  <div>
+    {#if Array.isArray(tags) && tags.length}
+      <CardTags tags="{tags}" />
+    {/if}
+
+    {#if ctaText}
+      <small aria-hidden="true">{ctaText}</small>
+    {/if}
+  </div>
 </div>
