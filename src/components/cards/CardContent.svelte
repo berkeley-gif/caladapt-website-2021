@@ -36,12 +36,12 @@
     font-size: 1.125rem;
     line-height: 1.3;
     margin-bottom: 1rem;
-    color: var(--text-color, --gray-80);
+    color: var(--text-color, var(--gray-80));
   }
 
   small {
     font-size: 1rem;
-    color: var(--text-color, --link-01);
+    color: var(--text-color, var(--link-01));
     opacity: 0.8;
     text-transform: uppercase;
     letter-spacing: 0.01rem;

@@ -17,7 +17,7 @@
   }
 
   a {
-    color: var(--text-color, --gray-100);
+    color: var(--text-color, var(--gray-100));
     text-decoration: none;
 
     &::after {

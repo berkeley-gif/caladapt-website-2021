@@ -26,7 +26,7 @@
     height: var(--card-height, auto);
     box-sizing: border-box;
     position: relative;
-    background-color: var(--card-bg-color, --white);
+    background-color: var(--card-bg-color, var(--white));
     border: 1px solid var(--gray-20);
 
     // a11y fix for Safari
