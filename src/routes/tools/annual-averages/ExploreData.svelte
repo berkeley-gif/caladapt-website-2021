@@ -151,8 +151,8 @@
   </div>
 
   <!-- Stats -->
-  <div class="explore-stats">
-    <div class="block">
+  <ul class="explore-stats">
+    <li class="block">
       <RangeAvg
         units="{$climvar.units.imperial}"
         data="{statsData}"
@@ -161,8 +161,8 @@
         period="{'baseline'}"
         format="{formatFn}"
       />
-    </div>
-    <div class="block">
+    </li>
+    <li class="block">
       <RangeAvg
         units="{$climvar.units.imperial}"
         data="{statsData}"
@@ -171,8 +171,8 @@
         period="{'mid-century'}"
         format="{formatFn}"
       />
-    </div>
-    <div class="block">
+    </li>
+    <li class="block">
       <RangeAvg
         units="{$climvar.units.imperial}"
         data="{statsData}"
@@ -181,8 +181,8 @@
         period="{'end-century'}"
         format="{formatFn}"
       />
-    </div>
-  </div>
+    </li>
+  </ul>
 
   <!-- Chart-->
   <div class="explore-chart block">
