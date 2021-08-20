@@ -21,7 +21,7 @@
   export let events;
 
   const cardWidth = 22;
-  const cardHeight = 37;
+  const cardGap = 2;
 
   let filteredPosts = posts;
   let filter = "";
@@ -82,7 +82,7 @@
   <div class="content">
     <div class="bx--grid">
       <div class="bx--row">
-        <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+        <CardsContainer gridGap="{cardGap}" cardWidth="{cardWidth}">
           {#each filteredPosts as { slug, metadata: { image, tags, title, pubdate, datestring, author, snippet } }}
             <Card
               {...{
@@ -95,7 +95,6 @@
                 pubDate: pubdate,
                 pubDateStr: datestring,
                 author,
-                height: cardHeight,
               }}
             />
           {/each}
