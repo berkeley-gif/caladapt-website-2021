@@ -1,7 +1,9 @@
 <script>
   import { Row, Column } from "carbon-components-svelte";
-  import TopicTile from "./_TopicTile.svelte";
+  import { Card, CardsContainer } from "~/components/cards";
   import { getting_started_topics } from "./_getting-started-topics";
+
+  const cardHeight = 18;
 </script>
 
 <style lang="scss">
@@ -30,10 +32,18 @@
       > is a great place to begin. In this getting started guide, you can get a background
       on climate change and working with climate data.
     </p>
-    <ul class="tiles-list">
-      {#each getting_started_topics as topic}
-        <TopicTile topic="{topic}" />
+    <CardsContainer>
+      {#each getting_started_topics as { title, text, slug }}
+        <Card
+          {...{
+            height: cardHeight,
+            titleText: title,
+            description: text,
+            linkPath: `/help/get-started/${slug}`,
+            ctaText: "learn more",
+          }}
+        />
       {/each}
-    </ul>
+    </CardsContainer>
   </Column>
 </Row>
