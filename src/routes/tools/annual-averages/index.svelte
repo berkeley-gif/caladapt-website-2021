@@ -14,7 +14,9 @@
 
     // Filter metadata for current tool
     const tool = toolsList.find((d) => d.slug === "annual-averages");
-    const related = toolsList.filter((d) => tool.related.includes(d.slug));
+    const relatedTools = toolsList
+      .filter((d) => tool.related.includes(d.slug))
+      .map((d) => ({ ...d, category: "caladapt" }));
 
     // Get glossary items
     const glossary = await this.fetch("help/glossary.json")
@@ -47,7 +49,7 @@
       };
     }
 
-    return { initialConfig, glossary, tool, related };
+    return { initialConfig, glossary, tool, relatedTools };
   }
 </script>
 
@@ -66,6 +68,7 @@
     About,
     Resources,
     Help,
+    ToolNavigation,
   } from "../../../components/tools/Partials";
   import {
     NotificationDisplay,
@@ -81,13 +84,14 @@
     locationStore,
     dataStore,
     queryParams,
+    datasetStore,
   } from "./_store";
   import { getObserved, getModels, getEnvelope } from "./_data";
 
   export let initialConfig;
   export let glossary;
   export let tool;
-  export let related;
+  export let relatedTools;
 
   // Derived stores
   const { location } = locationStore;
@@ -119,19 +123,22 @@
   ];
 
   // Monitor sections as they enter & leave viewport
-  let inviewEl = "explore";
+  let currentView;
   const handleEntry = (e) => {
-    const { entry } = e.detail;
-    inviewEl = entry.target.id;
-  };
-  const entryOptions = {
-    threshold: 0.5,
+    const { inView, entry } = e.detail;
+    if (inView) {
+      currentView = entry.target.id;
+    }
   };
 
   // Reactive props
   $: datasets = tool.datasets;
-  $: resources = [...tool.resources, ...related];
+  $: resources = [...tool.resources, ...relatedTools];
   $: $climvar, $scenario, $models, $location, update();
+
+  function updateDataset(e) {
+    datasetStore.set(e.detail);
+  }
 
   async function update() {
     if (!appReady) return;
@@ -151,6 +158,7 @@
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
+      notifier.error("Error", err, 2000);
     }
   }
 
@@ -196,6 +204,11 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        notifier.error(
+          "Unable to Load Tool",
+          "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
+          2000
+        );
       });
     window.scrollTo(0, 0);
   });
@@ -212,7 +225,7 @@
 <div class="tool">
   <!-- Header -->
   <div id="header">
-    <Header currentView="{inviewEl}" icons="{tool.icons}" color="blue">
+    <Header>
       <h1 slot="title">{tool.title}</h1>
       <div slot="description">
         <p class="lead">
@@ -224,8 +237,11 @@
     </Header>
   </div>
 
+  <!-- Tool navigation -->
+  <ToolNavigation selected="{currentView}" />
+
   <!-- Explore -->
-  <div id="explore" class="section" use:inview="{entryOptions}">
+  <div id="explore" class="section" use:inview="{{}}" on:enter="{handleEntry}">
     {#if appReady}
       <ExploreData on:define="{showDefinition}" />
     {/if}
@@ -233,23 +249,13 @@
 
   <div class="bx--grid">
     <!-- Help -->
-    <div
-      id="help"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
+    <div id="help" class="section" use:inview="{{}}" on:enter="{handleEntry}">
       <Help />
     </div>
 
     <!-- About -->
-    <div
-      id="about"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <About datasets="{datasets}">
+    <div id="about" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+      <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
         <div slot="description">
           <p>
             Overall temperatures are projected to rise substantially throughout
@@ -298,7 +304,7 @@
     <div
       id="resources"
       class="section"
-      use:inview="{entryOptions}"
+      use:inview="{{}}"
       on:enter="{handleEntry}"
     >
       <Resources resources="{resources}" />
