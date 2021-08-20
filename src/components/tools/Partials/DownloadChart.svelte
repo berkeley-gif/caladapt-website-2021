@@ -23,21 +23,19 @@
   const items = [
     {
       format: "png",
-      text: `Chart in image format. Use it in 
-      presentations or other documents.`,
+      text: "Chart in image format. Use it in presentations or other documents.",
     },
     {
       format: "svg",
-      text: `Chart in vector format. Use it in 
-      documents or customize it further with graphic software like Inkscape or Adobe Illustrator`,
+      text: "Chart in vector format. Use it in documents or customize it further with graphic software like Inkscape or Adobe Illustrator",
     },
     {
       format: "csv",
-      text: `Data used to create this chart. Use it for further analysis.`,
+      text: "Data used to create this chart. Use it for further analysis. Any filters, options selected, and recalculations are also applied to the exported data.",
     },
     {
       format: "pdf",
-      text: `Document with chart, map and supporting text for printing or sharing.`,
+      text: "Document with chart, map and supporting text for printing or sharing.",
     },
   ];
 
@@ -58,6 +56,12 @@
             ${csvFormat(csvData)}
           `;
           await exportCSV(csvWithMetadata);
+          break;
+        case "svg":
+          // TODO: handle svg
+          break;
+        case "pdf":
+          // TODO: handle pdf
           break;
         default:
         // Do nothing
