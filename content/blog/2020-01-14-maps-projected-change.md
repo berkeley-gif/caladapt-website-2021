@@ -2,7 +2,7 @@
 title: Maps of Projected Change
 author: Cal-Adapt
 image: maps-projected-change-maxtemp.png
-tags: tool
+tags: tools
 snippet: The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display.
 ---
 
