@@ -31,8 +31,8 @@ $teal-90: #013031;
 $teal-100: #001818;
 
 $card-bg-color-01: saturate($teal-60, 5);
-$card-bg-color-02: adjust-hue($card-bg-color-01, -10deg);
-$card-bg-color-03: adjust-hue($card-bg-color-01, 10deg);
+$card-bg-color-02: adjust-hue($card-bg-color-01, -15deg);
+$card-bg-color-03: adjust-hue($card-bg-color-01, 15deg);
 
 $caladapt-colors: (
   "gray-10": $gray-10,
