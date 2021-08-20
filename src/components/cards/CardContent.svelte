@@ -14,7 +14,7 @@
   export let pubDate = null;
   export let pubDateStr = "";
   export let tags = [];
-  export let cardVariant = false;
+  export let isVariant = false;
 </script>
 
 <style lang="scss">
@@ -27,19 +27,8 @@
     padding: 1rem;
     overflow: hidden;
 
-    // & > * + * {
-    //   margin-top: 0.75rem;
-    // }
-
-    // &:last-child {
-    //   margin-top: auto;
-    // }
-
-    // &:nth-last-child(2) {
-    //   margin-bottom: 0.75rem;
-    // }
-
     &.card--layout-img-icon {
+      height: auto;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -64,10 +53,7 @@
   }
 </style>
 
-<div
-  class="card--content-container"
-  class:card--layout-img-icon="{cardVariant}"
->
+<div class="card--content-container" class:card--layout-img-icon="{isVariant}">
   <div>
     <CardTitle {...{ titleText, headingLevel, linkPath }} />
 

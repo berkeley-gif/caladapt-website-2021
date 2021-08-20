@@ -20,7 +20,7 @@
   export let bgColor = null;
   export let useRule = false;
 
-  $: cardVariant = Boolean(imgSrc || iconPaths || $$slots.icon_slot);
+  $: isVariant = Boolean(imgSrc || iconPaths || $$slots.icon_slot);
   $: varCardHeight =
     height && typeof height === "number" ? `${height}rem` : CARD_DEFAULT_HEIGHT;
 </script>
@@ -79,7 +79,7 @@
       linkPath,
       ctaText,
       useRule,
-      cardVariant,
+      isVariant,
     }}
   />
 </li>
