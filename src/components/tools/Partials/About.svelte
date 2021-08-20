@@ -24,7 +24,7 @@
     if (!datasets) return null;
     fetchDatasets().then((results) => {
       datasetList = results;
-      dispatch("dataLoaded", results);
+      dispatch("datasetLoaded", results);
     });
   });
 </script>
