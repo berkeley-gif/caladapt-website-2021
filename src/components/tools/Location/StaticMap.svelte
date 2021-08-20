@@ -29,6 +29,7 @@
       loading = false;
     };
     img.onerror = () => {
+      loading = false;
       error = true;
     };
   }
@@ -38,7 +39,7 @@
       geojson = location.geometry;
       // Use zoom for point geometry to prevent returned image from
       // being zoomed all the way in
-      bounds = `${geojson.coordinates[0]},${geojson.coordinates[1]},${zoom}`;
+      bounds = `${geojson.geometry.coordinates[0]},${geojson.geometry.coordinates[1]},${zoom}`;
       overlay = encodeURIComponent(JSON.stringify(geojson));
     } else {
       // Add style for non point geometry
