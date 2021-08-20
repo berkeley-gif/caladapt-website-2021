@@ -15,29 +15,22 @@
   });
 
   function getLabel(feature) {
-    let label;
     switch (feature.layer.id) {
       case "substations":
-        label = `<strong>Substation:</strong> ${feature.properties.Name}`;
-        break;
+        return `<strong>Substation:</strong> ${feature.properties.Name}`;
       case "translines":
-        label = `<strong>Transmission Line:</strong> ${feature.properties.Name}`;
-        break;
+        return `<strong>Transmission Line:</strong> ${feature.properties.Name}`;
       case "powerplants":
-        label = `<strong>Powerplant:</strong> ${feature.properties.Plant_Label}`;
-        break;
+        return `<strong>Powerplant:</strong> ${feature.properties.PlantName}`;
       case "hadisd":
-        label = `<strong>${feature.properties.name}</strong><br/>Elev: ${feature.properties.elevation_m} m`;
-        break;
+        return `<strong>${feature.properties.name}</strong><br/>Elev: ${feature.properties.elevation_m} m`;
       case "calenviroscreen":
-        label = `<strong>CalEnviroScreen 3.0 Percentile:</strong> ${feature.properties.ces_3_0_percentile_range}`;
-        break;
+        return `<strong>CalEnviroScreen 3.0 Percentile:</strong> ${feature.properties.ces_3_0_percentile_range}`;
       default:
         // eslint-disable-next-line no-case-declarations
         const prop = feature.layer.metadata.nameField || "name";
-        label = feature.properties[prop];
+        return feature.properties[prop];
     }
-    return label;
   }
 
   map.on("mouseenter", layer.id, function (e) {
