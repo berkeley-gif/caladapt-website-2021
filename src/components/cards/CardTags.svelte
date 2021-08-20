@@ -1,10 +1,11 @@
 <script>
   import { Tag } from "carbon-components-svelte";
+  import { CARD_TAG_COLOR_MAP } from "./Card.constants";
 
   export let tags = [];
 </script>
 
-<style lang="scss">
+<style>
   div {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -15,7 +16,7 @@
   {#each tags as tag, index}
     <Tag
       size="default"
-      type="teal"
+      type="{CARD_TAG_COLOR_MAP.get(tag) || 'gray'}"
       style="{index === 0 ? 'margin-left: 0;' : ''}">{tag}</Tag
     >
   {/each}
