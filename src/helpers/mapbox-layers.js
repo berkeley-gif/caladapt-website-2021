@@ -5,7 +5,8 @@
 
 // Expressions
 const translinesExpr = ["to-number", ["get", "kV_Sort"]];
-const powerplantsExpr = ["to-number", ["get", "MW"]];
+// MW attribute missing in geojson, check with CEC
+//const powerplantsExpr = ["to-number", ["get", "MW"]];
 const cesScore = ["get", "ces_3_0_percentile_range"];
 
 const data = [
@@ -294,7 +295,6 @@ const data = [
     layout: {
       "line-cap": "round",
       "line-join": "round",
-      visibility: "none",
     },
     paint: {
       "line-opacity": 0.5,
@@ -350,14 +350,7 @@ const data = [
       data: "https://opendata.arcgis.com/datasets/4a702cd67be24ae7ab8173423a768e1b_0.geojson",
     },
     paint: {
-      "circle-radius": [
-        "case",
-        [">=", powerplantsExpr, 1000],
-        8,
-        [">=", powerplantsExpr, 500],
-        5,
-        3,
-      ],
+      "circle-radius": 8,
       "circle-opacity": 0.7,
       "circle-color": "rgb(171, 72, 33)",
       "circle-stroke-color": "#B42222",
