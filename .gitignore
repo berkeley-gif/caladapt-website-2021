@@ -4,3 +4,5 @@
 /__sapper__/
 /static/g/
 .eslintcache
+# Local Netlify folder
+.netlify
