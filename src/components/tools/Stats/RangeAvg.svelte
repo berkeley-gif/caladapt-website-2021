@@ -138,10 +138,6 @@
     position: relative;
   }
 
-  .stat-header {
-    margin-bottom: 1rem;
-  }
-
   .stat-data {
     display: flex;
     flex-wrap: wrap;
@@ -191,6 +187,14 @@
     <div class="stat-header">
       <span class="stat-text">{selectedSeries.label}</span>
       <span class="stat-title">{selectedPeriod.label}</span>
+      <Button
+        icon="{Calendar16}"
+        kind="ghost"
+        size="small"
+        on:click="{() => (showSettings = true)}"
+      >
+        Change Period
+      </Button>
     </div>
     <!-- values -->
     <div class="stat-data">
@@ -209,20 +213,11 @@
           icon="{Information16}"
           kind="ghost"
           size="small"
-          style="padding-left:0;"
           on:click="{() => (showInfo = true)}"
         >
           {note}
         </Button>
       </div>
-      <Button
-        icon="{Calendar16}"
-        kind="ghost"
-        size="small"
-        on:click="{() => (showSettings = true)}"
-      >
-        Change Period
-      </Button>
     </div>
   </div>
 {:else}
