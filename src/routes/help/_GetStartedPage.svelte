@@ -11,16 +11,6 @@
     max-width: 75ch;
     padding: 1rem;
   }
-
-  .tiles-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    grid-gap: 1.5rem;
-    margin-bottom: 3rem;
-    padding-right: 1rem;
-    padding-left: 0.75rem;
-    list-style: none;
-  }
 </style>
 
 <Row>
