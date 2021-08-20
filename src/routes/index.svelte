@@ -6,14 +6,19 @@
     const events = await this.fetch(`blog/events.json`)
       .then((r) => r.json())
       .then((events) => events);
-    return { posts, events };
+    const cardsData = await this.fetch("index.json")
+      .then((r) => r.json())
+      .then((cards) => cards);
+    return { posts, events, cardsData };
   }
 </script>
 
 <script>
+  import { onMount } from "svelte";
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
 
+  import { Card, CardsContainer } from "~/components/cards";
   import SidebarRight from "../partials/SidebarRight.svelte";
   import Sun from "../../static/img/icons/sun.svg";
   import Rainfall from "../../static/img/icons/rainfall.svg";
@@ -24,8 +29,24 @@
 
   export let events;
   export let posts;
+  export let cardsData;
 
   const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
+  const cardHeight = 18;
+  const cardWidth = 16;
+  $: cardBgColors = [];
+
+  onMount(() => {
+    const styles = getComputedStyle(document.documentElement);
+    cardBgColors = [
+      styles.getPropertyValue("--card-bg-color-02"),
+      styles.getPropertyValue("--card-bg-color-01"),
+      styles.getPropertyValue("--card-bg-color-03"),
+      styles.getPropertyValue("--card-bg-color-03"),
+      styles.getPropertyValue("--card-bg-color-01"),
+      styles.getPropertyValue("--card-bg-color-02"),
+    ];
+  });
 </script>
 
 <svelte:head>
@@ -47,6 +68,7 @@
         </div>
       {/each}
     </div>
+
     <div class="bx--row">
       <div class="bx--col-md-16 bx--col-lg-12">
         <h1 style="font-size:2rem;">
@@ -54,11 +76,13 @@
           how climate change might affect California at the state and local
           level.
         </h1>
+
         <p class="lead">
           We make this data available through downloads, visualizations, and the
           Cal-Adapt API for your research, outreach, and adaptation planning
           needs.
         </p>
+
         <Button icon="{ArrowRight16}" href="/about"
           >LEARN MORE ABOUT CAL-ADAPT</Button
         >
@@ -69,51 +93,24 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    <div class="content-block lift shadow bg-teal-40">
-      <a href="/help/get-started" aria-label="get started with climate data">
-      </a>
-      <h3 class="content-block-title">New to Cal-Adapt?</h3>
-      <p class="content-block-text">
-        Learn how to get started using climate data
-      </p>
-    </div>
-    <div class="content-block lift shadow bg-blue-40 inverse">
-      <a
-        href="/tools/local-climate-change-snapshot"
-        aria-label="local climate change snapshot tool"
-      >
-      </a>
-      <h3 class="content-block-title">Local Climate Change Snapshot Tool</h3>
-    </div>
-    <div
-      class="content-block lift shadow bg-blue-60 inverse"
-      style="text-align:center;"
-    >
-      <a href="/tools" aria-label="explore all climate tools"> </a>
-      <h3 class="content-block-title">Explore all Climate Tools</h3>
-    </div>
-    <div class="content-block lift shadow bg-gray-70 inverse">
-      <a href="/data" aria-label="download data"> </a>
-      <h3 class="content-block-title">Download Data</h3>
-      <p class="content-block-text">
-        Download climate data in NetCDF, CSV and GeoTIFF formats for your area
-      </p>
-    </div>
-    <div
-      class="content-block lift shadow bg-teal-20"
-      style="text-align:center;"
-    >
-      <a href="/help/tutorials" aria-label="gtutorials and webinars">&nbsp;</a>
-      <h3 class="content-block-title">Tutorials &amp; Webinars</h3>
-    </div>
-    <div class="content-block lift shadow bg-teal-80 inverse">
-      <a href="/developer" aria-label="developers"> </a>
-      <h3 class="content-block-title">Developers</h3>
-      <p class="content-block-text">
-        Integrate climate data in your workflows with the Cal-Adapt API
-      </p>
-    </div>
+    {#if cardBgColors.length}
+      <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+        {#each cardsData as cardDatum, index}
+          <Card
+            {...{
+              ...cardDatum,
+              height: cardHeight,
+              ctaText: "Learn more",
+              textColor: "white",
+              bgColor: cardBgColors[index],
+              useRule: true,
+            }}
+          />
+        {/each}
+      </CardsContainer>
+    {/if}
   </div>
+
   <div class="sidebar-right">
     <SidebarRight
       display="{['events', 'posts']}"
@@ -121,6 +118,7 @@
       posts="{[posts[0]]}"
     />
   </div>
+
   <div class="footer">
     <p class="lead">
       Get the latest Cal-Adapt news, updates &amp; events delivered to your

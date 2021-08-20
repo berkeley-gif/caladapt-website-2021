@@ -18,8 +18,6 @@
 </script>
 
 <script>
-  import PostStub from "../../partials/PostStub.svelte";
-
   export let posts;
   export let query;
 

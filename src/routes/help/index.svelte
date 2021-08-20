@@ -13,6 +13,7 @@
   import Catalog32 from "carbon-icons-svelte/lib/Catalog32";
   import User32 from "carbon-icons-svelte/lib/User32";
   import Video32 from "carbon-icons-svelte/lib/Video32";
+  import { Card, CardsContainer } from "~/components/cards";
 
   export let categories;
 
@@ -22,6 +23,10 @@
     faqs: Help32,
     glossary: Catalog32,
   };
+
+  const cardWidth = 16;
+  const cardHeight = 16;
+  const cardGap = 2;
 </script>
 
 <style lang="scss">
@@ -68,33 +73,23 @@
 
 <section>
   <div class="bx--grid">
-    <div class="bx--row">
-      {#each categories as category}
-        <div class="bx--col-lg-4" style="padding:1rem;">
-          <div class="card shadow lift">
-            <div
-              class="card-body"
-              style="padding: 1.5rem 1rem;text-align:center;"
-            >
-              <div class="icon-circle bg-teal-60 text-white">
-                <svelte:component this="{icons[category.slug]}" />
-              </div>
-              <h4>
-                {category.title}
-              </h4>
-              <p class="text-gray-70">
-                {category.text}
-              </p>
-              <a
-                class="stretched-link"
-                href="/help/{category.slug}/"
-                title="Explore »"
-              >
-              </a>
+    <div class="bx--row" style="max-width: 72rem; margin: 0 auto">
+      <CardsContainer cardWidth="{cardWidth}" gridGap="{cardGap}">
+        {#each categories as { slug, title, text }}
+          <Card
+            {...{
+              titleText: title,
+              linkPath: `/help/${slug}`,
+              description: text,
+              height: cardHeight,
+            }}
+          >
+            <div class="icon-circle bg-teal-60 text-white" slot="icon_slot">
+              <svelte:component this="{icons[slug]}" />
             </div>
-          </div>
-        </div>
-      {/each}
+          </Card>
+        {/each}
+      </CardsContainer>
     </div>
   </div>
   <div class="bx--row">

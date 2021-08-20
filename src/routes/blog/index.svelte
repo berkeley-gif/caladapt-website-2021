@@ -13,11 +13,15 @@
 <script>
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
-  import PostStub from "../../partials/PostStub.svelte";
+
+  import { Card, CardsContainer } from "~/components/cards";
   import SidebarRight from "../../partials/SidebarRight.svelte";
 
   export let posts;
   export let events;
+
+  const cardWidth = 22;
+  const cardGap = 2;
 
   let filteredPosts = posts;
   let filter = "";
@@ -78,11 +82,23 @@
   <div class="content">
     <div class="bx--grid">
       <div class="bx--row">
-        {#each filteredPosts as post}
-          <div class="bx--col-lg-8" style="padding:2rem;">
-            <PostStub post="{post}" />
-          </div>
-        {/each}
+        <CardsContainer gridGap="{cardGap}" cardWidth="{cardWidth}">
+          {#each filteredPosts as { slug, metadata: { image, tags, title, pubdate, datestring, author, snippet } }}
+            <Card
+              {...{
+                titleText: title,
+                linkPath: `/blog/${slug}`,
+                imgSrc: `img/blog/${image}`,
+                description: snippet,
+                ctaText: "View article",
+                tags,
+                pubDate: pubdate,
+                pubDateStr: datestring,
+                author,
+              }}
+            />
+          {/each}
+        </CardsContainer>
       </div>
     </div>
   </div>
