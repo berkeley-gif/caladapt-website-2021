@@ -9,6 +9,7 @@
   div {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    text-transform: capitalize;
   }
 </style>
 
