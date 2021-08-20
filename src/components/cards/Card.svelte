@@ -60,6 +60,12 @@
     <CardIcons iconPaths="{iconPaths}" />
   {/if}
 
+  {#if $$slots.icon_slot}
+    <CardIcons>
+      <slot slot="icon_slot" name="icon_slot" />
+    </CardIcons>
+  {/if}
+
   <CardContent
     {...{
       headingLevel,

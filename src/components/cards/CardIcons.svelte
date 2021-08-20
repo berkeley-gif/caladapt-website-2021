@@ -23,4 +23,8 @@
       <img src="{src}" alt="" class="icon" />
     {/each}
   {/if}
+
+  {#if $$slots.icon_slot}
+    <slot name="icon_slot" />
+  {/if}
 </div>
