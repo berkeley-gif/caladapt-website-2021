@@ -10,7 +10,7 @@
     padding: 1rem;
 
     &.block-settings {
-      background-color: $gray-20;
+      background-color: var(--gray-20);
     }
 
     .block-title {
@@ -19,9 +19,16 @@
     }
   }
 
-  .header {
-    padding: 2rem;
-    background: rgba(218, 222, 225, 0.25);
+  #header {
+    .banner {
+      padding: 2rem;
+      background: var(--gray-10);
+      color: var(--text-01);
+
+      h1 {
+        margin-top: var(--spacing-8);
+      }
+    }
 
     .lead {
       max-width: 70vw;
@@ -30,9 +37,8 @@
 
   .secondary-nav {
     width: 100%;
-    background: rgba(250, 251, 251, 1);
     top: 0;
-    border-bottom: 1px solid #dadee1;
+    border-bottom: 1px solid var(--gray-50);
     z-index: 3;
     background: var(--gray-30);
 
@@ -52,7 +58,7 @@
     }
 
     ul li:hover {
-      background: rgba(154, 201, 202, 0.5);
+      background: var(--gray-50);
     }
 
     ul li.active {
@@ -267,7 +273,6 @@
         justify-content: space-between;
 
         div.block {
-          height: 100%;
           flex: 1 0 auto;
           margin: 0 0.5rem;
         }
