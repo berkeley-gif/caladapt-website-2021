@@ -21,6 +21,7 @@
   export let events;
 
   const cardWidth = 22;
+  const cardHeight = 37;
 
   let filteredPosts = posts;
   let filter = "";
@@ -94,6 +95,7 @@
                 pubDate: pubdate,
                 pubDateStr: datestring,
                 author,
+                height: cardHeight,
               }}
             />
           {/each}
