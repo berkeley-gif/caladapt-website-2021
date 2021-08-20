@@ -1,7 +1,6 @@
 /**
  * API Config module.
  * @module api_config
- * @todo switch out ecoengine urs with caladapt urls
  */
 
 const development = {
