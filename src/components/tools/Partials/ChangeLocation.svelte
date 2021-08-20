@@ -84,6 +84,7 @@
   }
 
   function change() {
+    open = false;
     dispatch("change", {
       boundaryId: currentBoundary.id,
       location: currentLoc,
@@ -91,6 +92,8 @@
   }
 
   function cancel() {
+    currentLoc = location;
+    currentBoundary = boundary;
     open = false;
   }
 </script>
