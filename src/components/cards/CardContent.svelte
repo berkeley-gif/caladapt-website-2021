@@ -14,15 +14,16 @@
   export let pubDate = null;
   export let pubDateStr = "";
   export let tags = [];
+  export let cardVariant = false;
 </script>
 
 <style lang="scss">
   .card--content-container {
     max-width: 60ch;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: space-between;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 25% 65% 10%;
     padding: 1rem;
     overflow: hidden;
 
@@ -37,6 +38,13 @@
     // &:nth-last-child(2) {
     //   margin-bottom: 0.75rem;
     // }
+
+    &.card--layout-img-icon {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
   }
 
   p {
@@ -56,7 +64,10 @@
   }
 </style>
 
-<div class="card--content-container">
+<div
+  class="card--content-container"
+  class:card--layout-img-icon="{cardVariant}"
+>
   <div>
     <CardTitle {...{ titleText, headingLevel, linkPath }} />
 
