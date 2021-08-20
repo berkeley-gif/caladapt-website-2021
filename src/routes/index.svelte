@@ -6,7 +6,10 @@
     const events = await this.fetch(`blog/events.json`)
       .then((r) => r.json())
       .then((events) => events);
-    return { posts, events };
+    const cardsData = await this.fetch("index.json")
+      .then((r) => r.json())
+      .then((cards) => cards);
+    return { posts, events, cardsData };
   }
 </script>
 
@@ -26,54 +29,12 @@
 
   export let events;
   export let posts;
+  export let cardsData;
 
   const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
-
   const cardHeight = 18;
   const cardWidth = 16;
   $: cardBgColors = [];
-  const getCardBgColor = (index) =>
-    index < 3 ? cardBgColors[index % 3] : cardBgColors[(index + 2) % 3];
-
-  // TODO: store this in content/homepage ?
-  const cardData = [
-    {
-      titleText: "New to Cal Adapt?",
-      linkPath: "/help/get-started",
-      description:
-        "Learn how to get started with using climate data for California.",
-    },
-    {
-      titleText: "Local Climate Change Snapshot Tool",
-      linkPath: "/tools/local-climate-change-snapshot",
-      description:
-        "Quickly view a variety of climate data for a city, county, or other place.",
-    },
-    {
-      titleText: "Explore all Climate Tools",
-      linkPath: "/tools",
-      description:
-        "Explore data on temperature, precipitation, snowpack, wildfire, and more.",
-    },
-    {
-      titleText: "Download Data",
-      linkPath: "/data",
-      description:
-        "Download climate data in NetCDF, CSV and GeoTIFF formats for your area.",
-    },
-    {
-      titleText: "Tutorials & Webinars",
-      linkPath: "/help/tutorials",
-      description:
-        "Browse our video collection of tool tutorials and past webinars.",
-    },
-    {
-      titleText: "Developers",
-      linkPath: "/developer",
-      description:
-        "Integrate climate data in your workflows with the Cal-Adapt API.",
-    },
-  ];
 
   onMount(() => {
     const styles = getComputedStyle(document.documentElement);
@@ -81,6 +42,9 @@
       styles.getPropertyValue("--card-bg-color-02"),
       styles.getPropertyValue("--card-bg-color-01"),
       styles.getPropertyValue("--card-bg-color-03"),
+      styles.getPropertyValue("--card-bg-color-03"),
+      styles.getPropertyValue("--card-bg-color-01"),
+      styles.getPropertyValue("--card-bg-color-02"),
     ];
   });
 </script>
@@ -131,14 +95,14 @@
   <div class="content">
     {#if cardBgColors.length}
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each cardData as cardDatum, index}
+        {#each cardsData as cardDatum, index}
           <Card
             {...{
               ...cardDatum,
               height: cardHeight,
               ctaText: "Learn more",
               textColor: "white",
-              bgColor: getCardBgColor(index),
+              bgColor: cardBgColors[index],
               useRule: true,
             }}
           />
