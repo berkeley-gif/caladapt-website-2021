@@ -1,9 +1,8 @@
 <script>
-  import { createEventDispatcher } from "svelte";
   import { extent, mean, merge } from "d3-array";
   import { Button, SkeletonText, Modal } from "carbon-components-svelte";
-  import { SettingsAdjust16, Information16 } from "carbon-icons-svelte";
-  import ChangeTimePeriod from "./ChangeTimePeriod2.svelte";
+  import { Information16, Calendar16 } from "carbon-icons-svelte";
+  import ChangeTimePeriod from "./ChangeTimePeriod.svelte";
 
   export let units = "inches";
   export let data;
@@ -53,7 +52,6 @@
     },
   ];
 
-  const dispatch = createEventDispatcher();
   let isHistorical = series === "historical" || series === "observed";
 
   let selectedSeries = seriesList.find((d) => d.id === series);
@@ -210,7 +208,7 @@
         <Button
           icon="{Information16}"
           kind="ghost"
-          size="sm"
+          size="small"
           style="padding-left:0;"
           on:click="{() => (showInfo = true)}"
         >
@@ -218,11 +216,12 @@
         </Button>
       </div>
       <Button
-        icon="{SettingsAdjust16}"
+        icon="{Calendar16}"
+        kind="ghost"
         size="small"
         on:click="{() => (showSettings = true)}"
       >
-        Change
+        Change Period
       </Button>
     </div>
   </div>
