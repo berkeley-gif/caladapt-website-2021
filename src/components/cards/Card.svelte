@@ -20,7 +20,11 @@
   export let bgColor = null;
   export let useRule = false;
 
-  $: isVariant = Boolean(imgSrc || iconPaths || $$slots.icon_slot);
+  $: isVariant = Boolean(
+    imgSrc ||
+      (Array.isArray(iconPaths) && iconPaths.length) ||
+      $$slots.icon_slot
+  );
   $: varCardHeight =
     height && typeof height === "number" ? `${height}rem` : CARD_DEFAULT_HEIGHT;
 </script>
