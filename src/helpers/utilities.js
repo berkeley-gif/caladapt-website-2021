@@ -503,3 +503,12 @@ export async function getDataset(opt) {
     throw new Error(error);
   }
 }
+
+/**
+ * Check for leap year
+ * @param {number} year
+ * @return {boolean}
+ */
+export function isLeapYear(year) {
+  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+}
