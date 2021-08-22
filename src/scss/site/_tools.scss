@@ -2,6 +2,10 @@
   .section {
     margin: 4rem 2rem;
     min-height: 300px;
+
+    .bx--grid {
+      padding-left: 0;
+    }
   }
 
   .block {
@@ -34,7 +38,7 @@
     }
 
     .lead {
-      max-width: 70vw;
+      max-width: 60ch;
     }
   }
 
@@ -317,6 +321,21 @@
           font-weight: 600;
         }
       }
+    }
+  }
+
+  #help,
+  #about,
+  #resources {
+    p,
+    ul {
+      font-size: 20px;
+      margin-bottom: 1.75rem;
+      max-width: 75ch;
+    }
+
+    li {
+      margin-bottom: 1rem;
     }
   }
 
