@@ -1,5 +1,5 @@
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { FileUploader } from "carbon-components-svelte";
 
   // Helpers
@@ -9,11 +9,8 @@
     convertFileToGeojson,
     validateShape,
   } from "./../../../helpers/utilities";
-  import { formatBoundaryPolygon } from "./../../../helpers/geocode";
+  import { formatFeature } from "./../../../helpers/geocode";
 
-  export let open = false;
-
-  let ready = false;
   let fileUploader;
   const fileUploadProps = {
     labelTitle: "",
@@ -22,10 +19,16 @@
     buttonLabel: "Upload File",
     accept: [".zip", ".json", ".geojson", ".kml", ".wkt"],
     id: "Upload",
+    errorSubject: "",
+    errorBody: "",
   };
 
-  $: if (open) {
+  $: if (fileUploader) {
     fileUploader.clearFiles();
+  }
+
+  function clear() {
+    console.log("clear");
   }
 
   const dispatch = createEventDispatcher();
@@ -46,29 +49,36 @@
     }
     fileUploadProps.status = "complete";
     const [geojson, geojsonError] = await handle(convertFileToGeojson(file));
-    if (geojsonError) {
+
+    if (geojson && !geojsonError && geojson.features.length === 1) {
+      fileUploadProps.errorSubject = "";
+      fileUploadProps.errorBody = "";
+      fileUploadProps.invalid = false;
+      const location = formatFeature(geojson.features[0], "custom");
+      location.title = file.name;
+      dispatch("upload", { location });
+      return;
+    }
+
+    if (geojson && geojsonError && geojson.features.length === 1) {
       fileUploadProps.errorSubject = "Warning";
       fileUploadProps.errorBody =
-        "File is valid but unable to display shape on map.";
+        "We can fetch data for this area but cannot display it on the inset map.";
+      const location = formatFeature(geojson.features[0], "custom");
+      location.title = file.name;
+      dispatch("upload", { location });
+      return;
     }
-    const { features } = geojson;
-    if (features.length > 1) {
+
+    if (geojson && geojson.features.length > 1) {
       fileUploadProps.status = "edit";
       fileUploadProps.invalid = true;
       fileUploadProps.errorSubject = "Error";
-      fileUploadProps.errorBody = "The uploaded file has more than 1 polygon";
+      fileUploadProps.errorBody =
+        "The uploaded file has more than 1 geometry. The tool can display fetch data for only 1 geometry at a time.";
+      return;
     }
-    console.log("feature", features);
-    const location = formatBoundaryPolygon(features[0], "custom");
-    location.title = file.name;
-    dispatch("upload", { location });
-    return;
   }
-
-  onMount(() => {
-    ready = true;
-    dispatch("ready");
-  });
 </script>
 
 <style>
@@ -82,8 +92,12 @@
 
 <FileUploader
   {...fileUploadProps}
+  kind="tertiary"
   bind:this="{fileUploader}"
   on:add="{({ detail }) => {
     processUpload(detail[0]);
   }}"
 />
+{#if fileUploadProps.errorSubject === "Warning" || fileUploadProps.errorSubject === "Error"}
+  <span>{fileUploadProps.errorBody}</span>
+{/if}
