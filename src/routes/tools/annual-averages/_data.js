@@ -8,6 +8,7 @@ import {
   fetchData,
   transformResponse,
   pipe,
+  isLeapYear,
 } from "../../../helpers/utilities";
 import { seriesList } from "./_helpers";
 
@@ -44,6 +45,16 @@ const buildEnvelope = (_data) => {
   });
 };
 
+// Converts precipitation data from inches/day to inches/year
+const convertToAnnual = (values) => {
+  return values.map((d) => {
+    if (isLeapYear(+d.date.getFullYear())) {
+      return { ...d, value: d.value * 366 };
+    }
+    return { ...d, value: d.value * 365 };
+  });
+};
+
 export async function addModel(config, params, method, modelId) {
   const { climvarId, scenarioId } = config;
   const slugs = [
@@ -62,7 +73,7 @@ export async function addModel(config, params, method, modelId) {
       const series = {
         key: modelId,
         type: "line",
-        values,
+        values: climvarId === "pr" ? convertToAnnual(values) : values,
       };
       return addSeriesInfo(series);
     })
@@ -83,10 +94,14 @@ export async function getObserved(config, params, method) {
     if (values.length === 0) {
       throw new Error("No Data");
     }
+    // Filter out data before 2007 for livneh
+    const filteredValues = values.filter((d) => +d.date.getFullYear() < 2007);
+
     const observed = {
       key: "observed",
       type: "line",
-      values: values.filter((d) => d.date.getFullYear() < 2007),
+      values:
+        climvarId === "pr" ? convertToAnnual(filteredValues) : filteredValues,
     };
     return addSeriesInfo(observed);
   } catch (error) {

@@ -2,25 +2,28 @@
   import { createEventDispatcher } from "svelte";
   import { range } from "d3-array";
   import {
-    FormGroup,
     RadioButtonGroup,
     RadioButton,
     ComboBox,
     Modal,
   } from "carbon-components-svelte";
 
-  export let historicalOnly = false;
+  export let isHistorical = true;
+  export let seriesList;
+  export let periodList;
+  export let seriesId;
+  export let periodId;
   export let open = false;
 
-  let selected = "baseline";
   let yearRange;
 
   const dispatch = createEventDispatcher();
-  if (historicalOnly) {
+  if (isHistorical) {
     yearRange = range(1950, 2006, 1);
   } else {
-    yearRange = range(1950, 2100, 1);
+    yearRange = range(2006, 2100, 1);
   }
+
   const items = yearRange.map((d) => ({ id: d, text: `${d}` }));
 
   let startYear_selectedIndex = -1;
@@ -44,31 +47,21 @@
   }
 
   function update() {
-    let period;
     let start;
     let end;
-    switch (selected) {
-      case "midcentury":
-        start = 2035;
-        end = 2064;
-        period = "Mid-Century";
-        break;
-      case "endcentury":
-        start = 2070;
-        end = 2099;
-        period = "End of Century";
-        break;
-      case "custom":
-        start = items[startYear_selectedIndex].text;
-        end = filteredItems[endYear_selectedIndex].text;
-        period = "";
-        break;
-      default:
-        start = 1961;
-        end = 1990;
-        period = "Baseline";
+    if (periodId === "custom") {
+      start = items[startYear_selectedIndex].text;
+      end = filteredItems[endYear_selectedIndex].text;
+    } else {
+      const period = periodList.find((d) => d.id === periodId);
+      start = period.start;
+      end = period.end;
     }
-    dispatch("change", { period, range: [start, end] });
+    dispatch("change", {
+      seriesId,
+      periodId,
+      range: [start, end],
+    });
   }
 </script>
 
@@ -85,21 +78,25 @@
   secondaryButtonText="Cancel"
   on:click:button--secondary="{() => (open = false)}"
   bind:open
-  modalHeading="Change Time Period"
+  modalHeading="Change Stats"
   on:submit="{update}"
-  on:open
-  on:close
+  on:close="{() => dispatch('cancel')}"
 >
-  <RadioButtonGroup orientation="vertical" bind:selected>
-    <RadioButton labelText="Baseline (1961-1990)" value="baseline" />
-    {#if !historicalOnly}
-      <RadioButton labelText="Mid-Century (2035-2064)" value="midcentury" />
-      <RadioButton labelText="End-Century (2070-2099)" value="endcentury" />
-    {/if}
+  <h5>Select Series</h5>
+  <RadioButtonGroup bind:selected="{seriesId}">
+    {#each seriesList as opt}
+      <RadioButton labelText="{opt.label}" value="{opt.id}" />
+    {/each}
+  </RadioButtonGroup>
+  <h5>Select Time Period</h5>
+  <RadioButtonGroup bind:selected="{periodId}">
+    {#each periodList as opt}
+      <RadioButton labelText="{opt.label}" value="{opt.id}" />
+    {/each}
     <RadioButton labelText="Enter custom year range" value="custom" />
   </RadioButtonGroup>
 
-  {#if selected === "custom"}
+  {#if periodId === "custom"}
     <div class="year-select">
       <ComboBox
         bind:selectedIndex="{startYear_selectedIndex}"

@@ -1,9 +1,8 @@
 <script>
-  import { createEventDispatcher } from "svelte";
   import { extent, mean, merge } from "d3-array";
   import { Button, SkeletonText, Modal } from "carbon-components-svelte";
-  import { SettingsAdjust16, Information16 } from "carbon-icons-svelte";
-  import ChangeTimePeriod from "./ChangeTimePeriod2.svelte";
+  import { Information16, Calendar16 } from "carbon-icons-svelte";
+  import ChangeTimePeriod from "./ChangeTimePeriod.svelte";
 
   export let units = "inches";
   export let data;
@@ -53,7 +52,6 @@
     },
   ];
 
-  const dispatch = createEventDispatcher();
   let isHistorical = series === "historical" || series === "observed";
 
   let selectedSeries = seriesList.find((d) => d.id === series);
@@ -140,14 +138,10 @@
     position: relative;
   }
 
-  .stat-header {
-    margin-bottom: 1rem;
-  }
-
   .stat-data {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     margin: 0.75rem 0;
   }
 
@@ -170,7 +164,8 @@
   }
 
   .stat-units {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--gray-70);
   }
 
   .stat-controls {
@@ -193,14 +188,24 @@
     <div class="stat-header">
       <span class="stat-text">{selectedSeries.label}</span>
       <span class="stat-title">{selectedPeriod.label}</span>
+      <Button
+        icon="{Calendar16}"
+        kind="ghost"
+        size="small"
+        on:click="{() => (showSettings = true)}"
+      >
+        Change Period
+      </Button>
     </div>
     <!-- values -->
     <div class="stat-data">
       {#each stats as item}
-        <div>
+        <div class="stat-data-item">
           <div class="stat-text">{item.label}</div>
-          <div class="stat-value">{item.value}</div>
-          <div class="stat-units">{units}</div>
+          <div class="stat-value">
+            {item.value}
+            <sup><span class="stat-units">{units}</span></sup>
+          </div>
         </div>
       {/each}
     </div>
@@ -210,20 +215,12 @@
         <Button
           icon="{Information16}"
           kind="ghost"
-          size="sm"
-          style="padding-left:0;"
+          size="small"
           on:click="{() => (showInfo = true)}"
         >
           {note}
         </Button>
       </div>
-      <Button
-        icon="{SettingsAdjust16}"
-        size="small"
-        on:click="{() => (showSettings = true)}"
-      >
-        Change
-      </Button>
     </div>
   </div>
 {:else}

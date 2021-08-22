@@ -8,7 +8,6 @@
     searchFeature,
     reverseGeocode,
   } from "../../../helpers/geocode";
-  import { boundaryList } from "./_helpers";
 
   import {
     SelectBoundary,
@@ -16,19 +15,19 @@
   } from "../../../components/tools/Settings";
   import { Location } from "../../../components/tools/Location";
 
-  // Store
-  import { locationStore } from "./_store";
-
+  // Props
+  export let location;
+  export let boundary;
+  export let boundaryList;
   export let open = false;
 
   const dispatch = createEventDispatcher();
-  const { location, boundary } = locationStore;
 
-  let currentLoc = $location;
-  let currentBoundary = $boundary;
+  let currentLoc = location;
+  let currentBoundary = boundary;
   let geocodeResults = [];
   let searchValue = "";
-  let searchPlaceholder = $boundary.metadata.placeholder;
+  let searchPlaceholder = boundary.metadata.placeholder;
   let isSearching = false;
   let showSuggestions = false;
 
@@ -85,6 +84,7 @@
   }
 
   function change() {
+    open = false;
     dispatch("change", {
       boundaryId: currentBoundary.id,
       location: currentLoc,
@@ -92,10 +92,8 @@
   }
 
   function cancel() {
-    currentLoc = $location;
-    currentBoundary = $boundary;
-    searchPlaceholder = $boundary.metadata.placeholder;
-    clearSearch();
+    currentLoc = location;
+    currentBoundary = boundary;
     open = false;
   }
 </script>

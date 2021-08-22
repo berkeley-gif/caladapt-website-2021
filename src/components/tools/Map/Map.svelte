@@ -114,6 +114,7 @@
 
       // Forward mouse events
       el.on("mousemove", (e) => {
+        if (!map) return;
         const features = map.queryRenderedFeatures(e.point);
         dispatch("mousemove", {
           event: e,

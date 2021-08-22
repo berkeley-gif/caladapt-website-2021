@@ -14,7 +14,9 @@
 
     // Filter metadata for current tool
     const tool = toolsList.find((d) => d.slug === "annual-averages");
-    const related = toolsList.filter((d) => tool.related.includes(d.slug));
+    const relatedTools = toolsList
+      .filter((d) => tool.related.includes(d.slug))
+      .map((d) => ({ ...d, category: "caladapt" }));
 
     // Get glossary items
     const glossary = await this.fetch("help/glossary.json")
@@ -47,7 +49,7 @@
       };
     }
 
-    return { initialConfig, glossary, tool, related };
+    return { initialConfig, glossary, tool, relatedTools };
   }
 </script>
 
@@ -60,12 +62,18 @@
   import { getFeature, reverseGeocode } from "../../../helpers/geocode";
 
   // Components
-  import Header from "./Header.svelte";
   import ExploreData from "./ExploreData.svelte";
-  import About from "./About.svelte";
-  import Resources from "./Resources.svelte";
-  import Help from "./Help.svelte";
-  import { NotificationDisplay } from "../../../components/notifications";
+  import {
+    Header,
+    About,
+    Resources,
+    Help,
+    ToolNavigation,
+  } from "../../../components/tools/Partials";
+  import {
+    NotificationDisplay,
+    notifier,
+  } from "../../../components/notifications";
 
   // Store
   import {
@@ -76,13 +84,14 @@
     locationStore,
     dataStore,
     queryParams,
+    datasetStore,
   } from "./_store";
   import { getObserved, getModels, getEnvelope } from "./_data";
 
   export let initialConfig;
   export let glossary;
   export let tool;
-  export let related;
+  export let relatedTools;
 
   // Derived stores
   const { location } = locationStore;
@@ -114,19 +123,22 @@
   ];
 
   // Monitor sections as they enter & leave viewport
-  let inviewEl = "explore";
+  let currentView;
   const handleEntry = (e) => {
-    const { entry } = e.detail;
-    inviewEl = entry.target.id;
-  };
-  const entryOptions = {
-    threshold: 0.5,
+    const { inView, entry } = e.detail;
+    if (inView) {
+      currentView = entry.target.id;
+    }
   };
 
   // Reactive props
   $: datasets = tool.datasets;
-  $: resources = [...tool.resources, ...related];
+  $: resources = [...tool.resources, ...relatedTools];
   $: $climvar, $scenario, $models, $location, update();
+
+  function updateDataset(e) {
+    datasetStore.set(e.detail);
+  }
 
   async function update() {
     if (!appReady) return;
@@ -146,6 +158,7 @@
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
+      notifier.error("Error", err, 2000);
     }
   }
 
@@ -191,13 +204,18 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        notifier.error(
+          "Unable to Load Tool",
+          "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
+          2000
+        );
       });
     window.scrollTo(0, 0);
   });
 </script>
 
 <svelte:head>
-  <title>Annual Averages</title>
+  <title>{tool.title}</title>
   <link
     href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
     rel="stylesheet"
@@ -206,43 +224,88 @@
 
 <div class="tool">
   <!-- Header -->
-  <Header currentView="{inviewEl}" />
-
-  <!-- Explore -->
-  <div id="explore" class="section">
-    <ExploreData on:define="{showDefinition}" />
+  <div id="header">
+    <Header>
+      <h1 slot="title">{tool.title}</h1>
+      <div slot="description">
+        <p class="lead">
+          Explore projected changes in annual average Maximum Temperature,
+          Minimum Temperature and Precipitation through end of this century for
+          California.
+        </p>
+      </div>
+    </Header>
   </div>
 
-  <div class="bx--grid">
-    <!-- Help -->
-    <div
-      id="help"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <Help />
-    </div>
+  <!-- Tool navigation -->
+  <ToolNavigation selected="{currentView}" />
 
-    <!-- About -->
-    <div
-      id="about"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <About datasets="{datasets}" />
-    </div>
+  <!-- Explore -->
+  <div id="explore" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+    {#if appReady}
+      <ExploreData on:define="{showDefinition}" />
+    {/if}
+  </div>
 
-    <!-- Resources -->
-    <div
-      id="resources"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <Resources resources="{resources}" />
-    </div>
+  <!-- Help -->
+  <div id="help" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+    <Help />
+  </div>
+
+  <!-- About -->
+  <div id="about" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+      <div slot="description">
+        <p>
+          Overall temperatures are projected to rise substantially throughout
+          this century. These projections differ depending on the time of year
+          and the type of measurement (highs vs. lows), all of which have
+          different potential effects to the state's ecosystem health,
+          agricultural production, water use and availability, and energy
+          demand. On average, the projections show little change in total annual
+          precipitation in California. Furthermore, among several models,
+          precipitation projections do not show a consistent trend during the
+          next century. The Mediterranean seasonal precipitation pattern is
+          expected to continue, with most precipitation falling during winter
+          from North Pacific storms. However, even modest changes would have a
+          significant impact because California ecosystems are conditioned to
+          historical precipitation levels and water resources are nearly fully
+          utilized.
+        </p>
+        <p>
+          With this tool you can explore projections of annually averaged
+          maximum temperature, minimum temperature and precipitation. These
+          climate projections have been downscaled from global climate models
+          from the <a href="https://pcmdi.llnl.gov/mips/cmip5/" target="_blank"
+            >CMIP5</a
+          >
+          archive, using the
+          <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
+            >Localized Constructed Analogs</a
+          > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
+          LOCA is a statistical downscaling technique that uses past history to add
+          improved fine-scale detail to global climate models.
+        </p>
+        <p>
+          On average, the projections show little change in total annual
+          precipitation in California. Furthermore, among several models,
+          precipitation projections do not show a consistent trend during the
+          next century. However, even modest changes would have a significant
+          impact because California ecosystems are conditioned to historical
+          precipitation levels and water resources are nearly fully utilized.
+        </p>
+      </div>
+    </About>
+  </div>
+
+  <!-- Resources -->
+  <div
+    id="resources"
+    class="section"
+    use:inview="{{}}"
+    on:enter="{handleEntry}"
+  >
+    <Resources resources="{resources}" />
   </div>
 </div>
 
