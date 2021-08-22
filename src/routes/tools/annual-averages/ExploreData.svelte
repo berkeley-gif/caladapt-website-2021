@@ -63,14 +63,14 @@
   let printContainer;
   let printSkipElements;
 
-  function loadLocation() {
+  async function loadLocation() {
     showChangeLocation = true;
-    import("../../../components/tools/Partials/ChangeLocation.svelte").then(
-      (res) => (ChangeLocation = res.default)
-    );
+    ChangeLocation = (
+      await import("../../../components/tools/Partials/ChangeLocation.svelte")
+    ).default;
   }
 
-  function loadDownload() {
+  async function loadDownload() {
     showDownload = true;
     csvData = formatDataForExport(dataByDate);
     metadata = [
@@ -83,9 +83,9 @@
     ];
     printContainer = document.querySelector(".explore");
     printSkipElements = ["explore-settings"];
-    import("../../../components/tools/Partials/DownloadChart.svelte").then(
-      (res) => (DownloadChart = res.default)
-    );
+    DownloadChart = (
+      await import("../../../components/tools/Partials/DownloadChart.svelte")
+    ).default;
   }
 
   $: formatFn = format(`.${$climvar.decimals}f`);
