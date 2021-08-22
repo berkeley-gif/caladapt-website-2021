@@ -6,33 +6,35 @@
 </script>
 
 <!-- Resources -->
-<div class="bx--row">
-  <div class="bx--col-lg-12">
-    <h2>Help</h2>
-    <slot name="help">
-      {#if !items || items.length === 0}
-        <em>[Provide a list of Help items for the tool]</em>
-      {:else}
-        {#each items as opt}
-          <div class="bx--row">
-            <div class="bx--col">
-              <ClickableTile href="{opt.link}" class="center-row">
-                <div class="center">
-                  <img
-                    style="width:300px;"
-                    src="/img/{opt.image}"
-                    alt="scripps logo"
-                  />
-                </div>
-                <div style="padding:1rem 5rem 1rem 1rem;">
-                  <h4>{opt.title}</h4>
-                  <p>{opt.desc}</p>
-                </div>
-              </ClickableTile>
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--col-lg-12">
+      <h2>Help</h2>
+      <slot name="help">
+        {#if Array.isArray(items) || items.length === 0}
+          <em>[Provide a list of Help items for the tool]</em>
+        {:else}
+          {#each items as opt}
+            <div class="bx--row">
+              <div class="bx--col">
+                <ClickableTile href="{opt.link}" class="center-row">
+                  <div class="center">
+                    <img
+                      style="width:300px;"
+                      src="/img/{opt.image}"
+                      alt="scripps logo"
+                    />
+                  </div>
+                  <div style="padding:1rem 5rem 1rem 1rem;">
+                    <h4>{opt.title}</h4>
+                    <p>{opt.desc}</p>
+                  </div>
+                </ClickableTile>
+              </div>
             </div>
-          </div>
-        {/each}
-      {/if}
-    </slot>
+          {/each}
+        {/if}
+      </slot>
+    </div>
   </div>
 </div>
