@@ -141,7 +141,7 @@
   .stat-data {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     margin: 0.75rem 0;
   }
 
@@ -164,7 +164,8 @@
   }
 
   .stat-units {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--gray-70);
   }
 
   .stat-controls {
@@ -199,10 +200,12 @@
     <!-- values -->
     <div class="stat-data">
       {#each stats as item}
-        <div>
+        <div class="stat-data-item">
           <div class="stat-text">{item.label}</div>
-          <div class="stat-value">{item.value}</div>
-          <div class="stat-units">{units}</div>
+          <div class="stat-value">
+            {item.value}
+            <sup><span class="stat-units">{units}</span></sup>
+          </div>
         </div>
       {/each}
     </div>
