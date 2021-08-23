@@ -333,9 +333,21 @@
       margin-bottom: 1.75rem;
       max-width: 75ch;
     }
+  }
 
-    li {
-      margin-bottom: 1rem;
+  #about {
+    .source {
+      .source-logo {
+        width: 100%;
+        margin-top: 2rem;
+      }
+      .source-text,
+      .source-list {
+        font-size: 18px;
+      }
+      .source-list {
+        padding-left: 1.5rem;
+      }
     }
   }
 
