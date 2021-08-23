@@ -17,6 +17,8 @@ Characterizing climate conditions is important when planning for the future in a
 
 The [California Fourth Climate Change Assessment](https://www.climateassessment.ca.gov) produced updated climate projections that provide state-of-the-art understanding of different possible climate futures for California. The science is highly certain that California (and the world) will continue to warm and experience greater impacts from climate change in the future. Projected climate change trends are listed in the table below.
 
+<div class="table-wrapper">
+
 | Climate variable           | Cal-Adapt symbol                                            | Projected change | Scientific confidence | Cal-Adapt tools                                                                                                                                  |
 | -------------------------- | ----------------------------------------------------------- | ---------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Temperature                | <img width="24" height="24" src="/img/icons/sun.svg">       | Warming          | Very high             | Annual averages Extreme heat Maps of projected change Local climate change snapshot Cooling degree days and heating degree days Extended drought |
@@ -25,6 +27,8 @@ The [California Fourth Climate Change Assessment](https://www.climateassessment.
 | Heavy precipitation events | <img width="24" height="24" src="/img/icons/rainfall.svg">  | Increasing       | Medium high           | Annual averages Maps of projected change Local climate change snapshot Extreme precipitation events                                              |
 | Drought                    | <img width="24" height="24" src="/img/icons/sun.svg">       | Increasing       | Medium high           | Local climate change snapshot Extended drought                                                                                                   |
 | Wildfire                   | <img width="24" height="24" src="/img/icons/wildfire.svg">  | Increasing       | Medium high           | Local climate change snapshot Wildfire                                                                                                           |
+
+</div>
 
 _Table: projected climate change trends in California, from Fourth Assessment key takeaways report_
 
