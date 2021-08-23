@@ -3,6 +3,7 @@
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
+  import resourcesList from "../../../../content/resources/data";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -14,7 +15,12 @@
 
     // Filter metadata for current tool
     const tool = toolsList.find((d) => d.slug === "extreme-weather");
-    const related = toolsList.filter((d) => tool.related.includes(d.slug));
+    const relatedTools = toolsList
+      .filter((d) => tool.related.includes(d.slug))
+      .map((d) => ({ ...d, category: "caladapt" }));
+    const externalResources = resourcesList
+      .filter((d) => tool.resources.includes(d.title))
+      .map((d) => ({ ...d, category: "external" }));
 
     const glossary = await this.fetch(`help/glossary.json`)
       .then((r) => r.json())
@@ -41,7 +47,7 @@
       };
     }
 
-    return { initialConfig, glossary, tool, related };
+    return { initialConfig, glossary, tool, relatedTools, externalResources };
   }
 </script>
 
@@ -55,12 +61,17 @@
   import { getStation } from "../../../helpers/geocode";
 
   // Components
-  import Header from "./Header.svelte";
   import ExploreData from "./ExploreData.svelte";
-  import About from "./About.svelte";
-  import Resources from "./Resources.svelte";
-  import Help from "./Help.svelte";
-  import { NotificationDisplay } from "../../../components/notifications";
+  import {
+    Header,
+    About,
+    Resources,
+    ToolNavigation,
+  } from "../../../components/tools/Partials";
+  import {
+    NotificationDisplay,
+    notifier,
+  } from "../../../components/notifications";
 
   // Store
   import {
@@ -73,13 +84,15 @@
     observationsStore,
     forecastStore,
     extremesStore,
+    datasetStore,
   } from "./_store";
   import { getObservedValues, getObservedReturnLevels } from "./_data";
 
   export let initialConfig;
   export let glossary;
   export let tool;
-  export let related;
+  export let relatedTools;
+  export let externalResources;
 
   // Derived stores
   const { climvar } = climvarStore;
@@ -176,20 +189,23 @@
   ];
 
   // Monitor sections as they enter & leave viewport
-  let inviewEl = "explore";
+  let currentView;
   const handleEntry = (e) => {
-    const { entry } = e.detail;
-    inviewEl = entry.target.id;
-  };
-  const entryOptions = {
-    threshold: 0.5,
+    const { inView, entry } = e.detail;
+    if (inView) {
+      currentView = entry.target.id;
+    }
   };
 
   // Reactive props
   $: datasets = tool.datasets;
-  $: resources = [...tool.resources, ...related];
+  $: resources = [...externalResources, ...relatedTools];
   $: $climvar, $doyStore, $locationStore, $extremesStore, update();
   $: $locationStore, forecastStore.reset();
+
+  function updateDataset(e) {
+    datasetStore.set(e.detail);
+  }
 
   async function update() {
     if (!appReady) return;
@@ -214,6 +230,7 @@
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
+      notifier.error("Error", err, 2000);
     }
   }
 
@@ -259,13 +276,18 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        notifier.error(
+          "Unable to Load Tool",
+          "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
+          2000
+        );
       });
     window.scrollTo(0, 0);
   });
 </script>
 
 <svelte:head>
-  <title>Extreme Weather</title>
+  <title>{tool.title}</title>
   <link
     href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
     rel="stylesheet"
@@ -274,43 +296,65 @@
 
 <div class="tool">
   <!-- Header -->
-  <Header currentView="{inviewEl}" />
-
-  <!-- Explore -->
-  <div id="explore" class="section">
-    <ExploreData on:define="{showDefinition}" />
+  <div id="header">
+    <Header>
+      <h1 slot="title">{tool.title}</h1>
+      <div slot="description">
+        <p class="lead">
+          Explore extreme temperatures for past weather and present day at 38
+          weather stations across California. Each of the 38 stations has an
+          observation period of greater than 30 years (1973 to present) from the
+          HadISD global record and was identified as having high quality data
+          for temperature. This dataset was produced for use by the energy
+          sector.
+        </p>
+      </div>
+    </Header>
   </div>
 
-  <div class="bx--grid">
-    <!-- Help -->
-    <div
-      id="help"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <Help />
-    </div>
+  <!-- Explore -->
+  <div id="explore" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+    {#if appReady}
+      <ExploreData on:define="{showDefinition}" />
+    {/if}
+  </div>
 
-    <!-- About -->
-    <div
-      id="about"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <About datasets="{datasets}" />
-    </div>
+  <!-- About -->
+  <div id="about" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+      <div slot="description">
+        <p>
+          Explore extreme temperatures for past weather, present day, and future
+          climate projections.
+        </p>
+      </div>
+      <div slot="extra-sources">
+        <div class="bx--row source">
+          <div class="bx--col-lg-2 ">
+            <img
+              src="/img/logos/US-NationalWeatherService-Logo.svg"
+              class="source-logo"
+              alt="data provider logo"
+            />
+          </div>
+          <div class="bx--col-lg-12">
+            <h4>7 Day Weather Forecast</h4>
+            <h5>National Weather Service</h5>
+            <p class="source-text">Describe the product</p>
+          </div>
+        </div>
+      </div>
+    </About>
+  </div>
 
-    <!-- Resources -->
-    <div
-      id="resources"
-      class="section"
-      use:inview="{entryOptions}"
-      on:enter="{handleEntry}"
-    >
-      <Resources resources="{resources}" />
-    </div>
+  <!-- Resources -->
+  <div
+    id="resources"
+    class="section"
+    use:inview="{{}}"
+    on:enter="{handleEntry}"
+  >
+    <Resources resources="{resources}" />
   </div>
 </div>
 
