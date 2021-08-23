@@ -44,3 +44,9 @@ hr {
   display: flex;
   align-items: center;
 }
+
+// prevents a table from extending beyond its parent's width
+.table-wrapper {
+  overflow-x: auto;
+  max-width: 48rem;
+}
