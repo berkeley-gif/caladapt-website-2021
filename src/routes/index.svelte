@@ -33,7 +33,7 @@
 
   const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
   const cardHeight = 18;
-  const cardWidth = 16;
+  const cardWidth = 18;
   $: cardBgColors = [];
 
   onMount(() => {
