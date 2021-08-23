@@ -1,7 +1,7 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
-  import { bin, thresholdFreedmanDiaconis, extent, min } from "d3-array";
+  import { bin, thresholdFreedmanDiaconis, extent, min, max } from "d3-array";
 
   import Column from "./Column.svelte";
   import Annotation from "./Annotation.svelte";
@@ -84,6 +84,10 @@
       x="{xKey}"
       y="{yKey}"
       data="{bins}"
+      xDomain="{[
+        Math.min(domain[0], threshold),
+        Math.max(domain[1], threshold),
+      ]}"
     >
       <Svg>
         <AxisX
