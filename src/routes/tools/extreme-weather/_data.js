@@ -10,6 +10,7 @@ import {
   fetchData,
   transformResponse,
   pipe,
+  closest,
 } from "../../../helpers/utilities";
 
 const { apiEndpoint } = config.env.production;
@@ -61,9 +62,6 @@ export async function getObservedValues(config, params, method) {
   }
 }
 
-//https://api.cal-adapt.org/api/series/tasmax_day_hadisd/ams/events/?g=POINT(-119.719%2036.78)&doy=235&imperial=true&extype=high
-//https://api.cal-adapt.org/api/series/tasmax_day_hadisd/ams/events/?g=POINT(-119.719%2036.78)&doy=235&imperial=true&extype=high&v=2
-
 export async function getObservedReturnLevels(config, params, method) {
   try {
     const { climvarId } = config;
@@ -110,18 +108,6 @@ export function getThreshold(_data, extremes) {
     bound: percentile.value,
     text: "Number must be <= 10th percentile value",
   };
-}
-
-function closest(list, x) {
-  var min,
-    chosen = 0;
-  for (var i in list) {
-    min = Math.abs(list[chosen] - x);
-    if (Math.abs(list[i] - x) < min) {
-      chosen = i;
-    }
-  }
-  return chosen;
 }
 
 export function getReturnPeriod(_data, threshold) {
