@@ -31,6 +31,9 @@ th {
   vertical-align: middle;
 }
 
-td img {
-  margin: 0 auto;
+td {
+  img {
+    display: block;
+    margin: 0 auto;
+  }
 }
