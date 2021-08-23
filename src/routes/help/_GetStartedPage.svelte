@@ -4,6 +4,7 @@
   import { getting_started_topics } from "./_getting-started-topics";
 
   const cardHeight = 18;
+  const cardWidth = 18;
 </script>
 
 <style lang="scss">
@@ -22,7 +23,7 @@
       > is a great place to begin. In this getting started guide, you can get a background
       on climate change and working with climate data.
     </p>
-    <CardsContainer>
+    <CardsContainer cardWidth="{cardWidth}">
       {#each getting_started_topics as { title, text, slug }}
         <Card
           {...{
