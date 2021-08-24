@@ -12,13 +12,11 @@
     InlineLoading,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { timeFormat } from "d3-time-format";
-  import { csvFormat, csvFormatRows } from "d3-dsv";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
   import copy from "clipboard-copy";
 
   // Helpers
-  import { climvarList } from "./_helpers";
+  import { climvarList, stationsLayer } from "./_helpers";
   import {
     getBaselineStats,
     getThreshold,
@@ -27,11 +25,9 @@
     getForecastData,
     filterForecast,
   } from "./_data";
-  import { exportPNG, exportCSV } from "../../../helpers/export";
   import { debounce } from "../../../helpers/utilities";
 
   // Components
-  import ChangeLocation from "./ChangeLocation.svelte";
   import {
     SelectClimvar,
     SelectDayOfYear,
@@ -39,8 +35,6 @@
   } from "../../../components/tools/Settings";
   import { StaticMap } from "../../../components/tools/Location";
   import { Histogram } from "../../../components/tools/Charts";
-  import DownloadChart from "../../../components/tools/DownloadChart.svelte";
-  import { notifier } from "../../../components/notifications";
 
   // Store
   import {
@@ -75,6 +69,14 @@
   let thresholdInvalid;
   let thresholdProbability;
 
+  let ChangeStation;
+  let DownloadChart;
+
+  let metadata;
+  let csvData;
+  let printContainer;
+  let printSkipElements;
+
   $: metadata = [
     ["station", $location.title],
     ["variable", $climvar.label],
@@ -104,36 +106,26 @@
     thresholdInvalid = $thresholdStore > thresholdOpts.bound;
   }
 
-  async function downloadViz(e) {
-    isLoading = true;
-    const format = e.detail;
-    showDownload = false;
-    try {
-      const container = document.querySelector(".explore");
-      switch (format) {
-        case "png":
-          await exportPNG(container, ["explore-settings"]);
-          break;
-        case "csv":
-          var csvData = formatDataForExport($baseline.values);
-          var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(
-            csvData
-          )}`;
-          await exportCSV(csvWithMetadata);
-          break;
-        default:
-        // Do nothing
-      }
-      notifier.success(
-        "Download",
-        `Successfully created ${format} file`,
-        "",
-        2000
-      );
-    } catch (error) {
-      notifier.error("Download", `Error creating ${format} file`, error, 2000);
-    }
-    isLoading = false;
+  async function loadLocation() {
+    showChangeLocation = true;
+    ChangeStation = (
+      await import("../../../components/tools/Partials/ChangeStation.svelte")
+    ).default;
+  }
+
+  async function loadDownload() {
+    showDownload = true;
+    csvData = formatDataForExport(baselineData);
+    metadata = [
+      ["station", $location.title],
+      ["variable", $climvar.label],
+      ["units", $climvar.units.imperial],
+    ];
+    printContainer = document.querySelector(".explore");
+    printSkipElements = ["explore-settings"];
+    DownloadChart = (
+      await import("../../../components/tools/Partials/DownloadChart.svelte")
+    ).default;
   }
 
   function changeClimvar(e) {
@@ -357,6 +349,20 @@
   />
 </Modal>
 
-<ChangeLocation bind:open="{showChangeLocation}" on:change="{changeLocation}" />
+<!-- <ChangeLocation bind:open="{showChangeLocation}" on:change="{changeLocation}" /> -->
+<svelte:component
+  this="{ChangeStation}"
+  bind:open="{showChangeLocation}"
+  location="{$location}"
+  stationsLayer="{stationsLayer}"
+  on:change="{changeLocation}"
+/>
 
-<DownloadChart bind:open="{showDownload}" on:download="{downloadViz}" />
+<svelte:component
+  this="{DownloadChart}"
+  metadata="{metadata}"
+  csvData="{csvData}"
+  printContainer="{printContainer}"
+  printSkipElements="{printSkipElements}"
+  bind:open="{showDownload}"
+/>
