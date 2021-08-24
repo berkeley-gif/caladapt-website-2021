@@ -67,9 +67,5 @@
     if (enableClick) {
       map.off("click", layer.id);
     }
-    map.removeLayer(layer.id);
-    if (map.getSource(layer.id)) {
-      map.removeSource(layer.id);
-    }
   });
 </script>
