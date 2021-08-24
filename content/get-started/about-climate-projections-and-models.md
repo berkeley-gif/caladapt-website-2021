@@ -68,8 +68,8 @@ Each tool in Cal-Adapt shows climate outcomes for two plausible greenhouse gas s
 
 _Table: greenhouse gas trajectory scenarios hosted on Cal-Adapt_
 
-![Image: Chart, line chart, RCP 4.5](#)
+<img class="img--get-started" alt="Chart, line chart, RCP 4.5" src="img/get-started/gs3_rcp45_lg.jpg" srcset="img/get-started/gs3_rcp45_sm.jpg 375w, img/get-started/gs3_rcp45_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
-![Image: Chart, line chart, RCP 8.5](#)
+<img class="img--get-started" alt="Chart, line chart, RCP 8.5" src="img/get-started/gs3_rcp85_lg.jpg" srcset="img/get-started/gs3_rcp85_sm.jpg 375w, img/get-started/gs3_rcp85_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
 _Figure: comparison of RCP 4.5 and RCP 8.5 temperature trajectories on Cal-Adapt_
