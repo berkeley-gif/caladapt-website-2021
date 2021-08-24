@@ -103,7 +103,26 @@
   let definitionTitle;
   let appReady = false;
 
+  // Temporary prop for Tool Navigation
+  // TODO: Remove when Help content has been developed
+  // for the tool
+  let toolItems = [
+    {
+      id: "explore",
+      label: "Explore Data",
+    },
+    {
+      id: "about",
+      label: "About the Tool",
+    },
+    {
+      id: "resources",
+      label: "Resources",
+    },
+  ];
+
   // Add tool specific content to glossary
+  // TODO: Review when Glossary items are updated
   glossary = [
     ...glossary,
     {
@@ -312,6 +331,9 @@
     </Header>
   </div>
 
+  <!-- Tool navigation -->
+  <ToolNavigation selected="{currentView}" items="{toolItems}" />
+
   <!-- Explore -->
   <div id="explore" class="section" use:inview="{{}}" on:enter="{handleEntry}">
     {#if appReady}
@@ -338,9 +360,24 @@
             />
           </div>
           <div class="bx--col-lg-12">
-            <h4>7 Day Weather Forecast</h4>
+            <h4>Near Term Weather Forecast</h4>
             <h5>National Weather Service</h5>
-            <p class="source-text">Describe the product</p>
+            <p class="source-text">
+              The National Weather Service (NWS) is an agency of the United
+              States federal government that provides weather, water, and
+              climate forecasts and warnings for the United States, its
+              territories, adjacent waters and ocean areas. The Near Term
+              forecast provided by NWS focuses on large-scale temperature and
+              precipitation patterns for the next 7 days.
+            </p>
+            <p class="source-text">Data Access:</p>
+            <ul class="source-list">
+              <li class="source-list-item">
+                <a href="https://www.weather.gov/documentation/services-web-api"
+                  >National Weather Service API</a
+                >
+              </li>
+            </ul>
           </div>
         </div>
       </div>
