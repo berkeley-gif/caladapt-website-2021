@@ -47,13 +47,7 @@ In addition to hosting climate data, Cal-Adapt also hosts vector datasets contai
 
 These vector datasets can be used to select, view, aggregate, and summarize climate data for a geography of interest.
 
-<style>
-    img.gs2_lccs_county_boundary_lg {
-        width: 100%;
-    }
-</style>
-
-<img class="gs2_lccs_county_boundary_lg" alt="Example of county boundary vector dataset on Cal-Adapt" height="" src="img/get-started/gs2_lccs_county_boundary_lg.jpg" srcset="img/get-started/gs2_lccs_county_boundary_sm.jpg 375w, img/get-started/gs2_lccs_county_boundary_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
+<img class="img--get-started" alt="Example of county boundary vector dataset on Cal-Adapt" src="img/get-started/gs2_lccs_county_boundary_lg.jpg" srcset="img/get-started/gs2_lccs_county_boundary_sm.jpg 375w, img/get-started/gs2_lccs_county_boundary_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
 _An example of a county boundary vector dataset on Cal-Adapt_
 
