@@ -41,9 +41,9 @@ Cal-Adapt hosts climate projections from 32 general circulation models (GCMs). G
 
 Each GCM has strengths and shortcomings in how it depicts conditions for a place or a specific aspect of climate. As a result, climate change analysis is usually best informed when you consider the average values across different models and the full range of individual model values to capture all probable conditions. If you have limited analytic capacity, California’s Fourth Climate Change Assessment has identified a set of 10 GCMs that collectively describe climate conditions in California particularly well and provide common climate scenarios for projecting future climate conditions. A smaller subset of 4 GCMs has been further selected and recommended for use as “priority” models. Cal-Adapt tools default to these 4 priority models, and you can use these smaller sets of 4 or 10 models if you need to.
 
-![Image: model selection GUI]()
+<img height="530" alt="List of priority GCMs on Cal-Adapt" src="img/get-started/gs3_models_list_lg.jpg" srcset="img/get-started/gs3_models_list_sm.jpg 375w, img/get-started/gs3_models_list_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
-[Figure: List of priority GCMs on Cal-Adapt]
+_List of priority GCMs on Cal-Adapt_
 
 ## How are climate models validated?
 
