@@ -18,9 +18,9 @@
   import { Row, Column } from "carbon-components-svelte";
   import SidebarLeft from "../_SidebarLeft.svelte";
   import ItemDetail from "../_ItemDetail.svelte";
-  import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
   import SupportFooter from "../_SupportFooter.svelte";
   import ItemsPrevNextNav from "../_ItemsNavPrevNext.svelte";
+  import NavBreadcrumbHelp from "../_NavBreadcrumbHelp.svelte";
 
   export let item;
   export let toc;
@@ -91,18 +91,7 @@
     <SidebarLeft toc="{toc}" subToc="{subToc}" />
   </aside>
 
-  <div class="nav" style="padding:1rem 0 0;">
-    <div class="bx--grid bx--grid--condensed">
-      <!-- Row -->
-      <div class="bx--row">
-        <div class="bx--col">
-          {#if activeCategory}
-            <NavBreadcrumb items="{items}" />
-          {/if}
-        </div>
-      </div>
-    </div>
-  </div>
+  <NavBreadcrumbHelp {...{ items, activeCategory }} />
 
   <div class="header">
     <div class="bx--grid">
