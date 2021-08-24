@@ -115,7 +115,7 @@ export function getReturnPeriod(_data, threshold) {
   const gevisfMap = new Map(Object.entries(gevisf));
   const valuesArr = Object.keys(gevisf).map((d) => +d);
   const closestValue = closest(+threshold, valuesArr);
-  const probability = +gevisfMap.get(String(closestValue));
+  const probability = +gevisfMap.get(String(closestValue.value));
   const rp = +format(".0f")(1 / probability);
   let label;
   if (rp > 50) {
@@ -134,6 +134,7 @@ export function getReturnPeriod(_data, threshold) {
 }
 
 export function formatDataForExport(_data) {
+  console.log("format data for export", _data);
   return _data;
 }
 
