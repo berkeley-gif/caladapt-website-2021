@@ -24,8 +24,9 @@ It is important to note that here the term “uncertainty” is being used in th
 
 If you have lived in California for any length of time, you know that our current climate experiences a great deal of natural variability. Some summers are much hotter than others, some winters produce more snow than others, and some fire seasons produce more burning than others. This natural variability will continue in the future, and it is expressed in future climate projections. Projections show that climate change will cause increases in average summer temperatures, reductions in average snowfall, and increases in average area burned by wildfire – but not every year looks like the average year. For example, in the future as in the current climate, some years will be hotter and some cooler. But overall, future years will be warmer compared with our current climate.
 
-![TODO: Image of chart](#)  
-_Figure: natural variability in annual precipitation, Sacramento, 1960-2005_
+<img class="img--get-started" alt="Chart, line chart, Natural variability in annual precipitation, Sacramento, 1960-2005" src="img/get-started/gs5_sac_hx_precip_lg.jpg" srcset="img/get-started/gs5_sac_hx_precip_sm.jpg 375w, img/get-started/gs5_sac_hx_precip_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
+
+_Natural variability in annual precipitation, Sacramento, 1960-2005_
 
 ### Guidance on using climate projections
 
