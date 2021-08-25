@@ -14,7 +14,7 @@ There are three ways to access climate data on Cal-Adapt: by using a tool, going
 
 ### 1. Using a tool
 
-The tools allow you to view climate projections for an area of interest. Each of Cal-Adapt’s tools focuses on a particular climate change variable(s) like extreme heat, sea level rise, or precipitation. To see the full list of tools and the climate variables they each capture, go to the tools page [link]. Once you’ve identified the data you’re interested in (including a time period, representative concentration pathway (emissions) scenarios, and general circulation model(s), if applicable), you can download the data and/or charts from the tool. For more information about choosing time periods, emissions scenarios, and models, see the section on best practices for working with climate data [link].
+The tools allow you to view climate projections for an area of interest. Each of Cal-Adapt’s tools focuses on a particular climate change variable(s) like extreme heat, sea level rise, or precipitation. To see the full list of tools and the climate variables they each capture, go to the [tools page](/tools/). Once you’ve identified the data you’re interested in (including a time period, representative concentration pathway (emissions) scenarios, and general circulation model(s), if applicable), you can download the data and/or charts from the tool. For more information about choosing time periods, emissions scenarios, and models, see the section on [best practices for working with climate data](/help/get-started/best-practices-for-using-climate-projections/).
 
 ### 2. Going through the data download process
 
@@ -28,4 +28,4 @@ For more information on accessing climate data on Cal-Adapt, visit the [data pag
 
 ## Examples of Cal-Adapt data used in adaptation planning
 
-To see how other people have used climate data from Cal-Adapt in adaptation planning, check out the resources housed on the Adaptation Clearinghouse [TO DO: link to page of resources with Cal-Adapt tag](#).
+To see how other people have used climate data from Cal-Adapt in adaptation planning, check out the resources housed on the [Adaptation Clearinghouse](https://resilientca.org/search/?q=cal-adapt).

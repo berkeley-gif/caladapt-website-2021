@@ -16,7 +16,7 @@
   $: slug = $page.params.slug;
 </script>
 
-<nav class="is-sticky" aria-label="Help Topics">
+<nav class="is-sticky sidebar-left--help" aria-label="Help Topics">
   <SideNavItems>
     {#each toc as opt}
       {#if opt.slug === category && Array.isArray(subToc) && subToc.length}

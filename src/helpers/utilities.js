@@ -3,6 +3,7 @@ import { timeDay } from "d3-time";
 import config from "./api-config";
 import shp from "shpjs";
 import tj from "@mapbox/togeojson";
+import throttle from "lodash.throttle";
 
 const { apiEndpoint } = config.env.production;
 
@@ -512,3 +513,5 @@ export async function getDataset(opt) {
 export function isLeapYear(year) {
   return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
+
+export { throttle };

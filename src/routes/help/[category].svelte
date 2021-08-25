@@ -19,7 +19,6 @@
   import User32 from "carbon-icons-svelte/lib/User32";
   import Video32 from "carbon-icons-svelte/lib/Video32";
   import { merge } from "d3-array";
-  import NavBreadcrumb from "../../partials/NavBreadcrumb.svelte";
   import SidebarRight from "../../partials/SidebarRight.svelte";
   import { stores } from "@sapper/app";
   import SidebarLeft from "./_SidebarLeft.svelte";
@@ -27,6 +26,7 @@
   import ItemsAccordion from "./_ItemsAccordion.svelte";
   import GetStartedPage from "./_GetStartedPage.svelte";
   import SupportFooter from "./_SupportFooter.svelte";
+  import NavBreadcrumbHelp from "./_NavBreadcrumbHelp.svelte";
 
   export let data;
   export let toc;
@@ -138,18 +138,7 @@
     <SidebarLeft toc="{toc}" />
   </aside>
 
-  <nav class="nav" style="padding:1rem 0 0;">
-    <div class="bx--grid">
-      <!-- Row -->
-      <div class="bx--row">
-        <div class="bx--col">
-          {#if activeCategory}
-            <NavBreadcrumb items="{items}" />
-          {/if}
-        </div>
-      </div>
-    </div>
-  </nav>
+  <NavBreadcrumbHelp {...{ items, activeCategory }} />
 
   <div class="header">
     <div class="bx--grid">

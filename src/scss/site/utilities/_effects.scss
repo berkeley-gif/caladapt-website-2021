@@ -44,3 +44,14 @@ hr {
   display: flex;
   align-items: center;
 }
+
+// prevents a table from extending beyond its parent's width
+.table-wrapper {
+  overflow-x: auto;
+  max-width: 48rem;
+}
+
+.img--get-started {
+  width: 100%;
+  border: 1px solid $gray-30;
+}

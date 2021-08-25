@@ -28,9 +28,12 @@ When climate scientists run a climate model, they divide the area of study into 
 
 The grid cells in most GCMs are very large – often from 100 to 600 kilometers squared. This coarse resolution is fine when scientists are studying climate on the global scale, but it is not very useful when we are trying to understand climate change on smaller scales, particularly for adaptation planning. We know that present-day climate varies greatly from region to region in California, and so we expect future climate to vary accordingly. But that detail is lost in global climate model outputs in which all of California may be represented by just a few grid cells. To be able to plan for the future, we need to produce higher-resolution projections of future climate. Climate scientists do just that by using various statistical techniques to “downscale” global climate model outputs to finer spatial scales. The data in Cal-Adapt is taken from a selection of global climate models and downscaled to a grid cell size of about 6 km by 6 km. The climate data hosted on Cal-Adapt was downscaled using localized constructed analogs (LOCA), a statistical downscaling technique that uses past history to add improved fine-scale detail to global climate models.
 
-![Image: Chart, surface chart](#)
+<img class="img--get-started" alt="Comparison of GCM output and LOCA downscaled output" src="img/get-started/gs3_loca_pierce_lg.jpg" srcset="img/get-started/gs3_loca_pierce_sm.jpg 375w, img/get-started/gs3_loca_pierce_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
-[Figure: comparison of GCM output and LOCA downscaled output - Pierce et al. 2018](#)
+_Figure: comparison of GCM output and LOCA downscaled output - Pierce et al. 2018_
+
+The above figure shows the annual precipitation in California and Nevada (cm; 250 cm is approximately 100 inches) in a global climate model with a resolution of approx. 160 km (100 miles; left), and after using a statistical model to account for the effects of topography at a 6 kilometer (3.6 mile) resolution (right). The global model only has a few grid cells over the entire state of California, so does not resolve the coastal mountain ranges, interior valley, or Sierra Nevada Mountains on the border with Nevada. The precipitation field in the right panel, by contrast, captures the wet conditions on the west slopes of the mountains, and the dry, rain shadow region to the east of the mountains. The vertical scale has been exaggerated for clarity, and by the same amount in both panels. 
+
 
 ### Climate projections and GCMs on Cal-Adapt
 
@@ -38,9 +41,9 @@ Cal-Adapt hosts climate projections from 32 general circulation models (GCMs). G
 
 Each GCM has strengths and shortcomings in how it depicts conditions for a place or a specific aspect of climate. As a result, climate change analysis is usually best informed when you consider the average values across different models and the full range of individual model values to capture all probable conditions. If you have limited analytic capacity, California’s Fourth Climate Change Assessment has identified a set of 10 GCMs that collectively describe climate conditions in California particularly well and provide common climate scenarios for projecting future climate conditions. A smaller subset of 4 GCMs has been further selected and recommended for use as “priority” models. Cal-Adapt tools default to these 4 priority models, and you can use these smaller sets of 4 or 10 models if you need to.
 
-![Image: model selection GUI]()
+<img height="530" alt="List of priority GCMs on Cal-Adapt" src="img/get-started/gs3_models_list_lg.jpg" srcset="img/get-started/gs3_models_list_sm.jpg 375w, img/get-started/gs3_models_list_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
-[Figure: List of priority GCMs on Cal-Adapt]
+_List of priority GCMs on Cal-Adapt_
 
 ## How are climate models validated?
 
@@ -54,15 +57,19 @@ The main driver of human-caused climate change is our emission of carbon dioxide
 
 Each tool in Cal-Adapt shows climate outcomes for two plausible greenhouse gas scenarios: a high-emissions trajectory in which greenhouse gas emissions continue to rise over the 21st century, and a lower-emissions trajectory in which greenhouse gas emissions level off around the middle of the 21st century and by the end of the century are lower than 1990 levels. These emissions trajectories are referred to as representative concentration pathways (RCPs), as described in the table below.
 
+<div class="table-wrapper">
+
 | Emissions trajectory | Definition                                                        | Description                                                  | Outcome        |
 | -------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
 | RCP 4.5              | 4.5 watts per meter squared of radiative forcing in the year 2100 | Emissions peak around 2040 and then decline                  | Medium warming |
 | RCP 8.5              | 8.5 watts per meter squared of radiative forcing by the year 2100 | Emissions rise strongly through 2050 and plateau around 2100 | High warming   |
 
+</div>
+
 _Table: greenhouse gas trajectory scenarios hosted on Cal-Adapt_
 
-![Image: Chart, line chart, RCP 4.5](#)
+<img class="img--get-started" alt="Chart, line chart, RCP 4.5" src="img/get-started/gs3_rcp45_lg.jpg" srcset="img/get-started/gs3_rcp45_sm.jpg 375w, img/get-started/gs3_rcp45_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
-![Image: Chart, line chart, RCP 8.5](#)
+<img class="img--get-started" alt="Chart, line chart, RCP 8.5" src="img/get-started/gs3_rcp85_lg.jpg" srcset="img/get-started/gs3_rcp85_sm.jpg 375w, img/get-started/gs3_rcp85_lg.jpg 768w" sizes="(max-width: 375px) 375px, 768px">
 
 _Figure: comparison of RCP 4.5 and RCP 8.5 temperature trajectories on Cal-Adapt_
