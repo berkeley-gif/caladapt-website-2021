@@ -1,6 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import NavBreadcrumb from "../../partials/NavBreadcrumb.svelte";
+  import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
+  import { throttle } from "~/helpers/utilities";
 
   export let activeCategory;
   export let breakpoint = 1000;
@@ -9,11 +10,11 @@
   let mediaQuery;
   $: showBreadcrumbs = true;
 
-  const handleResize = () => {
+  const handleResize = throttle(() => {
     if (mediaQuery) {
       showBreadcrumbs = mediaQuery.matches;
     }
-  };
+  }, 200);
 
   onMount(() => {
     mediaQuery = window.matchMedia(`(min-width: ${breakpoint}px)`);
