@@ -55,3 +55,19 @@
     }
   }
 }
+
+// SideNavMenuItem style overrides
+.sidebar-left--help {
+  .bx--side-nav__items > li.bx--side-nav__item {
+    .bx--side-nav__menu a.bx--side-nav__link {
+      height: auto;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    span.bx--side-nav__link-text {
+      text-overflow: initial;
+      white-space: initial;
+    }
+  }
+}
