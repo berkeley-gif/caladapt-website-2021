@@ -173,8 +173,8 @@
     thresholdStore.set(e.detail);
     console.log("threshold change");
     thresholdProbability = calcReturnPeriod($returnLevels, e.detail);
-    thresholdCI = await getProbabilityCI(thresholdProbability.rp);
-    console.log("trehosld ci", thresholdCI);
+    //thresholdCI = await getProbabilityCI(thresholdProbability.rp);
+    //console.log("trehosld ci", thresholdCI);
   }
 
   function changeLocation(e) {
@@ -275,7 +275,7 @@
             <span class="block-title">1 in {thresholdProbability.rp}</span> year
             event.
           </p>
-          <ShowDefinition topics="{['probability']}" title="Chart" on:define />
+          <!-- <ShowDefinition topics="{['probability']}" title="Chart" on:define /> -->
         </div>
       {/if}
       <div>
@@ -380,7 +380,7 @@
       <AccordionItem open title="Enter Threshold">
         <NumberInput
           invalid="{!isThresholdValid}"
-          invalidText="{thresholdOpts.text}"
+          invalidText="{thresholdOpts.invalidText}"
           value="{$thresholdStore}"
           on:change="{changeThreshold}"
         />
