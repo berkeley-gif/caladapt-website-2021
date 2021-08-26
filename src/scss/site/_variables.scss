@@ -208,6 +208,7 @@ $spacing-160: $layout-2xl;
 
 // text variables
 $p-default-max-width: 75ch;
+$p-lead-default-max-width: 55ch;
 
 // Sass variables as CSS Custom Properties to fix variables in .svelte components
 :root {
@@ -323,4 +324,5 @@ $p-default-max-width: 75ch;
   --spacing-160: #{$spacing-160};
 
   --p-default-max-width: #{$p-default-max-width};
+  --p-lead-default-max-width: #{$p-lead-default-max-width};
 }

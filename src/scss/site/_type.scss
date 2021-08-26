@@ -50,6 +50,7 @@ p.lead {
   @include type-style("expressive-paragraph-01", false);
   margin-top: $spacing-md;
   margin-bottom: $spacing-md;
+  max-width: $p-lead-default-max-width;
 }
 
 p.feedback {
