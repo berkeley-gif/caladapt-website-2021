@@ -23,7 +23,8 @@
 <div class="bleed banner overlay">
   <div class="bx--grid">
     <div class="bx--row">
-      <div class="bx--col">
+      <div class="bx--col-lg-2"></div>
+      <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
         <h1>Download Data</h1>
         <p class="lead">
           Discover and access climate data for California from the state's
@@ -31,13 +32,15 @@
           ways.
         </p>
       </div>
+      <div class="bx--col-lg-5"></div>
     </div>
   </div>
 </div>
 
-<div class="bx--grid">
-  <div class="bx--row">
-    <div class="bx--col">
+<div class="bx--grid bx--grid--condensed">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Climate Tools</h2>
       <p>
         All Cal-Adapt climate tools have a “Download Chart” button that you may
@@ -48,10 +51,12 @@
       </p>
       <p><a href="/tools/">Go to Climate Tools</a></p>
     </div>
+    <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row">
-    <div class="bx--col">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Data Download Tool</h2>
       <p>
         Search by climate indicator, publisher or dataset name. Follow a series
@@ -62,10 +67,12 @@
       </p>
       <p><a href="/data/download/">Go to Data Download Tool</a></p>
     </div>
+    <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row">
-    <div class="bx--col">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Cal-Adapt Data Server</h2>
       <p>
         All climate data provided by California’s scientific and research
@@ -84,10 +91,12 @@
         >
       </p>
     </div>
+    <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row">
-    <div class="bx--col">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Cal-Adapt API</h2>
       <p>
         The Cal-Adapt REST API allows you to programmatically access climate
@@ -108,10 +117,12 @@
         >
       </p>
     </div>
+    <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row">
-    <div class="bx--col">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>3rd Party Integrations</h2>
       <p>
         The following packages enable working with the Cal-Adapt API using the R
@@ -126,6 +137,7 @@
       </p>
     </div>
   </div>
+  <div class="bx--col-lg-5"></div>
 </div>
 
 <div class="spacing--v-96"></div>
