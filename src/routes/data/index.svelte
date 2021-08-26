@@ -1,4 +1,6 @@
 <script>
+  import { Button } from "carbon-components-svelte";
+  import { ArrowRight16 } from "carbon-icons-svelte";
 </script>
 
 <style>
@@ -10,8 +12,12 @@
     padding: var(--spacing-48) 0;
   }
 
-  p.lead {
-    max-width: 55ch;
+  p:not(.lead) {
+    font-size: 1.125rem;
+  }
+
+  p.btn-container {
+    text-transform: uppercase;
   }
 </style>
 
@@ -49,7 +55,9 @@
         applied to the exported data. For downloading complete and original time
         series data, use the Data Download Tool, Data Server, or API.
       </p>
-      <p><a href="/tools/">Go to Climate Tools</a></p>
+      <p class="btn-container">
+        <Button icon="{ArrowRight16}" href="/tools/">Climate Tools</Button>
+      </p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
@@ -65,7 +73,11 @@
         of downloading resampled data using different spatial and temporal
         aggregations.
       </p>
-      <p><a href="/data/download/">Go to Data Download Tool</a></p>
+      <p class="btn-container">
+        <Button icon="{ArrowRight16}" href="/data/download/"
+          >Data Download Tool</Button
+        >
+      </p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
@@ -85,9 +97,11 @@
         Links to individual datasets are also included in the Data Download
         Tool.
       </p>
-      <p>
-        <a href="http://albers.cnr.berkeley.edu/data/"
-          >Go to Cal-Adapt Data Server</a
+      <p class="btn-container">
+        <Button
+          icon="{ArrowRight16}"
+          href="http://albers.cnr.berkeley.edu/data/"
+          >Cal-Adapt Data Server</Button
         >
       </p>
     </div>
@@ -111,9 +125,11 @@
           >JavaScript</a
         > programming languages.
       </p>
-      <p>
-        <a href="https://berkeley-gif.github.io/caladapt-docs/"
-          >Go to Cal-Adapt API documentation</a
+      <p class="btn-container">
+        <Button
+          icon="{ArrowRight16}"
+          href="https://berkeley-gif.github.io/caladapt-docs/"
+          >Cal-Adapt API documentation</Button
         >
       </p>
     </div>
@@ -128,12 +144,17 @@
         The following packages enable working with the Cal-Adapt API using the R
         programming language and the ArcGIS Pro desktop software.
       </p>
-      <p>
-        <a href="https://ucanr-igis.github.io/caladaptr/">Cal-Adapt R package</a
+      <p class="btn-container">
+        <Button
+          icon="{ArrowRight16}"
+          href="https://ucanr-igis.github.io/caladaptr/"
+          >Cal-Adapt R package</Button
         >
       </p>
-      <p>
-        <a href="/data/#">ArcGIS Pro Extension</a>
+      <p class="btn-container">
+        <Button icon="{ArrowRight16}" href="/data/#"
+          >ArcGIS Pro Extension</Button
+        >
       </p>
     </div>
   </div>
