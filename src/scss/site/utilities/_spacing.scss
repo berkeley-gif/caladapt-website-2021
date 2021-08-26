@@ -1,3 +1,4 @@
+// Vertical height
 .spacing--v-1 {
   height: $spacing-1;
 }
@@ -44,4 +45,53 @@
 
 .spacing--v-160 {
   height: $spacing-160;
+}
+
+// Vertical Margins
+.margin--v-1 {
+  margin: $spacing-1 0;
+}
+
+.margin--v-2 {
+  margin: $spacing-2 0;
+}
+
+.margin--v-4 {
+  margin: $spacing-4 0;
+}
+
+.margin--v-8 {
+  margin: $spacing-8 0;
+}
+
+.margin--v-12 {
+  margin: $spacing-12 0;
+}
+
+.margin--v-16 {
+  margin: $spacing-16 0;
+}
+
+.margin--v-24 {
+  margin: $spacing-24 0;
+}
+
+.margin--v-32 {
+  margin: $spacing-32 0;
+}
+
+.margin--v-40 {
+  margin: $spacing-40 0;
+}
+
+.margin--v-48 {
+  margin: $spacing-48 0;
+}
+
+.margin--v-96 {
+  margin: $spacing-96 0;
+}
+
+.margin--v-160 {
+  margin: $spacing-160 0;
 }
