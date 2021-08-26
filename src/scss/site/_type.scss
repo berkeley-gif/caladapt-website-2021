@@ -1,29 +1,32 @@
 .h1,
 h1 {
+  @include type-style("display-02", false);
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style("display-01", false);
 }
 
 .h2,
 h2 {
+  @include type-style("expressive-heading-05", false);
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style("expressive-heading-05", false);
+  font-weight: 600;
 }
 
 .h3,
 h3 {
+  @include type-style("expressive-heading-04", false);
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style("expressive-heading-04", false);
+  font-weight: 600;
 }
 
 .h4,
 h4 {
+  @include type-style("expressive-heading-03", false);
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style("expressive-heading-03", false);
+  font-weight: 600;
 }
 
 .h5,
@@ -31,20 +34,23 @@ h5,
 .h6,
 h6 {
   // h5 and h6 intentionally mimic one another
+  @include type-style("productive-heading-02", false);
   margin-top: $spacing-lg;
   margin-bottom: $spacing-md;
-  @include type-style("productive-heading-02", false);
+  font-weight: 600;
 }
 
 p {
   @include type-style("body-long-02", false);
   margin-bottom: $spacing-md;
+  max-width: $p-default-max-width;
 }
 
 p.lead {
+  @include type-style("expressive-paragraph-01", false);
   margin-top: $spacing-md;
   margin-bottom: $spacing-md;
-  @include type-style("expressive-paragraph-01", false);
+  max-width: $p-lead-default-max-width;
 }
 
 p.feedback {
@@ -79,9 +85,9 @@ figure {
   margin: 2rem;
 
   figcaption {
+    @include type-style("body-short-02", false);
     color: $gray-70;
     padding: 2rem;
-    @include type-style("body-short-02", false);
   }
 
   img {

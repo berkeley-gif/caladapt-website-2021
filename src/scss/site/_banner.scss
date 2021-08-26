@@ -2,18 +2,6 @@
   color: $white;
   padding: $carbon--layout-04;
 
-  h1 {
-    @include type-style("display-01", true);
-    /*     margin-top: $carbon--spacing-02;
-    margin-bottom: 0;
-    margin-top: 0.25rem;
-    margin-bottom: 0;
-    font-weight: 300;
-    line-height: 1.19;
-    letter-spacing: 0;
-    font-size: 3.375; */
-  }
-
   .lead a {
     color: $white;
     text-decoration: solid underline $accent 2px;
