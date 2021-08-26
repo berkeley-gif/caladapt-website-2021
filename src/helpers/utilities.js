@@ -518,3 +518,13 @@ export function isLeapYear(year) {
 }
 
 export { throttle };
+
+/**
+ * Check if date is today
+ * @param {date} date
+ * @return {boolean}
+ */
+export function isToday(date) {
+  const today = new Date();
+  return date.toDateString() === today.toDateString();
+}
