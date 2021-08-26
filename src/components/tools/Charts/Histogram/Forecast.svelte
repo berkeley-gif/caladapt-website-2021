@@ -9,7 +9,6 @@
   export let data;
 
   $: circles = groups(data, (d) => d.temperature);
-  $: console.log(circles);
 
   function handleMousemove(feature) {
     return function handleMousemoveFn(e) {
@@ -26,14 +25,14 @@
   .circle {
     fill: var(--teal-60);
     fill-opacity: 1;
-    stroke: var(--teal-60);
-    stroke-width: 7;
-    stroke-opacity: 0.2;
   }
 
   .label {
     fill: var(--teal-60);
     font-weight: 600;
+    stroke: white;
+    stroke-width: 2;
+    paint-order: stroke;
   }
 </style>
 

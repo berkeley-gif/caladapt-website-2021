@@ -43,15 +43,16 @@
       </text>
     {/each}
   </g>
-  <g class="threshold">
-    <circle cy="{30}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
-    <text
-      x="{$xScale(+threshold) + 10}"
-      y="{35}"
-      style="font-weight:600;fill:red;"
-    >
-      {threshold} °F
-    </text>
-  </g>
-  <g class="forecast"> </g>
+  {#if threshold}
+    <g class="threshold">
+      <circle cy="{30}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
+      <text
+        x="{$xScale(+threshold) + 10}"
+        y="{35}"
+        style="font-weight:600;fill:red;"
+      >
+        {threshold} °F
+      </text>
+    </g>
+  {/if}
 </g>
