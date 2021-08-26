@@ -1,6 +1,5 @@
 // Node modules
-import { timeParse } from "d3-time-format";
-import { quantile, max, min } from "d3-array";
+import { timeParse, timeFormat } from "d3-time-format";
 import { format } from "d3-format";
 
 // Helpers
@@ -11,14 +10,17 @@ import {
   transformResponse,
   pipe,
   closest,
+  isToday,
 } from "../../../helpers/utilities";
 
 const { apiEndpoint } = config.env.production;
 const dateParse = timeParse("%Y-%m-%d");
+const startTimeParse = timeParse("%Y-%m-%dT%H:%M:%S%Z");
+const startTimeFormat = timeFormat("%-I%p");
 
-const fetchTimeseries = async ({ slug, params, method }) => {
+const fetchTimeseries = async ({ slug, params }) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
-  const [response, error] = await handleXHR(fetchData(url, params, method));
+  const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
     throw new Error(error.message);
   }
@@ -62,14 +64,15 @@ export async function getObservedValues(config, params, method) {
   }
 }
 
-export async function getObservedReturnLevels(config, params, method) {
+export async function getObservedReturnLevels(config, params) {
   try {
+    params.v = 2;
     const { climvarId } = config;
     const slug = `${climvarId}_day_hadisd/ams`;
     const promise = pipe(
       fetchTimeseries,
       transformReturnLevels
-    )({ slug, params, method });
+    )({ slug, params });
     const values = await promise;
     if (values.length === 0) {
       throw new Error("No Data");
@@ -80,7 +83,7 @@ export async function getObservedReturnLevels(config, params, method) {
   }
 }
 
-export function getBaselineStats(_data, extremes) {
+export function calcBaselineStats(_data, extremes) {
   const { low, high, stats } = _data;
   let percentiles;
   if (extremes === "high") {
@@ -95,27 +98,27 @@ export function getBaselineStats(_data, extremes) {
   };
 }
 
-export function getThreshold(_data, extremes) {
+export function calcThreshold(_data, extremes) {
   if (extremes === "high") {
     const percentile = _data.percentiles.find((d) => d.percentile === 90);
     return {
       bound: percentile.value,
-      text: "Number must be >= 90th percentile value",
+      invalidText: "Number must be >= 90th percentile value",
     };
   }
   const percentile = _data.percentiles.find((d) => d.percentile === 10);
   return {
     bound: percentile.value,
-    text: "Number must be <= 10th percentile value",
+    invalidText: "Number must be <= 10th percentile value",
   };
 }
 
-export function getReturnPeriod(_data, threshold) {
+export function calcReturnPeriod(_data, threshold) {
   const { gevisf, timestep } = _data;
-  const gevisfMap = new Map(Object.entries(gevisf));
-  const valuesArr = Object.keys(gevisf).map((d) => +d);
+  const { probabilities, values } = gevisf;
+  const valuesArr = values.map((d) => +d);
   const closestValue = closest(+threshold, valuesArr);
-  const probability = +gevisfMap.get(String(closestValue.value));
+  const probability = probabilities[closestValue.index];
   const rp = +format(".0f")(1 / probability);
   let label;
   if (rp > 50) {
@@ -133,11 +136,6 @@ export function getReturnPeriod(_data, threshold) {
   };
 }
 
-export function formatDataForExport(_data) {
-  console.log("format data for export", _data);
-  return _data;
-}
-
 export async function getForecastData({ lng, lat }) {
   const url = `https://api.weather.gov/points/${lat},${lng}`;
   const [response, error] = await handleXHR(fetchData(url, {}));
@@ -147,12 +145,13 @@ export async function getForecastData({ lng, lat }) {
   const forecastUrl = response.properties.forecast;
   const [data, dataError] = await handleXHR(fetchData(forecastUrl, {}));
   if (error) {
-    throw new Error(dataError.message);
+    throw new Error(dataError);
   }
   return data.properties.periods.map((d) => {
     let label;
-    if (d.name.includes(["This", "Tonight"])) {
-      label = "Today";
+    let startTime = startTimeParse(d.startTime);
+    if (isToday(startTime)) {
+      label = startTimeFormat(startTime);
     } else {
       label = d.name.substring(0, 3);
     }

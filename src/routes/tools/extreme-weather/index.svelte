@@ -58,7 +58,7 @@
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
-  import { getStation } from "../../../helpers/geocode";
+  import { getStationById } from "../../../helpers/geocode";
 
   // Components
   import ExploreData from "./ExploreData.svelte";
@@ -82,7 +82,6 @@
     doyStore,
     queryParams,
     observationsStore,
-    forecastStore,
     extremesStore,
     datasetStore,
   } from "./_store";
@@ -220,7 +219,6 @@
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
   $: $climvar, $doyStore, $locationStore, $extremesStore, update();
-  $: $locationStore, forecastStore.reset();
 
   function updateDataset(e) {
     datasetStore.set(e.detail);
@@ -275,7 +273,7 @@
     climvarStore.set(climvarId);
     unitsStore.set({ imperial });
     // Set intial station
-    const station = await getStation(stationId, "hadisdstations");
+    const station = await getStationById(stationId, "hadisdstations");
     locationStore.updateLocation(station);
     // Set today's date as default
     if (!doy) {

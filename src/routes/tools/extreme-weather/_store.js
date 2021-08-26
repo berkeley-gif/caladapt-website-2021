@@ -89,10 +89,7 @@ export const locationStore = (() => {
     updateLocation: (location) =>
       update((store) => {
         if (!location) return;
-        const title = `Weather Station at ${location.properties.name}, 
-          ${location.properties.city}, CA`;
-        const bbox = getBbox(location.geometry);
-        store = { title, bbox, ...location };
+        store = location;
         return store;
       }),
     get location() {
@@ -180,17 +177,17 @@ export const observationsStore = (() => {
         });
 
         // Calculate percentiles from 30 year data
-        const valuesBaseline = filteredData.map((d) => +d.value).sort();
+        const values = filteredData.map((d) => +d.value).sort();
         const statsBaseline = percentiles.map((d) => {
           return {
             percentile: d,
             label: `p${d}`,
-            value: +formatFn(quantile(valuesBaseline, d / 100)),
+            value: +formatFn(quantile(values, d / 100)),
           };
         });
 
         return {
-          values: valuesBaseline,
+          values: filteredData,
           low: recordLow,
           high: recordHigh,
           stats: statsBaseline,
