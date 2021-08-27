@@ -18,6 +18,7 @@
       "Select a boundary from the dropdown list or upload your project area. Supported formats - zipped shapefile, GeoJSON, KML, WKT.",
     buttonLabel: "Upload File",
     accept: [".zip", ".json", ".geojson", ".kml", ".wkt"],
+    iconDescription: "Clear file",
     id: "Upload",
     errorSubject: "",
     errorBody: "",
@@ -27,8 +28,13 @@
     fileUploader.clearFiles();
   }
 
-  function clear() {
-    console.log("clear");
+  function clearFiles() {
+    fileUploader.clearFiles();
+    fileUploadProps.status = "";
+    fileUploadProps.errorSubject = "";
+    fileUploadProps.errorBody = "";
+    fileUploadProps.invalid = false;
+    dispatch("clear");
   }
 
   const dispatch = createEventDispatcher();
@@ -97,6 +103,7 @@
   on:add="{({ detail }) => {
     processUpload(detail[0]);
   }}"
+  on:click="{clearFiles}"
 />
 {#if fileUploadProps.errorSubject === "Warning" || fileUploadProps.errorSubject === "Error"}
   <span>{fileUploadProps.errorBody}</span>
