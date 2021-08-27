@@ -4,7 +4,8 @@
   // Props
   export let resources = [];
 
-  const cardWidth = 16;
+  const resourceCardWidth = 22;
+  const toolCardWidth = 16;
 
   $: tools = resources.filter((d) => d.category === "caladapt");
   $: other = resources.filter((d) => d.category === "external");
@@ -19,7 +20,7 @@
         {#if !resources || resources.length === 0}
           <em>[Provide a list of resources for the tool]</em>
         {:else}
-          <CardsContainer cardWidth="{cardWidth}">
+          <CardsContainer cardWidth="{resourceCardWidth}">
             {#each other as { link, image, title, text }}
               <Card
                 {...{
@@ -44,7 +45,7 @@
         {#if !resources || tools.length === 0}
           <em>[Provide a list of related Cal-Adapt tools]</em>
         {:else}
-          <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+          <CardsContainer gridGap="{2}" cardWidth="{toolCardWidth}">
             {#each tools as { icons, title, desc, slug }}
               <Card
                 {...{
