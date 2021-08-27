@@ -7,7 +7,6 @@
     CodeSnippet,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { csvFormat, csvFormatRows } from "d3-dsv";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
   import copy from "clipboard-copy";
 
@@ -26,10 +25,10 @@
     SelectModels,
     SelectClimvar,
     ShowDefinition,
-  } from "../../../components/tools/Settings";
-  import { StaticMap } from "../../../components/tools/Location";
-  import { LineAreaChart } from "../../../components/tools/Charts";
-  import { RangeAvg } from "../../../components/tools/Stats";
+  } from "~/components/tools/Settings";
+  import { StaticMap } from "~/components/tools/Location";
+  import { LineAreaChart } from "~/components/tools/Charts";
+  import { RangeAvg } from "~/components/tools/Stats";
 
   // Store
   import {
@@ -66,7 +65,7 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("../../../components/tools/Partials/ChangeLocation.svelte")
+      await import("~/components/tools/Partials/ChangeLocation.svelte")
     ).default;
   }
 
@@ -84,7 +83,7 @@
     printContainer = document.querySelector(".explore");
     printSkipElements = ["explore-settings"];
     DownloadChart = (
-      await import("../../../components/tools/Partials/DownloadChart.svelte")
+      await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
   }
 
