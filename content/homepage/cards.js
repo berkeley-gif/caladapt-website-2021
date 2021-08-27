@@ -31,7 +31,7 @@ export default [
   },
   {
     titleText: "Developers",
-    linkPath: "/developer",
+    linkPath: "/data/#cal-adapt-api",
     description:
       "Integrate climate data in your workflows with the Cal-Adapt API.",
   },

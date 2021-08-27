@@ -64,17 +64,6 @@
       </li>
       <li>
         <a
-          href="/developer/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'developer' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">Developer</span>
-        </a>
-      </li>
-      <li>
-        <a
           href="/help/"
           class="bx--header__menu-item"
           role="menuitem"

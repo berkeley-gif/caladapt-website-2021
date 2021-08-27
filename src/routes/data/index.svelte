@@ -1,6 +1,26 @@
 <script>
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
+  import { inview } from "svelte-inview/dist/";
+  import PageNav from "~/partials/PageNav.svelte";
+
+  let selectedItem;
+  let pageNavItems = [
+    { id: "climate-tools", label: "Climate Tools" },
+    { id: "data-download-tool", label: "Data Download Tool" },
+    { id: "cal-adapt-data-server", label: "Data Server" },
+    { id: "cal-adapt-api", label: "Cal-Adapt API" },
+    { id: "third-party-integrations", label: "3rd Party Integrations" },
+  ];
+
+  const handleEntry = (e) => {
+    const { entry } = e.detail;
+    selectedItem = entry.target.id;
+  };
+
+  const entryOptions = {
+    threshold: 1,
+  };
 </script>
 
 <style>
@@ -9,7 +29,7 @@
       url(/img/banners/data.svg);
     background-position: center;
     background-size: cover;
-    padding: var(--spacing-48) 0;
+    padding: var(--spacing-48) var(--spacing-16);
   }
 
   p:not(.lead) {
@@ -18,6 +38,12 @@
 
   p.btn-container {
     text-transform: uppercase;
+    margin-top: 2rem;
+  }
+
+  .is-sticky {
+    top: -1px;
+    z-index: 1;
   }
 </style>
 
@@ -43,8 +69,30 @@
   </div>
 </div>
 
-<div class="bx--grid bx--grid--condensed">
-  <div class="bx--row margin--v-32">
+<div class="bx--grid is-sticky">
+  <div class="bx--row">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-11 bx--col-md-8 bx--col-sm-4">
+      <PageNav
+        href="{'/data'}"
+        items="{pageNavItems}"
+        selected="{selectedItem}"
+        center="{false}"
+        isSticky="{false}"
+        zIndex="{'initial'}"
+      />
+    </div>
+    <div class="bx--col-lg-3"></div>
+  </div>
+</div>
+
+<div class="bx--grid">
+  <div
+    class="bx--row margin--v-32"
+    id="climate-tools"
+    use:inview="{entryOptions}"
+    on:enter="{handleEntry}"
+  >
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Climate Tools</h2>
@@ -56,13 +104,20 @@
         series data, use the Data Download Tool, Data Server, or API.
       </p>
       <p class="btn-container">
-        <Button icon="{ArrowRight16}" href="/tools/">Climate Tools</Button>
+        <Button kind="tertiary" icon="{ArrowRight16}" href="/tools/"
+          >Climate Tools</Button
+        >
       </p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row margin--v-32">
+  <div
+    class="bx--row margin--v-32"
+    id="data-download-tool"
+    use:inview="{entryOptions}"
+    on:enter="{handleEntry}"
+  >
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Data Download Tool</h2>
@@ -74,7 +129,7 @@
         aggregations.
       </p>
       <p class="btn-container">
-        <Button icon="{ArrowRight16}" href="/data/download/"
+        <Button kind="tertiary" icon="{ArrowRight16}" href="/data/download/"
           >Data Download Tool</Button
         >
       </p>
@@ -82,7 +137,12 @@
     <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row margin--v-32">
+  <div
+    class="bx--row margin--v-32"
+    id="cal-adapt-data-server"
+    use:inview="{entryOptions}"
+    on:enter="{handleEntry}"
+  >
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Cal-Adapt Data Server</h2>
@@ -99,6 +159,7 @@
       </p>
       <p class="btn-container">
         <Button
+          kind="tertiary"
           icon="{ArrowRight16}"
           href="http://albers.cnr.berkeley.edu/data/"
           >Cal-Adapt Data Server</Button
@@ -108,7 +169,12 @@
     <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row margin--v-32">
+  <div
+    class="bx--row margin--v-32"
+    id="cal-adapt-api"
+    use:inview="{entryOptions}"
+    on:enter="{handleEntry}"
+  >
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Cal-Adapt API</h2>
@@ -127,6 +193,7 @@
       </p>
       <p class="btn-container">
         <Button
+          kind="tertiary"
           icon="{ArrowRight16}"
           href="https://berkeley-gif.github.io/caladapt-docs/"
           >Cal-Adapt API documentation</Button
@@ -136,7 +203,12 @@
     <div class="bx--col-lg-5"></div>
   </div>
 
-  <div class="bx--row margin--v-32">
+  <div
+    class="bx--row margin--v-32"
+    id="third-party-integrations"
+    use:inview="{entryOptions}"
+    on:enter="{handleEntry}"
+  >
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>3rd Party Integrations</h2>
@@ -146,13 +218,14 @@
       </p>
       <p class="btn-container">
         <Button
+          kind="tertiary"
           icon="{ArrowRight16}"
           href="https://ucanr-igis.github.io/caladaptr/"
           >Cal-Adapt R package</Button
         >
       </p>
       <p class="btn-container">
-        <Button icon="{ArrowRight16}" href="/data/#"
+        <Button kind="tertiary" icon="{ArrowRight16}" href="/data/#"
           >ArcGIS Pro Extension</Button
         >
       </p>

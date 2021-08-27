@@ -1,6 +1,6 @@
 ---
 title: "Some future event"
-date: 2021-08-11
+date: 2100-08-27
 location: Online
 time: "1:00 PM - 2:00 PM PST"
 tags: webinar

@@ -5,6 +5,7 @@
   export let offset = 50;
   export let href = "/about/";
   export let center = true;
+  export let isSticky = true;
   export let items = [
     {
       id: "section1",
@@ -15,6 +16,7 @@
       label: "Section 2",
     },
   ];
+  export let zIndex = 2;
 
   function scrollTo(e, id) {
     e.preventDefault();
@@ -34,7 +36,7 @@
     border-bottom: 1px solid #dadee1;
     background: #dadee1;
     top: 0;
-    z-index: 2;
+    z-index: var(--z-index);
   }
 
   .page-nav :global(.bx--side-nav__items) {
@@ -66,7 +68,12 @@
   }
 </style>
 
-<div class="page-nav shadow is-sticky" class:center>
+<div
+  class="page-nav shadow"
+  class:is-sticky="{isSticky}"
+  class:center
+  style="--z-index:{zIndex}"
+>
   <SideNavItems>
     {#each items as item}
       <SideNavLink
