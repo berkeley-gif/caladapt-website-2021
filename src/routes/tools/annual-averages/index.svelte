@@ -29,18 +29,31 @@
         return json.data;
       });
 
+    // Get help categories
+    const help = await this.fetch("help.json")
+      .then((r) => r.json())
+      .then((json) => {
+        return json;
+      });
+    const helpItems = help.filter((d) =>
+      ["get-started", "faqs"].includes(d.slug)
+    );
+
     // Set intitial config for tool
     let initialConfig;
 
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      let imperial;
-      if (query.imperial && query.imperial === "false") {
-        imperial = false;
-      } else {
-        imperial = true;
-      }
-      initialConfig = { ...query, imperial };
+      const { boundary, climvar, scenario, models, imperial, lat, lng } = query;
+      initialConfig = {
+        boundaryId: boundary,
+        scenarioId: scenario,
+        climvarId: climvar,
+        modelIds: models,
+        imperial: imperial === "true" ? true : false,
+        lat: +lat,
+        lng: +lng,
+      };
     } else {
       initialConfig = {
         boundaryId: "locagrid",
@@ -53,7 +66,14 @@
       };
     }
 
-    return { initialConfig, glossary, tool, relatedTools, externalResources };
+    return {
+      initialConfig,
+      glossary,
+      tool,
+      relatedTools,
+      externalResources,
+      helpItems,
+    };
   }
 </script>
 
@@ -97,6 +117,7 @@
   export let tool;
   export let relatedTools;
   export let externalResources;
+  export let helpItems;
 
   // Derived stores
   const { location } = locationStore;
@@ -252,11 +273,6 @@
     {/if}
   </div>
 
-  <!-- Help -->
-  <div id="help" class="section" use:inview="{{}}" on:enter="{handleEntry}">
-    <Help />
-  </div>
-
   <!-- About -->
   <div id="about" class="section" use:inview="{{}}" on:enter="{handleEntry}">
     <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
@@ -311,6 +327,11 @@
     on:enter="{handleEntry}"
   >
     <Resources resources="{resources}" />
+  </div>
+
+  <!-- Help -->
+  <div id="help" class="section" use:inview="{{}}" on:enter="{handleEntry}">
+    <Help items="{helpItems}" />
   </div>
 </div>
 
