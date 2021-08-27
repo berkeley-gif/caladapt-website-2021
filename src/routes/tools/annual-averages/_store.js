@@ -184,11 +184,9 @@ export const bookmark = derived(
     const { location, boundaryId } = $locationStore;
     const { imperial } = $unitsStore;
     const [lng, lat] = location.center;
-    const bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}
-    &imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}`;
-    if (process.browser) {
-      return `${window.location.href}?${bookmark}`;
+    if (boundaryId === "custom") {
+      return "Cannot create a bookmark for an uploaded boundary";
     }
-    return null;
+    return `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}&imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}`;
   }
 );

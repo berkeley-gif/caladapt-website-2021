@@ -1,14 +1,7 @@
 <script>
-  import {
-    Button,
-    Modal,
-    Accordion,
-    AccordionItem,
-    CodeSnippet,
-  } from "carbon-components-svelte";
+  import { Button, Accordion, AccordionItem } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
-  import copy from "clipboard-copy";
 
   // Helpers
   import {
@@ -56,11 +49,18 @@
 
   let ChangeLocation;
   let DownloadChart;
+  let ShareLink;
 
   let metadata;
   let csvData;
   let printContainer;
   let printSkipElements;
+
+  async function loadShare() {
+    showShare = true;
+    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
+      .default;
+  }
 
   async function loadLocation() {
     showChangeLocation = true;
@@ -210,11 +210,7 @@
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
           Download Chart
         </Button>
-        <Button
-          size="small"
-          icon="{Share16}"
-          on:click="{() => (showShare = true)}"
-        >
+        <Button size="small" icon="{Share16}" on:click="{loadShare}">
           Share
         </Button>
       </div>
@@ -269,21 +265,11 @@
   </div>
 </div>
 
-<Modal
-  id="share"
-  passiveModal
+<svelte:component
+  this="{ShareLink}"
   bind:open="{showShare}"
-  modalHeading="Share Link"
-  on:open
-  on:close
->
-  <CodeSnippet
-    type="multi"
-    wrapText
-    code="{$bookmark}"
-    on:click="{() => copy($bookmark)}"
-  />
-</Modal>
+  state="{$bookmark}"
+/>
 
 <svelte:component
   this="{ChangeLocation}"
