@@ -9,14 +9,7 @@
   $: bookmark = `${pathname}?${state}`;
 </script>
 
-<Modal
-  id="share"
-  passiveModal
-  bind:open
-  modalHeading="Share Link"
-  on:open
-  on:close
->
+<Modal id="share" passiveModal bind:open modalHeading="Share Link">
   <CodeSnippet
     type="multi"
     wrapText
