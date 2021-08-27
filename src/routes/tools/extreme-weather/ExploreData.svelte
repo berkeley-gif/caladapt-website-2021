@@ -36,10 +36,10 @@
     SelectClimvar,
     SelectDayOfYear,
     ShowDefinition,
-  } from "../../../components/tools/Settings";
-  import { StaticMap } from "../../../components/tools/Location";
-  import { Histogram } from "../../../components/tools/Charts";
-  import { notifier } from "../../../components/notifications";
+  } from "~/components/tools/Settings";
+  import { StaticMap } from "~/components/tools/Location";
+  import { Histogram } from "~/components/tools/Charts";
+  import { notifier } from "~/components/notifications";
 
   // Store
   import {
@@ -86,7 +86,7 @@
   let printContainer;
   let printSkipElements;
 
-  $: $locationStore, updateForecast();
+  $: $locationStore, resetForecast();
 
   function checkThresholdValidity(val) {
     if ($extremesStore === "high") {
@@ -95,7 +95,7 @@
     return val <= thresholdOpts.bound;
   }
 
-  function updateForecast() {
+  function resetForecast() {
     showForecast = false;
     forecastStore.reset();
     forecast = null;
@@ -116,7 +116,7 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeStation = (
-      await import("../../../components/tools/Partials/ChangeStation.svelte")
+      await import("~/components/tools/Partials/ChangeStation.svelte")
     ).default;
   }
 
@@ -133,7 +133,7 @@
     printContainer = document.querySelector(".explore");
     printSkipElements = ["explore-settings"];
     DownloadChart = (
-      await import("../../../components/tools/Partials/DownloadChart.svelte")
+      await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
   }
 
@@ -208,6 +208,8 @@
 
   function toggleForecastDisplay() {
     showForecast = !showForecast;
+    console.log("toggle forecast", showForecast);
+
     if (showForecast) {
       if (forecast === null) {
         getForecast();
@@ -299,7 +301,7 @@
           <Checkbox
             labelText="{`Show 7-Day Forecast for ${$forecastDate}`}"
             checked="{showForecast}"
-            on:click="{toggleForecastDisplay}"
+            on:check="{toggleForecastDisplay}"
           />
         </div>
       {/if}
@@ -307,7 +309,7 @@
     <Histogram
       data="{baselineData}"
       labels="{baselineLabels}"
-      forecast="{forecast}"
+      forecast="{showForecast ? forecast : null}"
       threshold="{isThresholdValid ? $thresholdStore : null}"
       yAxis="{{
         label: `Count of Days`,

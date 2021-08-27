@@ -58,7 +58,7 @@
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
-  import { getStationById } from "../../../helpers/geocode";
+  import { getStationById } from "~/helpers/geocode";
 
   // Components
   import ExploreData from "./ExploreData.svelte";
@@ -67,11 +67,8 @@
     About,
     Resources,
     ToolNavigation,
-  } from "../../../components/tools/Partials";
-  import {
-    NotificationDisplay,
-    notifier,
-  } from "../../../components/notifications";
+  } from "~/components/tools/Partials";
+  import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Store
   import {
