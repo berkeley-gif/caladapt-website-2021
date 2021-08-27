@@ -40,12 +40,12 @@
   <!-- Related Cal-Adapt tools -->
   <div class="bx--row">
     <div class="bx--col">
-      <h2>Related Cal-Adapt Tools</h2>
+      <h3>Related Cal-Adapt Tools</h3>
       <slot name="tools">
         {#if !resources || tools.length === 0}
           <em>[Provide a list of related Cal-Adapt tools]</em>
         {:else}
-          <CardsContainer gridGap="{2}" cardWidth="{toolCardWidth}">
+          <CardsContainer cardWidth="{toolCardWidth}">
             {#each tools as { icons, title, desc, slug }}
               <Card
                 {...{
