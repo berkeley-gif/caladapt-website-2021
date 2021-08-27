@@ -38,6 +38,7 @@
 
   p.btn-container {
     text-transform: uppercase;
+    margin-top: 2rem;
   }
 
   .is-sticky {
@@ -103,7 +104,9 @@
         series data, use the Data Download Tool, Data Server, or API.
       </p>
       <p class="btn-container">
-        <Button icon="{ArrowRight16}" href="/tools/">Climate Tools</Button>
+        <Button kind="tertiary" icon="{ArrowRight16}" href="/tools/"
+          >Climate Tools</Button
+        >
       </p>
     </div>
     <div class="bx--col-lg-5"></div>
@@ -126,7 +129,7 @@
         aggregations.
       </p>
       <p class="btn-container">
-        <Button icon="{ArrowRight16}" href="/data/download/"
+        <Button kind="tertiary" icon="{ArrowRight16}" href="/data/download/"
           >Data Download Tool</Button
         >
       </p>
@@ -156,6 +159,7 @@
       </p>
       <p class="btn-container">
         <Button
+          kind="tertiary"
           icon="{ArrowRight16}"
           href="http://albers.cnr.berkeley.edu/data/"
           >Cal-Adapt Data Server</Button
@@ -189,6 +193,7 @@
       </p>
       <p class="btn-container">
         <Button
+          kind="tertiary"
           icon="{ArrowRight16}"
           href="https://berkeley-gif.github.io/caladapt-docs/"
           >Cal-Adapt API documentation</Button
@@ -213,13 +218,14 @@
       </p>
       <p class="btn-container">
         <Button
+          kind="tertiary"
           icon="{ArrowRight16}"
           href="https://ucanr-igis.github.io/caladaptr/"
           >Cal-Adapt R package</Button
         >
       </p>
       <p class="btn-container">
-        <Button icon="{ArrowRight16}" href="/data/#"
+        <Button kind="tertiary" icon="{ArrowRight16}" href="/data/#"
           >ArcGIS Pro Extension</Button
         >
       </p>
