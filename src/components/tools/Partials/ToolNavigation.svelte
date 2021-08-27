@@ -6,16 +6,16 @@
       label: "Explore Data",
     },
     {
-      id: "help",
-      label: "Help",
-    },
-    {
       id: "about",
       label: "About the Tool",
     },
     {
       id: "resources",
       label: "Resources",
+    },
+    {
+      id: "help",
+      label: "Help",
     },
   ];
 
