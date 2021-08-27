@@ -38,7 +38,6 @@
     if (location.geometry.type === "Point") {
       geojson = location.geometry;
       const [lng, lat] = geojson.coordinates;
-      console.log("geosjon", geojson, lng, lat);
       // Use zoom for point geometry to prevent returned image from
       // being zoomed all the way in
       bounds = `${lng},${lat},${zoom}`;
