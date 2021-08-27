@@ -5,6 +5,7 @@
   export let offset = 50;
   export let href = "/about/";
   export let center = true;
+  export let isSticky = true;
   export let items = [
     {
       id: "section1",
@@ -66,7 +67,7 @@
   }
 </style>
 
-<div class="page-nav shadow is-sticky" class:center>
+<div class="page-nav shadow" class:is-sticky="{isSticky}" class:center>
   <SideNavItems>
     {#each items as item}
       <SideNavLink
