@@ -30,9 +30,9 @@ export default [
       "Browse our video collection of tool tutorials and past webinars.",
   },
   {
-    titleText: "Events",
-    linkPath: "/#",
+    titleText: "Developers",
+    linkPath: "/data/#cal-adapt-api",
     description:
-      "View upcoming events hosted by Cal-Adapt.",
+      "Integrate climate data in your workflows with the Cal-Adapt API.",
   },
 ];
