@@ -138,11 +138,11 @@
   <div class="explore-header block">
     <StaticMap location="{$location}" width="{300}" height="{300}" />
     <div class="explore-header-title">
-      <h3><span class="block-title">{$location.title}</span></h3>
-      <h4>
+      <div class="h3 block-title">{$location.title}</div>
+      <div class="h4">
         Projected changes in <span class="block-title">{$climvar.title}</span>
         under a <span class="block-title">{$scenario.labelLong}</span>.
-      </h4>
+      </div>
       <Button size="small" icon="{Location16}" on:click="{loadLocation}">
         Change Location
       </Button>
@@ -219,7 +219,7 @@
 
   <!-- Settings-->
   <div class="explore-settings">
-    <h4 class="block-title">Change Settings:</h4>
+    <div class="h4 block-title">Change Settings:</div>
     <Accordion class="settings-list">
       <AccordionItem open title="Select Climate Variable">
         <SelectClimvar
