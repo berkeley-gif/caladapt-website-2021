@@ -41,8 +41,9 @@ const tools = [
       'maps-of-projected-change',
     ],
     resources: [
-      ...externalResources,
-    ]
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
   },
   {
     title: 'Extreme Weather',
@@ -62,8 +63,9 @@ const tools = [
       'extreme-heat',
     ],
     resources: [
-      ...externalResources,
-    ]
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
   },
   {
     title: 'Maps of Projected Change',

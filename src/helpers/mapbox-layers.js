@@ -423,7 +423,7 @@ const data = [
     type: "circle",
     metadata: {
       group: "stations",
-      title: "NCDC Weather Stations",
+      title: "Weather Stations",
     },
     source: {
       type: "geojson",

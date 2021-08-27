@@ -37,10 +37,13 @@
   $: if (location) {
     if (location.geometry.type === "Point") {
       geojson = location.geometry;
+      const [lng, lat] = geojson.coordinates;
       // Use zoom for point geometry to prevent returned image from
       // being zoomed all the way in
-      bounds = `${geojson.geometry.coordinates[0]},${geojson.geometry.coordinates[1]},${zoom}`;
+      bounds = `${lng},${lat},${zoom}`;
       overlay = encodeURIComponent(JSON.stringify(geojson));
+      // Padding cannot be used without the auto parameter/bounding box.
+      src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?&access_token=${mapboxgl.accessToken}`;
     } else {
       // Add style for non point geometry
       geojson = {
@@ -54,8 +57,8 @@
       const simplifiedGeojson = simplify(geojson, { tolerance: 0.01 });
       bounds = "auto";
       overlay = encodeURIComponent(JSON.stringify(simplifiedGeojson));
+      src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?padding=${padding}&access_token=${mapboxgl.accessToken}`;
     }
-    src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?padding=${padding}&access_token=${mapboxgl.accessToken}`;
   }
 
   $: if (img && src !== undefined) load();

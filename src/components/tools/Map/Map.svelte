@@ -15,7 +15,6 @@
   export let zoom = 5;
   export let minZoom = 0;
   export let maxZoom = 22;
-  export let flyToOnLoad = true;
   export let attributionControl = false;
   export let style = "mapbox://styles/mapbox/light-v10";
 
@@ -27,8 +26,8 @@
     zoom,
     minZoom,
     maxZoom,
-    flyToOnLoad,
     attributionControl,
+    scrollZoon: false,
   };
   let canvas;
 
@@ -79,9 +78,6 @@
   export function updatePopup(event, description) {
     if (event) {
       canvas.style.cursor = "pointer";
-      // popupElem.textContent = description;
-      // popupElem.style.left = `${event.originalEvent.clientX}px`;
-      // popupElem.style.top = `${event.originalEvent.clientY}px`;
       popup.setLngLat(event.lngLat).setHTML(description);
       popupElem.style.display = "block";
     } else {

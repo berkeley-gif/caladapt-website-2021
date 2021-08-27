@@ -132,7 +132,7 @@ export const getTitle = (feature, layerId, placeName) => {
     case "ca":
       return "State of California";
     case "hadisdstations":
-      return `${feature.properties.name} Weather Station at ${feature.properties.city}, California`;
+      return `Weather Station at ${feature.properties.name}, ${feature.properties.city}, California`;
     default:
       return placeName;
   }
@@ -210,19 +210,6 @@ export const searchLocation = async (searchStr, boundaryId) => {
   return null;
 };
 
-export const getNearestStation = async (lng, lat, layerId) => {
-  const url = `${apiEndpoint}/${layerId}/`;
-  const params = {
-    distance_to: `POINT(${lng} ${lat})`,
-  };
-  const [response, error] = await handleXHR(fetchData(url, params));
-  if (error) {
-    throw new Error(error.message);
-  }
-  const nearest = response.features[0];
-  return nearest;
-};
-
 export const formatFeature = (feature, boundaryId, placeName = "") => {
   const center = feature.center || getCenter(feature.geometry);
   const lng = center.geometry.coordinates[0].toFixed(4);
@@ -285,11 +272,23 @@ export const searchFeature = async (searchStr, boundaryId) => {
   return results;
 };
 
-export const getStation = async (id, layerId) => {
+export const getStationById = async (id, layerId) => {
   const url = `${apiEndpoint}/${layerId}/${id}`;
   const [response, error] = await handleXHR(fetchData(url));
   if (error) {
     throw new Error(error.message);
   }
-  return response;
+  return formatFeature(response, layerId);
+};
+
+export const getNearestStation = async (lng, lat, layerId) => {
+  const url = `${apiEndpoint}/${layerId}/`;
+  const params = {
+    distance_to: `POINT(${lng} ${lat})`,
+  };
+  const [response, error] = await handleXHR(fetchData(url, params));
+  if (error) {
+    throw new Error(error.message);
+  }
+  return formatFeature(response.features[0], layerId);
 };

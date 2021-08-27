@@ -12,35 +12,34 @@
     InlineLoading,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { timeFormat } from "d3-time-format";
-  import { csvFormat, csvFormatRows } from "d3-dsv";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import {
+    Download16,
+    Share16,
+    Location16,
+    Information16,
+  } from "carbon-icons-svelte";
   import copy from "clipboard-copy";
 
   // Helpers
-  import { climvarList } from "./_helpers";
+  import { climvarList, stationsLayer } from "./_helpers";
   import {
-    getBaselineStats,
-    getThreshold,
-    getReturnPeriod,
-    formatDataForExport,
+    calcBaselineStats,
+    calcThreshold,
+    calcReturnPeriod,
     getForecastData,
+    getObservedReturnLevels,
     filterForecast,
   } from "./_data";
-  import { exportPNG, exportCSV } from "../../../helpers/export";
-  import { debounce } from "../../../helpers/utilities";
 
   // Components
-  import ChangeLocation from "./ChangeLocation.svelte";
   import {
     SelectClimvar,
     SelectDayOfYear,
     ShowDefinition,
-  } from "../../../components/tools/Settings";
-  import { StaticMap } from "../../../components/tools/Location";
-  import { Histogram } from "../../../components/tools/Charts";
-  import DownloadChart from "../../../components/tools/DownloadChart.svelte";
-  import { notifier } from "../../../components/notifications";
+  } from "~/components/tools/Settings";
+  import { StaticMap } from "~/components/tools/Location";
+  import { Histogram } from "~/components/tools/Charts";
+  import { notifier } from "~/components/notifications";
 
   // Store
   import {
@@ -54,6 +53,7 @@
     extremesStore,
     forecastDate,
     forecastStore,
+    queryParams,
   } from "./_store";
 
   const { baseline, returnLevels, doyRange } = observationsStore;
@@ -66,74 +66,75 @@
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
+
   let showForecast = false;
   let forecast = null;
+  let forecastLoading = false;
 
   let baselineData;
   let baselineLabels;
   let thresholdOpts = {};
-  let thresholdInvalid;
+  let isThresholdValid;
   let thresholdProbability;
+  let thresholdCI;
 
-  $: metadata = [
-    ["station", $location.title],
-    ["variable", $climvar.label],
-    ["units", $climvar.units.imperial],
-  ];
+  let ChangeStation;
+  let DownloadChart;
 
-  $: if (!$forecastStore) {
+  let metadata;
+  let csvData;
+  let printContainer;
+  let printSkipElements;
+
+  $: $locationStore, resetForecast();
+
+  function checkThresholdValidity(val) {
+    if ($extremesStore === "high") {
+      return val >= thresholdOpts.bound;
+    }
+    return val <= thresholdOpts.bound;
+  }
+
+  function resetForecast() {
     showForecast = false;
+    forecastStore.reset();
     forecast = null;
   }
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($baseline) {
-    baselineData = $baseline.values;
-    baselineLabels = getBaselineStats($baseline, $extremesStore);
-    thresholdOpts = getThreshold(baselineLabels, $extremesStore);
+    baselineData = $baseline.values.map((d) => +d.value);
+    baselineLabels = calcBaselineStats($baseline, $extremesStore);
+    thresholdOpts = calcThreshold(baselineLabels, $extremesStore);
     thresholdStore.set(thresholdOpts.bound);
     isLoading = false;
   } else {
     isLoading = true;
   }
 
-  $: if ($extremesStore === "high") {
-    thresholdInvalid = $thresholdStore < thresholdOpts.bound;
-  } else {
-    thresholdInvalid = $thresholdStore > thresholdOpts.bound;
+  async function loadLocation() {
+    showChangeLocation = true;
+    ChangeStation = (
+      await import("~/components/tools/Partials/ChangeStation.svelte")
+    ).default;
   }
 
-  async function downloadViz(e) {
-    isLoading = true;
-    const format = e.detail;
-    showDownload = false;
-    try {
-      const container = document.querySelector(".explore");
-      switch (format) {
-        case "png":
-          await exportPNG(container, ["explore-settings"]);
-          break;
-        case "csv":
-          var csvData = formatDataForExport($baseline.values);
-          var csvWithMetadata = `${csvFormatRows(metadata)} \n \n ${csvFormat(
-            csvData
-          )}`;
-          await exportCSV(csvWithMetadata);
-          break;
-        default:
-        // Do nothing
-      }
-      notifier.success(
-        "Download",
-        `Successfully created ${format} file`,
-        "",
-        2000
-      );
-    } catch (error) {
-      notifier.error("Download", `Error creating ${format} file`, error, 2000);
-    }
-    isLoading = false;
+  async function loadDownload() {
+    showDownload = true;
+    metadata = [
+      ["station", $location.title],
+      ["variable", $climvar.label],
+      ["units", $climvar.units.imperial],
+      ["record high", `${$baseline.high.value} on ${$baseline.high.date}`],
+      ["record low", `${$baseline.low.value} on ${$baseline.low.date}`],
+    ];
+    csvData = $baseline.values;
+    printContainer = document.querySelector(".explore");
+    printSkipElements = ["explore-settings"];
+    DownloadChart = (
+      await import("~/components/tools/Partials/DownloadChart.svelte")
+    ).default;
   }
 
   function changeClimvar(e) {
@@ -154,12 +155,27 @@
     console.log("doy change");
   }
 
-  const changeThreshold = debounce((e) => {
+  async function getProbabilityCI(rp) {
+    const config = {
+      climvarId: $climvarStore,
+    };
+    const { params } = $queryParams;
+    params.intervals = rp;
+    const response = await getObservedReturnLevels(config, params);
+    const level = response[0].levels[0];
+    return [level.lowerci, level.upperci];
+  }
+
+  async function changeThreshold(e) {
     if (!e || !e.detail) return;
-    console.log("threshold change");
+    isThresholdValid = checkThresholdValidity(e.detail);
+    if (!isThresholdValid) return;
     thresholdStore.set(e.detail);
-    thresholdProbability = getReturnPeriod($returnLevels, $thresholdStore);
-  }, 500);
+    console.log("threshold change");
+    thresholdProbability = calcReturnPeriod($returnLevels, e.detail);
+    //thresholdCI = await getProbabilityCI(thresholdProbability.rp);
+    //console.log("trehosld ci", thresholdCI);
+  }
 
   function changeLocation(e) {
     showChangeLocation = false;
@@ -168,28 +184,65 @@
   }
 
   async function getForecast() {
-    console.log("get forecast");
-    const data = await getForecastData({
-      lng: $location.geometry.coordinates[0],
-      lat: $location.geometry.coordinates[1],
-    });
-    forecastStore.set(data);
-    forecast = filterForecast($climvar.id, data);
-    console.log("forecast ", forecast);
+    forecastLoading = true;
+    try {
+      const data = await getForecastData({
+        lng: $location.geometry.coordinates[0],
+        lat: $location.geometry.coordinates[1],
+      });
+      forecastStore.set(data);
+      forecast = filterForecast($climvar.id, data);
+      forecastLoading = false;
+      return data;
+    } catch (error) {
+      console.log("error fetching forecast");
+      notifier.error(
+        "Error",
+        "Unable to get forecast from NWS at this time. Try again in a few minutes.",
+        2000
+      );
+      forecastLoading = false;
+      showForecast = false;
+    }
   }
 
   function toggleForecastDisplay() {
     showForecast = !showForecast;
-    console.log("toggle 2", showForecast);
+    console.log("toggle forecast", showForecast);
+
     if (showForecast) {
-      if (!$forecastStore) {
+      if (forecast === null) {
         getForecast();
       }
-    } else {
-      console.log("hide forecast");
     }
   }
 </script>
+
+<style>
+  :global(.forecast-toggle .bx--checkbox-label-text::after) {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: var(--teal-60);
+    margin-left: 2px;
+  }
+
+  .block-title.threshold::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: red;
+    margin-left: 2px;
+  }
+
+  .threshold-info p {
+    margin-bottom: 0;
+  }
+</style>
 
 <div class="explore">
   {#if isLoading}
@@ -209,26 +262,26 @@
         around
         <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
       </h4>
-      {#if !thresholdInvalid && thresholdProbability}
-        <p>
-          A daily <span class="block-title">{$climvar.title}</span> of
-          <span class="block-title">{$thresholdStore} °F</span>
-          around <span class="block-title">{$doyText}</span> is a
-          <span class="block-title">{thresholdProbability.label}</span>
-          event. The probability of exceeding
-          <span class="block-title">{$thresholdStore} °F</span>
-          is
-          <span class="block-title">{thresholdProbability.probability}%</span>
-          and is estimated to be a
-          <span class="block-title">1 in {thresholdProbability.rp}</span> year event.
-        </p>
+      {#if isThresholdValid && thresholdProbability}
+        <div class="threshold-info">
+          <p>
+            A daily <span class="block-title">{$climvar.title}</span> of
+            <span class="block-title threshold">{$thresholdStore} °F</span>
+            around <span class="block-title">{$doyText}</span> is a
+            <span class="block-title">{thresholdProbability.label}</span>
+            event. The probability of exceeding
+            <span class="block-title">{$thresholdStore} °F</span>
+            is
+            <span class="block-title">{thresholdProbability.probability}%</span>
+            and is estimated to be a
+            <span class="block-title">1 in {thresholdProbability.rp}</span> year
+            event.
+          </p>
+          <!-- <ShowDefinition topics="{['probability']}" title="Chart" on:define /> -->
+        </div>
       {/if}
       <div>
-        <Button
-          size="small"
-          icon="{Location16}"
-          on:click="{() => (showChangeLocation = true)}"
-        >
+        <Button size="small" icon="{Location16}" on:click="{loadLocation}">
           Change Location
         </Button>
       </div>
@@ -241,21 +294,23 @@
   <!-- Chart-->
   <div class="explore-chart block">
     <div class="chart-controls">
-      {#if showForecast && !forecast}
+      {#if forecastLoading && !forecast}
         <InlineLoading description="Fetching forecast from NWS..." />
       {:else}
-        <Checkbox
-          labelText="{`Show 7-Day Forecast for ${$forecastDate}`}"
-          checked="{showForecast}"
-          on:check="{toggleForecastDisplay}"
-        />
+        <div class="forecast-toggle">
+          <Checkbox
+            labelText="{`Show 7-Day Forecast for ${$forecastDate}`}"
+            checked="{showForecast}"
+            on:check="{toggleForecastDisplay}"
+          />
+        </div>
       {/if}
     </div>
     <Histogram
       data="{baselineData}"
       labels="{baselineLabels}"
-      forecast="{forecast}"
-      threshold="{thresholdInvalid ? null : $thresholdStore}"
+      forecast="{showForecast ? forecast : null}"
+      threshold="{isThresholdValid ? $thresholdStore : null}"
       yAxis="{{
         label: `Count of Days`,
         tickFormat: formatFn,
@@ -275,12 +330,8 @@
     <div class="chart-download">
       <ShowDefinition topics="{['histogram-chart']}" title="Chart" on:define />
       <div>
-        <Button
-          size="small"
-          icon="{Download16}"
-          on:click="{() => (showDownload = true)}"
-        >
-          Download
+        <Button size="small" icon="{Download16}" on:click="{loadDownload}">
+          Download Chart
         </Button>
         <Button
           size="small"
@@ -330,8 +381,8 @@
       </AccordionItem>
       <AccordionItem open title="Enter Threshold">
         <NumberInput
-          invalid="{thresholdInvalid}"
-          invalidText="{thresholdOpts.text}"
+          invalid="{!isThresholdValid}"
+          invalidText="{thresholdOpts.invalidText}"
           value="{$thresholdStore}"
           on:change="{changeThreshold}"
         />
@@ -357,6 +408,19 @@
   />
 </Modal>
 
-<ChangeLocation bind:open="{showChangeLocation}" on:change="{changeLocation}" />
+<svelte:component
+  this="{ChangeStation}"
+  bind:open="{showChangeLocation}"
+  location="{$location}"
+  stationsLayer="{stationsLayer}"
+  on:change="{changeLocation}"
+/>
 
-<DownloadChart bind:open="{showDownload}" on:download="{downloadViz}" />
+<svelte:component
+  this="{DownloadChart}"
+  metadata="{metadata}"
+  csvData="{csvData}"
+  printContainer="{printContainer}"
+  printSkipElements="{printSkipElements}"
+  bind:open="{showDownload}"
+/>

@@ -30,28 +30,6 @@
 </script>
 
 <style>
-  .source {
-    margin-top: 1rem;
-  }
-
-  .source .source-logo {
-    display: flex;
-    padding-top: 1.5rem;
-    align-items: start;
-  }
-
-  .source .source-logo img {
-    width: 100px;
-  }
-
-  .source .source-text > * {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .source .source-text ul {
-    padding-left: 1.5rem;
-  }
 </style>
 
 <div class="bx--grid">
@@ -82,39 +60,45 @@
           {:then items}
             {#each items as item}
               <div class="bx--row source">
-                <div class="bx--col-lg-2 source-logo">
-                  <img src="/img/logos/{item.logo}" alt="data provider logo" />
+                <div class="bx--col-lg-2">
+                  <img
+                    src="/img/logos/{item.logo}"
+                    class="source-logo"
+                    alt="data provider logo"
+                  />
                 </div>
-                <div class="bx--col-lg-12 source-text">
+                <div class="bx--col-lg-12">
                   <h4>{item.title}</h4>
                   <h5>{item.publisher}</h5>
-                  <p>{item.description}</p>
-                  <p>Download dataset:</p>
-                  <ul>
-                    <li>
+                  <p class="source-text">{item.description}</p>
+                  <p class="source-text">Download dataset:</p>
+                  <ul class="source-list">
+                    <li class="source-list-item">
                       <a href="/data/download/{item.id}" target="_blank"
                         >Cal-Adapt Data Download tool</a
                       >
                     </li>
                     {#each item.resources.filter((d) => d.format !== "reference") as ref}
-                      <li>
+                      <li class="source-list-item">
                         <a href="{ref.url}" target="_blank"
                           >{ref.name} ({ref.format})</a
                         >
                       </li>
                     {/each}
                   </ul>
-                  <p>References:</p>
-                  <ul>
+                  <p class="source-text">References:</p>
+                  <ul class="source-list">
                     {#each item.resources.filter((d) => d.format === "reference") as ref}
-                      <li>
-                        {ref.name}. <a href="{ref.url}" target="_blank">Link</a>
+                      <li class="source-list-item">
+                        {ref.name} (<a href="{ref.url}" target="_blank">link</a
+                        >)
                       </li>
                     {/each}
                   </ul>
                 </div>
               </div>
             {/each}
+            <slot name="extra-sources" />
           {:catch error}
             <InlineNotification
               lowContrast

@@ -1,42 +1,33 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { onDestroy, createEventDispatcher } from "svelte";
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
   import getBbox from "@turf/bbox";
 
   // Helpers
   import {
     getNearestStation,
-    getStation,
+    getStationById,
     searchFeature,
   } from "../../../helpers/geocode";
-  import { stationsLayer } from "./_helpers";
 
   import { Location } from "../../../components/tools/Location";
 
-  // Store
-  import { locationStore } from "./_store";
-
+  // Props
+  export let location;
+  export let stationsLayer;
   export let open = false;
 
   const dispatch = createEventDispatcher();
-  const { location } = locationStore;
-  let currentLoc = $location;
+
+  let currentLoc = location;
   let geocodeResults = [];
   let searchValue = "";
   let searchPlaceholder = "Enter place name or address";
   let isSearching = false;
   let showSuggestions = false;
 
-  async function mapClick(e) {
-    currentLoc = await getNearestStation(
-      e.detail[0],
-      e.detail[0],
-      "hadisdstations"
-    );
-  }
-
   async function overlayClick(e) {
-    currentLoc = await getStation(e.detail, "hadisdstations");
+    currentLoc = await getStationById(e.detail, stationsLayer.id);
     currentLoc.bbox = getBbox(currentLoc.geometry);
     console.log("overlay result", currentLoc);
   }
@@ -47,14 +38,21 @@
     showSuggestions = false;
   }
 
-  async function search(e) {
+  async function search({ key }) {
+    if (key === "Escape") {
+      clearSearch();
+      return;
+    }
+    if (key !== "Enter") return;
     isSearching = true;
     showSuggestions = false;
     geocodeResults.length = 0;
-    geocodeResults = await searchFeature(e.target.value);
+    geocodeResults = await searchFeature(searchValue, stationsLayer.id);
     // Add groupname for results from all geocoders
     geocodeResults.forEach((item) => {
-      if (item.geocoder === "mapbox") {
+      if (item.geocoder === "caladapt") {
+        item.category = stationsLayer.metadata.title;
+      } else {
         item.category = "Places & Addresses";
       }
     });
@@ -63,91 +61,30 @@
   }
 
   async function selectSuggestion(opt) {
-    if (opt) {
+    if (opt.geocoder === "mapbox") {
       currentLoc = await getNearestStation(
         opt.center[0],
         opt.center[1],
         stationsLayer.id
       );
+    } else {
+      currentLoc = opt;
     }
     clearSearch();
   }
 
   function change() {
+    open = false;
     dispatch("change", {
       location: currentLoc,
     });
   }
 
   function cancel() {
-    currentLoc = $location;
-    clearSearch();
+    currentLoc = location;
     open = false;
   }
 </script>
-
-<style>
-  .change-location {
-    position: relative;
-  }
-
-  .search-control {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    z-index: 3;
-    box-shadow: var(--box-shadow);
-    width: 14rem;
-  }
-
-  .search-status {
-    position: absolute;
-    z-index: 2;
-    left: 13rem;
-    top: 10px;
-    z-index: 3;
-  }
-
-  .suggestions-wrapper {
-    background-color: var(--white);
-    border-radius: 4px;
-    position: absolute;
-    width: 100%;
-    left: 0;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    z-index: 1000;
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-  }
-
-  .suggestions .suggestion {
-    cursor: default;
-    display: block;
-    padding: 3px 12px;
-    color: var(--gray-80);
-  }
-
-  .suggestions .suggestion:hover {
-    background-color: var(--gray-20);
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  .suggestion-text {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-size: 0.8rem;
-  }
-
-  .suggestion-category {
-    display: block;
-    margin: 0.5rem;
-    font-size: 0.9rem;
-    font-size: bold;
-  }
-</style>
 
 <Modal
   preventCloseOnClickOutside
@@ -155,7 +92,7 @@
   secondaryButtonText="Cancel"
   on:click:button--secondary="{cancel}"
   bind:open
-  modalHeading="Change Location"
+  modalHeading="Change Station"
   shouldSubmitOnEnter="{false}"
   on:submit="{change}"
   on:open
@@ -173,7 +110,7 @@
           size="sm"
           id="search"
           placeholder="{searchPlaceholder}"
-          on:change="{search}"
+          on:keydown="{search}"
           on:clear="{clearSearch}"
           bind:value="{searchValue}"
         />
@@ -219,9 +156,13 @@
       {/if}
       <!-- Map-->
       <Location
+        zoom="{7}"
+        lng="{currentLoc.center[0]}"
+        lat="{currentLoc.center[1]}"
         stations="{stationsLayer}"
         location="{currentLoc}"
         imageOverlayShow="{false}"
+        zoomToLocationOnLoad="{false}"
         on:overlayclick="{overlayClick}"
         on:ready="{() => dispatch('ready')}"
       />

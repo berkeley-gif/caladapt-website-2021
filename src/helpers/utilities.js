@@ -448,23 +448,26 @@ export async function convertFileToGeojson(file) {
 }
 
 /**
- * Return closest number in array
+ * Return closest number and it's index in array
  *
- * @param {number} needle
- * @param {array} haystack
- * @return {number}
+ * @param {number} num
+ * @param {array} arr
+ * @return {object}
  */
-export function closest(needle, haystack) {
-  return haystack.reduce((a, b) => {
-    let aDiff = Math.abs(a - needle);
-    let bDiff = Math.abs(b - needle);
+export function closest(num, arr) {
+  let value = arr[0];
+  let diff = Math.abs(num - value);
+  let index = 0;
 
-    if (aDiff == bDiff) {
-      return a > b ? a : b;
-    } else {
-      return bDiff < aDiff ? b : a;
+  for (let val = 0; val < arr.length; val++) {
+    const newdiff = Math.abs(num - arr[val]);
+    if (newdiff < diff) {
+      diff = newdiff;
+      value = arr[val];
+      index = val;
     }
-  });
+  }
+  return { value, index };
 }
 
 /**
@@ -515,3 +518,13 @@ export function isLeapYear(year) {
 }
 
 export { throttle };
+
+/**
+ * Check if date is today
+ * @param {date} date
+ * @return {boolean}
+ */
+export function isToday(date) {
+  const today = new Date();
+  return date.toDateString() === today.toDateString();
+}

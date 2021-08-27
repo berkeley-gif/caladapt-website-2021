@@ -1,7 +1,7 @@
 <script>
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
-  import { bin, thresholdFreedmanDiaconis, extent, min } from "d3-array";
+  import { bin, thresholdFreedmanDiaconis, extent, min, max } from "d3-array";
 
   import Column from "./Column.svelte";
   import Annotation from "./Annotation.svelte";
@@ -30,9 +30,10 @@
   const xKey = ["x0", "x1"];
   const yKey = "length";
 
-  let domain;
   let hist;
   let bins;
+  let xDomain;
+  let dataExtent;
 
   let evt;
   let hideTooltip = true;
@@ -40,9 +41,18 @@
   $: style = `height:${height}px`;
 
   $: if (data) {
-    domain = extent(data);
-    hist = bin().domain(domain).thresholds(thresholdFreedmanDiaconis);
+    dataExtent = extent(data);
+    hist = bin().domain(dataExtent).thresholds(thresholdFreedmanDiaconis);
     bins = hist(data);
+  }
+
+  $: if (threshold) {
+    xDomain = [
+      Math.min(dataExtent[0], threshold),
+      Math.max(dataExtent[1], threshold),
+    ];
+  } else {
+    xDomain = dataExtent;
   }
 
   function labelForecast(d) {
@@ -84,6 +94,7 @@
       x="{xKey}"
       y="{yKey}"
       data="{bins}"
+      xDomain="{xDomain}"
     >
       <Svg>
         <AxisX
@@ -127,7 +138,7 @@
     <SkeletonText />
     <SkeletonText />
   </div>
-  <div style="{`height:${height}`}">
+  <div style="{style}">
     <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
 {/if}

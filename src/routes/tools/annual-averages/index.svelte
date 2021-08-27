@@ -3,6 +3,7 @@
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
+  import resourcesList from "../../../../content/resources/data";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -17,6 +18,9 @@
     const relatedTools = toolsList
       .filter((d) => tool.related.includes(d.slug))
       .map((d) => ({ ...d, category: "caladapt" }));
+    const externalResources = resourcesList
+      .filter((d) => tool.resources.includes(d.title))
+      .map((d) => ({ ...d, category: "external" }));
 
     // Get glossary items
     const glossary = await this.fetch("help/glossary.json")
@@ -49,7 +53,7 @@
       };
     }
 
-    return { initialConfig, glossary, tool, relatedTools };
+    return { initialConfig, glossary, tool, relatedTools, externalResources };
   }
 </script>
 
@@ -59,7 +63,7 @@
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
-  import { getFeature, reverseGeocode } from "../../../helpers/geocode";
+  import { getFeature, reverseGeocode } from "~/helpers/geocode";
 
   // Components
   import ExploreData from "./ExploreData.svelte";
@@ -92,6 +96,7 @@
   export let glossary;
   export let tool;
   export let relatedTools;
+  export let externalResources;
 
   // Derived stores
   const { location } = locationStore;
@@ -133,7 +138,7 @@
 
   // Reactive props
   $: datasets = tool.datasets;
-  $: resources = [...tool.resources, ...relatedTools];
+  $: resources = [...externalResources, ...relatedTools];
   $: $climvar, $scenario, $models, $location, update();
 
   function updateDataset(e) {
