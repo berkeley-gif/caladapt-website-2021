@@ -263,7 +263,6 @@
     }
   }
 
-  #help,
   #about {
     p,
     ul {
@@ -271,9 +270,6 @@
       margin-bottom: 1.75rem;
       max-width: 75ch;
     }
-  }
-
-  #about {
     .source {
       .source-logo {
         width: 100%;
@@ -286,6 +282,13 @@
       .source-list {
         padding-left: 1.5rem;
       }
+    }
+  }
+
+  #resources,
+  #help {
+    ul {
+      margin-bottom: 1.75rem;
     }
   }
 
