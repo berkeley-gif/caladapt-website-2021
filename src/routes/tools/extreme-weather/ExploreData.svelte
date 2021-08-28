@@ -54,9 +54,10 @@
     forecastDate,
     forecastStore,
     queryParams,
+    doyRange,
   } from "./_store";
 
-  const { baseline, returnLevels, doyRange } = observationsStore;
+  const { baseline, returnLevels } = observationsStore;
   const { climvar } = climvarStore;
   const { doyText } = doyStore;
   const { titles } = datasetStore;
@@ -256,12 +257,17 @@
   <div class="explore-header block">
     <StaticMap location="{$location}" width="{500}" height="{500}" />
     <div class="explore-header-title">
-      <h3><span class="block-title">{$location.title}</span></h3>
-      <h4>
+      <div class="h3 block-title">
+        {$location.title}&nbsp; (<span class="block-title"
+          >{$location.geometry.coordinates[0]}°</span
+        >,&nbsp;
+        <span class="block-title">{$location.geometry.coordinates[1]}°</span>)
+      </div>
+      <div class="h4">
         Distribution of daily <span class="block-title">{$climvar.title}s</span>
         around
         <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
-      </h4>
+      </div>
       {#if isThresholdValid && thresholdProbability}
         <div class="threshold-info">
           <p>
@@ -346,7 +352,7 @@
 
   <!-- Settings-->
   <div class="explore-settings">
-    <h4 class="block-title">Change Settings:</h4>
+    <div class="h4 block-title">Change Settings:</div>
     <Accordion class="settings-list">
       <AccordionItem open title="Select Climate Variable">
         <SelectClimvar
