@@ -1,5 +1,6 @@
 import { writable, derived, readable } from "svelte/store";
 import { timeFormat, timeParse } from "d3-time-format";
+import { timeDay } from "d3-time";
 import { format } from "d3-format";
 import { quantile, sort } from "d3-array";
 import getBbox from "@turf/bbox";
@@ -8,7 +9,6 @@ import { climvarList } from "./_helpers";
 const numberFormat = timeFormat("%j");
 const textFormat = timeFormat("%b %e");
 const today = new Date();
-const dateParse = timeParse("%Y-%m-%d");
 const dateFormat = timeFormat("%b %e, %Y");
 
 const percentiles = [1, 10, 90, 99];
@@ -194,14 +194,6 @@ export const observationsStore = (() => {
         };
       });
     },
-    get doyRange() {
-      return derived(store, ($store) => {
-        if (!$store) return null;
-        const begin = textFormat($store.returnLevels.begin);
-        const end = textFormat($store.returnLevels.end);
-        return `${begin}–${end}`;
-      });
-    },
   };
 })();
 
@@ -272,5 +264,21 @@ export const bookmark = derived(
       return `${window.location.href}?${bookmark}`;
     }
     return null;
+  }
+);
+
+// Date range store
+export const doyRange = derived(
+  [doyStore, observationsStore],
+  ([$doyStore, $observationsStore]) => {
+    if (!doyStore || !$observationsStore) return;
+    const begin = $observationsStore.returnLevels.begin;
+    const end = $observationsStore.returnLevels.end;
+    const currentYear = $doyStore.getFullYear();
+    const currentYearBegin = new Date(begin.setYear(+currentYear));
+    const currentYearEnd = new Date(end.setYear(+currentYear));
+    const n = timeDay.count(currentYearBegin, $doyStore);
+    const m = timeDay.count($doyStore, currentYearEnd);
+    return `${n} days before & ${m} days after`;
   }
 );
