@@ -223,6 +223,7 @@ export const formatFeature = (feature, boundaryId, placeName = "") => {
     center: [+lng, +lat],
     bbox,
     id: feature.id || "",
+    properties: feature.properties,
   };
 };
 
