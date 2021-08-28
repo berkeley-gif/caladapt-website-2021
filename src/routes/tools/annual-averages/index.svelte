@@ -251,8 +251,7 @@
 <div class="tool">
   <!-- Header -->
   <div id="header">
-    <Header>
-      <h1 slot="title">{tool.title}</h1>
+    <Header iconPaths="{tool.icons}" title="{tool.title}">
       <div slot="description">
         <p class="lead">
           Explore projected changes in annual average Maximum Temperature,
