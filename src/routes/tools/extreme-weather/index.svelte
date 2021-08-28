@@ -141,7 +141,7 @@
         <div>
           <p>The probability that an extreme weather event occurs is often expressed as a Return Period. A return period is the inverse of probability (generally expressed in %); it gives the estimated time interval between events of a similar size or intensity.</p>
           <p>For example, the estimated return period of an event might be 1 in 10 years. This does not mean the event will occur every 10 years, it indicates probability of ocurrence being 10/100, or 10% in any one year.</p>
-          <p>For this tool, 30 years of data for the Baseline, Mid-Century and End-Century periods are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
+          <p>For this tool, 30 years of data for the Baseline periods are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
         </div>
       `,
     },
@@ -152,7 +152,7 @@
       },
       html: `
         <div>
-          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast if for today's date only and does not change if you select a different day of year.</p>
+          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast is for today's date only and does not change if you select a different day of year.</p>
         </div>
       `,
     },
@@ -198,6 +198,28 @@
         <div>
           <p>The lines represent frequency curves that relate estimated values of selected climate variable to return periods (years) for historcal observed data and downscaled GCMs. The shaded areas represent 95% confidence intervals.</p>
           <p>Data is presented for Baseline, Mid-Century and End-Century periods. Click on the legend button to highlight corresponding timeseries.</p>
+        </div>
+      `,
+    },
+    {
+      slug: "tasmax",
+      metadata: {
+        title: "Daily Maximum Temperature",
+      },
+      html: `
+        <div>
+          <p>The daily maximum temperature is the highest near-surface air temperature for a day. It usually occurs in the afternoon.</p>
+        </div>
+      `,
+    },
+    {
+      slug: "tasmin",
+      metadata: {
+        title: "Daily Minimum Temperature",
+      },
+      html: `
+        <div>
+          <p>The daily minimum temperature is the lowest near-surface air temperature for a day. It usually occurs in the early morning.</p>
         </div>
       `,
     },
@@ -311,16 +333,18 @@
 <div class="tool">
   <!-- Header -->
   <div id="header">
-    <Header>
+    <Header iconPaths="{tool.icons}">
       <h1 slot="title">{tool.title}</h1>
       <div slot="description">
         <p class="lead">
-          Explore extreme temperatures for past weather and present day at 38
-          weather stations across California. Each of the 38 stations has an
-          observation period of greater than 30 years (1973 to present) from the
-          HadISD global record and was identified as having high quality data
-          for temperature. This dataset was produced for use by the energy
-          sector.
+          Explore extreme temperatures for past weather and present day. This
+          tool provides data from 39 weather stations across California,
+          utilizing a quality-controlled dataset for hourly weather observations
+          for 1973-2019. This dataset was produced for use by the energy sector
+          (<a
+            href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
+            target="_blank">Doherty 2020</a
+          >).
         </p>
       </div>
     </Header>
@@ -341,8 +365,13 @@
     <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
       <div slot="description">
         <p>
-          Explore extreme temperatures for past weather, present day, and future
-          climate projections.
+          Explore extreme temperatures for past weather and present day. This
+          tool provides data from 39 weather stations across California,
+          utilizing a quality-controlled data base for hourly weather
+          observations for 1973-2019 produced for use by the energy sector (<a
+            href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
+            target="_blank">Doherty 2020</a
+          >).
         </p>
       </div>
       <div slot="extra-sources">
