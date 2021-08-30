@@ -140,16 +140,13 @@ export const observationsStore = (() => {
         if (!$store) return null;
 
         // Get start and end dates to filter observations for 20 day period
-        const beginDate = $store.returnLevels.begin;
-        const beginYear = +beginDate.getFullYear();
-        const endDate = $store.returnLevels.end;
-        const endYear = +endDate.getFullYear();
+        const { begin, end } = $store.returnLevels;
 
         // Filter by 20 day period around selected date
         const filterBy20DayPeriod = $store.values.filter((d) => {
           const year = d.date.getFullYear();
-          const s = new Date(beginDate.setYear(year));
-          const e = new Date(endDate.setYear(year));
+          const s = new Date(year, begin.month, begin.day);
+          const e = new Date(year, end.month, end.day);
           if (
             d.date.getTime() >= s.getTime() &&
             d.date.getTime() <= e.getTime()
@@ -167,10 +164,8 @@ export const observationsStore = (() => {
 
         // Filter by baseline period (30 years, e.g. 1991-2020)
         const filteredData = filterBy20DayPeriod.filter((d) => {
-          if (
-            +d.date.getFullYear() >= beginYear &&
-            +d.date.getFullYear() <= endYear
-          ) {
+          const year = +d.date.getFullYear();
+          if (year >= begin.year && year <= end.year) {
             return true;
           }
           return false;
@@ -272,11 +267,10 @@ export const doyRange = derived(
   [doyStore, observationsStore],
   ([$doyStore, $observationsStore]) => {
     if (!doyStore || !$observationsStore) return;
-    const begin = $observationsStore.returnLevels.begin;
-    const end = $observationsStore.returnLevels.end;
-    const currentYear = $doyStore.getFullYear();
-    const currentYearBegin = new Date(begin.setYear(+currentYear));
-    const currentYearEnd = new Date(end.setYear(+currentYear));
+    const { begin, end } = $observationsStore.returnLevels;
+    const year = $doyStore.getFullYear();
+    const currentYearBegin = new Date(year, begin.month, begin.day);
+    const currentYearEnd = new Date(year, end.month, end.day);
     const n = timeDay.count(currentYearBegin, $doyStore);
     const m = timeDay.count($doyStore, currentYearEnd);
     return `${n} days before & ${m} days after`;

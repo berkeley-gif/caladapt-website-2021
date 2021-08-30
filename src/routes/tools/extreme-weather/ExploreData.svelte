@@ -87,7 +87,17 @@
   let printContainer;
   let printSkipElements;
 
+  let dataSourceTitles = $titles;
+
   $: $locationStore, resetForecast();
+
+  $: if (showForecast) {
+    dataSourceTitles = [...dataSourceTitles, "National Weather Service"];
+  } else {
+    dataSourceTitles = dataSourceTitles.filter(
+      (d) => d !== "National Weather Service"
+    );
+  }
 
   function checkThresholdValidity(val) {
     if ($extremesStore === "high") {
@@ -209,7 +219,6 @@
 
   function toggleForecastDisplay() {
     showForecast = !showForecast;
-    console.log("toggle forecast", showForecast);
 
     if (showForecast) {
       if (forecast === null) {
@@ -239,10 +248,6 @@
     background-color: red;
     margin-left: 2px;
   }
-
-  .threshold-info p {
-    margin-bottom: 0;
-  }
 </style>
 
 <div class="explore">
@@ -268,24 +273,6 @@
         around
         <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
       </div>
-      {#if isThresholdValid && thresholdProbability}
-        <div class="threshold-info">
-          <p>
-            A daily <span class="block-title">{$climvar.title}</span> of
-            <span class="block-title threshold">{$thresholdStore} °F</span>
-            around <span class="block-title">{$doyText}</span> is a
-            <span class="block-title">{thresholdProbability.label}</span>
-            event. The probability of exceeding
-            <span class="block-title">{$thresholdStore} °F</span>
-            is
-            <span class="block-title">{thresholdProbability.probability}%</span>
-            and is estimated to be a
-            <span class="block-title">1 in {thresholdProbability.rp}</span> year
-            event.
-          </p>
-          <!-- <ShowDefinition topics="{['probability']}" title="Chart" on:define /> -->
-        </div>
-      {/if}
       <div>
         <Button size="small" icon="{Location16}" on:click="{loadLocation}">
           Change Location
@@ -295,7 +282,25 @@
   </div>
 
   <!-- Stats -->
-  <div class="explore-stats"></div>
+  <div class="explore-stats" style="display: block;">
+    <div class="block">
+      {#if isThresholdValid && thresholdProbability}
+        <p>
+          A daily <span class="block-title">{$climvar.title}</span> of
+          <span class="block-title threshold">{$thresholdStore} °F</span>
+          around <span class="block-title">{$doyText}</span> is a
+          <span class="block-title">{thresholdProbability.label}</span>
+          event. The probability of exceeding
+          <span class="block-title">{$thresholdStore} °F</span>
+          is
+          <span class="block-title">{thresholdProbability.probability}%</span>
+          and is estimated to be a
+          <span class="block-title">1 in {thresholdProbability.rp}</span> year event.
+        </p>
+        <ShowDefinition topics="{['probability']}" title="Chart" on:define />
+      {/if}
+    </div>
+  </div>
 
   <!-- Chart-->
   <div class="explore-chart block">
@@ -330,7 +335,7 @@
     />
     <div class="chart-notes">
       <p>
-        Source: Cal-Adapt. Data: {$titles.join(", ")}.
+        Source: Cal-Adapt. Data: {dataSourceTitles.join(", ")}.
       </p>
     </div>
     <div class="chart-download">

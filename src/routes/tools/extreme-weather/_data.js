@@ -10,13 +10,12 @@ import {
   transformResponse,
   pipe,
   closest,
-  isToday,
 } from "../../../helpers/utilities";
 
 const { apiEndpoint } = config.env.production;
 const dateParse = timeParse("%Y-%m-%d");
 const startTimeParse = timeParse("%Y-%m-%dT%H:%M:%S%Z");
-const startTimeFormat = timeFormat("%-I%p");
+const startTimeFormat = timeFormat("%m/%d");
 
 const fetchTimeseries = async ({ slug, params }) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
@@ -29,10 +28,11 @@ const fetchTimeseries = async ({ slug, params }) => {
 
 const transformReturnLevels = (response) => {
   const returnlevels = response.returnlevels.map((d) => {
-    const begin = dateParse(d.begin);
-    const end = dateParse(d.end);
-    const beginYear = +begin.getFullYear();
-    const endYear = +end.getFullYear();
+    const { threshold, gevisf, levels, begin, end } = d;
+    const beginDate = dateParse(begin);
+    const endDate = dateParse(end);
+    const beginYear = beginDate.getFullYear();
+    const endYear = endDate.getFullYear();
     let timestep;
     if (beginYear < 2000) {
       timestep = `Baseline (${beginYear}-${endYear})`;
@@ -41,7 +41,22 @@ const transformReturnLevels = (response) => {
     } else {
       timestep = `End-Century (${beginYear}-${endYear})`;
     }
-    return { ...d, timestep, begin, end };
+    return {
+      threshold,
+      gevisf,
+      levels,
+      timestep,
+      begin: {
+        day: beginDate.getDate(),
+        month: beginDate.getMonth(),
+        year: beginYear,
+      },
+      end: {
+        day: endDate.getDate(),
+        month: endDate.getMonth(),
+        year: endYear,
+      },
+    };
   });
   return returnlevels;
 };
@@ -66,6 +81,7 @@ export async function getObservedValues(config, params, method) {
 
 export async function getObservedReturnLevels(config, params) {
   try {
+    // TODO: remove cache busting param v=2
     params.v = 2;
     const { climvarId } = config;
     const slug = `${climvarId}_day_hadisd/ams`;
@@ -148,13 +164,8 @@ export async function getForecastData({ lng, lat }) {
     throw new Error(dataError);
   }
   return data.properties.periods.map((d) => {
-    let label;
-    let startTime = startTimeParse(d.startTime);
-    if (isToday(startTime)) {
-      label = startTimeFormat(startTime);
-    } else {
-      label = d.name.substring(0, 3);
-    }
+    const startTime = startTimeParse(d.startTime);
+    const label = startTimeFormat(startTime);
     return { ...d, label };
   });
 }
