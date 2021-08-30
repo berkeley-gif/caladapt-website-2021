@@ -89,6 +89,11 @@
     currentLoc = e.detail.location;
   }
 
+  function clearUpload() {
+    currentLoc = location;
+    currentBoundary = boundary;
+  }
+
   function change() {
     open = false;
     dispatch("change", {
@@ -131,7 +136,7 @@
       />
       {#if enableUpload}
         <!-- Upload Boundary -->
-        <UploadBoundary on:upload="{uploadBoundary}" />
+        <UploadBoundary on:upload="{uploadBoundary}" on:clear="{clearUpload}" />
       {/if}
     </div>
     <div class="change-location">

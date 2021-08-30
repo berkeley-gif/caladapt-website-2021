@@ -29,85 +29,79 @@
   });
 </script>
 
-<style>
-</style>
-
-<div class="bx--grid">
-  <!-- About -->
-  <div class="bx--row">
-    <div class="bx--col-lg-12">
-      <h2>About the Tool</h2>
-      <slot name="description">
-        <em>[Provide content describing the tool]</em>
-      </slot>
-    </div>
+<!-- About -->
+<div class="bx--row">
+  <div class="bx--col-lg-12">
+    <h2>About the Tool</h2>
+    <slot name="description">
+      <em>[Provide content describing the tool]</em>
+    </slot>
   </div>
-  <!-- Datasets -->
-  <div class="bx--row">
-    <div class="bx--col-lg-12">
-      <h3>Data Sources</h3>
-      <slot name="sources">
-        <p>
-          The following list of datasets were used to create this tool. Download
-          data visualized in the charts by clicking the Download Chart button.
-          For more download options follow the links below.
-        </p>
-        {#if !datasets || !datasetList}
-          <em>[Provide a list of datasets used for the tool]</em>
-        {:else}
-          {#await datasetList}
-            <InlineLoading description="Loading list of datasets..." />
-          {:then items}
-            {#each items as item}
-              <div class="bx--row source">
-                <div class="bx--col-lg-2">
-                  <img
-                    src="/img/logos/{item.logo}"
-                    class="source-logo"
-                    alt="data provider logo"
-                  />
-                </div>
-                <div class="bx--col-lg-12">
-                  <h4>{item.title}</h4>
-                  <h5>{item.publisher}</h5>
-                  <p class="source-text">{item.description}</p>
-                  <p class="source-text">Download dataset:</p>
-                  <ul class="source-list">
+</div>
+<!-- Datasets -->
+<div class="bx--row">
+  <div class="bx--col-lg-12">
+    <h2>Data Sources</h2>
+    <slot name="sources">
+      <p>
+        The following list of datasets were used to create this tool. Download
+        data visualized in the charts by clicking the Download Chart button. For
+        more download options follow the links below.
+      </p>
+      {#if !datasets || !datasetList}
+        <em>[Provide a list of datasets used for the tool]</em>
+      {:else}
+        {#await datasetList}
+          <InlineLoading description="Loading list of datasets..." />
+        {:then items}
+          {#each items as item}
+            <div class="bx--row source">
+              <div class="bx--col-lg-2">
+                <img
+                  src="/img/logos/{item.logo}"
+                  class="source-logo"
+                  alt="data provider logo"
+                />
+              </div>
+              <div class="bx--col-lg-12">
+                <h4>{item.title}</h4>
+                <h5>{item.publisher}</h5>
+                <p class="source-text">{item.description}</p>
+                <p class="source-text">Download dataset:</p>
+                <ul class="source-list">
+                  <li class="source-list-item">
+                    <a href="/data/download/{item.id}" target="_blank"
+                      >Cal-Adapt Data Download tool</a
+                    >
+                  </li>
+                  {#each item.resources.filter((d) => d.format !== "reference") as ref}
                     <li class="source-list-item">
-                      <a href="/data/download/{item.id}" target="_blank"
-                        >Cal-Adapt Data Download tool</a
+                      <a href="{ref.url}" target="_blank"
+                        >{ref.name} ({ref.format})</a
                       >
                     </li>
-                    {#each item.resources.filter((d) => d.format !== "reference") as ref}
-                      <li class="source-list-item">
-                        <a href="{ref.url}" target="_blank"
-                          >{ref.name} ({ref.format})</a
-                        >
-                      </li>
-                    {/each}
-                  </ul>
-                  <p class="source-text">References:</p>
-                  <ul class="source-list">
-                    {#each item.resources.filter((d) => d.format === "reference") as ref}
-                      <li class="source-list-item">
-                        {ref.name} (<a href="{ref.url}" target="_blank">link</a
-                        >)
-                      </li>
-                    {/each}
-                  </ul>
-                </div>
+                  {/each}
+                </ul>
+                <p class="source-text">References:</p>
+                <ul class="source-list">
+                  {#each item.resources.filter((d) => d.format === "reference") as ref}
+                    <li class="source-list-item">
+                      {ref.name} (<a href="{ref.url}" target="_blank">link</a>)
+                    </li>
+                  {/each}
+                </ul>
               </div>
-            {/each}
-            <slot name="extra-sources" />
-          {:catch error}
-            <InlineNotification
-              lowContrast
-              title="Error:"
-              subtitle="Currently unable to load dataset descriptions."
-            />
-          {/await}
-        {/if}
-      </slot>
-    </div>
+            </div>
+          {/each}
+          <slot name="extra-sources" />
+        {:catch error}
+          <InlineNotification
+            lowContrast
+            title="Error:"
+            subtitle="Currently unable to load dataset descriptions."
+          />
+        {/await}
+      {/if}
+    </slot>
   </div>
 </div>

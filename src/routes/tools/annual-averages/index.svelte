@@ -29,18 +29,31 @@
         return json.data;
       });
 
+    // Get help categories
+    const help = await this.fetch("help.json")
+      .then((r) => r.json())
+      .then((json) => {
+        return json;
+      });
+    const helpItems = help.filter((d) =>
+      ["get-started", "faqs"].includes(d.slug)
+    );
+
     // Set intitial config for tool
     let initialConfig;
 
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      let imperial;
-      if (query.imperial && query.imperial === "false") {
-        imperial = false;
-      } else {
-        imperial = true;
-      }
-      initialConfig = { ...query, imperial };
+      const { boundary, climvar, scenario, models, imperial, lat, lng } = query;
+      initialConfig = {
+        boundaryId: boundary,
+        scenarioId: scenario,
+        climvarId: climvar,
+        modelIds: models,
+        imperial: imperial === "true" ? true : false,
+        lat: +lat,
+        lng: +lng,
+      };
     } else {
       initialConfig = {
         boundaryId: "locagrid",
@@ -53,7 +66,14 @@
       };
     }
 
-    return { initialConfig, glossary, tool, relatedTools, externalResources };
+    return {
+      initialConfig,
+      glossary,
+      tool,
+      relatedTools,
+      externalResources,
+      helpItems,
+    };
   }
 </script>
 
@@ -97,6 +117,7 @@
   export let tool;
   export let relatedTools;
   export let externalResources;
+  export let helpItems;
 
   // Derived stores
   const { location } = locationStore;
@@ -230,8 +251,7 @@
 <div class="tool">
   <!-- Header -->
   <div id="header">
-    <Header>
-      <h1 slot="title">{tool.title}</h1>
+    <Header iconPaths="{tool.icons}" title="{tool.title}">
       <div slot="description">
         <p class="lead">
           Explore projected changes in annual average Maximum Temperature,
@@ -252,65 +272,60 @@
     {/if}
   </div>
 
-  <!-- Help -->
-  <div id="help" class="section" use:inview="{{}}" on:enter="{handleEntry}">
-    <Help />
-  </div>
+  <div class="bx--grid">
+    <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
+      <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+        <div slot="description">
+          <p>
+            Overall temperatures are projected to rise substantially throughout
+            this century. These projections differ depending on the time of year
+            and the type of measurement (highs vs. lows), all of which have
+            different potential effects to the state's ecosystem health,
+            agricultural production, water use and availability, and energy
+            demand. On average, the projections show little change in total
+            annual precipitation in California. Furthermore, among several
+            models, precipitation projections do not show a consistent trend
+            during the next century. The Mediterranean seasonal precipitation
+            pattern is expected to continue, with most precipitation falling
+            during winter from North Pacific storms. However, even modest
+            changes would have a significant impact because California
+            ecosystems are conditioned to historical precipitation levels and
+            water resources are nearly fully utilized.
+          </p>
+          <p>
+            With this tool you can explore projections of annually averaged
+            maximum temperature, minimum temperature and precipitation. These
+            climate projections have been downscaled from global climate models
+            from the <a
+              href="https://pcmdi.llnl.gov/mips/cmip5/"
+              target="_blank">CMIP5</a
+            >
+            archive, using the
+            <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
+              >Localized Constructed Analogs</a
+            > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
+            LOCA is a statistical downscaling technique that uses past history to
+            add improved fine-scale detail to global climate models.
+          </p>
+          <p>
+            On average, the projections show little change in total annual
+            precipitation in California. Furthermore, among several models,
+            precipitation projections do not show a consistent trend during the
+            next century. However, even modest changes would have a significant
+            impact because California ecosystems are conditioned to historical
+            precipitation levels and water resources are nearly fully utilized.
+          </p>
+        </div>
+      </About>
+    </div>
 
-  <!-- About -->
-  <div id="about" class="section" use:inview="{{}}" on:enter="{handleEntry}">
-    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
-      <div slot="description">
-        <p>
-          Overall temperatures are projected to rise substantially throughout
-          this century. These projections differ depending on the time of year
-          and the type of measurement (highs vs. lows), all of which have
-          different potential effects to the state's ecosystem health,
-          agricultural production, water use and availability, and energy
-          demand. On average, the projections show little change in total annual
-          precipitation in California. Furthermore, among several models,
-          precipitation projections do not show a consistent trend during the
-          next century. The Mediterranean seasonal precipitation pattern is
-          expected to continue, with most precipitation falling during winter
-          from North Pacific storms. However, even modest changes would have a
-          significant impact because California ecosystems are conditioned to
-          historical precipitation levels and water resources are nearly fully
-          utilized.
-        </p>
-        <p>
-          With this tool you can explore projections of annually averaged
-          maximum temperature, minimum temperature and precipitation. These
-          climate projections have been downscaled from global climate models
-          from the <a href="https://pcmdi.llnl.gov/mips/cmip5/" target="_blank"
-            >CMIP5</a
-          >
-          archive, using the
-          <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
-            >Localized Constructed Analogs</a
-          > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
-          LOCA is a statistical downscaling technique that uses past history to add
-          improved fine-scale detail to global climate models.
-        </p>
-        <p>
-          On average, the projections show little change in total annual
-          precipitation in California. Furthermore, among several models,
-          precipitation projections do not show a consistent trend during the
-          next century. However, even modest changes would have a significant
-          impact because California ecosystems are conditioned to historical
-          precipitation levels and water resources are nearly fully utilized.
-        </p>
-      </div>
-    </About>
-  </div>
+    <div id="resources" use:inview="{{}}" on:enter="{handleEntry}">
+      <Resources resources="{resources}" />
+    </div>
 
-  <!-- Resources -->
-  <div
-    id="resources"
-    class="section"
-    use:inview="{{}}"
-    on:enter="{handleEntry}"
-  >
-    <Resources resources="{resources}" />
+    <div id="help" use:inview="{{}}" on:enter="{handleEntry}">
+      <Help items="{helpItems}" />
+    </div>
   </div>
 </div>
 

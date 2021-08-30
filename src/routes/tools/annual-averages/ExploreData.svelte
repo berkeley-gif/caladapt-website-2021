@@ -1,14 +1,7 @@
 <script>
-  import {
-    Button,
-    Modal,
-    Accordion,
-    AccordionItem,
-    CodeSnippet,
-  } from "carbon-components-svelte";
+  import { Button, Accordion, AccordionItem } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
-  import copy from "clipboard-copy";
 
   // Helpers
   import {
@@ -56,11 +49,18 @@
 
   let ChangeLocation;
   let DownloadChart;
+  let ShareLink;
 
   let metadata;
   let csvData;
   let printContainer;
   let printSkipElements;
+
+  async function loadShare() {
+    showShare = true;
+    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
+      .default;
+  }
 
   async function loadLocation() {
     showChangeLocation = true;
@@ -138,11 +138,11 @@
   <div class="explore-header block">
     <StaticMap location="{$location}" width="{300}" height="{300}" />
     <div class="explore-header-title">
-      <h3><span class="block-title">{$location.title}</span></h3>
-      <h4>
+      <div class="h3 block-title">{$location.title}</div>
+      <div class="h4">
         Projected changes in <span class="block-title">{$climvar.title}</span>
         under a <span class="block-title">{$scenario.labelLong}</span>.
-      </h4>
+      </div>
       <Button size="small" icon="{Location16}" on:click="{loadLocation}">
         Change Location
       </Button>
@@ -210,11 +210,7 @@
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
           Download Chart
         </Button>
-        <Button
-          size="small"
-          icon="{Share16}"
-          on:click="{() => (showShare = true)}"
-        >
+        <Button size="small" icon="{Share16}" on:click="{loadShare}">
           Share
         </Button>
       </div>
@@ -223,7 +219,7 @@
 
   <!-- Settings-->
   <div class="explore-settings">
-    <h4 class="block-title">Change Settings:</h4>
+    <div class="h4 block-title">Change Settings:</div>
     <Accordion class="settings-list">
       <AccordionItem open title="Select Climate Variable">
         <SelectClimvar
@@ -269,21 +265,11 @@
   </div>
 </div>
 
-<Modal
-  id="share"
-  passiveModal
+<svelte:component
+  this="{ShareLink}"
   bind:open="{showShare}"
-  modalHeading="Share Link"
-  on:open
-  on:close
->
-  <CodeSnippet
-    type="multi"
-    wrapText
-    code="{$bookmark}"
-    on:click="{() => copy($bookmark)}"
-  />
-</Modal>
+  state="{$bookmark}"
+/>
 
 <svelte:component
   this="{ChangeLocation}"

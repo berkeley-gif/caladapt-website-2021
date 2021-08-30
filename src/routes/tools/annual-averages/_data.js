@@ -132,7 +132,13 @@ export async function getEnvelope(config, params, method) {
   });
   return Promise.all(promises)
     .then((results) => {
-      const values = buildEnvelope(merge(results));
+      let arr;
+      if (climvarId === "pr") {
+        arr = convertToAnnual(merge(results));
+      } else {
+        arr = merge(results);
+      }
+      const values = buildEnvelope(arr, climvarId);
       const series = {
         key: scenarioId,
         type: "area",

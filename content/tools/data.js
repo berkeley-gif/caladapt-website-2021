@@ -1,5 +1,3 @@
-import externalResources from './resources';
-
 const categories = ['All', 'Temperature', 'Precipitation', 'Snowpack', 'Sea Level Rise', 'Wildfire'];
 
 const tools = [
