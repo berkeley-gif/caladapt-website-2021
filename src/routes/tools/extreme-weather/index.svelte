@@ -333,8 +333,7 @@
 <div class="tool">
   <!-- Header -->
   <div id="header">
-    <Header iconPaths="{tool.icons}">
-      <h1 slot="title">{tool.title}</h1>
+    <Header iconPaths="{tool.icons}" title="{tool.title}">
       <div slot="description">
         <p class="lead">
           Explore extreme temperatures for past weather and present day. This
@@ -344,7 +343,8 @@
           (<a
             href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
             target="_blank">Doherty 2020</a
-          >).
+          >). Present day weather conditions are from the National Weather
+          Service.
         </p>
       </div>
     </Header>
@@ -360,62 +360,64 @@
     {/if}
   </div>
 
-  <!-- About -->
-  <div id="about" class="section" use:inview="{{}}" on:enter="{handleEntry}">
-    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
-      <div slot="description">
-        <p>
-          Explore extreme temperatures for past weather and present day. This
-          tool provides data from 39 weather stations across California,
-          utilizing a quality-controlled data base for hourly weather
-          observations for 1973-2019 produced for use by the energy sector (<a
-            href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
-            target="_blank">Doherty 2020</a
-          >).
-        </p>
-      </div>
-      <div slot="extra-sources">
-        <div class="bx--row source">
-          <div class="bx--col-lg-2 ">
-            <img
-              src="/img/logos/US-NationalWeatherService-Logo.svg"
-              class="source-logo"
-              alt="data provider logo"
-            />
-          </div>
-          <div class="bx--col-lg-12">
-            <h4>Near Term Weather Forecast</h4>
-            <h5>National Weather Service</h5>
-            <p class="source-text">
-              The National Weather Service (NWS) is an agency of the United
-              States federal government that provides weather, water, and
-              climate forecasts and warnings for the United States, its
-              territories, adjacent waters and ocean areas. The Near Term
-              forecast provided by NWS focuses on large-scale temperature and
-              precipitation patterns for the next 7 days.
-            </p>
-            <p class="source-text">Data Access:</p>
-            <ul class="source-list">
-              <li class="source-list-item">
-                <a href="https://www.weather.gov/documentation/services-web-api"
-                  >National Weather Service API</a
-                >
-              </li>
-            </ul>
+  <div class="bx--grid">
+    <!-- About -->
+    <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
+      <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+        <div slot="description">
+          <p>
+            Explore extreme temperatures for past weather and present day. This
+            tool provides data from 39 weather stations across California,
+            utilizing a quality-controlled data base for hourly weather
+            observations for 1973-2019 produced for use by the energy sector (<a
+              href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
+              target="_blank">Doherty 2020</a
+            >).
+          </p>
+        </div>
+        <div slot="extra-sources">
+          <div class="bx--row source">
+            <div class="bx--col-lg-2 ">
+              <img
+                src="/img/logos/US-NationalWeatherService-Logo.svg"
+                class="source-logo"
+                alt="data provider logo"
+              />
+            </div>
+            <div class="bx--col-lg-12">
+              <h4>Near Term Weather Forecast</h4>
+              <h5>National Weather Service</h5>
+              <p class="source-text">
+                The National Weather Service (NWS) is an agency of the United
+                States federal government that provides weather, water, and
+                climate forecasts and warnings for the United States, its
+                territories, adjacent waters and ocean areas. The Near Term
+                forecast provided by NWS focuses on large-scale temperature and
+                precipitation patterns for the next 7 days.
+              </p>
+              <p class="source-text">Data Access:</p>
+              <ul class="source-list">
+                <li class="source-list-item">
+                  <a
+                    href="https://www.weather.gov/documentation/services-web-api"
+                    >National Weather Service API</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </About>
-  </div>
-
-  <!-- Resources -->
-  <div
-    id="resources"
-    class="section"
-    use:inview="{{}}"
-    on:enter="{handleEntry}"
-  >
-    <Resources resources="{resources}" />
+      </About>
+    </div>
+    <!-- Resources -->
+    <div
+      id="resources"
+      class="section"
+      use:inview="{{}}"
+      on:enter="{handleEntry}"
+    >
+      <Resources resources="{resources}" />
+    </div>
   </div>
 </div>
 
