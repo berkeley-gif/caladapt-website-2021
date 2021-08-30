@@ -42,7 +42,7 @@
   }
 </style>
 
-<g class="axis y-axis" transform="translate($padding.left - 10, 0)">
+<g class="axis y-axis">
   {#each tickVals as tick, i}
     <g
       class="tick tick-{tick}"
@@ -53,7 +53,7 @@
         <line
           class="gridline"
           xi="0"
-          x2="{$width}"
+          x2="{$width - (isBandwidth ? $padding.right : 0)}"
           y1="{yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}"
           y2="{yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}"></line>
       {/if}

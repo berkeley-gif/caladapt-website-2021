@@ -1,14 +1,13 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
-  import { groups } from "d3-array";
 
-  const { xScale } = getContext("LayerCake");
+  const { yGet, xScale, height, yScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
   export let data;
 
-  $: circles = groups(data, (d) => d.temperature);
+  $: midHeight = $yScale.bandwidth() / 2;
 
   function handleMousemove(feature) {
     return function handleMousemoveFn(e) {
@@ -27,6 +26,12 @@
     fill-opacity: 1;
   }
 
+  .line {
+    stroke: var(--teal-30);
+    stroke-dasharray: 3, 3;
+    stroke-width: 1;
+  }
+
   .label {
     fill: var(--teal-60);
     font-weight: 600;
@@ -37,29 +42,33 @@
 </style>
 
 <g class="forecast-group">
-  {#each circles as group}
-    <circle
-      cy="{100}"
-      cx="{$xScale(group[0])}"
-      class="circle"
-      r="{5}"
-      on:mouseout="{() => dispatch('mouseout')}"
-      on:mouseover="{(e) => dispatch('mousemove', { e, props: group[1] })}"
-      on:mousemove="{handleMousemove(group[1])}"
-    >
-    </circle>
-    <text y="{120}" x="{$xScale(group[0])}" text-anchor="middle" class="label">
-      {group[0]}
-    </text>
-    {#each group[1] as d, i}
+  {#each data as d}
+    <g>
+      <circle
+        cy="{$yGet(d) + midHeight}"
+        cx="{$xScale(d.temperature)}"
+        class="circle"
+        r="{5}"
+        on:mouseout="{() => dispatch('mouseout')}"
+        on:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
+        on:mousemove="{handleMousemove(d)}"
+      >
+      </circle>
+      <line
+        x1="{$xScale(d.temperature)}"
+        x2="{$xScale(d.temperature)}"
+        y1="{-50}"
+        y2="{$yGet(d) + midHeight}"
+        class="line"
+      >
+      </line>
       <text
-        y="{90 - 12 * i}"
-        x="{$xScale(d.temperature)}"
-        text-anchor="middle"
+        y="{$yGet(d) + midHeight + 4}"
+        x="{$xScale(d.temperature) + 10}"
         class="label"
       >
-        {d.label}
+        {d.temperature}°F
       </text>
-    {/each}
+    </g>
   {/each}
 </g>

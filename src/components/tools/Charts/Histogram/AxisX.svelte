@@ -99,7 +99,7 @@
   {/if}
   <text
     transform="translate({$width / 2}, {$height})"
-    y="30"
+    y="35"
     text-anchor="middle"
     style="font-size:13px;fill:#666"
   >

@@ -2,6 +2,7 @@
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
   import { bin, thresholdFreedmanDiaconis, extent, min, max } from "d3-array";
+  import { scaleBand } from "d3-scale";
 
   import Column from "./Column.svelte";
   import Annotation from "./Annotation.svelte";
@@ -26,6 +27,7 @@
   };
 
   let chartContainer;
+  let forecastContainer;
 
   const xKey = ["x0", "x1"];
   const yKey = "length";
@@ -38,7 +40,18 @@
   let evt;
   let hideTooltip = true;
 
+  let yDomainForecast;
+  let yKeyForecast = "label";
+  let yScaleForecast = scaleBand();
+  let evtForecast;
+  let hideTooltipForecast = true;
+
   $: style = `height:${height}px`;
+
+  $: if (forecast) {
+    console.log("foreast", forecast);
+    yDomainForecast = forecast.map((d) => d.label);
+  }
 
   $: if (data) {
     dataExtent = extent(data);
@@ -57,7 +70,7 @@
 
   function labelForecast(d) {
     let label;
-    label = `<span class="title">${d.name}</span>`;
+    label = `<span class="title">${d.name} ${d.label}</span>`;
     label += d.detailedForecast;
     return label;
   }
@@ -69,31 +82,23 @@
     return label;
   }
 
-  function createTooltip(d) {
-    let tooltip;
-    if (d.detailedForecast) {
-      tooltip = labelForecast(d);
-    } else if (d.x0) {
-      tooltip = labelColumn(d);
-    } else {
-      tooltip = d.map((item) => {
-        return `
-          ${labelForecast(item)}
-          <br />
-        `;
-      });
-    }
-    return tooltip;
+  function createForecastTooltip(d) {
+    return labelForecast(d);
+  }
+
+  function createHistogramTooltip(d) {
+    return labelColumn(d);
   }
 </script>
 
 {#if data}
   <div style="{style}" bind:this="{chartContainer}">
     <LayerCake
-      padding="{{ top: 100, right: 30, bottom: 30, left: 35 }}"
+      padding="{{ top: 100, right: 30, bottom: 40, left: 35 }}"
       x="{xKey}"
       y="{yKey}"
       data="{bins}"
+      height="{height}"
       xDomain="{xDomain}"
     >
       <Svg>
@@ -106,7 +111,6 @@
         />
         <AxisY
           gridlines="{true}"
-          ticks="{3}"
           label="{yAxis.label}"
           tickFormat="{yAxis.tickFormat}"
         />
@@ -116,18 +120,11 @@
           on:mouseout="{() => (hideTooltip = true)}"
         />
         <Annotation data="{labels}" threshold="{threshold}" />
-        {#if forecast}
-          <Forecast
-            data="{forecast}"
-            on:mousemove="{(event) => (evt = hideTooltip = event)}"
-            on:mouseout="{() => (hideTooltip = true)}"
-          />
-        {/if}
       </Svg>
       <Html pointerEvents="{false}">
         {#if hideTooltip !== true}
           <Tooltip evt="{evt}" let:detail>
-            {@html createTooltip(detail.props)}
+            {@html createHistogramTooltip(detail.props)}
           </Tooltip>
         {/if}
       </Html>
@@ -140,5 +137,37 @@
   </div>
   <div style="{style}">
     <SkeletonPlaceholder style="height:100%;width:100%;" />
+  </div>
+{/if}
+
+{#if forecast}
+  <div style="height:150px;" bind:this="{forecastContainer}">
+    <LayerCake
+      padding="{{ top: 10, right: 30, bottom: 20, left: 35 }}"
+      x="{xKey}"
+      y="{yKeyForecast}"
+      yScale="{yScaleForecast}"
+      data="{bins}"
+      height="{150}"
+      xDomain="{xDomain}"
+      yDomain="{yDomainForecast}"
+    >
+      <Svg>
+        <AxisY gridlines="{true}" label="{'Forecast'}" />
+        <Forecast
+          data="{forecast}"
+          on:mousemove="{(event) =>
+            (evtForecast = hideTooltipForecast = event)}"
+          on:mouseout="{() => (hideTooltipForecast = true)}"
+        />
+      </Svg>
+      <Html pointerEvents="{false}">
+        {#if hideTooltipForecast !== true}
+          <Tooltip evt="{evtForecast}" let:detail>
+            {@html createForecastTooltip(detail.props)}
+          </Tooltip>
+        {/if}
+      </Html>
+    </LayerCake>
   </div>
 {/if}
