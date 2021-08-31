@@ -12,10 +12,18 @@
   } from "carbon-components-svelte";
   import { serialize } from "~/helpers/utilities";
 
-  console.log(process.env.NODE_ENV);
-
-  // TODO: add real values for profession select
-  const selectItems = ["Option One", "Option Two", "Option Three"];
+  const selectItems = [
+    "Municipal Government",
+    "County Government",
+    "State Government",
+    "Other Government",
+    "Non-profit",
+    "Educator",
+    "Student",
+    "Private Sector",
+    "Retired",
+    "Other",
+  ];
 
   const defaultValues =
     process.env.NODE_ENV === "development"
@@ -166,7 +174,7 @@
         <div class="bx--col-lg-5">
           <FormGroup>
             <TextInput
-              labelText="Company"
+              labelText="Company / Organization"
               name="fields[company]"
               value="{defaultValues.company}"
             />
@@ -236,33 +244,14 @@
               name="fields[profession]"
               required
             >
-              <SelectItem
-                disabled
-                value="placeholder-item"
-                text="Choose an option"
-              />
+              <SelectItem text="Choose a profession" />
               {#each selectItems as item}
-                <SelectItem value="item" text="{item}" />
+                <SelectItem value="{item}" text="{item}" />
               {/each}
             </Select>
           </FormGroup>
         </div>
         <div class="bx--col-lg-9"></div>
-      </div>
-
-      <div class="bx--row">
-        <div class="bx--col-lg-2"></div>
-        <div class="bx--col--4" style="padding-left: 1rem">
-          <FormGroup>
-            <TextArea
-              labelText="Optional message to Cal-Adapt"
-              name="fields[message]"
-              helperText=""
-              placeholder=""
-            />
-          </FormGroup>
-        </div>
-        <div class="bx--col-lg-10"></div>
       </div>
 
       <div class="bx--row">
