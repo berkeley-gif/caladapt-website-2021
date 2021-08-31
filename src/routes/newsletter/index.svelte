@@ -11,11 +11,49 @@
     TextInput,
   } from "carbon-components-svelte";
 
+  // TODO: add real values for profession select
   const selectItems = ["Option One", "Option Two", "Option Three"];
 
-  function handleSubmit(event) {
+  // TODO: Remove these!
+  const defaultValues = {
+    name: "Chris",
+    name_last: "Henrick",
+    email: "chrishenrick@gmail.com",
+    company: "",
+    city: "Oak",
+    state: "CA",
+    country: "United States",
+    profession: "Option A",
+  };
+
+  $: formSuccess = false;
+  $: formError = false;
+
+  async function handleSubmit(event) {
     event.preventDefault();
-    console.log(event);
+
+    const formData = new FormData(event.target);
+    const formProps = Object.fromEntries(formData);
+
+    try {
+      const res = await window.fetch(
+        "https://landing.mailerlite.com/webforms/landing/z3u0j0",
+        {
+          method: "post",
+          body: JSON.stringify(formProps),
+        }
+      );
+      console.log(res);
+      formSuccess = true;
+    } catch (error) {
+      console.error(error);
+      formError = true;
+    }
+  }
+
+  function reset() {
+    formSuccess = false;
+    formError = false;
   }
 </script>
 
@@ -48,44 +86,36 @@
   </div>
 </div>
 
+<div class="spacing--v-32"></div>
+
 <div class="bx--grid">
-  <Form on:submit="{handleSubmit}">
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup />
-      </div>
-      <div class="bx--col-lg-5">
-        <FormGroup />
-      </div>
-      <div class="bx--col-lg-4"></div>
-    </div>
-
+  <Form
+    on:submit="{handleSubmit}"
+    action="https://landing.mailerlite.com/webforms/landing/z3u0j0"
+    data-id="549651"
+    data-code="z3u0j0"
+    method="POST"
+  >
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-5">
         <FormGroup>
-          <TextInput labelText="First name" required />
+          <TextInput
+            labelText="First name"
+            name="fields[name]"
+            value="{defaultValues.name}"
+            required
+          />
         </FormGroup>
       </div>
       <div class="bx--col-lg-5">
         <FormGroup>
-          <TextInput labelText="Last name" required />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-4"></div>
-    </div>
-
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput labelText="Email address" required />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput labelText="City" required />
+          <TextInput
+            labelText="Last name"
+            name="fields[last_name]"
+            value="{defaultValues.name_last}"
+            required
+          />
         </FormGroup>
       </div>
       <div class="bx--col-lg-4"></div>
@@ -95,12 +125,22 @@
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-5">
         <FormGroup>
-          <TextInput labelText="State" required />
+          <TextInput
+            labelText="Company"
+            name="fields[company]"
+            value="{defaultValues.company}"
+          />
         </FormGroup>
       </div>
       <div class="bx--col-lg-5">
         <FormGroup>
-          <TextInput labelText="Country" required />
+          <TextInput
+            labelText="Email address"
+            type="email"
+            name="fields[email]"
+            value="{defaultValues.email}"
+            required
+          />
         </FormGroup>
       </div>
       <div class="bx--col-lg-4"></div>
@@ -110,7 +150,52 @@
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-5">
         <FormGroup>
-          <Select labelText="Profession" value="placeholder-item" required>
+          <TextInput
+            labelText="City"
+            name="fields[city]"
+            value="{defaultValues.city}"
+            required
+          />
+        </FormGroup>
+      </div>
+      <div class="bx--col-lg-5">
+        <FormGroup>
+          <TextInput
+            labelText="State"
+            name="fields[state]"
+            value="{defaultValues.state}"
+            required
+          />
+        </FormGroup>
+      </div>
+      <div class="bx--col-lg-4"></div>
+    </div>
+
+    <div class="bx--row">
+      <div class="bx--col-lg-2"></div>
+      <div class="bx--col-lg-5">
+        <FormGroup>
+          <TextInput
+            labelText="Country"
+            name="fields[country]"
+            value="{defaultValues.country}"
+            required
+          />
+        </FormGroup>
+      </div>
+      <div class="bx--col-lg-10"></div>
+    </div>
+
+    <div class="bx--row">
+      <div class="bx--col-lg-2"></div>
+      <div class="bx--col-lg-5">
+        <FormGroup>
+          <Select
+            labelText="Profession"
+            value="{defaultValues.profession}"
+            name="fields[profession]"
+            required
+          >
             <SelectItem
               disabled
               value="placeholder-item"
@@ -131,6 +216,7 @@
         <FormGroup>
           <TextArea
             labelText="Optional message to Cal-Adapt"
+            name="fields[message]"
             helperText=""
             placeholder=""
           />
@@ -141,9 +227,10 @@
 
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
-      <div class="bx--col--4" style="padding-left: 1rem">
+      <div class="bx--col--4" style="padding-left: 1rem;">
         <FormGroup>
-          <Button type="submit">Submit</Button>
+          <Button style="text-transform: uppercase" type="submit">Submit</Button
+          >
         </FormGroup>
       </div>
       <div class="bx--col-lg-10"></div>
