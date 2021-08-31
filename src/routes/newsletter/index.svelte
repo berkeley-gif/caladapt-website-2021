@@ -10,6 +10,7 @@
     TextArea,
     TextInput,
   } from "carbon-components-svelte";
+  import { serialize } from "~/helpers/utilities";
 
   console.log(process.env.NODE_ENV);
 
@@ -19,9 +20,9 @@
   const defaultValues =
     process.env.NODE_ENV === "development"
       ? {
-          name: "Chris",
-          name_last: "Henrick",
-          email: "chrishenrick@gmail.com",
+          name: "Johnny",
+          name_last: "Appleseed",
+          email: "ja@example.com",
           company: "",
           city: "Oak",
           state: "CA",
@@ -40,7 +41,7 @@
         };
 
   $: formSuccess = false;
-  $: formError = true;
+  $: formError = false;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -50,13 +51,22 @@
 
     try {
       const res = await window.fetch(
-        "https://landing.mailerlite.com/webforms/landing/z3u0j0",
-        {
-          method: "post",
-          body: JSON.stringify(formProps),
-        }
+        `https://static.mailerlite.com/webforms/submit/z3u0j0?${serialize({
+          ...formProps,
+          // extra stuff that seems to be required by mailerlite for the submit to work correctly
+          "ml-submit": 1,
+          ajax: 1,
+          callback: "jQuery18309354418696922607_1630447952611",
+          guid: "2e6f8bb7-0d9a-43fc-e788-ff8996b70ffb",
+          _: 1630448321658,
+        })}`
       );
-      formSuccess = true;
+
+      if (res && res.ok) {
+        formSuccess = true;
+      } else {
+        formError = true;
+      }
     } catch (error) {
       console.error(error);
       formError = true;
@@ -125,13 +135,7 @@
       <div class="bx--col-lg-8"></div>
     </div>
   {:else}
-    <Form
-      on:submit="{handleSubmit}"
-      action="https://landing.mailerlite.com/webforms/landing/z3u0j0"
-      data-id="549651"
-      data-code="z3u0j0"
-      method="POST"
-    >
+    <Form on:submit="{handleSubmit}">
       <div class="bx--row">
         <div class="bx--col-lg-2"></div>
         <div class="bx--col-lg-5">
