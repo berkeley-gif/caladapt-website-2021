@@ -92,6 +92,10 @@
     padding: var(--spacing-48) var(--spacing-16);
     background-color: var(--gray-80);
   }
+
+  :global(.bx--label) {
+    font-size: 1rem;
+  }
 </style>
 
 <svelte:head>
