@@ -11,23 +11,36 @@
     TextInput,
   } from "carbon-components-svelte";
 
+  console.log(process.env.NODE_ENV);
+
   // TODO: add real values for profession select
   const selectItems = ["Option One", "Option Two", "Option Three"];
 
-  // TODO: Remove these!
-  const defaultValues = {
-    name: "Chris",
-    name_last: "Henrick",
-    email: "chrishenrick@gmail.com",
-    company: "",
-    city: "Oak",
-    state: "CA",
-    country: "United States",
-    profession: "Option A",
-  };
+  const defaultValues =
+    process.env.NODE_ENV === "development"
+      ? {
+          name: "Chris",
+          name_last: "Henrick",
+          email: "chrishenrick@gmail.com",
+          company: "",
+          city: "Oak",
+          state: "CA",
+          country: "United States",
+          profession: "Option A",
+        }
+      : {
+          name: "",
+          name_last: "",
+          email: "",
+          company: "",
+          city: "",
+          state: "",
+          country: "",
+          profession: "",
+        };
 
   $: formSuccess = false;
-  $: formError = false;
+  $: formError = true;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -43,7 +56,6 @@
           body: JSON.stringify(formProps),
         }
       );
-      console.log(res);
       formSuccess = true;
     } catch (error) {
       console.error(error);
@@ -51,7 +63,7 @@
     }
   }
 
-  function reset() {
+  function resetFormState() {
     formSuccess = false;
     formError = false;
   }
@@ -89,153 +101,179 @@
 <div class="spacing--v-32"></div>
 
 <div class="bx--grid">
-  <Form
-    on:submit="{handleSubmit}"
-    action="https://landing.mailerlite.com/webforms/landing/z3u0j0"
-    data-id="549651"
-    data-code="z3u0j0"
-    method="POST"
-  >
+  {#if formSuccess}
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="First name"
-            name="fields[name]"
-            value="{defaultValues.name}"
-            required
-          />
-        </FormGroup>
+      <div class="bx--col-lg-6">
+        <p>Thank you! You have successfully signed up for our newsletter.</p>
+        <p>Please make sure to confirm your email.</p>
       </div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="Last name"
-            name="fields[last_name]"
-            value="{defaultValues.name_last}"
-            required
-          />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-4"></div>
+      <div class="bx--col-lg-8"></div>
     </div>
-
+  {:else if formError}
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="Company"
-            name="fields[company]"
-            value="{defaultValues.company}"
-          />
-        </FormGroup>
+      <div class="bx--col-lg-6">
+        <p>
+          We're sorry, but the form did not submit correctly. Please try again
+          or email <a href="mailto:support@cal-adapt.org"
+            >support@cal-adapt.org</a
+          > for help.
+        </p>
+        <Button on:click="{resetFormState}">Try Again</Button>
       </div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="Email address"
-            type="email"
-            name="fields[email]"
-            value="{defaultValues.email}"
-            required
-          />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-4"></div>
+      <div class="bx--col-lg-8"></div>
     </div>
-
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="City"
-            name="fields[city]"
-            value="{defaultValues.city}"
-            required
-          />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="State"
-            name="fields[state]"
-            value="{defaultValues.state}"
-            required
-          />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-4"></div>
-    </div>
-
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <TextInput
-            labelText="Country"
-            name="fields[country]"
-            value="{defaultValues.country}"
-            required
-          />
-        </FormGroup>
-      </div>
-      <div class="bx--col-lg-10"></div>
-    </div>
-
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-5">
-        <FormGroup>
-          <Select
-            labelText="Profession"
-            value="{defaultValues.profession}"
-            name="fields[profession]"
-            required
-          >
-            <SelectItem
-              disabled
-              value="placeholder-item"
-              text="Choose an option"
+  {:else}
+    <Form
+      on:submit="{handleSubmit}"
+      action="https://landing.mailerlite.com/webforms/landing/z3u0j0"
+      data-id="549651"
+      data-code="z3u0j0"
+      method="POST"
+    >
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="First name"
+              name="fields[name]"
+              value="{defaultValues.name}"
+              required
             />
-            {#each selectItems as item}
-              <SelectItem value="item" text="{item}" />
-            {/each}
-          </Select>
-        </FormGroup>
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="Last name"
+              name="fields[last_name]"
+              value="{defaultValues.name_last}"
+              required
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-4"></div>
       </div>
-      <div class="bx--col-lg-9"></div>
-    </div>
 
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col--4" style="padding-left: 1rem">
-        <FormGroup>
-          <TextArea
-            labelText="Optional message to Cal-Adapt"
-            name="fields[message]"
-            helperText=""
-            placeholder=""
-          />
-        </FormGroup>
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="Company"
+              name="fields[company]"
+              value="{defaultValues.company}"
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="Email address"
+              type="email"
+              name="fields[email]"
+              value="{defaultValues.email}"
+              required
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-4"></div>
       </div>
-      <div class="bx--col-lg-10"></div>
-    </div>
 
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col--4" style="padding-left: 1rem;">
-        <FormGroup>
-          <Button style="text-transform: uppercase" type="submit">Submit</Button
-          >
-        </FormGroup>
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="City"
+              name="fields[city]"
+              value="{defaultValues.city}"
+              required
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="State"
+              name="fields[state]"
+              value="{defaultValues.state}"
+              required
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-4"></div>
       </div>
-      <div class="bx--col-lg-10"></div>
-    </div>
-  </Form>
+
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <TextInput
+              labelText="Country"
+              name="fields[country]"
+              value="{defaultValues.country}"
+              required
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-10"></div>
+      </div>
+
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col-lg-5">
+          <FormGroup>
+            <Select
+              labelText="Profession"
+              value="{defaultValues.profession}"
+              name="fields[profession]"
+              required
+            >
+              <SelectItem
+                disabled
+                value="placeholder-item"
+                text="Choose an option"
+              />
+              {#each selectItems as item}
+                <SelectItem value="item" text="{item}" />
+              {/each}
+            </Select>
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-9"></div>
+      </div>
+
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col--4" style="padding-left: 1rem">
+          <FormGroup>
+            <TextArea
+              labelText="Optional message to Cal-Adapt"
+              name="fields[message]"
+              helperText=""
+              placeholder=""
+            />
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-10"></div>
+      </div>
+
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col--4" style="padding-left: 1rem;">
+          <FormGroup>
+            <Button style="text-transform: uppercase" type="submit"
+              >Submit</Button
+            >
+          </FormGroup>
+        </div>
+        <div class="bx--col-lg-10"></div>
+      </div>
+    </Form>
+  {/if}
 </div>
 
 <div class="spacing--v-96"></div>
