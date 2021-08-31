@@ -3,7 +3,7 @@
   "description": "TODO",
   "version": "0.0.1",
   "scripts": {
-    "dev": "sapper dev --no-hot",
+    "dev": "NODE_ENV=production sapper dev --no-hot",
     "build": "sapper build",
     "export": "sapper export --timeout=10000 --concurrent 1",
     "start": "node __sapper__/build",
