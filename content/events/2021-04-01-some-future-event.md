@@ -5,6 +5,7 @@ location: Online
 time: "1:00 PM - 2:00 PM PST"
 tags: webinar
 image: webinar.jpg
+teaser: "An introduction to the newly updated Cal-Adapt website, lorem ipsum dolor sit amet, consectetur adipiscing elit. Dui dignissim nibh diam magnis. Urna in eget neque odio sit. Semper in neque a fames viverra in sollicitudin vel."
 ---
 
 ### Webinar Description

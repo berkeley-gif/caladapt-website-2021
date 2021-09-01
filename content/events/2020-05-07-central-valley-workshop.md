@@ -5,6 +5,7 @@ location: Online
 time: "1:00 PM - 2:30 PM PST"
 tags: workshop
 image: fresno.jpg
+teaser: Participants in the workshop will discuss the data, tools, and support needed for climate change adaptation and resilience in California's southern Central Valley.
 ---
 
 ## Workshop Description

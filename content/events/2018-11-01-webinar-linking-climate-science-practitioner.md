@@ -5,6 +5,7 @@ location: Online
 time: "12:00 PM - 1:00 PM PST"
 tags: webinar
 image: webinar.jpg
+teaser: Introducing new data and features of Cal-Adapt, as well as examples of how it has already been used to aid resilience planning and policy in California.
 ---
 
 ## Webinar Description

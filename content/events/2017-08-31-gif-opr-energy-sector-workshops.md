@@ -5,6 +5,7 @@ location: "Sacramento, CA"
 time: "9:30 AM - 12:00 PM PST"
 tags: workshop
 image: Sacramento_Skyline.png
+teaser: New features and capabilities of Cal-Adapt v2.0 by UC Berkeley’s Geospatial Innovation Facility and an overview of the State Adaptation Clearinghouse by the Governor’s Office of Planning and Research.
 ---
 
 <u><a href="#materials">LINKS TO WORKSHOP MATERIALS</a></u><br/>

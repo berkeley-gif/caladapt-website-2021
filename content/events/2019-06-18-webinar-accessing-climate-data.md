@@ -5,6 +5,7 @@ location: Online
 time: "12:30 PM - 1:30 PM PST"
 tags: webinar
 image: webinar.jpg
+teaser: An overview of Cal-Adapt's data download tool by the California Energy Commission and UC Berkeley’s Geospatial Innovation Facility.
 ---
 
 ## Webinar Description
