@@ -6,6 +6,7 @@
 
   export let topics;
   export let title = "";
+  export let cta = "Learn More";
 
   const dispatch = createEventDispatcher();
 </script>
@@ -17,5 +18,5 @@
   style="padding-left:0;"
   on:click="{() => dispatch('define', { topics, title })}"
 >
-  Learn More
+  {cta}
 </Button>
