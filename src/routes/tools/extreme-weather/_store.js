@@ -111,11 +111,11 @@ export const hadisdStore = (() => {
   return {
     set,
     subscribe,
-    get fullExtent() {
+    get hadisdDateRange() {
       return derived(store, ($store) => {
         if (!$store) return null;
         const dateExtent = extent($store.values, (d) => d.date);
-        return dateExtent;
+        return `${dateExtent[0].getFullYear()}-${dateExtent[1].getFullYear()}`;
       });
     },
     get gevisf() {
@@ -195,27 +195,43 @@ export const hadisdStore = (() => {
   };
 })();
 
-// // Data Store for recent observations from NWS and NOAA
-// export const observationsStore = (() => {
-//   const store = writable(null);
-//   const { set, subscribe, update } = store;
-//   return {
-//     set,
-//     subscribe,
-//     reset: () =>
-//       update((store) => {
-//         store = null;
-//         return store;
-//       }),
-//     add: (arr) =>
-//       update((store) => {
-//         if (store && store.length) {
-//           return [...store, ...arr];
-//         }
-//         return [...arr];
-//       }),
-//   };
-// })();
+// Data Store for recent observations from NWS and NOAA
+export const observationsStore = (() => {
+  const store = writable([
+    {
+      id: "forecast",
+      data: null,
+    },
+    {
+      id: "recent",
+      data: null,
+    },
+  ]);
+  const { set, subscribe, update } = store;
+  return {
+    set,
+    subscribe,
+    reset: () =>
+      update((store) => {
+        store["forecast"].data = null;
+        store["recent"].data = null;
+        return [...store];
+      }),
+    addData: (data, id) =>
+      update((store) => {
+        store[id].data = data;
+        return [...store];
+      }),
+    get forecastDate() {
+      return dateFormat(today);
+    },
+    get recentDateRange() {
+      const startDate = timeFormat("%Y-%m-%d")(timeDay.offset(today, -10));
+      const endDate = timeFormat("%Y-%m-%d")(today);
+      return { startDate, endDate };
+    },
+  };
+})();
 
 export const forecastStore = writable(null);
 export const measuredStore = writable(null);

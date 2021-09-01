@@ -54,7 +54,7 @@
     measuredDateRange,
   } from "./_store";
 
-  const { baseline, gevisf, begin, end } = hadisdStore;
+  const { baseline, gevisf, begin, end, hadisdDateRange } = hadisdStore;
   const { doyText } = doyStore;
   const { climvar } = climvarStore;
   const { location } = locationStore;
@@ -359,6 +359,11 @@
 
     <div class="block">
       {#if $baseline}
+        <p>
+          From the Historical period ({$hadisdDateRange}) available for this
+          station, between <span class="block-title">{$begin}</span> and
+          <span class="block-title">{$end}</span>:
+        </p>
         <p>
           A <span class="block-title">Record Low</span> of
           <span class="block-title">{$baseline.low.value}</span>

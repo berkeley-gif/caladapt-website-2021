@@ -32,13 +32,12 @@
     let initialConfig;
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      let imperial;
-      if (query.imperial && query.imperial === "false") {
-        imperial = false;
-      } else {
-        imperial = true;
-      }
-      initialConfig = { ...query, imperial };
+      const { climvar, station, imperial } = query;
+      initialConfig = {
+        stationId: station,
+        climvarId: climvar,
+        imperial: imperial === "true" ? true : false,
+      };
     } else {
       initialConfig = {
         stationId: 11,
@@ -128,7 +127,7 @@
       html: `
         <div>
           <p>The threshold sets the conditions for which a weather event is considered “extreme“.</p>
-          <p>Due to the nature of the extreme value statistics, only threshold values at or above the 90th percentile for Maximum Temperature, and at or above the 10th percentile for Minimum Temperature, are allowed for this input.</p>
+          <p>Due to the nature of the extreme value statistics, only threshold values at or above the 90th percentile for Maximum Temperature, and at or below the 10th percentile for Minimum Temperature, are allowed for this input.</p>
         </div>
       `,
     },
@@ -180,9 +179,9 @@
       },
       html: `
         <div>
-          <p>The histogram shows the distribution of selected climate varibale around a 20 day window for the Baseline period (1991-2020). The data values for a climate variable are grouped into buckets and represented by columns along the X axis. The Y axis represents the percentage of occurences in the data for each column.</p>
+          <p>The histogram shows the distribution of selected climate variable around a 20 day window for the Baseline period (1991-2020). The data values for a climate variable are grouped into buckets and represented by columns along the X axis. The Y axis represents the percentage of occurences in the data for each column.</p>
           <p>The NWS Forecast section of the graphic, if selected, shows the Near Term forecast from the National Weather Service for selected climate variable.</p>
-          <p>The Recent Observations section of the graphic, if selected, shows Recent Observations from NOAA, for selected climate variable. There is usually a time lag of 2-3 days in the data provided by NOAA, so you may not see data for last 2-3 days.</p>
+          <p>The Recent Observations section of the graphic, if selected, shows Recent Observations from NOAA, for selected climate variable. There is usually a time lag of 2-3 days in the data provided by NOAA, so you may not see data for the last 2-3 days.</p>
           <p>Both the NWS Forecast and Recent Observations are presented with respect to <strong>today's date</strong> and <strong>do not change</strong> if the user selects another Day of Year value.
         </div>
       `,
@@ -355,9 +354,9 @@
         <p>
           <em
             >Note: This tool is still under development. We are working on
-            adding Wind to the list of climate variables and soliciting feedback
-            from our users. Please email us at support@cal-adapt.org with your
-            comments and questions.</em
+            adding Wind Speed to the list of climate variables and soliciting
+            feedback from our users. Please email us at support@cal-adapt.org
+            with your comments and questions.</em
           >
         </p>
       </div>
@@ -377,12 +376,12 @@
   <div class="bx--grid">
     <!-- About -->
     <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
-      <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+      <About datasets="{[]}">
         <div slot="description">
           <p>
             Extreme Value Theory (EVT) is a statistical methodology used for
             describing rare events. There are several ways to apply EVT to
-            weather variables inlcuding fitting a Generalized Extreme Value
+            weather variables including fitting a Generalized Extreme Value
             distribution (GEV) over Block Maxima (annual maximum value) and the
             Peaks-Over-Threshold approach where probability distribution of
             exceedances over a pre-defined threshold are modeled using a
@@ -411,15 +410,80 @@
           </p>
         </div>
         <div slot="extra-sources">
+          <div class="bx--row source">
+            <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1">
+              <img
+                src="/img/logos/scripps_100x100.png"
+                class="source-logo"
+                alt="data provider logo"
+              />
+            </div>
+            <div class="bx--col-lg-12 bx--col-md-7 bx--col-sm-3">
+              <div class="h4">Hourly Observed Historical Data</div>
+              <div class="h5">Met Office Hadley Centre</div>
+              <p class="source-text">
+                The Hourly Observed Historical Data product consists of 39
+                stations across the state, each with an observation period of
+                greater than 30 years (1973 to present) from the HadISD global
+                record. Stations identified for use in this data product were
+                chosen based on being considered high quality for temperature.
+                Due to observing techniques, instrumentation used, and
+                similarities in QA/QC protocols, it’s likely that data for dew
+                point and mean sea level pressure will be of similar quality,
+                however this has not been assessed fully.
+              </p>
+              <p>
+                <em
+                  >Note: Only 38 of the 39 stations from the Hourly Observed
+                  Historical Data are presented in this tool. The Monterey NAF
+                  station was archived by HadISD on 12/31/2020.</em
+                >
+              </p>
+              <p class="source-text">Data Access:</p>
+              <ul class="source-list">
+                <li class="source-list-item">
+                  <a
+                    href="http://albers.cnr.berkeley.edu/data/hadisd/"
+                    target="_blank"
+                    >Hourly Observed Historical Data Product (csv)</a
+                  >
+                </li>
+                <li class="source-list-item">
+                  <a
+                    href="https://www.metoffice.gov.uk/hadobs/hadisd/"
+                    target="_blank"
+                    >HadISD Global Sub-Daily Station Dataset (netcdf)</a
+                  >
+                </li>
+              </ul>
+              <p class="source-text">References:</p>
+              <ul class="source-list">
+                <li class="source-list-item">
+                  Explanatory Guide to Hourly Observed Historical Data on
+                  Cal-Adapt (<a
+                    href="http://albers.cnr.berkeley.edu/data/hadisd/user_guide_to_hourly_data.pdf"
+                    target="_blank">link</a
+                  >)
+                </li>
+                <li class="source-list-item">
+                  Weather and Climate Informatics for the Electricity Sector,
+                  Subdaily Observations and the Predictability of Extreme Heat
+                  Events (<a
+                    href="https://www.energy.ca.gov/publications/2020/weather-and-climate-informatics-electricity-sector-subdaily-observations-and"
+                    target="_blank">link</a
+                  >)
+                </li>
+              </ul>
+            </div>
+          </div>
           <div class="bx--row">
             <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1"></div>
             <div class="bx--col-lg-12 bx--col-md-7 bx--col-sm-3">
               <p>
                 <em
                   >Note: Only 38 of the 39 stations from the Hourly Observed
-                  Historical Data are presented in this tool due to data ongoing
-                  data quality issues with the weather station at Monterey
-                  Regional Airport.</em
+                  Historical Data are presented in this tool. The Monterey NAF
+                  station was archived by HadISD on 12/31/2020.</em
                 >
               </p>
             </div>
@@ -448,7 +512,7 @@
                 <li class="source-list-item">
                   <a
                     href="https://www.weather.gov/documentation/services-web-api"
-                    >National Weather Service API</a
+                    target="_blank">National Weather Service API</a
                   >
                 </li>
               </ul>
@@ -479,7 +543,7 @@
                 <li class="source-list-item">
                   <a
                     href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html"
-                    >GHCN-Daily Dataset Overview</a
+                    target="_blank">GHCN-Daily Dataset Overview</a
                   >
                 </li>
               </ul>
