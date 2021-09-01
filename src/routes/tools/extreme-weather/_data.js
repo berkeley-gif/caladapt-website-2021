@@ -127,6 +127,7 @@ export function calcThresholdProbability({ gevisf, threshold }) {
   const valuesArr = values.map((d) => +d);
   const closestValue = closest(+threshold, valuesArr);
   const probability = +probabilities[closestValue.index];
+  const rp = +format(".0f")(1 / probability);
   let label;
   if (probability <= 0.01) {
     label = "Extreme";
@@ -138,6 +139,7 @@ export function calcThresholdProbability({ gevisf, threshold }) {
   return {
     value: +format(".2f")(probability * 100),
     label,
+    rp,
   };
 }
 

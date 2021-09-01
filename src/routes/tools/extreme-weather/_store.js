@@ -252,6 +252,8 @@ export const datasetStore = (() => {
   };
 })();
 
+export const threshCIStore = writable([]);
+
 // DERIVED STORES
 // Query params store
 export const queryParams = derived(

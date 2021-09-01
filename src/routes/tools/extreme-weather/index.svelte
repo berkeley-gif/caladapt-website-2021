@@ -79,6 +79,7 @@
     hadisdStore,
     extremesStore,
     datasetStore,
+    threshCIStore,
   } from "./_store";
   import { getObservedValues, getObservedReturnLevels } from "./_data";
 
@@ -134,19 +135,31 @@
     {
       slug: "extreme-event",
       metadata: {
-        title: "Defining an Extreme Weather Event",
+        title: "",
       },
       html: `
         <div>
           <p>According to WMO (<a href="https://ane4bf-datap1.s3-eu-west-1.amazonaws.com/wmocms/s3fs-public/event/related_docs/DraftversionoftheGuidelinesontheDefinitionandMonitoringofExtremeWeatherandClimateEvents.pdf?h2Kr0f7dXp6CXZzoclQYveoEQ9FNoO5r" target="_blank">2016</a>), an extreme can be identified when a single climate variable exceeds its specific threshold, which can be varying percentile-based values, fixed absolute values and return period.</p>
           <p>This tool uses Extreme Value Theory (<a href="https://link.springer.com/book/10.1007%2F978-1-4471-3675-0" target="_blank">Coles, 2001</a>) to evaluate the exceedance probability of rare events that lie far in the tails (upper and lower ranges) of the probability distribution of a weather variable.</p>
-          <p>The annual maxima from 30 years of observed data for the Baseline period are used to calculate estimated return periods and return levels. Due to the relatively short time frame, return levels extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
           <p>The following descriptive terms are used for labeling extreme events:
           <ul style="padding-left:1.5rem;">
-            <li>An event with an Exceedance Probability <=1% is <strong>Extreme</strong></li>
-            <li>An event with an Exceedance Probability >1% and <25% is <strong>Rare</strong></li>
-            <li>An event with an Exceedance Probability <=25% is <strong>Common</strong></li>
+            <li><strong>Extreme</strong>: Exceedance Probability <=1% is </li>
+            <li><strong>Rare</strong>: Exceedance Probability >1% and <25% is </li>
+            <li><strong>Common</strong>: Exceedance Probability <=25% is</li>
           </ul>
+        </div>
+      `,
+    },
+    {
+      slug: "probability",
+      metadata: {
+        title: "",
+      },
+      html: `
+        <div>
+          <p>
+            The Exceedance probability describes the likelihood of a specific threshold temperature being exceeded in any given year. Annual maxima from 30 years of observed data for the Baseline period are used to calculate the estimated exceedance probability.
+          </p>
         </div>
       `,
     },
@@ -280,6 +293,17 @@
     const items = glossary.filter((d) => topics.includes(d.slug));
     definitionText = items
       .map((item) => {
+        if (title === "What is Exceedance Probability?") {
+          return `
+          <div>
+            <h5>${item.metadata.title}</h5>
+            ${item.html}
+            <p>The <strong>95% Confidence Intervals</strong> for selected threshold value are <strong>[${$threshCIStore[0].toFixed(
+              1
+            )}, ${$threshCIStore[1].toFixed(1)}] °F</strong></p>
+          </div>
+          `;
+        }
         return `
         <div>
           <h5>${item.metadata.title}</h5>

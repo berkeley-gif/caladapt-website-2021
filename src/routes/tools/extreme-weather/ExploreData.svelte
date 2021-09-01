@@ -16,6 +16,7 @@
   // Helpers
   import { climvarList, stationsLayer } from "./_helpers";
   import {
+    getObservedReturnLevels,
     filterPercentiles,
     filterThreshold,
     getThresholdText,
@@ -52,6 +53,8 @@
     forecastStore,
     measuredStore,
     measuredDateRange,
+    queryParams,
+    threshCIStore,
   } from "./_store";
 
   const { baseline, gevisf, begin, end, hadisdDateRange } = hadisdStore;
@@ -84,6 +87,7 @@
   let threshValid = true;
   let threshProbability;
   let threshExceedances;
+  let threshCI;
 
   let showForecast = false;
   let forecast = null;
@@ -172,6 +176,17 @@
     return val <= threshBound;
   }
 
+  async function getProbabilityCI(rp) {
+    const config = {
+      climvarId: $climvarStore,
+    };
+    const { params } = $queryParams;
+    params.intervals = rp;
+    const response = await getObservedReturnLevels(config, params);
+    const level = response[0].levels[0];
+    return [level.lowerci, level.upperci];
+  }
+
   async function changeThreshold(e) {
     if (!e || !e.detail) return;
     threshValid = checkThresholdValidity(e.detail);
@@ -186,8 +201,8 @@
       values: histogramData,
       threshold: +e.detail,
     });
-    //threshCI = await getProbabilityCI(thresholdProbability.rp);
-    // console.log("trehosld ci", thresholdCI);
+    threshCI = await getProbabilityCI(threshProbability.rp);
+    threshCIStore.set(threshCI);
   }
 
   function resetObservations() {
@@ -351,7 +366,14 @@
         </p>
         <ShowDefinition
           topics="{['extreme-event']}"
-          title="Extreme Value Analysis"
+          title="What is an extreme event?"
+          cta="Extreme events"
+          on:define
+        />
+        <ShowDefinition
+          topics="{['probability']}"
+          title="What is Exceedance Probability?"
+          cta="Exceedance Probability"
           on:define
         />
       {/if}
@@ -360,8 +382,9 @@
     <div class="block">
       {#if $baseline}
         <p>
-          From the Historical period ({$hadisdDateRange}) available for this
-          station, between <span class="block-title">{$begin}</span> and
+          In the available record ({$hadisdDateRange}) between
+          <span class="block-title">{$begin}</span>
+          and
           <span class="block-title">{$end}</span>:
         </p>
         <p>
@@ -429,7 +452,11 @@
       </p>
     </div>
     <div class="chart-download">
-      <ShowDefinition topics="{['chart']}" title="About the Chart" on:define />
+      <ShowDefinition
+        topics="{['chart']}"
+        title="About this graphic"
+        on:define
+      />
       <div>
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
           Download Chart
@@ -437,6 +464,7 @@
         <Button
           size="small"
           icon="{Share16}"
+          cta="About this graphic"
           on:click="{() => (showShare = true)}"
         >
           Share
