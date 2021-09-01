@@ -10,7 +10,7 @@
 </script>
 
 <script>
-  import { Button } from "carbon-components-svelte";
+  import EventListItem from "./_EventListItem.svelte";
 
   export let events;
 
@@ -48,9 +48,7 @@
         <h1>Events at Cal-Adapt</h1>
         <p class="lead">
           View information on and register for upcoming webinars and workshops
-          hosted by Cal-Adapt and its partners. You may also <a
-            href="/help/tutorials">view recordings of past events.</a
-          >
+          hosted by Cal-Adapt and its partners.
         </p>
       </div>
       <div class="bx--col-lg-5"></div>
@@ -63,22 +61,15 @@
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Upcoming Events</h2>
+      <p>Register for upcoming webinars and workshops hosted by Cal-Adapt.</p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
 
+  <!-- Upcoming Events / empty state -->
   {#if Array.isArray(upcomingEvents) && upcomingEvents.length}
-    {#each upcomingEvents as { metadata: { title, time, eventdatestring, tags } }}
-      <div class="bx--row">
-        <div class="bx--col-lg-2"></div>
-        <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-          <h3>{title}</h3>
-          <p>{eventdatestring}</p>
-          <p>{time}</p>
-          <Button kind="tertiary">Register</Button>
-        </div>
-        <div class="bx--col-lg-5"></div>
-      </div>
+    {#each upcomingEvents as event}
+      <EventListItem {...{ event, isFuture: true }} />
     {/each}
   {:else}
     <div class="bx--row">
@@ -94,6 +85,7 @@
     </div>
   {/if}
 
+  <!-- Rule -->
   <div class="bx--row">
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
@@ -102,26 +94,22 @@
     <div class="bx--col-lg-5"></div>
   </div>
 
+  <!-- Past events list / pagination -->
   <div class="bx--row">
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Past Events</h2>
+      <p>
+        View previously recorded webinars and workshops hosted by Cal-Adapt
+        below.
+      </p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
 
   {#if Array.isArray(pastEvents) && pastEvents.length}
-    {#each pastEvents as { metadata: { title, time, eventdatestring, tags } }}
-      <div class="bx--row">
-        <div class="bx--col-lg-2"></div>
-        <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-          <h3>{title}</h3>
-          <p>{eventdatestring}</p>
-          <p>{time}</p>
-          <Button kind="tertiary">Event Details</Button>
-        </div>
-        <div class="bx--col-lg-5"></div>
-      </div>
+    {#each pastEvents as event}
+      <EventListItem {...{ event }} />
     {/each}
   {/if}
 </div>
