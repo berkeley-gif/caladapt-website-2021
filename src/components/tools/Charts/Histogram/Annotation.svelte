@@ -3,27 +3,18 @@
 
   const { yScale, xScale } = getContext("LayerCake");
 
-  export let data;
+  export let lines;
   export let threshold;
-
-  $: percentiles = data.percentiles;
-  $: low = data.low;
-  $: high = data.high;
 </script>
 
 <g class="annotation-group">
-  <g class="records">
-    <text x="{0}" y="{-70}" style="font-weight:600;">
-      <tspan dy="{0}">Record Low</tspan>
-      <tspan x="{0}" dy="{20}">{low.value} on {low.date}</tspan>
-    </text>
-    <text x="{200}" y="{-70}" style="font-weight:600;">
-      <tspan dy="{0}">Record High</tspan>
-      <tspan x="{200}" dy="{20}">{high.value} on {high.date}</tspan>
+  <g class="title">
+    <text x="{0}" y="{-25}" style="font-size:18px;font-weight:600;">
+      Baseline (1991-2020)
     </text>
   </g>
-  <g class="percentiles">
-    {#each percentiles as d}
+  <g class="line-labels">
+    {#each lines as d}
       <line
         x1="{$xScale(d.value)}"
         x2="{$xScale(d.value)}"
@@ -39,7 +30,7 @@
         style="font-weight:600;"
       >
         <tspan x="{$xScale(d.value)}" y="{-10}">{d.label}</tspan>
-        <tspan x="{$xScale(d.value)}" y="{5}">{d.value} °F</tspan>
+        <tspan x="{$xScale(d.value)}" y="{5}">{d.value}°F</tspan>
       </text>
     {/each}
   </g>
