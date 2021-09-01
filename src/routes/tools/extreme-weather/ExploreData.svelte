@@ -424,7 +424,7 @@
       </p>
     </div>
     <div class="chart-download">
-      <ShowDefinition topics="{['histogram-chart']}" title="Chart" on:define />
+      <ShowDefinition topics="{['chart']}" title="About the Chart" on:define />
       <div>
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
           Download Chart
