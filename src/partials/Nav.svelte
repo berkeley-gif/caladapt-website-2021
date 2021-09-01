@@ -86,6 +86,18 @@
       </li>
       <li>
         <a
+          href="/events/"
+          class="bx--header__menu-item"
+          role="menuitem"
+          tabindex="0"
+          aria-current="{segment === 'events' ? 'page' : undefined}"
+        >
+          <span class="bx--text-truncate--end">Events</span>
+        </a>
+      </li>
+
+      <li>
+        <a
           href="/about/"
           class="bx--header__menu-item"
           role="menuitem"
