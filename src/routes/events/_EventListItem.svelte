@@ -95,10 +95,15 @@
           href="/events/{slug}"
           kind="tertiary"
           size="field"
+          aria-label="View details for upcoming event {title}"
           icon="{ArrowRight16}">Register</Button
         >
       {:else}
-        <Button href="/events/{slug}" kind="tertiary" size="small"
+        <Button
+          href="/events/{slug}"
+          kind="tertiary"
+          size="small"
+          aria-label="View details for previous event {title}"
           >Event Details</Button
         >
       {/if}
