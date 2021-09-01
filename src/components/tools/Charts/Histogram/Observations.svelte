@@ -2,10 +2,11 @@
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
 
-  const { yGet, xScale, height, yScale } = getContext("LayerCake");
+  const { yGet, xScale, padding, yScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
   export let data;
+  export let yHeight;
 
   $: midHeight = $yScale.bandwidth() / 2;
 
@@ -57,7 +58,7 @@
       <line
         x1="{$xScale(d.temperature)}"
         x2="{$xScale(d.temperature)}"
-        y1="{-50}"
+        y1="{yHeight}"
         y2="{$yGet(d) + midHeight}"
         class="line"
       >
