@@ -31,7 +31,16 @@
   .rule {
     height: 1px;
     background-color: var(--gray-30);
-    margin: 2rem 0;
+    margin: 3rem 0;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+
+  p.description {
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
   }
 </style>
 
@@ -56,28 +65,33 @@
   </div>
 </div>
 
+<div class="spacing--v-32"></div>
+
+<!-- Upcoming events title -->
 <div class="bx--grid">
   <div class="bx--row">
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Upcoming Events</h2>
-      <p>Register for upcoming webinars and workshops hosted by Cal-Adapt.</p>
+      <p class="description">
+        Register for upcoming webinars and workshops hosted by Cal-Adapt.
+      </p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
 
-  <!-- Upcoming Events / empty state -->
+  <!-- Upcoming events list / empty state -->
   {#if Array.isArray(upcomingEvents) && upcomingEvents.length}
     <div role="list">
       {#each upcomingEvents as event}
-        <EventListItem {...{ event, isFuture: true }} />
+        <EventListItem {...{ event, isFutureEvent: true }} />
       {/each}
     </div>
   {:else}
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-        <p>
+        <p class="description">
           No events are currently scheduled. Please check back later or
           <a href="/signup/">subscribe to our newsletter</a> to be notified when
           future events are announced.
@@ -101,7 +115,7 @@
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Past Events</h2>
-      <p>
+      <p class="description">
         View previously recorded webinars and workshops hosted by Cal-Adapt
         below.
       </p>
