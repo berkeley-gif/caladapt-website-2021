@@ -48,7 +48,7 @@
       {#each upcomingEvents as event}
         <li class="item">
           <p class="item-title">
-            <a href="{`blog/events/${event.slug}`}">{event.metadata.title}</a>
+            <a href="{`events/${event.slug}`}">{event.metadata.title}</a>
           </p>
           <p class="item-text">{event.metadata.eventdatestring}</p>
           <p class="item-text">
@@ -58,7 +58,7 @@
       {/each}
     </ul>
     <span class="sidebar-block-link">
-      <a href="/blog/events">See All Events</a>
+      <a href="/events">See All Events</a>
     </span>
   </div>
 {/if}

@@ -1,7 +1,7 @@
 <script context="module">
   export async function preload({ params }) {
     try {
-      const res = await this.fetch(`blog/events/${params.slug}.json`);
+      const res = await this.fetch(`events/${params.slug}.json`);
 
       if (res.status === 200) {
         return { event: await res.json() };
