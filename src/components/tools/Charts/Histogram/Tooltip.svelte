@@ -6,7 +6,8 @@
 <style>
   .chart-tooltip {
     position: absolute;
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1.2;
     pointer-events: none;
     border: 1px solid #ccc;
     background: rgba(0, 0, 0, 0.8);
@@ -15,7 +16,7 @@
     transition: left 250ms ease-out, top 250ms ease-out;
     z-index: 15;
     color: #fff;
-    width: 125px;
+    width: 150px;
   }
 
   :global(.chart-tooltip > span) {

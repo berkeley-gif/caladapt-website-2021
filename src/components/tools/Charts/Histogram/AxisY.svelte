@@ -73,16 +73,14 @@
         style="text-anchor:{isBandwidth ? 'end' : textAnchor};"
         >{formatTick(tick)}</text
       >
+      {#if i === tickVals.length - 1}
+        <text
+          y="-4"
+          x="{$padding.left - 10}"
+          class="label"
+          style="font-size:14px;fill:#666">{label}</text
+        >
+      {/if}
     </g>
   {/each}
-  <text
-    transform="rotate(-90)"
-    y="{-$padding.left + 15}"
-    x="{-$height / 2}"
-    class="label"
-    text-anchor="middle"
-    style="font-size:13px;fill:#666"
-  >
-    {label}
-  </text>
 </g>

@@ -2,20 +2,25 @@
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
 
-  const { data, xGet, yGet, yRange, xScale } = getContext("LayerCake");
+  const { data, xGet, yGet, yRange, xScale, yScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
   export let fill = "#aaa";
   export let stroke = "#aaa";
   export let strokeWidth = 1;
+  export let total;
 
   $: columnWidth = (d) => {
     const vals = $xGet(d);
     return Math.max(0, vals[1] - vals[0]);
   };
 
+  $: y = (d) => {
+    return $yScale((d.length / total) * 100);
+  };
+
   $: columnHeight = (d) => {
-    return $yRange[0] - $yGet(d);
+    return $yScale(0) - $yScale((d.length / total) * 100);
   };
 
   function handleMousemove(feature) {
@@ -35,7 +40,7 @@
       class="group-rect"
       data-id="{i}"
       x="{$xScale.bandwidth ? $xGet(d) : $xGet(d)[0]}"
-      y="{$yGet(d)}"
+      y="{y(d)}"
       width="{$xScale.bandwidth ? $xScale.bandwidth() : columnWidth(d)}"
       height="{columnHeight(d)}"
       fill="{fill}"
