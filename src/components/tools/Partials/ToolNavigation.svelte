@@ -29,6 +29,39 @@
   }
 </script>
 
+<style lang="scss">
+  .secondary-nav {
+    width: 100%;
+    top: 0;
+    border-bottom: 1px solid var(--gray-50);
+    z-index: 3;
+    background: var(--gray-30);
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      list-style-type: none;
+      text-transform: uppercase;
+      margin: 0 2rem;
+    }
+
+    ul li {
+      margin-right: 1rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      color: #000;
+    }
+
+    ul li:hover {
+      background: var(--gray-50);
+    }
+
+    ul li.active {
+      font-weight: 600;
+    }
+  }
+</style>
+
 <div class="secondary-nav is-sticky">
   <ul>
     {#each items as item}

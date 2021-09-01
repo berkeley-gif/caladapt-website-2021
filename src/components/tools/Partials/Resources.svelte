@@ -11,6 +11,12 @@
   $: other = resources.filter((d) => d.category === "external");
 </script>
 
+<style lang="scss">
+  div {
+    margin-bottom: 1.75rem;
+  }
+</style>
+
 <!-- Resources -->
 <div class="bx--row">
   <div class="bx--col">
@@ -37,6 +43,7 @@
     </slot>
   </div>
 </div>
+
 <!-- Related Cal-Adapt tools -->
 <div class="bx--row">
   <div class="bx--col">

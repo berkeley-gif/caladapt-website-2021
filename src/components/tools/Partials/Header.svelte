@@ -4,23 +4,28 @@
 </script>
 
 <style lang="scss">
-  :global(.banner .lead a) {
-    color: var(--link-01);
-    text-decoration: none;
-  }
+  .banner-tool {
+    padding: 2rem;
+    background: var(--gray-10);
+    color: var(--text-01);
 
-  img {
-    width: 60px;
-    margin-left: 0.5rem;
+    h1 {
+      margin-top: var(--spacing-8);
+    }
 
-    &:first-of-type {
-      margin-left: 0;
+    img {
+      width: 60px;
+      margin-left: 0.5rem;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
     }
   }
 </style>
 
 <!-- Banner -->
-<div class="banner bg-gray-100">
+<div class="banner-tool bg-gray-100">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
