@@ -10,6 +10,8 @@
 </script>
 
 <script>
+  import { Button } from "carbon-components-svelte";
+  import { ArrowRight16 } from "carbon-icons-svelte";
   import EventListItem from "./_EventListItem.svelte";
 
   export let events;
@@ -42,6 +44,10 @@
     margin-bottom: 2rem;
     font-size: 1.25rem;
   }
+
+  p.lead {
+    font-size: 1.25rem;
+  }
 </style>
 
 <svelte:head>
@@ -50,7 +56,7 @@
 
 <!-- Banner -->
 <div class="bleed banner overlay">
-  <div class="bx--grid">
+  <div class="bx--grid bx--grid--narrow">
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
@@ -70,66 +76,96 @@
 <!-- Upcoming events title -->
 <div class="bx--grid">
   <div class="bx--row">
+    <!-- 2 lg column spacer -->
     <div class="bx--col-lg-2"></div>
-    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-      <h2>Upcoming Events</h2>
-      <p class="description">
-        Register for upcoming webinars and workshops hosted by Cal-Adapt.
-      </p>
-    </div>
-    <div class="bx--col-lg-5"></div>
-  </div>
 
-  <!-- Upcoming events list / empty state -->
-  {#if Array.isArray(upcomingEvents) && upcomingEvents.length}
-    <div role="list">
-      {#each upcomingEvents as event}
-        <EventListItem {...{ event, isFutureEvent: true }} />
-      {/each}
-    </div>
-  {:else}
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-        <p class="description">
-          No events are currently scheduled. Please check back later or
-          <a href="/signup/">subscribe to our newsletter</a> to be notified when
-          future events are announced.
-        </p>
+    <!-- middle content column -->
+    <div class="bx--col-lg-8 bx--col-md-8 bx--col-sm-4">
+      <!-- displays only on breakpoints smaller than desktop -->
+      <div class="bx--row">
+        <div class="bx--col-lg-0 bx--col">
+          <p class="lead">
+            Get the latest Cal-Adapt news, updates &amp; events delivered to
+            your inbox. Subscribe to the Cal-Adapt Newsletter.
+          </p>
+          <Button icon="{ArrowRight16}" href="/signup" size="small"
+            >Subscribe</Button
+          >
+          <div class="spacing--v-32"></div>
+        </div>
       </div>
-      <div class="bx--col-lg-5"></div>
-    </div>
-  {/if}
 
-  <!-- Rule -->
-  <div class="bx--row">
-    <div class="bx--col-lg-2"></div>
-    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-      <div class="rule"></div>
-    </div>
-    <div class="bx--col-lg-5"></div>
-  </div>
+      <div class="bx--row">
+        <div class="bx--col">
+          <h2>Upcoming Events</h2>
+          <p class="description">
+            Register for upcoming webinars and workshops hosted by Cal-Adapt.
+          </p>
+        </div>
+      </div>
 
-  <!-- Past events list / pagination -->
-  <div class="bx--row">
-    <div class="bx--col-lg-2"></div>
-    <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-      <h2>Past Events</h2>
-      <p class="description">
-        View previously recorded webinars and workshops hosted by Cal-Adapt
-        below.
+      <!-- Upcoming events list / empty state -->
+      {#if Array.isArray(upcomingEvents) && upcomingEvents.length}
+        <div role="list">
+          {#each upcomingEvents as event}
+            <EventListItem {...{ event, isFutureEvent: true }} />
+          {/each}
+        </div>
+      {:else}
+        <div class="bx--row">
+          <div class="bx--col">
+            <p class="description">
+              No events are currently scheduled. Please check back later or
+              <a href="/signup/">subscribe to our newsletter</a> to be notified when
+              future events are announced.
+            </p>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Rule -->
+      <div class="bx--row">
+        <div class="bx--col">
+          <div class="rule"></div>
+        </div>
+      </div>
+
+      <!-- Past events title -->
+      <div class="bx--row">
+        <div class="bx--col">
+          <h2>Past Events</h2>
+          <p class="description">
+            View previously recorded webinars and workshops hosted by Cal-Adapt
+            below.
+          </p>
+        </div>
+      </div>
+
+      {#if Array.isArray(pastEvents) && pastEvents.length}
+        <div role="list">
+          {#each pastEvents as event}
+            <EventListItem {...{ event }} />
+          {/each}
+        </div>
+      {/if}
+    </div>
+    <!-- end middle lg column -->
+
+    <!-- right sidebar offset by 1 lg col -->
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+      <p class="lead">
+        Get the latest Cal-Adapt news, updates &amp; events delivered to your
+        inbox. Subscribe to the Cal-Adapt Newsletter.
       </p>
+      <Button icon="{ArrowRight16}" href="/signup" size="field"
+        >Subscribe</Button
+      >
     </div>
-    <div class="bx--col-lg-5"></div>
   </div>
 
-  {#if Array.isArray(pastEvents) && pastEvents.length}
-    <div role="list">
-      {#each pastEvents as event}
-        <EventListItem {...{ event }} />
-      {/each}
-    </div>
-  {/if}
+  <!-- 1 lg column right spacer -->
+  <div class="bx--col-lg-1"></div>
 </div>
+<!-- end bx--grid -->
 
 <div class="spacing--v-96"></div>

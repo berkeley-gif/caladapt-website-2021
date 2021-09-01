@@ -23,7 +23,7 @@
 
 <style>
   .bx--row:not(:last-child) {
-    margin-bottom: 3.5rem;
+    margin-bottom: 4rem;
   }
 
   h3 {
@@ -66,9 +66,7 @@
 <!-- Note: the listitem ARIA role registers this as an <li> in the accessibility tree. 
     This means the component's immediate parent must have role=list -->
 <div class="bx--row" role="listitem">
-  <div class="bx--col-lg-2"></div>
-
-  <div class="bx--col-lg-8 bx--col-md-8 bx--col-sm-4">
+  <div class="bx--col">
     <h3>{title}</h3>
 
     <div class="date-tags-container">
@@ -106,6 +104,4 @@
       {/if}
     </div>
   </div>
-
-  <div class="bx--col-lg-4"></div>
 </div>
