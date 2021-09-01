@@ -88,8 +88,11 @@
             Get the latest Cal-Adapt news, updates &amp; events delivered to
             your inbox. Subscribe to the Cal-Adapt Newsletter.
           </p>
-          <Button icon="{ArrowRight16}" href="/signup" size="small"
-            >Subscribe</Button
+          <Button
+            icon="{ArrowRight16}"
+            href="/signup"
+            size="small"
+            aria-label="Newsletter subscription form">Subscribe</Button
           >
           <div class="spacing--v-32"></div>
         </div>
@@ -157,8 +160,11 @@
         Get the latest Cal-Adapt news, updates &amp; events delivered to your
         inbox. Subscribe to the Cal-Adapt Newsletter.
       </p>
-      <Button icon="{ArrowRight16}" href="/signup" size="field"
-        >Subscribe</Button
+      <Button
+        icon="{ArrowRight16}"
+        href="/signup"
+        size="field"
+        aria-label="Newsletter subscription form">Subscribe</Button
       >
     </div>
   </div>
