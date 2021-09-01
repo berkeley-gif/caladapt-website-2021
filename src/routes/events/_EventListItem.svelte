@@ -21,7 +21,9 @@
   }
 </style>
 
-<div class="bx--row">
+<!-- Note: the listitem ARIA role registers this as an <li> in the accessibility tree. 
+    This means the component's immediate parent must have role=list -->
+<div class="bx--row" role="listitem">
   <div class="bx--col-lg-2"></div>
   <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
     <h3>{title}</h3>

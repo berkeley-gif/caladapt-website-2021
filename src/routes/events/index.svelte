@@ -68,9 +68,11 @@
 
   <!-- Upcoming Events / empty state -->
   {#if Array.isArray(upcomingEvents) && upcomingEvents.length}
-    {#each upcomingEvents as event}
-      <EventListItem {...{ event, isFuture: true }} />
-    {/each}
+    <div role="list">
+      {#each upcomingEvents as event}
+        <EventListItem {...{ event, isFuture: true }} />
+      {/each}
+    </div>
   {:else}
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
@@ -108,9 +110,11 @@
   </div>
 
   {#if Array.isArray(pastEvents) && pastEvents.length}
-    {#each pastEvents as event}
-      <EventListItem {...{ event }} />
-    {/each}
+    <div role="list">
+      {#each pastEvents as event}
+        <EventListItem {...{ event }} />
+      {/each}
+    </div>
   {/if}
 </div>
 
