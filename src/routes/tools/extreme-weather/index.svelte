@@ -141,7 +141,7 @@
         <div>
           <p>According to WMO (<a href="https://ane4bf-datap1.s3-eu-west-1.amazonaws.com/wmocms/s3fs-public/event/related_docs/DraftversionoftheGuidelinesontheDefinitionandMonitoringofExtremeWeatherandClimateEvents.pdf?h2Kr0f7dXp6CXZzoclQYveoEQ9FNoO5r" target="_blank">2016</a>), an extreme can be identified when a single climate variable exceeds its specific threshold, which can be varying percentile-based values, fixed absolute values and return period.</p>
           <p>This tool uses Extreme Value Theory (<a href="https://link.springer.com/book/10.1007%2F978-1-4471-3675-0" target="_blank">Coles, 2001</a>) to evaluate the exceedance probability of rare events that lie far in the tails (upper and lower ranges) of the probability distribution of a weather variable.</p>
-          <p>The annual maxima from 30 years of data for the Baseline period are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
+          <p>The annual maxima from 30 years of observed data for the Baseline period are used to calculate estimated return periods and return levels. Due to the relatively short time frame, return levels extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
           <p>The following descriptive terms are used for labeling extreme events:
           <ul style="padding-left:1.5rem;">
             <li>An event with an Exceedance Probability <=1% is <strong>Extreme</strong></li>
@@ -158,7 +158,7 @@
       },
       html: `
         <div>
-          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast is for today's date only and does not change if you select a different day of year.</p>
+          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the Near Term forecast & Recent Observations are for today's date only and do not change if you select a different day of year.</p>
         </div>
       `,
     },
@@ -169,18 +169,21 @@
       },
       html: `
         <div>
-          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the 7-day forecast if for today's date only and does not change if you select a different day of year.</p>
+          <p>Need text for this toolip</p>
         </div>
       `,
     },
     {
-      slug: "observations",
+      slug: "chart",
       metadata: {
-        title: "Frequency of Observations",
+        title: "",
       },
       html: `
         <div>
-          <p>This histogram indicates the frequency distribution of selected climate varibale and shows how often each different value occurs.</p>
+          <p>The histogram shows the distribution of selected climate varibale around a 20 day window for the Baseline period (1991-2020). The data values for a climate variable are grouped into buckets and represented by columns along the X axis. The Y axis represents the percentage of occurences in the data for each column.</p>
+          <p>The NWS Forecast section of the graphic, if selected, shows the Near Term forecast from the National Weather Service for selected climate variable.</p>
+          <p>The Recent Observations section of the graphic, if selected, shows Recent Observations from NOAA, for selected climate variable. There is usually a time lag of 2-3 days in the data provided by NOAA, so you may not see data for last 2-3 days.</p>
+          <p>Both the NWS Forecast and Recent Observations are presented with respect to <strong>today's date</strong> and <strong>do not change</strong> if the user selects another Day of Year value.
         </div>
       `,
     },
@@ -391,23 +394,36 @@
             interest are extracted from a 30 year daily timeseries for the
             Baseline period (1991–2020). A GEV distribution is applied to this
             time series. Shape and scale parameters for the distribution are
-            estimated using the Maximum Likelihood method. Probability for
-            different threshold values (Return levels) are estimated from the
-            fitted model with 95% confidence intervals.
+            estimated using the Maximum Likelihood method. Exceedance
+            Probabilities for different threshold values (Return levels) are
+            estimated from the fitted model with 95% confidence intervals.
           </p>
           <p>
             <strong>User Admonishment</strong>: The Extreme Weather Tool is
-            designed to broadly inform potential extreme weather frequency
-            across a wide range of environments and climate zones in California.
-            On a local scale, different statistical assumptions (i.e. fitting
-            techniques for distribution parameters, choice of extreme value
-            distribution) may be more appropriate. We encourage users to ensure
-            the empirical fit of the applied distribution is acceptable to their
-            end use before using estimates produced from this tool for planning
-            purposes.
+            designed to broadly inform estimated probabilities of extreme
+            weather events across a wide range of environments and climate zones
+            in California. On a local scale, different statistical assumptions
+            (i.e. fitting techniques for distribution parameters, choice of
+            extreme value distribution) may be more appropriate. We encourage
+            users to ensure the empirical fit of the applied distribution is
+            acceptable to their end use before using estimates produced from
+            this tool for planning purposes.
           </p>
         </div>
         <div slot="extra-sources">
+          <div class="bx--row">
+            <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1"></div>
+            <div class="bx--col-lg-12 bx--col-md-7 bx--col-sm-3">
+              <p>
+                <em
+                  >Note: Only 38 of the 39 stations from the Hourly Observed
+                  Historical Data are presented in this tool due to data ongoing
+                  data quality issues with the weather station at Monterey
+                  Regional Airport.</em
+                >
+              </p>
+            </div>
+          </div>
           <div class="bx--row source">
             <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1">
               <img
