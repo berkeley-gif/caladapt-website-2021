@@ -1,13 +1,23 @@
-import { get_future_events } from "./_future-events";
+import { get_events } from "./_events";
 
-export function get(req, res, next) {
-  const eventsData = get_future_events();
-  if (eventsData) {
-    res.writeHead(200, {
-      "Content-Type": "application/json",
-    });
-    res.end(JSON.stringify(eventsData));
-  } else {
-    next();
+let json;
+
+export function get(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "application/json",
+  });
+
+  if (!json || process.env.NODE_ENV !== "production") {
+    const events = get_events()
+      .filter((post) => !post.metadata.draft)
+      .map((post) => {
+        return {
+          slug: post.slug,
+          metadata: post.metadata,
+        };
+      });
+    json = JSON.stringify(events);
   }
+
+  res.end(json);
 }

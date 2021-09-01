@@ -4,7 +4,7 @@ import frontMatter from "front-matter";
 import marked from "marked";
 import { timeParse, timeFormat } from "d3-time-format";
 
-export function get_future_events() {
+export function get_events() {
   return fs
     .readdirSync("content/events")
     .filter((file) => path.extname(file) === ".md")
@@ -33,6 +33,5 @@ export function get_future_events() {
         slug,
       };
     })
-    .filter((d) => +d.metadata.eventdate > +new Date())
     .sort((a, b) => (a.metadata.eventdate < b.metadata.eventdate ? 1 : -1));
 }

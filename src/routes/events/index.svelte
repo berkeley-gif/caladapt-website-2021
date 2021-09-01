@@ -1,6 +1,6 @@
 <script context="module">
   export function preload() {
-    return this.fetch(`events.json`)
+    return this.fetch("events.json")
       .then((r) => r.json())
       .then((events) => ({ events }))
       .catch((error) => {
@@ -13,6 +13,13 @@
   import { Button } from "carbon-components-svelte";
 
   export let events;
+
+  $: upcomingEvents = events.filter(
+    (d) => +new Date(d.metadata.eventdate) >= +new Date()
+  );
+  $: pastEvents = events.filter(
+    (d) => +new Date(d.metadata.eventdate) < +new Date()
+  );
 </script>
 
 <style>
@@ -60,8 +67,8 @@
     <div class="bx--col-lg-5"></div>
   </div>
 
-  {#if Array.isArray(events) && events.length}
-    {#each events as { metadata: { title, time, eventdatestring, tags } }}
+  {#if Array.isArray(upcomingEvents) && upcomingEvents.length}
+    {#each upcomingEvents as { metadata: { title, time, eventdatestring, tags } }}
       <div class="bx--row">
         <div class="bx--col-lg-2"></div>
         <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
@@ -99,14 +106,24 @@
     <div class="bx--col-lg-2"></div>
     <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
       <h2>Past Events</h2>
-      <p>
-        To view recordings of past events, vist the <a href="/help/tutorials/"
-          >Tutorials and Webinars help page</a
-        >.
-      </p>
     </div>
     <div class="bx--col-lg-5"></div>
   </div>
+
+  {#if Array.isArray(pastEvents) && pastEvents.length}
+    {#each pastEvents as { metadata: { title, time, eventdatestring, tags } }}
+      <div class="bx--row">
+        <div class="bx--col-lg-2"></div>
+        <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
+          <h3>{title}</h3>
+          <p>{eventdatestring}</p>
+          <p>{time}</p>
+          <Button kind="tertiary">Event Details</Button>
+        </div>
+        <div class="bx--col-lg-5"></div>
+      </div>
+    {/each}
+  {/if}
 </div>
 
 <div class="spacing--v-96"></div>
