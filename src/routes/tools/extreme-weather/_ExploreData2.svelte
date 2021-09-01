@@ -4,6 +4,7 @@
     Modal,
     Accordion,
     AccordionItem,
+    CodeSnippet,
     NumberInput,
     RadioButtonGroup,
     RadioButton,
@@ -12,16 +13,16 @@
   } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import copy from "clipboard-copy";
 
   // Helpers
   import { climvarList, stationsLayer } from "./_helpers";
   import {
-    filterPercentiles,
-    filterThreshold,
-    getThresholdText,
-    calcThresholdProbability,
-    calcThresholdExceedances,
+    calcBaselineStats,
+    calcThreshold,
+    calcReturnPeriod,
     getForecastData,
+    getObservedReturnLevels,
     filterForecast,
     getMeasuredData,
     filterMeasured,
@@ -43,47 +44,28 @@
     locationStore,
     bookmark,
     doyStore,
-    doyRange,
     thresholdStore,
-    hadisdStore,
+    observationsStore,
     datasetStore,
     extremesStore,
     forecastDate,
     forecastStore,
+    queryParams,
+    doyRange,
     measuredStore,
     measuredDateRange,
   } from "./_store";
 
-  const { baseline, gevisf, begin, end } = hadisdStore;
-  const { doyText } = doyStore;
+  const { baseline, returnLevels } = observationsStore;
   const { climvar } = climvarStore;
-  const { location } = locationStore;
+  const { doyText } = doyStore;
   const { titles } = datasetStore;
+  const { location } = locationStore;
 
   let isLoading = true;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
-
-  let ChangeStation;
-  let DownloadChart;
-  let ShareLink;
-
-  let metadata;
-  let csvData;
-  let printContainer;
-  let printSkipElements;
-
-  let histogramData;
-  let histogramAnnotation;
-  let recordLow;
-  let recordHigh;
-
-  let threshBound;
-  let threshInvalidText;
-  let threshValid = true;
-  let threshProbability;
-  let threshExceedances;
 
   let showForecast = false;
   let forecast = null;
@@ -93,31 +75,66 @@
   let measured = null;
   let measuredLoading = false;
 
-  $: formatFn = format(`.${$climvar.decimals}f`);
+  let baselineData;
+  let baselineLabels;
+  let thresholdOpts = {};
+  let isThresholdValid;
+  let thresholdProbability;
+  let thresholdCI;
+
+  let ChangeStation;
+  let DownloadChart;
+
+  let metadata;
+  let csvData;
+  let printContainer;
+  let printSkipElements;
+
   $: dataSourceTitles = $titles;
-  $: $locationStore, resetObservations();
-  $: $climvar, updateObservations();
+  $: $locationStore, resetForecast();
+
+  $: if (showForecast) {
+    dataSourceTitles = [...dataSourceTitles, "National Weather Service"];
+  } else {
+    dataSourceTitles = dataSourceTitles.filter(
+      (d) => d !== "National Weather Service"
+    );
+  }
+
+  $: if (showMeasured) {
+    dataSourceTitles = [
+      ...dataSourceTitles,
+      "National Centers for Environmental Information",
+    ];
+  } else {
+    dataSourceTitles = dataSourceTitles.filter(
+      (d) => d !== "National Centers for Environmental Information"
+    );
+  }
+
+  function checkThresholdValidity(val) {
+    if ($extremesStore === "high") {
+      return val >= thresholdOpts.bound;
+    }
+    return val <= thresholdOpts.bound;
+  }
+
+  function resetForecast() {
+    showForecast = false;
+    forecastStore.reset();
+    forecast = null;
+  }
+
+  $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($baseline) {
-    histogramData = $baseline.values.map((d) => +d.value);
-    histogramAnnotation = filterPercentiles(
-      $baseline.percentiles,
-      $extremesStore
-    );
-    recordLow = $baseline.low;
-    recordHigh = $baseline.high;
-    threshBound = filterThreshold($baseline.percentiles, $extremesStore);
-    threshInvalidText = getThresholdText($extremesStore);
-    thresholdStore.set(threshBound);
+    baselineData = $baseline.values.map((d) => +d.value);
+    baselineLabels = calcBaselineStats($baseline, $extremesStore);
+    thresholdOpts = calcThreshold(baselineLabels, $extremesStore);
+    thresholdStore.set(thresholdOpts.bound);
     isLoading = false;
   } else {
     isLoading = true;
-  }
-
-  async function loadShare() {
-    showShare = true;
-    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
-      .default;
   }
 
   async function loadLocation() {
@@ -133,8 +150,8 @@
       ["station", $location.title],
       ["variable", $climvar.label],
       ["units", $climvar.units.imperial],
-      ["record high", recordHigh],
-      ["record low", recordLow],
+      ["record high", `${$baseline.high.value} on ${$baseline.high.date}`],
+      ["record low", `${$baseline.low.value} on ${$baseline.low.date}`],
     ];
     csvData = $baseline.values;
     printContainer = document.querySelector(".explore");
@@ -146,6 +163,9 @@
 
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
+    if ($forecastStore) {
+      forecast = filterForecast(e.detail.id, $forecastStore);
+    }
     console.log("climvar change");
   }
 
@@ -159,53 +179,37 @@
     console.log("doy change");
   }
 
-  function changeLocation(e) {
-    showChangeLocation = false;
-    locationStore.updateLocation(e.detail.location);
-    console.log("location change");
-  }
-
-  function checkThresholdValidity(val) {
-    if ($extremesStore === "high") {
-      return val >= threshBound;
-    }
-    return val <= threshBound;
+  async function getProbabilityCI(rp) {
+    const config = {
+      climvarId: $climvarStore,
+    };
+    const { params } = $queryParams;
+    params.intervals = rp;
+    const response = await getObservedReturnLevels(config, params);
+    const level = response[0].levels[0];
+    return [level.lowerci, level.upperci];
   }
 
   async function changeThreshold(e) {
     if (!e || !e.detail) return;
-    threshValid = checkThresholdValidity(e.detail);
-    if (!threshValid) return;
-    thresholdStore.set(+e.detail);
+    isThresholdValid = checkThresholdValidity(e.detail);
+    if (!isThresholdValid) return;
+    thresholdStore.set(e.detail);
     console.log("threshold change");
-    threshProbability = calcThresholdProbability({
-      gevisf: $gevisf,
-      threshold: +e.detail,
+    thresholdProbability = calcReturnPeriod({
+      returnLevels: $returnLevels,
+      threshold: e.detail,
+      observations: baselineData,
     });
-    threshExceedances = calcThresholdExceedances({
-      values: histogramData,
-      threshold: +e.detail,
-    });
-    //threshCI = await getProbabilityCI(thresholdProbability.rp);
-    // console.log("trehosld ci", thresholdCI);
+    console.log("thresholdProbability", thresholdProbability);
+    thresholdCI = await getProbabilityCI(thresholdProbability.rp);
+    console.log("trehosld ci", thresholdCI);
   }
 
-  function resetObservations() {
-    showForecast = false;
-    showMeasured = false;
-    forecastStore.set(null);
-    measuredStore.set(null);
-    forecast = null;
-    measured = null;
-  }
-
-  function updateObservations() {
-    if ($forecastStore) {
-      forecast = filterForecast($climvar.id, $forecastStore);
-    }
-    if ($measuredStore) {
-      measured = filterMeasured($climvar.id, $measuredStore);
-    }
+  function changeLocation(e) {
+    showChangeLocation = false;
+    locationStore.updateLocation(e.detail.location);
+    console.log("location change");
   }
 
   async function getForecast() {
@@ -218,34 +222,22 @@
       forecastStore.set(data);
       forecast = filterForecast($climvar.id, data);
       forecastLoading = false;
-      dataSourceTitles = [...dataSourceTitles, "National Weather Service"];
       return data;
     } catch (error) {
       console.log("error fetching forecast");
-      forecastLoading = false;
-      dataSourceTitles = dataSourceTitles.filter(
-        (d) => d !== "National Weather Service"
-      );
-      showForecast = false;
       notifier.error(
         "Error",
         "Unable to get forecast from NWS at this time. Try again in a few minutes.",
         2000
       );
-    }
-  }
-
-  function toggleForecastDisplay() {
-    showForecast = !showForecast;
-    if (showForecast) {
-      if (forecast === null) {
-        getForecast();
-      }
+      forecastLoading = false;
+      showForecast = false;
     }
   }
 
   async function getMeasured() {
     measuredLoading = true;
+    console.log($measuredDateRange);
     try {
       const data = await getMeasuredData({
         stationId: `USW000${$location.properties.wban}`,
@@ -256,28 +248,32 @@
       measuredStore.set(data);
       measured = filterMeasured($climvar.id, data);
       measuredLoading = false;
-      dataSourceTitles = [
-        ...dataSourceTitles,
-        "National Centers for Environmental Information",
-      ];
       return data;
     } catch (error) {
       console.log("error fetching noaa data");
-      measuredLoading = false;
-      showMeasured = false;
-      dataSourceTitles = dataSourceTitles.filter(
-        (d) => d !== "National Centers for Environmental Information"
-      );
       notifier.error(
         "Error",
         "Unable to get recent observations from NOAA at this time. Try again in a few minutes.",
         2000
       );
+      forecastLoading = false;
+      showForecast = false;
+    }
+  }
+
+  function toggleForecastDisplay() {
+    showForecast = !showForecast;
+
+    if (showForecast) {
+      if (forecast === null) {
+        getForecast();
+      }
     }
   }
 
   function toggleMeasuredDisplay() {
     showMeasured = !showMeasured;
+
     if (showMeasured) {
       if (measured === null) {
         getMeasured();
@@ -287,8 +283,14 @@
 </script>
 
 <style>
-  .block-title.threshold {
-    color: red;
+  .block-title.threshold::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: red;
+    margin-left: 2px;
   }
 </style>
 
@@ -313,7 +315,8 @@
       <div class="h4">
         Distribution of daily <span class="block-title">{$climvar.title}s</span>
         around
-        <span class="block-title">{$doyText} ({$doyRange})</span> from 1991-2020.
+        <span class="block-title">{$doyText} (m days before, n days after)</span
+        > from 1991-2020.
       </div>
       <div>
         <Button size="small" icon="{Location16}" on:click="{loadLocation}">
@@ -324,33 +327,35 @@
   </div>
 
   <!-- Stats -->
-  <div
-    class="explore-stats"
-    style="grid-template-columns: auto minmax(18rem, 1fr);"
-  >
+  <div class="explore-stats">
     <div class="block">
-      {#if threshValid && threshProbability}
+      {#if isThresholdValid && thresholdProbability}
         <p>
           A daily <span class="block-title">{$climvar.title}</span> of
-          <span class="block-title threshold">{$thresholdStore}°F</span>
+          <span class="block-title threshold">{$thresholdStore} °F</span>
           around <span class="block-title">{$doyText}</span> is a
-          <span class="block-title">{threshProbability.label}</span>
-          event. Based on historical observations, the probability of exceeding
-          <span class="block-title threshold">{$thresholdStore}°F</span>
-          at least once between <span class="block-title">{$begin}</span> and
-          <span class="block-title">{$end}</span>
-          is <span class="block-title">{threshProbability.value}%</span>.
+          <span class="block-title">{thresholdProbability.label}</span>
+          event.
         </p>
         <p>
-          In the Baseline period (1991-2020), a temperature of <span
+          Based on historical observations, the probability of exceeding <span
+            class="block-title">{$thresholdStore} °F</span
+          >
+          at least once between
+          <span class="block-title">{$doyRange.begin}</span>
+          and <span class="block-title">{$doyRange.end}</span> is
+          <span class="block-title">{thresholdProbability.probability}%</span>.
+        </p>
+        <p>
+          In the baseline period (1991-2020), a temperature of <span
             class="block-title threshold">{$thresholdStore} °F</span
           >
-          was exceeded <span class="block-title">{threshExceedances}</span>
-          times between <span class="block-title">{$begin}</span> and
-          <span class="block-title">{$end}</span> for the graphic below.
+          was exceeded <span class="block-title">m</span> times between
+          <span class="block-title">{$doyRange.begin}</span>
+          and <span class="block-title">{$doyRange.end}</span> for the graphic below.
         </p>
         <ShowDefinition
-          topics="{['extreme-event']}"
+          topics="{['extreme-event', 'return-period']}"
           title="Extreme Value Analysis"
           on:define
         />
@@ -358,37 +363,29 @@
     </div>
 
     <div class="block">
-      {#if $baseline}
-        <p>
-          A <span class="block-title">Record Low</span> of
-          <span class="block-title">{$baseline.low.value}</span>
-          was observed on <span class="block-title">{$baseline.low.date}</span>
-        </p>
-        <p>
-          A <span class="block-title">Record High</span> of
-          <span class="block-title">{$baseline.high.value}</span>
-          was observed on <span class="block-title">{$baseline.high.date}</span>
-        </p>
+      {#if baselineLabels}
+        <div>
+          <span class="h5">Record Low</span>
+          <span class="h5"
+            >{baselineLabels.low.value} on {baselineLabels.low.date}</span
+          >
+        </div>
+        <div>
+          <span class="h5">Record High</span>
+          <span class="h5"
+            >{baselineLabels.high.value} on {baselineLabels.high.date}</span
+          >
+        </div>
       {/if}
     </div>
   </div>
 
+  Based on historical observations, the probability of exceeding 106 deg F at
+  least once between mm/dd and mm/dd is yy%.
+
   <!-- Chart-->
   <div class="explore-chart block">
     <div class="chart-controls">
-      {#if measuredLoading && !measured}
-        <InlineLoading
-          description="Fetching recent observations from NOAA..."
-        />
-      {:else}
-        <div class="measured-toggle">
-          <Checkbox
-            labelText="{`Show Recent Observations of ${$climvar.title}`}"
-            checked="{showMeasured}"
-            on:check="{toggleMeasuredDisplay}"
-          />
-        </div>
-      {/if}
       {#if forecastLoading && !forecast}
         <InlineLoading description="Fetching forecast from NWS..." />
       {:else}
@@ -400,15 +397,28 @@
           />
         </div>
       {/if}
+      {#if measuredLoading && !measured}
+        <InlineLoading
+          description="Fetching recent observations from NOAA..."
+        />
+      {:else}
+        <div class="measured-toggle">
+          <Checkbox
+            labelText="{`Show Past 7 Days ${$climvar.title}s`}"
+            checked="{showMeasured}"
+            on:check="{toggleMeasuredDisplay}"
+          />
+        </div>
+      {/if}
     </div>
-    <Histogram
-      data="{histogramData}"
-      labels="{histogramAnnotation}"
-      threshold="{threshValid ? $thresholdStore : null}"
+    <!--     <Histogram
+      data="{baselineData}"
+      labels="{baselineLabels}"
       forecast="{showForecast ? forecast : null}"
       measured="{showMeasured ? measured : null}"
+      threshold="{isThresholdValid ? $thresholdStore : null}"
       yAxis="{{
-        label: `% Days`,
+        label: `Count of Days`,
         tickFormat: formatFn,
         units: `${$climvar.units.imperial}`,
       }}"
@@ -417,7 +427,7 @@
         tickFormat: formatFn,
         units: `${$climvar.units.imperial}`,
       }}"
-    />
+    /> -->
     <div class="chart-notes">
       <p>
         Source: Cal-Adapt. Data: {dataSourceTitles.join(", ")}.
@@ -477,8 +487,8 @@
       </AccordionItem>
       <AccordionItem open title="Enter Threshold">
         <NumberInput
-          invalid="{!threshValid}"
-          invalidText="{threshInvalidText}"
+          invalid="{!isThresholdValid}"
+          invalidText="{thresholdOpts.invalidText}"
           value="{$thresholdStore}"
           on:change="{changeThreshold}"
         />
@@ -488,11 +498,21 @@
   </div>
 </div>
 
-<svelte:component
-  this="{ShareLink}"
+<Modal
+  id="share"
+  passiveModal
   bind:open="{showShare}"
-  state="{$bookmark}"
-/>
+  modalHeading="Share Link"
+  on:open
+  on:close
+>
+  <CodeSnippet
+    type="multi"
+    wrapText
+    code="{$bookmark}"
+    on:click="{() => copy($bookmark)}"
+  />
+</Modal>
 
 <svelte:component
   this="{ChangeStation}"

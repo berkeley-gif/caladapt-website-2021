@@ -75,10 +75,9 @@
     climvarStore,
     unitsStore,
     locationStore,
-    dataStore,
     doyStore,
     queryParams,
-    observationsStore,
+    hadisdStore,
     extremesStore,
     datasetStore,
   } from "./_store";
@@ -124,24 +123,31 @@
     {
       slug: "threshold",
       metadata: {
-        title: "Threshold",
+        title: "",
       },
       html: `
         <div>
+          <p>The threshold sets the conditions for which a weather event is considered “extreme“.</p>
           <p>Due to the nature of the extreme value statistics, only threshold values at or above the 90th percentile for Maximum Temperature, and at or above the 10th percentile for Minimum Temperature, are allowed for this input.</p>
         </div>
       `,
     },
     {
-      slug: "return-period",
+      slug: "extreme-event",
       metadata: {
-        title: "Return Period",
+        title: "Defining an Extreme Weather Event",
       },
       html: `
         <div>
-          <p>The probability that an extreme weather event occurs is often expressed as a Return Period. A return period is the inverse of probability (generally expressed in %); it gives the estimated time interval between events of a similar size or intensity.</p>
-          <p>For example, the estimated return period of an event might be 1 in 10 years. This does not mean the event will occur every 10 years, it indicates probability of ocurrence being 10/100, or 10% in any one year.</p>
-          <p>For this tool, 30 years of data for the Baseline periods are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
+          <p>According to WMO (<a href="https://ane4bf-datap1.s3-eu-west-1.amazonaws.com/wmocms/s3fs-public/event/related_docs/DraftversionoftheGuidelinesontheDefinitionandMonitoringofExtremeWeatherandClimateEvents.pdf?h2Kr0f7dXp6CXZzoclQYveoEQ9FNoO5r" target="_blank">2016</a>), an extreme can be identified when a single climate variable exceeds its specific threshold, which can be varying percentile-based values, fixed absolute values and return period.</p>
+          <p>This tool uses Extreme Value Theory (<a href="https://link.springer.com/book/10.1007%2F978-1-4471-3675-0" target="_blank">Coles, 2001</a>) to evaluate the exceedance probability of rare events that lie far in the tails (upper and lower ranges) of the probability distribution of a weather variable.</p>
+          <p>The annual maxima from 30 years of data for the Baseline period are used to calculate return periods. Due to the relatively short time frame, values extrapolated far into the tail should be understood to have more uncertainty than those calculated for earlier return periods.</p>
+          <p>The following descriptive terms are used for labeling extreme events:
+          <ul style="padding-left:1.5rem;">
+            <li>An event with an Exceedance Probability <=1% is <strong>Extreme</strong></li>
+            <li>An event with an Exceedance Probability >1% and <25% is <strong>Rare</strong></li>
+            <li>An event with an Exceedance Probability <=25% is <strong>Common</strong></li>
+          </ul>
         </div>
       `,
     },
@@ -246,22 +252,19 @@
   async function update() {
     if (!appReady) return;
     try {
-      dataStore.set(null);
+      hadisdStore.set(null);
       const config = {
         climvarId: $climvarStore,
       };
       const { params } = $queryParams;
-      const observedValues = await getObservedValues(config, {
+      const values = await getObservedValues(config, {
         g: params.g,
         imperial: params.imperial,
       });
-      const observedReturnLevels = await getObservedReturnLevels(
-        config,
-        params
-      );
-      observationsStore.set({
-        values: observedValues,
-        returnLevels: observedReturnLevels[0],
+      const returnLevels = await getObservedReturnLevels(config, params);
+      hadisdStore.set({
+        values,
+        returnLevels: returnLevels[0],
       });
     } catch (err) {
       // TODO: notify user of error
@@ -333,11 +336,11 @@
 <div class="tool">
   <!-- Header -->
   <div id="header">
-    <Header iconPaths="{tool.icons}" title="{tool.title}">
+    <Header iconPaths="{tool.icons}" title="{`${tool.title} (beta)`}">
       <div slot="description">
         <p class="lead">
           Explore extreme temperatures for past weather and present day. This
-          tool provides data from 39 weather stations across California,
+          tool provides data from 38 weather stations across California,
           utilizing a quality-controlled dataset for hourly weather observations
           for 1973-2019. This dataset was produced for use by the energy sector
           (<a
@@ -345,6 +348,14 @@
             target="_blank">Doherty 2020</a
           >). Present day weather conditions are from the National Weather
           Service.
+        </p>
+        <p>
+          <em
+            >Note: This tool is still under development. We are working on
+            adding Wind to the list of climate variables and soliciting feedback
+            from our users. Please email us at support@cal-adapt.org with your
+            comments and questions.</em
+          >
         </p>
       </div>
     </Header>
@@ -366,27 +377,48 @@
       <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
         <div slot="description">
           <p>
-            Explore extreme temperatures for past weather and present day. This
-            tool provides data from 39 weather stations across California,
-            utilizing a quality-controlled data base for hourly weather
-            observations for 1973-2019 produced for use by the energy sector (<a
-              href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
-              target="_blank">Doherty 2020</a
-            >).
+            Extreme Value Theory (EVT) is a statistical methodology used for
+            describing rare events. There are several ways to apply EVT to
+            weather variables inlcuding fitting a Generalized Extreme Value
+            distribution (GEV) over Block Maxima (annual maximum value) and the
+            Peaks-Over-Threshold approach where probability distribution of
+            exceedances over a pre-defined threshold are modeled using a
+            generalized Pareto distribution (GPD). This tool explores extreme
+            events in California using a Block Maxima approach.
+          </p>
+          <p>
+            Annual Maximum values from a 20 day window around the day of
+            interest are extracted from a 30 year daily timeseries for the
+            Baseline period (1991–2020). A GEV distribution is applied to this
+            time series. Shape and scale parameters for the distribution are
+            estimated using the Maximum Likelihood method. Probability for
+            different threshold values (Return levels) are estimated from the
+            fitted model with 95% confidence intervals.
+          </p>
+          <p>
+            <strong>User Admonishment</strong>: The Extreme Weather Tool is
+            designed to broadly inform potential extreme weather frequency
+            across a wide range of environments and climate zones in California.
+            On a local scale, different statistical assumptions (i.e. fitting
+            techniques for distribution parameters, choice of extreme value
+            distribution) may be more appropriate. We encourage users to ensure
+            the empirical fit of the applied distribution is acceptable to their
+            end use before using estimates produced from this tool for planning
+            purposes.
           </p>
         </div>
         <div slot="extra-sources">
           <div class="bx--row source">
-            <div class="bx--col-lg-2 ">
+            <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1">
               <img
                 src="/img/logos/US-NationalWeatherService-Logo.svg"
                 class="source-logo"
                 alt="data provider logo"
               />
             </div>
-            <div class="bx--col-lg-12">
-              <h4>Near Term Weather Forecast</h4>
-              <h5>National Weather Service</h5>
+            <div class="bx--col-lg-12 bx--col-md-7 bx--col-sm-3">
+              <div class="h4">Near Term Weather Forecast</div>
+              <div class="h5">National Weather Service</div>
               <p class="source-text">
                 The National Weather Service (NWS) is an agency of the United
                 States federal government that provides weather, water, and
@@ -406,17 +438,39 @@
               </ul>
             </div>
           </div>
+          <div class="bx--row source">
+            <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1">
+              <img
+                src="/img/logos/NOAA_logo.svg"
+                class="source-logo"
+                alt="data provider logo"
+              />
+            </div>
+            <div class="bx--col-lg-12 bx--col-md-7 bx--col-sm-3">
+              <div class="h4">GHCN-Daily</div>
+              <div class="h5">
+                National Centers for Environmental Information, NOAA
+              </div>
+              <p class="source-text">
+                The Global Historical Climatology Network - Daily (GHCN-Daily)
+                dataset integrates daily land surface observations from around
+                the world. If observed, the station dataset includes max and
+                minimum temperatures, total precipitation, snowfall, and depth
+                of snow on ground.
+              </p>
+              <p class="source-text">Data Access:</p>
+              <ul class="source-list">
+                <li class="source-list-item">
+                  <a
+                    href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html"
+                    >GHCN-Daily Dataset Overview</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </About>
-    </div>
-    <!-- Resources -->
-    <div
-      id="resources"
-      class="section"
-      use:inview="{{}}"
-      on:enter="{handleEntry}"
-    >
-      <Resources resources="{resources}" />
     </div>
   </div>
 </div>

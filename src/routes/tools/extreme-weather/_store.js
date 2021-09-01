@@ -1,22 +1,21 @@
 import { writable, derived, readable } from "svelte/store";
-import { timeFormat, timeParse } from "d3-time-format";
+import { timeFormat } from "d3-time-format";
 import { timeDay } from "d3-time";
 import { format } from "d3-format";
-import { quantile, sort } from "d3-array";
-import getBbox from "@turf/bbox";
+import { quantile, sort, extent } from "d3-array";
 import { climvarList } from "./_helpers";
 
 const numberFormat = timeFormat("%j");
-const textFormat = timeFormat("%b %e");
+const textFormat = timeFormat("%B %e");
 const today = new Date();
-const dateFormat = timeFormat("%b %e, %Y");
+const dateFormat = timeFormat("%B %-e, %Y");
 
 const percentiles = [1, 10, 90, 99];
 const formatFn = format(".1f");
 
 function formatRecord(d) {
   return {
-    value: `${formatFn(d.value)} °F`,
+    value: `${formatFn(d.value)}°F`,
     date: dateFormat(d.date),
   };
 }
@@ -37,6 +36,11 @@ export const climvarStore = (() => {
 })();
 
 export const forecastDate = readable(dateFormat(today));
+
+export const measuredDateRange = readable({
+  start: timeFormat("%Y-%m-%d")(timeDay.offset(today, -10)),
+  end: timeFormat("%Y-%m-%d")(today),
+});
 
 export const unitsStore = writable({ imperial: true });
 
@@ -61,7 +65,7 @@ export const doyStore = (() => {
   };
 })();
 
-export const thresholdStore = writable();
+export const thresholdStore = writable(100);
 
 export const locationStore = (() => {
   const store = writable({
@@ -100,39 +104,38 @@ export const locationStore = (() => {
   };
 })();
 
-// Projections Data Store
-export const dataStore = (() => {
+// Data Store for HadISD observations from Cal-Adapt API
+export const hadisdStore = (() => {
   const store = writable();
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get data() {
+    get fullExtent() {
       return derived(store, ($store) => {
         if (!$store) return null;
-        return $store;
+        const dateExtent = extent($store.values, (d) => d.date);
+        return dateExtent;
       });
     },
-  };
-})();
-
-// Observed Data Store
-export const observationsStore = (() => {
-  const store = writable();
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get values() {
+    get gevisf() {
       return derived(store, ($store) => {
         if (!$store) return null;
-        return $store.values;
+        return $store.returnLevels.gevisf;
       });
     },
-    get returnLevels() {
+    get begin() {
       return derived(store, ($store) => {
         if (!$store) return null;
-        return $store.returnLevels;
+        const { month, date } = $store.returnLevels.begin;
+        return textFormat(new Date(2021, month, date));
+      });
+    },
+    get end() {
+      return derived(store, ($store) => {
+        if (!$store) return null;
+        const { month, date } = $store.returnLevels.end;
+        return textFormat(new Date(2021, month, date));
       });
     },
     get baseline() {
@@ -145,8 +148,8 @@ export const observationsStore = (() => {
         // Filter by 20 day period around selected date
         const filterBy20DayPeriod = $store.values.filter((d) => {
           const year = d.date.getFullYear();
-          const s = new Date(year, begin.month, begin.day);
-          const e = new Date(year, end.month, end.day);
+          const s = new Date(year, begin.month, begin.date);
+          const e = new Date(year, end.month, end.date);
           if (
             d.date.getTime() >= s.getTime() &&
             d.date.getTime() <= e.getTime()
@@ -173,7 +176,7 @@ export const observationsStore = (() => {
 
         // Calculate percentiles from 30 year data
         const values = filteredData.map((d) => +d.value).sort();
-        const statsBaseline = percentiles.map((d) => {
+        const stats = percentiles.map((d) => {
           return {
             percentile: d,
             label: `p${d}`,
@@ -185,38 +188,39 @@ export const observationsStore = (() => {
           values: filteredData,
           low: recordLow,
           high: recordHigh,
-          stats: statsBaseline,
+          percentiles: stats,
         };
       });
     },
   };
 })();
 
-// Foreacst data Store
-export const forecastStore = (() => {
-  const store = writable(null);
-  const { set, subscribe, update } = store;
-  return {
-    set,
-    subscribe,
-    reset: () =>
-      update((store) => {
-        store = null;
-        return store;
-      }),
-    // get forecast() {
-    //   return derived([climvarStore, store], ([$climvarStore, $store]) => {
-    //     if (!$store) return null;
-    //     if ($climvarStore.id === "tasmin") {
-    //       return $store.filter((d) => d.isDaytime === false);
-    //     }
-    //     return $store.filter((d) => d.isDaytime === true);
-    //   });
-    // },
-  };
-})();
+// // Data Store for recent observations from NWS and NOAA
+// export const observationsStore = (() => {
+//   const store = writable(null);
+//   const { set, subscribe, update } = store;
+//   return {
+//     set,
+//     subscribe,
+//     reset: () =>
+//       update((store) => {
+//         store = null;
+//         return store;
+//       }),
+//     add: (arr) =>
+//       update((store) => {
+//         if (store && store.length) {
+//           return [...store, ...arr];
+//         }
+//         return [...arr];
+//       }),
+//   };
+// })();
 
-// Datasets store
+export const forecastStore = writable(null);
+export const measuredStore = writable(null);
+
+// Data store for list of datasets used in the tool
 export const datasetStore = (() => {
   const store = writable([]);
   const { set, subscribe } = store;
@@ -249,28 +253,24 @@ export const queryParams = derived(
 
 // Bookmark store
 export const bookmark = derived(
-  [climvarStore, unitsStore, locationStore, doyStore],
-  ([$climvarStore, $unitsStore, $locationStore, $doyStore]) => {
+  [climvarStore, unitsStore, locationStore, doyStore, extremesStore],
+  ([$climvarStore, $unitsStore, $locationStore, $doyStore, $extremesStore]) => {
     const id = $locationStore.id;
     const { imperial } = $unitsStore;
     const { doy } = $doyStore;
-    const bookmark = `climvar=${$climvarStore}&imperial=${imperial}&station=${id}&doy=${doy}`;
-    if (process.browser) {
-      return `${window.location.href}?${bookmark}`;
-    }
-    return null;
+    return `climvar=${$climvarStore}&imperial=${imperial}&station=${id}&doy=${doy}&extremes=${$extremesStore}`;
   }
 );
 
 // Date range store
 export const doyRange = derived(
-  [doyStore, observationsStore],
-  ([$doyStore, $observationsStore]) => {
-    if (!doyStore || !$observationsStore) return;
-    const { begin, end } = $observationsStore.returnLevels;
+  [doyStore, hadisdStore],
+  ([$doyStore, $hadisdStore]) => {
+    if (!doyStore || !$hadisdStore) return;
+    const { begin, end } = $hadisdStore.returnLevels;
     const year = $doyStore.getFullYear();
-    const currentYearBegin = new Date(year, begin.month, begin.day);
-    const currentYearEnd = new Date(year, end.month, end.day);
+    const currentYearBegin = new Date(year, begin.month, begin.date);
+    const currentYearEnd = new Date(year, end.month, end.date);
     const n = timeDay.count(currentYearBegin, $doyStore);
     const m = timeDay.count($doyStore, currentYearEnd);
     return `${n} days before & ${m} days after`;
