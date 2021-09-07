@@ -58,7 +58,7 @@
 </style>
 
 <!-- About -->
-<div class="bx--row">
+<div class="bx--row margin--v-32">
   <div class="bx--col-lg-12">
     <h2>About the Tool</h2>
     <div class="description">
@@ -69,7 +69,7 @@
   </div>
 </div>
 <!-- Datasets -->
-<div class="bx--row">
+<div class="bx--row margin--v-32">
   <div class="bx--col-lg-12">
     <h2>Data Sources</h2>
     <p>
