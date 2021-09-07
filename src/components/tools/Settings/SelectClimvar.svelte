@@ -23,9 +23,7 @@
 
 {#if ready}
   <Select
-    class="climvar-select"
-    hideLabel
-    labelText="Climate Variable"
+    labelText="Select Climate Variable"
     selected="{selectedId}"
     on:change="{change}"
   >
