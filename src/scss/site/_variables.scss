@@ -210,6 +210,18 @@ $spacing-160: $layout-2xl;
 $p-default-max-width: 75ch;
 $p-lead-default-max-width: 55ch;
 
+// gcms
+$gcm-ACCESS1-0: rgba(31, 119, 180, 1);
+$gcm-CanESM2: rgba(188, 189, 34, 1);
+$gcm-CCSM4: rgba(44, 160, 44, 1);
+$gcm-CESM1-BGC: rgba(140, 86, 75, 1);
+$gcm-CMCC-CMS: rgba(227, 119, 194, 1);
+$gcm-CNRM-CM5: rgba(23, 190, 207, 1);
+$gcm-GFDL-CM3: rgba(255, 127, 14, 1);
+$gcm-HadGEM2-CC: rgba(69, 68, 68, 1);
+$gcm-HadGEM2-ES: rgba(214, 39, 40, 1);
+$gcm-MIROC5: rgba(148, 103, 189, 1);
+
 // Sass variables as CSS Custom Properties to fix variables in .svelte components
 :root {
   --white: #{$white};
@@ -325,4 +337,15 @@ $p-lead-default-max-width: 55ch;
 
   --p-default-max-width: #{$p-default-max-width};
   --p-lead-default-max-width: #{$p-lead-default-max-width};
+
+  --gcm-ACCESS1-0: $gcm-ACCESS1-0;
+  --gcm-CanESM2: $gcm-CanESM2;
+  --gcm-CCSM4: $gcm-CCSM4;
+  --gcm-CESM1-BGC: $gcm-CESM1-BGC;
+  --gcm-CMCC-CMS: $gcm-CMCC-CMS;
+  --gcm-CNRM-CM5: $gcm-CNRM-CM5;
+  --gcm-GFDL-CM3: $gcm-GFDL-CM3;
+  --gcm-HadGEM2-CC: $gcm-HadGEM2-CC;
+  --gcm-HadGEM2-ES: $gcm-HadGEM2-ES;
+  --gcm-MIROC5: $gcm-MIROC5;
 }
