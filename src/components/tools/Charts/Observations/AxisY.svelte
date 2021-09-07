@@ -1,7 +1,7 @@
 <script>
   import { getContext } from "svelte";
 
-  const { padding, xRange, yScale, height, width } = getContext("LayerCake");
+  const { padding, xRange, yScale, width } = getContext("LayerCake");
 
   export let ticks = 4;
   export let tickMarks = false;
@@ -12,7 +12,6 @@
   export let dxTick = 0;
   export let dyTick = -4;
   export let textAnchor = "start";
-  export let label;
 
   $: isBandwidth = typeof $yScale.bandwidth === "function";
 
@@ -73,11 +72,6 @@
         style="text-anchor:{isBandwidth ? 'end' : textAnchor};"
         >{formatTick(tick)}</text
       >
-      {#if i === tickVals.length - 1}
-        <text y="-4" x="{25}" class="label" style="font-size:14px;fill:#666"
-          >{label}</text
-        >
-      {/if}
     </g>
   {/each}
 </g>

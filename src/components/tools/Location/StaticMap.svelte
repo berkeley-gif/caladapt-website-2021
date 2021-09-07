@@ -67,6 +67,7 @@
 <style>
   div.static-map {
     position: relative;
+    box-shadow: var(--box-shadow);
   }
   img {
     width: 100%;
