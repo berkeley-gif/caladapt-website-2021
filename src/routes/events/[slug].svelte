@@ -32,8 +32,8 @@
   $: eventType =
     Array.isArray(event.metadata.tags) && event.metadata.tags.length
       ? event.metadata.tags[0]
-      : "";
-  $: tweetText = `I'm attending the ${eventType} ${event.metadata.title} on ${event.metadata.eventdatestring}`;
+      : "event";
+  $: tweetText = `I'm attending the ${eventType} "${event.metadata.title}" on ${event.metadata.eventdatestring}\n`;
   $: tweetTags = [
     ...event.metadata.tags,
     "caladapt",
@@ -48,23 +48,10 @@
     background-size: cover;
   }
 
-  .social {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .share {
-    display: flex;
-    justify-content: space-between;
-  }
-
   .content {
     margin-top: 2rem;
 
-    :global(> :first-child) {
+    :global(:first-child) {
       margin-top: 0;
     }
 
@@ -77,6 +64,27 @@
     :global(li) {
       line-height: calc(1.75 * 1.125rem);
     }
+  }
+
+  .social-back {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .back,
+  .social {
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .social {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    gap: 0.5rem;
   }
 </style>
 
@@ -130,12 +138,13 @@
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-9">
         <hr />
-        <div class="share">
+        <div class="social-back">
           <div class="social">
-            <p>Interested in this event? Share it:</p>
+            <p>Interested in this event?</p>
             <ul class="list-social">
               <li>
                 <TweetButton
+                  linkText="Tweet it!"
                   text="{tweetText}"
                   hashtags="{tweetTags}"
                   url="{typeof window !== 'undefined'
