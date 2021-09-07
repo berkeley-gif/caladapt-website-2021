@@ -388,7 +388,7 @@
     <div class="h4">
       Distribution of daily <span class="annotate">{$climvar.title}s</span>
       around <span class="annotate">{$doyText}</span> (<span class="annotate"
-        >&#177;20 days</span
+        >&#177;10 days</span
       >) from 1991-2020.
     </div>
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
