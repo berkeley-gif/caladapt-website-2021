@@ -3,27 +3,24 @@
 
   const { yScale, xScale } = getContext("LayerCake");
 
-  export let data;
+  export let lines;
   export let threshold;
-
-  $: percentiles = data.percentiles;
-  $: low = data.low;
-  $: high = data.high;
+  export let units;
 </script>
 
+<style>
+  .title {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+</style>
+
 <g class="annotation-group">
-  <g class="records">
-    <text x="{0}" y="{-70}" style="font-weight:600;">
-      <tspan dy="{0}">Record Low</tspan>
-      <tspan x="{0}" dy="{20}">{low.value} on {low.date}</tspan>
-    </text>
-    <text x="{200}" y="{-70}" style="font-weight:600;">
-      <tspan dy="{0}">Record High</tspan>
-      <tspan x="{200}" dy="{20}">{high.value} on {high.date}</tspan>
-    </text>
+  <g class="title">
+    <text x="{0}" y="{-35}" class="title"> Baseline Period (1991-2020) </text>
   </g>
-  <g class="percentiles">
-    {#each percentiles as d}
+  <g class="line-labels">
+    {#each lines as d}
       <line
         x1="{$xScale(d.value)}"
         x2="{$xScale(d.value)}"
@@ -38,8 +35,8 @@
         text-anchor="middle"
         style="font-weight:600;"
       >
-        <tspan x="{$xScale(d.value)}" y="{-10}">{d.label}</tspan>
-        <tspan x="{$xScale(d.value)}" y="{5}">{d.value} °F</tspan>
+        <tspan x="{$xScale(d.value)}" y="{-10}">{d.label} {units}</tspan>
+        <tspan x="{$xScale(d.value)}" y="{5}">{d.value} {units}</tspan>
       </text>
     {/each}
   </g>
@@ -51,7 +48,8 @@
         y="{35}"
         style="font-weight:600;fill:red;"
       >
-        {threshold} °F
+        {threshold}
+        {units}
       </text>
     </g>
   {/if}

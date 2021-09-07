@@ -1,22 +1,21 @@
 import { writable, derived, readable } from "svelte/store";
-import { timeFormat, timeParse } from "d3-time-format";
+import { timeFormat } from "d3-time-format";
+import { timeDay } from "d3-time";
 import { format } from "d3-format";
-import { quantile, sort } from "d3-array";
-import getBbox from "@turf/bbox";
+import { quantile, sort, extent } from "d3-array";
 import { climvarList } from "./_helpers";
 
 const numberFormat = timeFormat("%j");
-const textFormat = timeFormat("%b %e");
+const textFormat = timeFormat("%B %e");
 const today = new Date();
-const dateParse = timeParse("%Y-%m-%d");
-const dateFormat = timeFormat("%b %e, %Y");
+const dateFormat = timeFormat("%B %-e, %Y");
 
 const percentiles = [1, 10, 90, 99];
 const formatFn = format(".1f");
 
 function formatRecord(d) {
   return {
-    value: `${formatFn(d.value)} °F`,
+    value: `${formatFn(d.value)}°F`,
     date: dateFormat(d.date),
   };
 }
@@ -38,6 +37,11 @@ export const climvarStore = (() => {
 
 export const forecastDate = readable(dateFormat(today));
 
+export const measuredDateRange = readable({
+  start: timeFormat("%Y-%m-%d")(timeDay.offset(today, -10)),
+  end: timeFormat("%Y-%m-%d")(today),
+});
+
 export const unitsStore = writable({ imperial: true });
 
 export const extremesStore = writable("high");
@@ -58,10 +62,22 @@ export const doyStore = (() => {
         return textFormat($store);
       });
     },
+    get begin() {
+      return derived(store, ($store) => {
+        const rangeStart = timeDay.offset($store, -10);
+        return textFormat(rangeStart);
+      });
+    },
+    get end() {
+      return derived(store, ($store) => {
+        const rangeEnd = timeDay.offset($store, +10);
+        return textFormat(rangeEnd);
+      });
+    },
   };
 })();
 
-export const thresholdStore = writable();
+export const thresholdStore = writable(100);
 
 export const locationStore = (() => {
   const store = writable({
@@ -100,39 +116,38 @@ export const locationStore = (() => {
   };
 })();
 
-// Projections Data Store
-export const dataStore = (() => {
+// Data Store for HadISD observations from Cal-Adapt API
+export const hadisdStore = (() => {
   const store = writable();
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get data() {
+    get hadisdDateRange() {
       return derived(store, ($store) => {
         if (!$store) return null;
-        return $store;
+        const dateExtent = extent($store.values, (d) => d.date);
+        return `${dateExtent[0].getFullYear()}-${dateExtent[1].getFullYear()}`;
       });
     },
-  };
-})();
-
-// Observed Data Store
-export const observationsStore = (() => {
-  const store = writable();
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get values() {
+    get gevisf() {
       return derived(store, ($store) => {
         if (!$store) return null;
-        return $store.values;
+        return $store.returnLevels.gevisf;
       });
     },
-    get returnLevels() {
+    /*    get begin() {
       return derived(store, ($store) => {
         if (!$store) return null;
-        return $store.returnLevels;
+        const { month, date } = $store.returnLevels.begin;
+        return textFormat(new Date(2021, month, date));
+      });
+    },
+    get end() {
+      return derived(store, ($store) => {
+        if (!$store) return null;
+        const { month, date } = $store.returnLevels.end;
+        return textFormat(new Date(2021, month, date + 1));
       });
     },
     get baseline() {
@@ -140,16 +155,13 @@ export const observationsStore = (() => {
         if (!$store) return null;
 
         // Get start and end dates to filter observations for 20 day period
-        const beginDate = $store.returnLevels.begin;
-        const beginYear = +beginDate.getFullYear();
-        const endDate = $store.returnLevels.end;
-        const endYear = +endDate.getFullYear();
+        const { begin, end } = $store.returnLevels;
 
         // Filter by 20 day period around selected date
         const filterBy20DayPeriod = $store.values.filter((d) => {
           const year = d.date.getFullYear();
-          const s = new Date(beginDate.setYear(year));
-          const e = new Date(endDate.setYear(year));
+          const s = new Date(year, begin.month, begin.date);
+          const e = new Date(year, end.month, end.date + 1);
           if (
             d.date.getTime() >= s.getTime() &&
             d.date.getTime() <= e.getTime()
@@ -158,6 +170,7 @@ export const observationsStore = (() => {
           }
           return false;
         });
+        console.log('filterBy20DayPeriod', filterBy20DayPeriod);
 
         // Calculate min max from entire historical record
         // for the 20 day period in each year
@@ -167,18 +180,17 @@ export const observationsStore = (() => {
 
         // Filter by baseline period (30 years, e.g. 1991-2020)
         const filteredData = filterBy20DayPeriod.filter((d) => {
-          if (
-            +d.date.getFullYear() >= beginYear &&
-            +d.date.getFullYear() <= endYear
-          ) {
+          const year = +d.date.getFullYear();
+          if (year >= begin.year && year <= end.year) {
             return true;
           }
           return false;
         });
+        console.log('filteredData', filteredData);
 
         // Calculate percentiles from 30 year data
         const values = filteredData.map((d) => +d.value).sort();
-        const statsBaseline = percentiles.map((d) => {
+        const stats = percentiles.map((d) => {
           return {
             percentile: d,
             label: `p${d}`,
@@ -190,46 +202,18 @@ export const observationsStore = (() => {
           values: filteredData,
           low: recordLow,
           high: recordHigh,
-          stats: statsBaseline,
+          percentiles: stats,
+          dataExtent: extent(values),
         };
       });
-    },
-    get doyRange() {
-      return derived(store, ($store) => {
-        if (!$store) return null;
-        const begin = textFormat($store.returnLevels.begin);
-        const end = textFormat($store.returnLevels.end);
-        return `${begin}–${end}`;
-      });
-    },
+    },*/
   };
 })();
 
-// Foreacst data Store
-export const forecastStore = (() => {
-  const store = writable(null);
-  const { set, subscribe, update } = store;
-  return {
-    set,
-    subscribe,
-    reset: () =>
-      update((store) => {
-        store = null;
-        return store;
-      }),
-    // get forecast() {
-    //   return derived([climvarStore, store], ([$climvarStore, $store]) => {
-    //     if (!$store) return null;
-    //     if ($climvarStore.id === "tasmin") {
-    //       return $store.filter((d) => d.isDaytime === false);
-    //     }
-    //     return $store.filter((d) => d.isDaytime === true);
-    //   });
-    // },
-  };
-})();
+export const forecastStore = writable(null);
+export const measuredStore = writable(null);
 
-// Datasets store
+// Data store for list of datasets used in the tool
 export const datasetStore = (() => {
   const store = writable([]);
   const { set, subscribe } = store;
@@ -244,6 +228,8 @@ export const datasetStore = (() => {
     },
   };
 })();
+
+export const threshCIStore = writable([]);
 
 // DERIVED STORES
 // Query params store
@@ -262,15 +248,63 @@ export const queryParams = derived(
 
 // Bookmark store
 export const bookmark = derived(
-  [climvarStore, unitsStore, locationStore, doyStore],
-  ([$climvarStore, $unitsStore, $locationStore, $doyStore]) => {
+  [climvarStore, unitsStore, locationStore, doyStore, extremesStore],
+  ([$climvarStore, $unitsStore, $locationStore, $doyStore, $extremesStore]) => {
     const id = $locationStore.id;
     const { imperial } = $unitsStore;
     const { doy } = $doyStore;
-    const bookmark = `climvar=${$climvarStore}&imperial=${imperial}&station=${id}&doy=${doy}`;
-    if (process.browser) {
-      return `${window.location.href}?${bookmark}`;
-    }
-    return null;
+    return `climvar=${$climvarStore}&imperial=${imperial}&station=${id}&doy=${doy}&extremes=${$extremesStore}`;
+  }
+);
+
+// Baseline store
+export const baseline = derived(
+  [doyStore, hadisdStore],
+  ([$doyStore, $hadisdStore]) => {
+    if (!doyStore || !$hadisdStore) return;
+    // Filter by 20 day period around selected date
+    const filterBy20DayPeriod = $hadisdStore.values.filter((d) => {
+      const date = d.date.setHours(0, 0, 0);
+      const year = d.date.getFullYear();
+      const center = new Date(year, $doyStore.getMonth(), $doyStore.getDate());
+      const left = timeDay.offset(center, -10);
+      const right = timeDay.offset(center, 10);
+      if (date >= left && date <= right) {
+        return true;
+      }
+      return false;
+    });
+    // Calculate min max from entire historical record
+    // for the 20 day period in each year
+    const sorted = sort(filterBy20DayPeriod, (d) => +d.value);
+    const recordLow = formatRecord(sorted[0]);
+    const recordHigh = formatRecord(sorted[sorted.length - 1]);
+
+    // Filter by baseline period (30 years, e.g. 1991-2020)
+    const filteredData = filterBy20DayPeriod.filter((d) => {
+      const year = d.date.getFullYear();
+      if (year >= 1991 && year <= 2020) {
+        return true;
+      }
+      return false;
+    });
+
+    // Calculate percentiles from 30 year data
+    const values = filteredData.map((d) => +d.value).sort();
+    const stats = percentiles.map((d) => {
+      return {
+        percentile: d,
+        label: `p${d}`,
+        value: +formatFn(quantile(values, d / 100)),
+      };
+    });
+
+    return {
+      values: filteredData,
+      low: recordLow,
+      high: recordHigh,
+      percentiles: stats,
+      dataExtent: extent(values),
+    };
   }
 );

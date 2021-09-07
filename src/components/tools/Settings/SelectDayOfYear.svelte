@@ -4,6 +4,7 @@
   import { DatePickerInput } from "carbon-components-svelte";
 
   export let value;
+  export let labelText;
 
   $: placeholder = timeFormat("%m/%d")(value);
 
@@ -33,7 +34,7 @@
     on:change="{change}"
   >
     <DatePickerInput
-      hideLabel
+      labelText="{labelText}"
       placeholder="{placeholder}"
       pattern="\\d{(1, 2)}\\/\\d{(1, 2)}"
     />

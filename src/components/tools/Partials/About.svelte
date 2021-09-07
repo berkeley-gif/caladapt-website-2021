@@ -29,25 +29,55 @@
   });
 </script>
 
+<style lang="scss">
+  .description :global(p),
+  p {
+    font-size: 20px;
+    margin-bottom: 1.75rem;
+    max-width: 75ch;
+  }
+
+  :global(.source .source-logo) {
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  :global(.source .h5) {
+    margin-top: 0;
+  }
+
+  :global(.source .source-text) {
+    font-size: 18px;
+  }
+
+  :global(.source .source-list) {
+    font-size: 18px;
+    padding-left: 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+</style>
+
 <!-- About -->
-<div class="bx--row">
+<div class="bx--row margin--v-32">
   <div class="bx--col-lg-12">
     <h2>About the Tool</h2>
-    <slot name="description">
-      <em>[Provide content describing the tool]</em>
-    </slot>
+    <div class="description">
+      <slot name="description">
+        <em>[Provide content describing the tool]</em>
+      </slot>
+    </div>
   </div>
 </div>
 <!-- Datasets -->
-<div class="bx--row">
+<div class="bx--row margin--v-32">
   <div class="bx--col-lg-12">
     <h2>Data Sources</h2>
+    <p>
+      The following list of datasets were used to create this tool. Download
+      data visualized in the charts by clicking the Download Chart button. For
+      more download options follow the links below.
+    </p>
     <slot name="sources">
-      <p>
-        The following list of datasets were used to create this tool. Download
-        data visualized in the charts by clicking the Download Chart button. For
-        more download options follow the links below.
-      </p>
       {#if !datasets || !datasetList}
         <em>[Provide a list of datasets used for the tool]</em>
       {:else}
@@ -56,16 +86,16 @@
         {:then items}
           {#each items as item}
             <div class="bx--row source">
-              <div class="bx--col-lg-2">
+              <div class="bx--col-lg-2 bx--col-md-1 bx--col-sm-1">
                 <img
                   src="/img/logos/{item.logo}"
                   class="source-logo"
                   alt="data provider logo"
                 />
               </div>
-              <div class="bx--col-lg-12">
-                <h4>{item.title}</h4>
-                <h5>{item.publisher}</h5>
+              <div class="bx--col-lg-12 bx--col-md-7 bx--col-sm-3">
+                <div class="h4">{item.title}</div>
+                <div class="h5">{item.publisher}</div>
                 <p class="source-text">{item.description}</p>
                 <p class="source-text">Download dataset:</p>
                 <ul class="source-list">
