@@ -5,6 +5,7 @@ location: Online
 time: "12:30 PM - 1:30 PM PST"
 tags: webinar
 image: webinar.jpg
+teaser: An overview of common climate change scenarios, climate models and downscaling, using climate variables for planning purposes and more.
 ---
 
 ## Webinar Description

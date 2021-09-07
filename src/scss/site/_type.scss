@@ -70,6 +70,10 @@ p.reference {
   }
 }
 
+li {
+  max-width: $p-default-max-width;
+}
+
 blockquote {
   h3 {
     padding: 2rem 2rem 0;

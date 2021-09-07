@@ -3,7 +3,7 @@
     const posts = await this.fetch(`blog.json`)
       .then((r) => r.json())
       .then((posts) => posts);
-    const events = await this.fetch(`blog/events.json`)
+    const events = await this.fetch(`events.json`)
       .then((r) => r.json())
       .then((events) => events);
     const cardsData = await this.fetch("index.json")

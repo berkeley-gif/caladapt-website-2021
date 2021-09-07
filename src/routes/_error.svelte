@@ -14,6 +14,7 @@
     <div class="bx--col">
       <h1>{status}</h1>
       <p>{error.message}</p>
+      <p>Sorry about that! Try going back to <a href="/">the home page</a>.</p>
       {#if dev && error.stack}
         <pre>{error.stack}</pre>
       {/if}

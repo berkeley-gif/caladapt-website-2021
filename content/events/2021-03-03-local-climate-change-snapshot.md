@@ -5,6 +5,7 @@ location: Online
 time: "1:00 PM - 2:00 PM PST"
 tags: webinar
 image: webinar.jpg
+teaser: "An introduction on how to use the Climate Change Snapshot tool, basics of climate change data, and using the tool in an Affordable Housing and Sustainable Communities program."
 ---
 
 ### Webinar Description

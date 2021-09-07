@@ -1,4 +1,4 @@
-import get_events from "./_events.js";
+import { get_events } from "./_events";
 
 let json;
 

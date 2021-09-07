@@ -4,7 +4,7 @@ import frontMatter from "front-matter";
 import marked from "marked";
 import { timeParse, timeFormat } from "d3-time-format";
 
-export default function get_events() {
+export function get_events() {
   return fs
     .readdirSync("content/events")
     .filter((file) => path.extname(file) === ".md")
