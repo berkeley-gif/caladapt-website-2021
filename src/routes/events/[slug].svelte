@@ -74,8 +74,7 @@
     margin-bottom: 2rem;
   }
 
-  .back,
-  .social {
+  .back {
     p {
       margin-bottom: 0;
     }
@@ -138,11 +137,10 @@
         <hr />
         <div class="social-back">
           <div class="social">
-            <p>Interested in this event?</p>
             <ul class="list-social">
               <li>
                 <TweetButton
-                  linkText="Tweet it!"
+                  linkText="Share on Twitter"
                   text="{tweetText}"
                   hashtags="{tweetTags}"
                   url="{typeof window !== 'undefined'
