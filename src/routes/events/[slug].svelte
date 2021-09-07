@@ -17,7 +17,6 @@
 <script>
   import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
   import LogoTwitter32 from "carbon-icons-svelte/lib/LogoTwitter32";
-  import Email32 from "carbon-icons-svelte/lib/Email32";
   export let event;
 
   $: items = [
@@ -45,6 +44,18 @@
   .share {
     display: flex;
     justify-content: space-between;
+  }
+
+  .content {
+    :global(p),
+    :global(li) {
+      font-size: 1.125rem;
+      max-width: 65ch;
+    }
+
+    :global(li) {
+      line-height: calc(1.75 * 1.125rem);
+    }
   }
 </style>
 
@@ -105,13 +116,11 @@
             >
             <ul class="list-social">
               <li>
-                <a href="https://twitter.com/cal_adapt" title="Twitter">
+                <a
+                  href="https://twitter.com/cal_adapt"
+                  aria-label="Cal-Adapt Twitter profile"
+                >
                   <LogoTwitter32 />
-                </a>
-              </li>
-              <li>
-                <a href="https://twitter.com/cal_adapt" title="Twitter">
-                  <Email32 />
                 </a>
               </li>
             </ul>
