@@ -16,7 +16,8 @@
 
 <script>
   import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
-  import LogoTwitter32 from "carbon-icons-svelte/lib/LogoTwitter32";
+  import { TweetButton } from "~/components/social-media";
+
   export let event;
 
   $: items = [
@@ -26,6 +27,18 @@
       href: "",
       text: `${event.metadata.title}`,
     },
+  ];
+
+  $: eventType =
+    Array.isArray(event.metadata.tags) && event.metadata.tags.length
+      ? event.metadata.tags[0]
+      : "";
+  $: tweetText = `I'm attending the ${eventType} ${event.metadata.title} on ${event.metadata.eventdatestring}`;
+  $: tweetTags = [
+    ...event.metadata.tags,
+    "caladapt",
+    "climatechange",
+    "california",
   ];
 </script>
 
@@ -39,6 +52,8 @@
     display: flex;
     align-items: center;
     font-size: 1rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .share {
@@ -111,17 +126,16 @@
         <hr />
         <div class="share">
           <div class="social">
-            <span style="margin-bottom:0.75rem;"
-              >Interested in this event? Share it.</span
-            >
+            <p>Interested in this event? Share it:</p>
             <ul class="list-social">
               <li>
-                <a
-                  href="https://twitter.com/cal_adapt"
-                  aria-label="Cal-Adapt Twitter profile"
-                >
-                  <LogoTwitter32 />
-                </a>
+                <TweetButton
+                  text="{tweetText}"
+                  hashtags="{tweetTags}"
+                  url="{typeof window !== 'undefined'
+                    ? window.location.href
+                    : ''}"
+                />
               </li>
             </ul>
           </div>
