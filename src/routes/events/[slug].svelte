@@ -62,6 +62,12 @@
   }
 
   .content {
+    margin-top: 2rem;
+
+    :global(> :first-child) {
+      margin-top: 0;
+    }
+
     :global(p),
     :global(li) {
       font-size: 1.125rem;
