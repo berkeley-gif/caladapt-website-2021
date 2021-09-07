@@ -3,6 +3,7 @@
   export let url = "https://cal-adapt.org";
   export let hashtags = [];
   export let via = "cal_adapt";
+  export let size = "large";
 </script>
 
 <div>
@@ -16,6 +17,7 @@
       ? hashtags.join(',')
       : ''}"
     data-via="{via}"
+    data-size="{size}"
   >
     Tweet</a
   >
