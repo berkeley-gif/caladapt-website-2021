@@ -42,7 +42,7 @@
 
 <style>
   .title {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
   }
 </style>
@@ -72,7 +72,7 @@
         />
       </Svg>
       <Html pointerEvents="{false}">
-        {#if hideTooltip !== true}
+        {#if !hideTooltip}
           <Tooltip evt="{evt}" let:detail>
             {@html createTooltip(detail.props)}
           </Tooltip>
