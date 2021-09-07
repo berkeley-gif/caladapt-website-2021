@@ -28,6 +28,8 @@
   .banner {
     background-color: var(--gray-80);
     padding: var(--spacing-48) var(--spacing-16);
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .rule {
@@ -56,7 +58,7 @@
 
 <!-- Banner -->
 <div class="bleed banner overlay">
-  <div class="bx--grid bx--grid--narrow">
+  <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">

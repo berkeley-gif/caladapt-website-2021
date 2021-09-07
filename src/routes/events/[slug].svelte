@@ -46,6 +46,7 @@
   .banner {
     background-position: center;
     background-size: cover;
+    padding: 3rem 0;
   }
 
   .content {
@@ -97,11 +98,8 @@
 </div>
 
 <!-- Banner -->
-<div
-  class="banner overlay overlay-gradient-gray-blue overlay-60 bleed"
-  style="background-image: url(/img/blog/webinar.jpg);"
->
-  <div class="bx--grid bx--grid--narrow">
+<div class="banner overlay overlay-gradient-gray-blue overlay-80 bleed">
+  <div class="bx--grid">
     <!-- Row -->
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
