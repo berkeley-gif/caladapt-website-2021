@@ -62,6 +62,18 @@ export const doyStore = (() => {
         return textFormat($store);
       });
     },
+    get begin() {
+      return derived(store, ($store) => {
+        const rangeStart = timeDay.offset($store, -10);
+        return textFormat(rangeStart);
+      });
+    },
+    get end() {
+      return derived(store, ($store) => {
+        const rangeEnd = timeDay.offset($store, +10);
+        return textFormat(rangeEnd);
+      });
+    },
   };
 })();
 
@@ -124,7 +136,7 @@ export const hadisdStore = (() => {
         return $store.returnLevels.gevisf;
       });
     },
-    get begin() {
+    /*    get begin() {
       return derived(store, ($store) => {
         if (!$store) return null;
         const { month, date } = $store.returnLevels.begin;
@@ -135,7 +147,7 @@ export const hadisdStore = (() => {
       return derived(store, ($store) => {
         if (!$store) return null;
         const { month, date } = $store.returnLevels.end;
-        return textFormat(new Date(2021, month, date));
+        return textFormat(new Date(2021, month, date + 1));
       });
     },
     get baseline() {
@@ -149,7 +161,7 @@ export const hadisdStore = (() => {
         const filterBy20DayPeriod = $store.values.filter((d) => {
           const year = d.date.getFullYear();
           const s = new Date(year, begin.month, begin.date);
-          const e = new Date(year, end.month, end.date);
+          const e = new Date(year, end.month, end.date + 1);
           if (
             d.date.getTime() >= s.getTime() &&
             d.date.getTime() <= e.getTime()
@@ -158,6 +170,7 @@ export const hadisdStore = (() => {
           }
           return false;
         });
+        console.log('filterBy20DayPeriod', filterBy20DayPeriod);
 
         // Calculate min max from entire historical record
         // for the 20 day period in each year
@@ -173,6 +186,7 @@ export const hadisdStore = (() => {
           }
           return false;
         });
+        console.log('filteredData', filteredData);
 
         // Calculate percentiles from 30 year data
         const values = filteredData.map((d) => +d.value).sort();
@@ -192,7 +206,7 @@ export const hadisdStore = (() => {
           dataExtent: extent(values),
         };
       });
-    },
+    },*/
   };
 })();
 
@@ -243,17 +257,54 @@ export const bookmark = derived(
   }
 );
 
-// Date range store
-export const doyRange = derived(
+// Baseline store
+export const baseline = derived(
   [doyStore, hadisdStore],
   ([$doyStore, $hadisdStore]) => {
     if (!doyStore || !$hadisdStore) return;
-    const { begin, end } = $hadisdStore.returnLevels;
-    const year = $doyStore.getFullYear();
-    const currentYearBegin = new Date(year, begin.month, begin.date);
-    const currentYearEnd = new Date(year, end.month, end.date);
-    //const n = timeDay.count(currentYearBegin, $doyStore);
-    //const m = timeDay.count($doyStore, currentYearEnd);
-    return `${textFormat(currentYearBegin)} - ${textFormat(currentYearEnd)}`;
+    // Filter by 20 day period around selected date
+    const filterBy20DayPeriod = $hadisdStore.values.filter((d) => {
+      const date = d.date.setHours(0, 0, 0);
+      const year = d.date.getFullYear();
+      const center = new Date(year, $doyStore.getMonth(), $doyStore.getDate());
+      const left = timeDay.offset(center, -10);
+      const right = timeDay.offset(center, 10);
+      if (date >= left && date <= right) {
+        return true;
+      }
+      return false;
+    });
+    // Calculate min max from entire historical record
+    // for the 20 day period in each year
+    const sorted = sort(filterBy20DayPeriod, (d) => +d.value);
+    const recordLow = formatRecord(sorted[0]);
+    const recordHigh = formatRecord(sorted[sorted.length - 1]);
+
+    // Filter by baseline period (30 years, e.g. 1991-2020)
+    const filteredData = filterBy20DayPeriod.filter((d) => {
+      const year = d.date.getFullYear();
+      if (year >= 1991 && year <= 2020) {
+        return true;
+      }
+      return false;
+    });
+
+    // Calculate percentiles from 30 year data
+    const values = filteredData.map((d) => +d.value).sort();
+    const stats = percentiles.map((d) => {
+      return {
+        percentile: d,
+        label: `p${d}`,
+        value: +formatFn(quantile(values, d / 100)),
+      };
+    });
+
+    return {
+      values: filteredData,
+      low: recordLow,
+      high: recordHigh,
+      percentiles: stats,
+      dataExtent: extent(values),
+    };
   }
 );

@@ -9,7 +9,7 @@
     InlineLoading,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { min, max, extent } from "d3-array";
+  import { extent } from "d3-array";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
@@ -44,7 +44,6 @@
     locationStore,
     bookmark,
     doyStore,
-    doyRange,
     thresholdStore,
     hadisdStore,
     //datasetStore,
@@ -55,10 +54,11 @@
     measuredDateRange,
     queryParams,
     threshCIStore,
+    baseline,
   } from "./_store";
 
-  const { baseline, gevisf, begin, end, hadisdDateRange } = hadisdStore;
-  const { doyText } = doyStore;
+  const { gevisf, hadisdDateRange } = hadisdStore;
+  const { doyText, begin, end } = doyStore;
   const { climvar } = climvarStore;
   const { location } = locationStore;
   //TODO: Use dataset info from API after data download tool is migrated
@@ -113,7 +113,6 @@
     threshBound = filterThreshold($baseline.percentiles, $extremesStore);
     threshInvalidText = getThresholdText($extremesStore);
     thresholdStore.set(threshBound);
-    //xDomain = updateDataExtent([...$baseline.dataExtent, $thresholdStore]);
     isLoading = false;
   } else {
     isLoading = true;
@@ -156,6 +155,13 @@
 
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
+    if (e.detail.id === "tasmax") {
+      extremesStore.set("high");
+    } else if (e.detail.id === "tasmin") {
+      extremesStore.set("low");
+    } else {
+      extremesStore.set("high");
+    }
     console.log("climvar change");
   }
 
@@ -382,7 +388,7 @@
     <div class="h4">
       Distribution of daily <span class="annotate">{$climvar.title}s</span>
       around <span class="annotate">{$doyText}</span> (<span class="annotate"
-        >{$doyRange}</span
+        >&#177;20 days</span
       >) from 1991-2020.
     </div>
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
@@ -558,7 +564,7 @@
       <RadioButtonGroup
         legendText="Choose Type of Extremes"
         orientation="vertical"
-        selected="high"
+        selected="{$extremesStore}"
         on:change="{changeExtremes}"
       >
         <RadioButton labelText="High Extremes" value="high" />
