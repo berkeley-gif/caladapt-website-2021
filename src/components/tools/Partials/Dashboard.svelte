@@ -1,6 +1,8 @@
 <style lang="scss">
   .dashboard {
     display: flex;
+    max-width: 99rem;
+    margin: 2rem auto;
 
     .content {
       width: 75%;
@@ -46,7 +48,7 @@
   }
 </style>
 
-<div class="dashboard margin--v-32">
+<div class="dashboard">
   <div class="bx--grid bx--grid--narrow content">
     <div class="bx--row margin--v-16">
       <div
