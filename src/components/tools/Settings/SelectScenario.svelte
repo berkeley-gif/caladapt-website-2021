@@ -27,6 +27,7 @@
 {#if ready}
   <div class="scenario-select">
     <RadioButtonGroup
+      legendText="Select Scenario"
       class="scenario-select"
       orientation="vertical"
       selected="{selectedId}"
