@@ -6,7 +6,7 @@
 <style>
   .chart-tooltip {
     position: absolute;
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 1.2;
     pointer-events: none;
     border: 1px solid #ccc;

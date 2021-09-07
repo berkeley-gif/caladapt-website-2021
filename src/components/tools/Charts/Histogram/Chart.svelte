@@ -95,7 +95,7 @@
         />
       </Svg>
       <Html pointerEvents="{false}">
-        {#if hideTooltip !== true}
+        {#if !hideTooltip}
           <Tooltip evt="{evt}" let:detail>
             {@html createTooltip(detail.props)}
           </Tooltip>

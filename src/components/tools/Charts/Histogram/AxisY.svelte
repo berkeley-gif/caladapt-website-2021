@@ -49,7 +49,7 @@
       transform="translate({$xRange[0] +
         (isBandwidth ? $padding.left : 0)}, {$yScale(tick)})"
     >
-      {#if gridlines !== false}
+      {#if gridlines}
         <line
           class="gridline"
           xi="0"
@@ -57,7 +57,7 @@
           y1="{yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}"
           y2="{yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}"></line>
       {/if}
-      {#if tickMarks === true}
+      {#if tickMarks}
         <line
           class="tick-mark"
           x1="0"

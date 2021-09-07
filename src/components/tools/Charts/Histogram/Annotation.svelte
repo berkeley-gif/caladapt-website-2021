@@ -10,7 +10,7 @@
 
 <style>
   .title {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
   }
 </style>

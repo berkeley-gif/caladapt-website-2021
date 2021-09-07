@@ -69,10 +69,10 @@
       class="tick tick-{i}"
       transform="translate({$xScale(tick)},{$yRange[0]})"
     >
-      {#if gridlines !== false}
+      {#if gridlines}
         <line class="gridline" y1="{$height * -1}" y2="0" x1="0" x2="0"></line>
       {/if}
-      {#if tickMarks === true}
+      {#if tickMarks}
         <line
           class="tick-mark"
           y1="{0}"
@@ -89,7 +89,7 @@
       >
     </g>
   {/each}
-  {#if baseline === true}
+  {#if baseline}
     <line
       class="baseline"
       y1="{$height + 0.5}"
