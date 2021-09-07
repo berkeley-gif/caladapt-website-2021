@@ -20,6 +20,8 @@
 
   export let event;
 
+  const past = +new Date(event.metadata.eventdate) < +new Date();
+
   $: items = [
     { href: "/", text: "Home" },
     { href: "/events/", text: "Events" },
@@ -33,7 +35,9 @@
     Array.isArray(event.metadata.tags) && event.metadata.tags.length
       ? event.metadata.tags[0]
       : "event";
-  $: tweetText = `I'm attending the ${eventType} "${event.metadata.title}" on ${event.metadata.eventdatestring}\n`;
+  $: leadText = past ? "Checkout the" : "I'm attending the";
+  $: dateText = past ? "" : `on ${event.metadata.eventdatestring}`;
+  $: tweetText = `${leadText} ${eventType} "${event.metadata.title}" ${dateText}\n`;
   $: tweetTags = [
     ...event.metadata.tags,
     "caladapt",
