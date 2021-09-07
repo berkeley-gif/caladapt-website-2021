@@ -74,11 +74,8 @@
         >{formatTick(tick)}</text
       >
       {#if i === tickVals.length - 1}
-        <text
-          y="-4"
-          x="{$padding.left - 10}"
-          class="label"
-          style="font-size:14px;fill:#666">{label}</text
+        <text y="-4" x="{25}" class="label" style="font-size:14px;fill:#666"
+          >{label}</text
         >
       {/if}
     </g>
