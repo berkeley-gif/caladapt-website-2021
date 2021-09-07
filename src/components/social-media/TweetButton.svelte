@@ -37,8 +37,7 @@
   a {
     display: flex;
     align-items: center;
-    color: rgb(29, 161, 242);
-    font-weight: bold;
+    color: var(--link-01);
   }
 </style>
 
