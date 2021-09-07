@@ -189,46 +189,9 @@ export const hadisdStore = (() => {
           low: recordLow,
           high: recordHigh,
           percentiles: stats,
+          dataExtent: extent(values),
         };
       });
-    },
-  };
-})();
-
-// Data Store for recent observations from NWS and NOAA
-export const observationsStore = (() => {
-  const store = writable([
-    {
-      id: "forecast",
-      data: null,
-    },
-    {
-      id: "recent",
-      data: null,
-    },
-  ]);
-  const { set, subscribe, update } = store;
-  return {
-    set,
-    subscribe,
-    reset: () =>
-      update((store) => {
-        store["forecast"].data = null;
-        store["recent"].data = null;
-        return [...store];
-      }),
-    addData: (data, id) =>
-      update((store) => {
-        store[id].data = data;
-        return [...store];
-      }),
-    get forecastDate() {
-      return dateFormat(today);
-    },
-    get recentDateRange() {
-      const startDate = timeFormat("%Y-%m-%d")(timeDay.offset(today, -10));
-      const endDate = timeFormat("%Y-%m-%d")(today);
-      return { startDate, endDate };
     },
   };
 })();
@@ -289,8 +252,8 @@ export const doyRange = derived(
     const year = $doyStore.getFullYear();
     const currentYearBegin = new Date(year, begin.month, begin.date);
     const currentYearEnd = new Date(year, end.month, end.date);
-    const n = timeDay.count(currentYearBegin, $doyStore);
-    const m = timeDay.count($doyStore, currentYearEnd);
-    return `${n} days before & ${m} days after`;
+    //const n = timeDay.count(currentYearBegin, $doyStore);
+    //const m = timeDay.count($doyStore, currentYearEnd);
+    return `${textFormat(currentYearBegin)} - ${textFormat(currentYearEnd)}`;
   }
 );

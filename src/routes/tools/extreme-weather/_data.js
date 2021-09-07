@@ -1,6 +1,7 @@
 // Node modules
 import { timeParse, timeFormat } from "d3-time-format";
 import { format } from "d3-format";
+import { timeDay } from "d3-time";
 
 // Helpers
 import config from "../../../helpers/api-config";
@@ -136,16 +137,28 @@ export function calcThresholdProbability({ gevisf, threshold }) {
   } else {
     label = "Common";
   }
+  const value = +format(".2f")(probability * 100);
+  let append;
+  if (value === 50) {
+    append = "at least";
+  } else if (value === 0.1) {
+    append = "less than";
+  } else {
+    append = "";
+  }
   return {
-    value: +format(".2f")(probability * 100),
+    append,
+    value,
     label,
     rp,
   };
 }
 
-export function calcThresholdExceedances({ values, threshold }) {
-  const exceedances = values.filter((d) => d > threshold);
-  return exceedances.length;
+export function calcThresholdExceedances({ values, threshold, extremes }) {
+  if (extremes === "high") {
+    return values.filter((d) => d > threshold).length;
+  }
+  return values.filter((d) => d < threshold).length;
 }
 
 export async function getForecastData({ lng, lat }) {
@@ -162,7 +175,7 @@ export async function getForecastData({ lng, lat }) {
   const periods = data.properties.periods.map((d) => {
     const startTime = startTimeParse(d.startTime);
     const label = startTimeFormat(startTime);
-    return { ...d, date: startTime, label, category: "forcast" };
+    return { ...d, date: startTime, label, value: d.temperature };
   });
   return periods.sort((a, b) => b.date - a.date);
 }
@@ -189,17 +202,30 @@ export async function getMeasuredData({ stationId, startDate, endDate }) {
   if (error) {
     throw new Error(error.message);
   }
+  const dateRange = timeDay.range(dateParse(startDate), dateParse(endDate));
   const data = response.map((d) => ({
     ...d,
     date: dateParse(d.DATE),
     label: startTimeFormat(dateParse(d.DATE)),
   }));
-  return data.filter((d) => d.TMAX && d.TMIN).sort((a, b) => b.date - a.date);
+  const records = dateRange.map((d) => {
+    const match = data.find((item) => item.date.getTime() === d.getTime());
+    if (!match) {
+      return {
+        date: d,
+        label: startTimeFormat(d),
+        TMAX: null,
+        TMIN: null,
+      };
+    }
+    return match;
+  });
+  return records.sort((a, b) => b.date - a.date);
 }
 
 export function filterMeasured(climvarId, measured) {
   if (climvarId === "tasmin") {
-    return measured.map((d) => ({ label: d.label, temperature: d.TMIN }));
+    return measured.map((d) => ({ label: d.label, value: +d.TMIN }));
   }
-  return measured.map((d) => ({ label: d.label, temperature: d.TMAX }));
+  return measured.map((d) => ({ label: d.label, value: +d.TMAX }));
 }
