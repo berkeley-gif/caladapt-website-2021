@@ -65,8 +65,12 @@
     }
   }
 
-  .banner--content-btn {
+  .btn-container {
     text-transform: uppercase;
+  }
+
+  .footer {
+    margin-top: 2rem;
   }
 </style>
 
@@ -104,7 +108,7 @@
           needs.
         </p>
 
-        <div class="banner--content-btn">
+        <div class="btn-container">
           <Button icon="{ArrowRight16}" href="/about"
             >More about Cal-Adapt</Button
           >
@@ -147,6 +151,8 @@
       Get the latest Cal-Adapt news, updates &amp; events delivered to your
       inbox. Subscribe to the Cal-Adapt Newsletter.
     </p>
-    <Button icon="{ArrowRight16}" href="/signup">SUBSCRIBE</Button>
+    <div class="btn-container">
+      <Button icon="{ArrowRight16}" href="/signup">Subscribe</Button>
+    </div>
   </div>
 </section>
