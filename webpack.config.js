@@ -9,9 +9,10 @@ const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 
 const alias = {
-  content: path.resolve(__dirname, "content"),
-  svelte: path.resolve("node_modules", "svelte"),
   "~": path.resolve(__dirname, "src/"),
+  content: path.resolve(__dirname, "content"),
+  static: path.resolve(__dirname, "static"),
+  svelte: path.resolve("node_modules", "svelte"),
 };
 const extensions = [".mjs", ".js", ".json", ".svelte", ".html"];
 const mainFields = ["svelte", "module", "browser", "main"];
