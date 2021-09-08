@@ -71,6 +71,10 @@
 
   .footer {
     margin-top: 2rem;
+
+    @media (max-width: 1000px) {
+      margin-top: 1rem;
+    }
   }
 </style>
 
