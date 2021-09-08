@@ -344,10 +344,7 @@
   </div>
 </Header>
 
-<ToolNavigation
-  pageNavItems="{pageNavItems}"
-  href="{`/tools/extreme-weather-grid`}"
-/>
+<ToolNavigation pageNavItems="{pageNavItems}" href="{`/tools/${tool.slug}`}" />
 
 <div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}

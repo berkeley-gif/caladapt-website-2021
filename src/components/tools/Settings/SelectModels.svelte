@@ -47,7 +47,7 @@
     invalid="{invalid}"
     invalidText="Choose atleast 1 GCM"
     selectedIds="{selectedIdsArr}"
-    titleText=""
+    titleText="Select Models"
     label="Select..."
     items="{items}"
     sortItem="{sortItem}"

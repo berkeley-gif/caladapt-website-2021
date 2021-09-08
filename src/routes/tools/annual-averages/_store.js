@@ -131,7 +131,7 @@ export const datasetStore = (() => {
     get titles() {
       return derived(store, ($store) => {
         if (!$store || $store.length === 0) return [];
-        return $store.map((d) => d.title);
+        return $store.map((d) => `${d.title} (${d.publisher})`);
       });
     },
   };

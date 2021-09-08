@@ -180,6 +180,10 @@
     display: flex;
     align-items: center;
   }
+
+  :global(.stat .bx--btn) {
+    padding-left: 0;
+  }
 </style>
 
 {#if stats}

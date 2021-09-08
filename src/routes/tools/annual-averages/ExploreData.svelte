@@ -1,5 +1,5 @@
 <script>
-  import { Button, Accordion, AccordionItem } from "carbon-components-svelte";
+  import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
@@ -13,6 +13,7 @@
   import { flattenData, getDataByDate, formatDataForExport } from "./_data";
 
   // Components
+  import { Dashboard } from "~/components/tools/Partials";
   import {
     SelectScenario,
     SelectModels,
@@ -80,8 +81,8 @@
       ["climate indicator", $climvar.label],
       ["units", $climvar.units.imperial],
     ];
-    printContainer = document.querySelector(".explore");
-    printSkipElements = ["explore-settings"];
+    printContainer = document.querySelector("#explore");
+    printSkipElements = ["settings"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
@@ -126,65 +127,119 @@
   }
 </script>
 
-<div class="explore">
-  {#if isLoading}
-    <div class="explore-loading-overlay"></div>
-  {/if}
+<style lang="scss">
+  .block {
+    background-color: var(--white);
+    box-shadow: var(--box-shadow);
+    height: 100%;
+    box-sizing: border-box;
+    padding: var(--spacing-16);
+  }
 
-  <!-- Controls -->
-  <div class="explore-controls"></div>
+  .annotate {
+    font-weight: 600;
+  }
 
-  <!-- Title -->
-  <div class="explore-header block">
-    <StaticMap location="{$location}" width="{300}" height="{300}" />
-    <div class="explore-header-title">
-      <div class="h3 block-title">{$location.title}</div>
-      <div class="h4">
-        Projected changes in <span class="block-title">{$climvar.title}</span>
-        under a <span class="block-title">{$scenario.labelLong}</span>.
-      </div>
-      <Button size="small" icon="{Location16}" on:click="{loadLocation}">
-        Change Location
-      </Button>
-    </div>
+  .h4 {
+    font-weight: 400;
+  }
+
+  .title {
+    > * {
+      margin: var(--spacing-8) 0;
+    }
+
+    .h3 {
+      margin-top: 0;
+    }
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    grid-gap: var(--spacing-16);
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .chart-download {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .settings {
+    width: 100%;
+    display: grid;
+    grid-gap: var(--spacing-8);
+    grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
+
+    .block {
+      background-color: var(--gray-20);
+      height: auto;
+    }
+  }
+</style>
+
+{#if isLoading}
+  <Loading />
+{/if}
+
+<Dashboard>
+  <div slot="map">
+    <StaticMap location="{$location}" width="{500}" height="{500}" />
   </div>
 
-  <!-- Stats -->
-  <ul class="explore-stats">
-    <li class="block">
-      <RangeAvg
-        units="{$climvar.units.imperial}"
-        data="{statsData}"
-        isHistorical="{true}"
-        series="{'historical'}"
-        period="{'baseline'}"
-        format="{formatFn}"
-      />
-    </li>
-    <li class="block">
-      <RangeAvg
-        units="{$climvar.units.imperial}"
-        data="{statsData}"
-        isHistorical="{false}"
-        series="{'future'}"
-        period="{'mid-century'}"
-        format="{formatFn}"
-      />
-    </li>
-    <li class="block">
-      <RangeAvg
-        units="{$climvar.units.imperial}"
-        data="{statsData}"
-        isHistorical="{false}"
-        series="{'future'}"
-        period="{'end-century'}"
-        format="{formatFn}"
-      />
-    </li>
-  </ul>
+  <div slot="title" class="block title">
+    <div class="h3">
+      {$location.title}
+    </div>
+    <div class="h4">
+      Projected changes in <span class="annotate">{$climvar.title}</span>
+      under a <span class="annotate">{$scenario.labelLong}</span>.
+    </div>
+    <Button size="small" icon="{Location16}" on:click="{loadLocation}">
+      Change Location
+    </Button>
+  </div>
 
-  <!-- Chart-->
-  <div class="explore-chart block">
+  <div slot="stats">
+    <ul class="stats">
+      <li class="block">
+        <RangeAvg
+          units="{$climvar.units.imperial}"
+          data="{statsData}"
+          isHistorical="{true}"
+          series="{'historical'}"
+          period="{'baseline'}"
+          format="{formatFn}"
+        />
+      </li>
+      <li class="block">
+        <RangeAvg
+          units="{$climvar.units.imperial}"
+          data="{statsData}"
+          isHistorical="{false}"
+          series="{'future'}"
+          period="{'mid-century'}"
+          format="{formatFn}"
+        />
+      </li>
+      <li class="block">
+        <RangeAvg
+          units="{$climvar.units.imperial}"
+          data="{statsData}"
+          isHistorical="{false}"
+          series="{'future'}"
+          period="{'end-century'}"
+          format="{formatFn}"
+        />
+      </li>
+    </ul>
+  </div>
+
+  <div slot="graphic" class="graphic block">
     <LineAreaChart
       data="{$data}"
       dataByDate="{dataByDate}"
@@ -195,15 +250,17 @@
         units: `${$climvar.units.imperial}`,
       }}"
     />
-    <div class="chart-notes">
+
+    <div class="chart-notes margin--v-8">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
-    <div class="chart-download">
+    <div class="chart-download margin--v-8">
       <ShowDefinition
-        topics="{['annual-averages-chart']}"
-        title="Chart"
+        topics="{['chart']}"
+        title="About the Chart"
+        cta="Explain Chart"
         on:define
       />
       <div>
@@ -217,53 +274,49 @@
     </div>
   </div>
 
-  <!-- Settings-->
-  <div class="explore-settings">
-    <div class="h4 block-title">Change Settings:</div>
-    <Accordion class="settings-list">
-      <AccordionItem open title="Select Climate Variable">
-        <SelectClimvar
-          selectedId="{$climvarStore}"
-          items="{climvarList}"
-          on:change="{changeClimvar}"
-        />
-        <ShowDefinition
-          on:define
-          topics="{[
-            'annual-average-tasmax',
-            'annual-average-tasmin',
-            'annual-average-pr',
-          ]}"
-          title="Climate Variables"
-        />
-      </AccordionItem>
-      <AccordionItem open title="Choose Scenario">
-        <SelectScenario
-          selectedId="{$scenarioStore}"
-          items="{scenarioList}"
-          on:change="{changeScenario}"
-        />
-        <ShowDefinition
-          on:define
-          topics="{['climate-scenarios']}"
-          title="RCP Scenarios"
-        />
-      </AccordionItem>
-      <AccordionItem open title="Select Models">
-        <SelectModels
-          selectedIds="{$modelsStore}"
-          items="{modelList}"
-          on:change="{changeModels}"
-        />
-        <ShowDefinition
-          on:define
-          topics="{['gcms']}"
-          title="Global Climate Models (GCMs)"
-        />
-      </AccordionItem>
-    </Accordion>
+  <div slot="settings" class="settings">
+    <div class="block">
+      <SelectClimvar
+        selectedId="{$climvarStore}"
+        items="{climvarList}"
+        on:change="{changeClimvar}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{[
+          'annual-average-tasmax',
+          'annual-average-tasmin',
+          'annual-average-pr',
+        ]}"
+        title="Climate Variables"
+      />
+    </div>
+    <div class="block">
+      <SelectScenario
+        selectedId="{$scenarioStore}"
+        items="{scenarioList}"
+        on:change="{changeScenario}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{['climate-scenarios']}"
+        title="RCP Scenarios"
+      />
+    </div>
+    <div class="block">
+      <SelectModels
+        selectedIds="{$modelsStore}"
+        items="{modelList}"
+        on:change="{changeModels}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{['gcms']}"
+        title="Global Climate Models (GCMs)"
+      />
+    </div>
   </div>
-</div>
+</Dashboard>
 
 <svelte:component
   this="{ShareLink}"
