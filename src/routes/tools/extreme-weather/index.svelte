@@ -180,7 +180,7 @@
       html: `
         <div>
           <h5>Histogram</>
-          <p>The histogram shows the distribution of selected climate variable around a 20 day window for the Baseline Period (1991-2020). The data values for a climate variable are grouped into buckets and represented by columns along the X axis. The Y axis represents the percentage of occurences in the data for each column.</p>
+          <p>The histogram shows the distribution of selected climate variable around a 21 day window for the Baseline Period (1991-2020). The data values for a climate variable are grouped into buckets and represented by columns along the X axis. The Y axis represents the percentage of occurences in the data for each column.</p>
           <h5>Forecast</>
           <p>This section of the chart can be displayed or hidden by using the checkbox at top of the chart. It shows the Near-Term forecast from the National Weather Service (NWS) for selected climate variable and location (latitide, longitude).</p>
           <h5>Recent Observations</>
@@ -370,7 +370,7 @@
           California using a Block Maxima approach.
         </p>
         <p>
-          Annual Maximum values from a 20 day window around the day of interest
+          Annual Maximum values from a 21 day window around the day of interest
           are extracted from a 30 year daily timeseries for the Baseline Period
           (1991–2020). A GEV distribution is applied to this time series. Shape
           and scale parameters for the distribution are estimated using the
@@ -405,7 +405,7 @@
             <p class="source-text">
               The Hourly Observed Historical Data product consists of 39
               stations across the state, each with an observation period of
-              greater than 30 years (1973 to present) from the HadISD global
+              greater than 47 years (1973 to present) from the HadISD global
               record. Stations identified for use in this data product were
               chosen based on being considered high quality for temperature. Due
               to observing techniques, instrumentation used, and similarities in
