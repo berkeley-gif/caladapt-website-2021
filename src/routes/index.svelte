@@ -49,17 +49,38 @@
   });
 </script>
 
+<style lang="scss">
+  .banner--icons {
+    padding: 0.5rem 1rem;
+    gap: 0.25rem;
+  }
+
+  .banner--content {
+    > * + * {
+      margin-top: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+  }
+
+  .banner--content-btn {
+    text-transform: uppercase;
+  }
+</style>
+
 <svelte:head>
   <title>Cal-Adapt</title>
 </svelte:head>
 
 <!-- Banner -->
 <section
-  class="banner overlay overlay-black overlay-40"
+  class="bleed banner overlay overlay-black overlay-60"
   style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;"
 >
   <div class="bx--grid">
-    <div class="bx--row" style="padding: 0.5rem 1rem;">
+    <div class="bx--row banner--icons">
       {#each icons as icon}
         <div class="bx--col-1">
           <a href="/tools">
@@ -70,8 +91,8 @@
     </div>
 
     <div class="bx--row">
-      <div class="bx--col-md-16 bx--col-lg-12">
-        <h1 style="font-size:2rem;">
+      <div class="bx--col-lg-10 bx--col-md-8 banner--content">
+        <h1>
           Cal-Adapt provides a means of exploring peer-reviewed data portraying
           how climate change might affect California at the state and local
           level.
@@ -83,9 +104,11 @@
           needs.
         </p>
 
-        <Button icon="{ArrowRight16}" href="/about"
-          >LEARN MORE ABOUT CAL-ADAPT</Button
-        >
+        <div class="banner--content-btn">
+          <Button icon="{ArrowRight16}" href="/about"
+            >More about Cal-Adapt</Button
+          >
+        </div>
       </div>
     </div>
   </div>
