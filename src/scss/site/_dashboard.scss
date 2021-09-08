@@ -2,17 +2,6 @@
   min-height: 50vh;
 }
 
---gcm-ACCESS1-0: $gcm-ACCESS1-0;
---gcm-CanESM2: $gcm-CanESM2;
---gcm-CCSM4: $gcm-CCSM4;
---gcm-CESM1-BGC: $gcm-CESM1-BGC;
---gcm-CMCC-CMS: $gcm-CMCC-CMS;
---gcm-CNRM-CM5: $gcm-CNRM-CM5;
---gcm-GFDL-CM3: $gcm-GFDL-CM3;
---gcm-HadGEM2-CC: $gcm-HadGEM2-CC;
---gcm-HadGEM2-ES: $gcm-HadGEM2-ES;
---gcm-MIROC5: $gcm-MIROC5;
-
 .dashboard {
   input[name*="ACCESS1-0"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="ACCESS1-0"]:checked + .bx--checkbox-label::before {
