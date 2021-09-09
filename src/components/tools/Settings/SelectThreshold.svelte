@@ -5,12 +5,14 @@
     RadioButton,
     RadioButtonGroup,
     RadioButtonSkeleton,
+    NumberInput,
   } from "carbon-components-svelte";
   import Delete16 from "carbon-icons-svelte/lib/Delete16";
 
   export let items;
   export let selected;
   export let units;
+  export let helperText;
 
   $: selected, dispatch("change", selected);
 
@@ -53,7 +55,11 @@
 </style>
 
 {#if ready}
-  <RadioButtonGroup orientation="vertical" bind:selected>
+  <RadioButtonGroup
+    legendText="Set Threshold"
+    orientation="vertical"
+    bind:selected
+  >
     {#each items as threshold (threshold.id)}
       <div class="flex-center">
         <RadioButton
@@ -72,21 +78,12 @@
       </div>
     {/each}
   </RadioButtonGroup>
-  <div class="bx--form-item">
-    <div class="bx--number bx--number--sm">
-      <label for="threshold-input" class="input-label"
-        >Add custom threshold</label
-      >
-      <div class="bx--number__input-wrapper">
-        <input
-          style="padding-right:0.5rem;width:50%;"
-          type="number"
-          id="threshold-input"
-          step="1"
-          on:keydown="{addThreshold}"
-        />
-      </div>
-    </div>
+  <div style="margin-top: 0.5rem;">
+    <NumberInput
+      hideLabel
+      helperText="{helperText}"
+      on:input="{addThreshold}"
+    />
   </div>
 {:else}
   <RadioButtonGroup orientation="vertical">
