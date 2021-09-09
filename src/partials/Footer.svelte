@@ -119,15 +119,15 @@
     </div>
   </div>
   <div class="footer-links">
-    <a href="https://twitter.com/cal_adapt" title="Twitter">
+    <a href="https://twitter.com/cal_adapt" aria-label="Cal-Adapt on Twitter">
       <LogoTwitter32 />
     </a>
-    <a href="mailto:support@cal-adapt.org" title="Email">
+    <a href="mailto:support@cal-adapt.org" aria-label="Email Cal-Adapt support">
       <Email24 />
     </a>
   </div>
   <div class="footer-copyright">
-    <small>&copy; 2021 California Energy Commission </small>
-    <small> State of California, Gavin Newsom, Governor. </small>
+    <small>&copy; 2021 California Energy Commission</small>
+    <small>State of California, Gavin Newsom, Governor.</small>
   </div>
 </footer>
