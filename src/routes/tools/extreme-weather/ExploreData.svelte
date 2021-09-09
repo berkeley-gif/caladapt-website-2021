@@ -578,7 +578,7 @@
     </div>
     <div class="block">
       <SelectDayOfYear
-        labelText="Choose Day of Year"
+        labelText="Enter Day of Year"
         value="{$doyStore}"
         on:change="{changeDayOfYear}"
       />
