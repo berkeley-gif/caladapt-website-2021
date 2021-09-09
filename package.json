@@ -10,7 +10,6 @@
     "lint": "eslint src --ext .js,.svelte",
     "format": "prettier --write",
     "format:all": "npm run format -- .",
-    "format:single": "npm run format --file=$npm_config_file",
     "sass:test-build": "node-sass --quiet --include-path ./node_modules src/scss/main.scss > /dev/null",
     "pretest": "npm run lint",
     "transfer-dev": "rsync -avz __sapper__/export/ gitdev@api.cal-adapt.org:/var/www/dev.cal-adapt.org/",
