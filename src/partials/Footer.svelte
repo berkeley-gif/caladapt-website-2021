@@ -4,22 +4,75 @@
 </script>
 
 <style lang="scss">
-  /* TODO: mv SCSS partial styles in here */
+  .footer-logos {
+    background-image: linear-gradient(
+      to top,
+      var(--gray-60),
+      #636b71,
+      #5d646b,
+      #575e64,
+      #51585e
+    );
+
+    color: var(--white);
+  }
+
   .about-text {
     display: flex;
     align-content: center;
     align-items: center;
 
+    @media (max-width: 1000px) {
+      text-align: center;
+    }
+
     p {
       margin-bottom: 0;
     }
+  }
+
+  .logos {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    a {
+      background: var(--white);
+      margin: 0.5rem;
+    }
+
+    @media (max-width: 1000px) {
+      justify-content: space-evenly;
+    }
+  }
+
+  .footer-links {
+    background: var(--gray-80);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
+      color: var(--accent);
+      margin: 1rem;
+    }
+  }
+
+  .footer-copyright {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
   }
 </style>
 
 <footer>
   <div class="bx--grid bx--grid--full-width footer-logos">
     <div class="bx--row bx--row-padding">
-      <div class="bx--offset-lg-2 bx--col-lg-6 about-text">
+      <div
+        class="bx--offset-lg-2 bx--col-lg-6 bx--offset-md-1 bx--col-md-6 about-text"
+      >
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
           University of California, Berkeley with funding and advisory oversight
