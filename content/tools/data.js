@@ -129,6 +129,13 @@ const tools = [
     icons: [
       'img/icons/sun.svg',
     ],
+    related: [
+      'maps-of-projected-change',
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
   },
   {
     title: 'Stream Flow',
