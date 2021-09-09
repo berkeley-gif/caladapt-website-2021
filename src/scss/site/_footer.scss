@@ -10,23 +10,27 @@ footer {
     );
     color: $white;
 
-    .bx--row {
-      padding: 1.5rem 0;
-    }
+    // .bx--row {
+    //   padding: 1.5rem 0;
+    // }
 
-    .text {
-      padding: 2rem;
-    }
+    // .text {
+    //   padding: 1rem 0;
+    // }
 
     .logos {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: center;
       flex-wrap: wrap;
 
       a {
         background: $white;
         margin: 0.5rem;
+      }
+
+      @media (max-width: 1000px) {
+        justify-content: flex-start;
       }
     }
   }

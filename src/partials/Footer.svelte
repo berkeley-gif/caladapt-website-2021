@@ -3,10 +3,23 @@
   import Email24 from "carbon-icons-svelte/lib/Email24";
 </script>
 
+<style lang="scss">
+  /* TODO: mv SCSS partial styles in here */
+  .about-text {
+    display: flex;
+    align-content: center;
+    align-items: center;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+</style>
+
 <footer>
   <div class="bx--grid bx--grid--full-width footer-logos">
-    <div class="bx--row">
-      <div class="bx--offset-lg-2 bx--col-lg-6 text">
+    <div class="bx--row bx--row-padding">
+      <div class="bx--offset-lg-2 bx--col-lg-6 about-text">
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
           University of California, Berkeley with funding and advisory oversight
@@ -14,12 +27,11 @@
           Council.
         </p>
       </div>
-      <div class="bx--col-lg-6 logos">
+      <div class="bx--offset-lg-1 bx--col-lg-5 logos">
         <a
           href="http://gif.berkeley.edu/"
           target="_blank"
-          title="Geospatial Innovation Facility"
-          alt="Geospatial Innovation Facility logo"
+          aria-label="Geospatial Innovation Facility"
         >
           <img
             src="img/logos/gif_249x100.png"
@@ -30,8 +42,7 @@
         <a
           href="http://www.energy.ca.gov/"
           target="_blank"
-          title="California Energy Commission"
-          alt="California Energy Commission logo"
+          aria-label="California Energy Commission"
         >
           <img
             src="img/logos/cec_900x790.png"
@@ -42,8 +53,7 @@
         <a
           href="http://sgc.ca.gov/"
           target="_blank"
-          title="California Strategic Growth Council"
-          alt="California Strategic Growth Council logo"
+          aria-label="California Strategic Growth Council"
           style="background: transparent;"
         >
           <img
@@ -64,13 +74,7 @@
     </a>
   </div>
   <div class="footer-copyright">
-    <small
-      >&copy;
-      <script type="text/javascript">
-        document.write(new Date().getFullYear());
-      </script>
-      California Energy Commission
-    </small>
+    <small>&copy; 2021 California Energy Commission </small>
     <small> State of California, Gavin Newsom, Governor. </small>
   </div>
 </footer>
