@@ -12,11 +12,11 @@
   const { page } = stores();
 
   const dispatch = createEventDispatcher();
+
   let upcomingEvents;
   $: if (events && events.length > 0) {
-    const today = new Date();
     upcomingEvents = events.filter(
-      (d) => new Date(d.metadata.eventdate) >= today
+      (d) => new Date(d.metadata.eventdate) >= new Date()
     );
   }
 
@@ -35,6 +35,32 @@
 </script>
 
 <style lang="scss">
+  .sidebar-block {
+    &:not(:first-of-type) {
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 1000px) {
+      margin-top: 3rem;
+    }
+  }
+
+  .sidebar-block-link {
+    display: block;
+    padding-top: 1.5rem;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+
+  .sidebar-block-title {
+    margin: 0;
+  }
+
+  .sidebar-filter,
+  .sidebar-search {
+    margin-top: 0.5rem;
+  }
+
   ul.page-anchor-links-list {
     list-style: none;
   }
@@ -43,7 +69,7 @@
 {#if display.includes("events") && upcomingEvents.length > 0}
   <!-- Events -->
   <div class="sidebar-block">
-    <h5 class="sidebar-block-title">Upcoming Events</h5>
+    <p class="sidebar-block-title h5">Upcoming Events</p>
     <ul class="sidebar-block-list list-items">
       {#each upcomingEvents as event}
         <li class="item">
@@ -66,7 +92,7 @@
 {#if display.includes("posts")}
   <!-- Posts -->
   <div class="sidebar-block">
-    <h5 class="sidebar-block-title">Latest on Cal-Adapt Blog</h5>
+    <p class="sidebar-block-title h5">Latest on Cal-Adapt Blog</p>
     <ul class="sidebar-block-list list-items">
       {#each posts as post}
         <li class="item">
@@ -86,10 +112,11 @@
 {#if display.includes("search")}
   <!-- Search -->
   <div class="sidebar-block">
-    <h5 class="sidebar-block-title">Search</h5>
+    <p class="sidebar-block-title h5">Search</p>
     <div class="sidebar-search">
       <Search
         style="padding-left: 1.5rem;"
+        type="search"
         on:change="{updateSearch}"
         on:clear="{() => dispatch('search', '')}"
       />
@@ -100,7 +127,7 @@
 {#if display.includes("filters")}
   <!-- Search -->
   <div class="sidebar-block">
-    <h5 class="sidebar-block-title">Filters</h5>
+    <p class="sidebar-block-title h5">Filters</p>
     <div class="sidebar-filter">
       <Select
         hideLabel

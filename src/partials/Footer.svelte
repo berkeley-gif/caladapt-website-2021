@@ -3,10 +3,76 @@
   import Email24 from "carbon-icons-svelte/lib/Email24";
 </script>
 
+<style lang="scss">
+  .footer-logos {
+    background-image: linear-gradient(
+      to top,
+      var(--gray-60),
+      #636b71,
+      #5d646b,
+      #575e64,
+      #51585e
+    );
+
+    color: var(--white);
+  }
+
+  .about-text {
+    display: flex;
+    align-content: center;
+    align-items: center;
+
+    @media (max-width: 1000px) {
+      text-align: center;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .logos {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    a {
+      background: var(--white);
+      margin: 0.5rem;
+    }
+
+    @media (max-width: 1000px) {
+      justify-content: space-evenly;
+    }
+  }
+
+  .footer-links {
+    background: var(--gray-80);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
+      color: var(--accent);
+      margin: 1rem;
+    }
+  }
+
+  .footer-copyright {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+</style>
+
 <footer>
   <div class="bx--grid bx--grid--full-width footer-logos">
-    <div class="bx--row">
-      <div class="bx--offset-lg-2 bx--col-lg-6 text">
+    <div class="bx--row bx--row-padding">
+      <div
+        class="bx--offset-lg-2 bx--col-lg-6 bx--offset-md-1 bx--col-md-6 about-text"
+      >
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
           University of California, Berkeley with funding and advisory oversight
@@ -14,12 +80,11 @@
           Council.
         </p>
       </div>
-      <div class="bx--col-lg-6 logos">
+      <div class="bx--offset-lg-1 bx--col-lg-5 logos">
         <a
           href="http://gif.berkeley.edu/"
           target="_blank"
-          title="Geospatial Innovation Facility"
-          alt="Geospatial Innovation Facility logo"
+          aria-label="Geospatial Innovation Facility"
         >
           <img
             src="img/logos/gif_249x100.png"
@@ -30,8 +95,7 @@
         <a
           href="http://www.energy.ca.gov/"
           target="_blank"
-          title="California Energy Commission"
-          alt="California Energy Commission logo"
+          aria-label="California Energy Commission"
         >
           <img
             src="img/logos/cec_900x790.png"
@@ -42,8 +106,7 @@
         <a
           href="http://sgc.ca.gov/"
           target="_blank"
-          title="California Strategic Growth Council"
-          alt="California Strategic Growth Council logo"
+          aria-label="California Strategic Growth Council"
           style="background: transparent;"
         >
           <img
@@ -56,21 +119,15 @@
     </div>
   </div>
   <div class="footer-links">
-    <a href="https://twitter.com/cal_adapt" title="Twitter">
+    <a href="https://twitter.com/cal_adapt" aria-label="Cal-Adapt on Twitter">
       <LogoTwitter32 />
     </a>
-    <a href="mailto:support@cal-adapt.org" title="Email">
+    <a href="mailto:support@cal-adapt.org" aria-label="Email Cal-Adapt support">
       <Email24 />
     </a>
   </div>
   <div class="footer-copyright">
-    <small
-      >&copy;
-      <script type="text/javascript">
-        document.write(new Date().getFullYear());
-      </script>
-      California Energy Commission
-    </small>
-    <small> State of California, Gavin Newsom, Governor. </small>
+    <small>&copy; 2021 California Energy Commission</small>
+    <small>State of California, Gavin Newsom, Governor.</small>
   </div>
 </footer>
