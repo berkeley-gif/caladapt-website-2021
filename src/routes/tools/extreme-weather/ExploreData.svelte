@@ -7,6 +7,7 @@
     RadioButton,
     Checkbox,
     InlineLoading,
+    SkeletonText,
   } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { extent } from "d3-array";
@@ -88,6 +89,7 @@
   let threshProbability;
   let threshExceedances;
   let threshCI;
+  let threshCILoading = true;
 
   let showForecast = false;
   let forecast = null;
@@ -112,7 +114,7 @@
     );
     threshBound = filterThreshold($baseline.percentiles, $extremesStore);
     threshInvalidText = getThresholdText($extremesStore);
-    thresholdStore.set(threshBound);
+    changeThreshold({ detail: threshBound });
     isLoading = false;
   } else {
     isLoading = true;
@@ -215,8 +217,10 @@
       threshold: +e.detail,
       extremes: $extremesStore,
     });
+    threshCILoading = true;
     threshCI = await getProbabilityCI(threshProbability.rp);
     threshCIStore.set(threshCI);
+    threshCILoading = false;
   }
 
   function resetObservations() {
@@ -398,7 +402,7 @@
 
   <div slot="stats" class="stats">
     <div class="block wide">
-      {#if threshValid && threshProbability}
+      {#if threshValid && !threshCILoading}
         <p>
           A daily <span class="annotate">{$climvar.title}</span> of
           <span class="annotate threshold">{$thresholdStore}°F</span>
@@ -436,6 +440,8 @@
           cta="Exceedance Probability"
           on:define
         />
+      {:else}
+        <SkeletonText paragraph />
       {/if}
     </div>
     <div class="block">
