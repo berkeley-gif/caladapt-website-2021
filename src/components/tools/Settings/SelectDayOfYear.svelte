@@ -1,42 +1,30 @@
 <script>
-  import { timeFormat } from "d3-time-format";
-  import { createEventDispatcher, onMount } from "svelte";
-  import { DatePickerInput } from "carbon-components-svelte";
+  import { timeFormat, timeParse } from "d3-time-format";
+  import { createEventDispatcher } from "svelte";
+  import { DatePicker, DatePickerInput } from "carbon-components-svelte";
 
   export let value;
   export let labelText;
+  export let formatFn = timeFormat("%m/%d");
 
-  $: placeholder = timeFormat("%m/%d")(value);
+  $: placeholder = formatFn(value);
 
-  let DatePicker;
   const dispatch = createEventDispatcher();
 
   function change(e) {
-    dispatch("change", e.detail.selectedDates[0]);
+    dispatch("change", timeParse("%m/%d")(e.detail));
   }
-
-  // DatePicker ability to append to HTML body throws a document node defined
-  // error everytime component is rebuild
-  // https://github.com/IBM/carbon-components-svelte/issues/522
-  onMount(async () => {
-    const module = await import(
-      "carbon-components-svelte/src/DatePicker/DatePicker.svelte"
-    );
-    DatePicker = module.default;
-  });
 </script>
 
+<style>
+</style>
+
 <div class="doy-select">
-  <svelte:component
-    this="{DatePicker}"
-    datePickerType="single"
-    dateFormat="m/d"
-    on:change="{change}"
-  >
+  <DatePicker dateFormat="m/d" on:change="{change}">
     <DatePickerInput
       labelText="{labelText}"
       placeholder="{placeholder}"
       pattern="\\d{(1, 2)}\\/\\d{(1, 2)}"
     />
-  </svelte:component>
+  </DatePicker>
 </div>
