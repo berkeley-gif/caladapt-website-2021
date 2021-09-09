@@ -50,18 +50,34 @@
 </script>
 
 <style lang="scss">
+  .banner {
+    --banner-child-v-spacing: 2.5rem;
+  }
+
   .banner--icons {
     padding: 0.5rem 1rem;
     gap: 0.25rem;
+    margin-bottom: var(--banner-child-v-spacing);
   }
 
   .banner--content {
     > * + * {
-      margin-top: 2rem;
+      margin-top: var(--banner-child-v-spacing);
     }
 
     .title-container * {
       display: inline;
+    }
+
+    .title-container p {
+      filter: drop-shadow(0px 1px 2px #121416);
+      max-width: 50ch;
+    }
+
+    p.lead {
+      font-weight: 400;
+      max-width: 56ch;
+      margin-bottom: 0;
     }
 
     .title {
@@ -88,7 +104,7 @@
 
 <!-- Banner -->
 <section
-  class="bleed banner overlay overlay-black overlay-60"
+  class="bleed banner overlay overlay-black overlay-40"
   style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;"
 >
   <div class="bx--grid">
