@@ -19,13 +19,13 @@
   import { ArrowRight16 } from "carbon-icons-svelte";
 
   import { Card, CardsContainer } from "~/components/cards";
-  import SidebarRight from "../partials/SidebarRight.svelte";
-  import Sun from "../../static/img/icons/sun.svg";
-  import Rainfall from "../../static/img/icons/rainfall.svg";
-  import Wildfire from "../../static/img/icons/wildfire.svg";
-  import Snowflake from "../../static/img/icons/snowflake.svg";
-  import Sea from "../../static/img/icons/sea.svg";
-  import Streamflow from "../../static/img/icons/streamflow.svg";
+  import SidebarRight from "~/partials/SidebarRight.svelte";
+  import Sun from "static/img/icons/sun.svg";
+  import Rainfall from "static/img/icons/rainfall.svg";
+  import Wildfire from "static/img/icons/wildfire.svg";
+  import Snowflake from "static/img/icons/snowflake.svg";
+  import Sea from "static/img/icons/sea.svg";
+  import Streamflow from "static/img/icons/streamflow.svg";
 
   export let events;
   export let posts;
@@ -60,7 +60,11 @@
       margin-top: 2rem;
     }
 
-    h1 {
+    .title-container * {
+      display: inline;
+    }
+
+    .title {
       font-size: 2rem;
     }
   }
@@ -88,23 +92,24 @@
   style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;"
 >
   <div class="bx--grid">
-    <div class="bx--row banner--icons">
+    <div class="bx--row banner--icons" aria-hidden="true">
       {#each icons as icon}
         <div class="bx--col-1">
-          <a href="/tools">
-            <div class="icon">{@html icon}</div>
-          </a>
+          <div class="icon">{@html icon}</div>
         </div>
       {/each}
     </div>
 
     <div class="bx--row">
       <div class="bx--col-lg-10 bx--col-md-8 banner--content">
-        <h1>
-          Cal-Adapt provides a means of exploring peer-reviewed data portraying
-          how climate change might affect California at the state and local
-          level.
-        </h1>
+        <div class="title-container">
+          <h1 class="sr-only">Cal-Adapt</h1>
+          <p class="title h1">
+            Cal-Adapt provides a means of exploring peer-reviewed data
+            portraying how climate change might affect California at the state
+            and local level.
+          </p>
+        </div>
 
         <p class="lead">
           We make this data available through downloads, visualizations, and the
