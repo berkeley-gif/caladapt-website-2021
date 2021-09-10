@@ -4,7 +4,7 @@ import boundaries from "~/helpers/mapbox-layers";
 import climvars from "~/helpers/climate-variables";
 
 export const climvarList = climvars
-  .filter((d) => ["ccd", "hdd"].includes(d.id))
+  .filter((d) => ["tasmax"].includes(d.id))
   .map((d) => {
     const title = `Annual Average ${d.label}`;
     return { ...d, title };

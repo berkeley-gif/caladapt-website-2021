@@ -1,17 +1,30 @@
 import { writable, derived } from "svelte/store";
 import { scenarioList, boundaryList, climvarList } from "./_helpers";
 
+export const indicatorStore = (() => {
+  const store = writable("cdd");
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get indicator() {
+      return derived(store, ($store) =>
+        climvarList.find((d) => d.id === $store)
+      );
+    },
+  };
+})();
+
 export const climvarStore = (() => {
-  const store = writable("ccd");
+  const store = writable("tasmax");
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
     get climvar() {
-      return derived(store, ($store) => {
-        const selected = climvarList.find((d) => d.id === $store);
-        return selected;
-      });
+      return derived(store, ($store) =>
+        climvarList.find((d) => d.id === $store)
+      );
     },
   };
 })();
