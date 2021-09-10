@@ -153,32 +153,33 @@ export const datasetStore = (() => {
 // DERIVED STORES
 // Query params store
 export const queryParams = derived(
-  [unitsStore, locationStore],
-  ([$unitsStore, $locationStore]) => {
+  // Question: should indicators (cdd/hdd) go here?
+  [unitsStore, locationStore, indicatorsStore],
+  ([$unitsStore, $locationStore, $indicatorsStore]) => {
     const { boundaryId, location } = $locationStore;
     const { imperial } = $unitsStore;
-    const params = {};
+    const { indicator } = $indicatorsStore;
+    const params = {
+      imperial,
+      indicator,
+    };
     let method = "GET";
     switch (boundaryId) {
       case "locagrid":
         params.g = `Point(${location.center[0]} ${location.center[1]})`;
-        params.imperial = imperial;
         break;
       case "ca":
         params.ref = "/media/ca.json";
         params.stat = "mean";
-        params.imperial = imperial;
         break;
       case "custom":
         params.g = JSON.stringify(location.geometry);
         params.stat = "mean";
-        params.imperial = imperial;
         method = "POST";
         break;
       default:
         params.ref = `/api/${boundaryId}/${location.id}/`;
         params.stat = "mean";
-        params.imperial = imperial;
     }
     return { params, method };
   }
@@ -186,13 +187,21 @@ export const queryParams = derived(
 
 // Bookmark store
 export const bookmark = derived(
-  [climvarStore, scenarioStore, modelsStore, unitsStore, locationStore],
+  [
+    climvarStore,
+    scenarioStore,
+    modelsStore,
+    unitsStore,
+    locationStore,
+    indicatorsStore,
+  ],
   ([
     $climvarStore,
     $scenarioStore,
     $modelsStore,
     $unitsStore,
     $locationStore,
+    $indicatorsStore,
   ]) => {
     const { location, boundaryId } = $locationStore;
     const { imperial } = $unitsStore;
@@ -200,6 +209,17 @@ export const bookmark = derived(
     if (boundaryId === "custom") {
       return "Cannot create a bookmark for an uploaded boundary";
     }
-    return `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}&imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}`;
+    return Object.entries({
+      indicator: $indicatorsStore,
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore,
+      imperial,
+      lng,
+      lat,
+      boundary: boundaryId,
+    })
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
   }
 );

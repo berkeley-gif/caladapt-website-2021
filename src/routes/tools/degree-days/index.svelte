@@ -24,11 +24,21 @@
     let initialConfig = {};
 
     if (Object.keys(query).length) {
-      const { boundary, climvar, scenario, models, imperial, lat, lng } = query;
+      const {
+        boundary,
+        climvar,
+        indicator,
+        scenario,
+        models,
+        imperial,
+        lat,
+        lng,
+      } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
+        indicatorId: indicator,
         modelIds: models,
         imperial: imperial === "true" ? true : false,
         lat: +lat,
@@ -39,6 +49,7 @@
         boundaryId: "locagrid",
         scenarioId: "rcp45",
         climvarId: "tasmax",
+        indicatorId: "cdd",
         modelIds: "HadGEM2-ES,CNRM-CM5",
         imperial: true,
         lat: 38.58,
@@ -86,6 +97,7 @@
     dataStore,
     queryParams,
     datasetStore,
+    indicatorsStore,
   } from "./_store";
   import { getObserved, getModels, getEnvelope } from "./_data";
 
@@ -152,6 +164,7 @@
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
+        indicatorId: $indicatorsStore,
       };
       const { params, method } = $queryParams;
       const envelope = await getEnvelope(config, params, method);
@@ -184,12 +197,21 @@
   }
 
   async function initApp(config) {
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } =
-      config;
+    const {
+      lat,
+      lng,
+      boundaryId,
+      scenarioId,
+      climvarId,
+      indicatorId,
+      modelIds,
+      imperial,
+    } = config;
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
+    indicatorsStore.set(indicatorId);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
