@@ -215,15 +215,6 @@
       });
     window.scrollTo(0, 0);
   });
-
-  $: {
-    // console.log(initialConfig);
-    // console.log(glossary);
-    // console.log(tool);
-    // console.log(relatedTools);
-    // console.log(externalResources);
-    // console.log(helpItems);
-  }
 </script>
 
 <svelte:head>
@@ -233,3 +224,53 @@
     rel="stylesheet"
   />
 </svelte:head>
+
+<Header iconPaths="{tool.icons}" title="{tool.title}">
+  <div slot="description">
+    <p class="lead">
+      Explore projected changes in Heating Degree Days and Cooling Degree Days,
+      which are a common proxy for energy needed to heat and cool buildings,
+      respectively.
+    </p>
+  </div>
+</Header>
+
+<ToolNavigation href="{`/tools/${tool.slug}`}" />
+
+<div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
+  {#if appReady}
+    <ExploreData on:define="{showDefinition}" />
+  {:else}
+    <Loading />
+  {/if}
+</div>
+
+<div class="bx--grid">
+  <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
+    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}" />
+  </div>
+
+  <div id="resources" use:inview="{{}}" on:enter="{handleEntry}">
+    <Resources resources="{resources}" />
+  </div>
+
+  <div id="help" use:inview="{{}}" on:enter="{handleEntry}">
+    <Help items="{helpItems}" />
+  </div>
+</div>
+
+<div class="spacing--v-96"></div>
+
+<Modal
+  id="definition"
+  size="sm"
+  passiveModal
+  bind:open="{showInfo}"
+  modalHeading="{definitionTitle}"
+  on:open
+  on:close
+>
+  <div>{@html definitionText}</div>
+</Modal>
+
+<NotificationDisplay />
