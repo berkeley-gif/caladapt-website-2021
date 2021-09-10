@@ -10,6 +10,13 @@ export const climvarList = climvars
     return { ...d, title };
   });
 
+export const climIndiList = climvars
+  .filter((d) => ["cdd", "hdd"].includes(d.id))
+  .map((d) => {
+    const title = `Annual Average ${d.label}`;
+    return { ...d, title };
+  });
+
 // List of series used in tool with additional props for
 // symbolyzing these lines
 const series = [

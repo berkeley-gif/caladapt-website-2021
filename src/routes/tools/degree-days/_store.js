@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store";
 import { scenarioList, boundaryList, climvarList } from "./_helpers";
 
-export const indicatorStore = (() => {
+export const indicatorsStore = (() => {
   const store = writable("cdd");
   const { set, subscribe } = store;
   return {
