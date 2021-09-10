@@ -4,12 +4,8 @@
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
-  import {
-    climvarList,
-    modelList,
-    scenarioList,
-    boundaryList,
-  } from "./_helpers";
+  import { modelList, scenarioList, boundaryList } from "../_common/_lists";
+  import { climvarList } from "./_helpers";
   import { flattenData, getDataByDate, formatDataForExport } from "./_data";
 
   // Components
@@ -26,14 +22,13 @@
 
   // Store
   import {
-    climvarStore,
     scenarioStore,
     locationStore,
     dataStore,
     modelsStore,
-    bookmark,
     datasetStore,
-  } from "./_store";
+  } from "../_common/_store";
+  import { climvarStore } from "./_store";
 
   const { location, boundary } = locationStore;
   const { data } = dataStore;
@@ -52,12 +47,20 @@
   let DownloadChart;
   let ShareLink;
 
+  let bookmark;
+
   let metadata;
   let csvData;
   let printContainer;
   let printSkipElements;
 
   async function loadShare() {
+    if ($boundary.id === "custom") {
+      bookmark = "Cannot create a bookmark for an uploaded boundary";
+    } else {
+      const [lng, lat] = $location.center;
+      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+    }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -321,7 +324,7 @@
 <svelte:component
   this="{ShareLink}"
   bind:open="{showShare}"
-  state="{$bookmark}"
+  state="{bookmark}"
 />
 
 <svelte:component

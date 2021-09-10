@@ -44,13 +44,12 @@
 
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, imperial, lat, lng } = query;
+      const { boundary, climvar, scenario, models, lat, lng } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
         modelIds: models,
-        imperial: imperial === "true" ? true : false,
         lat: +lat,
         lng: +lng,
       };
@@ -60,7 +59,6 @@
         scenarioId: "rcp45",
         climvarId: "tasmax",
         modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
-        imperial: true,
         lat: 38.58,
         lng: -121.46,
       };
@@ -93,23 +91,19 @@
     Resources,
     Help,
     ToolNavigation,
-  } from "../../../components/tools/Partials";
-  import {
-    NotificationDisplay,
-    notifier,
-  } from "../../../components/notifications";
+  } from "~/components/tools/Partials";
+  import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Store
   import {
-    climvarStore,
     scenarioStore,
     modelsStore,
     unitsStore,
     locationStore,
     dataStore,
-    queryParams,
     datasetStore,
-  } from "./_store";
+  } from "../_common/_store";
+  import { queryParams, climvarStore } from "./_store";
   import { getObserved, getModels, getEnvelope } from "./_data";
 
   export let initialConfig;
