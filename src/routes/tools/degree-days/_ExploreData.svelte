@@ -5,6 +5,7 @@
 
   // Helpers
   import {
+    climIndiList,
     climvarList,
     modelList,
     scenarioList,
@@ -26,6 +27,7 @@
 
   // Store
   import {
+    indicatorsStore,
     climvarStore,
     scenarioStore,
     locationStore,
@@ -38,6 +40,7 @@
   const { location, boundary } = locationStore;
   const { data } = dataStore;
   const { climvar } = climvarStore;
+  const { indicator } = indicatorsStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
 
@@ -81,6 +84,11 @@
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate indicator", $climvar.label],
+
+      /* TODO: add both variable & indicator? **/
+      // ["climate variable", $climvar.label],
+      // ["climate indicator", $indicator.label],
+
       ["units", $climvar.units.imperial],
     ];
     printContainer = document.querySelector("#explore");
@@ -110,6 +118,11 @@
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds.join(","));
     console.log("models change");
+  }
+
+  function changeIndicator(e) {
+    indicatorsStore.set(e.detail.id);
+    console.log("indicator change");
   }
 
   function changeClimvar(e) {
@@ -239,6 +252,94 @@
         />
       </li>
     </ul>
+  </div>
+
+  <div slot="graphic" class="graphic block">
+    <LineAreaChart
+      data="{$data}"
+      dataByDate="{dataByDate}"
+      yAxis="{{
+        key: 'value',
+        label: `${$climvar.title} (${$climvar.units.imperial})`,
+        tickFormat: formatFn,
+        units: `${$climvar.units.imperial}`,
+      }}"
+    />
+
+    <div class="chart-notes margin--v-8">
+      <p>
+        Source: Cal-Adapt. Data: {$titles.join(", ")}.
+      </p>
+    </div>
+
+    <div class="chart-download margin--v-8">
+      <ShowDefinition
+        topics="{['chart']}"
+        title="About the Chart"
+        cta="Explain Chart"
+        on:define
+      />
+      <div>
+        <Button size="small" icon="{Download16}" on:click="{loadDownload}">
+          Download Chart
+        </Button>
+        <Button size="small" icon="{Share16}" on:click="{loadShare}">
+          Share
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <div slot="settings" class="settings">
+    <div class="block">
+      <SelectClimvar
+        labelText="Select Indicator"
+        selectedId="{$indicatorsStore}"
+        items="{climIndiList}"
+        on:change="{changeIndicator}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{['hdd', 'cdd']}"
+        title="Climate Indicators"
+      />
+    </div>
+    <div class="block">
+      <SelectClimvar
+        selectedId="{$climvarStore}"
+        items="{climvarList}"
+        on:change="{changeClimvar}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{['annual-average-tasmax', 'annual-average-tasmin']}"
+        title="Climate Variables"
+      />
+    </div>
+    <div class="block">
+      <SelectScenario
+        selectedId="{$scenarioStore}"
+        items="{scenarioList}"
+        on:change="{changeScenario}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{['climate-scenarios']}"
+        title="RCP Scenarios"
+      />
+    </div>
+    <div class="block">
+      <SelectModels
+        selectedIds="{$modelsStore}"
+        items="{modelList}"
+        on:change="{changeModels}"
+      />
+      <ShowDefinition
+        on:define
+        topics="{['gcms']}"
+        title="Global Climate Models (GCMs)"
+      />
+    </div>
   </div>
 </Dashboard>
 
