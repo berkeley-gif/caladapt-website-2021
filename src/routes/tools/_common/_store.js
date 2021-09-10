@@ -2,25 +2,6 @@ import { writable, derived } from "svelte/store";
 import scenarios from "../../../helpers/climate-scenarios";
 import boundaries from "../../../helpers/mapbox-layers";
 
-const DEFAULT_LOCATION = {
-  id: "37907",
-  title: "240 32nd Street, Sacramento, California 95816",
-  geometry: {
-    type: "Polygon",
-    coordinates: [
-      [
-        [-121.5, 38.625],
-        [-121.4375, 38.625],
-        [-121.4375, 38.5625],
-        [-121.5, 38.5625],
-        [-121.5, 38.625],
-      ],
-    ],
-  },
-  center: [-121.4688, 38.5938],
-  bbox: [-121.5, 38.5625, -121.4375, 38.625],
-};
-
 export const scenarioStore = (() => {
   const store = writable("rcp45");
   const { set, subscribe } = store;
@@ -55,8 +36,8 @@ export const unitsStore = writable({ imperial: true });
 
 export const locationStore = (() => {
   const store = writable({
-    boundaryId: "locagrid",
-    location: DEFAULT_LOCATION,
+    boundaryId: null,
+    location: null,
     isUpload: false,
   });
   const { update, subscribe } = store;
@@ -71,6 +52,8 @@ export const locationStore = (() => {
       }),
     updateBoundary: (val) =>
       update((store) => {
+        console.log("from store id", val);
+        console.log(boundaries.find((d) => d.id === val));
         store.boundaryId = val;
         return store;
       }),
@@ -82,6 +65,7 @@ export const locationStore = (() => {
     get boundary() {
       return derived(store, ($store) => {
         const selected = boundaries.find((d) => d.id === $store.boundaryId);
+        console.log("from store selected", selected);
         return selected;
       });
     },
