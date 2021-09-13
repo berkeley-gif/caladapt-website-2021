@@ -1,4 +1,4 @@
-import { rollup, sort, group } from "d3-array";
+import { rollups, sort, group } from "d3-array";
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -9,12 +9,11 @@ import { rollup, sort, group } from "d3-array";
  * @return {object}
  */
 export function buildEnvelope(_data) {
-  const dataMap = rollup(
+  const dataArr = rollups(
     _data,
     (v) => v.map((i) => i.value),
     (d) => d.date.getFullYear()
   );
-  const dataArr = Array.from(dataMap);
   return dataArr.map(([key, value]) => {
     const sortedArr = sort(value);
     return {
