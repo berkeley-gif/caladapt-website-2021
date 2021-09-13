@@ -30,7 +30,7 @@
     const rows = result.values;
 
     const visibleRows = rows.filter((row) => {
-      const legend = $legendItems.find((d) => d.key === row.key);
+      const legend = $legendItems.find((d) => d.id === row.id);
       if (legend.visible) {
         return true;
       }
@@ -53,9 +53,9 @@
         .map((row) => {
           return `<div style="padding:3px 0;">
           <span style="background:${color(
-            row.key
+            row.id
           )};width:10px;height:10px;display:inline-block;padding-right:1px;"></span>
-          ${label(row.key)}: ${getValue(row.value)}
+          ${label(row.id)}: ${getValue(row.value)}
         </div>`;
         })
         .join("")}`;

@@ -8,6 +8,7 @@
 
   export let selectedId;
   export let items;
+  export let title = "Select Station";
 
   const dispatch = createEventDispatcher();
 
@@ -28,7 +29,7 @@
 {#if ready}
   <Select
     class="station-select"
-    labelText="SELECT STATION"
+    labelText="{title}"
     selected="{selectedId}"
     on:change="{change}"
   >

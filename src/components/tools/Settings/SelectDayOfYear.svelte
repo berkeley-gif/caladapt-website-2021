@@ -4,7 +4,7 @@
   import { DatePicker, DatePickerInput } from "carbon-components-svelte";
 
   export let value;
-  export let labelText;
+  export let title = "Select Day of Year";
   export let formatStr = timeFormat("%-m/%-d");
 
   let invalid = false;
@@ -52,7 +52,7 @@
     <DatePickerInput
       invalid="{invalid}"
       invalidText="{`Invalid date. 3/24 is an example of a valid date.`}"
-      labelText="{labelText}"
+      labelText="{title}"
       placeholder="{placeholder}"
       pattern="\\d{(1, 2)}\\/\\d{(1, 2)}"
     />

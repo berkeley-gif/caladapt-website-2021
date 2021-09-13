@@ -37,7 +37,7 @@
       class="path-line"
       class:show="{showItems[i] ? true : false}"
       d="{path(group.values)}"
-      stroke="{colorScale(group.values[0].key)}"
+      stroke="{colorScale(group.values[0].id)}"
       fill="none"
       stroke-width="2px"
     >

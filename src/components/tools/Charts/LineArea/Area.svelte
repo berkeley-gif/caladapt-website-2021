@@ -10,7 +10,7 @@
   const legendItems = getContext("Legend");
 
   $: $legendItems.forEach((d) => {
-    if (d.key === series.key) {
+    if (d.id === series.id) {
       show = d.visible;
     }
   });
@@ -28,7 +28,7 @@
 
 {#if show}
   <path
-    class="{`path-area ${series.key}`}"
+    class="{`path-area ${series.id}`}"
     d="{path(series.values)}"
     fill="{series.color.replace(/[^,]+(?=\))/, '0.7')}"
   >
