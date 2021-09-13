@@ -8,7 +8,7 @@
   export let items;
   export let title = "Select Models";
 
-  let selectedIdsArr = selectedIds.split(",");
+  let selectedIdsArr = selectedIds;
   let invalid = false;
   const dispatch = createEventDispatcher();
   const sortItem = (a, b) => a.order - b.order;

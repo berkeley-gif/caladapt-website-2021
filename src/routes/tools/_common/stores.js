@@ -17,20 +17,12 @@ export const scenarioStore = (() => {
   };
 })();
 
-export const modelsStore = (() => {
-  const store = writable("HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5");
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get models() {
-      return derived(store, ($store) => {
-        const arr = $store.split(",");
-        return arr;
-      });
-    },
-  };
-})();
+export const modelsStore = writable([
+  "HadGEM2-ES",
+  "CNRM-CM5",
+  "CanESM2",
+  "MIROC5",
+]);
 
 export const unitsStore = writable({ imperial: true });
 

@@ -43,7 +43,7 @@
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
-        modelIds: models,
+        modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
       };
@@ -104,7 +104,6 @@
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
-  const { models } = modelsStore;
 
   // Local props
   let appReady = false;
@@ -121,11 +120,11 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $models, $location, update();
+  $: $climvar, $scenario, $modelsStore, $location, update();
 
   async function update() {
     if (!appReady) return;
-    if ($models.length === 0) return;
+    if ($modelsStore.length === 0) return;
     try {
       dataStore.set(null);
       const config = {

@@ -88,7 +88,8 @@
       bookmark = "Cannot create a bookmark for an uploaded boundary";
     } else {
       const [lng, lat] = $location.center;
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+      const modelsStr = $modelsStore.join(",");
+      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
@@ -138,7 +139,7 @@
   }
 
   function changeModels(e) {
-    modelsStore.set(e.detail.selectedIds.join(","));
+    modelsStore.set(e.detail.selectedIds);
     console.log("models change");
   }
 

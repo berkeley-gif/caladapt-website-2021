@@ -111,7 +111,7 @@ export const INITIAL_CONFIG = {
   boundaryId: "locagrid",
   scenarioId: "rcp45",
   climvarId: "tasmax",
-  modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
+  modelIds: ["HadGEM2-ES", "CNRM-CM5", "CanESM2", "MIROC5"],
   lat: 38.58,
   lng: -121.46,
 };

@@ -50,8 +50,7 @@ const getObservedSeries = ({ climvarId }) => {
 // For each model, there are usually 2 raster series in the API,
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
 const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
-  const modelList = modelIds.split(",");
-  return PRIORITY_10_MODELS.filter((d) => modelList.includes(d.id)).map((d) => {
+  return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
     const slugs = [
       `${climvarId}_year_${d.id}_historical`,
       `${climvarId}_year_${d.id}_${scenarioId}`,
