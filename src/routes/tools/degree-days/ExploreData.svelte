@@ -34,12 +34,18 @@
     modelsStore,
     datasetStore,
   } from "../_common/stores";
-  import { climvarList, climvarStore } from "./_store";
+  import {
+    climvarList,
+    climvarStore,
+    indicatorsList,
+    indicatorsStore,
+  } from "./_store";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
+  const { indicator } = indicatorsStore;
 
   let isLoading = true;
   let dataByDate;
@@ -49,6 +55,7 @@
   let showChangeLocation = false;
   let showLearnMore = false;
 
+  // async component imports
   let ChangeLocation;
   let DownloadChart;
   let ShareLink;
@@ -69,6 +76,7 @@
   let printContainer;
   let printSkipElements;
 
+  // Q: what should the glossary items be for this tool?
   async function loadLearnMore({
     slugs = [],
     content = "",
@@ -111,7 +119,10 @@
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      ["climate indicator", $climvar.label],
+      // Q: for degree-days shouldn't cdd or hdd be the indicator?
+      //    or shouldn't this technically be "climate variable"?
+      ["climate variable", $climvar.label],
+      ["climate indicator", $indicator],
       ["units", $climvar.units.imperial],
     ];
     printContainer = document.querySelector("#explore");
@@ -146,6 +157,11 @@
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
     console.log("climvar change");
+  }
+
+  function changeIndicator(e) {
+    indicatorsStore.set(e.detail.id);
+    console.log(`indicator changed: ${e.detail.id}`);
   }
 
   function changeLocation(e) {
@@ -312,6 +328,20 @@
   <div slot="settings" class="settings">
     <div class="block">
       <SelectClimvar
+        selectedId="{$indicatorsStore}"
+        items="{indicatorsList}"
+        title="Select Indicator"
+        on:change="{changeIndicator}"
+      />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: ['annual-average-tasmax'],
+          })}"
+      />
+    </div>
+    <div class="block">
+      <SelectClimvar
         selectedId="{$climvarStore}"
         items="{climvarList}"
         on:change="{changeClimvar}"
@@ -319,11 +349,7 @@
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({
-            slugs: [
-              'annual-average-tasmax',
-              'annual-average-tasmin',
-              'annual-average-pr',
-            ],
+            slugs: ['annual-average-tasmax'],
           })}"
       />
     </div>
