@@ -6,9 +6,9 @@
   function onClick(e) {
     const target = e.target;
     target.classList.toggle("show");
-    const key = target.getAttribute("data-value");
+    const id = target.getAttribute("data-value");
     $legendItems = $legendItems.map((d) => {
-      if (d.key === key) {
+      if (d.id === id) {
         d.visible = !d.visible;
       }
       return d;
@@ -67,7 +67,7 @@
       class:show="{item.visible}"
       role="{'button'}"
       tabindex="{0}"
-      data-value="{item.key}"
+      data-value="{item.id}"
       on:click="{onClick}"
     >
       {#if item.mark === "area"}

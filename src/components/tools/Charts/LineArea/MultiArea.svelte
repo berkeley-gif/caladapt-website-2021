@@ -33,6 +33,6 @@
       class="path-area"
       class:show="{showItems[i] ? true : false}"
       d="{path(group.values)}"
-      fill="{colorScale(group.values[0].key)}"></path>
+      fill="{colorScale(group.values[0].id)}"></path>
   {/each}
 </g>

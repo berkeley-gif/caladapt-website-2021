@@ -9,7 +9,7 @@
   const legendItems = getContext("Legend");
 
   $: $legendItems.forEach((d) => {
-    if (d.key === series.key) {
+    if (d.id === series.id) {
       show = d.visible;
     }
   });
@@ -28,7 +28,7 @@
 
 {#if show}
   <path
-    class="{`path-line ${series.key}`}"
+    class="{`path-line ${series.id}`}"
     d="{path(series.values)}"
     stroke="{series.color}"
     fill="none"
