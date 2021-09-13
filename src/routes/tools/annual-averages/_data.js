@@ -162,7 +162,7 @@ export async function getModels(config, params, method = "GET") {
   }
 }
 
-export async function getEnvelope(config, params, method = "GET") {
+export async function getEnsemble(config, params, method = "GET") {
   try {
     const seriesList = getEnsembleSeries(config);
     const promises = seriesList.map((series) =>
