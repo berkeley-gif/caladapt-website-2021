@@ -37,7 +37,6 @@
   import { climvarList, climvarStore } from "./_store";
 
   const { location, boundary } = locationStore;
-  const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
@@ -53,7 +52,7 @@
   let ChangeLocation;
   let DownloadChart;
   let ShareLink;
-  let LearnMore;
+  let LearnMoreModal;
 
   let bookmark;
 
@@ -77,7 +76,7 @@
   }) {
     learnMoreProps = { slugs, content, header };
     showLearnMore = true;
-    LearnMore = (
+    LearnMoreModal = (
       await import(
         "~/components/tools/Partials/LearnMore/LearnMoreModal.svelte"
       )
@@ -123,9 +122,9 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: if ($data) {
-    statsData = $data.filter((d) => d.type !== "area");
-    dataByDate = getDataByDate(flattenData($data));
+  $: if ($dataStore) {
+    statsData = $dataStore.filter((d) => d.type !== "area");
+    dataByDate = getDataByDate(flattenData($dataStore));
     isLoading = false;
   } else {
     statsData = null;
@@ -274,7 +273,7 @@
 
   <div slot="graphic" class="graphic block">
     <LineAreaChart
-      data="{$data}"
+      data="{$dataStore}"
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
@@ -349,7 +348,7 @@
 </Dashboard>
 
 <svelte:component
-  this="{LearnMore}"
+  this="{LearnMoreModal}"
   bind:open="{showLearnMore}"
   {...learnMoreProps}
 />

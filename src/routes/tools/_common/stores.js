@@ -75,20 +75,7 @@ export const locationStore = (() => {
 })();
 
 // Data Store
-export const dataStore = (() => {
-  const store = writable();
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get data() {
-      return derived(store, ($store) => {
-        if (!$store) return null;
-        return $store;
-      });
-    },
-  };
-})();
+export const dataStore = writable(null);
 
 // Datasets store
 export const datasetStore = (() => {

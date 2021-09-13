@@ -142,6 +142,7 @@
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
       dataStore.set([...envelope, ...observed, ...modelsData]);
+      console.log("update", $dataStore);
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
@@ -169,7 +170,6 @@
       .then(() => {
         appReady = true;
         console.log("app ready");
-        update();
       })
       .catch((error) => {
         console.log("init error", error);
