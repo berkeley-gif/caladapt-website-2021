@@ -293,7 +293,7 @@
   <div slot="settings" class="settings">
     <div class="block">
       <SelectClimvar
-        labelText="Select Indicator"
+        title="Select Indicator"
         selectedId="{$indicatorsStore}"
         items="{climIndiList}"
         on:change="{changeIndicator}"
@@ -306,7 +306,7 @@
     </div>
     <div class="block">
       <SelectClimvar
-        selectedId="{$climvarStore}"
+        title="{$climvarStore}"
         items="{climvarList}"
         on:change="{changeClimvar}"
       />
