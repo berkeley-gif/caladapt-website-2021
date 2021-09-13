@@ -5,6 +5,7 @@
   export let selectedId;
   export let items;
   export let addStateBoundary = false;
+  export let title = "AGGREGATE DATA BY BOUNDARY";
 
   const dispatch = createEventDispatcher();
 
@@ -48,7 +49,7 @@
 
 <Select
   class="boundary-select"
-  labelText="AGGREGATE DATA BY BOUNDARY"
+  labelText="{title}"
   selected="{selectedId}"
   on:change="{change}"
 >

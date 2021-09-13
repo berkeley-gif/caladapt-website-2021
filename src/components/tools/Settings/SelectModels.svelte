@@ -1,14 +1,14 @@
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
-  import { MultiSelect, SelectSkeleton } from "carbon-components-svelte";
+  import { createEventDispatcher } from "svelte";
+  import { MultiSelect } from "carbon-components-svelte";
 
   import { debounce } from "../../../helpers/utilities";
 
   export let selectedIds;
   export let items;
+  export let title = "Select Models";
 
   let selectedIdsArr = selectedIds.split(",");
-  let ready = false;
   let invalid = false;
   const dispatch = createEventDispatcher();
   const sortItem = (a, b) => a.order - b.order;
@@ -32,31 +32,25 @@
   }, 1000);
 
   $: feedback = formatSelected(selectedIdsArr);
-
-  onMount(() => {
-    ready = true;
-    dispatch("ready");
-  });
 </script>
 
 <style>
+  .feedback {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
 </style>
 
-{#if ready}
-  <MultiSelect
-    invalid="{invalid}"
-    invalidText="Choose atleast 1 GCM"
-    selectedIds="{selectedIdsArr}"
-    titleText="Select Models"
-    label="Select..."
-    items="{items}"
-    sortItem="{sortItem}"
-    on:select="{changeSelection}"
-  />
-{:else}
-  <SelectSkeleton />
-{/if}
-
-<div class="font-size-sm mt-2">
+<MultiSelect
+  invalid="{invalid}"
+  invalidText="Choose atleast 1 GCM"
+  selectedIds="{selectedIdsArr}"
+  titleText="{title}"
+  label="Select..."
+  items="{items}"
+  sortItem="{sortItem}"
+  on:select="{changeSelection}"
+/>
+<div class="feedback">
   {feedback}
 </div>

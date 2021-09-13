@@ -4,6 +4,7 @@
 
   export let selectedId;
   export let items;
+  export let title = "Select Month";
 
   const dispatch = createEventDispatcher();
 
@@ -30,8 +31,7 @@
 {#if ready}
   <Select
     class="month-select"
-    hideLabel
-    labelText="Month"
+    labelText="{title}"
     selected="{selectedId}"
     on:change="{change}"
   >

@@ -4,7 +4,7 @@
 
   export let selectedId;
   export let items;
-  export let labelText = "Select Climate Variable";
+  export let title = "Select Climate Variable";
 
   const dispatch = createEventDispatcher();
 
@@ -16,7 +16,7 @@
   }
 </script>
 
-<Select labelText="{labelText}" selected="{selectedId}" on:change="{change}">
+<Select labelText="{title}" selected="{selectedId}" on:change="{change}">
   {#each items as opt}
     <SelectItem value="{opt.id}" text="{opt.label}" />
   {/each}

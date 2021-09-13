@@ -11,6 +11,7 @@
   export let items;
   export let selected;
   export let units;
+  export let title = "Select Threshold";
 
   $: selected, dispatch("change", selected);
 
@@ -53,7 +54,7 @@
 </style>
 
 {#if ready}
-  <RadioButtonGroup orientation="vertical" bind:selected>
+  <RadioButtonGroup legendText="{title}" orientation="vertical" bind:selected>
     {#each items as threshold (threshold.id)}
       <div class="flex-center">
         <RadioButton
