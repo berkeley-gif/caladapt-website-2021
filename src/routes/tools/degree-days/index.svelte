@@ -1,6 +1,7 @@
 <script context="module">
   import resourcesList from "content/resources/data";
   import { INITIAL_CONFIG } from "../_common/constants";
+  import { TOOL_SLUG } from "./_constants";
 
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
@@ -11,7 +12,7 @@
     const toolsList = (await (await this.fetch("tools.json")).json()).tools;
 
     // Filter metadata for current tool
-    const tool = toolsList.find(({ slug }) => slug === "annual-averages");
+    const tool = toolsList.find(({ slug }) => slug === TOOL_SLUG);
     const relatedTools = toolsList
       .filter((d) => tool.related.includes(d.slug))
       .map((d) => ({ ...d, category: "caladapt" }));
