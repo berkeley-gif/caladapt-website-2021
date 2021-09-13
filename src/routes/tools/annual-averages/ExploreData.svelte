@@ -4,17 +4,23 @@
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
-  import { modelList, scenarioList, boundaryList } from "../_common/_lists";
-  import { climvarList } from "./_helpers";
-  import { flattenData, getDataByDate, formatDataForExport } from "./_data";
+  import {
+    PRIORITY_10_MODELS,
+    DEFAULT_SCENARIOS,
+    DEFAULT_BOUNDARIES,
+  } from "../_common/_constants";
+  import {
+    flattenData,
+    getDataByDate,
+    formatDataForExport,
+  } from "../_common/_helpers";
 
   // Components
-  import { Dashboard } from "~/components/tools/Partials";
+  import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
   import {
     SelectScenario,
     SelectModels,
     SelectClimvar,
-    ShowDefinition,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
@@ -27,8 +33,8 @@
     dataStore,
     modelsStore,
     datasetStore,
-  } from "../_common/_store";
-  import { climvarStore } from "./_store";
+  } from "../_common/_stores";
+  import { climvarList, climvarStore } from "./_store";
 
   const { location, boundary } = locationStore;
   const { data } = dataStore;
@@ -42,17 +48,41 @@
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
+  let showLearnMore = false;
 
   let ChangeLocation;
   let DownloadChart;
   let ShareLink;
+  let LearnMore;
 
   let bookmark;
+
+  let learnMoreProps = {};
+  let chartDescription = `<p>The colored lines on this visualization represent 
+    a timeseries of annual average values from individual downscaled GCMs. 
+    The gray shaded region in the background represents the range of projections 
+    from all 32 downscaled GCMs. The historical observed data is represented by 
+    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
+    corresponding timeseries.</p>`;
 
   let metadata;
   let csvData;
   let printContainer;
   let printSkipElements;
+
+  async function loadLearnMore({
+    slugs = [],
+    content = "",
+    header = "Glossary",
+  }) {
+    learnMoreProps = { slugs, content, header };
+    showLearnMore = true;
+    LearnMore = (
+      await import(
+        "~/components/tools/Partials/LearnMore/LearnMoreModal.svelte"
+      )
+    ).default;
+  }
 
   async function loadShare() {
     if ($boundary.id === "custom") {
@@ -260,11 +290,13 @@
       </p>
     </div>
     <div class="chart-download margin--v-8">
-      <ShowDefinition
-        topics="{['chart']}"
-        title="About the Chart"
-        cta="Explain Chart"
-        on:define
+      <LearnMoreButton
+        cta="{'Explain Chart'}"
+        on:click="{() =>
+          loadLearnMore({
+            content: chartDescription,
+            header: 'About this Chart',
+          })}"
       />
       <div>
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
@@ -284,42 +316,43 @@
         items="{climvarList}"
         on:change="{changeClimvar}"
       />
-      <ShowDefinition
-        on:define
-        topics="{[
-          'annual-average-tasmax',
-          'annual-average-tasmin',
-          'annual-average-pr',
-        ]}"
-        title="Climate Variables"
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: [
+              'annual-average-tasmax',
+              'annual-average-tasmin',
+              'annual-average-pr',
+            ],
+          })}"
       />
     </div>
     <div class="block">
       <SelectScenario
         selectedId="{$scenarioStore}"
-        items="{scenarioList}"
+        items="{DEFAULT_SCENARIOS}"
         on:change="{changeScenario}"
       />
-      <ShowDefinition
-        on:define
-        topics="{['climate-scenarios']}"
-        title="RCP Scenarios"
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
       />
     </div>
     <div class="block">
       <SelectModels
         selectedIds="{$modelsStore}"
-        items="{modelList}"
+        items="{PRIORITY_10_MODELS}"
         on:change="{changeModels}"
       />
-      <ShowDefinition
-        on:define
-        topics="{['gcms']}"
-        title="Global Climate Models (GCMs)"
-      />
+      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
     </div>
   </div>
 </Dashboard>
+
+<svelte:component
+  this="{LearnMore}"
+  bind:open="{showLearnMore}"
+  {...learnMoreProps}
+/>
 
 <svelte:component
   this="{ShareLink}"
@@ -332,7 +365,7 @@
   bind:open="{showChangeLocation}"
   location="{$location}"
   boundary="{$boundary}"
-  boundaryList="{boundaryList}"
+  boundaryList="{DEFAULT_BOUNDARIES}"
   on:change="{changeLocation}"
 />
 

@@ -4,6 +4,7 @@
   // the data we need to render the page. It only runs once
   // during export.
   import resourcesList from "../../../../content/resources/data";
+  import { INITIAL_CONFIG } from "../_common/_constants";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -21,13 +22,6 @@
     const externalResources = resourcesList
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
-
-    // Get glossary items
-    const glossary = await this.fetch("help/glossary.json")
-      .then((r) => r.json())
-      .then((json) => {
-        return json.data;
-      });
 
     // Get help categories
     const help = await this.fetch("help.json")
@@ -55,18 +49,12 @@
       };
     } else {
       initialConfig = {
-        boundaryId: "locagrid",
-        scenarioId: "rcp45",
-        climvarId: "tasmax",
-        modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
-        lat: 38.58,
-        lng: -121.46,
+        ...INITIAL_CONFIG,
       };
     }
 
     return {
       initialConfig,
-      glossary,
       tool,
       relatedTools,
       externalResources,
@@ -77,7 +65,7 @@
 
 <script>
   import { onMount } from "svelte";
-  import { Modal, Loading } from "carbon-components-svelte";
+  import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
@@ -102,45 +90,24 @@
     locationStore,
     dataStore,
     datasetStore,
-  } from "../_common/_store";
-  import { queryParams, climvarStore } from "./_store";
-  import { getObserved, getModels, getEnvelope } from "./_data";
+  } from "../_common/_stores";
+  import { climvarStore } from "./_store";
+  import { getObserved, getModels, getEnvelope, getQueryParams } from "./_data";
 
   export let initialConfig;
-  export let glossary;
   export let tool;
   export let relatedTools;
   export let externalResources;
   export let helpItems;
 
   // Derived stores
-  const { location } = locationStore;
+  const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { models } = modelsStore;
 
   // Local props
-  let showInfo = false;
-  let definitionText;
-  let definitionTitle;
   let appReady = false;
-
-  // Add tool specific content to glossary
-  glossary = [
-    ...glossary,
-    {
-      slug: "annual-averages-chart",
-      metadata: {
-        title: "Annual Averages",
-      },
-      html: `
-        <div>
-          <p>The colored lines on this visualization represent a timeseries of annual average values from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The historical observed data is represented by a gray line from 1950-2006.</p>
-          <p>Click on any of the legend keys to highlight corresponding timeseries.</p>
-        </div>
-      `,
-    },
-  ];
 
   // Monitor sections as they enter & leave viewport
   let currentView;
@@ -156,10 +123,6 @@
   $: resources = [...externalResources, ...relatedTools];
   $: $climvar, $scenario, $models, $location, update();
 
-  function updateDataset(e) {
-    datasetStore.set(e.detail);
-  }
-
   async function update() {
     if (!appReady) return;
     if ($models.length === 0) return;
@@ -170,34 +133,20 @@
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
       };
-      const { params, method } = $queryParams;
+      const { params, method } = getQueryParams({
+        location: $location,
+        boundary: $boundary,
+        imperial: true,
+      });
       const envelope = await getEnvelope(config, params, method);
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
-      dataStore.set([envelope, observed, ...modelsData]);
+      dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
       notifier.error("Error", err, 2000);
     }
-  }
-
-  // Populates an info modal when user clicks Learn More
-  function showDefinition(e) {
-    const { topics, title } = e.detail;
-    const items = glossary.filter((d) => topics.includes(d.slug));
-    definitionText = items
-      .map((item) => {
-        return `
-        <div>
-          <h5>${item.metadata.title}</h5>
-          ${item.html}
-        </div>
-        `;
-      })
-      .join("<br/>");
-    definitionTitle = title;
-    showInfo = true;
   }
 
   async function initApp(config) {
@@ -255,7 +204,7 @@
 
 <div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData on:define="{showDefinition}" />
+    <ExploreData />
   {:else}
     <Loading />
   {/if}
@@ -263,7 +212,10 @@
 
 <div class="bx--grid">
   <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
-    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+    <About
+      datasets="{datasets}"
+      on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
+    >
       <div slot="description">
         <p>
           Overall temperatures are projected to rise substantially throughout
@@ -317,17 +269,5 @@
 </div>
 
 <div class="spacing--v-96"></div>
-
-<Modal
-  id="definition"
-  size="sm"
-  passiveModal
-  bind:open="{showInfo}"
-  modalHeading="{definitionTitle}"
-  on:open
-  on:close
->
-  <div>{@html definitionText}</div>
-</Modal>
 
 <NotificationDisplay />
