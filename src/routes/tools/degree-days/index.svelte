@@ -1,42 +1,35 @@
 <script context="module">
+  import resourcesList from "content/resources/data";
+  import { INITIAL_CONFIG } from "../_common/constants";
+
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
-  import resourcesList from "../../../../content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/constants";
   export async function preload({ query }) {
     // Get tools metadata
-    const toolsList = await this.fetch("tools.json")
-      .then((r) => r.json())
-      .then((data) => {
-        const { tools } = data;
-        return tools;
-      });
+    const toolsList = (await (await this.fetch("tools.json")).json()).tools;
 
     // Filter metadata for current tool
-    const tool = toolsList.find((d) => d.slug === "annual-averages");
+    const tool = toolsList.find(({ slug }) => slug === "annual-averages");
     const relatedTools = toolsList
       .filter((d) => tool.related.includes(d.slug))
       .map((d) => ({ ...d, category: "caladapt" }));
+
     const externalResources = resourcesList
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
 
     // Get help categories
-    const help = await this.fetch("help.json")
-      .then((r) => r.json())
-      .then((json) => {
-        return json;
-      });
-    const helpItems = help.filter((d) =>
-      ["get-started", "faqs"].includes(d.slug)
+    const help = await (await this.fetch("help.json")).json();
+    const helpItems = help.filter(({ slug }) =>
+      ["get-started", "faqs"].includes(slug)
     );
 
     // Set intitial config for tool
     let initialConfig;
 
-    if (Object.keys(query).length > 0) {
+    if (Object.keys(query).length) {
       // TODO: validate bookmark
       const { boundary, climvar, scenario, models, lat, lng } = query;
       initialConfig = {
@@ -123,8 +116,7 @@
   $: $climvar, $scenario, $modelsStore, $location, update();
 
   async function update() {
-    if (!appReady) return;
-    if ($modelsStore.length === 0) return;
+    if (!appReady || !$modelsStore.length) return;
     try {
       dataStore.set(null);
       const config = {
@@ -141,16 +133,22 @@
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
       dataStore.set([...envelope, ...observed, ...modelsData]);
-    } catch (err) {
+    } catch (error) {
       // TODO: notify user of error
-      console.log("updateData", err);
-      notifier.error("Error", err, 2000);
+      console.log("updateData", error);
+      notifier.error("Error", error, 2000);
     }
   }
 
-  async function initApp(config) {
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } =
-      config;
+  async function initApp({
+    lat,
+    lng,
+    boundaryId,
+    scenarioId,
+    climvarId,
+    modelIds,
+    imperial,
+  }) {
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
@@ -192,8 +190,9 @@
 <Header iconPaths="{tool.icons}" title="{tool.title}">
   <div slot="description">
     <p class="lead">
-      Explore projected changes in annual average Maximum Temperature, Minimum
-      Temperature and Precipitation through end of this century for California.
+      Explore projected changes in Heating Degree Days and Cooling Degree Days,
+      which are a common proxy for energy needed to heat and cool buildings,
+      respectively.
     </p>
   </div>
 </Header>
@@ -215,44 +214,7 @@
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
       <div slot="description">
-        <p>
-          Overall temperatures are projected to rise substantially throughout
-          this century. These projections differ depending on the time of year
-          and the type of measurement (highs vs. lows), all of which have
-          different potential effects to the state's ecosystem health,
-          agricultural production, water use and availability, and energy
-          demand. On average, the projections show little change in total annual
-          precipitation in California. Furthermore, among several models,
-          precipitation projections do not show a consistent trend during the
-          next century. The Mediterranean seasonal precipitation pattern is
-          expected to continue, with most precipitation falling during winter
-          from North Pacific storms. However, even modest changes would have a
-          significant impact because California ecosystems are conditioned to
-          historical precipitation levels and water resources are nearly fully
-          utilized.
-        </p>
-        <p>
-          With this tool you can explore projections of annually averaged
-          maximum temperature, minimum temperature and precipitation. These
-          climate projections have been downscaled from global climate models
-          from the <a href="https://pcmdi.llnl.gov/mips/cmip5/" target="_blank"
-            >CMIP5</a
-          >
-          archive, using the
-          <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
-            >Localized Constructed Analogs</a
-          > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
-          LOCA is a statistical downscaling technique that uses past history to add
-          improved fine-scale detail to global climate models.
-        </p>
-        <p>
-          On average, the projections show little change in total annual
-          precipitation in California. Furthermore, among several models,
-          precipitation projections do not show a consistent trend during the
-          next century. However, even modest changes would have a significant
-          impact because California ecosystems are conditioned to historical
-          precipitation levels and water resources are nearly fully utilized.
-        </p>
+        <p>TO DO...</p>
       </div>
     </About>
   </div>
