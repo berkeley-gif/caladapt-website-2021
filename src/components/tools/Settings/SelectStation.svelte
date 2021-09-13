@@ -8,7 +8,7 @@
 
   export let selectedId;
   export let items;
-  export let title = "SELECT STATION";
+  export let title = "Select Station";
 
   const dispatch = createEventDispatcher();
 

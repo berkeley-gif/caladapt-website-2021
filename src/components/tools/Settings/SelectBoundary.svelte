@@ -5,7 +5,7 @@
   export let selectedId;
   export let items;
   export let addStateBoundary = false;
-  export let title = "AGGREGATE DATA BY BOUNDARY";
+  export let title = "Aggregate Data By Boundary";
 
   const dispatch = createEventDispatcher();
 
