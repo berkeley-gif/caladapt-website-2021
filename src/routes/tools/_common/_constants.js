@@ -25,7 +25,7 @@ export const DEFAULT_SCENARIOS = scenarios.filter((d) =>
   ["rcp45", "rcp85"].includes(d.id)
 );
 
-export const ALL_BOUNDARIES = boundaries
+export const DEFAULT_BOUNDARIES = boundaries
   .filter((d) => d.metadata.group === "Boundaries")
   .map((d) => {
     let label;
@@ -37,7 +37,7 @@ export const ALL_BOUNDARIES = boundaries
     return { ...d, label };
   });
 
-export const SMALL_BOUNDARIES = boundaries
+export const SMALL_SCALE_BOUNDARIES = boundaries
   .filter((d) =>
     [
       "locagrid",
@@ -88,13 +88,13 @@ export const PRIORITY_4_MODELS = models
 
 export const ENSEMBLES = [
   {
-    id: "rcp45",
+    id: "rcp45_range",
     label: "Modeled RCP 4.5 Range",
     color: "rgba(218, 222, 225, 1)",
     org: "Geospatial Innovation Facility",
   },
   {
-    id: "rcp85",
+    id: "rcp85_range",
     label: "Modeled RCP 8.5 Range",
     color: "rgba(218, 222, 225, 1)",
     org: "Geospatial Innovation Facility",
