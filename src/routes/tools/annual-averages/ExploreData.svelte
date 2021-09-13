@@ -8,12 +8,12 @@
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
     DEFAULT_BOUNDARIES,
-  } from "../_common/_constants";
+  } from "../_common/constants";
   import {
     flattenData,
     getDataByDate,
     formatDataForExport,
-  } from "../_common/_helpers";
+  } from "../_common/helpers";
 
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
@@ -33,7 +33,7 @@
     dataStore,
     modelsStore,
     datasetStore,
-  } from "../_common/_stores";
+  } from "../_common/stores";
   import { climvarList, climvarStore } from "./_store";
 
   const { location, boundary } = locationStore;

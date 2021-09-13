@@ -4,7 +4,7 @@
   // the data we need to render the page. It only runs once
   // during export.
   import resourcesList from "../../../../content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/_constants";
+  import { INITIAL_CONFIG } from "../_common/constants";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -90,7 +90,7 @@
     locationStore,
     dataStore,
     datasetStore,
-  } from "../_common/_stores";
+  } from "../_common/stores";
   import { climvarStore } from "./_store";
   import { getObserved, getModels, getEnvelope, getQueryParams } from "./_data";
 
