@@ -338,14 +338,14 @@ $gcm-MIROC5: rgba(148, 103, 189, 1);
   --p-default-max-width: #{$p-default-max-width};
   --p-lead-default-max-width: #{$p-lead-default-max-width};
 
-  --gcm-ACCESS1-0: $gcm-ACCESS1-0;
-  --gcm-CanESM2: $gcm-CanESM2;
-  --gcm-CCSM4: $gcm-CCSM4;
-  --gcm-CESM1-BGC: $gcm-CESM1-BGC;
-  --gcm-CMCC-CMS: $gcm-CMCC-CMS;
-  --gcm-CNRM-CM5: $gcm-CNRM-CM5;
-  --gcm-GFDL-CM3: $gcm-GFDL-CM3;
-  --gcm-HadGEM2-CC: $gcm-HadGEM2-CC;
-  --gcm-HadGEM2-ES: $gcm-HadGEM2-ES;
-  --gcm-MIROC5: $gcm-MIROC5;
+  --gcm-ACCESS1-0: #{$gcm-ACCESS1-0};
+  --gcm-CanESM2: #{$gcm-CanESM2};
+  --gcm-CCSM4: #{$gcm-CCSM4};
+  --gcm-CESM1-BGC: #{$gcm-CESM1-BGC};
+  --gcm-CMCC-CMS: #{$gcm-CMCC-CMS};
+  --gcm-CNRM-CM5: #{$gcm-CNRM-CM5};
+  --gcm-GFDL-CM3: #{$gcm-GFDL-CM3};
+  --gcm-HadGEM2-CC: #{$gcm-HadGEM2-CC};
+  --gcm-HadGEM2-ES: #{$gcm-HadGEM2-ES};
+  --gcm-MIROC5: #{$gcm-MIROC5};
 }
