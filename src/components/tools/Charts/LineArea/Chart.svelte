@@ -63,7 +63,7 @@
     legendItems.set(
       data.map((series) => {
         return {
-          key: series.key,
+          id: series.id,
           label: series.label,
           color: series.color,
           visible: series.visible,
@@ -73,12 +73,12 @@
     );
     setContext("Legend", legendItems);
 
-    lineData = data.filter((d) => d.type === "line");
-    areaData = data.filter((d) => d.type === "area");
+    lineData = data.filter((d) => d.mark === "line");
+    areaData = data.filter((d) => d.mark === "area");
   }
 
   function getTooltipLabel(d) {
-    const item = data.find((series) => series.key === d);
+    const item = data.find((series) => series.id === d);
     if (item) {
       return item.label;
     } else {
@@ -87,7 +87,7 @@
   }
 
   function getTooltipColor(d) {
-    const item = data.find((series) => series.key === d);
+    const item = data.find((series) => series.id === d);
     if (item) {
       return item.color;
     } else {
