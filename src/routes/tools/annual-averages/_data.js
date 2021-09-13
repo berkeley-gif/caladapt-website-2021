@@ -9,8 +9,8 @@ import {
   transformResponse,
   isLeapYear,
 } from "~/helpers/utilities";
-import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/_constants";
-import { buildEnvelope } from "../_common/_helpers";
+import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
+import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
 
@@ -190,30 +190,26 @@ export async function getEnvelope(config, params, method = "GET") {
  * @return {string} method
  */
 export function getQueryParams({ location, boundary, imperial = true }) {
-  const params = {};
+  const params = { imperial };
   let method;
   switch (boundary.id) {
     case "locagrid":
       params.g = `Point(${location.center[0]} ${location.center[1]})`;
-      params.imperial = imperial;
       method = "GET";
       return { params, method };
     case "ca":
       params.ref = "/media/ca.json";
       params.stat = "mean";
-      params.imperial = imperial;
       method = "GET";
       return { params, method };
     case "custom":
       params.g = JSON.stringify(location.geometry);
       params.stat = "mean";
-      params.imperial = imperial;
       method = "POST";
       return { params, method };
     default:
       params.ref = `/api/${boundary.id}/${location.id}/`;
       params.stat = "mean";
-      params.imperial = imperial;
       method = "GET";
       return { params, method };
   }
