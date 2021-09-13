@@ -140,6 +140,8 @@
     }
     console.log("location change");
   }
+
+  $: console.log(climvarList);
 </script>
 
 <style lang="scss">

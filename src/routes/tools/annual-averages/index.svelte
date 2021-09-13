@@ -5,6 +5,7 @@
   // during export.
   import resourcesList from "../../../../content/resources/data";
   import { INITIAL_CONFIG } from "../_common/constants";
+
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")

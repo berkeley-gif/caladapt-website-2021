@@ -10,12 +10,34 @@ import {
   pipe,
   isLeapYear,
 } from "~/helpers/utilities";
+import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
+import { buildEnvelope } from "../_common/helpers";
 import { seriesList } from "./_helpers";
 
 const { apiEndpoint } = config.env.production;
 
-const fetchTimeseries = async ({ slug, params, method }) => {
-  const url = `${apiEndpoint}/series/${slug}/events/`;
+const getObservedSeries = ({ climvarId }) =>
+  OBSERVED.map(({ id, ...rest }) => ({
+    ...rest,
+    slugs: [`${climvarId}_year_${id}`],
+    mark: "line",
+    visible: true,
+  }));
+
+const getModelSeries = ({ climvarId, scenarioId, modelIds }) =>
+  PRIORITY_10_MODELS.filter(({ id }) => modelIds.includes(id)).map(
+    ({ id, ...rest }) => ({
+      ...rest,
+      slugs: [`${climvarId}_year_${id}_`, `${climvarId}_year_${id}_`],
+      mark: "line",
+      visible: true,
+    })
+  );
+
+const fetchTimeseries = async ({ slug, params, method, indicatorId }) => {
+  const { indicator } = params;
+  console.log(indicator);
+  const url = `${apiEndpoint}/series/${slug}/${indicatorId}/`;
   const [response, error] = await handleXHR(fetchData(url, params, method));
   if (error) {
     throw new Error(error.message);
@@ -28,22 +50,22 @@ const addSeriesInfo = (series) => {
   return { ...series, ...item, visible: true };
 };
 
-const buildEnvelope = (_data) => {
-  const dataMap = rollup(
-    _data,
-    (v) => v.map((i) => i.value),
-    (d) => d.date.getFullYear()
-  );
-  const dataArr = Array.from(dataMap);
-  return dataArr.map(([key, value]) => {
-    const sortedArr = sort(value);
-    return {
-      date: new Date(key, 11, 31),
-      min: sortedArr[0],
-      max: sortedArr[1],
-    };
-  });
-};
+// const buildEnvelope = (_data) => {
+//   const dataMap = rollup(
+//     _data,
+//     (v) => v.map((i) => i.value),
+//     (d) => d.date.getFullYear()
+//   );
+//   const dataArr = Array.from(dataMap);
+//   return dataArr.map(([key, value]) => {
+//     const sortedArr = sort(value);
+//     return {
+//       date: new Date(key, 11, 31),
+//       min: sortedArr[0],
+//       max: sortedArr[1],
+//     };
+//   });
+// };
 
 // Converts precipitation data from inches/day to inches/year
 const convertToAnnual = (values) => {
@@ -120,16 +142,21 @@ export async function getModels(config, params, method) {
 }
 
 export async function getEnvelope(config, params, method) {
-  const { climvarId, scenarioId } = config;
+  console.log(config, params);
+  const { climvarId, scenarioId, indicatorId, modelIds } = config;
   const slugs = [
-    `${climvarId}_year_models-min_historical`,
-    `${climvarId}_year_models-min_${scenarioId}`,
-    `${climvarId}_year_models-max_historical`,
-    `${climvarId}_year_models-max_${scenarioId}`,
+    // `${climvarId}_year_models-min_historical`,
+    `${climvarId}_day_${scenarioId}`,
+    "tasmax_day_livneh",
+    // `${climvarId}_year_models-max_historical`,
+    // `${climvarId}_year_models-max_${scenarioId}`,
   ];
-  const promises = slugs.map((slug) => {
-    return pipe(fetchTimeseries, transformResponse)({ slug, params, method });
-  });
+  const promises = slugs.map((slug) =>
+    pipe(
+      fetchTimeseries,
+      transformResponse
+    )({ slug, params, method, indicatorId })
+  );
   return Promise.all(promises)
     .then((results) => {
       let arr;

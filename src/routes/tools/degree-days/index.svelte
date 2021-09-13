@@ -1,5 +1,6 @@
 <script context="module">
   import resourcesList from "content/resources/data";
+  import { INITIAL_CONFIG } from "../_common/constants";
 
   export async function preload({ query }) {
     const toolsList = (await (await this.fetch("tools.json")).json()).tools;
@@ -39,21 +40,14 @@
         scenarioId: scenario,
         climvarId: climvar,
         indicatorId: indicator,
-        modelIds: models,
+        modelIds: models.split(","),
         imperial: imperial === "true" ? true : false,
         lat: +lat,
         lng: +lng,
       };
     } else {
       initialConfig = {
-        boundaryId: "locagrid",
-        scenarioId: "rcp45",
-        climvarId: "tasmax",
-        indicatorId: "cdd",
-        modelIds: "HadGEM2-ES,CNRM-CM5",
-        imperial: true,
-        lat: 38.58,
-        lng: -121.46,
+        ...INITIAL_CONFIG,
       };
     }
 
@@ -89,16 +83,14 @@
 
   // Store
   import {
-    climvarStore,
     scenarioStore,
     modelsStore,
     unitsStore,
     locationStore,
     dataStore,
-    queryParams,
     datasetStore,
-    indicatorsStore,
-  } from "./_store";
+  } from "../_common/stores";
+  import { climvarStore, queryParams, indicatorsStore } from "./_store";
   import { getObserved, getModels, getEnvelope } from "./_data";
 
   export let initialConfig;

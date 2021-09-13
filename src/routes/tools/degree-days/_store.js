@@ -152,38 +152,38 @@ export const datasetStore = (() => {
 
 // DERIVED STORES
 // Query params store
-export const queryParams = derived(
-  // Question: should indicators (cdd/hdd) go here?
-  [unitsStore, locationStore, indicatorsStore],
-  ([$unitsStore, $locationStore, $indicatorsStore]) => {
-    const { boundaryId, location } = $locationStore;
-    const { imperial } = $unitsStore;
-    const { indicator } = $indicatorsStore;
-    const params = {
-      imperial,
-      indicator,
-    };
-    let method = "GET";
-    switch (boundaryId) {
-      case "locagrid":
-        params.g = `Point(${location.center[0]} ${location.center[1]})`;
-        break;
-      case "ca":
-        params.ref = "/media/ca.json";
-        params.stat = "mean";
-        break;
-      case "custom":
-        params.g = JSON.stringify(location.geometry);
-        params.stat = "mean";
-        method = "POST";
-        break;
-      default:
-        params.ref = `/api/${boundaryId}/${location.id}/`;
-        params.stat = "mean";
-    }
-    return { params, method };
-  }
-);
+// export const queryParams = derived(
+//   // Question: should indicators (cdd/hdd) go here?
+//   [unitsStore, locationStore, indicatorsStore],
+//   ([$unitsStore, $locationStore, $indicatorsStore]) => {
+//     const { boundaryId, location } = $locationStore;
+//     const { imperial } = $unitsStore;
+//     const { indicator } = $indicatorsStore;
+//     const params = {
+//       imperial,
+//       indicator,
+//     };
+//     let method = "GET";
+//     switch (boundaryId) {
+//       case "locagrid":
+//         params.g = `Point(${location.center[0]} ${location.center[1]})`;
+//         break;
+//       case "ca":
+//         params.ref = "/media/ca.json";
+//         params.stat = "mean";
+//         break;
+//       case "custom":
+//         params.g = JSON.stringify(location.geometry);
+//         params.stat = "mean";
+//         method = "POST";
+//         break;
+//       default:
+//         params.ref = `/api/${boundaryId}/${location.id}/`;
+//         params.stat = "mean";
+//     }
+//     return { params, method };
+//   }
+// );
 
 // Bookmark store
 export const bookmark = derived(
