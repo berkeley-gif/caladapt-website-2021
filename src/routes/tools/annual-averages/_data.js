@@ -40,8 +40,7 @@ const convertToAnnual = (values) => {
  */
 
 // The observed data is usually a single raster series, so only 1 slug
-const getObservedSeries = (config) => {
-  const { climvarId } = config;
+const getObservedSeries = ({ climvarId }) => {
   return OBSERVED.map((d) => {
     const slugs = [`${climvarId}_year_${d.id}`];
     return { ...d, slugs, mark: "line", visible: true };
@@ -50,8 +49,7 @@ const getObservedSeries = (config) => {
 
 // For each model, there are usually 2 raster series in the API,
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
-const getModelSeries = (config) => {
-  const { climvarId, scenarioId, modelIds } = config;
+const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
   const modelList = modelIds.split(",");
   return PRIORITY_10_MODELS.filter((d) => modelList.includes(d.id)).map((d) => {
     const slugs = [
@@ -64,8 +62,7 @@ const getModelSeries = (config) => {
 
 // The ensemble has to be assembled from the max and min of 10/all models
 // Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = (config) => {
-  const { climvarId, scenarioId } = config;
+const getEnsembleSeries = ({ climvarId, scenarioId }) => {
   return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
     const slugs = [
       `${climvarId}_year_models-min_historical`,
