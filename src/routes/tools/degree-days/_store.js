@@ -1,5 +1,9 @@
 import { writable, derived } from "svelte/store";
 import climvars from "~/helpers/climate-variables";
+import {
+  DEFAULT_THRESHOLD_DEGREES,
+  DEFAULT_FREQUENCY_CODE,
+} from "./_constants";
 
 // List of climvars used in Degree Days Tool
 export const climvarList = climvars
@@ -40,3 +44,7 @@ export const indicatorsStore = (() => {
     },
   };
 })();
+
+export const thresholdStore = writable(DEFAULT_THRESHOLD_DEGREES);
+
+export const frequencyStore = writable(DEFAULT_FREQUENCY_CODE);
