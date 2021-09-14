@@ -235,7 +235,70 @@
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
       <div slot="description">
-        <p>TO DO...</p>
+        <p>
+          With this tool, you can explore how Cooling Degree Days (CDD) and
+          Heating Degree Days (HDD), which are proxies for energy used to cool
+          and heat buildings, are expected to change under different emissions
+          scenarios and climate models. You can customize the metric for CDDs
+          and HDDs by adjusting the baseline temperature as well as selecting
+          the entire year or a specific portion of the year for inquiry.
+        </p>
+        <p>
+          The underlying data are derived from daily climate projections that
+          have been downscaled from global climate models from
+
+          <!-- TODO: this link is currently broken -->
+          <a
+            href="http://cmip-pcmdi.llnl.gov/cmip5/data_portal.html"
+            target="_blank">CMIP5</a
+          >
+          archive, using the
+          <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
+            >Localized Constructed</a
+          >
+          (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
+          LOCA is a statistical downscaling technique that uses past history to add
+          improved fine-scale detail to global climate models.
+        </p>
+        <p>
+          CDDs and HDDs are often used by utilities and other energy sector
+          planners to understand energy demand for cooling and heating. As
+          California’s climate changes, historical observed climate is becoming
+          an increasingly poor proxy for future energy demand for cooling and
+          heating. For example, an increase in the number and magnitude of hot
+          days is expected to increase demand for air conditioning.
+        </p>
+
+        <!-- Q: should this live in Glossary now? -->
+        <h3>What is a Cooling Degree Day?</h3>
+        <p>
+          A Cooling Degree Day (CDD) is defined as the number of degrees by
+          which a daily average temperature exceeds a reference temperature. The
+          reference temperature is typically 65 degrees Fahrenheit, although
+          different utilities and planning entities sometimes use different
+          reference temperatures. The reference temperature loosely represents
+          an average daily temperature below which space cooling (e.g., air
+          conditioning) is not needed. The average temperature is represented by
+          the average of the maximum and minimum daily temperature. CDDs can be
+          summed over the entire year or over a portion of the year (e.g., the
+          month of July) as a rough indicator of cooling energy over that
+          period.
+        </p>
+
+        <!-- Q: should this live in Glossary now? -->
+        <h3>What is a Heating Degree Day?</h3>
+        <p>
+          A Heating Degree Day (HDD) is defined as the number of degrees by
+          which a daily average temperature is below a reference temperature.
+          The reference temperature is typically 65 degrees Fahrenheit, although
+          different utilities and planning entities sometimes use different
+          reference temperatures. The reference temperature loosely represents
+          an average daily temperature above which space heating is not needed.
+          The average temperature is represented by the average of the maximum
+          and minimum daily temperature. HDDs can be summed over the entire year
+          or over a portion of the year (e.g., the month of February) as a rough
+          indicator of heating energy over that period.
+        </p>
       </div>
     </About>
   </div>
