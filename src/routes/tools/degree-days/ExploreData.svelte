@@ -21,6 +21,7 @@
     SelectScenario,
     SelectModels,
     SelectClimvar,
+    SelectThresholdNumeric,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
@@ -39,6 +40,7 @@
     climvarStore,
     indicatorsList,
     indicatorsStore,
+    thresholdStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -173,6 +175,11 @@
       locationStore.updateLocation(e.detail.location);
     }
     console.log("location change");
+  }
+
+  function changeThreshold(e) {
+    thresholdStore.set(e.detail);
+    console.log(e.detail);
   }
 </script>
 
@@ -340,6 +347,8 @@
           })}"
       />
     </div>
+
+    <!-- Q: remove this because there's only one variable? -->
     <div class="block">
       <SelectClimvar
         selectedId="{$climvarStore}"
@@ -353,6 +362,7 @@
           })}"
       />
     </div>
+
     <div class="block">
       <SelectScenario
         selectedId="{$scenarioStore}"
@@ -363,6 +373,7 @@
         on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
       />
     </div>
+
     <div class="block">
       <SelectModels
         selectedIds="{$modelsStore}"
@@ -370,6 +381,17 @@
         on:change="{changeModels}"
       />
       <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
+    </div>
+
+    <div class="block">
+      <SelectThresholdNumeric
+        title="Set Threshold"
+        value="{$thresholdStore}"
+        on:change="{changeThreshold}"
+      />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['annual-average-tasmax'] })}"
+      />
     </div>
   </div>
 </Dashboard>
