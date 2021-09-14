@@ -85,7 +85,7 @@
     dataStore,
     datasetStore,
   } from "../_common/stores";
-  import { climvarStore } from "./_store";
+  import { climvarStore, indicatorsStore } from "./_store";
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
 
   export let initialConfig;
@@ -98,6 +98,12 @@
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
+
+  // TODO: UI controls for freq & thresh
+  const extraModelParams = {
+    freq: "A",
+    thresh: 65,
+  };
 
   // Local props
   let appReady = false;
@@ -114,7 +120,7 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $modelsStore, $location, update();
+  $: $climvar, $scenario, $modelsStore, $location, $indicatorsStore, update();
 
   async function update() {
     if (!appReady || !$modelsStore.length) return;
@@ -124,15 +130,25 @@
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
+        indicatorId: $indicatorsStore,
       };
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
       });
+
       const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(config, params, method);
-      const modelsData = await getModels(config, params, method);
+      const modelsData = await getModels(
+        config,
+        { ...params, ...extraModelParams },
+        method
+      );
+      console.log(envelope);
+      console.log(observed);
+      console.log(modelsData);
+
       dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (error) {
       // TODO: notify user of error
