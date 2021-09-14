@@ -60,22 +60,19 @@ const getModelSeries = ({ climvarId, scenarioId, modelIds, indicatorId }) => {
 };
 
 // The ensemble has to be assembled from the max and min of 10/all models
-// Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = ({ climvarId, scenarioId }) => {
+const getEnsembleSeries = ({ scenarioId, indicatorId }) => {
   return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
     const slugs = [
-      `${climvarId}_year_models-min_historical`,
-      `${climvarId}_year_models-min_${scenarioId}`,
-      `${climvarId}_year_models-max_historical`,
-      `${climvarId}_year_models-max_${scenarioId}`,
+      `${indicatorId}_year_ens32avg_historical`,
+      `${indicatorId}_year_ens32avg_${scenarioId}`,
     ];
     return { ...d, slugs, mark: "area", visible: true };
   });
 };
 
 // determines next URL path segment following the slug
-const urlPathAfterSlug = (indicatorId) => {
-  if (["cdd", "hdd"].includes(indicatorId)) return indicatorId;
+const urlPathAfterSlug = (indicatorId, isEnsemble) => {
+  if (["cdd", "hdd"].includes(indicatorId) && !isEnsemble) return indicatorId;
   return "events";
 };
 
@@ -88,8 +85,17 @@ const urlPathAfterSlug = (indicatorId) => {
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({ slug, params, method = "GET", indicatorId }) => {
-  const url = `${apiEndpoint}/series/${slug}/${urlPathAfterSlug(indicatorId)}/`;
+const fetchEvents = async ({
+  slug,
+  params,
+  method = "GET",
+  indicatorId,
+  isEnsemble,
+}) => {
+  const url = `${apiEndpoint}/series/${slug}/${urlPathAfterSlug(
+    indicatorId,
+    isEnsemble
+  )}/`;
   const [response, error] = await handleXHR(fetchData(url, params, method));
   if (error) {
     throw new Error(error.message);
@@ -109,11 +115,17 @@ const fetchEvents = async ({ slug, params, method = "GET", indicatorId }) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-const fetchSeries = async ({ series, params, method = "GET", indicatorId }) => {
+const fetchSeries = async ({
+  series,
+  params,
+  method = "GET",
+  indicatorId,
+  isEnsemble,
+}) => {
   try {
     const { slugs } = series;
     const promises = slugs.map((slug) =>
-      fetchEvents({ slug, params, method, indicatorId })
+      fetchEvents({ slug, params, method, indicatorId, isEnsemble })
     );
     const responses = await Promise.all(promises);
     const values = merge(responses);
@@ -174,7 +186,13 @@ export async function getEnsemble(config, params, method = "GET") {
   try {
     const seriesList = getEnsembleSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({
+        series,
+        params,
+        method,
+        indicatorId: config.indicatorId,
+        isEnsemble: true,
+      })
     );
     const data = await Promise.all(promises);
     return data.map((d) => {
