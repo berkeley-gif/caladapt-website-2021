@@ -257,7 +257,7 @@
     <ul class="stats">
       <li class="block">
         <RangeAvg
-          units="{$climvar.units.imperial}"
+          units="{$indicator.units.imperial}"
           data="{statsData}"
           isHistorical="{true}"
           series="{'historical'}"
@@ -267,7 +267,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$climvar.units.imperial}"
+          units="{$indicator.units.imperial}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -277,7 +277,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$climvar.units.imperial}"
+          units="{$indicator.units.imperial}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
