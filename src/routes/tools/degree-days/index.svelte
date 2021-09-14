@@ -86,7 +86,7 @@
     datasetStore,
   } from "../_common/stores";
   import { climvarStore, indicatorsStore } from "./_store";
-  import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
+  import { getObserved, getModels, getQueryParams } from "./_data";
 
   export let initialConfig;
   export let tool;
@@ -138,7 +138,6 @@
         imperial: true,
       });
 
-      const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(
         config,
         { ...params, ...extraParams },
@@ -149,11 +148,8 @@
         { ...params, ...extraParams },
         method
       );
-      console.log(envelope);
-      console.log(observed);
-      console.log(modelsData);
 
-      dataStore.set([...envelope, ...observed, ...modelsData]);
+      dataStore.set([...observed, ...modelsData]);
     } catch (error) {
       // TODO: notify user of error
       console.log("updateData", error);

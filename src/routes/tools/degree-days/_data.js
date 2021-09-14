@@ -182,6 +182,7 @@ export async function getModels(config, params, method = "GET") {
   }
 }
 
+// TODO: maybe delete me?
 export async function getEnsemble(config, params, method = "GET") {
   try {
     const seriesList = getEnsembleSeries(config);
