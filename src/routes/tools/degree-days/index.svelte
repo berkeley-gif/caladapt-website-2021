@@ -100,7 +100,7 @@
   const { scenario } = scenarioStore;
 
   // TODO: UI controls for freq & thresh
-  const extraModelParams = {
+  const extraParams = {
     freq: "A",
     thresh: 65,
   };
@@ -139,10 +139,14 @@
       });
 
       const envelope = await getEnsemble(config, params, method);
-      const observed = await getObserved(config, params, method);
+      const observed = await getObserved(
+        config,
+        { ...params, ...extraParams },
+        method
+      );
       const modelsData = await getModels(
         config,
-        { ...params, ...extraModelParams },
+        { ...params, ...extraParams },
         method
       );
       console.log(envelope);
