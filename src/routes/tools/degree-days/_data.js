@@ -42,20 +42,20 @@ const convertToAnnual = (values) => {
 // The observed data is usually a single raster series, so only 1 slug
 const getObservedSeries = ({ climvarId }) => {
   return OBSERVED.map((d) => {
-    const slugs = [`${climvarId}_year_${d.id}`];
+    const slugs = [`${climvarId}_day_${d.id}`];
     return { ...d, slugs, mark: "line", visible: true };
   });
 };
 
 // For each model, there are usually 2 raster series in the API,
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
-const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
+const getModelSeries = ({ climvarId, scenarioId, modelIds, indicatorId }) => {
   return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
     const slugs = [
-      `${climvarId}_year_${d.id}_historical`,
-      `${climvarId}_year_${d.id}_${scenarioId}`,
+      // `${climvarId}_day_${d.id}_historical`,
+      `${climvarId}_day_${d.id}_${scenarioId}`,
     ];
-    return { ...d, slugs, mark: "line", visible: true };
+    return { ...d, slugs, mark: "line", visible: true, indicatorId };
   });
 };
 
@@ -73,6 +73,12 @@ const getEnsembleSeries = ({ climvarId, scenarioId }) => {
   });
 };
 
+// determines next URL path segment following the slug
+const urlPathAfterSlug = (indicatorId) => {
+  if (["cdd", "hdd"].includes(indicatorId)) return indicatorId;
+  return "events";
+};
+
 /**
  * Fetches data from the events endpoint in Cal-Adapt API
  * Input parameters:
@@ -82,8 +88,8 @@ const getEnsembleSeries = ({ climvarId, scenarioId }) => {
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({ slug, params, method = "GET" }) => {
-  const url = `${apiEndpoint}/series/${slug}/events/`;
+const fetchEvents = async ({ slug, params, method = "GET", indicatorId }) => {
+  const url = `${apiEndpoint}/series/${slug}/${urlPathAfterSlug(indicatorId)}/`;
   const [response, error] = await handleXHR(fetchData(url, params, method));
   if (error) {
     throw new Error(error.message);
@@ -103,10 +109,12 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-const fetchSeries = async ({ series, params, method = "GET" }) => {
+const fetchSeries = async ({ series, params, method = "GET", indicatorId }) => {
   try {
     const { slugs } = series;
-    const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
+    const promises = slugs.map((slug) =>
+      fetchEvents({ slug, params, method, indicatorId })
+    );
     const responses = await Promise.all(promises);
     const values = merge(responses);
     if (!values.length) {
@@ -140,7 +148,7 @@ export async function getObserved(config, params, method = "GET") {
   try {
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params, method, indicatorId: config.indicatorId })
     );
     const data = await Promise.all(promises);
     return data;
@@ -153,7 +161,7 @@ export async function getModels(config, params, method = "GET") {
   try {
     const seriesList = getModelSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params, method, indicatorId: config.indicatorId })
     );
     const data = await Promise.all(promises);
     return data;
