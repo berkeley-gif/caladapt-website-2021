@@ -39,7 +39,6 @@
     datasetStore,
   } from "../_common/stores";
   import {
-    climvarList,
     climvarStore,
     indicatorsList,
     indicatorsStore,
@@ -142,7 +141,7 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: if ($dataStore) {
+  $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
     isLoading = false;

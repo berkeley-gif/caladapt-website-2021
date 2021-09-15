@@ -3,12 +3,7 @@ import { merge } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
-import {
-  handleXHR,
-  fetchData,
-  transformResponse,
-  isLeapYear,
-} from "~/helpers/utilities";
+import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
 import { buildEnvelope } from "../_common/helpers";
 
@@ -66,6 +61,7 @@ const urlPathAfterSlug = (indicatorId, isEnsemble) => {
 };
 
 const filterReponseByMonths = (response, monthIds = []) => {
+  if (!monthIds || !monthIds.length) return response;
   const months = new Set(monthIds);
   return response.filter(({ date }) => months.has(date.getMonth()));
 };
@@ -91,17 +87,13 @@ const fetchEvents = async ({
     indicatorId,
     isEnsemble
   )}/`;
-
   const [response, error] = await handleXHR(fetchData(url, params, method));
-
   if (error) {
     throw new Error(error.message);
   }
-
   if (slug.includes("livneh")) {
     return transformResponse(response);
   }
-
   return filterReponseByMonths(transformResponse(response), monthIds);
 };
 
