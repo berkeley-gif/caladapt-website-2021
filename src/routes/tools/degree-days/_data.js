@@ -14,17 +14,6 @@ import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
 
-// Helper function to convert precipitation values from a rate (inches/day)
-// to total accumulation in a year
-const convertToAnnual = (values) => {
-  return values.map((d) => {
-    if (isLeapYear(+d.date.getFullYear())) {
-      return { ...d, value: d.value * 366 };
-    }
-    return { ...d, value: d.value * 365 };
-  });
-};
-
 /**
  * The following 3 functions take the list of observed, models and ensemble
  * raster series and add extra props. These props describe how the data
@@ -76,6 +65,11 @@ const urlPathAfterSlug = (indicatorId, isEnsemble) => {
   return "events";
 };
 
+const filterReponseByMonths = (response, monthIds = []) => {
+  const months = new Set(monthIds);
+  return response.filter(({ date }) => months.has(date.getMonth()));
+};
+
 /**
  * Fetches data from the events endpoint in Cal-Adapt API
  * Input parameters:
@@ -90,21 +84,25 @@ const fetchEvents = async ({
   params,
   method = "GET",
   indicatorId,
+  monthIds,
   isEnsemble,
 }) => {
   const url = `${apiEndpoint}/series/${slug}/${urlPathAfterSlug(
     indicatorId,
     isEnsemble
   )}/`;
+
   const [response, error] = await handleXHR(fetchData(url, params, method));
+
   if (error) {
     throw new Error(error.message);
   }
-  // Additional transformation for precipitation values
-  if (slug.includes("pr")) {
-    return convertToAnnual(transformResponse(response));
+
+  if (slug.includes("livneh")) {
+    return transformResponse(response);
   }
-  return transformResponse(response);
+
+  return filterReponseByMonths(transformResponse(response), monthIds);
 };
 
 /**
@@ -120,12 +118,13 @@ const fetchSeries = async ({
   params,
   method = "GET",
   indicatorId,
+  monthIds,
   isEnsemble,
 }) => {
   try {
     const { slugs } = series;
     const promises = slugs.map((slug) =>
-      fetchEvents({ slug, params, method, indicatorId, isEnsemble })
+      fetchEvents({ slug, params, method, indicatorId, monthIds, isEnsemble })
     );
     const responses = await Promise.all(promises);
     const values = merge(responses);
@@ -158,9 +157,10 @@ const fetchSeries = async ({
 
 export async function getObserved(config, params, method = "GET") {
   try {
+    const { indicatorId } = config;
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, indicatorId: config.indicatorId })
+      fetchSeries({ series, params, method, indicatorId })
     );
     const data = await Promise.all(promises);
     return data;
@@ -171,9 +171,10 @@ export async function getObserved(config, params, method = "GET") {
 
 export async function getModels(config, params, method = "GET") {
   try {
+    const { monthIds, indicatorId } = config;
     const seriesList = getModelSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, indicatorId: config.indicatorId })
+      fetchSeries({ series, params, method, indicatorId, monthIds })
     );
     const data = await Promise.all(promises);
     return data;

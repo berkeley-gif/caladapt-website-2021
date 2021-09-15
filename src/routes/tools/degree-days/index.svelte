@@ -90,6 +90,7 @@
     indicatorsStore,
     thresholdStore,
     frequencyStore,
+    selectedMonthsStore,
   } from "./_store";
   import { getObserved, getModels, getQueryParams } from "./_data";
 
@@ -127,6 +128,7 @@
     $indicatorsStore,
     $thresholdStore,
     $frequencyStore,
+    $selectedMonthsStore,
     update();
 
   async function update() {
@@ -138,6 +140,7 @@
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
         indicatorId: $indicatorsStore,
+        monthIds: $selectedMonthsStore,
       };
       const { params, method } = getQueryParams({
         location: $location,
