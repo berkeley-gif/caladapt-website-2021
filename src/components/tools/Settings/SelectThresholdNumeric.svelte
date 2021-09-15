@@ -1,14 +1,17 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { NumberInput, NumberInputSkeleton } from "carbon-components-svelte";
+  import { debounce } from "~/helpers/utilities";
 
   export let value = 0;
   export let title = "Select Threshold";
+
+  // TODO: these probably shouldn't be Infinity...
   export let minValue = -Infinity;
   export let maxValue = Infinity;
   export let hideSteppers = false;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = debounce(createEventDispatcher(), 300);
 
   let ready = false;
 
