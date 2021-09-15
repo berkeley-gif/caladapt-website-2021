@@ -130,8 +130,6 @@ const tools = [
       'img/icons/sun.svg',
     ],
     datasets: [
-      // Q: what do these refer to?
-      // TODO: probably only one or two relates to CDD/HDD...
       {
         slug: 'cb0c5f49-59d2-4f8e-8d9c-a047833f6081',
         logo: 'scripps_100x100.png',
@@ -140,17 +138,12 @@ const tools = [
         slug: '0887cba6-695c-403a-a757-674075799ea5',
         logo: 'u_colorado.png',
       },
-      {
-        slug: 'b8bee9f9-31c1-40d9-89a3-2dad814ba7da',
-        logo: 'gif_80x80.png'
-      }
     ],
     related: [
-      // TODO: double check on this
+      'extreme-heat',
       'maps-of-projected-change',
     ],
     resources: [
-      // TODO: double check on this
       'California Adaptation Clearinghouse', 
       "California's 4th Climate Change Assessment",
     ],
