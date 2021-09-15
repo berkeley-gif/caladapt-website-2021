@@ -15,7 +15,17 @@
   const dispatch = createEventDispatcher();
 
   let selected = items.find((d) => d.id === selectedId);
+  let invalid = false;
   let ready = false;
+  let selectedIdsArr = multi && selectedId;
+
+  $: idSet = new Set(selectedIdsArr);
+  $: feedback = idSet.size
+    ? items
+        .filter(({ id }) => idSet.has(id))
+        .map(({ text }) => text)
+        .join(", ")
+    : "";
 
   function change(e) {
     selected = items.find((d) => d.id === parseInt(e.detail));
@@ -23,7 +33,13 @@
   }
 
   function select(e) {
-    dispatch("change", e.detail.selectedIds);
+    selectedIdsArr = e.detail.selectedIds;
+    if (e.detail.selectedIds && e.detail.selectedIds.length) {
+      invalid = false;
+      dispatch("change", e.detail.selectedIds);
+    } else {
+      invalid = true;
+    }
   }
 
   onMount(() => {
@@ -36,12 +52,20 @@
   :global(.month-select .bx--select-input) {
     background-color: #f4f4f4;
   }
+
+  .feedback {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 </style>
 
 {#if ready}
   {#if multi}
     <MultiSelect
       class="month-select"
+      invalid="{invalid}"
+      invalidText="Choose at least one month"
       titleText="{title}"
       label="Select months"
       selectedIds="{selectedId}"
@@ -49,6 +73,9 @@
       on:select="{select}"
       sortItem="{() => {}}"
     />
+    <div>
+      <p class="feedback">{feedback}</p>
+    </div>
   {:else}
     <Select
       class="month-select"
