@@ -364,21 +364,6 @@
       />
     </div>
 
-    <!-- Q: remove this because there's only one variable? -->
-    <div class="block">
-      <SelectClimvar
-        selectedId="{$climvarStore}"
-        items="{climvarList}"
-        on:change="{changeClimvar}"
-      />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            slugs: ['annual-average-tasmax'],
-          })}"
-      />
-    </div>
-
     <div class="block">
       <SelectScenario
         selectedId="{$scenarioStore}"
@@ -391,12 +376,22 @@
     </div>
 
     <div class="block">
-      <SelectModels
-        selectedIds="{$modelsStore}"
-        items="{PRIORITY_10_MODELS}"
-        on:change="{changeModels}"
+      <SelectClimvar
+        title="Set frequency"
+        selectedId="{$frequencyStore}"
+        items="{frequencyList}"
+        on:change="{changeFrequency}"
       />
-      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
+      <div class="spacing--v-16"></div>
+      {#if $frequencyStore === "M"}
+        <SelectMonth
+          multi="{true}"
+          items="{MONTHS_LIST}"
+          selectedId="{DEFAULT_SELECTED_MONTHS}"
+          on:change="{changeSelectedMonths}"
+        />
+      {/if}
+      <LearnMoreButton />
     </div>
 
     <div class="block">
@@ -410,27 +405,13 @@
       />
     </div>
 
-    <!-- TODO: add month selection for frequency -->
     <div class="block">
-      <SelectClimvar
-        title="Set frequency"
-        selectedId="{$frequencyStore}"
-        items="{frequencyList}"
-        on:change="{changeFrequency}"
+      <SelectModels
+        selectedIds="{$modelsStore}"
+        items="{PRIORITY_10_MODELS}"
+        on:change="{changeModels}"
       />
-
-      <div class="spacing--v-16"></div>
-
-      {#if $frequencyStore === "M"}
-        <SelectMonth
-          multi="{true}"
-          items="{MONTHS_LIST}"
-          selectedId="{DEFAULT_SELECTED_MONTHS}"
-          on:change="{changeSelectedMonths}"
-        />
-      {/if}
-
-      <LearnMoreButton />
+      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
     </div>
   </div>
 </Dashboard>
