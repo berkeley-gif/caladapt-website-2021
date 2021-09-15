@@ -24,8 +24,8 @@
 
 {#if ready}
   <NumberInput
+    bind:value
     label="{title}"
-    value="{value}"
     mix="{minValue}"
     max="{maxValue}"
     hideSteppers="{hideSteppers}"
