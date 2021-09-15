@@ -3,6 +3,7 @@ import climvars from "~/helpers/climate-variables";
 import {
   DEFAULT_THRESHOLD_DEGREES,
   DEFAULT_FREQUENCY_CODE,
+  DEFAULT_SELECTED_MONTHS,
 } from "./_constants";
 
 // List of climvars used in Degree Days Tool
@@ -53,3 +54,5 @@ export const frequencyList = [
   { id: "A", label: "Annually" },
   { id: "M", label: "Monthly" },
 ];
+
+export const selectedMonthsStore = writable(DEFAULT_SELECTED_MONTHS);

@@ -8,7 +8,9 @@
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
     DEFAULT_BOUNDARIES,
+    MONTHS_LIST,
   } from "../_common/constants";
+  import { DEFAULT_SELECTED_MONTHS } from "./_constants";
   import {
     flattenData,
     getDataByDate,
@@ -18,6 +20,7 @@
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
   import {
+    SelectMonth,
     SelectScenario,
     SelectModels,
     SelectClimvar,
@@ -43,6 +46,7 @@
     thresholdStore,
     frequencyStore,
     frequencyList,
+    selectedMonthsStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -187,6 +191,11 @@
   function changeFrequency(e) {
     frequencyStore.set(e.detail.id);
     console.log(`frequency changed: ${e.detail.id}`);
+  }
+
+  function changeSelectedMonths(e) {
+    selectedMonthsStore.set(e.detail);
+    console.log(`frequency months changed: ${e.detail}`);
   }
 </script>
 
@@ -409,6 +418,18 @@
         items="{frequencyList}"
         on:change="{changeFrequency}"
       />
+
+      <div class="spacing--v-16"></div>
+
+      {#if $frequencyStore === "M"}
+        <SelectMonth
+          multi="{true}"
+          items="{MONTHS_LIST}"
+          selectedId="{DEFAULT_SELECTED_MONTHS}"
+          on:change="{changeSelectedMonths}"
+        />
+      {/if}
+
       <LearnMoreButton />
     </div>
   </div>
