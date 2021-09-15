@@ -85,7 +85,12 @@
     dataStore,
     datasetStore,
   } from "../_common/stores";
-  import { climvarStore, indicatorsStore } from "./_store";
+  import {
+    climvarStore,
+    indicatorsStore,
+    thresholdStore,
+    frequencyStore,
+  } from "./_store";
   import { getObserved, getModels, getQueryParams } from "./_data";
 
   export let initialConfig;
@@ -98,12 +103,6 @@
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
-
-  // TODO: UI controls for freq & thresh
-  const extraParams = {
-    freq: "A",
-    thresh: 65,
-  };
 
   // Local props
   let appReady = false;
@@ -120,7 +119,15 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $modelsStore, $location, $indicatorsStore, update();
+  $: extraParams = { freq: $frequencyStore, thresh: $thresholdStore };
+  $: $climvar,
+    $scenario,
+    $modelsStore,
+    $location,
+    $indicatorsStore,
+    $thresholdStore,
+    $frequencyStore,
+    update();
 
   async function update() {
     if (!appReady || !$modelsStore.length) return;
