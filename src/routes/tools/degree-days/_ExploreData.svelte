@@ -41,6 +41,8 @@
     indicatorsList,
     indicatorsStore,
     thresholdStore,
+    frequencyStore,
+    frequencyList,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -179,7 +181,12 @@
 
   function changeThreshold(e) {
     thresholdStore.set(e.detail);
-    console.log(e.detail);
+    console.log("threshold changed:", e.detail);
+  }
+
+  function changeFrequency(e) {
+    frequencyStore.set(e.detail.id);
+    console.log(`frequency changed: ${e.detail.id}`);
   }
 </script>
 
@@ -392,6 +399,17 @@
       <LearnMoreButton
         on:click="{() => loadLearnMore({ slugs: ['annual-average-tasmax'] })}"
       />
+    </div>
+
+    <!-- TODO: add month selection for frequency -->
+    <div class="block">
+      <SelectClimvar
+        title="Set frequency"
+        selectedId="{$frequencyStore}"
+        items="{frequencyList}"
+        on:change="{changeFrequency}"
+      />
+      <LearnMoreButton />
     </div>
   </div>
 </Dashboard>
