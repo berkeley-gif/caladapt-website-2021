@@ -1,8 +1,12 @@
 export const TOOL_SLUG = "degree-days";
 
+export const CLIMATE_INDICATORS = ["hdd", "cdd"];
+export const CLIMATE_VARIABLE = "tasmax";
+
+export const DEFAULT_CLIMATE_INDICATOR = CLIMATE_INDICATORS[0];
 export const DEFAULT_THRESHOLD_DEGREES = 65;
 export const DEFAULT_FREQUENCY_CODE = "A";
-export const DEFAULT_SELECTED_MONTHS = [0, 1, 2, 3];
+export const DEFAULT_SELECTED_MONTHS = [5, 6, 7];
 
 // Q: what values should these be?
 export const MAX_THRESHOLD_DEGREES = 90;
