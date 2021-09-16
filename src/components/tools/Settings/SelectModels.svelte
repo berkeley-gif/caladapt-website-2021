@@ -43,7 +43,7 @@
 
 <MultiSelect
   invalid="{invalid}"
-  invalidText="Choose atleast 1 GCM"
+  invalidText="Choose at least 1 GCM"
   selectedIds="{selectedIdsArr}"
   titleText="{title}"
   label="Select..."
