@@ -25,10 +25,10 @@
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
   import {
+    RadioBtnGroup,
     SelectMonth,
     SelectScenario,
     SelectModels,
-    SelectClimvar,
     SelectThresholdNumeric,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
@@ -184,7 +184,7 @@
   }
 
   function changeIndicator(e) {
-    indicatorsStore.set(e.detail.id);
+    indicatorsStore.set(e.detail);
     console.log(`indicator changed: ${e.detail.id}`);
   }
 
@@ -205,8 +205,8 @@
   }
 
   function changeFrequency(e) {
-    frequencyStore.set(e.detail.id);
-    console.log(`frequency changed: ${e.detail.id}`);
+    frequencyStore.set(e.detail);
+    console.log(`frequency changed: ${e.detail}`);
   }
 
   function changeSelectedMonths(e) {
@@ -373,8 +373,8 @@
 
   <div slot="settings" class="settings">
     <div class="block">
-      <SelectClimvar
-        selectedId="{$indicatorsStore}"
+      <RadioBtnGroup
+        selected="{$indicatorsStore}"
         items="{indicatorsList}"
         title="Select Indicator"
         on:change="{changeIndicator}"
@@ -399,9 +399,9 @@
     </div>
 
     <div class="block">
-      <SelectClimvar
+      <RadioBtnGroup
         title="Set frequency"
-        selectedId="{$frequencyStore}"
+        selected="{$frequencyStore}"
         items="{frequencyList}"
         on:change="{changeFrequency}"
       />
