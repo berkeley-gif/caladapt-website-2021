@@ -140,7 +140,8 @@
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
         indicatorId: $indicatorsStore,
-        monthIds: $frequencyStore === "M" ? $selectedMonthsStore : null,
+        monthIds:
+          $frequencyStore === "M" ? new Set($selectedMonthsStore) : null,
       };
       const { params, method } = getQueryParams({
         location: $location,

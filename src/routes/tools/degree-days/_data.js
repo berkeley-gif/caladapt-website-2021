@@ -1,5 +1,6 @@
 // Node modules
-import { merge } from "d3-array";
+import { mean, merge, rollups } from "d3-array";
+import { format } from "d3-format";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -60,11 +61,15 @@ const urlPathAfterSlug = (indicatorId, isEnsemble) => {
   return "events";
 };
 
-const filterReponseByMonths = (response, monthIds = []) => {
-  if (!monthIds || !monthIds.length) return response;
-  const months = new Set(monthIds);
-  return response.filter(({ date }) => months.has(date.getMonth()));
-};
+const filterReponseByMonths = (response, monthIds) =>
+  response.filter(({ date }) => monthIds.has(date.getMonth()));
+
+const aggregateMonthlyData = (response) =>
+  rollups(
+    response,
+    (arr) => +format(".0f")(mean(arr, (d) => d.value)),
+    (dd) => dd.date.getFullYear()
+  ).map(([year, value]) => ({ date: new Date(Date.UTC(year)), value }));
 
 /**
  * Fetches data from the events endpoint in Cal-Adapt API
@@ -91,10 +96,12 @@ const fetchEvents = async ({
   if (error) {
     throw new Error(error.message);
   }
-  if (slug.includes("livneh")) {
-    return transformResponse(response);
+  if (monthIds && monthIds.size) {
+    return aggregateMonthlyData(
+      filterReponseByMonths(transformResponse(response), monthIds)
+    );
   }
-  return filterReponseByMonths(transformResponse(response), monthIds);
+  return transformResponse(response);
 };
 
 /**
@@ -149,10 +156,10 @@ const fetchSeries = async ({
 
 export async function getObserved(config, params, method = "GET") {
   try {
-    const { indicatorId } = config;
+    const { indicatorId, monthIds } = config;
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, indicatorId })
+      fetchSeries({ series, params, method, indicatorId, monthIds })
     );
     const data = await Promise.all(promises);
     return data;
