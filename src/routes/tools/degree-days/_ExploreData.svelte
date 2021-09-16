@@ -378,7 +378,7 @@
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({
-            slugs: ['annual-average-tasmax'],
+            slugs: ['cooling-degree-day', 'heating-degree-day'],
           })}"
       />
     </div>
@@ -420,7 +420,10 @@
         on:change="{changeThreshold}"
       />
       <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['annual-average-tasmax'] })}"
+        on:click="{() =>
+          loadLearnMore({
+            slugs: ['cooling-degree-day', 'heating-degree-day'],
+          })}"
       />
     </div>
 
@@ -430,7 +433,12 @@
         items="{PRIORITY_10_MODELS}"
         on:change="{changeModels}"
       />
-      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: ['cooling-degree-day', 'heating-degree-day'],
+          })}"
+      />
     </div>
   </div>
 </Dashboard>
