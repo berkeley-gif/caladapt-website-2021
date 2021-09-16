@@ -7,7 +7,7 @@
   import {
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
-    DEFAULT_BOUNDARIES,
+    SMALL_SCALE_BOUNDARIES,
     MONTHS_LIST,
   } from "../_common/constants";
   import {
@@ -88,6 +88,24 @@
   let printContainer;
   let printSkipElements;
 
+  $: formatFn = format(`.${$climvar.decimals}f`);
+
+  $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
+  $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
+  $: frequencyLabel =
+    $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
+  $: monthsLabel = $frequencyStore === "M" ? getMonthsLabel() : "";
+
+  $: if (Array.isArray($dataStore) && $dataStore.length) {
+    statsData = $dataStore.filter((d) => d.type !== "area");
+    dataByDate = getDataByDate(flattenData($dataStore));
+    isLoading = false;
+  } else {
+    statsData = null;
+    dataByDate = null;
+    isLoading = true;
+  }
+
   async function loadLearnMore({
     slugs = [],
     content = "",
@@ -139,24 +157,6 @@
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
-  }
-
-  $: formatFn = format(`.${$climvar.decimals}f`);
-
-  $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
-  $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
-  $: frequencyLabel =
-    $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
-  $: monthsLabel = $frequencyStore === "M" ? getMonthsLabel() : "";
-
-  $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.type !== "area");
-    dataByDate = getDataByDate(flattenData($dataStore));
-    isLoading = false;
-  } else {
-    statsData = null;
-    dataByDate = null;
-    isLoading = true;
   }
 
   function getMonthsLabel() {
@@ -466,7 +466,8 @@
   bind:open="{showChangeLocation}"
   location="{$location}"
   boundary="{$boundary}"
-  boundaryList="{DEFAULT_BOUNDARIES}"
+  boundaryList="{SMALL_SCALE_BOUNDARIES}"
+  enableUpload="{false}"
   on:change="{changeLocation}"
 />
 
