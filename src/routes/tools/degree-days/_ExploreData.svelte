@@ -10,7 +10,11 @@
     DEFAULT_BOUNDARIES,
     MONTHS_LIST,
   } from "../_common/constants";
-  import { DEFAULT_SELECTED_MONTHS } from "./_constants";
+  import {
+    DEFAULT_SELECTED_MONTHS,
+    MAX_THRESHOLD_DEGREES_F,
+    MIN_THRESHOLD_DEGREES_F,
+  } from "./_constants";
   import {
     flattenData,
     getDataByDate,
@@ -417,6 +421,8 @@
       <SelectThresholdNumeric
         title="Set Threshold"
         value="{$thresholdStore}"
+        minValue="{MIN_THRESHOLD_DEGREES_F}"
+        maxValue="{MAX_THRESHOLD_DEGREES_F}"
         on:change="{changeThreshold}"
       />
       <LearnMoreButton

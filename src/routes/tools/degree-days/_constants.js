@@ -9,5 +9,5 @@ export const DEFAULT_FREQUENCY_CODE = "A";
 export const DEFAULT_SELECTED_MONTHS = [5, 6, 7];
 
 // Q: what values should these be?
-export const MAX_THRESHOLD_DEGREES = 90;
-export const MIN_THRESHOLD_DEGREES = 32;
+export const MAX_THRESHOLD_DEGREES_F = 100;
+export const MIN_THRESHOLD_DEGREES_F = 40;
