@@ -16,6 +16,7 @@
     getDataByDate,
     formatDataForExport,
   } from "../_common/helpers";
+  import { getSelectedMonthStrings } from "./_helpers";
 
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
@@ -83,7 +84,6 @@
   let printContainer;
   let printSkipElements;
 
-  // Q: what should the glossary items be for this tool?
   async function loadLearnMore({
     slugs = [],
     content = "",
@@ -126,8 +126,6 @@
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      // Q: for degree-days shouldn't cdd or hdd be the indicator?
-      //    or shouldn't this technically be "climate variable"?
       ["climate variable", $climvar.label],
       ["climate indicator", $indicator],
       ["units", $climvar.units.imperial],
@@ -141,6 +139,12 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
+  $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
+  $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
+  $: frequencyLabel =
+    $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
+  $: monthsLabel = $frequencyStore === "M" ? getMonthsLabel() : "";
+
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
@@ -151,6 +155,20 @@
     isLoading = true;
   }
 
+  function getMonthsLabel() {
+    if (Array.isArray($selectedMonthsStore) && $selectedMonthsStore.length) {
+      return getSelectedMonthStrings($selectedMonthsStore).reduce(
+        (acc, cur, idx, arr) =>
+          idx === 0
+            ? cur
+            : idx === arr.length - 1
+            ? `${acc} and ${cur}`
+            : `${acc}, ${cur}`,
+        ""
+      );
+    }
+  }
+
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
     console.log("scenario change");
@@ -159,11 +177,6 @@
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds);
     console.log("models change");
-  }
-
-  function changeClimvar(e) {
-    climvarStore.set(e.detail.id);
-    console.log("climvar change");
   }
 
   function changeIndicator(e) {
@@ -267,8 +280,15 @@
       {$location.title}
     </div>
     <div class="h4">
-      Projected changes in <span class="annotate">{$climvar.title}</span>
-      under a <span class="annotate">{$scenario.labelLong}</span>.
+      Projected changes in <span class="annotate"
+        >{frequencyLabel} {indicatorTitle}</span
+      >
+      under a <span class="annotate">{$scenario.labelLong}</span>{monthsLabel
+        ? ""
+        : "."}
+      {#if monthsLabel}
+        for the months of <span class="annotate">{monthsLabel}</span>.
+      {/if}
     </div>
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
       Change Location
