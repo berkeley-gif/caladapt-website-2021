@@ -5,8 +5,6 @@
 
   export let value = 0;
   export let title = "Select Threshold";
-
-  // TODO: these probably shouldn't be Infinity...
   export let minValue = -Infinity;
   export let maxValue = Infinity;
   export let hideSteppers = false;
