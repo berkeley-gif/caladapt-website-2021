@@ -275,35 +275,43 @@
           days is expected to increase demand for air conditioning.
         </p>
 
-        <!-- Q: should this live in Glossary now? -->
         <h3>What is a Cooling Degree Day?</h3>
         <p>
-          A Cooling Degree Day (CDD) is defined as the number of degrees by
-          which a daily average temperature exceeds a reference temperature. The
-          reference temperature is typically 65 degrees Fahrenheit, although
+          A cooling degree day (CDD) is the number of degrees by which a daily
+          average temperature exceeds a reference temperature and may therefore
+          require additional energy for space cooling.
+        </p>
+        <p>
+          The reference temperature is typically 65 degrees Fahrenheit, although
           different utilities and planning entities sometimes use different
           reference temperatures. The reference temperature loosely represents
-          an average daily temperature below which space cooling (e.g., air
-          conditioning) is not needed. The average temperature is represented by
-          the average of the maximum and minimum daily temperature. CDDs can be
-          summed over the entire year or over a portion of the year (e.g., the
-          month of July) as a rough indicator of cooling energy over that
-          period.
+          an average daily temperature below which space cooling (e.g. air
+          conditioning) is not needed.
+        </p>
+        <p>
+          The average temperature is the average of the minimum and maximum
+          daily temperatures. CDDs can be summed over the entire year or over a
+          portion of the year (e.g. the month of July) as a rough indicator of
+          cooling energy used over that period.
         </p>
 
-        <!-- Q: should this live in Glossary now? -->
         <h3>What is a Heating Degree Day?</h3>
         <p>
-          A Heating Degree Day (HDD) is defined as the number of degrees by
-          which a daily average temperature is below a reference temperature.
+          A heating degree day (HDD) is the number of degrees by which a daily
+          average temperature is below a reference temperature and may therefore
+          require space heating.
+        </p>
+        <p>
           The reference temperature is typically 65 degrees Fahrenheit, although
           different utilities and planning entities sometimes use different
           reference temperatures. The reference temperature loosely represents
           an average daily temperature above which space heating is not needed.
-          The average temperature is represented by the average of the maximum
-          and minimum daily temperature. HDDs can be summed over the entire year
-          or over a portion of the year (e.g., the month of February) as a rough
-          indicator of heating energy over that period.
+        </p>
+        <p>
+          The average temperature is the average of the minimum and maximum
+          daily temperatures. HDDs can be summed over the entire year or over a
+          portion of the year (e.g. the month of January) as a rough indicator
+          of heating energy over that period.
         </p>
       </div>
     </About>
