@@ -1,5 +1,7 @@
 ---
 title: How do I work with variability in climate change projections?
+tags: data
+category: understanding-data
 ---
 
 Variability is a natural part of our climate systems and will not cease under climate change. Our climate in California has always been variable; for example, some years are wetter than other years, and some years see more wildfire than other years. Projections show that climate change will cause increases in average summer temperatures, but not every year looks like the average year.
