@@ -340,7 +340,7 @@
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
-        label: $indicator.label,
+        label: `Number of ${$indicator.label} (Base temperature ${$thresholdStore}˚F)`,
         tickFormat: formatFn,
         units: `${$indicator.units.imperial}`,
       }}"
