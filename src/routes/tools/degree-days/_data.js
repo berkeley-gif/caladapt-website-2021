@@ -5,7 +5,12 @@ import { format } from "d3-format";
 // Helpers
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
-import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
+import {
+  ENSEMBLES,
+  OBSERVED,
+  OBSERVED_FILTER_YEAR,
+  PRIORITY_10_MODELS,
+} from "../_common/constants";
 import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
@@ -130,12 +135,12 @@ const fetchSeries = async ({
     if (!values.length) {
       throw new Error(`${series.id}: No Data`);
     }
-    // For livneh, remove data values after 2006
-    // because there are QA/QC issues with the data
     if (series.id === "livneh") {
       return {
         ...series,
-        values: values.filter((d) => d.date.getFullYear() <= 2006),
+        values: values.filter(
+          (d) => d.date.getFullYear() < OBSERVED_FILTER_YEAR
+        ),
       };
     }
     return { ...series, values };

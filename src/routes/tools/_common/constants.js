@@ -110,6 +110,10 @@ export const OBSERVED = [
   },
 ];
 
+// For livneh, typically we remove data values after 2006
+// because there are QA/QC issues with the data
+export const OBSERVED_FILTER_YEAR = 2006;
+
 export const INITIAL_CONFIG = {
   boundaryId: "locagrid",
   scenarioId: "rcp45",
