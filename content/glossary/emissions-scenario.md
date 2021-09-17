@@ -17,5 +17,5 @@ California’s Fourth Climate Change Assessment uses two RCPs from the Fifth Int
 For more details see:
 
 <p class="reference">
-Bedsworth, Louise, Dan Cayan, Guido Franco, Leah Fisher, Sonya Ziaja. (California Governor’s Office of Planning and Research, Scripps Institution of Oceanography, California Energy Commission, California Public Utilities Commission). 2018. <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Statewide_Reports-SUM-CCCA4-2018-013_Statewide_Summary_Report_ADA.pdf" target="_blank">Statewide Summary Report]</a>. California’s Fourth Climate Change Assessment. Publication number: SUM-CCCA4-2018-013.
+Bedsworth, Louise, Dan Cayan, Guido Franco, Leah Fisher, Sonya Ziaja. (California Governor’s Office of Planning and Research, Scripps Institution of Oceanography, California Energy Commission, California Public Utilities Commission). 2018. <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Statewide_Reports-SUM-CCCA4-2018-013_Statewide_Summary_Report_ADA.pdf" target="_blank">Statewide Summary Report</a>. California’s Fourth Climate Change Assessment. Publication number: SUM-CCCA4-2018-013.
 </p>
