@@ -1,5 +1,7 @@
 ---
 title: What climate models should I use in my analysis? What are the priority models?
+tags: data
+category: understanding-data
 ---
 
 Thirty-two global climate model (GCM) simulations produced by institutions across the world served as a basis for California’s climate projections for California’s Fourth Climate Change Assessment, and thus for much of the data currently available on Cal-Adapt. These 32 GCMs are from the Coupled Model Intercomparison Project, version 5 (CMIP5).
