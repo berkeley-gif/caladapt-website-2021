@@ -1,5 +1,7 @@
 ---
 title: Which RCP (emissions) scenarios should I use in my analysis?
+tags: data
+category: understanding-data
 ---
 
 Representative concentration pathways (RCP) portray possible future greenhouse gas and aerosol emissions scenarios. RCP scenarios are not specific policies, demographics, or economic futures; instead, they are defined by total solar radiative forcing by 2100. To address uncertainty in future concentrations of greenhouse gases and emissions of aerosols, data made available via Cal-Adapt incorporates two RCPs: RCP 4.5 and RCP 8.5.
