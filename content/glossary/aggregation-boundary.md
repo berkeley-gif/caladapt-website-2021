@@ -13,4 +13,3 @@ To get more representative projections for California's complex geography, GCMs 
 When users select a point location on the map, data is retrieved for the LOCA grid cells from different downscaled GCMs that intersect that point. Climate Tools on Cal-Adapt offer users an option to **spatially aggregate** data over an area. When users select a county or census tract, data retrieved represents the mean of all the grid cells that intersect area of interest.
 
 Users can select from several different boundary layers. This selection varies with the Climate Tool. 
-
