@@ -4,6 +4,7 @@
   // the data we need to render the page. It only runs once
   // during export.
   import resourcesList from "../../../../content/resources/data";
+  import { INITIAL_CONFIG } from "../_common/constants";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -22,13 +23,6 @@
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
 
-    // Get glossary items
-    const glossary = await this.fetch("help/glossary.json")
-      .then((r) => r.json())
-      .then((json) => {
-        return json.data;
-      });
-
     // Get help categories
     const help = await this.fetch("help.json")
       .then((r) => r.json())
@@ -42,35 +36,38 @@
     // Set intitial config for tool
     let initialConfig;
 
-    if (Object.keys(query).length) {
+    if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, imperial, lat, lng } = query;
+      const {
+        boundary,
+        climvar,
+        scenario,
+        models,
+        lat,
+        lng,
+        thresh,
+        duration,
+      } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
-        modelIds: models,
-        imperial: imperial === "true" ? true : false,
+        modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
+        thresh: +thresh,
+        duration: +duration,
       };
     } else {
       initialConfig = {
-        boundaryId: "locagrid",
-        scenarioId: "rcp45",
-        climvarId: "tasmax",
-        modelIds: "HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5",
-        imperial: true,
-        lat: 38.58,
-        lng: -121.46,
-        thresh: 103.9,
-        period: 4,
+        ...INITIAL_CONFIG,
+        thresh: null,
+        duration: 4,
       };
     }
 
     return {
       initialConfig,
-      glossary,
       tool,
       relatedTools,
       externalResources,
@@ -80,8 +77,8 @@
 </script>
 
 <script>
-  import { onMount } from "svelte";
-  import { Modal, Loading } from "carbon-components-svelte";
+  import { onMount, tick } from "svelte";
+  import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
@@ -95,45 +92,46 @@
     Resources,
     Help,
     ToolNavigation,
-  } from "../../../components/tools/Partials";
-  import {
-    NotificationDisplay,
-    notifier,
-  } from "../../../components/notifications";
+  } from "~/components/tools/Partials";
+  import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Store
   import {
-    climvarStore,
     scenarioStore,
     modelsStore,
     unitsStore,
     locationStore,
-    dataStore,
+    datasetStore,
+  } from "../_common/stores";
+  import {
+    climvarStore,
     thresholdStore,
     thresholdListStore,
-    periodStore,
-    queryParams,
-    datasetStore,
+    durationStore,
+    dataStore,
   } from "./_store";
-  import { get98pThreshold, getObserved, getModels } from "./_data";
+  import {
+    getObserved,
+    getModels,
+    getQueryParams,
+    get98pThreshold,
+  } from "./_data";
 
   export let initialConfig;
-  export let glossary;
   export let tool;
   export let relatedTools;
   export let externalResources;
   export let helpItems;
 
   // Derived stores
-  const { location } = locationStore;
+  const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
-  const { models } = modelsStore;
+
+  console.log("in index");
 
   // Local props
-  let showInfo = false;
-  let definitionText;
-  let definitionTitle;
+  let initReady = false;
   let appReady = false;
 
   // Monitor sections as they enter & leave viewport
@@ -148,27 +146,31 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $models, $location, update();
-
-  function updateDataset(e) {
-    datasetStore.set(e.detail);
-  }
+  $: $modelsStore, update();
 
   async function update() {
-    if (!appReady) return;
-    if ($models.length === 0) return;
+    if (!initReady || !appReady) return;
+    if ($modelsStore.length === 0) return;
+
     try {
-      dataStore.set(null);
+      console.log("in update 1");
+      dataStore.reset();
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
       };
-      const { params, method } = $queryParams;
-      params.thresh = $thresholdStore;
+      const { params, method } = getQueryParams({
+        location: $location,
+        boundary: $boundary,
+        imperial: true,
+        thresh: $thresholdStore,
+      });
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
-      dataStore.set([observed, ...modelsData]);
+      console.log("in update 2");
+      dataStore.updateData([...observed, ...modelsData]);
+      console.log("in update 3");
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
@@ -176,114 +178,62 @@
     }
   }
 
-  /*  function updateThreshold() {
-    if (!appReady) return;
-    console.log("function update threshold");
-    appStatus = "working";
-    dataStore.set(null);
-    get98pThreshold($climvarStore, $queryParams).then((thresh98p) => {
-      thresholdListStore.reset(thresh98p, "98th Percentile");
-      thresholdStore.set(thresh98p);
-      // This threshold change triggers update() function
-    });
-  }*/
+  function initUpdate() {
+    appReady = true;
+    update();
+  }
 
-  async function initApp(config) {
-    const {
-      lat,
-      lng,
-      boundaryId,
-      scenarioId,
-      climvarId,
-      modelIds,
-      imperial,
-      thresh,
-      period,
-    } = config;
-    climvarStore.set(climvarId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
-    unitsStore.set({ imperial });
-    periodStore.set(period);
+  async function initLocation({ lat, lng, boundaryId }) {
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
-    const { params } = $queryParams;
-    const thresh98p = await get98pThreshold(climvarId, params);
-    console.log("thresh98p", thresh98p);
-    thresholdListStore.add(thresh98p, "98th Percentile");
-    thresholdStore.set(thresh98p);
-    if (thresh && +thresh !== thresh98p) {
-      thresholdListStore.add(+thresh);
-      thresholdStore.set(+thresh);
-    }
-    return;
+    return loc;
   }
 
-  /*  async function initApp(config) {
-    console.log("initApp", config);
+  async function initThreshold({ location, boundaryId, climvarId }) {
+    const { params } = getQueryParams({
+      location,
+      boundary: { id: boundaryId },
+      imperial: true,
+    });
+    const thresh98p = await get98pThreshold(climvarId, params);
+    return thresh98p;
+  }
+
+  onMount(() => {
     const {
       lat,
       lng,
       boundaryId,
       scenarioId,
       climvarId,
-      thresh,
       modelIds,
       imperial,
-      period,
-    } = config;
-    climvarStore.set(climvarId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
-    unitsStore.set({ imperial });
-    periodStore.set(period);
-    const loc = await getLocation(lng, lat, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
-    const thresh98p = await get98pThreshold(climvarId, $queryParams);
-    thresholdListStore.add(thresh98p, "98th Percentile");
-    thresholdStore.set(thresh98p);
-    if (thresh && +thresh !== thresh98p) {
-      thresholdListStore.add(+thresh);
-      thresholdStore.set(+thresh);
-    }
-    // Create threshold list store
-    return;
-  }*/
-
-  /*  $: $climvar, updateThreshold();
-  $: $location, updateThreshold();
-  $: $thresholdStore, update();
-  $: $scenario, update();
-  $: $models, update();*/
-
-  // Populates an info modal when user clicks Learn More
-  function showDefinition(e) {
-    const { topics, title } = e.detail;
-    const items = glossary.filter((d) => topics.includes(d.slug));
-    definitionText = items
-      .map((item) => {
-        return `
-        <div>
-          <h5>${item.metadata.title}</h5>
-          ${item.html}
-        </div>
-        `;
+      duration,
+      thresh,
+    } = initialConfig;
+    initLocation({ lat, lng, boundaryId })
+      .then((loc) => {
+        locationStore.updateLocation(loc);
+        locationStore.updateBoundary(boundaryId);
+        return initThreshold({ location: loc, boundaryId, climvarId });
       })
-      .join("<br/>");
-    definitionTitle = title;
-    showInfo = true;
-  }
-
-  onMount(() => {
-    initApp(initialConfig)
+      .then((thresh98p) => {
+        thresholdListStore.add(thresh98p, "98th Percentile");
+        thresholdStore.set(thresh98p);
+        if (thresh && thresh !== thresh98p) {
+          thresholdListStore.add(thresh);
+          thresholdStore.set(thresh);
+        }
+      })
       .then(() => {
-        appReady = true;
-        console.log("app ready");
-        update();
+        climvarStore.set(climvarId);
+        scenarioStore.set(scenarioId);
+        modelsStore.set(modelIds);
+        unitsStore.set({ imperial });
+        durationStore.set(duration);
+        initReady = true;
+        console.log("init complete");
       })
       .catch((error) => {
         console.log("init error", error);
@@ -298,7 +248,7 @@
 </script>
 
 <svelte:head>
-  <title>Extreme Heat</title>
+  <title>{tool.title}</title>
   <link
     href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
     rel="stylesheet"
@@ -308,11 +258,8 @@
 <Header iconPaths="{tool.icons}" title="{tool.title}">
   <div slot="description">
     <p class="lead">
-      For most areas around the state, the climate models project a significant
-      rise in the number of days exceeding what is now considered extremely hot
-      for the given area. Explore how the frequency and timing of extreme heat
-      days and warm nights is expected to change under different emission
-      scenarios for your location.
+      Explore projected changes in annual average Maximum Temperature, Minimum
+      Temperature and Precipitation through end of this century for California.
     </p>
   </div>
 </Header>
@@ -320,8 +267,8 @@
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
 <div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
-  {#if appReady}
-    <ExploreData on:define="{showDefinition}" />
+  {#if initReady}
+    <ExploreData on:ready="{initUpdate}" />
   {:else}
     <Loading />
   {/if}
@@ -329,7 +276,10 @@
 
 <div class="bx--grid">
   <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
-    <About datasets="{datasets}" on:datasetLoaded="{updateDataset}">
+    <About
+      datasets="{datasets}"
+      on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
+    >
       <div slot="description">
         <p>
           With this tool you can explore how the frequency and timing of extreme
@@ -386,12 +336,12 @@
 
         <p class="h4">What is a heat wave?</p>
         <p>
-          Heat waves are characterized as periods of sustained, extreme heat,
+          Heat waves are characterized as durations of sustained, extreme heat,
           although there is no universal definition of a heat wave. For purposes
-          of this tool, a heat wave is defined as a period of 4 consecutive
+          of this tool, a heat wave is defined as a duration of 4 consecutive
           extreme heat days or warm nights when the daily maximum/minimum
           temperature is above the extreme heat threshold. Each 4 day/night
-          period is counted, so that if extreme temperatures persist for 10
+          duration is counted, so that if extreme temperatures persist for 10
           consecutive days/nights, it counts as 2 Heat Waves. Users have the
           option of choosing a different value for number of consecutive
           days/nights.
@@ -410,17 +360,5 @@
 </div>
 
 <div class="spacing--v-96"></div>
-
-<Modal
-  id="definition"
-  size="sm"
-  passiveModal
-  bind:open="{showInfo}"
-  modalHeading="{definitionTitle}"
-  on:open
-  on:close
->
-  <div>{@html definitionText}</div>
-</Modal>
 
 <NotificationDisplay />

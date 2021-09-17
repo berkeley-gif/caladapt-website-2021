@@ -1,25 +1,33 @@
 <script>
-  import { Button, Loading, NumberInput } from "carbon-components-svelte";
+  import { onMount, createEventDispatcher } from "svelte";
+  import {
+    RadioButtonGroup,
+    Button,
+    Loading,
+    NumberInput,
+  } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
   import {
-    climvarList,
-    modelList,
-    scenarioList,
-    boundaryList,
-  } from "./_helpers";
-  import { flattenData, getDataByDate, formatDataForExport } from "./_data";
+    PRIORITY_10_MODELS,
+    DEFAULT_SCENARIOS,
+    SMALL_SCALE_BOUNDARIES,
+  } from "../_common/constants";
+  import {
+    flattenData,
+    getDataByDate,
+    formatDataForExport,
+  } from "../_common/helpers";
 
   // Components
-  import { Dashboard } from "~/components/tools/Partials";
+  import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
   import {
     SelectScenario,
     SelectModels,
     SelectClimvar,
     SelectThreshold,
-    ShowDefinition,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
@@ -27,23 +35,30 @@
 
   // Store
   import {
-    climvarStore,
     scenarioStore,
     locationStore,
-    dataStore,
     modelsStore,
-    bookmark,
     datasetStore,
+  } from "../_common/stores";
+  import {
+    climvarList,
+    climvarStore,
+    indicatorList,
+    indicatorStore,
+    indicator,
     thresholdStore,
     thresholdListStore,
-    periodStore,
+    durationStore,
+    dataStore,
   } from "./_store";
 
+  const dispatch = createEventDispatcher();
   const { location, boundary } = locationStore;
-  const { data } = dataStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
+  const { data } = dataStore;
+  console.log("reached explore");
 
   let isLoading = true;
   let dataByDate;
@@ -51,17 +66,51 @@
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
+  let showLearnMore = false;
+  let modelsInit = false;
 
   let ChangeLocation;
   let DownloadChart;
   let ShareLink;
+  let LearnMoreModal;
+
+  let bookmark;
+
+  let learnMoreProps = {};
+  let chartDescription = `<p>The colored lines on this visualization represent 
+    a timeseries of annual average values from individual downscaled GCMs. 
+    The gray shaded region in the background represents the range of projections 
+    from all 32 downscaled GCMs. The historical observed data is represented by 
+    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
+    corresponding timeseries.</p>`;
 
   let metadata;
   let csvData;
   let printContainer;
   let printSkipElements;
 
+  async function loadLearnMore({
+    slugs = [],
+    content = "",
+    header = "Glossary",
+  }) {
+    learnMoreProps = { slugs, content, header };
+    showLearnMore = true;
+    LearnMoreModal = (
+      await import(
+        "~/components/tools/Partials/LearnMore/LearnMoreModal.svelte"
+      )
+    ).default;
+  }
+
   async function loadShare() {
+    if ($boundary.id === "custom") {
+      bookmark = "Cannot create a bookmark for an uploaded boundary";
+    } else {
+      const [lng, lat] = $location.center;
+      const modelsStr = $modelsStore.join(",");
+      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+    }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -92,9 +141,12 @@
     ).default;
   }
 
+  $: if (modelsInit) dispatch("ready");
+
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($data) {
+    console.log("from explore", $data);
     statsData = $data.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($data));
     isLoading = false;
@@ -110,7 +162,8 @@
   }
 
   function changeModels(e) {
-    modelsStore.set(e.detail.selectedIds.join(","));
+    modelsStore.set(e.detail.selectedIds);
+    modelsInit = true;
     console.log("models change");
   }
 
@@ -119,9 +172,14 @@
     console.log("climvar change");
   }
 
-  function changePeriod(e) {
-    periodStore.set(e.detail);
-    console.log("period change");
+  function changeIndicator(e) {
+    indicatorStore.set(e.detail.id);
+    console.log("indicator change");
+  }
+
+  function changeDuration(e) {
+    durationStore.set(e.detail);
+    console.log("duration change");
   }
 
   function changeThreshold(e) {
@@ -215,7 +273,7 @@
       {$location.title}
     </div>
     <div class="h4">
-      Projected changes in <span class="annotate">{$climvar.title}</span>
+      Projected changes in <span class="annotate">{$indicator.title}</span>
       under a <span class="annotate">{$scenario.labelLong}</span>.
     </div>
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
@@ -227,7 +285,7 @@
     <ul class="stats">
       <li class="block">
         <RangeAvg
-          units="{$climvar.units.imperial}"
+          units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{true}"
           series="{'historical'}"
@@ -237,7 +295,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$climvar.units.imperial}"
+          units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -247,7 +305,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$climvar.units.imperial}"
+          units="{$indicator.unitsl}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -264,9 +322,9 @@
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
-        label: `${$climvar.title} (${$climvar.units.imperial})`,
+        label: `${$indicator.title} (${$indicator.units})`,
         tickFormat: formatFn,
-        units: `${$climvar.units.imperial}`,
+        units: `${$indicator.units}`,
       }}"
     />
 
@@ -276,11 +334,13 @@
       </p>
     </div>
     <div class="chart-download margin--v-8">
-      <ShowDefinition
-        topics="{['chart']}"
-        title="About the Chart"
-        cta="Explain Chart"
-        on:define
+      <LearnMoreButton
+        cta="{'Explain Chart'}"
+        on:click="{() =>
+          loadLearnMore({
+            content: chartDescription,
+            header: 'About this Chart',
+          })}"
       />
       <div>
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
@@ -295,43 +355,37 @@
 
   <div slot="settings" class="settings">
     <div class="block">
-      <SelectClimvar
+      <!--       <SelectClimvar
+        title="Select Indicator"
         selectedId="{$climvarStore}"
         items="{climvarList}"
         on:change="{changeClimvar}"
+      /> -->
+      <SelectClimvar
+        title=""
+        selectedId="{$indicatorStore}"
+        items="{indicatorList}"
+        on:change="{changeIndicator}"
       />
-      <ShowDefinition
-        on:define
-        topics="{[
-          'annual-average-tasmax',
-          'annual-average-tasmin',
-          'annual-average-pr',
-        ]}"
-        title="Climate Variables"
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: [
+              'annual-average-tasmax',
+              'annual-average-tasmin',
+              'annual-average-pr',
+            ],
+          })}"
       />
     </div>
     <div class="block">
       <SelectScenario
         selectedId="{$scenarioStore}"
-        items="{scenarioList}"
+        items="{DEFAULT_SCENARIOS}"
         on:change="{changeScenario}"
       />
-      <ShowDefinition
-        on:define
-        topics="{['climate-scenarios']}"
-        title="RCP Scenarios"
-      />
-    </div>
-    <div class="block">
-      <SelectModels
-        selectedIds="{$modelsStore}"
-        items="{modelList}"
-        on:change="{changeModels}"
-      />
-      <ShowDefinition
-        on:define
-        topics="{['gcms']}"
-        title="Global Climate Models (GCMs)"
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
       />
     </div>
     <div class="block">
@@ -343,34 +397,51 @@
         on:change="{changeThreshold}"
         on:add="{addThreshold}"
       />
-      <ShowDefinition on:define topics="{['extreme-heat-threshold']}" />
+      <LearnMoreButton />
     </div>
+    {#if $indicator.id === "waves"}
+      <div class="block">
+        <NumberInput
+          label="Change Heat Wave Duration"
+          min="{2}"
+          max="{7}"
+          helperText="A number between 2-7. This sets the number of consecutive days in a heat wave."
+          value="{$durationStore}"
+          on:change="{changeDuration}"
+        />
+        <LearnMoreButton />
+      </div>
+    {/if}
     <div class="block">
-      <NumberInput
-        label="Enter Heat Wave Duration"
-        min="{2}"
-        max="{7}"
-        helperText="A number between 2-7. This sets the number of consecutive days in a heat wave."
-        value="{$periodStore}"
-        on:change="{changePeriod}"
+      <SelectModels
+        selectedIds="{$modelsStore}"
+        items="{PRIORITY_10_MODELS}"
+        on:change="{changeModels}"
       />
-      <ShowDefinition on:define topics="{['heat-wave-event']}" />
+      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
     </div>
   </div>
 </Dashboard>
 
 <svelte:component
+  this="{LearnMoreModal}"
+  bind:open="{showLearnMore}"
+  {...learnMoreProps}
+/>
+
+<svelte:component
   this="{ShareLink}"
   bind:open="{showShare}"
-  state="{$bookmark}"
+  state="{bookmark}"
 />
 
 <svelte:component
   this="{ChangeLocation}"
   bind:open="{showChangeLocation}"
+  enableUpload="{false}"
   location="{$location}"
   boundary="{$boundary}"
-  boundaryList="{boundaryList}"
+  boundaryList="{SMALL_SCALE_BOUNDARIES}"
   on:change="{changeLocation}"
 />
 

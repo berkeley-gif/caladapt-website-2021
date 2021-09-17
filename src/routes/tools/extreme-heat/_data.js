@@ -1,37 +1,200 @@
 // Node modules
-import { merge, group } from "d3-array";
+import { merge, rollup, range, max, sum } from "d3-array";
+import { timeFormat } from "d3-time-format";
 
 // Helpers
-import config from "../../../helpers/api-config";
+import config from "~/helpers/api-config";
 import {
   handleXHR,
   fetchData,
   transformResponse,
-  pipe,
   serialize,
-} from "../../../helpers/utilities";
-import { seriesList } from "./_helpers";
+  groupConsecutiveDates,
+} from "~/helpers/utilities";
+import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
 
 const { apiEndpoint } = config.env.production;
+const dayNumberFormat = timeFormat("%j");
 
-const fetchTimeseries = async ({ slug, params }) => {
+// Helper function to calculate day number
+// Day number is used for plotting Timing of Days indicator
+const calcDayNumber = (values) => {
+  return values.map((d) => {
+    return { ...d, day: +dayNumberFormat(d.date) };
+  });
+};
+
+/**
+ * The following 2 functions take the list of observed and models
+ * raster series and add extra props. These props describe how the data
+ * should be fetched from the API or how the data is shown in the charts.
+ * List of extra props:
+ * slugs - list of raster series names in API
+ * mark - describes how the timeseries will be displayed in the chart (line/area)
+ * visible - controls whether line/area in chart is hidden/shown
+ *      when user clicks on corresponding legend key. Note: The stats component
+ *      also uses this prop to include/remove series from summary calculations
+ * @param {object} config
+ * @return {array}
+ */
+
+// The observed data is usually a single raster series, so only 1 slug
+const getObservedSeries = ({ climvarId }) => {
+  return OBSERVED.map((d) => {
+    const slugs = [`${climvarId}_day_${d.id}`];
+    return { ...d, slugs, mark: "line", visible: true };
+  });
+};
+
+// For each model, there are usually 2 raster series in the API,
+// the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
+const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
+  return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
+    const slugs = [
+      `${climvarId}_day_${d.id}_historical`,
+      `${climvarId}_day_${d.id}_${scenarioId}`,
+    ];
+    return { ...d, slugs, mark: "line", visible: true };
+  });
+};
+
+/**
+ * Fetches data from the events endpoint in Cal-Adapt API
+ * Input parameters:
+ * slug - name of raster series in API
+ * params - object with props for geometry, stat, units, etc.
+ * method - default is GET, POST used for user uploaded boundaries
+ * @param {object}
+ * @return {array}
+ */
+const fetchEvents = async ({ slug, params, method = "GET" }) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
-  const [response, error] = await handleXHR(fetchData(url, params));
+  const [response, error] = await handleXHR(fetchData(url, params, method));
   if (error) {
     throw new Error(error.message);
   }
-  return response;
+  return calcDayNumber(transformResponse(response));
 };
 
-const addSeriesInfo = (series) => {
-  const item = seriesList.find((d) => d.key === series.key);
-  return { ...series, ...item, visible: true };
-};
-
-export async function get98pThreshold(climvar, queryParams) {
+/**
+ * Fetches data for a single observed/model series
+ * Each series can have 1 or more slugs
+ * @param {object} series - a distinct timeseries obj
+ * @param {object} params - props for for geometry, stat, units, etc.
+ * @param {string} method - default is GET, POST for uploaded boundaries
+ * @return {array}
+ */
+const fetchSeries = async ({ series, params, method = "GET" }) => {
   try {
-    const url = `${apiEndpoint}/series/${climvar}_day_livneh/exheat/?${serialize(
-      queryParams
+    const { slugs } = series;
+    const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
+    const responses = await Promise.all(promises);
+    const values = merge(responses);
+    if (!values.length) {
+      throw new Error(`${series.id}: No Data`);
+    }
+    // For livneh, remove data values after 2006
+    // because there are QA/QC issues with the data
+    if (series.id === "livneh") {
+      return {
+        ...series,
+        values: values.filter((d) => d.date.getFullYear() <= 2006),
+      };
+    }
+    return { ...series, values };
+  } catch (error) {
+    throw new Error(`${series.id}: ${error.message}`);
+  }
+};
+
+/**
+ * The following 2 functions get observed and model data
+ * params - obj with props for geometry, stat, units, etc.
+ * method - default is GET, POST used for user uploaded boundaries
+ * @param {object} config - props for climate variable/indicator, scenario, models, etc.
+ * @param {object} params - props for for geometry, stat, units, etc.
+ * @param {string} method - default is GET, POST for uploaded boundaries
+ * @return {array}
+ */
+
+export async function getObserved(config, params, method = "GET") {
+  try {
+    const seriesList = getObservedSeries(config);
+    const promises = seriesList.map((series) =>
+      fetchSeries({ series, params, method })
+    );
+    const data = await Promise.all(promises);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getModels(config, params, method = "GET") {
+  try {
+    const seriesList = getModelSeries(config);
+    const promises = seriesList.map((series) =>
+      fetchSeries({ series, params, method })
+    );
+    const data = await Promise.all(promises);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Creates the param object used to fetch data from API
+ * @param {object} location
+ * @param {object} boundary - obj representing a mapbox layer
+ * @param {boolean} imperial - represents units
+ * @return {object} params
+ * @return {string} method
+ */
+export function getQueryParams({
+  location,
+  boundary,
+  imperial = true,
+  thresh,
+}) {
+  const params = { imperial, thresh };
+  let method;
+  switch (boundary.id) {
+    case "locagrid":
+      params.g = `Point(${location.center[0]} ${location.center[1]})`;
+      method = "GET";
+      return { params, method };
+    case "ca":
+      params.ref = "/media/ca.json";
+      params.stat = "mean";
+      method = "GET";
+      return { params, method };
+    case "custom":
+      params.g = JSON.stringify(location.geometry);
+      params.stat = "mean";
+      method = "POST";
+      return { params, method };
+    default:
+      params.ref = `/api/${boundary.id}/${location.id}/`;
+      params.stat = "mean";
+      method = "GET";
+      return { params, method };
+  }
+}
+
+/**
+ * Gets the 98th percentile threshold value from API
+ * @param {object} location
+ * @param {object} boundary - obj representing a mapbox layer
+ * @param {boolean} imperial - represents units
+ * @return {object} params
+ * @return {string} method
+ */
+export async function get98pThreshold(climvarId, params) {
+  try {
+    const { thresh, ...rest } = params;
+    const url = `${apiEndpoint}/series/${climvarId}_day_livneh/exheat/?${serialize(
+      rest
     )}`;
     const data = await fetch(url);
     const json = await data.json();
@@ -42,113 +205,64 @@ export async function get98pThreshold(climvar, queryParams) {
   }
 }
 
-export async function addModel(config, params, modelId) {
-  const { climvarId, scenarioId } = config;
-  const slugs = [
-    `${climvarId}_day_${modelId}_historical`,
-    `${climvarId}_day_${modelId}_${scenarioId}`,
-  ];
-  const promises = slugs.map((slug) => {
-    return pipe(fetchTimeseries, transformResponse)({ slug, params });
-  });
-  return Promise.all(promises)
-    .then((results) => {
-      const values = merge(results);
-      if (values.length === 0) {
-        throw new Error("No Data");
-      }
-      const series = {
-        key: modelId,
-        type: "line",
-        values,
-      };
-      return addSeriesInfo(series);
-    })
-    .catch((error) => {
-      throw new Error(`${modelId}: ${error.message}`);
-    });
-}
-
-export async function getObserved(config, params) {
-  try {
-    const { climvarId } = config;
-    const slug = `${climvarId}_day_livneh`;
-    const promise = pipe(fetchTimeseries, transformResponse)({ slug, params });
-    const values = await promise;
-    if (values.length === 0) {
-      throw new Error("No Data");
-    }
-    const observed = {
-      key: "observed",
-      type: "line",
-      values: values.filter((d) => d.date.getFullYear() < 2007),
-    };
-    return addSeriesInfo(observed);
-  } catch (error) {
-    throw new Error(`Observed: ${error.message}`);
+// Functions for reformatting data for different chart views
+export const groupDataByYear = (series) => {
+  let yearRange;
+  if (series.id === "livneh") {
+    yearRange = range(1950, 2007);
+  } else {
+    yearRange = range(1950, 2100);
   }
-}
-
-export async function getModels(config, params) {
-  const { modelIds } = config;
-  const modelList = modelIds.split(",");
-  const modelPromise = modelList.map((modelId) =>
-    addModel(config, params, modelId)
+  const daysPerYear = rollup(
+    series.values,
+    (v) => v,
+    (d) => d.date.getFullYear()
   );
-  const modelData = await Promise.all(modelPromise);
-  return modelData;
-}
-
-export function flattenData(_data) {
-  return _data.reduce((acc, series) => {
-    const seriesValues = series.values.map((d) => {
-      return {
-        ...d,
-        key: series.key,
-        label: series.label,
-      };
-    });
-    acc.push(...seriesValues);
-    return acc;
-  }, []);
-}
-
-export function getDataByDate(_arr) {
-  return Array.from(
-    group(_arr, (d) => d.date),
-    ([date, values]) => {
-      const rows = values.map((d) => {
-        if (d.min) {
-          return {
-            key: d.key,
-            label: d.label,
-            value: [d["min"], d["max"]],
-          };
-        } else {
-          return {
-            key: d.key,
-            label: d.label,
-            value: d.value,
-          };
-        }
-      });
-      return { date, values: rows };
+  const values = [];
+  yearRange.forEach((year) => {
+    if (daysPerYear.has(year)) {
+      const days = daysPerYear.get(year);
+      values.push({ date: new Date(year, 0, 1), days });
+    } else {
+      values.push({ date: new Date(year, 0, 1), days: [] });
     }
-  );
-}
-
-export function formatDataForExport(_arr) {
-  return _arr.map((item) => {
-    const row = {};
-    row.year = item.date.getFullYear();
-    item.values.forEach((d) => {
-      if (Array.isArray(d.value)) {
-        row[`${d.label} Min`] = d.value[0];
-        row[`${d.label} Max`] = d.value[1];
-      } else {
-        row[d.label] = d.value;
-      }
-    });
-    return row;
   });
-}
+  return {
+    ...series,
+    values,
+  };
+};
+
+export const calcDaysCount = (series) => {
+  return {
+    ...series,
+    values: series.values.map((d) => ({ date: d.date, value: d.days.length })),
+  };
+};
+
+// Functions for reformatting data for different chart views
+export const calcMaxDuration = (series) => {
+  return {
+    ...series,
+    values: series.values.map((d) => {
+      const groupedDates = groupConsecutiveDates(d.days);
+      const groupLengths = groupedDates.map((arr) => arr.length);
+      const duration = max(groupLengths);
+      return { date: d.date, value: duration };
+    }),
+  };
+};
+
+export const calcHeatwaveCount = (series, duration) => {
+  return {
+    ...series,
+    values: series.values.map((d) => {
+      const groupedDates = groupConsecutiveDates(d.days);
+      const groupCounts = groupedDates.map((arr) =>
+        Math.floor(arr.length / duration)
+      );
+      const count = sum(groupCounts);
+      return { date: d.date, value: count };
+    }),
+  };
+};

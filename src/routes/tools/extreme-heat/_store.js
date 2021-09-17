@@ -1,15 +1,72 @@
 import { writable, derived } from "svelte/store";
-import { rollup, range, max, sum } from "d3-array";
-import { timeFormat } from "d3-time-format";
+import climvars from "~/helpers/climate-variables";
 
-import { groupConsecutiveDates } from "../../../helpers/utilities";
+import { RangeAvg, MonthsCount } from "~/components/tools/Stats";
+import {
+  LineAreaChart,
+  ScatterChart,
+  HeatmapChart,
+} from "~/components/tools/Charts";
 
 import {
-  scenarioList,
-  boundaryList,
-  climvarList,
-  indicatorList,
-} from "./_helpers";
+  calcHeatwaveCount,
+  calcMaxDuration,
+  calcDaysCount,
+  groupDataByYear,
+} from "./_data";
+
+export const climvarList = climvars
+  .filter((d) => ["tasmax", "tasmin"].includes(d.id))
+  .map((d) => {
+    return {
+      ...d,
+      label: d.id === "tasmax" ? "Extreme Heat Days" : "Warm Nights",
+    };
+  });
+
+// List of indicators (or chart views) used for Extreme Heat Tool
+export const indicatorList = [
+  {
+    id: "frequency",
+    label: "Frequency",
+    title: "Number of Extreme Heat Days per Year",
+    helperText: `Days in a year when daily maximum temperature is above a threshold temperature`,
+    units: "days/year",
+    decimals: 0,
+    chartComponent: LineAreaChart,
+    statsComponent: RangeAvg,
+  },
+  {
+    id: "timing",
+    label: "Timing",
+    title: "Timing of Extreme Heat Days per Year",
+    helperText: `Days in a year when the daily maximum temperature is above a threshold temperature`,
+    units: "",
+    decimals: 0,
+    chartComponent: HeatmapChart,
+    statsComponent: MonthsCount,
+  },
+  {
+    id: "duration",
+    label: "Duration",
+    title: "Longest Stretch of Consecutive Extreme Heat Days per Year",
+    helperText: `The longest stretch of consecutive days when daily maximum temperatures are above a threshold temperature`,
+    units: "days/year",
+    decimals: 0,
+    chartComponent: ScatterChart,
+    statsComponent: RangeAvg,
+  },
+  {
+    id: "waves",
+    label: "Heat Waves",
+    title: "Number of Heat Wave Events per Year",
+    helperText: `Number of heat wave events in a year when daily maximum temperatures are above a threshold temperature`,
+    units: "events/year",
+    decimals: 0,
+    chartComponent: ScatterChart,
+    statsComponent: RangeAvg,
+  },
+];
 
 export const climvarStore = (() => {
   const store = writable("tasmax");
@@ -19,44 +76,38 @@ export const climvarStore = (() => {
     subscribe,
     get climvar() {
       return derived(store, ($store) => {
-        const selected = climvarList.find((d) => d.id === $store);
-        return selected;
+        return climvarList.find((d) => d.id === $store);
       });
     },
   };
 })();
 
-export const scenarioStore = (() => {
-  const store = writable("rcp45");
+// Indicator Store
+export const indicatorStore = (() => {
+  const store = writable("frequency");
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get scenario() {
-      return derived(store, ($store) => {
-        const selected = scenarioList.find((d) => d.id === $store);
+    /*    get indicator() {
+      return derived([climvarStore, store], ([$climvarStore, $store]) => {
+        console.log('get indicator store')
+        const selected = indicatorList.find((d) => d.id === $store);
+        if ($climvarStore === "tasmin") {
+          // Replace text 'Extreme Heat Days' text with 'Warm Nights'
+          let helperText = selected.helperText.replace("Days", "Nights");
+          helperText = helperText.replace("maximum", "minimum");
+          return {
+            ...selected,
+            title: selected.title.replace("Extreme Heat Days", "Warm Nights"),
+            helperText,
+          };
+        }
         return selected;
       });
-    },
+    },*/
   };
 })();
-
-export const modelsStore = (() => {
-  const store = writable("HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5");
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get models() {
-      return derived(store, ($store) => {
-        const arr = $store.split(",");
-        return arr;
-      });
-    },
-  };
-})();
-
-export const unitsStore = writable({ imperial: true });
 
 export const thresholdStore = writable();
 
@@ -95,246 +146,46 @@ export const thresholdListStore = (() => {
   };
 })();
 
-// export function createThresholdListStore(initialValue = []) {
-//   let uid = 1;
-//   const { subscribe, update } = writable(initialValue.map((t) => {
-//     t.id = uid++;
-//     return t;
-//   }));
-//   return {
-//     subscribe,
-//     update(value, label) {
-//       update((prev) => {
-//         const next = prev.map((t) => {
-//           if (t.label === label) {
-//             t.value = value;
-//           }
-//           return t;
-//         })
-//         return next;
-//       })
-//     },
-//     add(value, label='Custom') {
-//       const thresh = {
-//         id: uid++,
-//         label,
-//         value,
-//       };
-//       update((prev) => {
-//         return [...prev, thresh]
-//       })
-//     },
-//     remove(thresh) {
-//       update((prev) => {
-//         return prev.filter(t => t !== thresh);
-//       })
-//     },
-//   };
-// }
+export const durationStore = writable(4);
 
-export const periodStore = writable(4);
-
-export const locationStore = (() => {
+// Data Store
+export const dataStore = (() => {
   const store = writable({
-    boundaryId: "locagrid",
-    location: {
-      id: "37907",
-      title: "240 32nd Street, Sacramento, California 95816",
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [-121.5, 38.625],
-            [-121.4375, 38.625],
-            [-121.4375, 38.5625],
-            [-121.5, 38.5625],
-            [-121.5, 38.625],
-          ],
-        ],
-      },
-      center: [-121.4688, 38.5938],
-      bbox: [-121.5, 38.5625, -121.4375, 38.625],
-    },
-    isUpload: false,
+    daily: null,
+    annual: null,
   });
   const { update, subscribe } = store;
   return {
     subscribe,
-    updateLocation: (location, isUpload = false) =>
+    updateData: (data) =>
       update((store) => {
-        if (!location) return;
-        store.location = location;
-        store.isUpload = isUpload;
+        if (!data) return;
+        store.daily = data;
+        store.annual = data.map((series) => groupDataByYear(series));
         return store;
       }),
-    updateBoundary: (val) =>
+    reset: () =>
       update((store) => {
-        store.boundaryId = val;
+        store.daily = null;
+        store.annual = null;
         return store;
       }),
-    get location() {
-      return derived(store, ($store) => {
-        return $store.location;
-      });
-    },
-    get boundary() {
-      return derived(store, ($store) => {
-        const selected = boundaryList.find((d) => d.id === $store.boundaryId);
-        return selected;
-      });
-    },
-    get center() {
-      return derived(store, ($store) => {
-        return $store.center;
-      });
-    },
-  };
-})();
-
-// Indicator Store
-export const indicatorStore = (() => {
-  const store = writable(indicatorList[0]);
-  const { subscribe, update } = store;
-  return {
-    subscribe,
-    updateIndicator: (val) =>
-      update(() => {
-        return indicatorList.find((d) => d.id === val);
-      }),
-    get indicator() {
-      return derived([climvarStore, store], ([$climvarStore, $store]) => {
-        const indicator = $store;
-        if ($climvarStore === "tasmin") {
-          // Replace text 'Extreme Heat Days' text with 'Warm Nights'
-          let helperText = indicator.helperText.replace("Days", "Nights");
-          helperText = helperText.replace("maximum", "minimum");
-          return {
-            ...indicator,
-            title: indicator.title.replace("Extreme Heat Days", "Warm Nights"),
-            helperText,
-          };
-        }
-        return indicator;
-      });
-    },
-  };
-})();
-
-// Functions for reformatting data for different chart views
-const countByYear = (series) => {
-  let yearRange;
-  if (series.key === "observed") {
-    yearRange = range(1950, 2006);
-  } else {
-    yearRange = range(1950, 2100);
-  }
-  const counts = rollup(
-    series.values,
-    (v) => v.length,
-    (d) => d.date.getFullYear()
-  );
-  return {
-    ...series,
-    values: yearRange.map((year) => ({
-      date: new Date(year, 0, 1),
-      value: counts.get(year) || 0,
-    })),
-  };
-};
-
-const longestByYear = (series) => {
-  let yearRange;
-  if (series.key === "observed") {
-    yearRange = range(1950, 2006);
-  } else {
-    yearRange = range(1950, 2100);
-  }
-  const daysByYear = rollup(
-    series.values,
-    (v) => v,
-    (d) => d.date.getFullYear()
-  );
-  const values = [];
-  yearRange.forEach((year) => {
-    let duration = 0;
-    if (daysByYear.has(year)) {
-      const arr = daysByYear.get(year);
-      const groupedDates = groupConsecutiveDates(arr);
-      const groupLengths = groupedDates.map((arr) => arr.length);
-      duration = max(groupLengths);
-    }
-    values.push({ date: new Date(year, 0, 1), value: duration });
-  });
-  return {
-    ...series,
-    values,
-  };
-};
-
-const heatwaveByYear = (series, period) => {
-  let yearRange;
-  if (series.key === "observed") {
-    yearRange = range(1950, 2006);
-  } else {
-    yearRange = range(1950, 2100);
-  }
-  const daysByYear = rollup(
-    series.values,
-    (v) => v,
-    (d) => d.date.getFullYear()
-  );
-  const values = [];
-  yearRange.forEach((year) => {
-    let count = 0;
-    if (daysByYear.has(year)) {
-      const arr = daysByYear.get(year);
-      const groupedDates = groupConsecutiveDates(arr);
-      const groupCounts = groupedDates.map((arr) =>
-        Math.floor(arr.length / period)
-      );
-      count = sum(groupCounts);
-    }
-    values.push({ date: new Date(year, 0, 1), value: count });
-  });
-  return {
-    ...series,
-    values,
-  };
-};
-
-const dailyHeatmap = (series) => {
-  const dayNumberFormat = timeFormat("%j");
-  return {
-    ...series,
-    values: series.values.map((d) => ({ ...d, day: +dayNumberFormat(d.date) })),
-  };
-};
-
-// Data Store
-export const dataStore = (() => {
-  const store = writable();
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
     get data() {
       return derived(
-        [store, indicatorStore, periodStore],
-        ([$store, $indicatorStore, $periodStore]) => {
-          if (!$store) return null;
+        [store, indicatorStore, durationStore],
+        ([$store, $indicatorStore, $durationStore]) => {
+          if (!store || !$store.daily) return null;
           switch ($indicatorStore.id) {
             case "frequency":
-              return $store.map((series) => countByYear(series));
+              return $store.annual.map((series) => calcDaysCount(series));
             case "duration":
-              return $store.map((series) => longestByYear(series));
+              return $store.annual.map((series) => calcMaxDuration(series));
             case "waves":
-              return $store.map((series) =>
-                heatwaveByYear(series, $periodStore)
+              return $store.annual.map((series) =>
+                calcHeatwaveCount(series, $durationStore)
               );
-            case "timing":
-              return $store.map((series) => dailyHeatmap(series));
             default:
-              return $store;
+              return $store.daily;
           }
         }
       );
@@ -342,75 +193,21 @@ export const dataStore = (() => {
   };
 })();
 
-// Datasets store
-export const datasetStore = (() => {
-  const store = writable([]);
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get titles() {
-      return derived(store, ($store) => {
-        if (!$store || $store.length === 0) return [];
-        return $store.map((d) => `${d.title} (${d.publisher})`);
-      });
-    },
-  };
-})();
-
-// DERIVED STORES
-// Query params store
-export const queryParams = derived(
-  [unitsStore, locationStore],
-  ([$unitsStore, $locationStore]) => {
-    const { boundaryId, location } = $locationStore;
-    const { imperial } = $unitsStore;
-    const params = {};
-    let method = "GET";
-    switch (boundaryId) {
-      case "locagrid":
-        params.g = `Point(${location.center[0]} ${location.center[1]})`;
-        params.imperial = imperial;
-        break;
-      case "ca":
-        params.ref = "/media/ca.json";
-        params.stat = "mean";
-        params.imperial = imperial;
-        break;
-      default:
-        params.ref = `/api/${boundaryId}/${location.id}/`;
-        params.stat = "mean";
-        params.imperial = imperial;
-    }
-    return { params, method };
-  }
-);
-
 // Bookmark store
-export const bookmark = derived(
-  [
-    climvarStore,
-    scenarioStore,
-    modelsStore,
-    unitsStore,
-    locationStore,
-    thresholdStore,
-    periodStore,
-  ],
-  ([
-    $climvarStore,
-    $scenarioStore,
-    $modelsStore,
-    $unitsStore,
-    $locationStore,
-    $thresholdStore,
-    $periodStore,
-  ]) => {
-    const { location, boundaryId } = $locationStore;
-    const [lng, lat] = location.center;
-    const { imperial } = $unitsStore;
-    const { threshold } = $thresholdStore;
-    const period = $periodStore;
-    return `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}&imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}&period=${period}&thresh=${threshold}`;
+export const indicator = derived(
+  [climvarStore, indicatorStore],
+  ([$climvarStore, $indicatorStore]) => {
+    const selected = indicatorList.find((d) => d.id === $indicatorStore);
+    if ($climvarStore === "tasmin") {
+      // Replace text 'Extreme Heat Days' text with 'Warm Nights'
+      let helperText = selected.helperText.replace("Days", "Nights");
+      helperText = helperText.replace("maximum", "minimum");
+      return {
+        ...selected,
+        title: selected.title.replace("Extreme Heat Days", "Warm Nights"),
+        helperText,
+      };
+    }
+    return selected;
   }
 );
