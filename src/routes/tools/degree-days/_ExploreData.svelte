@@ -88,7 +88,7 @@
   let printContainer;
   let printSkipElements;
 
-  $: formatFn = format(`.${$climvar.decimals}f`);
+  $: formatFn = format(`.${$indicator.decimals}f`);
 
   $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
   $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
@@ -340,9 +340,9 @@
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
-        label: `${$climvar.title} (${$climvar.units.imperial})`,
+        label: $indicator.label,
         tickFormat: formatFn,
-        units: `${$climvar.units.imperial}`,
+        units: `${$indicator.units.imperial}`,
       }}"
     />
 
@@ -400,7 +400,7 @@
 
     <div class="block">
       <RadioBtnGroup
-        title="Set frequency"
+        title="Select frequency"
         selected="{$frequencyStore}"
         items="{frequencyList}"
         on:change="{changeFrequency}"
