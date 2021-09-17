@@ -1,5 +1,7 @@
 ---
 title: How do I cite Cal-Adapt?
+tags: about, other
+category: about-caladapt
 ---
 
 **Citing information and visualizations (maps, charts, screenshots, etc.) available via Cal-Adapt:**
