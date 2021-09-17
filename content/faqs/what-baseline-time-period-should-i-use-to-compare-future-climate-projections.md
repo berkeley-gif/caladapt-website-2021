@@ -1,5 +1,7 @@
 ---
 title: What baseline time period should I use to compare future climate projections?
+tags: data, other
+category: understanding-data
 ---
 
 Cal-Adapt typically represents the historical baseline as a thirty-year window from 1961 to 1990. In this period, most of California’s critical infrastructure was developed and the first signals of anthropogenic climate change were beginning to be felt. We also have observed and modeled climate data for this period. 1986 to 2005 is another common baseline period.
