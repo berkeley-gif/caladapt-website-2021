@@ -60,7 +60,7 @@
     {#each items as threshold (threshold.id)}
       <div class="flex-center">
         <RadioButton
-          labelText="{`${threshold.label} - ${threshold.value} ${units}`}"
+          labelText="{`${threshold.label}: ${threshold.value} ${units}`}"
           value="{threshold.value}"
         />
         {#if threshold.label === "Custom"}
