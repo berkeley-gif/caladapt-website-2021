@@ -151,13 +151,8 @@ export async function getModels(config, params, method = "GET") {
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({
-  location,
-  boundary,
-  imperial = true,
-  thresh,
-}) {
-  const params = { imperial, thresh };
+export function getQueryParams({ location, boundary, imperial = true }) {
+  const params = { imperial };
   let method;
   switch (boundary.id) {
     case "locagrid":
@@ -222,9 +217,10 @@ export const groupDataByYear = (series) => {
   yearRange.forEach((year) => {
     if (daysPerYear.has(year)) {
       const days = daysPerYear.get(year);
-      values.push({ date: new Date(year, 0, 1), days });
+      const groups = groupConsecutiveDates(days);
+      values.push({ date: new Date(year, 0, 1), days, groups });
     } else {
-      values.push({ date: new Date(year, 0, 1), days: [] });
+      values.push({ date: new Date(year, 0, 1), days: [], groups: [] });
     }
   });
   return {
@@ -236,7 +232,10 @@ export const groupDataByYear = (series) => {
 export const calcDaysCount = (series) => {
   return {
     ...series,
-    values: series.values.map((d) => ({ date: d.date, value: d.days.length })),
+    values: series.values.map(({ date, days }) => ({
+      date,
+      value: days.length,
+    })),
   };
 };
 
@@ -244,11 +243,9 @@ export const calcDaysCount = (series) => {
 export const calcMaxDuration = (series) => {
   return {
     ...series,
-    values: series.values.map((d) => {
-      const groupedDates = groupConsecutiveDates(d.days);
-      const groupLengths = groupedDates.map((arr) => arr.length);
-      const duration = max(groupLengths);
-      return { date: d.date, value: duration };
+    values: series.values.map(({ date, groups }) => {
+      const groupLengths = groups.map((arr) => arr.length);
+      return { date, value: max(groupLengths) || 0 };
     }),
   };
 };
@@ -256,13 +253,11 @@ export const calcMaxDuration = (series) => {
 export const calcHeatwaveCount = (series, duration) => {
   return {
     ...series,
-    values: series.values.map((d) => {
-      const groupedDates = groupConsecutiveDates(d.days);
-      const groupCounts = groupedDates.map((arr) =>
+    values: series.values.map(({ date, groups }) => {
+      const groupCounts = groups.map((arr) =>
         Math.floor(arr.length / duration)
       );
-      const count = sum(groupCounts);
-      return { date: d.date, value: count };
+      return { date, value: sum(groupCounts) };
     }),
   };
 };

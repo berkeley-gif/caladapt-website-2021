@@ -1,5 +1,11 @@
 import { writable, derived } from "svelte/store";
 import climvars from "~/helpers/climate-variables";
+import {
+  CLIMATE_VARIABLES,
+  DEFAULT_CLIMATE_VARIABLE,
+  DEFAULT_CLIMATE_INDICATOR,
+  DEFAULT_DURATION,
+} from "./_constants";
 
 import { RangeAvg, MonthsCount } from "~/components/tools/Stats";
 import {
@@ -16,7 +22,7 @@ import {
 } from "./_data";
 
 export const climvarList = climvars
-  .filter((d) => ["tasmax", "tasmin"].includes(d.id))
+  .filter((d) => CLIMATE_VARIABLES.includes(d.id))
   .map((d) => {
     return {
       ...d,
@@ -29,9 +35,9 @@ export const indicatorList = [
   {
     id: "frequency",
     label: "Frequency",
-    title: "Number of Extreme Heat Days per Year",
+    title: "Frequency of Extreme Heat Days per Year",
     helperText: `Days in a year when daily maximum temperature is above a threshold temperature`,
-    units: "days/year",
+    units: "days/yr",
     decimals: 0,
     chartComponent: LineAreaChart,
     statsComponent: RangeAvg,
@@ -51,8 +57,8 @@ export const indicatorList = [
     label: "Duration",
     title: "Longest Stretch of Consecutive Extreme Heat Days per Year",
     helperText: `The longest stretch of consecutive days when daily maximum temperatures are above a threshold temperature`,
-    units: "days/year",
-    decimals: 0,
+    units: "days/yr",
+    decimals: 1,
     chartComponent: ScatterChart,
     statsComponent: RangeAvg,
   },
@@ -61,15 +67,15 @@ export const indicatorList = [
     label: "Heat Waves",
     title: "Number of Heat Wave Events per Year",
     helperText: `Number of heat wave events in a year when daily maximum temperatures are above a threshold temperature`,
-    units: "events/year",
-    decimals: 0,
+    units: "events/yr",
+    decimals: 1,
     chartComponent: ScatterChart,
     statsComponent: RangeAvg,
   },
 ];
 
 export const climvarStore = (() => {
-  const store = writable("tasmax");
+  const store = writable(DEFAULT_CLIMATE_VARIABLE);
   const { set, subscribe } = store;
   return {
     set,
@@ -84,14 +90,13 @@ export const climvarStore = (() => {
 
 // Indicator Store
 export const indicatorStore = (() => {
-  const store = writable("frequency");
+  const store = writable(DEFAULT_CLIMATE_INDICATOR);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    /*    get indicator() {
+    get indicator() {
       return derived([climvarStore, store], ([$climvarStore, $store]) => {
-        console.log('get indicator store')
         const selected = indicatorList.find((d) => d.id === $store);
         if ($climvarStore === "tasmin") {
           // Replace text 'Extreme Heat Days' text with 'Warm Nights'
@@ -105,11 +110,11 @@ export const indicatorStore = (() => {
         }
         return selected;
       });
-    },*/
+    },
   };
 })();
 
-export const thresholdStore = writable();
+export const thresholdStore = writable(null);
 
 export const thresholdListStore = (() => {
   let uid = 1;
@@ -146,7 +151,7 @@ export const thresholdListStore = (() => {
   };
 })();
 
-export const durationStore = writable(4);
+export const durationStore = writable(DEFAULT_DURATION);
 
 // Data Store
 export const dataStore = (() => {
@@ -175,7 +180,7 @@ export const dataStore = (() => {
         [store, indicatorStore, durationStore],
         ([$store, $indicatorStore, $durationStore]) => {
           if (!store || !$store.daily) return null;
-          switch ($indicatorStore.id) {
+          switch ($indicatorStore) {
             case "frequency":
               return $store.annual.map((series) => calcDaysCount(series));
             case "duration":
@@ -192,22 +197,3 @@ export const dataStore = (() => {
     },
   };
 })();
-
-// Bookmark store
-export const indicator = derived(
-  [climvarStore, indicatorStore],
-  ([$climvarStore, $indicatorStore]) => {
-    const selected = indicatorList.find((d) => d.id === $indicatorStore);
-    if ($climvarStore === "tasmin") {
-      // Replace text 'Extreme Heat Days' text with 'Warm Nights'
-      let helperText = selected.helperText.replace("Days", "Nights");
-      helperText = helperText.replace("maximum", "minimum");
-      return {
-        ...selected,
-        title: selected.title.replace("Extreme Heat Days", "Warm Nights"),
-        helperText,
-      };
-    }
-    return selected;
-  }
-);

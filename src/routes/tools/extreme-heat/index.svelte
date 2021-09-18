@@ -1,10 +1,12 @@
 <script context="module">
+  import resourcesList from "../../../../content/resources/data";
+  import { INITIAL_CONFIG } from "../_common/constants";
+  import { TOOL_SLUG } from "./_constants";
+
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
-  import resourcesList from "../../../../content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/constants";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -15,7 +17,7 @@
       });
 
     // Filter metadata for current tool
-    const tool = toolsList.find((d) => d.slug === "extreme-heat");
+    const tool = toolsList.find((d) => d.slug === TOOL_SLUG);
     const relatedTools = toolsList
       .filter((d) => tool.related.includes(d.slug))
       .map((d) => ({ ...d, category: "caladapt" }));
@@ -85,7 +87,7 @@
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
 
   // Components
-  import ExploreData from "./ExploreData.svelte";
+  import ExploreData from "./_ExploreData.svelte";
   import {
     Header,
     About,
@@ -128,8 +130,6 @@
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
-  console.log("in index");
-
   // Local props
   let initReady = false;
   let appReady = false;
@@ -146,15 +146,38 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $modelsStore, update();
+  $: threshParams = {
+    location: $location,
+    boundary: $boundary,
+    climvarId: $climvar.id,
+  };
+  $: extraParams = {
+    thresh: $thresholdStore,
+  };
+  $: $scenario, $modelsStore, update();
+  $: $location, $climvar, update(true);
 
-  async function update() {
+  async function defaultThreshold({ location, boundary, climvarId }) {
+    const { params } = getQueryParams({
+      location,
+      boundary,
+      imperial: true,
+    });
+    const thresh98p = await get98pThreshold(climvarId, params);
+    return thresh98p;
+  }
+
+  async function update(resetThresh) {
     if (!initReady || !appReady) return;
     if ($modelsStore.length === 0) return;
 
     try {
       console.log("in update 1");
       dataStore.reset();
+      if (resetThresh) {
+        const thresh98p = await defaultThreshold(threshParams);
+        thresholdListStore.reset(thresh98p, "98th Percentile");
+      }
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -163,77 +186,65 @@
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
-        imperial: true,
-        thresh: $thresholdStore,
       });
-      const observed = await getObserved(config, params, method);
-      const modelsData = await getModels(config, params, method);
-      console.log("in update 2");
+      const observed = await getObserved(
+        config,
+        { ...params, ...extraParams },
+        method
+      );
+      const modelsData = await getModels(
+        config,
+        { ...params, ...extraParams },
+        method
+      );
       dataStore.updateData([...observed, ...modelsData]);
-      console.log("in update 3");
     } catch (err) {
       // TODO: notify user of error
-      console.log("updateData", err);
+      console.log("update error", err);
       notifier.error("Error", err, 2000);
     }
   }
 
-  function initUpdate() {
-    appReady = true;
-    update();
-  }
-
-  async function initLocation({ lat, lng, boundaryId }) {
+  async function initApp({
+    lat,
+    lng,
+    boundaryId,
+    scenarioId,
+    climvarId,
+    modelIds,
+    imperial,
+    duration,
+    thresh,
+  }) {
+    climvarStore.set(climvarId);
+    scenarioStore.set(scenarioId);
+    modelsStore.set(modelIds);
+    unitsStore.set({ imperial });
+    durationStore.set(duration);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
-    return loc;
-  }
-
-  async function initThreshold({ location, boundaryId, climvarId }) {
-    const { params } = getQueryParams({
-      location,
+    locationStore.updateLocation(loc);
+    locationStore.updateBoundary(boundaryId);
+    const thresh98p = await defaultThreshold({
+      location: loc,
       boundary: { id: boundaryId },
-      imperial: true,
+      climvarId,
     });
-    const thresh98p = await get98pThreshold(climvarId, params);
-    return thresh98p;
+    thresholdListStore.add(thresh98p, "98th Percentile");
+    if (thresh && thresh !== thresh98p) {
+      thresholdListStore.add(thresh);
+      thresholdStore.set(thresh);
+    } else {
+      thresholdStore.set(thresh98p);
+    }
   }
 
   onMount(() => {
-    const {
-      lat,
-      lng,
-      boundaryId,
-      scenarioId,
-      climvarId,
-      modelIds,
-      imperial,
-      duration,
-      thresh,
-    } = initialConfig;
-    initLocation({ lat, lng, boundaryId })
-      .then((loc) => {
-        locationStore.updateLocation(loc);
-        locationStore.updateBoundary(boundaryId);
-        return initThreshold({ location: loc, boundaryId, climvarId });
-      })
-      .then((thresh98p) => {
-        thresholdListStore.add(thresh98p, "98th Percentile");
-        thresholdStore.set(thresh98p);
-        if (thresh && thresh !== thresh98p) {
-          thresholdListStore.add(thresh);
-          thresholdStore.set(thresh);
-        }
-      })
+    initApp(initialConfig)
       .then(() => {
-        climvarStore.set(climvarId);
-        scenarioStore.set(scenarioId);
-        modelsStore.set(modelIds);
-        unitsStore.set({ imperial });
-        durationStore.set(duration);
         initReady = true;
-        console.log("init complete");
+        console.log("init ready");
       })
       .catch((error) => {
         console.log("init error", error);
@@ -268,7 +279,12 @@
 
 <div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
   {#if initReady}
-    <ExploreData on:ready="{initUpdate}" />
+    <ExploreData
+      on:ready="{() => {
+        appReady = true;
+        update();
+      }}"
+    />
   {:else}
     <Loading />
   {/if}

@@ -45,7 +45,6 @@
     climvarStore,
     indicatorList,
     indicatorStore,
-    indicator,
     thresholdStore,
     thresholdListStore,
     durationStore,
@@ -56,9 +55,9 @@
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
+  const { indicator } = indicatorStore;
   const { titles } = datasetStore;
   const { data } = dataStore;
-  console.log("reached explore");
 
   let isLoading = true;
   let dataByDate;
@@ -355,12 +354,12 @@
 
   <div slot="settings" class="settings">
     <div class="block">
-      <!--       <SelectClimvar
+      <SelectClimvar
         title="Select Indicator"
         selectedId="{$climvarStore}"
         items="{climvarList}"
         on:change="{changeClimvar}"
-      /> -->
+      />
       <SelectClimvar
         title=""
         selectedId="{$indicatorStore}"
