@@ -90,15 +90,12 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
     const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
     const responses = await Promise.all(promises);
     const values = merge(responses);
-    if (!values.length) {
-      throw new Error(`${series.id}: No Data`);
-    }
     // For livneh, remove data values after 2006
     // because there are QA/QC issues with the data
     if (series.id === "livneh") {
       return {
         ...series,
-        values: values.filter((d) => d.date.getFullYear() <= 2006),
+        values: values.filter((d) => d.date.getUTCFullYear() <= 2006),
       };
     }
     return { ...series, values };
@@ -146,11 +143,12 @@ export async function getModels(config, params, method = "GET") {
 /**
  * Creates the param object used to fetch data from API
  * @param {object} location
- * @param {object} boundary - obj representing a mapbox layer
- * @param {boolean} imperial - represents units
+ * @param {object} boundary - a mapbox layer
+ * @param {boolean} imperial - default true
  * @return {object} params
  * @return {string} method
  */
+
 export function getQueryParams({ location, boundary, imperial = true }) {
   const params = { imperial };
   let method;
@@ -179,17 +177,16 @@ export function getQueryParams({ location, boundary, imperial = true }) {
 
 /**
  * Gets the 98th percentile threshold value from API
- * @param {object} location
- * @param {object} boundary - obj representing a mapbox layer
- * @param {boolean} imperial - represents units
- * @return {object} params
- * @return {string} method
+ * @param {object} climvar
+ * @param {object} params - { location, boundary, imperial }
+ * @return {number} thresh98p
  */
-export async function get98pThreshold(climvarId, params) {
+
+export async function get98pThreshold(climvar, params) {
   try {
-    const { thresh, ...rest } = params;
-    const url = `${apiEndpoint}/series/${climvarId}_day_livneh/exheat/?${serialize(
-      rest
+    const { id } = climvar;
+    const url = `${apiEndpoint}/series/${id}_day_livneh/exheat/?${serialize(
+      params
     )}`;
     const data = await fetch(url);
     const json = await data.json();
@@ -200,23 +197,32 @@ export async function get98pThreshold(climvarId, params) {
   }
 }
 
-// Functions for reformatting data for different chart views
+/**
+ * The following 4 functions transform the data for different extreme heat indicators
+ * @param {array} series
+ * @return {array}
+ */
+
+// Group daily data by year
+// Backfill data for missing years with empty array
 export const groupDataByYear = (series) => {
   let yearRange;
   if (series.id === "livneh") {
-    yearRange = range(1950, 2007);
+    yearRange = range(1950, 2006);
   } else {
     yearRange = range(1950, 2100);
   }
   const daysPerYear = rollup(
     series.values,
     (v) => v,
-    (d) => d.date.getFullYear()
+    (d) => d.date.getUTCFullYear()
   );
   const values = [];
   yearRange.forEach((year) => {
     if (daysPerYear.has(year)) {
+      // Array of all dates in a year
       const days = daysPerYear.get(year);
+      // Array of arrays of consecutive dates
       const groups = groupConsecutiveDates(days);
       values.push({ date: new Date(year, 0, 1), days, groups });
     } else {
@@ -229,6 +235,7 @@ export const groupDataByYear = (series) => {
   };
 };
 
+// Calculate number of extreme heat days for each year
 export const calcDaysCount = (series) => {
   return {
     ...series,
@@ -239,7 +246,7 @@ export const calcDaysCount = (series) => {
   };
 };
 
-// Functions for reformatting data for different chart views
+// From arrays of consecutive dates, calculate longest group for each year
 export const calcMaxDuration = (series) => {
   return {
     ...series,
@@ -250,6 +257,8 @@ export const calcMaxDuration = (series) => {
   };
 };
 
+// From arrays of consecutive dates, calculate number of heat waves for each year
+// Length of heat wave = duration
 export const calcHeatwaveCount = (series, duration) => {
   return {
     ...series,
