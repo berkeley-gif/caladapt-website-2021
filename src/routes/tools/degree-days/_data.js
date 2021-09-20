@@ -132,9 +132,6 @@ const fetchSeries = async ({
     );
     const responses = await Promise.all(promises);
     const values = merge(responses);
-    if (!values.length) {
-      throw new Error(`${series.id}: No Data`);
-    }
     if (series.id === "livneh") {
       return {
         ...series,
