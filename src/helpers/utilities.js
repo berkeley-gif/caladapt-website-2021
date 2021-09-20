@@ -4,6 +4,7 @@ import config from "./api-config";
 import shp from "shpjs";
 import tj from "@mapbox/togeojson";
 import throttle from "lodash.throttle";
+import { range } from "d3-array";
 
 const { apiEndpoint } = config.env.production;
 
@@ -527,4 +528,23 @@ export { throttle };
 export function isToday(date) {
   const today = new Date();
   return date.toDateString() === today.toDateString();
+}
+
+/**
+ * Backfill missing years in transformed API response data
+ * @param {array} data
+ * @param {number} value the value to fill missing data with
+ * @param {number} start starting year value
+ * @param {number} end ending year value
+ * @param {number} inc increment value
+ * @return {array} transformed / mapped data
+ */
+export function backFillData({ data, value = 0, start, end, inc = 1 }) {
+  return range(start, end, inc).map(
+    (y) =>
+      data.find((d) => d.date.getUTCFullYear() === y) || {
+        date: new Date(Date.UTC(y)),
+        value,
+      }
+  );
 }
