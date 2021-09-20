@@ -129,6 +129,24 @@ const tools = [
     icons: [
       'img/icons/sun.svg',
     ],
+    datasets: [
+      {
+        slug: 'cb0c5f49-59d2-4f8e-8d9c-a047833f6081',
+        logo: 'scripps_100x100.png',
+      },
+      {
+        slug: '0887cba6-695c-403a-a757-674075799ea5',
+        logo: 'u_colorado.png',
+      },
+    ],
+    related: [
+      'extreme-heat',
+      'maps-of-projected-change',
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
   },
   {
     title: 'Stream Flow',

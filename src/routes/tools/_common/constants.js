@@ -1,3 +1,6 @@
+import { range } from "d3-array";
+import { timeFormat } from "d3-time-format";
+
 import models from "~/helpers/climate-models";
 import scenarios from "~/helpers/climate-scenarios";
 import boundaries from "~/helpers/mapbox-layers";
@@ -107,6 +110,10 @@ export const OBSERVED = [
   },
 ];
 
+// For livneh, typically we remove data values after 2006
+// because there are QA/QC issues with the data
+export const OBSERVED_FILTER_YEAR = 2006;
+
 export const INITIAL_CONFIG = {
   boundaryId: "locagrid",
   scenarioId: "rcp45",
@@ -115,3 +122,8 @@ export const INITIAL_CONFIG = {
   lat: 38.58,
   lng: -121.46,
 };
+
+export const MONTHS_LIST = range(0, 12).map((d) => ({
+  id: parseInt(d),
+  text: timeFormat("%B")(new Date(2020, d, 1)),
+}));
