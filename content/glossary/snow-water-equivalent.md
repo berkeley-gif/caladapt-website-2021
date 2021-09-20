@@ -1,7 +1,7 @@
 ---
-title: Snow Water Equivalent
+title: Snow Water Equivalent (SWE)
 ---
 
-Snow Water Equivalent, or SWE, is a commonly used measurement used by hydrologists and water managers to gage the amount of liquid water contained within the snowpack. 
+Snow water equivalent (SWE) is the amount of liquid water contained in a snowpack. Snow can vary in its density and structure, so snow water equivalent estimates allow different snowpacks’ water contents to be compared.
 
-In other words, it is the amount of water that theoretically would result if the entire snowpack melted instantaneously.
+SWE projections on Cal-Adapt are produced using a land surface and hydrology model known as the [Variable Infiltration Capacity](/help/glossary/vic) (VIC) model.
