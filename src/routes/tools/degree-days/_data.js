@@ -73,7 +73,7 @@ const aggregateMonthlyData = (response) =>
   rollups(
     response,
     (arr) => +format(".0f")(mean(arr, (d) => d.value)),
-    (dd) => dd.date.getFullYear()
+    (dd) => dd.date.getUTCFullYear()
   ).map(([year, value]) => ({ date: new Date(Date.UTC(year)), value }));
 
 /**
