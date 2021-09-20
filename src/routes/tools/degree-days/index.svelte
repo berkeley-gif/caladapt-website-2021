@@ -1,7 +1,13 @@
 <script context="module">
   import resourcesList from "content/resources/data";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { TOOL_SLUG } from "./_constants";
+  import {
+    DEFAULT_CLIMATE_INDICATOR,
+    DEFAULT_FREQUENCY_CODE,
+    DEFAULT_SELECTED_MONTHS,
+    DEFAULT_THRESHOLD_DEGREES,
+    TOOL_SLUG,
+  } from "./_constants";
 
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
@@ -32,11 +38,28 @@
 
     if (Object.keys(query).length) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng } = query;
+      const {
+        boundary,
+        climvar,
+        frequency,
+        indicator,
+        models,
+        months,
+        scenario,
+        threshold,
+        lat,
+        lng,
+      } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
+        indicatorId: indicator,
+        frequency,
+        months: months
+          ? months.split(",").map((d) => +d)
+          : DEFAULT_SELECTED_MONTHS,
+        threshold,
         modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
@@ -44,6 +67,10 @@
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
+        indicatorId: DEFAULT_CLIMATE_INDICATOR,
+        frequency: DEFAULT_FREQUENCY_CODE,
+        months: DEFAULT_SELECTED_MONTHS,
+        threshold: DEFAULT_THRESHOLD_DEGREES,
       };
     }
 
@@ -175,15 +202,23 @@
     lat,
     lng,
     boundaryId,
+    indicatorId,
     scenarioId,
     climvarId,
     modelIds,
+    months,
     imperial,
+    threshold,
+    frequency,
   }) {
     climvarStore.set(climvarId);
+    indicatorsStore.set(indicatorId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
+    thresholdStore.set(threshold);
+    frequencyStore.set(frequency);
+    selectedMonthsStore.set(months);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);

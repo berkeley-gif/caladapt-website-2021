@@ -21,6 +21,7 @@
     formatDataForExport,
   } from "../_common/helpers";
   import { getSelectedMonthStrings } from "./_helpers";
+  import { serialize } from "~/helpers/utilities";
 
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
@@ -125,7 +126,18 @@
     } else {
       const [lng, lat] = $location.center;
       const modelsStr = $modelsStore.join(",");
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+      bookmark = serialize({
+        climvar: $climvarStore,
+        frequency: $frequencyStore,
+        indicator: $indicatorsStore,
+        scenario: $scenarioStore,
+        threshold: $thresholdStore,
+        models: modelsStr,
+        months: $selectedMonthsStore,
+        lng,
+        lat,
+        boundary: $boundary.id,
+      });
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
@@ -409,7 +421,7 @@
         <SelectMonth
           multi="{true}"
           items="{MONTHS_LIST}"
-          selectedId="{DEFAULT_SELECTED_MONTHS}"
+          selectedId="{$selectedMonthsStore}"
           on:change="{changeSelectedMonths}"
         />
       {/if}
