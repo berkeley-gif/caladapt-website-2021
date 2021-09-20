@@ -35,7 +35,7 @@ export const indicatorList = [
   {
     id: "frequency",
     label: "Frequency",
-    title: "Frequency of Extreme Heat Days per Year",
+    title: "Number of Extreme Heat Days per Year",
     helperText: `Days in a year when daily maximum temperature is above a threshold temperature`,
     units: "days/yr",
     decimals: 0,
@@ -123,8 +123,8 @@ export const thresholdListStore = (() => {
   return {
     subscribe,
     reset(value, label) {
-      update((prev) => {
-        const next = prev.map((t) => {
+      update((store) => {
+        const next = store.map((t) => {
           if (t.label === label) {
             t.value = value;
           }
@@ -139,13 +139,13 @@ export const thresholdListStore = (() => {
         label,
         value,
       };
-      update((prev) => {
-        return [...prev, thresh];
+      update((store) => {
+        return [...store, thresh];
       });
     },
-    remove(thresh) {
-      update((prev) => {
-        return prev.filter((t) => t !== thresh);
+    remove(item) {
+      update((store) => {
+        return store.filter((t) => t.id !== item.id);
       });
     },
   };
