@@ -1,10 +1,5 @@
 <script>
-  import {
-    SkeletonText,
-    SkeletonPlaceholder,
-    Select,
-    SelectItem,
-  } from "carbon-components-svelte";
+  import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg } from "layercake";
   import { scaleBand, scaleTime, scaleQuantile } from "d3-scale";
   import { timeFormat } from "d3-time-format";
@@ -16,6 +11,7 @@
   import AxisX from "./AxisX.svelte";
   import AxisY from "./AxisY.svelte";
   import Legend from "./Legend.svelte";
+  import Control from "./Control.svelte";
 
   export let data;
   export let height = "350px";
@@ -30,32 +26,38 @@
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  export let colors = ["#fed976", "#fd8d3c", "#e31a1c", "#800026"];
 
+  let chartData;
   let chartContainer;
-  let series = [];
-  let selectedData;
-  let xmin;
-  let xmax;
-  let ymin;
-  let ymax;
-  let zmin;
-  let zmax;
+  let xDomain;
   let yDomain;
-  let colorScale;
+  let yTicks;
+  let colorScale = scaleQuantile().range(colors);
   let monthStartDays = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
-
-  function filterData(e) {
-    if (!e.detail) {
-      selectedData = data[0];
-      return;
-    }
-    selectedData = data.find((d) => d.key === e.detail);
-  }
+  let initialSeriesSelection;
 
   $: if (data) {
     // Set X Domain
-    xmin = min(data, (arr) => min(arr.values, (d) => d.date));
-    xmax = max(data, (arr) => max(arr.values, (d) => d.date));
+    const xmin = min(data, (arr) => min(arr.values, (d) => d.date));
+    const xmax = max(data, (arr) => max(arr.values, (d) => d.date));
+    xDomain = [xmin, xmax];
+
+    // The observed dataseries do not extend to end of century
+    // Find the first series in data that does extend across the
+    // complete xDomain
+    initialSeriesSelection = data.find(({ values }) => {
+      const seriesXMax = max(values, (d) => d.date);
+      return seriesXMax.getFullYear() >= xmax.getFullYear();
+    });
+
+    // Update visibility of data series
+    chartData = data.map((series) => {
+      return {
+        ...series,
+        visible: series.id === initialSeriesSelection.id ? true : false,
+      };
+    });
 
     // Set Y Domain
     const yminMonth = min(data, (arr) =>
@@ -64,18 +66,16 @@
     const ymaxMonth = max(data, (arr) =>
       max(arr.values, (d) => parseInt(d.date.getMonth()))
     );
-
     // Find the month start day number to define yDomain
-    ymin = monthStartDays[yminMonth];
-    ymax = monthStartDays[ymaxMonth + 1];
-    yDomain = monthStartDays.slice(yminMonth, ymaxMonth + 1);
+    const ymin = monthStartDays[yminMonth];
+    const ymax = monthStartDays[ymaxMonth + 1];
+    yDomain = range(ymin, ymax);
+    yTicks = monthStartDays.slice(yminMonth, ymaxMonth + 1);
 
     // Set Color Domain
-    zmin = min(data, (arr) => min(arr.values, (d) => d.value));
-    zmax = max(data, (arr) => max(arr.values, (d) => d.value));
-    colorScale = scaleQuantile()
-      .domain([zmin, zmax])
-      .range(["#fed976", "#fd8d3c", "#e31a1c", "#800026"]);
+    const zmin = min(data, (arr) => min(arr.values, (d) => d.value));
+    const zmax = max(data, (arr) => max(arr.values, (d) => d.value));
+    colorScale.domain([zmin, zmax]);
 
     // Set Legend
     const stopValues = [zmin, ...colorScale.quantiles()];
@@ -89,38 +89,22 @@
     });
     setContext("Legend", writable(legendItems));
 
-    // Set series
-    series = data.map((d) => {
+    // Set Controls
+    const controlItems = data.map(({ id, label, color }) => {
       return {
-        key: d.key,
-        label: d.label,
+        id,
+        label,
+        color,
+        visible: id === initialSeriesSelection.id ? true : false,
       };
     });
-
-    // Set data
-    selectedData = data.find((d) => d.key !== "observed");
+    setContext("Control", writable(controlItems));
   }
 </script>
 
-<style>
-  .series-select :global(.bx--select--inline .bx--select-input) {
-    background-color: #f4f4f4;
-    width: 250px;
-  }
-</style>
-
 {#if data}
-  <div class="series-select">
-    <Select
-      inline
-      labelText="SELECT SERIES"
-      selected="{selectedData.key}"
-      on:change="{filterData}"
-    >
-      {#each series as s}
-        <SelectItem value="{s.key}" text="{s.label}" />
-      {/each}
-    </Select>
+  <div class="chart-controls">
+    <Control />
   </div>
   <div class="chart-legend">
     <Legend />
@@ -132,9 +116,8 @@
       y="{yAxis.key}"
       xScale="{scaleTime()}"
       yScale="{scaleBand()}"
-      xDomain="{[xmin, xmax]}"
-      yDomain="{range(ymin, ymax)}"
-      data="{data}"
+      xDomain="{xDomain}"
+      yDomain="{yDomain}"
     >
       <Svg>
         <AxisX
@@ -143,9 +126,11 @@
           gridlines="{false}"
           snapTicks="{false}"
         />
-        <AxisY ticks="{yDomain}" gridlines="{true}" />
+        <AxisY ticks="{yTicks}" gridlines="{true}" />
         <g class="heatmap-group">
-          <Heatmap series="{selectedData}" fill="{colorScale}" />
+          {#each chartData as series}
+            <Heatmap series="{series}" fill="{colorScale}" />
+          {/each}
         </g>
       </Svg>
     </LayerCake>
