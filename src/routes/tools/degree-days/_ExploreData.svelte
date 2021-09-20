@@ -186,17 +186,14 @@
 
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
-    console.log("scenario change");
   }
 
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds);
-    console.log("models change");
   }
 
   function changeIndicator(e) {
     indicatorsStore.set(e.detail);
-    console.log(`indicator changed: ${e.detail.id}`);
   }
 
   function changeLocation(e) {
@@ -207,22 +204,18 @@
       locationStore.updateBoundary(e.detail.boundaryId);
       locationStore.updateLocation(e.detail.location);
     }
-    console.log("location change");
   }
 
   function changeThreshold(e) {
     thresholdStore.set(e.detail);
-    console.log("threshold changed:", e.detail);
   }
 
   function changeFrequency(e) {
     frequencyStore.set(e.detail);
-    console.log(`frequency changed: ${e.detail}`);
   }
 
   function changeSelectedMonths(e) {
     selectedMonthsStore.set(e.detail);
-    console.log(`frequency months changed: ${e.detail}`);
   }
 </script>
 

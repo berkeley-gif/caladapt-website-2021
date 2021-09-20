@@ -193,7 +193,7 @@
       dataStore.set([...observed, ...modelsData]);
     } catch (error) {
       isFetchingStore.set(false);
-      console.log("updateData", error);
+      console.error("updateData", error);
       notifier.error("Error", error, 2000);
     }
   }
@@ -231,10 +231,9 @@
     initApp(initialConfig)
       .then(() => {
         appReady = true;
-        console.log("app ready");
       })
       .catch((error) => {
-        console.log("init error", error);
+        console.error("init error", error);
         notifier.error(
           "Unable to Load Tool",
           "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
