@@ -14,7 +14,7 @@
   const legendItems = getContext("Legend");
 
   $: $legendItems.forEach((d) => {
-    if (d.key === series.key) {
+    if (d.id === series.id) {
       show = d.visible;
     }
   });
@@ -23,7 +23,7 @@
 </script>
 
 {#if show}
-  <g class="{`${series.key}`}">
+  <g class="{`${series.id}`}">
     {#each data as d}
       <circle
         cx="{$xGet(d) + (typeof dx === 'function' ? dx($xScale) : dx)}"
