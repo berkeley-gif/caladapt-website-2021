@@ -42,6 +42,7 @@
     dataStore,
     modelsStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import {
     climvarStore,
@@ -59,7 +60,6 @@
   const { titles } = datasetStore;
   const { indicator } = indicatorsStore;
 
-  let isLoading = true;
   let dataByDate;
   let statsData;
   let showDownload = false;
@@ -99,11 +99,10 @@
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
-    isLoading = false;
+    isFetchingStore.set(false);
   } else {
     statsData = null;
     dataByDate = null;
-    isLoading = true;
   }
 
   async function loadLearnMore({
@@ -270,7 +269,7 @@
   }
 </style>
 
-{#if isLoading}
+{#if $isFetchingStore}
   <Loading />
 {/if}
 

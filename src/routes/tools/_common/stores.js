@@ -84,3 +84,7 @@ export const datasetStore = (() => {
     },
   };
 })();
+
+// is a Network Request happening?
+// used to display UI loading state to user
+export const isFetchingStore = writable(false);

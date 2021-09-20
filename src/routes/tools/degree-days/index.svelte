@@ -84,6 +84,7 @@
     locationStore,
     dataStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import {
     climvarStore,
@@ -149,6 +150,8 @@
         imperial: true,
       });
 
+      isFetchingStore.set(true);
+
       const observed = await getObserved(
         config,
         { ...params, ...extraParams },
@@ -162,7 +165,7 @@
 
       dataStore.set([...observed, ...modelsData]);
     } catch (error) {
-      // TODO: notify user of error
+      isFetchingStore.set(false);
       console.log("updateData", error);
       notifier.error("Error", error, 2000);
     }
