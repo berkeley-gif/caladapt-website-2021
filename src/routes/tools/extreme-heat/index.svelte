@@ -79,7 +79,7 @@
 </script>
 
 <script>
-  import { onMount, tick } from "svelte";
+  import { onMount, tick, afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
@@ -149,35 +149,39 @@
   $: threshParams = {
     location: $location,
     boundary: $boundary,
-    climvarId: $climvar.id,
+    climvar: $climvar,
   };
-  $: extraParams = {
-    thresh: $thresholdStore,
-  };
-  $: $scenario, $modelsStore, update();
-  $: $location, $climvar, update(true);
+  $: extraParams = { thresh: $thresholdStore };
+  $: $location, $climvar, updateDefaultThreshold();
+  $: $scenario, $modelsStore, $thresholdStore, update();
 
-  async function defaultThreshold({ location, boundary, climvarId }) {
+  async function getDefaultThreshold({ location, boundary, climvar }) {
     const { params } = getQueryParams({
       location,
       boundary,
       imperial: true,
     });
-    const thresh98p = await get98pThreshold(climvarId, params);
+    const thresh98p = await get98pThreshold(climvar, params);
     return thresh98p;
   }
 
-  async function update(resetThresh) {
+  async function updateDefaultThreshold() {
+    const { location, boundary, climvar } = threshParams;
+    if (!location || !boundary) return;
+    const thresh98p = await getDefaultThreshold({
+      location,
+      boundary,
+      climvar,
+    });
+    thresholdListStore.reset(thresh98p, "98th Percentile");
+    thresholdStore.set(thresh98p);
+  }
+
+  async function update() {
     if (!initReady || !appReady) return;
     if ($modelsStore.length === 0) return;
-
     try {
-      console.log("in update 1");
       dataStore.reset();
-      if (resetThresh) {
-        const thresh98p = await defaultThreshold(threshParams);
-        thresholdListStore.reset(thresh98p, "98th Percentile");
-      }
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -226,10 +230,10 @@
     const loc = await getFeature(nearest, boundaryId);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
-    const thresh98p = await defaultThreshold({
+    const thresh98p = await getDefaultThreshold({
       location: loc,
       boundary: { id: boundaryId },
-      climvarId,
+      climvar: { id: climvarId },
     });
     thresholdListStore.add(thresh98p, "98th Percentile");
     if (thresh && thresh !== thresh98p) {
