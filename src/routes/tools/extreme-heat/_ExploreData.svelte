@@ -142,7 +142,7 @@
 
   $: if (modelsInit) dispatch("ready");
 
-  $: formatFn = format(`.${$climvar.decimals}f`);
+  $: formatFn = format(`.${$indicator.decimals}f`);
 
   $: if ($data) {
     console.log("from explore", $data);
@@ -189,6 +189,11 @@
   function addThreshold(e) {
     thresholdListStore.add(e.detail);
     console.log("threshold add");
+  }
+
+  function removeThreshold(e) {
+    thresholdListStore.remove(e.detail);
+    console.log("threshold remove");
   }
 
   function changeLocation(e) {
@@ -273,7 +278,8 @@
     </div>
     <div class="h4">
       Projected changes in <span class="annotate">{$indicator.title}</span>
-      under a <span class="annotate">{$scenario.labelLong}</span>.
+      above <span class="annotate">{$thresholdStore} °F</span> under a
+      <span class="annotate">{$scenario.labelLong}</span>.
     </div>
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
       Change Location
@@ -283,7 +289,8 @@
   <div slot="stats">
     <ul class="stats">
       <li class="block">
-        <RangeAvg
+        <svelte:component
+          this="{$indicator.statsComponent}"
           units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{true}"
@@ -293,7 +300,8 @@
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <svelte:component
+          this="{$indicator.statsComponent}"
           units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{false}"
@@ -303,8 +311,9 @@
         />
       </li>
       <li class="block">
-        <RangeAvg
-          units="{$indicator.unitsl}"
+        <svelte:component
+          this="{$indicator.statsComponent}"
+          units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -316,17 +325,18 @@
   </div>
 
   <div slot="graphic" class="graphic block">
-    <LineAreaChart
+    <svelte:component
+      this="{$indicator.chartComponent}"
       data="{$data}"
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
-        label: `${$indicator.title} (${$indicator.units})`,
+        label: `${$indicator.title}`,
+        baseValue: 0,
         tickFormat: formatFn,
         units: `${$indicator.units}`,
       }}"
     />
-
     <div class="chart-notes margin--v-8">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
@@ -395,6 +405,7 @@
         helperText="Add a new threshold value or select from existing values."
         on:change="{changeThreshold}"
         on:add="{addThreshold}"
+        on:remove="{removeThreshold}"
       />
       <LearnMoreButton />
     </div>
