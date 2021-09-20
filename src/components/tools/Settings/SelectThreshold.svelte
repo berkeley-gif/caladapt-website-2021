@@ -8,6 +8,7 @@
     NumberInput,
   } from "carbon-components-svelte";
   import Delete16 from "carbon-icons-svelte/lib/Delete16";
+  import { debounce } from "~/helpers/utilities";
 
   export let items;
   export let selected;
@@ -15,18 +16,21 @@
   export let title = "Select Threshold";
   export let helperText;
 
-  $: selected, dispatch("change", selected);
-
   const dispatch = createEventDispatcher();
   let ready = false;
 
-  function addThreshold(e) {
-    if (e.key === "Enter") {
-      const value = Number(e.target.value);
-      dispatch("add", value);
-      e.target.value = "";
-    }
-  }
+  $: selected, dispatch("change", selected);
+
+  const addThreshold = debounce((e) => {
+    console.log("add", e);
+    const value = Number(e.target.value);
+    dispatch("add", value);
+    e.target.value = "";
+  }, 500);
+
+  const removeThreshold = (e) => {
+    dispatch("remove", e);
+  };
 
   onMount(() => {
     ready = true;
@@ -40,19 +44,6 @@
     align-items: center;
     margin-bottom: 0.5rem;
   }
-
-  .input-label {
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.34;
-    letter-spacing: 0.32px;
-    display: inline-block;
-    margin: 0.5rem 0;
-    color: var(--gray-70);
-    font-weight: 400;
-    line-height: 1rem;
-    vertical-align: baseline;
-  }
 </style>
 
 {#if ready}
@@ -60,7 +51,7 @@
     {#each items as threshold (threshold.id)}
       <div class="flex-center">
         <RadioButton
-          labelText="{`${threshold.label}: ${threshold.value} ${units}`}"
+          labelText="{`${threshold.value} ${units} (${threshold.label})`}"
           value="{threshold.value}"
         />
         {#if threshold.label === "Custom"}
@@ -69,7 +60,7 @@
             kind="ghost"
             iconDescription="Remove value"
             icon="{Delete16}"
-            on:click="{() => items.remove(threshold)}"
+            on:click="{() => removeThreshold(threshold)}"
           />
         {/if}
       </div>
@@ -78,6 +69,7 @@
   <div style="margin-top: 0.5rem;">
     <NumberInput
       hideLabel
+      hideSteppers
       helperText="{helperText}"
       on:input="{addThreshold}"
     />
