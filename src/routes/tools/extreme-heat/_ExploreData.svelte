@@ -28,10 +28,9 @@
     SelectModels,
     SelectClimvar,
     SelectThreshold,
+    RadioBtnGroup,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
-  import { LineAreaChart } from "~/components/tools/Charts";
-  import { RangeAvg } from "~/components/tools/Stats";
 
   // Store
   import {
@@ -364,10 +363,10 @@
 
   <div slot="settings" class="settings">
     <div class="block">
-      <SelectClimvar
-        title="Select Indicator"
-        selectedId="{$climvarStore}"
+      <RadioBtnGroup
+        selected="{$climvarStore}"
         items="{climvarList}"
+        title="Select Indicator"
         on:change="{changeClimvar}"
       />
       <SelectClimvar
