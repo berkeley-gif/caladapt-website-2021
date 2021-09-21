@@ -77,13 +77,15 @@
     </div>
     <div class="bx--row">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each toolsByCategory as { icons, title, desc, slug }}
+        {#each toolsByCategory as { icons, title, desc, slug, version3 }}
           <Card
             {...{
               titleText: title,
               description: desc,
               height: cardHeight,
-              linkPath: `/tools/${slug}`,
+              linkPath: version3
+                ? `/tools/${slug}`
+                : `https://v2.cal-adapt.org/tools/${slug}`,
               iconPaths: icons,
               ctaText: "Explore",
             }}
