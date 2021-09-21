@@ -70,12 +70,7 @@
   let bookmark;
 
   let learnMoreProps = {};
-  let chartDescription = `<p>The colored lines on this visualization represent 
-    a timeseries of annual average values from individual downscaled GCMs. 
-    The gray shaded region in the background represents the range of projections 
-    from all 32 downscaled GCMs. The historical observed data is represented by 
-    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
-    corresponding timeseries.</p>`;
+  $: chartDescription = $indicator.description;
 
   let metadata;
   let csvData;
@@ -388,7 +383,7 @@
         on:change="{changeScenario}"
       />
       <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
+        on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
       />
     </div>
     <div class="block">
@@ -426,7 +421,9 @@
         items="{PRIORITY_10_MODELS}"
         on:change="{changeModels}"
       />
-      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['global-climate-model'] })}"
+      />
     </div>
   </div>
 </Dashboard>

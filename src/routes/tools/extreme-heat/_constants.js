@@ -17,6 +17,11 @@ export const CLIMATE_INDICATORS = [
     decimals: 0,
     chartComponent: LineAreaChart,
     statsComponent: RangeAvg,
+    description: `<p>The colored lines on this visualization represent 
+    a timeseries of number of extreme heat days from individual downscaled GCMs. 
+    The historical observed data is represented by 
+    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
+    corresponding timeseries.</p>`,
   },
   {
     id: "timing",
@@ -26,6 +31,9 @@ export const CLIMATE_INDICATORS = [
     decimals: 0,
     chartComponent: HeatmapChart,
     statsComponent: MonthsCount,
+    description: `<p>This chart shows a heatmap of extreme heat days for an 
+    individual GCM or for the historical observed data.</p><p>Click on any of 
+    the legend keys to highlight corresponding timeseries.</p>`,
   },
   {
     id: "duration",
@@ -35,6 +43,11 @@ export const CLIMATE_INDICATORS = [
     decimals: 1,
     chartComponent: ScatterChart,
     statsComponent: RangeAvg,
+    description: `<p>The colored dots on this visualization represent 
+    the longest stretch of consecutive extreme heat days from individual downscaled GCMs. 
+    The historical observed data is represented by 
+    a gray dots from 1950-2006.</p><p>Click on any of the legend keys to highlight 
+    corresponding timeseries.</p>`,
   },
   {
     id: "waves",
@@ -44,6 +57,11 @@ export const CLIMATE_INDICATORS = [
     decimals: 1,
     chartComponent: ScatterChart,
     statsComponent: RangeAvg,
+    description: `<p>The colored dots on this visualization represent 
+    the number of heat wave events from individual downscaled GCMs. 
+    The historical observed data is represented by 
+    a gray dots from 1950-2006.</p><p>Click on any of the legend keys to highlight 
+    corresponding timeseries. Change the duration of heat wave event in the Settings panel.</p>`,
   },
 ];
 
