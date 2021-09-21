@@ -16,14 +16,14 @@ There are many ways to access, visualize, and download data from Cal-Adapt:
  
 *Data catalog*: All datasets available on Cal-Adapt are listed in the [data catalog](/data/download/). Search for the dataset you are interested in by entering a search criteria and/or filtering by a climate variable or data producer. You will be prompted to follow a stepwise process to identify a data format (either GeoTIFF or CSV), specify a spatial extent, set aggregation parameters, and then select from different emissions scenarios and climate models. NetCDF files for full spatial extents are available from the [Cal-Adapt file server](https://albers.cnr.berkeley.edu/data/). Links to NetCDF files are displayed on screen during the data format selection step.
  
-*Cal-Adapt file server*: We store climate data provided by California’s scientific and research community in their original formats on the [Cal-Adapt file server](https://albers.cnr.berkeley.edu/data/). You can download NetCDF files of gridded datasets and CSV files of station data from the server. Links to individual datasets are also included in the [data catalog](/data/download/).
+*Cal-Adapt file server*: We store climate data provided by California’s scientific and research community in their original formats on the <a href="https://albers.cnr.berkeley.edu/data/" target="_blank">Cal-Adapt file server</a>. You can download NetCDF files of gridded datasets and CSV files of station data from the server. Links to individual datasets are also included in the [data catalog](/data/download/).
  
-*Cal-Adapt API*: We process data provided by California’s scientific and research community and serve some of these through the [Cal-Adapt RESTful API](https://api.cal-adapt.org/api/). You can read the [API documentation](https://berkeley-gif.github.io/caladapt-docs/) to learn more.
+*Cal-Adapt API*: We process data provided by California’s scientific and research community and serve some of these through the <a href="https://api.cal-adapt.org/api/" target="_blank">Cal-Adapt RESTful API</a>. You can read the <a href="https://berkeley-gif.github.io/caladapt-docs/" target="_blank">API documentation</a> to learn more.
  
-*R and ArcPro packages*: You can pull data from Cal-Adapt’s API into your local environment using either Cal-Adapt’s R package (caladaptr) or Cal-Adapt’s ArcPro package. Documentation for the [caladaptr R package is here](https://ucanr-igis.github.io/caladaptr/), and documentation for the [ArcPro package is here](https://ucanr-igis.github.io/caladapt-py/).
+*R and ArcPro packages*: You can pull data from Cal-Adapt’s API into your local environment using either <a href="https://ucanr-igis.github.io/caladaptr/" target="_blank">Cal-Adapt’s R package (caladaptr)</a> or <a href="https://ucanr-igis.github.io/caladapt-py/" target="_blank">Cal-Adapt’s ArcPro package</a>.
 
 For more information on accessing climate data on Cal-Adapt, visit the [data page](/data/).
 
 ## Examples of Cal-Adapt data used in adaptation planning
 
-To see how other people have used climate data from Cal-Adapt in adaptation planning, check out the resources housed on the [Adaptation Clearinghouse](https://resilientca.org/search/?q=cal-adapt).
+To see how other people have used climate data from Cal-Adapt in adaptation planning, check out the resources housed on the <a href="https://resilientca.org/search/?q=cal-adapt" target="_blank">Adaptation Clearinghouse</a>.
