@@ -52,11 +52,11 @@
     margin-bottom: 1rem;
   }
 
-  ul {
+  ul:not(.bx--accordion) {
     list-style: disc;
   }
 
-  ol {
+  ol:not(.bx--accordion) {
     list-style: decimal;
   }
 
