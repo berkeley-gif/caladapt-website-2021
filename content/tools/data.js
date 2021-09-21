@@ -6,6 +6,7 @@ const tools = [
     desc: `A starting point to get climate impacts for your location.`,
     categories: ['Temperature', 'Precipitation'],
     slug: 'local-climate-change-snapshot',
+    version3: false,
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
@@ -17,6 +18,7 @@ const tools = [
     desc: `Projected annual averages of maximum & minimum temperatures and precipitation.`,
     categories: ['Temperature', 'Precipitation'],
     slug: 'annual-averages',
+    version3: true,
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
@@ -48,6 +50,7 @@ const tools = [
     desc: `Extreme weather events for baseline and future climates.`,
     categories: ['Temperature'],
     slug: 'extreme-weather',
+    version3: true,
     icons: [
       'img/icons/sun.svg',
     ],
@@ -70,6 +73,7 @@ const tools = [
     desc: `Maps depicting long-term (30 years) changes in annual average temperature and precipitation.`,
     categories: ['Temperature', 'Precipitation'],
     slug: 'maps-of-projected-change',
+    version3: false,
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
@@ -80,6 +84,7 @@ const tools = [
     desc: `Changes in intesity and frequency of extreme precipitation events.`,
     categories: ['Precipitation'],
     slug: 'extreme-precipitation',
+    version3: false,
     icons: [
       'img/icons/rainfall.svg',
     ],
@@ -89,6 +94,7 @@ const tools = [
     desc: `Projected frequency and duration of extreme heat days and warm nights.`,
     categories: ['Precipitation'],
     slug: 'extreme-heat',
+    version3: true,
     icons: [
       'img/icons/sun.svg',
     ],
@@ -99,6 +105,7 @@ const tools = [
     Sea Level Rise scenarios.`,
     categories: ['Sea Level Rise', 'Flooding'],
     slug: 'slr-calflod-3d',
+    version3: false,
     icons: [
       'img/icons/sea.svg',
     ],
@@ -108,6 +115,7 @@ const tools = [
     desc: `Timelapse animation and monthly averages of projected Snow Water Equivalent.`,
     categories: ['Snowpack'],
     slug: 'snowpack',
+    version3: false,
     icons: [
       'img/icons/snowflake.svg',
     ],
@@ -117,6 +125,7 @@ const tools = [
     desc: `Annual averages of area burned for 4 GCMs, 2 RCPs and 3 population growth scenarios.`,
     categories: ['Wildfire'],
     slug: 'wildfire',
+    version3: false,
     icons: [
       'img/icons/wildfire.svg',
     ],
@@ -126,6 +135,7 @@ const tools = [
     desc: `A common proxy for energy needed to heat and cool buildings.`,
     categories: ['Temperature'],
     slug: 'degree-days',
+    version3: true,
     icons: [
       'img/icons/sun.svg',
     ],
@@ -154,6 +164,7 @@ const tools = [
     and precipitation.`,
     categories: ['Precipitation'],
     slug: 'streamflow',
+    version3: false,
     icons: [
       'img/icons/rainfall.svg',
     ],
@@ -164,6 +175,7 @@ const tools = [
     drought periods.`,
     categories: ['Temperature', 'Precipitation'],
     slug: 'extended-drought',
+    version3: false,
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
@@ -174,6 +186,7 @@ const tools = [
     desc: `Hourly sea level projections at selected Tide Gauge Locations along the California coast.`,
     categories: ['Sea Level Rise'],
     slug: 'slr-hourly-projections',
+    version3: false,
     icons: [
       'img/icons/sea.svg',
     ],
