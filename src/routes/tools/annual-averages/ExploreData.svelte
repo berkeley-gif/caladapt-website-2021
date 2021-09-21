@@ -334,7 +334,7 @@
         on:change="{changeScenario}"
       />
       <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
+        on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
       />
     </div>
     <div class="block">
@@ -343,7 +343,9 @@
         items="{PRIORITY_10_MODELS}"
         on:change="{changeModels}"
       />
-      <LearnMoreButton on:click="{() => loadLearnMore({ slugs: ['gcms'] })}" />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['global-climate-model'] })}"
+      />
     </div>
   </div>
 </Dashboard>
