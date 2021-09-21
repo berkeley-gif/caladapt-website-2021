@@ -60,7 +60,7 @@
     legendItems.set(
       data.map((series) => {
         return {
-          key: series.key,
+          id: series.id,
           label: series.label,
           color: series.color,
           visible: series.visible,
@@ -72,7 +72,7 @@
   }
 
   function getTooltipLabel(d) {
-    const item = data.find((series) => series.key === d);
+    const item = data.find((series) => series.id === d);
     if (item) {
       return item.label;
     } else {
@@ -81,7 +81,7 @@
   }
 
   function getTooltipColor(d) {
-    const item = data.find((series) => series.key === d);
+    const item = data.find((series) => series.id === d);
     if (item) {
       return item.color;
     } else {
