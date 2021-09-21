@@ -11,9 +11,9 @@ order: 2
 
 ## What climate data does Cal-Adapt provide?
 
-Cal-Adapt hosts climate change projections and related data generated for California’s Fourth Climate Change Assessment. Most of the projections on Cal-Adapt were derived by statistically downscaling the outputs of general circulation models (GCMs). You can learn more about general circulation models and downscaling [here](https://www.carbonbrief.org/qa-how-do-climate-models-work).
+Cal-Adapt hosts climate change projections and related data generated for California’s Fourth Climate Change Assessment. Most of the projections on Cal-Adapt were derived by statistically downscaling the outputs of general circulation models (GCMs). You can learn more about general circulation models and downscaling at [Carbon Brief's Q&A: How do climate models work?](https://www.carbonbrief.org/qa-how-do-climate-models-work)
 
-The main datasets hosted on Cal-Adapt are listed in the table below. For more information on how to access these datasets, see the FAQ article [How Can I Download Data?](/help/faqs/how-can-i-download-data/).
+The main datasets hosted on Cal-Adapt are listed in the table below. For more information on how to access these datasets, see the FAQ article [How Can I Download Data?](/help/faqs/how-can-i-download-data/)
 
 <div class="table-wrapper">
 
@@ -33,7 +33,7 @@ The main datasets hosted on Cal-Adapt are listed in the table below. For more in
 | Hourly Sea Level Projections | Hourly sea level projections at selected Tide Gauge Locations along the California coast produced for Ocean Protection Council and  California’s Fourth Climate Change Assessment | [Pierce et al. 2018](https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf) | Sea level rise | RCP 4.5, RCP 8.5 | 2000-2100 |
 </div><br>
 
-For a thorough explanation of how Cal-Adapt stores and makes accessible specific datasets, we recommend you read the Fourth Assessment report on Cal-Adapt <https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf>.
+For a thorough explanation of how Cal-Adapt stores and makes accessible specific datasets, we recommend you read the [Fourth Assessment report on Cal-Adapt](https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf).
 
 ## What other data does Cal-Adapt provide?
 
