@@ -44,10 +44,12 @@ The 2020 Adaptation Planning Guide (APG) provides guidance to local governments 
 2. Assess Vulnerability
 3. Define Adaptation Framework and Strategies
 4. Implement, Monitor, Evaluate, and Adjust
+
+[//]: # (Using Comment Trick to End List)
  
 While following this process, it is most useful to start examining climate change data from Cal-Adapt in a preliminary analysis during Phase 1 to understand the scope of the assessment you are about to undertake, and then to conduct a more thorough technical analysis as you move into Phase 2. Explore each phase, broken down into manageable smaller steps in the online <a href="https://resilientca.org/apg/intro/" target="_blank">Adaptation Planning Guide</a>.
  
-> Cities and Counties in California are required to address climate adaptation and vulnerability in their safety elements. For more information on the requirements see the State's 2020 Adaptation Planning Guide, the General Plan Guidelines Chapter 4, or Government Code section 65302(g). (Senate Bill 379, Jackson, 2015).
+>Cities and Counties in California are required to address climate adaptation and vulnerability in their safety elements. For more information on the requirements see the State's 2020 Adaptation Planning Guide, the General Plan Guidelines Chapter 4, or Government Code section 65302(g). (Senate Bill 379, Jackson, 2015).
  
 The way that you use climate data will depend on your particular needs, risk tolerance, and planning context. To support adaptation planning, the State of California has produced guidance materials, including:
  
@@ -57,5 +59,7 @@ The way that you use climate data will depend on your particular needs, risk tol
 - <a href="https://opr.ca.gov/planning/general-plan/" target="_blank">General Plan Guidelines and Technical Advisories</a> (See Chapter 4, Safety Element, and Chapter 8 for specific guidance on addressing climate change).
 - <a href="http://www.opr.ca.gov/docs/20200720-Vulnerable_Communities.pdf" target="_blank">Defining Vulnerable Communities in the Context of Climate Change</a>
 - Various state agencies produce regional, topical, and impact-specific guidance documents and technical resources that are compiled and highlighted on the State Adaptation Clearinghouse as Featured Resources, organized under <a href="https://resilientca.org/topics/" target="_blank">Topic Areas</a>.
+
+[//]: # (Using Comment Trick to End List)
  
 You can find a list of additional climate change adaptation planning resources on the <a href="https://resilientca.org/apg/adaptation-planning-resources/" target="_blank">California Adaptation Clearinghouse Resouces Page</a> and example plans and strategies by exploring the database search page, which can filter resources by the topics, climate impacts, regions, and resource types most relevant to you. Additionally, the Governor’s Office of Planning and Research regularly conducts an inventory of local adaptation efforts and related documents, which are displayed for public access on the <a href="https://resilientca.org/topics/land-use-and-community-development/#resilientca-adaptation-planning-map-rap-map">ResilientCA Adaptation Planning Map (RAP-Map)</a>, also housed on the Adaptation Clearinghouse.
