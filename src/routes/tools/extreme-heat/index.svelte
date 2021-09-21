@@ -248,7 +248,6 @@
     initApp(initialConfig)
       .then(() => {
         initReady = true;
-        console.log("init ready");
       })
       .catch((error) => {
         console.log("init error", error);
