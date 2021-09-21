@@ -260,19 +260,24 @@
     <div class="h3">
       {$location.title}
     </div>
-    <div class="h4">
-      Projected changes in <span class="annotate">{$indicator.title}</span>
-      when <span class="annotate">{$climvar.title}</span> is above
-      <span class="annotate">{$thresholdStore} °F</span>
-      under a
-      <span class="annotate">{$scenario.labelLong}</span>.
-    </div>
     {#if $indicator.id === "waves"}
-      <p>
-        A <span class="annotate">{$indicator.title}</span>
-        above <span class="annotate">{$thresholdStore} °F</span> under a
+      <div class="h4">
+        Projected changes in <span class="annotate"
+          >Number of {$durationStore} Day Heat Wave Events per Year</span
+        >
+        when <span class="annotate">{$climvar.title}</span> is above
+        <span class="annotate">{$thresholdStore} °F</span>
+        under a
         <span class="annotate">{$scenario.labelLong}</span>.
-      </p>
+      </div>
+    {:else}
+      <div class="h4">
+        Projected changes in <span class="annotate">{$indicator.title}</span>
+        when <span class="annotate">{$climvar.title}</span> is above
+        <span class="annotate">{$thresholdStore} °F</span>
+        under a
+        <span class="annotate">{$scenario.labelLong}</span>.
+      </div>
     {/if}
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
       Change Location
