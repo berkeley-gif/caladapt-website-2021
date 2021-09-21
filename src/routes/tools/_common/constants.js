@@ -56,30 +56,18 @@ export const SMALL_SCALE_BOUNDARIES = boundaries
   });
 
 export const PRIORITY_10_MODELS = models.map((d) => {
-  let label;
-  if (d.text) {
-    label = `${d.id} (${d.text})`;
-  } else {
-    label = d.id;
-  }
   return {
     ...d,
-    label,
+    label: d.text,
   };
 });
 
 export const PRIORITY_4_MODELS = models
   .filter((d) => d.priority)
   .map((d) => {
-    let label;
-    if (d.text) {
-      label = `${d.id} (${d.text})`;
-    } else {
-      label = d.id;
-    }
     return {
       ...d,
-      label,
+      label: d.text,
     };
   });
 
