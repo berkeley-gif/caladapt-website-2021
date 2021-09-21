@@ -1,11 +1,6 @@
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
-  import {
-    RadioButtonGroup,
-    Button,
-    Loading,
-    NumberInput,
-  } from "carbon-components-svelte";
+  import { createEventDispatcher } from "svelte";
+  import { Button, Loading, NumberInput } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
@@ -144,7 +139,6 @@
   $: formatFn = format(`.${$indicator.decimals}f`);
 
   $: if ($data) {
-    console.log("from explore", $data);
     statsData = $data.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($data));
     isLoading = false;
@@ -156,43 +150,35 @@
 
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
-    console.log("scenario change");
   }
 
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds);
     modelsInit = true;
-    console.log("models change");
   }
 
   function changeClimvar(e) {
-    climvarStore.set(e.detail.id);
-    console.log("climvar change");
+    climvarStore.set(e.detail);
   }
 
   function changeIndicator(e) {
     indicatorStore.set(e.detail.id);
-    console.log("indicator change");
   }
 
   function changeDuration(e) {
     durationStore.set(e.detail);
-    console.log("duration change");
   }
 
   function changeThreshold(e) {
     thresholdStore.set(e.detail);
-    console.log("threshold change");
   }
 
   function addThreshold(e) {
     thresholdListStore.add(e.detail);
-    console.log("threshold add");
   }
 
   function removeThreshold(e) {
     thresholdListStore.remove(e.detail);
-    console.log("threshold remove");
   }
 
   function changeLocation(e) {
@@ -203,7 +189,6 @@
       locationStore.updateBoundary(e.detail.boundaryId);
       locationStore.updateLocation(e.detail.location);
     }
-    console.log("location change");
   }
 </script>
 
@@ -277,9 +262,18 @@
     </div>
     <div class="h4">
       Projected changes in <span class="annotate">{$indicator.title}</span>
-      above <span class="annotate">{$thresholdStore} °F</span> under a
+      when <span class="annotate">{$climvar.title}</span> is above
+      <span class="annotate">{$thresholdStore} °F</span>
+      under a
       <span class="annotate">{$scenario.labelLong}</span>.
     </div>
+    {#if $indicator.id === "waves"}
+      <p>
+        A <span class="annotate">{$indicator.title}</span>
+        above <span class="annotate">{$thresholdStore} °F</span> under a
+        <span class="annotate">{$scenario.labelLong}</span>.
+      </p>
+    {/if}
     <Button size="small" icon="{Location16}" on:click="{loadLocation}">
       Change Location
     </Button>
@@ -378,11 +372,7 @@
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({
-            slugs: [
-              'annual-average-tasmax',
-              'annual-average-tasmin',
-              'annual-average-pr',
-            ],
+            slugs: ['extreme-heat-day', 'warm-night'],
           })}"
       />
     </div>
@@ -406,7 +396,9 @@
         on:add="{addThreshold}"
         on:remove="{removeThreshold}"
       />
-      <LearnMoreButton />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['extreme-heat-threshold'] })}"
+      />
     </div>
     {#if $indicator.id === "waves"}
       <div class="block">
@@ -414,11 +406,13 @@
           label="Change Heat Wave Duration"
           min="{2}"
           max="{7}"
-          helperText="A number between 2-7. This sets the number of consecutive days in a heat wave."
+          helperText="A number between 2-7. This updates the number of consecutive days in a heat wave."
           value="{$durationStore}"
           on:change="{changeDuration}"
         />
-        <LearnMoreButton />
+        <LearnMoreButton
+          on:click="{() => loadLearnMore({ slugs: ['heat-wave-event'] })}"
+        />
       </div>
     {/if}
     <div class="block">
