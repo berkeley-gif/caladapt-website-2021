@@ -5,62 +5,62 @@
 .dashboard {
   input[name*="ACCESS1-0"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="ACCESS1-0"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-ACCESS1-0;
-    border-color: --gcm-ACCESS1-0;
+    background-color: var(--gcm-ACCESS1-0);
+    border-color: var(--gcm-ACCESS1-0);
   }
 
   input[name*="CanESM2"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="CanESM2"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-CanESM2;
-    border-color: --gcm-CanESM2;
+    background-color: var(--gcm-CanESM2);
+    border-color: var(--gcm-CanESM2);
   }
 
   input[name*="CCSM4"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="CCSM4"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-CCSM4;
-    border-color: --gcm-CCSM4;
+    background-color: var(--gcm-CCSM4);
+    border-color: var(--gcm-CCSM4);
   }
 
   input[name*="CESM1-BGC"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="CESM1-BGC"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-CESM1-BGC;
-    border-color: --gcm-CESM1-BGC;
+    background-color: var(--gcm-CESM1-BGC);
+    border-color: var(--gcm-CESM1-BGC);
   }
 
   input[name*="CMCC-CMS"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="CMCC-CMS"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-CMCC-CMS;
-    border-color: --gcm-CMCC-CMS;
+    background-color: var(--gcm-CMCC-CMS);
+    border-color: var(--gcm-CMCC-CMS);
   }
 
   input[name*="CNRM-CM5"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="CNRM-CM5"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-CNRM-CM5;
-    border-color: --gcm-CNRM-CM5;
+    background-color: var(--gcm-CNRM-CM5);
+    border-color: var(--gcm-CNRM-CM5);
   }
 
   input[name*="GFDL-CM3"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="GFDL-CM3"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-GFDL-CM3;
-    border-color: --gcm-GFDL-CM3;
+    background-color: var(--gcm-GFDL-CM3);
+    border-color: var(--gcm-GFDL-CM3);
   }
 
   input[name*="HadGEM2-CC"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="HadGEM2-CC"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-HadGEM2-CC;
-    border-color: --gcm-HadGEM2-CC;
+    background-color: var(--gcm-HadGEM2-CC);
+    border-color: var(--gcm-HadGEM2-CC);
   }
 
   input[name*="HadGEM2-ES"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="HadGEM2-ES"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-HadGEM2-ES;
-    border-color: --gcm-HadGEM2-ES;
+    background-color: var(--gcm-HadGEM2-ES);
+    border-color: var(--gcm-HadGEM2-ES);
   }
 
   input[name*="MIROC5"] + .bx--checkbox-label::before,
   input.bx--checkbox[name*="MIROC5"]:checked + .bx--checkbox-label::before {
-    background-color: --gcm-MIROC5;
-    border-color: --gcm-MIROC5;
+    background-color: var(--gcm-MIROC5);
+    border-color: var(--gcm-MIROC5);
   }
 
   .bx--radio-button__appearance {
