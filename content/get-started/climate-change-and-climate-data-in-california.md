@@ -44,7 +44,7 @@ The 2020 Adaptation Planning Guide (APG) provides guidance to local governments 
 2. Assess Vulnerability
 3. Define Adaptation Framework and Strategies
 4. Implement, Monitor, Evaluate, and Adjust
- 
+
 While following this process, it is most useful to start examining climate change data from Cal-Adapt in a preliminary analysis during Phase 1 to understand the scope of the assessment you are about to undertake, and then to conduct a more thorough technical analysis as you move into Phase 2. Explore each phase, broken down into manageable smaller steps in the [online Adaptation Planning Guide](https://resilientca.org/apg/intro/).
  
 > Cities and Counties in California are required to address climate adaptation and vulnerability in their safety elements. For more information on the requirements see the State's 2020 Adaptation Planning Guide, the General Plan Guidelines Chapter 4, or Government Code section 65302(g). (Senate Bill 379, Jackson, 2015).
