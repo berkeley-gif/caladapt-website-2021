@@ -17,7 +17,8 @@
 
   // Props
   export let location;
-  export let enableUpload = true;
+  export let enableUpload = false;
+  export let addStateBoundary = false;
   export let boundary;
   export let boundaryList;
   export let open = false;
@@ -199,7 +200,7 @@
       <SelectBoundary
         selectedId="{currentBoundary.id}"
         items="{boundaryList}"
-        addStateBoundary="{true}"
+        addStateBoundary="{addStateBoundary}"
         on:change="{updateBoundary}"
       />
       {#if enableUpload}
