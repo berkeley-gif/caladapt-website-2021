@@ -129,7 +129,10 @@
         aggregations.
       </p>
       <p class="btn-container">
-        <Button kind="tertiary" icon="{ArrowRight16}" href="/data/download/"
+        <Button
+          kind="tertiary"
+          icon="{ArrowRight16}"
+          href="https://v2.cal-adapt.org/data/download/"
           >Data Download Tool</Button
         >
       </p>
