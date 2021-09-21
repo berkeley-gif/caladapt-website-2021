@@ -53,7 +53,7 @@ Two thirty-year climate change adaptation planning periods are often used in Cal
 
 Climate models are most powerful for adaptation planning when they are used as an ensemble to describe the full range of plausible future climate conditions, since the average values across different model projections are considered more likely than any individual model value. However, you should also look at individual model values to capture the full range of model outcomes.
 
-Cal-Adapt makes it easy for you to work with data from California’s priority models, described [here](https://www.google.com/url?q=https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf%23%255B%257B%2522num%2522%253A28%252C%2522gen%2522%253A0%257D%252C%257B%2522name%2522%253A%2522Fit%2522%257D%255D&sa=D&source=editors&ust=1632182237174000&usg=AOvVaw2tuD0fzqoO6gzkPX8cY1xP). The full suite of 32 downscaled GCMs is also available for download in NetCDF format.
+Cal-Adapt makes it easy for you to work with data from California’s priority models, as described in [Section 3.1 of Climate, Drought, and Sea Level Rise Scenarios for California's Fourth Climate Change Assessment](https://www.google.com/url?q=https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf%23%255B%257B%2522num%2522%253A28%252C%2522gen%2522%253A0%257D%252C%257B%2522name%2522%253A%2522Fit%2522%257D%255D&sa=D&source=editors&ust=1632182237174000&usg=AOvVaw2tuD0fzqoO6gzkPX8cY1xP). The full suite of 32 downscaled GCMs is also available for download in NetCDF format.
 
 #### 4. Compare modeled projections to modeled historical data, rather than observed historical data.
 
