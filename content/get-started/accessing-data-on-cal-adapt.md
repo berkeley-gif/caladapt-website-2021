@@ -10,19 +10,17 @@ order: 3
 
 ## How do I access, visualize, and download climate data on Cal-Adapt?
 
-There are three ways to access climate data on Cal-Adapt: by using a tool, going through the data download process, and using the Cal Adapt REST API.
-
-### 1. Using a tool
-
-The tools allow you to view climate projections for an area of interest. Each of Cal-Adapt’s tools focuses on a particular climate change variable(s) like extreme heat, sea level rise, or precipitation. To see the full list of tools and the climate variables they each capture, go to the [tools page](/tools/). Once you’ve identified the data you’re interested in (including a time period, representative concentration pathway (emissions) scenarios, and general circulation model(s), if applicable), you can download the data and/or charts from the tool. For more information about choosing time periods, emissions scenarios, and models, see the section on [best practices for working with climate data](/help/get-started/best-practices-for-using-climate-projections/).
-
-### 2. Going through the data download process
-
-The data download process gives you access to Cal-Adapt’s full data catalog. The process guides you through a series of filters to help you identify the data you’re interested in and allows more customization options than the tools. You can also upload your own vector data to get data for the area you’re interested in.
-
-### 3. Using the Application Programming Interface (API)
-
-Cal-Adapt has a RESTful API that you may use to access climate data using computer programming languages such as Python or R. Cal-Adapt’s API makes it easy for you to build your own applications that harness the climate projections hosted on Cal-Adapt.
+There are many ways to access, visualize, and download data from Cal-Adapt:
+ 
+*Climate tools*: All Cal-Adapt tools have a download button that you can click to download the data and graphics displayed on your screen. If you are downloading charts, you can only download one chart at a time. If you are downloading the data that compose a chart, you will only receive an export of the data that are currently displayed on the chart; any filters, date range controls, options selected, and recalculations are also applied to the exported data. So, for example, if you only display in your browser the data associated with two general circulation models (GCMs), the data file you download will only contain data for those two GCMs. To download complete and original time series, use the [data catalog](/data/download/).
+ 
+*Data catalog*: All datasets available on Cal-Adapt are listed in the [data catalog](/data/download/). Search for the dataset you are interested in by entering a search criteria and/or filtering by a climate variable or data producer. You will be prompted to follow a stepwise process to identify a data format (either GeoTIFF or CSV), specify a spatial extent, set aggregation parameters, and then select from different emissions scenarios and climate models. NetCDF files for full spatial extents are available from the [Cal-Adapt file server](https://albers.cnr.berkeley.edu/data/). Links to NetCDF files are displayed on screen during the data format selection step.
+ 
+*Cal-Adapt file server*: We store climate data provided by California’s scientific and research community in their original formats on the [Cal-Adapt file server](https://albers.cnr.berkeley.edu/data/). You can download NetCDF files of gridded datasets and CSV files of station data from the server. Links to individual datasets are also included in the [data catalog](/data/download/).
+ 
+*Cal-Adapt API*: We process data provided by California’s scientific and research community and serve some of these through the [Cal-Adapt RESTful API](https://api.cal-adapt.org/api/). You can read the [API documentation](https://berkeley-gif.github.io/caladapt-docs/) to learn more.
+ 
+*R and ArcPro packages*: You can pull data from Cal-Adapt’s API into your local environment using either Cal-Adapt’s R package (caladaptr) or Cal-Adapt’s ArcPro package. Documentation for the [caladaptr R package is here](https://ucanr-igis.github.io/caladaptr/), and documentation for the [ArcPro package is here](https://ucanr-igis.github.io/caladapt-py/).
 
 For more information on accessing climate data on Cal-Adapt, visit the [data page](/data/).
 
