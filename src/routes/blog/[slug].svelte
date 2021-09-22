@@ -59,7 +59,10 @@
   }
 
   .metadata {
-    text-align: center;
+    .author,
+    .publish-date {
+      max-width: 100%;
+    }
 
     .author {
       margin-bottom: 0.25rem;
@@ -98,10 +101,10 @@
     <!-- Row -->
     <div class="bx--row">
       <div class="bx--offset-lg-3 bx--col-lg-10 metadata">
-        <h5 class="author">
+        <p class="author h5">
           {post.metadata.author}
-        </h5>
-        <p>
+        </p>
+        <p class="publish-date">
           <time class="lead time" datetime="{post.metadata.pubdate}">
             {post.metadata.datestring}
           </time>
