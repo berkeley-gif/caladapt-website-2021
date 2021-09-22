@@ -19,7 +19,7 @@ These four models can be described as producing:
 
 Cal-Adapt’s default settings provide outputs for these subsets of 10 and 4 GCMs, depending on the hazard. The average of values across different model projections is considered more likely than any individual model value, and the full range of values the models present can help you to evaluate potential extreme events and conditions. State guidance, including in the [Office of Planning and Research’s Adaptation Planning Guide, Phase 2](https://resilientca.org/apg/) and [California Ocean Protection Council Sea Level Rise Guidance](https://www.opc.ca.gov/updating-californias-sea-level-rise-guidance/), recommends evaluating a range of future climate scenarios appropriate for planning decisions and respective risk aversion level.
 
-To learn more about climate models, check out the Getting Started section on climate models.
+To learn more about climate models, check out the [Get Started](/help/get-started/about-climate-projections-and-models) section on climate models.
 
 For more details on the selection of climate models for impact studies, see:
 
