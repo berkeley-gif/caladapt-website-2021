@@ -427,7 +427,7 @@
             <ul class="source-list">
               <li class="source-list-item">
                 <a
-                  href="http://albers.cnr.berkeley.edu/data/hadisd/"
+                  href="https://albers.cnr.berkeley.edu/data/hadisd/"
                   target="_blank"
                   >Hourly Observed Historical Data Product (csv)</a
                 >
@@ -445,7 +445,7 @@
               <li class="source-list-item">
                 Explanatory Guide to Hourly Observed Historical Data on
                 Cal-Adapt (<a
-                  href="http://albers.cnr.berkeley.edu/data/hadisd/user_guide_to_hourly_data.pdf"
+                  href="https://albers.cnr.berkeley.edu/data/hadisd/user_guide_to_hourly_data.pdf"
                   target="_blank">link</a
                 >)
               </li>
