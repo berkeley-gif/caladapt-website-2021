@@ -290,11 +290,8 @@
         <p>
           The underlying data are derived from daily climate projections that
           have been downscaled from global climate models from
-
-          <!-- TODO: this link is currently broken -->
-          <a
-            href="http://cmip-pcmdi.llnl.gov/cmip5/data_portal.html"
-            target="_blank">CMIP5</a
+          <a href="https://esgf-node.llnl.gov/projects/cmip5/" target="_blank"
+            >CMIP5</a
           >
           archive, using the
           <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
