@@ -2,6 +2,7 @@
 title: How can I download boundary layers?
 tags: data
 category: getting-data
+order: 2
 ---
 
 The following boundary layers can be downloaded from the Cal-Adapt API in GeoJSON format:

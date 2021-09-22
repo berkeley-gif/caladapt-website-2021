@@ -2,6 +2,7 @@
 title: How do I cite Cal-Adapt?
 tags: about, other
 category: about-caladapt
+order: 5
 ---
 
 **Citing information and visualizations (maps, charts, screenshots, etc.) available via Cal-Adapt:**

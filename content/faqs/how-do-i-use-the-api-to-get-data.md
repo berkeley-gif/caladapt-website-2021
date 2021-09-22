@@ -2,6 +2,7 @@
 title: How do I use the API to get data?
 tags: data
 category: getting-data
+order: 5
 ---
 
 [Here is an overview](https://berkeley-gif.github.io/caladapt-docs/) of Cal-Adapt’s RESTful API and documentation on how to use the API. If you have additional questions, you can email us at <support@cal-adapt.org>.

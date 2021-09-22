@@ -2,6 +2,7 @@
 title: What time period should I select for my analysis?
 tags: data
 category: understanding-data
+order: 4
 ---
 
 The specific time period you select will depend on the purpose of your analysis. However, regardless of the time period you select, we recommend that you abide by a few principles:

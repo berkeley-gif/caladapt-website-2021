@@ -2,6 +2,7 @@
 title: How can I download data from Cal-Adapt?
 tags: data
 category: getting-data
+order: 1
 ---
 
 There are many ways to download data from Cal-Adapt:

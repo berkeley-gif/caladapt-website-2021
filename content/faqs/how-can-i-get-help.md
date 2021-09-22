@@ -2,6 +2,7 @@
 title: How can I get help?
 tags: help
 category: getting-help
+order: 2
 ---
 
 All of Cal-Adapt’s climate tools include “Learn More” links that provide explanations and more information about tool parameters and terminology.
