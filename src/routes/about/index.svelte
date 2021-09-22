@@ -173,7 +173,7 @@
       <div class="bx--col">
         <h1>About Cal-Adapt</h1>
         <p class="lead">
-          Cal-Adapt provides a means of exploring peer-reviewed data portraying
+          Cal-Adapt provides a way to explore peer-reviewed data that portrays
           how climate change might affect California at the state and local
           level. We make this data available through downloads, visualizations,
           and the Cal-Adapt API for your research, outreach, and adaptation
