@@ -7,6 +7,7 @@
     getFeature,
     searchFeature,
     reverseGeocode,
+    getNearestFeature,
   } from "../../../helpers/geocode";
 
   import {
@@ -69,9 +70,23 @@
 
   async function updateBoundary(e) {
     if (!e.detail) return;
+    const { lng, lat } = currentLoc.center;
     currentBoundary = e.detail;
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
-    currentLoc = await getFeature(currentLoc, currentBoundary.id);
+    const intersectingFeature = await getFeature(
+      currentLoc,
+      currentBoundary.id
+    );
+    if (intersectingFeature) {
+      currentLoc = intersectingFeature;
+    } else {
+      const nearestFeature = await getNearestFeature(
+        lng,
+        lat,
+        currentBoundary.id
+      );
+      currentLoc = nearestFeature;
+    }
   }
 
   async function selectSuggestion(opt) {
