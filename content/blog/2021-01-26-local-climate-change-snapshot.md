@@ -10,14 +10,14 @@ snippet: An overview of a new tool to support climate change adaptation practiti
 
 In recognition of this, the Cal-Adapt team has created a new tool to support climate change adaptation practitioners in addressing the threats posed by rising temperatures, changing precipitation patterns, and climate change-influenced wildfire patterns. So without further ado, we are excited to introduce the [Local Climate Change Snapshot Tool (LCCS Tool)](https://cal-adapt.org/tools/local-climate-change-snapshot/)!
 
-### Multiple Impacts in One Dashboard
+## Multiple Impacts in One Dashboard
 The LCCS Tool was developed to serve two purposes:
 - Provide a simple, beginner-friendly interface for accessing basic climate change projections
 - Support users in accessing climate change projections by location, rather than by climate variable of of interest
 
 The LCCS Tool workflow and interface is particularly applicable for adaptation practitioners who are in charge of adaptation planning for a place, rather than for a specific anticipated impact. We also think that people interested in climate projections for a place they love will find the tool to be valuable!
 
-### Select a Location
+## Select a Location
 The first step in using the LCCS Tool is to select a location. There are a few options for location selection:
 - Select an address. The LCCS Tool will return climate change data for a grid cell containing the address. Each grid-cell represents climate conditions within a square area of 6 km by 6 km (3.7 mi by 3.7 mi).
 - Select a polygon representing a spatial unit - a county, a city, a census tract, or a HUC10 watershed. The LCCS Tool will return climate change data averaged over all the grid cells that intersect the polygon.
@@ -37,7 +37,7 @@ Then, you have two options:
 Once you’ve picked your location, click on the “Generate Snapshot” button to move to the next page.
 
 
-### View Climate Change Projections
+## View Climate Change Projections
 On the snapshot page, you can explore climate change projections for three variables: temperature, precipitation, and wildfire.
 
 <img src="/img/blog/lccs-variables.png" style="width:80%;margin-bottom:1rem;" class="mx-auto d-block" alt="Screenshot of tool comparing change in precipitation from historical baseline">
