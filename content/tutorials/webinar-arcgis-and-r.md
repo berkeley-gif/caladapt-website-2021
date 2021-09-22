@@ -1,5 +1,5 @@
 ---
-title: "Working with Cal-Adapt Data in ArcGIS Pro and R"
+title: Working with Cal-Adapt Data in ArcGIS Pro and R
 author: Cal-Adapt
 video: "https://www.youtube.com/watch?v=1EZhFXjvcIg"
 tags: tools

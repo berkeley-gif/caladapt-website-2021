@@ -1,5 +1,5 @@
 ---
-title: "Local Climate Change Snapshot Tool"
+title: Local Climate Change Snapshot Tool
 author: Lucy Andrews
 video: "https://www.youtube.com/watch?v=qcXtv2LpWr0"
 tags: tools

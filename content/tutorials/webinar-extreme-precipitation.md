@@ -1,5 +1,5 @@
 ---
-title: "Introducing the new Extreme Precipitation Tool on Cal-Adapt"
+title: Introducing the new Extreme Precipitation Tool on Cal-Adapt
 author: Cal-Adapt
 video: "https://www.youtube.com/watch?v=VqJ_0nYV0VQ"
 tags: tool
