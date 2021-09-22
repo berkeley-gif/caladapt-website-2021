@@ -80,7 +80,11 @@
   }
 </script>
 
-<style></style>
+<style>
+  :global(blockquote) {
+    margin-top: -1rem;
+  }
+</style>
 
 <svelte:head>
   <title>Help</title>
