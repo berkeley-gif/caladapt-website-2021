@@ -54,9 +54,20 @@
         },
         geometry: location.geometry,
       };
-      const simplifiedGeojson = simplify(geojson, { tolerance: 0.01 });
+      // The Static Images API only accepts requests that are 8,192 or fewer characters long.
+      // Simplify geometry only for more complex shapes
+      const geojsonString = JSON.stringify(geojson);
+      if (geojsonString.length < 7000) {
+        overlay = encodeURIComponent(geojsonString);
+      } else {
+        const simplifiedGeojson = simplify(geojson, {
+          tolerance: 0.01,
+          highQuality: true,
+        });
+        overlay = encodeURIComponent(JSON.stringify(simplifiedGeojson));
+      }
       bounds = "auto";
-      overlay = encodeURIComponent(JSON.stringify(simplifiedGeojson));
+
       src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?padding=${padding}&access_token=${mapboxgl.accessToken}`;
     }
   }

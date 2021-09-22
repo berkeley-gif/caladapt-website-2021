@@ -1,11 +1,11 @@
 <script>
-  import { onDestroy, createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
   import getBbox from "@turf/bbox";
 
   // Helpers
   import {
-    getNearestStation,
+    getNearestFeature,
     getStationById,
     searchFeature,
   } from "../../../helpers/geocode";
@@ -29,7 +29,6 @@
   async function overlayClick(e) {
     currentLoc = await getStationById(e.detail, stationsLayer.id);
     currentLoc.bbox = getBbox(currentLoc.geometry);
-    console.log("overlay result", currentLoc);
   }
 
   function clearSearch() {
@@ -62,7 +61,7 @@
 
   async function selectSuggestion(opt) {
     if (opt.geocoder === "mapbox") {
-      currentLoc = await getNearestStation(
+      currentLoc = await getNearestFeature(
         opt.center[0],
         opt.center[1],
         stationsLayer.id
