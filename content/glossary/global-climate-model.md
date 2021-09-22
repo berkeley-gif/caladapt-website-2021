@@ -13,7 +13,7 @@ The California Department of Water Resources’s Climate Change Technical Adviso
 
 Simulations produced with all climate models show substantial future warming; the “cooler/wetter” CNRM-CM5 simulation just shows less warming than the other models. The GCMs projections hosted on Cal-Adapt were generated for the periods 2006 to 2100 (future climate) and 1950 to 2005 (modeled historical climate).
 
-To learn more about climate models, visit the [Getting Started](/help/get-started/) page.
+To learn more about climate models, visit the [Get Started](/help/get-started/) page.
 
 For more details on the downscaling and selection of climate models for impact studies, see:
 

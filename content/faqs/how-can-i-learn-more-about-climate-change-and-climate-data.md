@@ -4,7 +4,7 @@ tags: data, help
 category: understanding-data
 ---
 
-Cal-Adapt has a [Getting Started](/help/get-started/) page where you can learn about climate change, climate data, and Cal-Adapt.
+Cal-Adapt has a [Get Started](/help/get-started/) page where you can learn about climate change, climate data, and Cal-Adapt.
 
 You can also learn about climate change in California through [California’s Fourth Climate Change Assessment](https://www.climateassessment.ca.gov/).
 
