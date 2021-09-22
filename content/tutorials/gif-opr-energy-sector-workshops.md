@@ -1,5 +1,5 @@
 ---
-title: Cal-Adapt and Climate Adaptation Clearinghouse Energy Sector User Needs Assessment Workshops
+title: "Cal-Adapt and Climate Adaptation Clearinghouse Energy Sector User Needs Assessment Workshops"
 author: Cal-Adapt
 video: "https://www.youtube.com/watch?v=XhaLdjRn2sk"
 tags: other

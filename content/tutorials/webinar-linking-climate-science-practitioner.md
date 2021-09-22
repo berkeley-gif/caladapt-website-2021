@@ -1,5 +1,5 @@
 ---
-title: Linking Climate Science with Practitioner Need
+title: "Linking Climate Science with Practitioner Need"
 author: Cal-Adapt
 video: "https://www.youtube.com/watch?v=hnz-jrXaADo"
 tags: data, tool

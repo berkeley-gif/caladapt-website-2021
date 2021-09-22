@@ -1,5 +1,5 @@
 ---
-title: Introduction to Climate Data
+title: "Introduction to Climate Data"
 author: Cal-Adapt
 video: "https://www.youtube.com/watch?v=DGBzmyejws0"
 tags: data
