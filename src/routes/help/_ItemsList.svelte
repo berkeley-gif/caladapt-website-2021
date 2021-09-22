@@ -37,6 +37,7 @@
                   style="font-size:1rem;"
                   href="{item.metadata.video}"
                   rel="prefetch"
+                  target="_blank"
                 >
                   {item.metadata.title}
                 </a>
