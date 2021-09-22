@@ -40,3 +40,6 @@
     </p>
   </div>
 </Header>
+
+<!-- placeholder div to add height -->
+<div id="explore"></div>
