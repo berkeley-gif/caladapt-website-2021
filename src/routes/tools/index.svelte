@@ -83,9 +83,7 @@
               titleText: title,
               description: desc,
               height: cardHeight,
-              linkPath: version3
-                ? `/tools/${slug}`
-                : `https://v2.cal-adapt.org/tools/${slug}`,
+              linkPath: `/tools/${slug}`,
               iconPaths: icons,
               ctaText: "Explore",
             }}
