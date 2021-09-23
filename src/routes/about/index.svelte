@@ -50,24 +50,35 @@
 </script>
 
 <style lang="scss">
+  figure {
+    margin: 1rem;
+  }
+
   .banner {
     background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash.jpg);
     background-position: center 35%;
     background-size: cover;
-    min-height: 350px;
+    min-height: 21.875rem;
+    background-color: var(--gray-80);
+    padding: var(--spacing-48) var(--spacing-16);
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .content {
-    margin: 2rem 4rem;
+  .sidebar-figure-container {
+    display: flex;
+    align-items: center;
   }
 
-  .order-1 {
-    order: 0;
+  .is-sticky {
+    top: -1px;
+    z-index: 1;
   }
 
   .contributor-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
   }
 
   .contributor {
@@ -175,10 +186,10 @@
   <title>About | Cal-Adapt</title>
 </svelte:head>
 
-<section class="banner overlay overlay-black overlay-60">
+<div class="banner bleed overlay overlay-black overlay-60">
   <div class="bx--grid">
     <div class="bx--row">
-      <div class="bx--col">
+      <div class="bx--offset-lg-2 bx--col-lg-9">
         <h1>About Cal-Adapt</h1>
         <p class="lead">
           Cal-Adapt provides a way to explore peer-reviewed data that portrays
@@ -194,18 +205,65 @@
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<PageNav href="{href}" items="{items}" selected="{selected}" />
-
-<div
-  class="bx--grid content"
-  id="mission"
-  use:inview="{entryOptions}"
-  on:enter="{handleEntry}"
->
+<!-- page anchor navigation -->
+<div class="bx--grid is-sticky">
   <div class="bx--row">
-    <div class="bx--col-lg-6 center">
+    <div class="bx--offset-lg-2 bx--col-lg-9">
+      <PageNav href="{href}" items="{items}" selected="{selected}" />
+    </div>
+  </div>
+</div>
+
+<div class="bx--grid">
+  <!-- Mission -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="mission" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Our Mission</h2>
+        <p>
+          Our mission is to make data portraying climate change in California
+          more accessible and actionable for a broad audience, with an emphasis
+          on energy sector stakeholders and local governments. We do this by:
+        </p>
+        <ul>
+          <li>
+            Building tools for exploring and downloading high-quality,
+            peer-reviewed climate data from California’s scientific and research
+            community. Cal-Adapt presents research developed under California’s
+            climate change assessments, with Cal-Adapt 2.0 focusing on <a
+              href="https://www.climateassessment.ca.gov/"
+              target="_blank">California’s Fourth Climate Change Assessment</a
+            >, including datasets portraying sea level rise, wildfires,
+            droughts, storms, and extreme heat events.
+          </li>
+          <li>
+            Designing tools and content to help users better understand climate
+            data (via tooltips, <a href="/help/glossary">Glossary</a> and
+            <a href="/blog">Cal-Adapt Blog</a>) and learn best practices for
+            working with climate projections (see our
+            <a href="/help/get-started">Get Started</a> guide). We make it easy to
+            share charts and tables of climate data with stakeholders and provide
+            options for customizing data visualizations to meet sector specific requirements
+            in some of our more technical tools.
+          </li>
+          <li>
+            Building a public <a href="/data">Cal-Adapt API</a> to empower researchers
+            and developers to integrate climate data on Cal-Adapt into existing workflows
+            and develop domain specific applications.
+          </li>
+          <li>
+            Engaging with and learning from our users through workshops,
+            webinars and stakeholder outreach.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="bx--offset-lg-1 bx--col-lg-5 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
+    >
       <figure class="quote">
         <blockquote cite="https://www.climateassessment.ca.gov/">
           <p>
@@ -224,88 +282,165 @@
         </figcaption>
       </figure>
     </div>
-    <div class="bx--col-lg-10">
-      <hr />
-      <h2>Our Mission</h2>
-      <p>
-        Our mission is to make data portraying climate change in California more
-        accessible and actionable for a broad audience, with an emphasis on
-        energy sector stakeholders and local governments. We do this by:
-      </p>
-      <ul>
-        <li>
-          Building tools for exploring and downloading high-quality,
-          peer-reviewed climate data from California’s scientific and research
-          community. Cal-Adapt presents research developed under California’s
-          climate change assessments, with Cal-Adapt 2.0 focusing on <a
-            href="https://www.climateassessment.ca.gov/"
-            target="_blank">California’s Fourth Climate Change Assessment</a
-          >, including datasets portraying sea level rise, wildfires, droughts,
-          storms, and extreme heat events.
-        </li>
-        <li>
-          Designing tools and content to help users better understand climate
-          data (via tooltips, <a href="/help/glossary">Glossary</a> and
-          <a href="/blog">Cal-Adapt Blog</a>) and learn best practices for
-          working with climate projections (see our
-          <a href="/help/get-started">Get Started</a> guide). We make it easy to
-          share charts and tables of climate data with stakeholders and provide options
-          for customizing data visualizations to meet sector specific requirements
-          in some of our more technical tools.
-        </li>
-        <li>
-          Building a public <a href="/data">Cal-Adapt API</a> to empower researchers
-          and developers to integrate climate data on Cal-Adapt into existing workflows
-          and develop domain specific applications.
-        </li>
-        <li>
-          Engaging with and learning from our users through workshops, webinars
-          and stakeholder outreach.
-        </li>
-      </ul>
-    </div>
   </div>
-</div>
 
-<div
-  class="bx--grid content"
-  id="audience"
-  use:inview="{entryOptions}"
-  on:enter="{handleEntry}"
->
+  <!-- Audience -->
   <div class="bx--row">
-    <div class="bx--col-lg-6 center order-1">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="audience" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <hr />
+        <h2>Our Audience</h2>
+        <p>
+          Cal-Adapt offers free public access to peer-reviewed data that support
+          exploration of California’s climate change impacts on state
+          infrastructure, communities, and natural resources. Our users include
+          energy sector stakeholders, infrastructure managers, municipal
+          planners, community-based organizations, state agencies, scientists
+          and climate experts, educators, and interested participants from the
+          general public.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
+    >
       <figure class="image">
-        <img
-          src="/img/banners/gif-workshop.jpg"
-          style="padding:1rem;"
-          alt="workshop at GIF"
-        />
+        <img src="/img/banners/gif-workshop.jpg" alt="Workshop at GIF" />
       </figure>
     </div>
-    <div class="bx--col-lg-10">
-      <hr />
-      <h2>Our Audience</h2>
-      <p>
-        Cal-Adapt offers free public access to peer-reviewed data that support
-        exploration of California’s climate change impacts on state
-        infrastructure, communities, and natural resources. Our users include
-        energy sector stakeholders, infrastructure managers, municipal planners,
-        community-based organizations, state agencies, scientists and climate
-        experts, educators, and interested participants from the general public.
-      </p>
-    </div>
   </div>
-</div>
 
-<div
-  class="bx--grid content"
-  id="partners"
-  use:inview="{entryOptions}"
-  on:enter="{handleEntry}"
->
+  <!-- Partners -->
   <div class="bx--row">
-    <div class="bx--col-lg-6 center d-md-none">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="partners" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <hr />
+        <h2>Our Partners</h2>
+
+        <h3 class="h5">Funding and Oversight</h3>
+        <div class="bx--row">
+          <div class="bx--col-lg-8">
+            <div class="collaborator">
+              <img
+                src="img/logos/cec_900x790.png"
+                alt="logo for California Energy Commission"
+              />
+              <a href="http://www.energy.ca.gov/" target="_blank"
+                >California Energy Commission</a
+              >
+            </div>
+          </div>
+          <div class="bx--col-lg-8">
+            <div class="collaborator">
+              <img
+                src="img/logos/SGC-Brand-Logos-03.png"
+                alt="logo for California Strategic Growth Council"
+                style="width:200px;"
+              />
+              <a href="http://sgc.ca.gov/" target="_blank"
+                >California Strategic Growth Council</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="bx--row">
+          <div class="bx--col-lg-8">
+            <h3 class="h5">Site Development</h3>
+            <div class="collaborator">
+              <img
+                src="img/logos/gif_249x100.png"
+                style="width:200px;"
+                alt="Geospatial Innovation Facility logo"
+              />
+              <a href="http://gif.berkeley.edu/" target="_blank"
+                >Geospatial Innovation Facility</a
+              >
+            </div>
+          </div>
+          <div class="bx--col-lg-8">
+            <h3 class="h5">Science Advisor</h3>
+            <div class="collaborator">
+              <img
+                src="img/logos/eagle-rock-analytics-logo-black_3.png"
+                alt="logo for Eagle Rock Analytics"
+              />
+              <a href="http://www.eaglerockanalytics.com/" target="_blank"
+                >Eagle Rock Analytics</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!--  -->
+        <div class="bx--row">
+          <div class="bx--col">
+            <h3 class="h5">Data Contributors</h3>
+          </div>
+        </div>
+
+        <div class="bx--row">
+          <div class="bx--col">
+            <div class="contributor-list">
+              <div class="contributor">
+                <img
+                  src="/img/logos/scripps_logo.svg"
+                  alt="logo for Scripps Institution of Oceanography"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/ca_dwr.png"
+                  alt="logo for California Department of Water Resources"
+                  style="height:100px;width:100px;"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/UCBerkeley_wordmark_blue.svg"
+                  alt="logo for University of California Berkeley"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/OCOF-logo.png"
+                  alt="logo for Our Coast Our Future"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/logo_UCLA_blue.svg"
+                  alt="logo for University of California Los Angeles"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/USGS_ID_green.png"
+                  alt="logo for United States Geological Survey"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"
+                  alt="logo for University of California Merced"
+                />
+              </div>
+              <div class="contributor">
+                <img
+                  src="/img/logos/boulder-fl-vertical-a-2.png"
+                  alt="logo for University of Colorado Boulder"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
+    >
       <figure class="quote">
         <blockquote
           cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
@@ -325,138 +460,63 @@
         </figcaption>
       </figure>
     </div>
-    <div class="bx--col-lg-10">
-      <hr />
-      <h2>Our Partners</h2>
-      <div class="bx--row">
-        <div class="bx--col">
-          <h3 class="h5">Funding and Oversight</h3>
-        </div>
-      </div>
-      <div class="bx--row">
-        <div class="bx--col-lg-8">
-          <div class="collaborator">
-            <img
-              src="img/logos/cec_900x790.png"
-              alt="logo for California Energy Commission"
-            />
-            <a href="http://www.energy.ca.gov/" target="_blank"
-              >California Energy Commission</a
-            >
-          </div>
-        </div>
-        <div class="bx--col-lg-8">
-          <div class="collaborator">
-            <img
-              src="img/logos/SGC-Brand-Logos-03.png"
-              alt="logo for California Strategic Growth Council"
-              style="width:200px;"
-            />
-            <a href="http://sgc.ca.gov/" target="_blank"
-              >California Strategic Growth Council</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="bx--row">
-        <div class="bx--col-lg-8">
-          <h3 class="h5">Site Development</h3>
-          <div class="collaborator">
-            <img
-              src="img/logos/gif_249x100.png"
-              style="width:200px;"
-              alt="Geospatial Innovation Facility logo"
-            />
-            <a href="http://gif.berkeley.edu/" target="_blank"
-              >Geospatial Innovation Facility</a
-            >
-          </div>
-        </div>
-        <div class="bx--col-lg-8">
-          <h3 class="h5">Science Advisor</h3>
-          <div class="collaborator">
-            <img
-              src="img/logos/eagle-rock-analytics-logo-black_3.png"
-              alt="logo for Eagle Rock Analytics"
-            />
-            <a href="http://www.eaglerockanalytics.com/" target="_blank"
-              >Eagle Rock Analytics</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="bx--row"></div>
-      <div class="bx--row">
-        <div class="bx--col">
-          <h3 class="h5">Data Contributors</h3>
-          <div class="contributor-list">
-            <div class="contributor">
-              <img
-                src="/img/logos/scripps_logo.svg"
-                alt="logo for Scripps Institution of Oceanography"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/ca_dwr.png"
-                alt="logo for California Department of Water Resources"
-                style="height:100px;width:100px;"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/UCBerkeley_wordmark_blue.svg"
-                alt="logo for University of California Berkeley"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/OCOF-logo.png"
-                alt="logo for Our Coast Our Future"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/logo_UCLA_blue.svg"
-                alt="logo for University of California Los Angeles"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/USGS_ID_green.png"
-                alt="logo for United States Geological Survey"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"
-                alt="logo for University of California Merced"
-              />
-            </div>
-            <div class="contributor">
-              <img
-                src="/img/logos/boulder-fl-vertical-a-2.png"
-                alt="logo for University of Colorado Boulder"
-              />
-            </div>
-          </div>
-        </div>
+  </div>
+
+  <!-- Background -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="background" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <hr />
+        <h2>Background</h2>
+        <p>
+          The <a href="http://www.energy.ca.gov/" target="_blank"
+            >California Energy Commission</a
+          >
+          (CEC) and UC Berkeley’s
+          <a href="http://gif.berkeley.edu/" target="_blank"
+            >Geospatial Innovation Facility</a
+          >
+          (GIF) initially released Cal-Adapt to the public in 2011 as a web-based
+          resource to showcase the innovative climate change research being produced
+          by the scientific community in California, as recommended in the
+          <a
+            href="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
+            target="_blank">2009 California Climate Adaptation Strategy</a
+          >.
+        </p>
+        <p>
+          The GIF, with funding support from the CEC, developed and launched the
+          current iteration of Cal-Adapt (version 2.0) as part of <a
+            href="https://www.climateassessment.ca.gov/"
+            target="_blank">California’s Fourth Climate Change Assessment</a
+          >. This version includes updates and enhancements that increase its
+          ease of use, information value, interactive visualizations, and data
+          accessibility. Cal-Adapt's design and functionality have been
+          developed in collaboration with a variety of beta testers and advisory
+          committee members who provided valuable feedback throughout several
+          iterations of updates.
+        </p>
+        <p>
+          Cal-Adapt has been recognized by California’s legislature as a key
+          resource to support local hazard mitigation efforts and has helped
+          California move forward on climate policy by providing easy access and
+          exploration of high-resolution, regionally downscaled climate
+          projections that are sanctioned by the state to be used in climate
+          adaptation resiliency and planning. The website continues to evolve to
+          present the latest scientific data and to further support stakeholders
+          in understanding climate-related impacts relevant to local decision
+          making.
+        </p>
       </div>
     </div>
-  </div>
-</div>
 
-<div
-  class="bx--grid content"
-  id="background"
-  use:inview="{entryOptions}"
-  on:enter="{handleEntry}"
->
-  <div class="bx--row">
-    <div class="bx--col-lg-6 center order-1">
+    <div
+      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
+    >
       <a
         href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf"
         target="_blank"
+        aria-describedby="fourth-assement-desc"
       >
         <figure class="image">
           <img
@@ -464,73 +524,27 @@
             class="report shadow"
             alt="caladapt report cover"
           />
-          <figcaption>
+          <figcaption id="fourth-assement-desc">
             Read our technical report for the Fourth Assessment for more
             detailed information on the background and development of Cal-Adapt.
           </figcaption>
         </figure>
       </a>
     </div>
-    <div class="bx--col-lg-10">
-      <hr />
-      <h2>Background</h2>
-      <p>
-        The <a href="http://www.energy.ca.gov/" target="_blank"
-          >California Energy Commission</a
-        >
-        (CEC) and UC Berkeley’s
-        <a href="http://gif.berkeley.edu/" target="_blank"
-          >Geospatial Innovation Facility</a
-        >
-        (GIF) initially released Cal-Adapt to the public in 2011 as a web-based resource
-        to showcase the innovative climate change research being produced by the
-        scientific community in California, as recommended in the
-        <a
-          href="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
-          target="_blank">2009 California Climate Adaptation Strategy</a
-        >.
-      </p>
-      <p>
-        The GIF, with funding support from the CEC, developed and launched the
-        current iteration of Cal-Adapt (version 2.0) as part of <a
-          href="https://www.climateassessment.ca.gov/"
-          target="_blank">California’s Fourth Climate Change Assessment</a
-        >. This version includes updates and enhancements that increase its ease
-        of use, information value, interactive visualizations, and data
-        accessibility. Cal-Adapt's design and functionality have been developed
-        in collaboration with a variety of beta testers and advisory committee
-        members who provided valuable feedback throughout several iterations of
-        updates.
-      </p>
-      <p>
-        Cal-Adapt has been recognized by California’s legislature as a key
-        resource to support local hazard mitigation efforts and has helped
-        California move forward on climate policy by providing easy access and
-        exploration of high-resolution, regionally downscaled climate
-        projections that are sanctioned by the state to be used in climate
-        adaptation resiliency and planning. The website continues to evolve to
-        present the latest scientific data and to further support stakeholders
-        in understanding climate-related impacts relevant to local decision
-        making.
-      </p>
-    </div>
   </div>
-</div>
 
-<div
-  class="bx--grid--full-width"
-  id="team"
-  use:inview="{entryOptions}"
-  on:enter="{handleEntry}"
->
+  <!-- Our Team -->
   <div class="bx--row">
-    <div class="bx--col center">
-      <hr />
-      <h2>Our Team</h2>
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="team" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <hr />
+        <h2>Our Team</h2>
+      </div>
     </div>
   </div>
-  <div class="bx--row center">
-    <div class="bx--ofset-lg-2 bx--col-lg-12">
+
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-12">
       <Tabs>
         <Tab label="Site Development" />
         <Tab label="Contract Management" />
