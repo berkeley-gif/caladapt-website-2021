@@ -11,7 +11,7 @@ Researchers for <a href="http://www.climateassessment.ca.gov/" target="_blank">C
 - Astronomical tides
 - Regional and local weather influences
 - Shorter period climate fluctuations (e.g. El Nino and other climate patterns)
-- Projections of long-term (decade to century timescale) change in regional sea levels (<a href="http://www.climateassessment.ca.gov/techreports/docs/20180827-Projections_CCCA4-CEC-2018-006.pdf" target="_blank">Pierce et al. 2018</a>)
+- Projections of long-term (decade to century timescale) change in regional sea levels (<a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf" target="_blank">Pierce et al. 2018</a>)
 
 The regional sea level rise projections leverage a probabilistic framework originally developed by <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014EF000239" target="_blank">Kopp et al (2014)</a>. The probabilistic framework is helpful because despite substantial advances in the science of sea level rise, significant uncertainty remains in mid- and late-century projections of sea levels. Probabilistic sea level rise projections provide a range of possible outcomes in a framework that enables decision-makers to choose a number that is appropriate for their level of risk tolerance (e.g., a wastewater treatment plant vs. a parking lot).
 
