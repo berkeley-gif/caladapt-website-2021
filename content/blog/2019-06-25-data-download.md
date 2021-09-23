@@ -64,4 +64,4 @@ The user can select up to 10 series at a time. Since more of our users prefer do
 
 The Cal-Adapt team hopes that these new features and interface help citizens, public officials, and scientists across California envision, prepare for, and communicate about climate change. To support engagement with this data download tool, Cal-Adapt staff will offer a brief [webinar on June 27, 2019](/events/webinar-accessing-climate-data).
 
-If additional data and functionality would support your climate science and planning goals, please get in touch! You can reach us by emailing <upport@cal-adapt.org>
+If additional data and functionality would support your climate science and planning goals, please get in touch! You can reach us by emailing <support@cal-adapt.org>
