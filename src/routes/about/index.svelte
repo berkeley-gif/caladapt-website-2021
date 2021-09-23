@@ -107,10 +107,7 @@
     }
   }
 
-  #team {
-    background: var(--gray-20);
-    padding: 2rem 0;
-
+  .tabs-container {
     :global(.bx--tabs__nav) {
       width: 100%;
       text-transform: uppercase;
@@ -119,45 +116,39 @@
 
     :global(a.bx--tabs__nav-link) {
       width: 100%;
-      text-align: center;
     }
   }
 
   p.team-text {
-    padding: 2rem;
-    margin-bottom: 0;
+    margin-top: 1rem;
   }
 
   .team-members {
     display: flex;
-    flex-wrap: wrap;
-    padding: 0 2rem;
-    justify-content: center;
-
-    &.managers {
-      margin: 2rem 0;
-
-      .card {
-        width: calc(50% - 2rem);
-      }
-    }
-
-    .card {
-      width: calc(33% - 2rem);
-      margin: 0.25rem;
-      text-align: center;
-    }
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
   }
 
   .team-list {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-left: 4rem;
+    justify-content: flex-start;
+    gap: 0.5rem;
 
     li {
-      width: calc(25% - 2rem);
-      margin: 0.25rem;
+      list-style-type: none;
+    }
+  }
+
+  .team-list-advisory {
+    justify-content: flex-start;
+    gap: 0.5rem;
+
+    .card {
+      width: calc(25% - 1rem);
+      min-height: 6rem;
     }
   }
 
@@ -373,7 +364,6 @@
           </div>
         </div>
 
-        <!--  -->
         <div class="bx--row">
           <div class="bx--col">
             <h3 class="h5">Data Contributors</h3>
@@ -532,107 +522,126 @@
       </a>
     </div>
   </div>
+</div>
 
-  <!-- Our Team -->
-  <div class="bx--row">
-    <div class="bx--offset-lg-2 bx--col-lg-8">
-      <div id="team" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <hr />
-        <h2>Our Team</h2>
+<!-- Our Team -->
+<div
+  class="bx--grid bx--grid--full-width"
+  style="background-color: var(--gray-20)"
+>
+  <div class="bx--grid">
+    <div class="bx--row">
+      <div class="bx--offset-lg-2 bx--col-lg-8">
+        <div id="team" use:inview="{entryOptions}" on:enter="{handleEntry}">
+          <h2>Our Team</h2>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="bx--row">
-    <div class="bx--offset-lg-2 bx--col-lg-12">
-      <Tabs>
-        <Tab label="Site Development" />
-        <Tab label="Contract Management" />
-        <Tab label="Advisory Oversight" />
-        <div slot="content">
-          <TabContent>
-            <p class="team-text">
-              The <a href="http://gif.berkeley.edu/" target="_blank"
-                >Geospatial Innovation Facility</a
-              >
-              at
-              <a href="https://www.berkeley.edu/" target="_blank">UC Berkeley</a
-              >'s
-              <a href="https://nature.berkeley.edu/" target="_blank"
-                >College of Natural Resources</a
-              > provides leadership and training across a broad array of integrated
-              mapping technologies. Our goal is to help people better understand
-              the changing world through the analysis and visualization of spatial
-              data.
-            </p>
-            <div class="team-members">
-              {#each staff.current as opt}
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      {opt.name}
-                    </h5>
-                    <p class="font-weight--light">
-                      {opt.org}
-                    </p>
-                  </div>
+    <div class="bx--row bx--no-gutter">
+      <div class="bx--offset-lg-2 bx--col-lg-8">
+        <div class="tabs-container">
+          <Tabs>
+            <Tab label="Site Development" />
+            <Tab label="Contract Management" />
+            <Tab label="Advisory Oversight" />
+            <div slot="content">
+              <TabContent>
+                <p class="team-text">
+                  The <a href="http://gif.berkeley.edu/" target="_blank"
+                    >Geospatial Innovation Facility</a
+                  >
+                  at
+                  <a href="https://www.berkeley.edu/" target="_blank"
+                    >UC Berkeley</a
+                  >'s
+                  <a href="https://nature.berkeley.edu/" target="_blank"
+                    >College of Natural Resources</a
+                  > provides leadership and training across a broad array of integrated
+                  mapping technologies. Our goal is to help people better understand
+                  the changing world through the analysis and visualization of spatial
+                  data.
+                </p>
+                <div class="team-members">
+                  {#each staff.current as opt}
+                    <div class="card">
+                      <div class="card-body">
+                        <p class="card-title h5">
+                          {#if opt.url}
+                            <a href="{opt.url}" target="_blank">{opt.name}</a>
+                          {:else}
+                            {opt.name}
+                          {/if}
+                        </p>
+                        <p class="font-weight--light">
+                          {opt.org}
+                        </p>
+                      </div>
+                    </div>
+                  {/each}
                 </div>
-              {/each}
-            </div>
-            <p class="team-text">Previous contributors:</p>
-            <ul class="team-list">
-              {#each staff.prior as opt}
-                <li style="flex: 1 0 auto;">
-                  {opt.name}
-                </li>
-              {/each}
-            </ul>
-          </TabContent>
-          <TabContent>
-            <div class="team-members managers">
-              {#each managers as opt}
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      {opt.name}
-                    </h5>
-                    <p class="font-weight--light">
-                      {opt.org}
-                    </p>
-                  </div>
+                <p class="team-text">
+                  <strong>Previous contributors:</strong>
+                </p>
+                <ul class="team-list">
+                  {#each staff.prior as opt, i}
+                    <li>
+                      {opt.name}{i < staff.prior.length - 1 ? "," : ""}
+                    </li>
+                  {/each}
+                </ul>
+              </TabContent>
+              <TabContent>
+                <div class="team-members">
+                  {#each managers as opt}
+                    <div class="card">
+                      <div class="card-body">
+                        <p class="card-title h5">
+                          {opt.name}
+                        </p>
+                        <p class="font-weight--light">
+                          {opt.org}
+                        </p>
+                      </div>
+                    </div>
+                  {/each}
                 </div>
-              {/each}
+              </TabContent>
+              <TabContent>
+                <p class="team-text">
+                  Our Technical Advisory Committee (TAC) is composed of experts
+                  from state and local government, utilities, consulting firms
+                  and academia. We thank the following people for serving on our
+                  TACs. If you are interested in serving on our TAC in the
+                  future, please email nethomas@berkeley.edu.
+                </p>
+                <ul class="team-list team-list-advisory">
+                  {#each advisors.current as opt}
+                    <li class="card">
+                      <div class="card-body">
+                        <p class="card-title h5">{opt.name}</p>
+                        {#if opt.org}
+                          <p class="small text-gray-70">{opt.org}</p>
+                        {/if}
+                      </div>
+                    </li>
+                  {/each}
+                </ul>
+                <p class="team-text">
+                  <strong>Previous contributors:</strong>
+                </p>
+                <ul class="team-list">
+                  {#each advisors.prior as opt, i}
+                    <li>
+                      {opt.name}{i < advisors.prior.length - 1 ? "," : ""}
+                    </li>
+                  {/each}
+                </ul>
+              </TabContent>
             </div>
-          </TabContent>
-          <TabContent>
-            <p class="team-text">
-              Our Technical Advisory Committee (TAC) is composed of experts from
-              state and local government, utilities, consulting firms and
-              academia. We thank the following people for serving on our TACs.
-              If you are interested in serving on our TAC in the future, please
-              email nethomas@berkeley.edu.
-            </p>
-            <ul class="team-list">
-              {#each advisors.current as opt}
-                <li>
-                  {opt.name}
-                  {#if opt.org}
-                    <br /><span class="small text-gray-70">{opt.org}</span>
-                  {/if}
-                </li>
-              {/each}
-            </ul>
-            <p class="team-text">Previous contributors:</p>
-            <ul class="team-list">
-              {#each advisors.prior as opt}
-                <li>
-                  {opt.name}
-                </li>
-              {/each}
-            </ul>
-          </TabContent>
+          </Tabs>
         </div>
-      </Tabs>
+      </div>
     </div>
   </div>
 </div>
