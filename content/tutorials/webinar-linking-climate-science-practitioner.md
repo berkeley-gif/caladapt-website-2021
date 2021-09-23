@@ -2,7 +2,7 @@
 title: Linking Climate Science with Practitioner Need
 author: Cal-Adapt
 video: "https://www.youtube.com/watch?v=hnz-jrXaADo"
-tags: data, tool
+tags: data, tools
 category: webinar
 date: "2018-11-01"
 ---
