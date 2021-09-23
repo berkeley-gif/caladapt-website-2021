@@ -77,7 +77,7 @@
     </div>
     <div class="bx--row">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each toolsByCategory as { icons, title, desc, slug }}
+        {#each toolsByCategory as { icons, title, desc, slug, version3 }}
           <Card
             {...{
               titleText: title,

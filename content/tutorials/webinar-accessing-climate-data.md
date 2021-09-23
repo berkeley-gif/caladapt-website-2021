@@ -1,9 +1,9 @@
 ---
 title: Accessing Climate Data through Cal-Adapt
 author: Cal-Adapt
+video: "https://www.youtube.com/watch?v=9ox8GPasI9M"
 tags: data
 category: webinar
-video: "https://www.youtube.com/watch?v=9ox8GPasI9M"
 date: "2019-06-18"
 ---
 

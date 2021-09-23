@@ -4,7 +4,7 @@ const tools = [
   {
     title: 'Local Climate Change Snapshot',
     desc: `A starting point to get climate impacts for your location.`,
-    categories: ['Temperature', 'Precipitation'],
+    categories: ['Temperature', 'Precipitation', 'Wildfire'],
     slug: 'local-climate-change-snapshot',
     icons: [
       'img/icons/sun.svg',

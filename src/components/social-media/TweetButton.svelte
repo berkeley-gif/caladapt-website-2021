@@ -3,7 +3,7 @@
 
   export let text = "The latest from Cal-Adapt";
   export let url = "https://cal-adapt.org";
-  export let hashtags = [];
+  export let hashtags = ["climatechange", "caladapt"];
   export let via = "cal_adapt";
   export let related = "";
   export let linkText = "Tweet this";

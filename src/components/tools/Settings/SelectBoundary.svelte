@@ -54,6 +54,6 @@
   on:change="{change}"
 >
   {#each items as opt}
-    <SelectItem value="{opt.id}" label="{opt.label}" />
+    <SelectItem value="{opt.id}" text="{opt.label}" />
   {/each}
 </Select>

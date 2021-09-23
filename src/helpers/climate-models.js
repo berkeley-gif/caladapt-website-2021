@@ -6,7 +6,7 @@ const models = [
       "and Bureau of Meteorology (BOM), Australia",
     priority: false,
     color: "rgba(31, 119, 180, 1)",
-    text: "",
+    text: "ACCESS1-0",
     order: 4,
   },
   {
@@ -14,7 +14,7 @@ const models = [
     org: "Canadian Centre for Climate Modelling and Analysis",
     priority: true,
     color: "rgba(188, 189, 34, 1)",
-    text: "Average",
+    text: "CanESM2 (Average)",
     order: 2,
   },
   {
@@ -22,7 +22,7 @@ const models = [
     org: "University of Miami - RSMAS",
     priority: false,
     color: "rgba(44, 160, 44, 1)",
-    text: "",
+    text: "CCSM4",
     order: 5,
   },
   {
@@ -30,7 +30,7 @@ const models = [
     org: "Community Earth System Model Contributors",
     priority: false,
     color: "rgba(140, 86, 75, 1)",
-    text: "",
+    text: "CESM1-BGC",
     order: 6,
   },
   {
@@ -38,7 +38,7 @@ const models = [
     org: "Centro Euro-Mediterraneo per I Cambiamenti Climatici",
     priority: false,
     color: "rgba(227, 119, 194, 1)",
-    text: "",
+    text: "CMCC-CMS",
     order: 7,
   },
   {
@@ -48,7 +48,7 @@ const models = [
       "de Recherche et Formation Avancée en Calcul Scientifique",
     priority: true,
     color: "rgba(23, 190, 207, 1)",
-    text: "Cool/Wet",
+    text: "CNRM-CM5 (Cool/Wet)",
     order: 1,
   },
   {
@@ -56,7 +56,7 @@ const models = [
     org: "NOAA Geophysical Fluid Dynamics Laboratory",
     priority: false,
     color: "rgba(255, 127, 14, 1)",
-    text: "",
+    text: "GFDL-CM3",
     order: 8,
   },
   {
@@ -64,7 +64,7 @@ const models = [
     org: "Met Office Hadley Centre",
     priority: false,
     color: "rgba(69, 68, 68, 1)",
-    text: "",
+    text: "HadGEM2-CC",
     order: 9,
   },
   {
@@ -72,7 +72,7 @@ const models = [
     org: "Met Office Hadley Centre and Instituto Nacional de Pesquisas Espaciais",
     priority: true,
     color: "rgba(214, 39, 40, 1)",
-    text: "Warm/Dry",
+    text: "HadGEM2-ES (Warm/Dry)",
     order: 0,
   },
   {
@@ -83,7 +83,7 @@ const models = [
       "Marine-Earth Science and Technology",
     priority: true,
     color: "rgba(148, 103, 189, 1)",
-    text: "Complement",
+    text: "MIROC5 (Complement)",
     order: 3,
   },
 ];

@@ -161,7 +161,7 @@
         <Button
           kind="tertiary"
           icon="{ArrowRight16}"
-          href="http://albers.cnr.berkeley.edu/data/"
+          href="https://albers.cnr.berkeley.edu/data/"
           >Cal-Adapt Data Server</Button
         >
       </p>

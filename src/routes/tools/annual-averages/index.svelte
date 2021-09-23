@@ -245,14 +245,6 @@
           LOCA is a statistical downscaling technique that uses past history to add
           improved fine-scale detail to global climate models.
         </p>
-        <p>
-          On average, the projections show little change in total annual
-          precipitation in California. Furthermore, among several models,
-          precipitation projections do not show a consistent trend during the
-          next century. However, even modest changes would have a significant
-          impact because California ecosystems are conditioned to historical
-          precipitation levels and water resources are nearly fully utilized.
-        </p>
       </div>
     </About>
   </div>

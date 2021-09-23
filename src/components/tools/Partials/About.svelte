@@ -100,8 +100,8 @@
                 <p class="source-text">Download dataset:</p>
                 <ul class="source-list">
                   <li class="source-list-item">
-                    <a href="/data/download/{item.id}" target="_blank"
-                      >Cal-Adapt Data Download tool</a
+                    <a href="/data/download/" target="_blank"
+                      >Cal-Adapt Data Download Tool</a
                     >
                   </li>
                   {#each item.resources.filter((d) => d.format !== "reference") as ref}

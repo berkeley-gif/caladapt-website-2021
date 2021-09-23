@@ -121,9 +121,9 @@
         <div class="title-container">
           <h1 class="sr-only">Cal-Adapt</h1>
           <p class="title h1">
-            Cal-Adapt provides a means of exploring peer-reviewed data
-            portraying how climate change might affect California at the state
-            and local level.
+            Cal-Adapt provides a way to explore peer-reviewed data that portrays
+            how climate change might affect California at the state and local
+            level.
           </p>
         </div>
 

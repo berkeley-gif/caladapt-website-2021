@@ -125,8 +125,18 @@ export const getTitle = (feature, layerId, placeName) => {
       return `Census Tract ${feature.properties.tract}, California`;
     case "hydrounits":
       return `${feature.properties.name} Watershed, California`;
+    case "place":
+      return `${feature.properties.name}, California`;
     case "cdistricts":
       return `Congressional District ${feature.properties.cd114fp}, California`;
+    case "wecc-load-area":
+      return `${feature.properties.name}, WECC Load Area`;
+    case "climregions":
+      return `${feature.properties.name}, WRCC Climate Region`;
+    case "ccc4aregions":
+      return `${feature.properties.name}, California's Fourth Assessment Climate Region`;
+    case "irwm":
+      return `${feature.properties.name}, IRWM Region`;
     case "custom":
       return "Custom Boundary";
     case "ca":
@@ -282,9 +292,11 @@ export const getStationById = async (id, layerId) => {
   return formatFeature(response, layerId);
 };
 
-export const getNearestStation = async (lng, lat, layerId) => {
+export const getNearestFeature = async (lng, lat, layerId) => {
   const url = `${apiEndpoint}/${layerId}/`;
   const params = {
+    srs: 4326,
+    precision: 4,
     distance_to: `POINT(${lng} ${lat})`,
   };
   const [response, error] = await handleXHR(fetchData(url, params));

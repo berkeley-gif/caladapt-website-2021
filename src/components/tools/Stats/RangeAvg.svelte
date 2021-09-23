@@ -258,7 +258,7 @@
     {#if isHistorical}
       <p>
         The average is calculated using data values between {selectedPeriod.start}
-        and {selectedPeriod.end} from the Observed Historical timeseries.
+        and {selectedPeriod.end} from the {selectedSeries.label} timeseries.
       </p>
     {:else}
       <p>

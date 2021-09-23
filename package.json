@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=development sapper dev --no-hot",
     "build": "sapper build",
-    "export": "sapper export --timeout=10000 --concurrent 1",
+    "export": "sapper export --timeout=10000",
     "start": "node __sapper__/build",
     "lint": "eslint src --ext .js,.svelte",
     "format": "prettier --write",
