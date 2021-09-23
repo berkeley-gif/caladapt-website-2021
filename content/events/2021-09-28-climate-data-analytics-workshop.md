@@ -23,6 +23,6 @@ September 28th -30th, 2021 9AM-2PM
 
 Questions?: <analytics@cal-adapt.org>
 
-This three-day virtual workshop will raise awareness of various state-supported climate data efforts, solicit feedback on critical use cases for the energy sector, and spur collaboration and alignment among creators and users of climate data. Attendees will be able to learn about efforts led by CEC & OPR, provide feedback on data platform development, and connect with our project team through co-production¹.
+This three-day virtual workshop will raise awareness of various state-supported climate data efforts, solicit feedback on critical use cases for the energy sector, and spur collaboration and alignment among creators and users of climate data. Attendees will be able to learn about efforts led by California Energy Commission & Governor's Office of Planning and Research, provide feedback on data platform development, and connect with our project team through co-production¹.
 
 ¹ Co-production consists of facilitated conversations between the scientists producing the data and the stakeholders utilizing it. Facilitation will be led by boundary spanners, multidisciplinary professionals who understand the language of both groups. We hope this workshop brings together the expertise of California’s leading scientists and the know-how of on the ground practitioners, actualizing top-down, bottom-up resilience.
