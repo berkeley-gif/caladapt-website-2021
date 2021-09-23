@@ -54,6 +54,14 @@
     margin: 1rem;
   }
 
+  hr {
+    margin-top: 4rem;
+  }
+
+  h2:not(:first-of-type) {
+    margin-top: 0;
+  }
+
   .banner {
     background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash.jpg);
     background-position: center 35%;
@@ -153,20 +161,11 @@
   }
 
   @media (max-width: 1000px) {
-    .content {
-      margin: 2rem auto;
-    }
-
-    .order-1 {
-      order: 1;
-    }
-
     figure {
       margin: 0;
     }
 
     .team-members .card,
-    .team-members.managers .card,
     .team-list li {
       width: 100%;
     }
@@ -275,11 +274,17 @@
     </div>
   </div>
 
+  <!-- Rule -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <hr />
+    </div>
+  </div>
+
   <!-- Audience -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
       <div id="audience" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <hr />
         <h2>Our Audience</h2>
         <p>
           Cal-Adapt offers free public access to peer-reviewed data that support
@@ -302,11 +307,17 @@
     </div>
   </div>
 
+  <!-- Rule -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <hr />
+    </div>
+  </div>
+
   <!-- Partners -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
       <div id="partners" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <hr />
         <h2>Our Partners</h2>
 
         <h3 class="h5">Funding and Oversight</h3>
@@ -452,11 +463,17 @@
     </div>
   </div>
 
+  <!-- Rule -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <hr />
+    </div>
+  </div>
+
   <!-- Background -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
       <div id="background" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <hr />
         <h2>Background</h2>
         <p>
           The <a href="http://www.energy.ca.gov/" target="_blank"
@@ -524,14 +541,17 @@
   </div>
 </div>
 
+<div class="spacing--v-48"></div>
+
 <!-- Our Team -->
 <div
   class="bx--grid bx--grid--full-width"
-  style="background-color: var(--gray-20)"
+  style="background-color: var(--gray-20);"
 >
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--offset-lg-2 bx--col-lg-8">
+        <div class="spacing--v-48"></div>
         <div id="team" use:inview="{entryOptions}" on:enter="{handleEntry}">
           <h2>Our Team</h2>
         </div>
