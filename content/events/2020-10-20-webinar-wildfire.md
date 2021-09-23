@@ -10,13 +10,13 @@ teaser: An overview of wildfire modeling and best practices for wildfire data pr
 
 2020 has been a record-setting year for wildfire in California. As of the writing of this blog post, more than 4.1 million acres have burned, more than double the previous annual total of 1.7 million acres burned in 2018, and California’s 2020 wildfire season is not yet over.
 
-Climate scientists project that in coming decades, [California will see increases in mean annual area burned and more frequent extreme wildfires](https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-014_ADA.pdf). Some of this increase in wildfire occurrence and intensity is the result of climate change, with additional anthropogenic factors like forest management, carbon emissions, population growth, and development patterns also contributing. Because wildfire projection is multifactorial and complex, Cal-Adapt and the Pyregence Consortium hosted a webinar that explored how wildfire projections are created, how they should and should not be interpreted, and how projection and modeling methods will be updated for California’s Fifth Climate Change Assessment.
+Climate scientists project that in coming decades, <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-014_ADA.pdf" target="_blank">California will see increases in mean annual area burned and more frequent extreme wildfires</a>. Some of this increase in wildfire occurrence and intensity is the result of climate change, with additional anthropogenic factors like forest management, carbon emissions, population growth, and development patterns also contributing. Because wildfire projection is multifactorial and complex, Cal-Adapt and the Pyregence Consortium hosted a webinar that explored how wildfire projections are created, how they should and should not be interpreted, and how projection and modeling methods will be updated for California’s Fifth Climate Change Assessment.
 
-Here’s a link to the [full video of the webinar](https://www.youtube.com/watch?v=XmuEPacVioE), and a written summary is provided below.
+Here’s a link to the <a href="https://www.youtube.com/watch?v=XmuEPacVioE" target="_blank">full video of the webinar</a>, and a written summary is provided below.
 
 ## Fourth Climate Change Assessment Wildfire Projections
 
-To start the webinar, [Dr. Leroy Westerling](http://ulmo.ucmerced.edu/) offered an overview of wildfire modeling techniques, particularly those that informed California’s Fourth Climate Change Assessment. Dr. Westerling’s presentation highlighted that:
+To start the webinar, <a href="http://ulmo.ucmerced.edu/" target="_blank">Dr. Leroy Westerling</a> offered an overview of wildfire modeling techniques, particularly those that informed California’s Fourth Climate Change Assessment. Dr. Westerling’s presentation highlighted that:
 - Wildfire modeling and projection must take into account a suite of environmental and social variables like land use scenarios, forest management practices, climate change projections, topography, vegetation patterns, ignition causes, and historic fire occurrence
 - Annual area burned and extreme wildfire event frequency are both projected to increase in California
 - Much of this increase is anticipated to occur in the Sierra Nevada, particularly in the northern parts of the state
@@ -26,7 +26,7 @@ To start the webinar, [Dr. Leroy Westerling](http://ulmo.ucmerced.edu/) offered 
 
 ## Wildfire Data Projections on Cal-Adapt
 
-Dr. Westerling’s Fourth Climate Change Assessment [wildfire modeling data is accessible through Cal-Adapt](https://cal-adapt.org/tools/wildfire/). Cal-Adapt presents both projected area burned and decadal wildfire probability.
+Dr. Westerling’s Fourth Climate Change Assessment [wildfire modeling data is accessible through Cal-Adapt](/tools/wildfire/). Cal-Adapt presents both projected area burned and decadal wildfire probability.
 
 <img src="/img/blog/wildfire-screenshot-data.png" style="width:90%;margin:2rem 0;" alt="Screenshot from Cal-Adapt.org showing projected wildfire data">
 
@@ -36,7 +36,7 @@ Projected data is available for California’s four priority general circulation
 
 ## Best Practices for Working with Climate Projections
 
-[Dr. Owen Doherty](http://www.eaglerockanalytics.com/about-us.html) offered best practices for working with climate change data, including wildfire projections.
+<a href="http://www.eaglerockanalytics.com/about-us.html" target="_blank">Dr. Owen Doherty</a> offered best practices for working with climate change data, including wildfire projections.
 
 First, a user must recognize that all climate projections carry with them a degree of uncertainty. This does not mean that we do not know anything about our climate future; we can say with great certainty that California is and will continue to experience warmer temperatures, more variable drought and precipitation patterns, and a greater frequency of extreme climate events. However, the specific trajectory of our climate future is bounded by an envelope of uncertainty, also known as a range of future climate conditions, that gets wider the further out in time we look and the more factors we incorporate in modeling. A lot of this range is attributable to future human decisions like energy consumption and land use practices that will impact emissions. In general, climate trends remain clear, and the more factors that are involved in modeling, the greater the corresponding uncertainty that surrounds specific modeled values.
 
@@ -58,18 +58,16 @@ Because of this, Dr. Doherty recommends that climate change data users:
 
 ## Wildfire Data in California’s Fifth Climate Change Assessment
 
-Finally, [Dr. David Saah](https://www.usfca.edu/faculty/david-saah) and [Dr. Leroy Westerling](http://ulmo.ucmerced.edu/) presented the wildfire modeling consortium and process that will support California’s Fifth Climate Change Assessment. The inputs, process, and outputs of this anticipated effort are illustrated in the figure below.
+Finally, <a href="https://www.usfca.edu/faculty/david-saah" target="_blank">Dr. David Saah</a> and <a href="http://ulmo.ucmerced.edu/" target="_blank">Dr. Leroy Westerling</a> presented the wildfire modeling consortium and process that will support California’s Fifth Climate Change Assessment. The inputs, process, and outputs of this anticipated effort are illustrated in the figure below.
 
 <figure class="image">
   <img src="/img/blog/pyregence-wildfire-modeling.png" style="width:90%;margin-top:2rem;margin-bottom:0.5rem;" alt="Outline of wildfire modeling process for California’s Fifth Climate Change Assessment">
   <figcaption style="font-size:90%;color: #757575;margin-bottom:2rem;">Outline of wildfire modeling process for California’s Fifth Climate Change Assessment, to be conducted by the Pyregence Consortium. From Dr. David Saah’s Cal-Adapt wildfire presentation on October 20, 2020.</figcaption>
 </figure>
 
-Wildfire modeling for the Fifth Assessment is expected to incorporate the newest science in modeling and management. Outputs will include projections for area burned, as well as smoke production (PM2.5). For more information, keep an eye on the web page and publications from the [Pyregence Consortium](https://pyregence.org/about).
+Wildfire modeling for the Fifth Assessment is expected to incorporate the newest science in modeling and management. Outputs will include projections for area burned, as well as smoke production (PM2.5). For more information, keep an eye on the web page and publications from the <a href="https://pyregence.org/about" target="_blank">Pyregence Consortium</a>.
 
 <figure class="image">
   <img src="/img/blog/pyregence-workgroups.png" style="width:90%;margin-top:2rem;margin-bottom:0.5rem;" alt="Pyregence consortium workgroups">
   <figcaption style="font-size:90%;color: #757575;margin-bottom:2rem;">The Pyregence Consortium collaborates across 4 workgroups.</figcaption>
 </figure>
-
-

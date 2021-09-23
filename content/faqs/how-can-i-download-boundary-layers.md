@@ -27,7 +27,7 @@ The following boundary layers can be downloaded from the Cal-Adapt API in GeoJSO
 `https://api.cal-adapt.org/api/counties/`
 
 
-<a href="https://api.cal-adapt.org/api/electricutilities/" target="_blank">Electric Utilities Regulated by the CEC</a>\
+<a href="https://api.cal-adapt.org/api/electricutilities/" target="_blank">Electric Utilities Regulated by the California Energy Commission</a>\
 `https://api.cal-adapt.org/api/electricutilities/`
 
 

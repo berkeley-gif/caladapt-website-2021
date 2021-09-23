@@ -6,11 +6,11 @@ tags: tools
 snippet: This new tool explores data for two 20-year drought scenarios derived from LOCA downscaled meteorological and hydrological simulations, one for the earlier part and one for the latter part of the 21st century.
 ---
 
-Climate simulations and scenarios produced for [California's Fourth Climate Change Assessment](http://www.climateassessment.ca.gov/) enable investigation of extreme, highly damaging climate changes that are possible but unlikely. One of these <em>low probability, high consequence events</em> is extreme drought. To explore extreme drought in a warmer future, two 20-year drought scenarios were produced from the LOCA downscaled meteorological and hydrological simulations ([Pierce et al, 2018](http://www.climateassessment.ca.gov/techreports/docs/20180827-Projections_CCCA4-CEC-2018-006.pdf)):
+Climate simulations and scenarios produced for <a href="http://www.climateassessment.ca.gov/" target="_blank">California's Fourth Climate Change Assessment</a> enable investigation of extreme, highly damaging climate changes that are possible but unlikely. One of these <em>low probability, high consequence events</em> is extreme drought. To explore extreme drought in a warmer future, two 20-year drought scenarios were produced from the LOCA downscaled meteorological and hydrological simulations (<a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf" target="_blank">Pierce et al, 2018</a>):
 - The first scenario covers the later part of this century from 2051-2070 and was derived from LOCA downscaled HadGEM2-ES RCP 8.5 simulation
 - The second scenario covers the earlier part of this century from 2023-2042.  The precipitation during this scenario is daily LOCA downscaled precipitation in the sequence that it occurred from 2051-2070. However, the maximum and minimum temperatures are an adjusted version of 2051-2070 scenario that takes into account climate warming over the century.
 
-A more detailed description about the drought scenarios is available in the technical Report on [Climate, Drought, and Sea Level Rise Scenarios](http://www.climateassessment.ca.gov/techreports/docs/20180827-Projections_CCCA4-CEC-2018-006.pdf) prepared for California's Fourth Climate Change Assessment.
+A more detailed description about the drought scenarios is available in the technical Report on <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf" target="_blank">Climate, Drought, and Sea Level Rise Scenarios</a> prepared for California's Fourth Climate Change Assessment.
 
 <figure class="image">
   <img src="/img/blog/extended_drought_scenarios.png" style="max-width:15rem;" alt="Screenshot of custom user controls">
@@ -41,8 +41,7 @@ Data can be aggregated to produce annual averages by water year (October to Sept
   <figcaption></figcaption>
 </figure>
 
-For both drought scenarios, additional downscaled hydrological variables calculated using [VIC](https://vic.readthedocs.io/en/master/) are also available for exploring the substantially diminished snowpack, runoff, baseflow, etc. during the multi-year dry spell. Users can select one or more hydrological variables to load by clicking on an option.
+For both drought scenarios, additional downscaled hydrological variables calculated using <a href="https://vic.readthedocs.io/en/master/" target="_blank">VIC</a> are also available for exploring the substantially diminished snowpack, runoff, baseflow, etc. during the multi-year dry spell. Users can select one or more hydrological variables to load by clicking on an option.
 
 ####  Explore
 Explore the [Extended Drought Scenarios](/tools/extended-drought/) tool. Please send us your feedback on the new Extended Drought Scenarios tool at support@cal-adapt.org.
-

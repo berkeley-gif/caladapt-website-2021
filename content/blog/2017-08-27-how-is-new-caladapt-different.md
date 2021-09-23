@@ -6,7 +6,7 @@ tags: other
 snippet: Read about how new Cal-Adapt 2.0 dramatically expands the capacities of the initial version.
 ---
 
-The new Cal-Adapt (Cal-Adapt 2.0) dramatically expands the capacities of the initial version of [Cal-Adapt](http://v1.cal-adapt.org/), which was released
+The new Cal-Adapt (Cal-Adapt 2.0) dramatically expands the capacities of the initial version of <a href="http://v1.cal-adapt.org/" target="_blank">Cal-Adapt</a>, which was released
 in 2011, in the following ways:
 * New climate projections
 * More powerful visualizations
@@ -17,13 +17,13 @@ Each of these is briefly described below.
 
 ## New Climate Projections
 
-Cal-Adapt 2.0 makes use of new, high-resolution climate projections developed by researchers at the Scripps Institution of Oceanography at the University of California, San Diego. The underlying technique, [LOCA](http://loca.ucsd.edu/what-is-loca/) (LOcalized Constructed Analogues), was developed to address prior methods’ limitations with regard to representing temperature extremes and spatial distribution of precipitation. These improvements are critical, because extreme events associated with temperature and precipitation drive many of the economic and health-related impacts of climate change.
+Cal-Adapt 2.0 makes use of new, high-resolution climate projections developed by researchers at the Scripps Institution of Oceanography at the University of California, San Diego. The underlying technique, <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank">LOCA</a> (LOcalized Constructed Analogues), was developed to address prior methods’ limitations with regard to representing temperature extremes and spatial distribution of precipitation. These improvements are critical, because extreme events associated with temperature and precipitation drive many of the economic and health-related impacts of climate change.
 
 The high-resolution projections presented on Cal-Adapt 2.0 align with the suite of global climate models (also known as general circulation models or GCMs) as well as the emissions scenarios that form the foundation of the United Nations’ Intergovernmental Panel on Climate Change (IPCC) latest assessment report, namely the Fifth Assessment Report (AR5). For more information regarding the particular models shown on Cal-Adapt read our post on [Underlying Data and Model Selection in Cal-Adapt 2.0](/blog/data-and-model-selection/).
 
-The projected temperature and precipitation data portrayed on Cal-Adapt 2.0 were statistically downscaled using [LOCA](http://loca.ucsd.edu/what-is-loca/) (Localized Climate Analogues), a method developed at Scripps Institution of Oceanography that is part of the University of California at San Diego. LOCA results are highly-resolved in both space (1/16° grid, ca. 3.7 miles × 3.7 miles) and time (daily resolution).
+The projected temperature and precipitation data portrayed on Cal-Adapt 2.0 were statistically downscaled using <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank">LOCA</a> (Localized Climate Analogues), a method developed at Scripps Institution of Oceanography that is part of the University of California at San Diego. LOCA results are highly-resolved in both space (1/16° grid, ca. 3.7 miles × 3.7 miles) and time (daily resolution).
 
-Among LOCA’s strengths are its [ability to better capture extreme temperatures and spatial distribution of precipitation](https://scripps.ucsd.edu/news/new-high-resolution-climate-projections-aim-better-represent-extreme-events). This is very important, because temperature extremes and precipitation are responsible for many of California’s climate vulnerabilities.
+Among LOCA’s strengths are its <a href="https://scripps.ucsd.edu/news/new-high-resolution-climate-projections-aim-better-represent-extreme-events" target="_blank">ability to better capture extreme temperatures and spatial distribution of precipitation</a>. This is very important, because temperature extremes and precipitation are responsible for many of California’s climate vulnerabilities.
 
 ## Enhanced Visualizations
 
@@ -47,9 +47,8 @@ Cal-Adapt 2.0 enables access to data through a number of options:
 * **CSV download of data depicted on charts**. Time series shown on Cal-Adapt 2.0 charts can be downloaded directly as a csv file for easy exploration with other software programs.
 * **Primary NetCDF data**. Cal-Adapt 2.0 provides direct access to data for all 32 CMIP5 models for 2 RCP scenarios (RCP4.5, RCP8.5) plus the historical modeled period as well as historical observed gridded data. These data are available directly from a server maintained by the Geospatial Innovation Facility at UC Berkeley as well as through several resources for which links are provided on Cal-Adapt 2.0.
 * **GeoTIFF**. Users can download data for a user-specified geographic extent and for selected variables, scenario, period (daily vs. annual averages), and GCM in GeoTIFF format from the [Data](/data) page.
-* **Cal-Adapt API**. An Applications Programming Interface (API) provides programmatic access to climate data hosted on Cal-Adapt. The [Cal-Adapt API](https://berkeley-gif.github.io/caladapt-docs/index.html) is built using Django, Django REST framework, and Django-Spillway, an open source library developed at the GIF. The API follows an architectural style called REST (REpresentational State Transfer) which uses uses HTTP as the transport protocol for the message requests and responses. The API returns data in different formats, e.g. JSON, GeoTIFF and CSV.
+* **Cal-Adapt API**. An Applications Programming Interface (API) provides programmatic access to climate data hosted on Cal-Adapt. The <a href="https://berkeley-gif.github.io/caladapt-docs/index.html" target="_blank">Cal-Adapt API</a> is built using Django, Django REST framework, and Django-Spillway, an open source library developed at the GIF. The API follows an architectural style called REST (REpresentational State Transfer) which uses uses HTTP as the transport protocol for the message requests and responses. The API returns data in different formats, e.g. JSON, GeoTIFF and CSV.
 
 ## Cal-Adapt (API)
 
-Because Cal-Adapt developers cannot anticipate (nor have the resources to fulfill) the full suite of tools, a Cal-Adapt API was designed to empower third party users to develop custom tools that are tailored to their specific applications. For more details on the Cal-Adapt API visit the [API docmentation](https://berkeley-gif.github.io/caladapt-docs/index.html).
-
+Because Cal-Adapt developers cannot anticipate (nor have the resources to fulfill) the full suite of tools, a Cal-Adapt API was designed to empower third party users to develop custom tools that are tailored to their specific applications. For more details on the Cal-Adapt API visit the <a href="https://berkeley-gif.github.io/caladapt-docs/index.html" target="_blank">API docmentation</a>.
