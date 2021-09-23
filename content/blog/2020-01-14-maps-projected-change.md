@@ -6,7 +6,7 @@ tags: tools
 snippet: The Maps of Projected Change tool allows you to compare long-term historic climate conditions with projected future climate conditions in a quick geographic display.
 ---
 
-Cal-Adapt has released a new tool: [Maps of Projected Change](https://cal-adapt.org/tools/maps-of-projected-change/). The Maps of Projected Change tool allows you to compare long-term historic climate with projected future climate in a quick geographic display. Climate data visualized in the tool represent 30 year ensemble averages from 10 LOCA downscaled climate models for three climate variables - annual averages of maximum temperature, minimum temperature and precipitation.
+Cal-Adapt has released a new tool: [Maps of Projected Change](/tools/maps-of-projected-change/). The Maps of Projected Change tool allows you to compare long-term historic climate with projected future climate in a quick geographic display. Climate data visualized in the tool represent 30 year ensemble averages from 10 LOCA downscaled climate models for three climate variables - annual averages of maximum temperature, minimum temperature and precipitation.
 
 ## Selecting overlays
 Because future climate projections express natural climate variability, analyzing a longer time period gives you a better sense of overall future conditions. The tools shows data as 30 year ensemble averages because 30 years is the traditional length of record used in climatological studies to characterize a regional climate. The time periods available in the tool are:
@@ -43,4 +43,4 @@ Click on the overlay to get a popup box with data value for the underlying grid 
 And if you find the maps useful, you can download the overlays as images (PNG) or as raster data (GeoTIFF) that you can import into a GIS program or other analytic environment.
 
 ## Explore
-We hope [this tool](https://cal-adapt.org/tools/maps-of-projected-change/) makes it easier to understand how climate change may impact California’s temperatures and precipitation, compared to the state’s recent climate history. If you want to learn more about how to use climate projections, check out our [guidance page](https://cal-adapt.org/resources/using-climate-projections/). And if you have any questions, don’t hesitate to reach out to the Cal-Adapt support team at [support@cal-adapt.org](mailto:support@cal-adapt.org).
+We hope [this tool](/tools/maps-of-projected-change/) makes it easier to understand how climate change may impact California’s temperatures and precipitation, compared to the state’s recent climate history. If you want to learn more about how to use climate projections, check out our [guidance page](/help/glossary/climate-projection). And if you have any questions, don’t hesitate to reach out to the Cal-Adapt support team at <support@cal-adapt.org>.

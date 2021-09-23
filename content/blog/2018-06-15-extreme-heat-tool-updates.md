@@ -6,7 +6,7 @@ tags: tools
 snippet: The Extreme Heat Tool utilizes LOCA downscaled daily maximum and minimum temperature data to visualize the frequency and duration of extreme heat events for California.
 ---
 
-The [Extreme Heat Tool](cal-adapt.org/tools/extreme-heat/) on Cal-Adapt has always been one of our most visited tools. This week we are excited to roll out some new visualizations and functionality we have added to our Extreme Heat Tool. A quick list of the major changes are below.
+The [Extreme Heat Tool](/tools/extreme-heat/) on Cal-Adapt has always been one of our most visited tools. This week we are excited to roll out some new visualizations and functionality we have added to our Extreme Heat Tool. A quick list of the major changes are below.
 
 ## Explore projections for Warm Nights
 <figure class="image">
@@ -53,4 +53,4 @@ You can load data for additional GCMs by checking the corresponding box in the S
 Tooltips throughout the tool that provide additional context. Hover over the icon to see a popup with more information.
 
 ####  Feedback
-We would love to hear from you! Please send us your feedback on the new updates to the Extreme Heat Tool at support@cal-adapt.org. If you are interested in exploring the data more interactively, download [this Jupyter Notebook](https://github.com/berkeley-gif/caladapt-docs/blob/master/cookbook/daily_data_extreme_heat.ipynb) and open it in your own Python environment to get started.
+We would love to hear from you! Please send us your feedback on the new updates to the Extreme Heat Tool at support@cal-adapt.org. If you are interested in exploring the data more interactively, download <a href="https://github.com/berkeley-gif/caladapt-docs/blob/master/cookbook/daily_data_extreme_heat.ipynb" target="_blank">this Jupyter Notebook</a> and open it in your own Python environment to get started.
