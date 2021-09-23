@@ -32,5 +32,3 @@ Access Link: Link will be emailed to registrants <br/>
 <a href="https://forms.gle/PP8uPsYJZfdyQpT16" target="_blank" class="btn btn-primary mt-2">Register</a>
 
 Please share this information widely with anyone you think might be interested!
-
-
