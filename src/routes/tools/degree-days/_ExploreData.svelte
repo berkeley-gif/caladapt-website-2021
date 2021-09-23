@@ -84,6 +84,11 @@
     a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
     corresponding timeseries.</p>`;
 
+  let learnMoreFrequency = `<p>You can explore average number of CDDs or HDDs per 
+    year (Annual) or for selected months (Monthly). Monthly frequency can be a single 
+    month or several consecutive months e.g.  exploring CDDs for June, July & August.
+    </p>`;
+
   let metadata;
   let csvData;
   let printContainer;
@@ -398,7 +403,7 @@
         on:change="{changeScenario}"
       />
       <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
+        on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
       />
     </div>
 
@@ -418,7 +423,9 @@
           on:change="{changeSelectedMonths}"
         />
       {/if}
-      <LearnMoreButton />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ content: learnMoreFrequency })}"
+      />
     </div>
 
     <div class="block">
