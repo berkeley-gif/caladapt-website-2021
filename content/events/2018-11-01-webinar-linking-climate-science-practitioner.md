@@ -25,7 +25,7 @@ Date: **Thursday, December 6, 2018** <br/>
 Time: **12:00 pm (PST)** <br/>
 Event number: 924 157 170 <br/>
 Event password: This event does not require a password.<br/>
-Event address for attendees: [Link to WebEx](https://energy.webex.com/energy/onstage/g.php?MTID=eb611b61966913241b393c6c16072e5dc)
+Event address for attendees: <a href="https://energy.webex.com/energy/onstage/g.php?MTID=eb611b61966913241b393c6c16072e5dc" target="_blank">Link to WebEx</a>
 
 
 ### Audio conference information
@@ -33,10 +33,10 @@ Event address for attendees: [Link to WebEx](https://energy.webex.com/energy/ons
 To receive a call back, provide your phone number when you join the event, or call the number below and enter the access code.<br/>
 Call-in toll-free number (US/Canada): 1-866-469-3239 <br/>
 Call-in toll number (US/Canada): 1-650-429-3300 <br/>
-Global call-in numbers: [List of numbers](https://energy.webex.com/energy/globalcallin.php?serviceType=EC&ED=731624442&tollFree=1) <br/>
-Toll-free dialing restrictions: https://www.webex.com/pdf/tollfree_restrictions.pdf <br/>
+Global call-in numbers: <a href="https://energy.webex.com/energy/globalcallin.php?serviceType=EC&ED=731624442&tollFree=1" target="_blank">List of numbers</a> <br/>
+Toll-free dialing restrictions: <a href="https://www.webex.com/pdf/tollfree_restrictions.pdf" target="_blank">https://www.webex.com/pdf/tollfree_restrictions.pdf</a> <br/>
 Access code: 924 157 170 <br/>
 
 ## Webinar Resources
-- [Cal-Adapt Website](http://cal-adapt.org/)
-- Technical report on [Cal-Adapt - Linking Climate Science with Practitioner Need](http://www.climateassessment.ca.gov/techreports/docs/20180827-Projections_CCCA4-CEC-2018-015.pdf) prepared for California's Fourth Climate Change Assessment.
+- <a href="http://cal-adapt.org/" target="_blank">Cal-Adapt Website</a>
+- Technical report on <a href="http://www.climateassessment.ca.gov/techreports/docs/20180827-Projections_CCCA4-CEC-2018-015.pdf" target="_blank">Cal-Adapt - Linking Climate Science with Practitioner Need</a> prepared for California's Fourth Climate Change Assessment.

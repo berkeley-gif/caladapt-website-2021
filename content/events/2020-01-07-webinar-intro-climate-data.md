@@ -26,9 +26,9 @@ The webinar will be recorded and published on Cal-Adapt. We look forward to chat
 
 Date: **Thursday, January 23, 2020** <br/>
 Time: **12:30pm - 1:30pm (PST)** <br/>
-Access Link: [Zoom](https://ucanr.zoom.us/j/383100714)
+Access Link: <a href="https://ucanr.zoom.us/j/383100714" target="_blank">Zoom</a>
 Webinar ID: 383 100 714 <br/>
 Telephone: (669)900-6833<br/>
-<a href="https://docs.google.com/forms/d/e/1FAIpQLScOfZYTpXOlQtW9O2IqNsXhvq-VyTcBS5n0jIxPceFdDkf1HQ/viewform" class="btn btn-primary mt-2">Register</a>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLScOfZYTpXOlQtW9O2IqNsXhvq-VyTcBS5n0jIxPceFdDkf1HQ/viewform" target="_blank" class="btn btn-primary mt-2">Register</a>
 
-Registration form not working for you? Please email lucyandrews@berkeley.edu to register. Feel free to include any topics or questions you'd like us to cover.
+Registration form not working for you? Please email <lucyandrews@berkeley.edu> to register. Feel free to include any topics or questions you'd like us to cover.

@@ -21,12 +21,11 @@ The webinar will introduce two new tools that facilitate the process of working 
 - How to integrate the functions of CalAdapt.py and caladaptR into your existing workflow
 - How you can try out and give feedback on CalAdapt.py and caladaptR
 
-Please email Andy Lyons at andlyons@ucanr.edu with any questions.
+Please email Andy Lyons at <andlyons@ucanr.edu> with any questions.
 
 ## Event Details
 
 Date: **Thursday, November 12**<br/>
 Time: **1:00pm - 2:00pm (PST)**<br/>
 Access Link: Link will be emailed to registrants<br/>
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSfzrYcNSkl5Eo1psebgb_vuTYX39JVCEx4ijbgPKKwbfp6HBg/viewform" class="btn btn-primary mt-2">Register</a>
-
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSfzrYcNSkl5Eo1psebgb_vuTYX39JVCEx4ijbgPKKwbfp6HBg/viewform" target="_blank" class="btn btn-primary mt-2">Register</a>
