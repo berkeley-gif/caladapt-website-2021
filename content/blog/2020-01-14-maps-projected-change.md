@@ -43,4 +43,4 @@ Click on the overlay to get a popup box with data value for the underlying grid 
 And if you find the maps useful, you can download the overlays as images (PNG) or as raster data (GeoTIFF) that you can import into a GIS program or other analytic environment.
 
 ## Explore
-We hope [this tool](/tools/maps-of-projected-change/) makes it easier to understand how climate change may impact California’s temperatures and precipitation, compared to the state’s recent climate history. If you want to learn more about how to use climate projections, check out our [guidance page](/help/glossary/climate-projection). And if you have any questions, don’t hesitate to reach out to the Cal-Adapt support team at <support@cal-adapt.org>.
+We hope [this tool](/tools/maps-of-projected-change/) makes it easier to understand how climate change may impact California’s temperatures and precipitation, compared to the state’s recent climate history. If you want to learn more about how to use climate projections, check out our [guidance page](/help/glossary/). And if you have any questions, don’t hesitate to reach out to the Cal-Adapt support team at <support@cal-adapt.org>.
