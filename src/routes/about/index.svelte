@@ -1,9 +1,17 @@
+<script context="module">
+  export async function preload() {
+    return {
+      data: await (await this.fetch("about.json")).json(),
+    };
+  }
+</script>
+
 <script>
   import { Tabs, Tab, TabContent } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
-
   import PageNav from "../../partials/PageNav.svelte";
-  import data from "./_data.json";
+
+  export let data;
 
   const { advisors, staff, managers } = data;
 
