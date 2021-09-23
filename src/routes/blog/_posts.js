@@ -12,7 +12,7 @@ export default function get_posts() {
     .readdirSync("content/blog")
     .filter((file) => path.extname(file) === ".md")
     .map((file) => {
-      const match = /(\d{4}-\d{2}-\d{2})-(.+)/.exec(file);
+      const match = /(\d{4}-\d{2}-\d{2})-(.+)\.md$/.exec(file);
       if (!match) throw new Error(`Invalid filename '${file}'`);
 
       const [, pubdate, slug] = match;
