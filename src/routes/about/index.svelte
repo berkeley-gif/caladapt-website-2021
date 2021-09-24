@@ -62,7 +62,12 @@
     }
   }
 
-  img {
+  img.workshop {
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+
+  img.report {
     @media (max-width: 1052px) {
       max-width: 60%;
       margin: 0;
@@ -314,16 +319,26 @@
     <div class="bx--offset-lg-2 bx--col-lg-8">
       <div id="audience" use:inview="{entryOptions}" on:enter="{handleEntry}">
         <h2>Our Audience</h2>
-        <p>
-          Cal-Adapt offers free public access to peer-reviewed data that support
-          exploration of California’s climate change impacts on state
-          infrastructure, communities, and natural resources. Our users include
-          energy sector stakeholders, infrastructure managers, municipal
-          planners, community-based organizations, state agencies, scientists
-          and climate experts, educators, and interested participants from the
-          general public.
-        </p>
       </div>
+    </div>
+    <div class="bx--col-lg-0 bx--col-md-8 bx--col-sm-4">
+      <img
+        width="780"
+        height="352"
+        class="workshop"
+        src="/img/banners/gif-workshop-780w.jpg"
+        alt="Workshop at GIF"
+      />
+    </div>
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <p>
+        Cal-Adapt offers free public access to peer-reviewed data that support
+        exploration of California’s climate change impacts on state
+        infrastructure, communities, and natural resources. Our users include
+        energy sector stakeholders, infrastructure managers, municipal planners,
+        community-based organizations, state agencies, scientists and climate
+        experts, educators, and interested participants from the general public.
+      </p>
     </div>
 
     <div
@@ -331,7 +346,11 @@
     >
       <div class="sidebar-figure-container">
         <figure class="image">
-          <img src="/img/banners/gif-workshop.jpg" alt="Workshop at GIF" />
+          <img
+            width="350"
+            src="/img/banners/gif-workshop-350w.jpg"
+            alt="Workshop at GIF"
+          />
         </figure>
       </div>
     </div>
@@ -556,7 +575,7 @@
           target="_blank"
           aria-describedby="fourth-assement-desc"
         >
-          <figure class="image">
+          <figure class="image report">
             <img
               src="/img/illustrations/caladapt-report-cover-750w.png"
               class="report shadow"
