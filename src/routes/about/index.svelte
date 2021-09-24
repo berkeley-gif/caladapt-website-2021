@@ -94,12 +94,15 @@
   }
 
   .banner {
-    background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash.jpg);
-    background-position: center 35%;
+    background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash_1600x400.jpg);
     background-size: cover;
-    min-height: 21.875rem;
+    background-repeat: no-repeat;
     background-color: var(--gray-80);
     padding: var(--spacing-48) 0;
+
+    @media (max-width: 672px) {
+      background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash_700x800.jpg);
+    }
   }
 
   .sidebar-figure-container {
