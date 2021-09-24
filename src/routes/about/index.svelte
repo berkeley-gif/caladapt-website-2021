@@ -51,7 +51,7 @@
 
 <style lang="scss">
   figure {
-    margin: 1rem;
+    margin: 0;
   }
 
   hr {
@@ -60,6 +60,17 @@
 
   h2:not(:first-of-type) {
     margin-top: 0;
+  }
+
+  li:not(.bx--side-nav__item):not(.team-list-prev-name),
+  p:not(.lead):not(.card-title):not(.card-org) {
+    font-size: 1.125rem;
+    margin-bottom: calc(1.125rem * 1.5);
+  }
+
+  li {
+    margin-left: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .banner {
@@ -116,6 +127,8 @@
   }
 
   .tabs-container {
+    margin-bottom: 4rem;
+
     :global(.bx--tabs__nav) {
       width: 100%;
       text-transform: uppercase;
@@ -127,8 +140,18 @@
     }
   }
 
+  .card-title {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
   p.team-text {
-    margin-top: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    &.team-text-prev {
+      margin-bottom: 1rem;
+    }
   }
 
   .team-members {
@@ -147,16 +170,17 @@
 
     li {
       list-style-type: none;
+      margin: 0;
     }
   }
 
   .team-list-advisory {
-    justify-content: flex-start;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(25% - 1rem), 1fr));
+    grid-gap: 0.5rem;
 
-    .card {
-      width: calc(25% - 1rem);
-      min-height: 6rem;
+    .card-title {
+      font-size: 0.875rem;
     }
   }
 
@@ -586,26 +610,26 @@
                   {#each staff.current as opt}
                     <div class="card">
                       <div class="card-body">
-                        <p class="card-title h5">
+                        <p class="card-title">
                           {#if opt.url}
                             <a href="{opt.url}" target="_blank">{opt.name}</a>
                           {:else}
                             {opt.name}
                           {/if}
                         </p>
-                        <p class="font-weight--light">
+                        <p class="card-org font-weight--light">
                           {opt.org}
                         </p>
                       </div>
                     </div>
                   {/each}
                 </div>
-                <p class="team-text">
+                <p class="team-text team-text-prev">
                   <strong>Previous contributors:</strong>
                 </p>
-                <ul class="team-list">
+                <ul class="team-list team-list-prev">
                   {#each staff.prior as opt, i}
-                    <li>
+                    <li class="team-list-prev-name">
                       {opt.name}{i < staff.prior.length - 1 ? "," : ""}
                     </li>
                   {/each}
@@ -616,10 +640,10 @@
                   {#each managers as opt}
                     <div class="card">
                       <div class="card-body">
-                        <p class="card-title h5">
+                        <p class="card-title">
                           {opt.name}
                         </p>
-                        <p class="font-weight--light">
+                        <p class="card-org font-weight--light">
                           {opt.org}
                         </p>
                       </div>
@@ -639,20 +663,20 @@
                   {#each advisors.current as opt}
                     <li class="card">
                       <div class="card-body">
-                        <p class="card-title h5">{opt.name}</p>
+                        <p class="card-title">{opt.name}</p>
                         {#if opt.org}
-                          <p class="small text-gray-70">{opt.org}</p>
+                          <p class="card-org small text-gray-70">{opt.org}</p>
                         {/if}
                       </div>
                     </li>
                   {/each}
                 </ul>
-                <p class="team-text">
+                <p class="team-text team-text-prev">
                   <strong>Previous contributors:</strong>
                 </p>
-                <ul class="team-list">
+                <ul class="team-list team-list-prev">
                   {#each advisors.prior as opt, i}
-                    <li>
+                    <li class="team-list-prev-name">
                       {opt.name}{i < advisors.prior.length - 1 ? "," : ""}
                     </li>
                   {/each}
