@@ -52,6 +52,13 @@
 <style lang="scss">
   .banner {
     --banner-child-v-spacing: 2.5rem;
+    background-image: url(/img/banners/yosemite_1600x540.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    @media (max-width: 672px) {
+      background-image: url(/img/banners/yosemite_700x800.jpg);
+    }
   }
 
   .banner--icons {
@@ -102,10 +109,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section
-  class="bleed banner overlay overlay-black overlay-40 bg-img"
-  style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;"
->
+<section class="bleed banner overlay overlay-black overlay-40 bg-img">
   <div class="bx--grid">
     <div class="bx--row banner--icons" aria-hidden="true">
       {#each icons as icon}
