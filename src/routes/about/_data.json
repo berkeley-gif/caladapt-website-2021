@@ -225,8 +225,9 @@
         "org": "Web Application Developer"
       },
       {
-        "name": "Chris Hendrick",
-        "org": "Web Application Developer"
+        "name": "Chris Henrick",
+        "org": "Web Application Developer",
+        "url": "https://clhenrick.io"
       },
       {
         "name": "Lucy Andrews",
@@ -254,19 +255,19 @@
   "managers": [
     {
       "name": "Martine Schmidt-Poolman",
-      "org": "CEC"
+      "org": "California Energy Commission"
     },
     {
       "name": "Leah Fisher",
-      "org": "SGC"
+      "org": "Strategic Growth Council"
     },
     {
       "name": "Susan Wilhelm",
-      "org": "CEC"
+      "org": "California Energy Commission"
     },
     {
       "name": "Guido Franco",
-      "org": "CEC"
+      "org": "California Energy Commission"
     }
   ]
 }

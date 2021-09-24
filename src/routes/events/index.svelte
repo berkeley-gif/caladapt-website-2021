@@ -57,7 +57,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<div class="bleed banner overlay">
+<div class="bleed banner overlay bg-img">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>

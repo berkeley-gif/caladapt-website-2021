@@ -48,7 +48,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section class="banner overlay overlay-black overlay-40">
+<section class="banner overlay overlay-black overlay-40 bg-img">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">

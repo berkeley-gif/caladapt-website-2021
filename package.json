@@ -15,6 +15,7 @@
     "pretest": "npm run lint",
     "transfer-dev": "rsync -avz __sapper__/export/ gitdev@api.cal-adapt.org:/var/www/dev.cal-adapt.org/",
     "deploy-dev": "npm run export && npm run transfer-dev",
+    "deploy-netlify": "npm run export && netlify deploy --dir=__sapper__/export/",
     "prepare": "husky install"
   },
   "dependencies": {
