@@ -156,6 +156,7 @@
               textColor: "white",
               bgColor: cardBgColors[index],
               useRule: true,
+              useGradient: true,
             }}
           />
         {/each}
