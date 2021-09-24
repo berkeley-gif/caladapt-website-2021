@@ -54,7 +54,11 @@
     margin: 0;
 
     @media (max-width: 1052px) {
-      margin-left: 2rem;
+      margin: 2rem;
+    }
+
+    @media (max-width: 672px) {
+      margin: 2rem 0;
     }
   }
 
@@ -66,7 +70,7 @@
   }
 
   hr {
-    margin-top: 4rem;
+    margin-top: 3rem;
   }
 
   h2:not(:first-of-type) {
@@ -96,6 +100,7 @@
   }
 
   .sidebar-figure-container {
+    height: 100%;
     display: flex;
     align-items: center;
   }
@@ -105,17 +110,17 @@
     z-index: 1;
   }
 
-  .contributor-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-
   .contributor {
     height: 7.25rem;
 
     img {
       height: 100%;
+    }
+
+    @media (max-width: 1056px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   }
 
@@ -220,7 +225,7 @@
 <!-- page anchor navigation -->
 <div class="bx--grid is-sticky">
   <div class="bx--row">
-    <div class="bx--offset-lg-2 bx--col-lg-9">
+    <div class="bx--offset-lg-2 bx--col-lg-9 bx--col-sm-0">
       <PageNav href="{href}" items="{items}" selected="{selected}" />
     </div>
   </div>
@@ -271,26 +276,27 @@
       </div>
     </div>
 
-    <div
-      class="bx--offset-lg-1 bx--col-lg-5 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
-    >
-      <figure class="quote">
-        <blockquote cite="https://www.climateassessment.ca.gov/">
-          <p>
-            California is one of the most “climate-challenged” regions of North
-            America; its historical climate is extremely variable, and climate
-            change is making extreme conditions more frequent and severe.
-            California’s temperatures are already warming, heat waves are more
-            frequent, and precipitation continues to be highly variable.
-          </p>
-        </blockquote>
-        <figcaption>
-          <cite
-            >- A Summary of Key Findings from California’s Fourth Climate Change
-            Assessment</cite
-          >
-        </figcaption>
-      </figure>
+    <div class="bx--offset-lg-1 bx--col-lg-5">
+      <div class="sidebar-figure-container">
+        <figure class="quote">
+          <blockquote cite="https://www.climateassessment.ca.gov/">
+            <p>
+              California is one of the most “climate-challenged” regions of
+              North America; its historical climate is extremely variable, and
+              climate change is making extreme conditions more frequent and
+              severe. California’s temperatures are already warming, heat waves
+              are more frequent, and precipitation continues to be highly
+              variable.
+            </p>
+          </blockquote>
+          <figcaption>
+            <cite
+              >- A Summary of Key Findings from California’s Fourth Climate
+              Change Assessment</cite
+            >
+          </figcaption>
+        </figure>
+      </div>
     </div>
   </div>
 
@@ -318,12 +324,12 @@
       </div>
     </div>
 
-    <div
-      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
-    >
-      <figure class="image">
-        <img src="/img/banners/gif-workshop.jpg" alt="Workshop at GIF" />
-      </figure>
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+      <div class="sidebar-figure-container">
+        <figure class="image">
+          <img src="/img/banners/gif-workshop.jpg" alt="Workshop at GIF" />
+        </figure>
+      </div>
     </div>
   </div>
 
@@ -461,27 +467,27 @@
       </div>
     </div>
 
-    <div
-      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
-    >
-      <figure class="quote">
-        <blockquote
-          cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
-        >
-          <p>
-            The California Energy Commission will develop the Cal-Adapt Web site
-            that will synthesize existing California climate change scenarios
-            and climate impact research and to encourage its use in a way that
-            is beneficial for local decision-makers.
-          </p>
-        </blockquote>
-        <figcaption>
-          <cite
-            >- A key recommendation of the 2009 California Climate Adaptation
-            Strategy</cite
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+      <div class="sidebar-figure-container">
+        <figure class="quote">
+          <blockquote
+            cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
           >
-        </figcaption>
-      </figure>
+            <p>
+              The California Energy Commission will develop the Cal-Adapt Web
+              site that will synthesize existing California climate change
+              scenarios and climate impact research and to encourage its use in
+              a way that is beneficial for local decision-makers.
+            </p>
+          </blockquote>
+          <figcaption>
+            <cite
+              >- A key recommendation of the 2009 California Climate Adaptation
+              Strategy</cite
+            >
+          </figcaption>
+        </figure>
+      </div>
     </div>
   </div>
 
@@ -539,26 +545,27 @@
       </div>
     </div>
 
-    <div
-      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 sidebar-figure-container"
-    >
-      <a
-        href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf"
-        target="_blank"
-        aria-describedby="fourth-assement-desc"
-      >
-        <figure class="image">
-          <img
-            src="/img/illustrations/caladapt-report-cover.png"
-            class="report shadow"
-            alt="caladapt report cover"
-          />
-          <figcaption id="fourth-assement-desc">
-            Read our technical report for the Fourth Assessment for more
-            detailed information on the background and development of Cal-Adapt.
-          </figcaption>
-        </figure>
-      </a>
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+      <div class="sidebar-figure-container">
+        <a
+          href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf"
+          target="_blank"
+          aria-describedby="fourth-assement-desc"
+        >
+          <figure class="image">
+            <img
+              src="/img/illustrations/caladapt-report-cover-750w.png"
+              class="report shadow"
+              alt="caladapt report cover"
+            />
+            <figcaption id="fourth-assement-desc">
+              Read our technical report for the Fourth Assessment for more
+              detailed information on the background and development of
+              Cal-Adapt.
+            </figcaption>
+          </figure>
+        </a>
+      </div>
     </div>
   </div>
 </div>
