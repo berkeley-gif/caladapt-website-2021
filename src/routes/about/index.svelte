@@ -194,6 +194,10 @@
     .card-title {
       font-size: 0.875rem;
     }
+
+    @media (max-width: 672px) {
+      grid-template-columns: repeat(auto-fill, minmax(calc(50% - 1rem), 1fr));
+    }
   }
 </style>
 
@@ -276,7 +280,7 @@
       </div>
     </div>
 
-    <div class="bx--offset-lg-1 bx--col-lg-5">
+    <div class="bx--offset-lg-1 bx--col-lg-5 bx--col-padding">
       <div class="sidebar-figure-container">
         <figure class="quote">
           <blockquote cite="https://www.climateassessment.ca.gov/">
@@ -291,7 +295,7 @@
           </blockquote>
           <figcaption>
             <cite
-              >- A Summary of Key Findings from California’s Fourth Climate
+              >— A Summary of Key Findings from California’s Fourth Climate
               Change Assessment</cite
             >
           </figcaption>
@@ -324,7 +328,9 @@
       </div>
     </div>
 
-    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+    <div
+      class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0 bx--col-padding"
+    >
       <div class="sidebar-figure-container">
         <figure class="image">
           <img src="/img/banners/gif-workshop.jpg" alt="Workshop at GIF" />
@@ -467,7 +473,7 @@
       </div>
     </div>
 
-    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-padding">
       <div class="sidebar-figure-container">
         <figure class="quote">
           <blockquote
@@ -482,7 +488,7 @@
           </blockquote>
           <figcaption>
             <cite
-              >- A key recommendation of the 2009 California Climate Adaptation
+              >— A key recommendation of the 2009 California Climate Adaptation
               Strategy</cite
             >
           </figcaption>
@@ -545,7 +551,7 @@
       </div>
     </div>
 
-    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-padding">
       <div class="sidebar-figure-container">
         <a
           href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf"
