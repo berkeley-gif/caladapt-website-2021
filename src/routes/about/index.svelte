@@ -52,6 +52,17 @@
 <style lang="scss">
   figure {
     margin: 0;
+
+    @media (max-width: 1052px) {
+      margin-left: 2rem;
+    }
+  }
+
+  img {
+    @media (max-width: 1052px) {
+      max-width: 60%;
+      margin: 0;
+    }
   }
 
   hr {
@@ -101,11 +112,7 @@
   }
 
   .contributor {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    height: 100px;
+    height: 7.25rem;
 
     img {
       height: 100%;
@@ -181,17 +188,6 @@
 
     .card-title {
       font-size: 0.875rem;
-    }
-  }
-
-  @media (max-width: 1000px) {
-    figure {
-      margin: 0;
-    }
-
-    .team-members .card,
-    .team-list li {
-      width: 100%;
     }
   }
 </style>
@@ -346,7 +342,7 @@
 
         <h3 class="h5">Funding and Oversight</h3>
         <div class="bx--row">
-          <div class="bx--col-lg-8">
+          <div class="bx--col-lg-8 bx--col-md-4">
             <div class="collaborator">
               <img
                 src="img/logos/cec_900x790.png"
@@ -357,7 +353,7 @@
               >
             </div>
           </div>
-          <div class="bx--col-lg-8">
+          <div class="bx--col-lg-8 bx--col-md-4">
             <div class="collaborator">
               <img
                 src="img/logos/SGC-Brand-Logos-03.png"
@@ -372,7 +368,7 @@
         </div>
 
         <div class="bx--row">
-          <div class="bx--col-lg-8">
+          <div class="bx--col-lg-8 bx--col-md-4">
             <h3 class="h5">Site Development</h3>
             <div class="collaborator">
               <img
@@ -385,7 +381,8 @@
               >
             </div>
           </div>
-          <div class="bx--col-lg-8">
+
+          <div class="bx--col-lg-8 bx--col-md-4">
             <h3 class="h5">Science Advisor</h3>
             <div class="collaborator">
               <img
@@ -405,59 +402,60 @@
           </div>
         </div>
 
-        <div class="bx--row">
-          <div class="bx--col">
-            <div class="contributor-list">
-              <div class="contributor">
-                <img
-                  src="/img/logos/scripps_logo.svg"
-                  alt="logo for Scripps Institution of Oceanography"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/ca_dwr.png"
-                  alt="logo for California Department of Water Resources"
-                  style="height:100px;width:100px;"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/UCBerkeley_wordmark_blue.svg"
-                  alt="logo for University of California Berkeley"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/OCOF-logo.png"
-                  alt="logo for Our Coast Our Future"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/logo_UCLA_blue.svg"
-                  alt="logo for University of California Los Angeles"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/USGS_ID_green.png"
-                  alt="logo for United States Geological Survey"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"
-                  alt="logo for University of California Merced"
-                />
-              </div>
-              <div class="contributor">
-                <img
-                  src="/img/logos/boulder-fl-vertical-a-2.png"
-                  alt="logo for University of Colorado Boulder"
-                />
-              </div>
-            </div>
+        <div class="bx--row bx--row-padding">
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/scripps_logo.svg"
+              alt="logo for Scripps Institution of Oceanography"
+            />
+          </div>
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/ca_dwr.png"
+              alt="logo for California Department of Water Resources"
+            />
+          </div>
+        </div>
+        <div class="bx--row bx--row-padding">
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/UCBerkeley_wordmark_blue.svg"
+              alt="logo for University of California Berkeley"
+            />
+          </div>
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/OCOF-logo.png"
+              alt="logo for Our Coast Our Future"
+            />
+          </div>
+        </div>
+        <div class="bx--row bx--row-padding">
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/logo_UCLA_blue.svg"
+              alt="logo for University of California Los Angeles"
+            />
+          </div>
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/USGS_ID_green.png"
+              alt="logo for United States Geological Survey"
+            />
+          </div>
+        </div>
+        <div class="bx--row bx--row-padding">
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/UCM_Logo_Lake_Yosemite_Blue.png"
+              alt="logo for University of California Merced"
+            />
+          </div>
+          <div class="bx--col-lg-8 bx--col-md-4 contributor">
+            <img
+              src="/img/logos/boulder-fl-vertical-a-2.png"
+              alt="logo for University of Colorado Boulder"
+            />
           </div>
         </div>
       </div>
