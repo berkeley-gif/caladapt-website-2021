@@ -94,9 +94,7 @@
     background-size: cover;
     min-height: 21.875rem;
     background-color: var(--gray-80);
-    padding: var(--spacing-48) var(--spacing-16);
-    padding-left: 0;
-    padding-right: 0;
+    padding: var(--spacing-48) 0;
   }
 
   .sidebar-figure-container {
@@ -153,7 +151,7 @@
   }
 
   .card-title {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1rem;
   }
 
