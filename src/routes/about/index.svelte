@@ -596,11 +596,11 @@
     <div class="bx--row bx--no-gutter">
       <div class="bx--offset-lg-2 bx--col-lg-8">
         <div class="tabs-container">
-          <Tabs>
+          <Tabs role="tablist" aria-label="Organizations">
             <Tab label="Site Development" />
             <Tab label="Contract Management" />
             <Tab label="Advisory Oversight" />
-            <div slot="content">
+            <div slot="content" aria-live="polite">
               <TabContent>
                 <p class="team-text">
                   The <a href="http://gif.berkeley.edu/" target="_blank"
