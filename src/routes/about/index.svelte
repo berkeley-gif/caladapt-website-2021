@@ -205,7 +205,7 @@
   <title>About | Cal-Adapt</title>
 </svelte:head>
 
-<div class="banner bleed overlay overlay-black overlay-60">
+<div class="banner bleed overlay overlay-black overlay-60 bg-img">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--offset-lg-2 bx--col-lg-9">

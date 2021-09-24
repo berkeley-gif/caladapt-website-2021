@@ -70,7 +70,6 @@
     }
 
     .title-container p {
-      filter: drop-shadow(0px 1px 2px #121416);
       max-width: 50ch;
     }
 
@@ -104,7 +103,7 @@
 
 <!-- Banner -->
 <section
-  class="bleed banner overlay overlay-black overlay-40"
+  class="bleed banner overlay overlay-black overlay-40 bg-img"
   style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;"
 >
   <div class="bx--grid">
