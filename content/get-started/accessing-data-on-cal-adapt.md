@@ -1,5 +1,5 @@
 ---
-title: Accessing Data on Cal Adapt
+title: Accessing Data on Cal-Adapt
 order: 3
 ---
 
