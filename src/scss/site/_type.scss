@@ -102,27 +102,22 @@ figure {
   }
 
   img {
-    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
   }
 
   &.image {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
   &.quote {
-    background: $teal-20;
+    background: $teal-10;
 
     figcaption {
       color: $gray-100;
     }
-  }
-
-  .report {
-    max-height: 250px;
-    width: auto;
-    border: 4px solid $teal-20;
   }
 }
 

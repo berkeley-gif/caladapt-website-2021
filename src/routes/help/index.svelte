@@ -31,13 +31,16 @@
 
 <style lang="scss">
   .banner {
-    background-image: url(/img/banners/help.jpg);
-    background-position: center 35%;
+    background-image: url(/img/banners/help_1500x400.jpg);
     background-size: cover;
     min-height: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    @media (max-width: 672px) {
+      background-image: url(/img/banners/help_500x500.jpg);
+    }
   }
 
   .help-footer {
@@ -61,7 +64,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section class="banner overlay overlay-black overlay-40">
+<section class="banner overlay overlay-black overlay-40 bg-img">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
