@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import frontMatter from "front-matter";
 import marked from "marked";
-import { timeParse, timeFormat } from "d3-time-format";
+import { utcParse, utcFormat } from "d3-time-format";
 
 export function get_events() {
   return fs
@@ -18,12 +18,10 @@ export function get_events() {
 
       const { attributes, body } = frontMatter(markdown);
       // Date published
-      attributes.pubdate = timeParse("%Y-%m-%d")(pubdate);
+      attributes.pubdate = utcParse("%Y-%m-%d")(pubdate);
       // Date of event
-      attributes.eventdate = new Date(attributes.date);
-      attributes.eventdatestring = timeFormat("%B %d, %Y")(
-        attributes.eventdate
-      );
+      attributes.eventdate = attributes.date;
+      attributes.eventdatestring = utcFormat("%B %d, %Y")(attributes.eventdate);
       attributes.tags = attributes.tags.split(",").map((d) => d.trim());
       const html = marked(body).replace(/^\t{3}/gm, "");
 
