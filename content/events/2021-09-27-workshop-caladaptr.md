@@ -4,7 +4,7 @@ date: 2021-10-01
 location: Online
 time: "10:00 AM - 11:30 AM PST"
 tags: workshop 
-image: webinar.jpg (http://igis.ucanr.edu/Training/CaladaptROct21/)
+image: webinar.jpg
 teaser: "Learn how to use the caladaptR package to access climate data on Cal-Adapt: a virtual workshop for R users."
 ---
 
