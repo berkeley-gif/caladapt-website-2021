@@ -1,0 +1,14 @@
+{
+  "beta": {
+    "showBetaBanner": true
+  },
+  "dev": {
+    "showBetaBanner": false
+  },
+  "netlify": {
+    "showBetaBanner": false
+  },
+  "prod": {
+    "showBetaBanner": false
+  }
+}
