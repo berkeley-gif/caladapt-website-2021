@@ -28,7 +28,7 @@ async function main() {
     return await usage("Missing argument for --location");
   }
 
-  handleLocation(location);
+  await handleLocation(location);
 };
 
 async function usage(message) {
