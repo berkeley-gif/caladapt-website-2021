@@ -181,7 +181,9 @@
       inbox. Subscribe to the Cal-Adapt Newsletter.
     </p>
     <div class="btn-container">
-      <Button icon="{ArrowRight16}" href="/signup">Subscribe</Button>
+      <Button icon="{ArrowRight16}" href="/signup/#cal-adapt-newsletter"
+        >Subscribe</Button
+      >
     </div>
   </div>
 </section>

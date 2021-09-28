@@ -7,7 +7,6 @@
     FormGroup,
     Select,
     SelectItem,
-    TextArea,
     TextInput,
   } from "carbon-components-svelte";
   import { serialize } from "~/helpers/utilities";
@@ -108,7 +107,7 @@
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
       <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-        <h1>Cal-Adapt Newsletter</h1>
+        <h1 id="cal-adapt-newsletter">Cal-Adapt Newsletter</h1>
         <p class="lead">
           Signup for quarterly updates on climate tools, data and resources on
           Cal-Adapt. Occasionally, we might send you announcements of events or
