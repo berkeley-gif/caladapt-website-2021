@@ -5,7 +5,7 @@
  * Handles transpiling and deploying code based on environment configuration.
  */
 
-import {$} from 'zx'
+import { $ } from "zx";
 
 const SAPPER_EXPORT_DIR = "__sapper__/export/";
 const USER = "gitdev";
@@ -29,7 +29,7 @@ async function main() {
   }
 
   await handleLocation(location);
-};
+}
 
 async function usage(message) {
   if (message) {
@@ -96,27 +96,27 @@ async function deployProd() {
 }
 
 function setEnvBeta() {
-  process.env.NODE_ENV = 'production';
-  process.env.DEPLOY = 'beta';
+  process.env.NODE_ENV = "production";
+  process.env.DEPLOY = "beta";
 }
 
 function setEnvDev() {
-  process.env.NODE_ENV = 'production';
-  process.env.DEPLOY = 'dev';
+  process.env.NODE_ENV = "production";
+  process.env.DEPLOY = "dev";
 }
 
 function setEnvProd() {
-  process.env.NODE_ENV = 'production';
-  process.env.DEPLOY = 'prod';
+  process.env.NODE_ENV = "production";
+  process.env.DEPLOY = "prod";
 }
 
 function setEnvNetlify() {
-  process.env.NODE_ENV = 'development';
-  process.env.DEPLOY = 'netlify';
+  process.env.NODE_ENV = "development";
+  process.env.DEPLOY = "netlify";
 }
 
 async function handleLocation(location) {
-  switch(location) {
+  switch (location) {
     case "beta":
       setEnvBeta();
       await deployBeta();
@@ -134,6 +134,8 @@ async function handleLocation(location) {
       await deployProd();
       break;
     default:
-      usage(`Unrecognized --location param: ${location}.\nValid params are: beta, prod, dev, netlify`);
+      usage(
+        `Unrecognized --location param: ${location}.\nValid params are: beta, prod, dev, netlify`
+      );
   }
 }
