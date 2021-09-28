@@ -48,7 +48,7 @@ async function transfer(subdomain) {
 
 async function deployDev() {
   try {
-    await $`export NODE_ENV=development`;
+    process.env.NODE_ENV = 'production';
     await sapperExport();
     await transfer("dev");
     await $`exit 0`;
@@ -60,7 +60,7 @@ async function deployDev() {
 
 async function deployBeta() {
   try {
-    await $`export FEATURE_FLAGS_BETA=true`;
+    process.env.FEATURE_FLAGS_BETA = 'true';
     await sapperExport();
     await transfer("beta");
     await $`exit 0`;
@@ -72,7 +72,7 @@ async function deployBeta() {
 
 async function deployProd() {
   try {
-    await $`export NODE_ENV=production`;
+    process.env.NODE_ENV = 'production';
     await sapperExport();
     await transfer("prod");
     await $`exit 0`;
@@ -84,7 +84,7 @@ async function deployProd() {
 
 async function deployNetlify() {
   try {
-    await $`export NODE_ENV=development`;
+    process.env.NODE_ENV = 'development';
     await sapperExport();
     await $`netlify deploy --dir=${SAPPER_EXPORT_DIR}`;
     await $`exit 0`;
