@@ -5,8 +5,19 @@ const config = require("sapper/config/webpack.js");
 const pkg = require("./package.json");
 const sveltePreprocess = require("svelte-preprocess");
 
+const featureFlags = require("./featureFlags.json");
+
+const deploy = process.env.DEPLOY || "dev";
+
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
+
+console.log({
+  "process.env": {
+    NODE_ENV: JSON.stringify(mode),
+    ...featureFlags[deploy],
+  },
+});
 
 const alias = {
   "~": path.resolve(__dirname, "src/"),
@@ -77,6 +88,10 @@ module.exports = {
       // dev && new webpack.HotModuleReplacementPlugin(),
       new webpack.DefinePlugin({
         "process.browser": true,
+        "process.env": {
+          NODE_ENV: JSON.stringify(mode),
+          ...featureFlags[deploy],
+        },
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),
     ].filter(Boolean),

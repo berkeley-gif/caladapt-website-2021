@@ -92,7 +92,6 @@ async function deployNetlify() {
 
 function setEnvBeta() {
   process.env.NODE_ENV = 'production';
-  process.env.FEATURE_FLAGS_BETA = 'true';
   process.env.DEPLOY = 'beta';
 }
 
