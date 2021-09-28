@@ -18,10 +18,14 @@ main();
 async function main() {
   // zx shorthand for parsing script arguments in the form of `--foo=bar`
   // eslint-disable-next-line no-undef
-  const { location } = argv;
+  const { location, help } = argv;
+
+  if (help) {
+    return await usage();
+  }
 
   if (!location) {
-    usage("Missing argument for --location");
+    return await usage("Missing argument for --location");
   }
 
   handleLocation(location);
@@ -31,8 +35,13 @@ async function usage(message) {
   if (message) {
     console.log(message);
   }
-  console.log("Usage: `zx deploy.mjs --location=<deploy>`");
+  console.log("Usage: `zx deploy.mjs --location=<deploy location>`");
   await $`exit 0`;
+}
+
+async function handleError(error) {
+  console.log(error.message);
+  await $`exit 1`;
 }
 
 async function sapperExport() {
@@ -46,36 +55,23 @@ async function transfer(subdomain) {
     ${USER}@${DEPLOY_URI}:${DIR}${domain}/`;
 }
 
-async function deployDev() {
-  try {
-    await sapperExport();
-    await transfer("dev");
-    await $`exit 0`;
-  } catch (error) {
-    console.log(error.message);
-    await $`exit 1`;
-  }
-}
-
 async function deployBeta() {
   try {
     await sapperExport();
     await transfer("beta");
     await $`exit 0`;
   } catch (error) {
-    console.log(error.message);
-    await $`exit 1`;
+    handleError(error);
   }
 }
 
-async function deployProd() {
+async function deployDev() {
   try {
     await sapperExport();
-    await transfer("prod");
+    await transfer("dev");
     await $`exit 0`;
   } catch (error) {
-    console.log(error.message);
-    await $`exit 1`;
+    handleError(error);
   }
 }
 
@@ -85,8 +81,17 @@ async function deployNetlify() {
     await $`netlify deploy --dir=${SAPPER_EXPORT_DIR}`;
     await $`exit 0`;
   } catch (error) {
-    console.log(error.message);
-    await $`exit 1`;
+    handleError(error);
+  }
+}
+
+async function deployProd() {
+  try {
+    await sapperExport();
+    await transfer("prod");
+    await $`exit 0`;
+  } catch (error) {
+    handleError(error);
   }
 }
 
@@ -116,17 +121,17 @@ async function handleLocation(location) {
       setEnvBeta();
       await deployBeta();
       break;
-    case "prod":
-      setEnvProd();
-      await deployProd();
+    case "dev":
+      setEnvDev();
+      await deployDev();
       break;
     case "netlify":
       setEnvNetlify();
       await deployNetlify();
       break;
-    case "dev":
-      setEnvDev();
-      await deployDev();
+    case "prod":
+      setEnvProd();
+      await deployProd();
       break;
     default:
       usage(`Unrecognized --location param: ${location}.\nValid params are: beta, prod, dev, netlify`);
