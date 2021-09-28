@@ -12,13 +12,6 @@ const deploy = process.env.DEPLOY || "dev";
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 
-console.log({
-  "process.env": {
-    NODE_ENV: JSON.stringify(mode),
-    ...featureFlags[deploy],
-  },
-});
-
 const alias = {
   "~": path.resolve(__dirname, "src/"),
   content: path.resolve(__dirname, "content"),
