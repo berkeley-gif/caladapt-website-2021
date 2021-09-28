@@ -23,7 +23,7 @@
   >
     <div slot="actions">
       <NotificationActionButton>
-        <Link href="https://cal-adapt.org/">cal-adapt.org</Link>
+        <Link href="https://cal-adapt.org/">Return to cal-adapt.org</Link>
       </NotificationActionButton>
     </div>
   </InlineNotification>
