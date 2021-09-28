@@ -379,15 +379,15 @@
           with 95% confidence intervals.
         </p>
         <p>
-          <strong>User Admonishment</strong>: The Extreme Weather Tool is
-          designed to broadly inform estimated probabilities of extreme weather
-          events across a wide range of environments and climate zones in
-          California. On a local scale, different statistical assumptions (i.e.
-          fitting techniques for distribution parameters, choice of extreme
-          value distribution) may be more appropriate. We encourage users to
-          ensure the empirical fit of the applied distribution is acceptable to
-          their end use before using estimates produced from this tool for
-          planning purposes.
+          <strong>User Advisory</strong>: The Extreme Weather Tool is designed
+          to broadly inform estimated probabilities of extreme weather events
+          across a wide range of environments and climate zones in California.
+          On a local scale, different statistical assumptions (i.e. fitting
+          techniques for distribution parameters, choice of extreme value
+          distribution) may be more appropriate. We encourage users to ensure
+          the empirical fit of the applied distribution is acceptable to their
+          end use before using estimates produced from this tool for planning
+          purposes.
         </p>
       </div>
       <div slot="extra-sources">

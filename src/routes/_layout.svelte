@@ -14,7 +14,9 @@
   <a href="#main-content">Skip to Main Content</a>
 </div>
 
-<SiteAlert />
+{#if process.env.showBetaBanner}
+  <SiteAlert />
+{/if}
 
 <Nav segment="{segment}" />
 

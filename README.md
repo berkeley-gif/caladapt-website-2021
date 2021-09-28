@@ -8,6 +8,24 @@ npm install # or yarn
 npm run dev
 ```
 
+## Deploying
+
+First, make the `deploy` script is executable in your environment:
+
+```bash
+# on unix systems:
+chmod +x scripts/deploy.mj
+```
+
+Then run the appropriate deploy script for the environment on which you would like to deploy to:
+
+```bash
+# e.g. for dev.cal-adapt.org
+npm run deploy-dev
+```
+
+This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
+
 ## Directory structure
 
 ### src

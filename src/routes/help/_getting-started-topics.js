@@ -6,8 +6,8 @@ export const getting_started_topics = [
   },
   {
     slug: "climate-data-and-other-data-on-caladapt",
-    title: "Climate data and other data on Cal Adapt",
-    text: "Information about the types of data available through Cal Adapt.",
+    title: "Climate data and other data on Cal-Adapt",
+    text: "Information about the types of data available through Cal-Adapt.",
   },
   {
     slug: "about-climate-projections-and-models",
@@ -17,7 +17,7 @@ export const getting_started_topics = [
   {
     slug: "accessing-data-on-cal-adapt",
     title: "Accessing data on Cal-Adapt",
-    text: "Three ways of exploring and downloading the data available on Cal Adapt.",
+    text: "Different ways of exploring and downloading the data available on Cal-Adapt.",
   },
   {
     slug: "best-practices-for-using-climate-projections",

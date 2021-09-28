@@ -32,7 +32,11 @@ export const climvarStore = (() => {
 
 export const indicatorsList = climvars
   .filter(({ id }) => CLIMATE_INDICATORS.includes(id))
-  .map((d) => ({ ...d, title: `Degree Days ${d.label}` }));
+  .map((d) => ({
+    ...d,
+    title: `Degree Days ${d.label}`,
+    units: "degree days",
+  }));
 
 export const indicatorsStore = (() => {
   const store = writable(DEFAULT_CLIMATE_INDICATOR);
