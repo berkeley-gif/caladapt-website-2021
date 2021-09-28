@@ -85,7 +85,6 @@ module.exports = {
           NODE_ENV: JSON.stringify(mode),
           ...featureFlags[deploy],
         },
-        "process.env.NODE_ENV": JSON.stringify(mode),
       }),
     ].filter(Boolean),
     devtool: dev && "inline-cheap-module-source-map",
