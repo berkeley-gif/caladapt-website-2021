@@ -1,14 +1,14 @@
 {
   "beta": {
-    "showBetaBanner": true
+    "showBetaBanner": "true"
   },
   "dev": {
-    "showBetaBanner": false
+    "showBetaBanner": "false"
   },
   "netlify": {
-    "showBetaBanner": false
+    "showBetaBanner": "false"
   },
   "prod": {
-    "showBetaBanner": false
+    "showBetaBanner": "false"
   }
 }
