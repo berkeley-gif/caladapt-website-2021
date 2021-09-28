@@ -48,7 +48,6 @@ async function transfer(subdomain) {
 
 async function deployDev() {
   try {
-    process.env.NODE_ENV = 'production';
     await sapperExport();
     await transfer("dev");
     await $`exit 0`;
@@ -60,7 +59,6 @@ async function deployDev() {
 
 async function deployBeta() {
   try {
-    process.env.FEATURE_FLAGS_BETA = 'true';
     await sapperExport();
     await transfer("beta");
     await $`exit 0`;
@@ -72,7 +70,6 @@ async function deployBeta() {
 
 async function deployProd() {
   try {
-    process.env.NODE_ENV = 'production';
     await sapperExport();
     await transfer("prod");
     await $`exit 0`;
@@ -84,7 +81,6 @@ async function deployProd() {
 
 async function deployNetlify() {
   try {
-    process.env.NODE_ENV = 'development';
     await sapperExport();
     await $`netlify deploy --dir=${SAPPER_EXPORT_DIR}`;
     await $`exit 0`;
@@ -94,18 +90,43 @@ async function deployNetlify() {
   }
 }
 
+function setEnvBeta() {
+  process.env.NODE_ENV = 'production';
+  process.env.FEATURE_FLAGS_BETA = 'true';
+  process.env.DEPLOY = 'beta';
+}
+
+function setEnvDev() {
+  process.env.NODE_ENV = 'production';
+  process.env.DEPLOY = 'dev';
+}
+
+function setEnvProd() {
+  process.env.NODE_ENV = 'production';
+  process.env.DEPLOY = 'prod';
+}
+
+function setEnvNetlify() {
+  process.env.NODE_ENV = 'development';
+  process.env.DEPLOY = 'netlify';
+}
+
 async function handleLocation(location) {
   switch(location) {
     case "beta":
+      setEnvBeta();
       await deployBeta();
       break;
     case "prod":
+      setEnvProd();
       await deployProd();
       break;
     case "netlify":
+      setEnvNetlify();
       await deployNetlify();
       break;
     case "dev":
+      setEnvDev();
       await deployDev();
       break;
     default:
