@@ -22,7 +22,7 @@ We identified three main goals to address in our new [Help](https://beta.cal-ada
 
 Our target audience for these enhancements is a broad audience of local climate planners, community organizations, technical users, educators, and anyone with an interest in exploring climate change projections in California. In addition, we are redesigning all Cal-Adapt tools to streamline and standardize the user experience of exploring and accessing climate data.
 
-<img src="/img/blog/redesign-help.png" style="width:100%;margin:1rem auto;" alt="Screenshot of the new caladapt help page">
+<img src="/img/blog/redesign-help.jpg" style="width:100%;margin:1rem auto;" alt="Screenshot of the new caladapt help page">
 
 ### Get Started with Cal-Adapt
 Our new [Get Started](https://beta.cal-adapt.org/help/get-started) guide helps build climate science literacy for users who may be new to climate science. It  also includes best practices we have learnt over the years for using climate data. Our [Get Started](https://beta.cal-adapt.org/help/get-started) guide is  organized into the following five topics:
