@@ -3,7 +3,7 @@ title: "Redesigning Cal-Adapt"
 author: Cal-Adapt
 image: redesign-homepage.png
 tags: other
-snippet: An overview of new Help content .
+snippet: A preview of our new Get Started guide and other Help content developed for Cal-Adapt in response to user feedback.
 ---
 
 Cal-Adapt’s mission is to make data portraying climate change in California more accessible and actionable for a broad audience. Recent funding from the Strategic Growth Council has allowed Cal-Adapt to expand beyond our primary energy sector users to a more diverse user community, especially users working in municipal governments, natural resource management agencies, and community-based organizations.
@@ -40,5 +40,5 @@ We have updated our list of [FAQs](https://beta.cal-adapt.org/help/faqs/) and de
 ## Updated Tools
 We are redesigning our tools to integrate the new [Help](https://beta.cal-adapt.org/help/) content, improve accessibility and provide a better and more consistent user experience. You can preview the new tool design on the [Extreme Weather tool](https://beta.cal-adapt.org/tools/extreme-weather). With this tool, users can explore extreme temperatures for past weather and present day, utilizing a quality-controlled dataset for historical hourly weather observations curated for use by the energy sector for 38 weather stations across California. Present day weather conditions are from NOAA.
 
-## Feedback
+#### We would love to hear from you!
 Stay tuned as we roll out our fully redesigned Cal-Adapt over the upcoming weeks and let us know what you think of the new look! We hope that these changes and new Help content will make it easier for users to understand climate science and make climate data actionable and useful. Most of all, we want to thank all of the many people who have taken the time to reach out to us and share their feedback and insight! The Cal-Adapt team is working for you to make the data that you need accessible. If you haven’t had the opportunity to share your thoughts yet, we invite you to fill out our [online survey](https://docs.google.com/forms/d/e/1FAIpQLSfYcOPYRCxIfZlchvw1kkv4OBg63hcyZhE2plRel-rPIbVllQ/viewform) or reach out to the Cal-Adapt support team at support@cal-adapt.org. 
