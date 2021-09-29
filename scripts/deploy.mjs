@@ -2,7 +2,19 @@
 
 /**
  * deploy.js
- * Handles transpiling and deploying code based on environment configuration.
+ * Handles transpiling and deploying source code.
+ *
+ * Available options:
+ * --help: prints script usage instructions.
+ * --location: (required) determines env variables and where compiled
+ *    assets should be rsync'd to.
+ * --transfer: (optional) disables rsync when set to false.
+ *
+ * Examples (assumes script is being run from root of repository):
+ *
+ * npm run deploy -- --help
+ * npm run deploy -- --location=dev
+ * npm run deploy -- --location=beta --transfer=false
  */
 
 import { $ } from "zx";
@@ -41,9 +53,7 @@ async function usage(message) {
   if (message) {
     console.log(message);
   }
-  console.log(
-    "Usage: `zx deploy.mjs --location=<deploy location> --transfer=<boolean>`"
-  );
+  console.log("Usage: zx deploy.mjs --location=<string> --transfer=<boolean>");
   await $`exit 0`;
 }
 
