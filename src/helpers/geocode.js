@@ -137,10 +137,10 @@ export const getTitle = (feature, layerId, placeName) => {
       return `${feature.properties.name}, California's Fourth Assessment Climate Region`;
     case "irwm":
       return `${feature.properties.name}, IRWM Region`;
+    case "states":
+      return `State of ${feature.properties.name}`;
     case "custom":
       return "Custom Boundary";
-    case "ca":
-      return "State of California";
     case "hadisdstations":
       return `Weather Station at ${feature.properties.name}, ${feature.properties.city}, California`;
     default:
