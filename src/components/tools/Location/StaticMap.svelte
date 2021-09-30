@@ -54,7 +54,7 @@
 
   function getPointImgSrc({ geometry, center }) {
     // Set bounds to use zoom instead of auto
-    // This prevents static image from being zoomed too detailed
+    // This prevents static image from being zoomed in too much
     // Note: Padding cannot be used in conjunction with zoom.
     const bounds = `${center[0]},${center[1]},${zoom}`;
     const overlay = createOverlay(geometry);
@@ -82,14 +82,15 @@
     return createSrcUrl({ overlay, bounds, params });
   }
 
-  $: if (location) {
-    if (location.geometry.type === "Point") {
+  function handleLocation(feature) {
+    if (feature.geometry.type === "Point") {
       src = getPointImgSrc(location);
     } else {
       src = getPolygonImgSrc(location);
     }
   }
 
+  $: if (location && location.geometry) handleLocation(location);
   $: if (img && src !== undefined) load();
 </script>
 
