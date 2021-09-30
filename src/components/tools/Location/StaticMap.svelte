@@ -1,8 +1,10 @@
 <script>
   import simplify from "@turf/simplify";
+  import truncate from "@turf/truncate";
 
   // Helpers
-  import { mapboxgl } from "./../../../helpers/mapbox";
+  import { mapboxgl } from "~/helpers/mapbox";
+  import { serialize } from "~/helpers/utilities";
 
   // Props
   export let width = 150;
@@ -13,6 +15,7 @@
   export let zoom = 8;
   export let alt = "location map";
 
+  const { accessToken } = mapboxgl;
   let img;
   let src;
   let loading;
@@ -31,7 +34,35 @@
     };
   }
 
-  function createPolygonImgSrc({ geometry }) {
+  function createSrcUrl({ overlay, bounds, params }) {
+    return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
+      params
+    )}`;
+  }
+
+  function createOverlay(geojson, tolerance = 0.005) {
+    const geojsonString = JSON.stringify(geojson);
+    if (geojsonString.length < 7000) {
+      return encodeURIComponent(geojsonString);
+    }
+    const simplifiedGeojson = simplify(geojson, {
+      tolerance,
+      highQuality: true,
+    });
+    return createOverlay(simplifiedGeojson, tolerance + 0.05);
+  }
+
+  function getPointImgSrc({ geometry, center }) {
+    // Set bounds to use zoom instead of auto
+    // This prevents static image from being zoomed too detailed
+    // Note: Padding cannot be used in conjunction with zoom.
+    const bounds = `${center[0]},${center[1]},${zoom}`;
+    const overlay = createOverlay(geometry);
+    const params = { access_token: accessToken };
+    return createSrcUrl({ overlay, bounds, params });
+  }
+
+  function getPolygonImgSrc({ geometry }) {
     // Add style for non point geometry
     const geojson = {
       type: "Feature",
@@ -42,44 +73,20 @@
       geometry,
     };
     const bounds = "auto";
-    // The Static Images API only accepts requests that are 8,192 or fewer characters long. Reduce the length of the geojson overlay or request a static map without the overlay
-    let overlay;
-    let simplifiedGeojson;
-    const geojsonString = JSON.stringify(geojson);
-
-    if (geojsonString.length < 7000) {
-      overlay = encodeURIComponent(geojsonString);
-    } else {
-      // Simplify geometry for more complex shapes
-      simplifiedGeojson = simplify(geojson, {
-        tolerance: 0.005,
-        highQuality: true,
-      });
-      // Simplify further for even more complex shapes (e.g. state boundaries)
-      if (JSON.stringify(simplifiedGeojson).length > 8000) {
-        simplifiedGeojson = simplify(geojson, {
-          tolerance: 0.1,
-          highQuality: false,
-        });
-      }
-      overlay = encodeURIComponent(JSON.stringify(simplifiedGeojson));
-    }
-
-    return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?padding=${padding}&access_token=${mapboxgl.accessToken}`;
+    const params = { access_token: accessToken, padding };
+    // The Mapbox Static Images API only accepts requests that are 8,192 or fewer characters long.
+    // Truncate coordinate precision
+    const truncatedGeojson = truncate(geojson, { precision: 4 });
+    // Simplify geometry
+    const overlay = createOverlay(truncatedGeojson);
+    return createSrcUrl({ overlay, bounds, params });
   }
 
   $: if (location) {
     if (location.geometry.type === "Point") {
-      const geojson = location.geometry;
-      const [lng, lat] = location.center;
-      // Set bounds to use zoom instead of auto
-      // This prevents static image from being zoomed too detailed
-      // Note: Padding cannot be used in conjunction with zoom.
-      const bounds = `${lng},${lat},${zoom}`;
-      const overlay = encodeURIComponent(JSON.stringify(geojson));
-      src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?&access_token=${mapboxgl.accessToken}`;
+      src = getPointImgSrc(location);
     } else {
-      src = createPolygonImgSrc(location);
+      src = getPolygonImgSrc(location);
     }
   }
 
