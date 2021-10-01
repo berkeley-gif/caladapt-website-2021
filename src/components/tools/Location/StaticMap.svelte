@@ -41,9 +41,9 @@
   }
 
   function createOverlay(geojson, tolerance = 0.005) {
-    const geojsonString = JSON.stringify(geojson);
-    if (geojsonString.length < 7000) {
-      return encodeURIComponent(geojsonString);
+    const overlay = encodeURIComponent(JSON.stringify(geojson));
+    if (overlay.length < 7500) {
+      return overlay;
     }
     const simplifiedGeojson = simplify(geojson, {
       tolerance,
