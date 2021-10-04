@@ -1,4 +1,5 @@
 <script>
+  import { ImageLoader, InlineLoading } from "carbon-components-svelte";
   import simplify from "@turf/simplify";
   import truncate from "@turf/truncate";
 
@@ -13,13 +14,13 @@
   export let style = "mapbox/streets-v11";
   export let padding = 50;
   export let zoom = 8;
-  export let alt = "location map";
 
   const { accessToken } = mapboxgl;
   let img;
   let src;
   let loading;
   let error;
+  let alt;
 
   function load() {
     loading = true;
@@ -42,7 +43,7 @@
 
   function createOverlay(geojson, tolerance = 0.005) {
     const overlay = encodeURIComponent(JSON.stringify(geojson));
-    if (overlay.length < 7500) {
+    if (overlay.length < 11000) {
       return overlay;
     }
     const simplifiedGeojson = simplify(geojson, {
@@ -83,6 +84,7 @@
   }
 
   function handleLocation(feature) {
+    alt = `map of ${feature.title}`;
     if (feature.geometry.type === "Point") {
       src = getPointImgSrc(location);
     } else {
@@ -96,41 +98,21 @@
 
 <style>
   div.static-map {
-    position: relative;
     box-shadow: var(--box-shadow);
   }
-  img {
-    width: 100%;
-  }
-  img.loading {
-    opacity: 0;
-  }
-  img:not(.loading) {
-    opacity: 1;
-    transition: opacity 250ms ease-out;
-  }
-  .hide {
-    display: none;
+
+  .error-text {
+    padding: var(--spacing-32);
   }
 </style>
 
 <div class="static-map">
-  {#if loading}
-    <span>Loading map of location...</span>
-  {/if}
-  {#if error}
-    <span>Unable to load map</span>
-  {/if}
-  <img
-    {...$$restProps}
-    bind:this="{img}"
-    class:loading
-    class:hide="{error}"
-    on:click
-    on:mouseover
-    on:mouseenter
-    on:mouseout
-    src="{src}"
-    alt="{alt}"
-  />
+  <ImageLoader src="{src}" ratio="1x1" alt="{alt}" fadeIn>
+    <div slot="loading">
+      <InlineLoading description="Loading location map..." />
+    </div>
+    <div slot="error">
+      <span class="error-text">An error occurred. Unable to load map.</span>
+    </div>
+  </ImageLoader>
 </div>
