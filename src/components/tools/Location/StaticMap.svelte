@@ -16,24 +16,8 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
-  let img;
   let src;
-  let loading;
-  let error;
   let alt;
-
-  function load() {
-    loading = true;
-    error = false;
-    img.src = src;
-    img.onload = () => {
-      loading = false;
-    };
-    img.onerror = () => {
-      loading = false;
-      error = true;
-    };
-  }
 
   function createSrcUrl({ overlay, bounds, params }) {
     return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -56,9 +40,9 @@
   function getPointImgSrc({ geometry, center }) {
     // Set bounds to use zoom instead of auto
     // This prevents static image from being zoomed in too much
-    // Note: Padding cannot be used in conjunction with zoom.
     const bounds = `${center[0]},${center[1]},${zoom}`;
     const overlay = createOverlay(geometry);
+    // Padding cannot be used if bounds has zoom.
     const params = { access_token: accessToken };
     return createSrcUrl({ overlay, bounds, params });
   }
@@ -76,7 +60,7 @@
     const bounds = "auto";
     const params = { access_token: accessToken, padding };
     // The Mapbox Static Images API only accepts requests that are 8,192 or fewer characters long.
-    // Truncate coordinate precision
+    // Reduce coordinate precision
     const truncatedGeojson = truncate(geojson, { precision: 4 });
     // Simplify geometry
     const overlay = createOverlay(truncatedGeojson);
@@ -84,16 +68,15 @@
   }
 
   function handleLocation(feature) {
-    alt = `map of ${feature.title}`;
     if (feature.geometry.type === "Point") {
-      src = getPointImgSrc(location);
+      return getPointImgSrc(location);
     } else {
-      src = getPolygonImgSrc(location);
+      return getPolygonImgSrc(location);
     }
   }
 
-  $: if (location && location.geometry) handleLocation(location);
-  $: if (img && src !== undefined) load();
+  $: src = location && location.geometry ? handleLocation(location) : "";
+  $: alt = location ? `map of ${location.title}` : "";
 </script>
 
 <style>
