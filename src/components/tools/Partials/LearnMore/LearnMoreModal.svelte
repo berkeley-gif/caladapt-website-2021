@@ -55,7 +55,7 @@
   on:open
   on:close
 >
-  <div>
+  <div class="content">
     {#if text}
       {@html text}
     {:else}

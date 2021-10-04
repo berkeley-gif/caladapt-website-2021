@@ -52,7 +52,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<div class="bleed banner overlay">
+<div class="bleed banner overlay bg-img">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col-lg-2"></div>
@@ -161,7 +161,7 @@
         <Button
           kind="tertiary"
           icon="{ArrowRight16}"
-          href="http://albers.cnr.berkeley.edu/data/"
+          href="https://albers.cnr.berkeley.edu/data/"
           >Cal-Adapt Data Server</Button
         >
       </p>

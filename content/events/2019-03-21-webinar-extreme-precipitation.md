@@ -27,7 +27,7 @@ Date: **Thursday, March 28, 2019** <br/>
 Time: **12:30-1:30 (PST)** <br/>
 Event number: 926 010 968 <br/>
 Event password: meeting@1230 <br/>
-Event address for attendees: [Link to WebEx](https://energy.webex.com/energy/onstage/g.php?MTID=e3b8402c6274a17fac9077509e8516c88)
+Event address for attendees: <a href="https://energy.webex.com/energy/onstage/g.php?MTID=e3b8402c6274a17fac9077509e8516c88" target="_blank">Link to WebEx</a>
 
 
 #### Audio conference information
@@ -36,6 +36,6 @@ Audio conference: 885524 <br/>
 To receive a call back, provide your phone number when you join the event, or call the number below and enter the access code. <br/>
 Call-in toll-free number (US/Canada): 1-866-469-3239 <br/>
 Call-in toll number (US/Canada): 1-650-429-3300 <br/>
-Global call-in numbers: [List of numbers](https://energy.webex.com/energy/globalcallin.php?serviceType=EC&ED=731624442&tollFree=1) <br/>
-Toll-free dialing restrictions: https://www.webex.com/pdf/tollfree_restrictions.pdf <br/>
+Global call-in numbers: <a href="https://energy.webex.com/energy/globalcallin.php?serviceType=EC&ED=731624442&tollFree=1" target="_blank">List of numbers</a> <br/>
+Toll-free dialing restrictions: <a href="https://www.webex.com/pdf/tollfree_restrictions.pdf" target="_blank">https://www.webex.com/pdf/tollfree_restrictions.pdf</a> <br/>
 Access code: 926 010 968 <br/>

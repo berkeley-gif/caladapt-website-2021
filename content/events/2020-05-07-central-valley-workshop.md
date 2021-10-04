@@ -29,8 +29,6 @@ Practitioners and researchers engaged in climate planning and resilience efforts
 Date: **Wednesday, May 27** <br/>
 Time: **1:00pm - 2:30pm (PST)** <br/>
 Access Link: Link will be emailed to registrants <br/>
-<a href="https://forms.gle/PP8uPsYJZfdyQpT16" class="btn btn-primary mt-2">Register</a>
+<a href="https://forms.gle/PP8uPsYJZfdyQpT16" target="_blank" class="btn btn-primary mt-2">Register</a>
 
 Please share this information widely with anyone you think might be interested!
-
-

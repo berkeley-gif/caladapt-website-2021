@@ -282,6 +282,33 @@ const data = [
     },
   },
   {
+    id: "states",
+    type: "line",
+    metadata: {
+      group: "Boundaries",
+      title: "State",
+      nameField: "name",
+      placeholder: "state name",
+    },
+    source: {
+      type: "vector",
+      tiles: ["https://api.cal-adapt.org/vtiles/states/{z}/{x}/{y}.pbf"],
+      minzoom: 1,
+      maxzoom: 20,
+    },
+    "source-layer": "state",
+    layout: {
+      "line-cap": "round",
+      "line-join": "round",
+      visibility: "none",
+    },
+    paint: {
+      "line-opacity": 0.75,
+      "line-color": "rgb(107, 231, 186)",
+      "line-width": 1,
+    },
+  },
+  {
     id: "translines",
     type: "line",
     metadata: {

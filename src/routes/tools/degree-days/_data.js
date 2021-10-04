@@ -222,11 +222,6 @@ export function getQueryParams({ location, boundary, imperial = true }) {
       params.g = `Point(${location.center[0]} ${location.center[1]})`;
       method = "GET";
       return { params, method };
-    case "ca":
-      params.ref = "/media/ca.json";
-      params.stat = "mean";
-      method = "GET";
-      return { params, method };
     case "custom":
       params.g = JSON.stringify(location.geometry);
       params.stat = "mean";

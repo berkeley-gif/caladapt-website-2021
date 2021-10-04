@@ -379,15 +379,15 @@
           with 95% confidence intervals.
         </p>
         <p>
-          <strong>User Admonishment</strong>: The Extreme Weather Tool is
-          designed to broadly inform estimated probabilities of extreme weather
-          events across a wide range of environments and climate zones in
-          California. On a local scale, different statistical assumptions (i.e.
-          fitting techniques for distribution parameters, choice of extreme
-          value distribution) may be more appropriate. We encourage users to
-          ensure the empirical fit of the applied distribution is acceptable to
-          their end use before using estimates produced from this tool for
-          planning purposes.
+          <strong>User Advisory</strong>: The Extreme Weather Tool is designed
+          to broadly inform estimated probabilities of extreme weather events
+          across a wide range of environments and climate zones in California.
+          On a local scale, different statistical assumptions (i.e. fitting
+          techniques for distribution parameters, choice of extreme value
+          distribution) may be more appropriate. We encourage users to ensure
+          the empirical fit of the applied distribution is acceptable to their
+          end use before using estimates produced from this tool for planning
+          purposes.
         </p>
       </div>
       <div slot="extra-sources">
@@ -427,7 +427,7 @@
             <ul class="source-list">
               <li class="source-list-item">
                 <a
-                  href="http://albers.cnr.berkeley.edu/data/hadisd/"
+                  href="https://albers.cnr.berkeley.edu/data/hadisd/"
                   target="_blank"
                   >Hourly Observed Historical Data Product (csv)</a
                 >
@@ -445,7 +445,7 @@
               <li class="source-list-item">
                 Explanatory Guide to Hourly Observed Historical Data on
                 Cal-Adapt (<a
-                  href="http://albers.cnr.berkeley.edu/data/hadisd/user_guide_to_hourly_data.pdf"
+                  href="https://albers.cnr.berkeley.edu/data/hadisd/user_guide_to_hourly_data.pdf"
                   target="_blank">link</a
                 >)
               </li>

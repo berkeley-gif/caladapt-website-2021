@@ -4,6 +4,6 @@ tags: data
 category: getting-data
 ---
 
-[Here is an overview](https://berkeley-gif.github.io/caladapt-docs/) of Cal-Adapt’s RESTful API and documentation on how to use the API. If you have additional questions, you can email us at <support@cal-adapt.org>.
+<a href="https://berkeley-gif.github.io/caladapt-docs/" target="_blank">Here is an overview</a> of Cal-Adapt’s RESTful API and documentation on how to use the API. If you have additional questions, you can email us at <support@cal-adapt.org>.
 
-You can also pull data from Cal-Adapt’s API into your local environment using either Cal-Adapt’s R package (caladaptr) or Cal-Adapt’s ArcPro package. Documentation for the [caladaptr R package is here](https://ucanr-igis.github.io/caladaptr/) and documentation for the [ArcPro package is here](https://ucanr-igis.github.io/caladapt-py/).
+You can also pull data from Cal-Adapt’s API into your local environment using either Cal-Adapt’s R package (caladaptr) or Cal-Adapt’s ArcPro package. Documentation for the <a href="https://ucanr-igis.github.io/caladaptr/" target="_blank">caladaptr R package is here</a> and documentation for the <a href="https://ucanr-igis.github.io/caladapt-py/" target="_blank">ArcPro package is here</a>.

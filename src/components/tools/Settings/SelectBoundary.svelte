@@ -9,34 +9,8 @@
 
   const dispatch = createEventDispatcher();
 
-  if (addStateBoundary) {
-    items.push({
-      id: "ca",
-      type: "line",
-      label: "State of California",
-      metadata: {
-        group: "Boundaries",
-        title: "State of California",
-        placeholder: "",
-      },
-      source: {
-        type: "vector",
-        tiles: ["https://api.cal-adapt.org/vtiles/locagrid/{z}/{x}/{y}.pbf"],
-        minzoom: 1,
-        maxzoom: 20,
-      },
-      "source-layer": "locagrid",
-      layout: {
-        "line-cap": "round",
-        "line-join": "round",
-        visibility: "none",
-      },
-      paint: {
-        "line-opacity": 0.75,
-        "line-color": "rgb(107 231 186)",
-        "line-width": 1,
-      },
-    });
+  if (!addStateBoundary) {
+    items = items.filter((d) => d.id !== "states");
   }
 
   let selected = items.find((d) => d.id === selectedId);
@@ -54,6 +28,6 @@
   on:change="{change}"
 >
   {#each items as opt}
-    <SelectItem value="{opt.id}" label="{opt.label}" />
+    <SelectItem value="{opt.id}" text="{opt.label}" />
   {/each}
 </Select>

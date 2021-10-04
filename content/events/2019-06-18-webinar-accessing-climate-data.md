@@ -12,7 +12,7 @@ teaser: An overview of Cal-Adapt's data download tool by the California Energy C
 
 The California Energy Commission and UC Berkeley’s Geospatial Innovation Facility (GIF) are jointly hosting a public webinar to introduce users to our new Data Download tool and to solicit input on the continued development of this and other tools on Cal-Adapt. Cal-Adapt is an interactive, publicly accessible web-based application providing easy-to-understand visualizations of locally relevant climate-related risks that enable users to explore research results and climate projections.
 
-This webinar will highlight a variety of ways that users can discover and access climate data for California that is hosted on Cal-Adapt. Climate datasets on Cal-Adapt are provided by various scientific and research institutions and include historical observations and downscaled climate projections. The new Data Download tool allows users to exploit the pre-processing capabilities of the Cal-Adapt API, without needing to write computer code. Users can download temporal and spatial subsets in raster or tabular formats for [4 priority models](http://www.climateassessment.ca.gov/techreports/docs/20180827-Projections_CCCA4-CEC-2018-006.pdf) (HadGEM2-ES, CNRM-CM5, CanESM2, MIROC5) or 10 models selected by [California’s Climate Action Team Research Working Group](https://www.climatechange.ca.gov/climate_action_team/research.html) as having a good simulation of California's historical climate. This new download tool includes several improvements developed in response to user requests:
+This webinar will highlight a variety of ways that users can discover and access climate data for California that is hosted on Cal-Adapt. Climate datasets on Cal-Adapt are provided by various scientific and research institutions and include historical observations and downscaled climate projections. The new Data Download tool allows users to exploit the pre-processing capabilities of the Cal-Adapt API, without needing to write computer code. Users can download temporal and spatial subsets in raster or tabular formats for <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf" target="_blank">4 priority models</a> (HadGEM2-ES, CNRM-CM5, CanESM2, MIROC5) or 10 models selected by <a href="https://www.climatechange.ca.gov/climate_action_team/research.html" target="_blank">California’s Climate Action Team Research Working Group</a> as having a good simulation of California's historical climate. This new download tool includes several improvements developed in response to user requests:
 * Allows users to input multiple point or polygon locations and download climate variables in tabular format.
 * Increased options for temporal and spatial aggregation for tabular download, including monthly, decadal, seasonal, and water year time steps.
 * Improved discoverability of data in a searchable data catalog.
@@ -29,13 +29,13 @@ From this webinar, we hope to provide an opportunity for interactive dialogue an
 
 Date: **Thursday, June 27, 2019** <br/>
 Time: **12:30-1:30 (PST)** <br/>
-Location: [WebEx](https://energy.webex.com/energy/j.php?MTID=m59793519f7c56662e4288f895aa9e16f) <br/>
+Location: <a href="https://energy.webex.com/energy/j.php?MTID=m59793519f7c56662e4288f895aa9e16f" target="_blank">WebEx</a> <br/>
 Meeting number: 928 333 804 <br/>
 
 #### Audio connection
 
 Call-in toll-free number (US/Canada): 1-866-469-3239 <br/>
 Call-in toll number (US/Canada): 1-650-429-3300 <br/>
-[Global call-in numbers](https://energy.webex.com/energy/globalcallin.php?serviceType=EC&ED=731624442&tollFree=1)<br/>
-[Toll-free dialing restrictions](https://www.webex.com/pdf/tollfree_restrictions.pdf)<br/>
+<a href="https://energy.webex.com/energy/globalcallin.php?serviceType=EC&ED=731624442&tollFree=1" target="_blank">Global call-in numbers</a><br/>
+<a href="https://www.webex.com/pdf/tollfree_restrictions.pdf" target="_blank">Toll-free dialing restrictions</a>https://www.webex.com/pdf/tollfree_restrictions.pdf</a><br/>
 Access code: 928 333 804 <br/>

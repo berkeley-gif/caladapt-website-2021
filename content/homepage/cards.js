@@ -1,6 +1,6 @@
 export default [
   {
-    titleText: "New to Cal Adapt?",
+    titleText: "New to Cal-Adapt?",
     linkPath: "/help/get-started",
     description:
       "Learn how to get started with using climate data for California.",

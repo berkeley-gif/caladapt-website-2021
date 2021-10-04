@@ -52,6 +52,13 @@
 <style lang="scss">
   .banner {
     --banner-child-v-spacing: 2.5rem;
+    background-image: url(/img/banners/yosemite_1600x540.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    @media (max-width: 672px) {
+      background-image: url(/img/banners/yosemite_700x800.jpg);
+    }
   }
 
   .banner--icons {
@@ -70,7 +77,6 @@
     }
 
     .title-container p {
-      filter: drop-shadow(0px 1px 2px #121416);
       max-width: 50ch;
     }
 
@@ -103,10 +109,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section
-  class="bleed banner overlay overlay-black overlay-40"
-  style="background-image: url(/img/banners/yosemite_2000w.jpg);background-size:cover;"
->
+<section class="bleed banner overlay overlay-black overlay-40 bg-img">
   <div class="bx--grid">
     <div class="bx--row banner--icons" aria-hidden="true">
       {#each icons as icon}
@@ -121,9 +124,9 @@
         <div class="title-container">
           <h1 class="sr-only">Cal-Adapt</h1>
           <p class="title h1">
-            Cal-Adapt provides a means of exploring peer-reviewed data
-            portraying how climate change might affect California at the state
-            and local level.
+            Cal-Adapt provides a way to explore peer-reviewed data that portrays
+            how climate change might affect California at the state and local
+            level.
           </p>
         </div>
 
@@ -156,6 +159,7 @@
               textColor: "white",
               bgColor: cardBgColors[index],
               useRule: true,
+              useGradient: true,
             }}
           />
         {/each}
@@ -177,7 +181,9 @@
       inbox. Subscribe to the Cal-Adapt Newsletter.
     </p>
     <div class="btn-container">
-      <Button icon="{ArrowRight16}" href="/signup">Subscribe</Button>
+      <Button icon="{ArrowRight16}" href="/signup/#cal-adapt-newsletter"
+        >Subscribe</Button
+      >
     </div>
   </div>
 </section>

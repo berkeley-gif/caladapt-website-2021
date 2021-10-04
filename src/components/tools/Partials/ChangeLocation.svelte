@@ -7,6 +7,7 @@
     getFeature,
     searchFeature,
     reverseGeocode,
+    getNearestFeature,
   } from "../../../helpers/geocode";
 
   import {
@@ -17,7 +18,8 @@
 
   // Props
   export let location;
-  export let enableUpload = true;
+  export let enableUpload = false;
+  export let addStateBoundary = false;
   export let boundary;
   export let boundaryList;
   export let open = false;
@@ -68,9 +70,23 @@
 
   async function updateBoundary(e) {
     if (!e.detail) return;
+    const { lng, lat } = currentLoc.center;
     currentBoundary = e.detail;
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
-    currentLoc = await getFeature(currentLoc, currentBoundary.id);
+    const intersectingFeature = await getFeature(
+      currentLoc,
+      currentBoundary.id
+    );
+    if (intersectingFeature) {
+      currentLoc = intersectingFeature;
+    } else {
+      const nearestFeature = await getNearestFeature(
+        lng,
+        lat,
+        currentBoundary.id
+      );
+      currentLoc = nearestFeature;
+    }
   }
 
   async function selectSuggestion(opt) {
@@ -199,7 +215,7 @@
       <SelectBoundary
         selectedId="{currentBoundary.id}"
         items="{boundaryList}"
-        addStateBoundary="{true}"
+        addStateBoundary="{addStateBoundary}"
         on:change="{updateBoundary}"
       />
       {#if enableUpload}

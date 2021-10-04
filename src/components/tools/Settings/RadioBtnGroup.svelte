@@ -13,9 +13,6 @@
   const dispatch = createEventDispatcher();
   let ready = false;
 
-  $: {
-    console.log(selected);
-  }
   $: selected, dispatch("change", selected);
 
   onMount(() => {

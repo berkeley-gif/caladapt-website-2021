@@ -10,7 +10,7 @@ teaser: New features and capabilities of Cal-Adapt v2.0 by UC Berkeley’s Geosp
 
 <u><a href="#materials">LINKS TO WORKSHOP MATERIALS</a></u><br/>
 
-UC Berkeley’s [Geospatial Innovation Facility](http://gif.berkeley.edu/) (GIF) and the [Governor’s Office of Planning and Research](https://www.opr.ca.gov/) (OPR) are pleased to invite you to a duo of energy sector-focused workshops for eliciting needs related to climate adaptation on September 12 in Sacramento at the California Energy Commission (Imbrecht Hearing Room). The day will include two user-focused workshops:
+UC Berkeley’s <a href="http://gif.berkeley.edu/" target="_blank">Geospatial Innovation Facility</a> (GIF) and the <a href="https://www.opr.ca.gov/" target="_blank">Governor’s Office of Planning and Research</a> (OPR) are pleased to invite you to a duo of energy sector-focused workshops for eliciting needs related to climate adaptation on September 12 in Sacramento at the California Energy Commission (Imbrecht Hearing Room). The day will include two user-focused workshops:
 * Morning session (9:30 AM to noon) on Cal-Adapt 2.0
 * Afternoon session (1:00 PM to 3:00 PM) on the State Adaptation Clearinghouse.
 
@@ -27,7 +27,7 @@ Cal-Adapt 2.0 has recently migrated from beta.cal-adapt.org to prime time at cal
 * Stream Flows and other Hydrological Projections
 * Cal-Adapt API
 
-Please note that this workshop is part of an ongoing, CEC-funded [EPIC](http://www.energy.ca.gov/contracts/epic.html) grant to enhance Cal-Adapt and therefore focuses on electricity sector needs, although we do envision additional opportunities to weigh in on how Cal-Adapt may be able to serve additional needs in the future.
+Please note that this workshop is part of an ongoing, California Energy Commission funded <a href="http://www.energy.ca.gov/contracts/epic.html" target="_blank">EPIC</a> grant to enhance Cal-Adapt and therefore focuses on electricity sector needs, although we do envision additional opportunities to weigh in on how Cal-Adapt may be able to serve additional needs in the future.
 
 ## OPR State Adaptation Clearinghouse Energy Sector User Needs Assessment Workshop
 
@@ -47,15 +47,15 @@ There is limited space for the number of in-person participants we can accommoda
 during breakout sessions and focus groups.
 
 In-Person<br/>
-Please RSVP for either/both workshops [here](https://www.surveymonkey.com/r/BZWBDSS).
+Please RSVP for either/both workshops on <a href="https://www.surveymonkey.com/r/BZWBDSS" target="_blank">Survey Monkey</a>.
 
 Webinar<br/>
-Webinar Link: [https://energy.webex.com/energy/j.php?MTID=mf7294acfd787fe5efdf94df2e348816e](https://energy.webex.com/energy/j.php?MTID=mf7294acfd787fe5efdf94df2e348816e)<br/>
+Webinar Link: <a href="https://energy.webex.com/energy/j.php?MTID=mf7294acfd787fe5efdf94df2e348816e](https://energy.webex.com/energy/j.php?MTID=mf7294acfd787fe5efdf94df2e348816e" target="_blank">https://energy.webex.com/energy/j.php?MTID=mf7294acfd787fe5efdf94df2e348816e](https://energy.webex.com/energy/j.php?MTID=mf7294acfd787fe5efdf94df2e348816e</a><br/>
 Meeting password: 2meetings@CEC
 <br/>
 Join by phone: 1-866- 469-3239
 
-Feel free to send any questions regarding the Cal-Adapt Workshop to [nethomas@berkeley.edu](mailto:nethomas@berkeley.edu) or the Adaptation Clearinghouse Workshop to [Greta.Soos@opr.ca.gov](mailto:Greta.Soos@opr.ca.gov).
+Feel free to send any questions regarding the Cal-Adapt Workshop to <nethomas@berkeley.edu> or the Adaptation Clearinghouse Workshop to <Greta.Soos@opr.ca.gov>.
 
 <h2 id="materials">Workshop Materials</h2>
 Thank you to all the participants for the extremely helpful feedback! Here are the materials from the workshop:
@@ -63,4 +63,3 @@ Thank you to all the participants for the extremely helpful feedback! Here are t
 * Presentation - <a href="/docs/gif-opr-energy-sector-workshop-materials/wilhelm_energy_sector_examples_091217.pdf" target="_blank">Examples of How Energy Sector Resilience Efforts Have Used Cal-Adapt</a>
 * Presentation - <a href="https://youtu.be/XhaLdjRn2sk" target="_blank">Video</a>
 * Breakout Sessions - <a href="/docs/gif-opr-energy-sector-workshop-materials/Break_out Notes.docx" target="_blank">Notes</a>
-

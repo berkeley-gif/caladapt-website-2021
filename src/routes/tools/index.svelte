@@ -48,7 +48,7 @@
 </svelte:head>
 
 <!-- Banner -->
-<section class="banner overlay overlay-black overlay-40">
+<section class="banner overlay overlay-black overlay-40 bg-img">
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col">
@@ -77,7 +77,7 @@
     </div>
     <div class="bx--row">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each toolsByCategory as { icons, title, desc, slug }}
+        {#each toolsByCategory as { icons, title, desc, slug, version3 }}
           <Card
             {...{
               titleText: title,

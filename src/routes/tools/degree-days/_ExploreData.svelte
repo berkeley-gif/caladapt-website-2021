@@ -78,11 +78,16 @@
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
-    a timeseries of annual average values from individual downscaled GCMs. 
-    The gray shaded region in the background represents the range of projections 
-    from all 32 downscaled GCMs. The historical observed data is represented by 
+    a timeseries of annual average values from individual downscaled GCMs. The historical observed data is represented by 
     a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
     corresponding timeseries.</p>`;
+
+  let learnMoreFrequency = `<p>You can explore average number of CDDs or HDDs per 
+    year (Annual) or for selected months (Monthly). Monthly frequency can be a single 
+    month or several consecutive months e.g.  exploring CDDs for June, July & August.
+    </p>`;
+
+  let baseTemperature = `<p>Heating or Cooling Degree Days are calculated with reference to a Base Temperature, e.g. 65 °F. You can set the Base Temperature to a different value that meets your analysis requirements.</p>`;
 
   let metadata;
   let csvData;
@@ -161,7 +166,7 @@
       ["scenario", $scenario.label],
       ["climate variable", $climvar.label],
       ["climate indicator", $indicator],
-      ["units", $climvar.units.imperial],
+      ["units", $indicator.units],
     ];
     printContainer = document.querySelector("#explore");
     printSkipElements = ["settings"];
@@ -291,6 +296,8 @@
       Projected changes in <span class="annotate"
         >{frequencyLabel} {indicatorTitle}</span
       >
+      using a base temperature of
+      <span class="annotate">{$thresholdStore} °F</span>
       under a <span class="annotate">{$scenario.labelLong}</span>{monthsLabel
         ? ""
         : "."}
@@ -307,7 +314,7 @@
     <ul class="stats">
       <li class="block">
         <RangeAvg
-          units="{$indicator.units.imperial}"
+          units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{true}"
           series="{'historical'}"
@@ -317,7 +324,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$indicator.units.imperial}"
+          units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -327,7 +334,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$indicator.units.imperial}"
+          units="{$indicator.units}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -346,7 +353,7 @@
         key: 'value',
         label: `Number of ${$indicator.label} (Base temperature ${$thresholdStore}˚F)`,
         tickFormat: formatFn,
-        units: `${$indicator.units.imperial}`,
+        units: `${$indicator.units}`,
       }}"
     />
 
@@ -398,7 +405,7 @@
         on:change="{changeScenario}"
       />
       <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['climate-scenarios'] })}"
+        on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
       />
     </div>
 
@@ -418,22 +425,21 @@
           on:change="{changeSelectedMonths}"
         />
       {/if}
-      <LearnMoreButton />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ content: learnMoreFrequency })}"
+      />
     </div>
 
     <div class="block">
       <SelectThresholdNumeric
-        title="Set Threshold"
+        title="Set Base Temperature"
         value="{$thresholdStore}"
         minValue="{MIN_THRESHOLD_DEGREES_F}"
         maxValue="{MAX_THRESHOLD_DEGREES_F}"
         on:change="{changeThreshold}"
       />
       <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            slugs: ['cooling-degree-day', 'heating-degree-day'],
-          })}"
+        on:click="{() => loadLearnMore({ content: baseTemperature })}"
       />
     </div>
 

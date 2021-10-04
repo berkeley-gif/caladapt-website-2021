@@ -1,18 +1,11 @@
-import categories from "./_categories.js";
-
-let json;
-
-export function get(req, res) {
-  res.writeHead(200, {
-    "Content-Type": "application/json",
-  });
-
-  if (!json || process.env.NODE_ENV !== "production") {
-    // const categories = get_data().map(({ slug, title, text }) => {
-    //   return { slug, title, text };
-    // });
-    json = JSON.stringify(categories);
+export async function get(_req, res, next) {
+  let json = JSON.stringify((await import("./_categories")).default);
+  if (json !== null) {
+    res.writeHead(200, {
+      "Content-Type": "application/json",
+    });
+    res.end(json);
+  } else {
+    next();
   }
-
-  res.end(json);
 }
