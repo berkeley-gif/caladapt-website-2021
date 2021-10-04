@@ -16,8 +16,6 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
-  let src;
-  let alt;
 
   function createSrcUrl({ overlay, bounds, params }) {
     return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
