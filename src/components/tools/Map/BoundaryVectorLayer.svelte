@@ -22,12 +22,7 @@
 
   function addBoundary() {
     removePreviousSelection();
-    if (
-      !boundary ||
-      boundary.id === "locagrid" ||
-      boundary.id === "ca" ||
-      boundary.id === "custom"
-    ) {
+    if (!boundary || boundary.id === "locagrid" || boundary.id === "custom") {
       selection = null;
       return;
     }

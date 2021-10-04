@@ -3,7 +3,7 @@
   "description": "TODO",
   "version": "0.0.1",
   "scripts": {
-    "dev": "NODE_ENV=development sapper dev --no-hot",
+    "dev": "sapper dev --no-hot",
     "build": "sapper build",
     "export": "sapper export --timeout=10000",
     "start": "node __sapper__/build",
@@ -27,6 +27,7 @@
     "@turf/center": "^6.0.1",
     "@turf/helpers": "^6.3.0",
     "@turf/simplify": "^5.1.5",
+    "@turf/truncate": "^6.5.0",
     "autoprefixer": "^10.1.0",
     "blueimp-canvas-to-blob": "^3.28.0",
     "clipboard-copy": "^4.0.1",
@@ -49,7 +50,7 @@
     "mapbox-gl": "^2.0.1",
     "node-sass": "^6.0.1",
     "npm": "^7.7.6",
-    "polka": "next",
+    "polka": "^1.0.0-next.20",
     "shpjs": "^3.6.3",
     "sirv": "^1.0.0",
     "svelte-inview": "^2.0.1"
