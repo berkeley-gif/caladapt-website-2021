@@ -77,7 +77,7 @@ export const thresholdListStore = (() => {
         return next;
       });
     },
-    add(value, label = "Custom") {
+    add(value, label = "") {
       const thresh = {
         id: uid++,
         label,
@@ -85,11 +85,6 @@ export const thresholdListStore = (() => {
       };
       update((store) => {
         return [...store, thresh];
-      });
-    },
-    remove(item) {
-      update((store) => {
-        return store.filter((t) => t.id !== item.id);
       });
     },
   };

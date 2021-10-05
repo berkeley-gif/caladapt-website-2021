@@ -172,10 +172,6 @@
     thresholdListStore.add(e.detail);
   }
 
-  function removeThreshold(e) {
-    thresholdListStore.remove(e.detail);
-  }
-
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
       locationStore.updateBoundary("locagrid");
@@ -391,10 +387,9 @@
         items="{$thresholdListStore}"
         selected="{$thresholdStore}"
         units="{$climvar.units.imperial}"
-        helperText="Add a new threshold value or select from existing values."
+        helperText="Add a new threshold value or select from list"
         on:change="{changeThreshold}"
         on:add="{addThreshold}"
-        on:remove="{removeThreshold}"
       />
       <LearnMoreButton
         on:click="{() => loadLearnMore({ slugs: ['extreme-heat-threshold'] })}"
