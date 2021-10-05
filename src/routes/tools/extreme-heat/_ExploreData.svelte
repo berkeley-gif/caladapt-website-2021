@@ -359,8 +359,16 @@
         title="Select Indicator"
         on:change="{changeClimvar}"
       />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: ['extreme-heat-day', 'warm-night'],
+          })}"
+      />
+    </div>
+    <div class="block">
       <SelectClimvar
-        title=""
+        title="Select View"
         selectedId="{$indicatorStore}"
         items="{indicatorList}"
         on:change="{changeIndicator}"
