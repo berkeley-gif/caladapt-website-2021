@@ -2,13 +2,13 @@
   import { onMount, createEventDispatcher } from "svelte";
   import {
     Button,
+    Form,
+    FormGroup,
     RadioButton,
     RadioButtonGroup,
     RadioButtonSkeleton,
     NumberInput,
   } from "carbon-components-svelte";
-  import Delete16 from "carbon-icons-svelte/lib/Delete16";
-  import { debounce } from "~/helpers/utilities";
 
   export let items;
   export let selected;
@@ -21,15 +21,12 @@
 
   $: selected, dispatch("change", selected);
 
-  const addThreshold = debounce((e) => {
-    console.log("add", e);
-    const value = Number(e.target.value);
-    dispatch("add", value);
-    e.target.value = "";
-  }, 500);
-
-  const removeThreshold = (e) => {
-    dispatch("remove", e);
+  const addThreshold = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formProps = Object.fromEntries(formData);
+    dispatch("add", formProps.newThreshold);
+    e.target.reset();
   };
 
   onMount(() => {
@@ -39,40 +36,39 @@
 </script>
 
 <style>
-  .flex-center {
+  .add-threshold :global(.bx--fieldset) {
     display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  }
+
+  .bx--form__helper-text {
+    margin-bottom: 0.25rem;
   }
 </style>
 
 {#if ready}
   <RadioButtonGroup legendText="{title}" orientation="vertical" bind:selected>
+    <div class="bx--form__helper-text">{helperText}</div>
     {#each items as threshold (threshold.id)}
-      <div class="flex-center">
+      {#if threshold.label.includes("Percentile")}
         <RadioButton
           labelText="{`${threshold.value} ${units} (${threshold.label})`}"
           value="{threshold.value}"
         />
-        {#if threshold.label === "Custom"}
-          <Button
-            size="small"
-            kind="ghost"
-            iconDescription="Remove value"
-            icon="{Delete16}"
-            on:click="{() => removeThreshold(threshold)}"
-          />
-        {/if}
-      </div>
+      {:else}
+        <RadioButton
+          labelText="{`${threshold.value} ${units}`}"
+          value="{threshold.value}"
+        />
+      {/if}
     {/each}
   </RadioButtonGroup>
-  <div style="margin-top: 0.5rem;">
-    <NumberInput
-      hideLabel
-      hideSteppers
-      helperText="{helperText}"
-      on:input="{addThreshold}"
-    />
+  <div class="add-threshold">
+    <Form on:submit="{addThreshold}">
+      <FormGroup noMargin>
+        <NumberInput name="newThreshold" hideLabel hideSteppers required />
+        <Button size="small" type="submit" kind="tertiary">Add</Button>
+      </FormGroup>
+    </Form>
   </div>
 {:else}
   <RadioButtonGroup orientation="vertical">
