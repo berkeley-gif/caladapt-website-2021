@@ -111,6 +111,9 @@ const tools = [
     icons: [
       'img/icons/snowflake.svg',
     ],
+    datasets: [],
+    related: [],
+    resources: []
   },
   {
     title: 'Wildfire',
