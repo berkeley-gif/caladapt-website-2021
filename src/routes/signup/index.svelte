@@ -25,7 +25,7 @@
   ];
 
   const defaultValues =
-    process.env.NODE_ENV === "development"
+    process.env.NODE_ENV !== "production"
       ? {
           name: "Johnny",
           name_last: "Appleseed",
