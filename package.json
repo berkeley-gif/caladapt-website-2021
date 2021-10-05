@@ -3,7 +3,7 @@
   "description": "TODO",
   "version": "0.0.1",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development sapper dev --no-hot",
+    "dev": "sapper dev --no-hot",
     "build": "sapper build",
     "export": "sapper export --timeout=10000",
     "start": "node __sapper__/build",
@@ -60,7 +60,6 @@
     "babel-eslint": "^10.1.0",
     "carbon-components": "^10.30.0",
     "carbon-components-svelte": "^0.42.2",
-    "cross-env": "^7.0.3",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-svelte3": "^3.1.2",
