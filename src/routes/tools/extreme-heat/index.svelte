@@ -236,6 +236,9 @@
       climvar: { id: climvarId },
     });
     thresholdListStore.add(thresh98p, "98th Percentile");
+    // Populate list with additional frequently used values
+    thresholdListStore.add(100);
+    thresholdListStore.add(65);
     if (thresh && thresh !== thresh98p) {
       thresholdListStore.add(thresh);
       thresholdStore.set(thresh);
