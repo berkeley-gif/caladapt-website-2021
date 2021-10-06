@@ -305,8 +305,8 @@
   </div>
 
   <div slot="settings" class="settings">
-    <div class="block locator-map">
-      <label for="" class="bx--label">Select Location</label>
+    <div class="block">
+      <label class="bx--label">Select Location</label>
       <StaticMap
         location="{$location}"
         width="{350}"
