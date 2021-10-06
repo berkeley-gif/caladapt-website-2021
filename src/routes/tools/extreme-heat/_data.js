@@ -190,8 +190,7 @@ export async function get98pThreshold(climvar, params) {
     )}`;
     const data = await fetch(url);
     const json = await data.json();
-    const thresh98p = +json["98p"].toFixed(1);
-    return thresh98p;
+    return +json["98p"].toFixed(1);
   } catch (error) {
     throw new Error(`Default Threshold: ${error.message}`);
   }
