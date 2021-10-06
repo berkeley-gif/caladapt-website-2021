@@ -26,7 +26,7 @@
     tickFormat: timeFormat("%Y"),
     units: "",
   };
-  export let colors = ["#fed976", "#fd8d3c", "#e31a1c", "#800026"];
+  export let colors;
 
   let chartData;
   let chartContainer;
@@ -55,7 +55,7 @@
     chartData = data.map((series) => {
       return {
         ...series,
-        visible: series.id === initialSeriesSelection.id ? true : false,
+        visible: series.id === initialSeriesSelection.id,
       };
     });
 
