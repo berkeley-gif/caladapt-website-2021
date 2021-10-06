@@ -79,7 +79,15 @@
 
 <style>
   div.static-map {
+    cursor: pointer;
+  }
+
+  div.static-map:hover {
     box-shadow: var(--box-shadow);
+  }
+
+  div.static-map:focus {
+    outline: 1px solid var(--gray-80);
   }
 
   .error-text {
@@ -87,7 +95,7 @@
   }
 </style>
 
-<div class="static-map">
+<div class="static-map" on:click>
   <ImageLoader src="{src}" ratio="1x1" alt="{alt}" fadeIn>
     <div slot="loading">
       <InlineLoading description="Loading location map..." />
