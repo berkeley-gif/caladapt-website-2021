@@ -78,15 +78,16 @@
 </script>
 
 <style>
-  div.static-map {
+  .static-map {
+    all: unset;
     cursor: pointer;
   }
 
-  div.static-map:hover {
+  .static-map:hover {
     box-shadow: var(--box-shadow);
   }
 
-  div.static-map:focus {
+  .static-map:focus {
     outline: 1px solid var(--gray-80);
   }
 
@@ -95,8 +96,8 @@
   }
 </style>
 
-<div class="static-map" on:click>
-  <ImageLoader src="{src}" ratio="1x1" alt="{alt}" fadeIn>
+<button class="static-map" on:click>
+  <ImageLoader src="{src}" alt="{alt}" fadeIn>
     <div slot="loading">
       <InlineLoading description="Loading location map..." />
     </div>
@@ -104,4 +105,4 @@
       <span class="error-text">An error occurred. Unable to load map.</span>
     </div>
   </ImageLoader>
-</div>
+</button>
