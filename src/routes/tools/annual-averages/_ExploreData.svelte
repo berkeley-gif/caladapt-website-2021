@@ -1,7 +1,7 @@
 <script>
   import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { Download16, Share16 } from "carbon-icons-svelte";
+  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
   import {
@@ -186,6 +186,7 @@
 
     .h3 {
       margin-top: 0;
+      font-size: 1.4rem;
     }
   }
 
@@ -214,6 +215,12 @@
       background-color: var(--gray-20);
       height: auto;
     }
+  }
+
+  .center-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 </style>
 
@@ -306,20 +313,30 @@
 
   <div slot="settings" class="settings">
     <div class="block">
-      <label class="bx--label">Select Location</label>
+      <span class="bx--label">Select Location</span>
       <StaticMap
         location="{$location}"
         width="{350}"
         height="{350}"
         on:click="{loadLocation}"
       />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            content: SELECT_LOCATION_DESCRIPTION,
-            header: 'Select Location',
-          })}"
-      />
+      <div class="center-row">
+        <LearnMoreButton
+          on:click="{() =>
+            loadLearnMore({
+              content: SELECT_LOCATION_DESCRIPTION,
+              header: 'Select Location',
+            })}"
+        />
+        <Button
+          size="small"
+          icon="{Location16}"
+          kind="ghost"
+          on:click="{loadLocation}"
+        >
+          Change Location
+        </Button>
+      </div>
     </div>
     <div class="block">
       <SelectClimvar
