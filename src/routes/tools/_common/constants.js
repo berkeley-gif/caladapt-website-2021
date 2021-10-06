@@ -106,6 +106,7 @@ export const INITIAL_CONFIG = {
   modelIds: ["HadGEM2-ES", "CNRM-CM5", "CanESM2", "MIROC5"],
   lat: 38.58,
   lng: -121.46,
+  imperial: true,
 };
 
 export const MONTHS_LIST = range(0, 12).map((d) => ({
