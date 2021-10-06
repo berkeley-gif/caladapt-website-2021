@@ -40,16 +40,7 @@
 
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      const {
-        boundary,
-        climvar,
-        scenario,
-        models,
-        lat,
-        lng,
-        thresh,
-        duration,
-      } = query;
+      const { boundary, climvar, scenario, models, lat, lng } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
@@ -57,14 +48,10 @@
         modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
-        thresh: +thresh,
-        duration: +duration,
       };
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
-        thresh: null,
-        duration: 4,
       };
     }
 
@@ -79,7 +66,7 @@
 </script>
 
 <script>
-  import { onMount, tick, afterUpdate } from "svelte";
+  import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
@@ -109,7 +96,6 @@
     climvarStore,
     thresholdStore,
     thresholdListStore,
-    durationStore,
     dataStore,
   } from "./_store";
   import {
@@ -118,6 +104,7 @@
     getQueryParams,
     get98pThreshold,
   } from "./_data";
+  import { DEFAULT_THRESHOLDS } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -217,14 +204,11 @@
     climvarId,
     modelIds,
     imperial,
-    duration,
-    thresh,
   }) {
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
-    durationStore.set(duration);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
@@ -236,15 +220,11 @@
       climvar: { id: climvarId },
     });
     thresholdListStore.add(thresh98p, "98th Percentile");
+    thresholdStore.set(thresh98p);
     // Populate list with additional frequently used values
-    thresholdListStore.add(100);
-    thresholdListStore.add(65);
-    if (thresh && thresh !== thresh98p) {
-      thresholdListStore.add(thresh);
-      thresholdStore.set(thresh);
-    } else {
-      thresholdStore.set(thresh98p);
-    }
+    DEFAULT_THRESHOLDS.forEach((val) => {
+      thresholdListStore.add(val);
+    });
   }
 
   onMount(() => {

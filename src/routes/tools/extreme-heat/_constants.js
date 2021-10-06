@@ -70,3 +70,5 @@ export const DEFAULT_CLIMATE_INDICATOR = "frequency";
 export const DEFAULT_DURATION = 4;
 
 export const HEATMAP_COLOR_SCALE = ["#fed976", "#fd8d3c", "#e31a1c", "#800026"];
+
+export const DEFAULT_THRESHOLDS = [100, 65];
