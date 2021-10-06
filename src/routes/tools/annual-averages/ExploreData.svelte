@@ -1,13 +1,14 @@
 <script>
   import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import { Download16, Share16 } from "carbon-icons-svelte";
 
   // Helpers
   import {
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
     DEFAULT_BOUNDARIES,
+    SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
   import {
     flattenData,
@@ -180,6 +181,7 @@
   .title {
     > * {
       margin: var(--spacing-8) 0;
+      max-width: 75ch;
     }
 
     .h3 {
@@ -220,10 +222,6 @@
 {/if}
 
 <Dashboard>
-  <div slot="map">
-    <StaticMap location="{$location}" width="{500}" height="{500}" />
-  </div>
-
   <div slot="title" class="block title">
     <div class="h3">
       {$location.title}
@@ -232,9 +230,6 @@
       Projected changes in <span class="annotate">{$climvar.title}</span>
       under a <span class="annotate">{$scenario.labelLong}</span>.
     </div>
-    <Button size="small" icon="{Location16}" on:click="{loadLocation}">
-      Change Location
-    </Button>
   </div>
 
   <div slot="stats">
@@ -284,7 +279,7 @@
       }}"
     />
 
-    <div class="chart-notes margin--v-8">
+    <div class="chart-notes margin--v-16">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
@@ -310,6 +305,39 @@
   </div>
 
   <div slot="settings" class="settings">
+    <div class="block locator-map">
+      <label for="" class="bx--label">Select Location</label>
+      <StaticMap
+        location="{$location}"
+        width="{350}"
+        height="{350}"
+        on:click="{loadLocation}"
+      />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: SELECT_LOCATION_DESCRIPTION,
+            header: 'Select Location',
+          })}"
+      />
+    </div>
+    <div class="block">
+      <SelectClimvar
+        selectedId="{$climvarStore}"
+        items="{climvarList}"
+        on:change="{changeClimvar}"
+      />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: [
+              'annual-average-tasmax',
+              'annual-average-tasmin',
+              'annual-average-pr',
+            ],
+          })}"
+      />
+    </div>
     <div class="block">
       <SelectClimvar
         selectedId="{$climvarStore}"
