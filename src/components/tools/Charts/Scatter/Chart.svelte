@@ -58,14 +58,8 @@
 
     // Set Legend
     legendItems.set(
-      data.map((series) => {
-        return {
-          id: series.id,
-          label: series.label,
-          color: series.color,
-          visible: series.visible,
-          mark: series.mark,
-        };
+      data.map(({ id, label, color, visible, mark }) => {
+        return { id, label, color, visible, mark };
       })
     );
     setContext("Legend", legendItems);
