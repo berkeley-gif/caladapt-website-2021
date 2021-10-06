@@ -10,6 +10,7 @@
     DEFAULT_SCENARIOS,
     SMALL_SCALE_BOUNDARIES,
   } from "../_common/constants";
+  import { HEATMAP_COLOR_SCALE } from "./_constants";
   import {
     flattenData,
     getDataByDate,
@@ -325,6 +326,7 @@
         tickFormat: formatFn,
         units: `${$indicator.units}`,
       }}"
+      colors="{HEATMAP_COLOR_SCALE}"
     />
     <div class="chart-notes margin--v-8">
       <p>
