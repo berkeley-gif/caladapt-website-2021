@@ -223,9 +223,13 @@ export const groupDataByYear = (series) => {
       const days = daysPerYear.get(year);
       // Array of arrays of consecutive dates
       const groups = groupConsecutiveDates(days);
-      values.push({ date: new Date(year, 0, 1), days, groups });
+      values.push({ date: new Date(Date.UTC(year, 0, 1)), days, groups });
     } else {
-      values.push({ date: new Date(year, 0, 1), days: [], groups: [] });
+      values.push({
+        date: new Date(Date.UTC(year, 0, 1)),
+        days: [],
+        groups: [],
+      });
     }
   });
   return {
