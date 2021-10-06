@@ -98,7 +98,7 @@
     } else {
       const [lng, lat] = $location.center;
       const modelsStr = $modelsStore.join(",");
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}&thresh=${$thresholdStore}`;
+      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
