@@ -420,19 +420,6 @@
         on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
       />
     </div>
-    <div class="block">
-      <SelectThreshold
-        items="{$thresholdListStore}"
-        selected="{$thresholdStore}"
-        units="{$climvar.units.imperial}"
-        helperText="Add a new threshold value or select from list"
-        on:change="{changeThreshold}"
-        on:add="{addThreshold}"
-      />
-      <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['extreme-heat-threshold'] })}"
-      />
-    </div>
     {#if $indicator.id === "waves"}
       <div class="block">
         <NumberInput
@@ -448,6 +435,19 @@
         />
       </div>
     {/if}
+    <div class="block">
+      <SelectThreshold
+        items="{$thresholdListStore}"
+        selected="{$thresholdStore}"
+        units="{$climvar.units.imperial}"
+        helperText="Add a new threshold value or select from list"
+        on:change="{changeThreshold}"
+        on:add="{addThreshold}"
+      />
+      <LearnMoreButton
+        on:click="{() => loadLearnMore({ slugs: ['extreme-heat-threshold'] })}"
+      />
+    </div>
     <div class="block">
       <SelectModels
         selectedIds="{$modelsStore}"
