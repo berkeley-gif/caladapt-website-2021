@@ -178,7 +178,7 @@
       ["record low", `{$baseline.low.value} on {$baseline.low.date}`],
     ];
     csvData = $baseline.values;
-    printContainer = document.querySelector("#explore");
+    printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings", "chart-controls"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
@@ -350,38 +350,6 @@
 </script>
 
 <style lang="scss">
-  .block {
-    background-color: var(--white);
-    box-shadow: var(--box-shadow);
-    height: 100%;
-    box-sizing: border-box;
-    padding: var(--spacing-16);
-  }
-
-  .annotate {
-    font-weight: 600;
-
-    &.threshold {
-      color: red;
-    }
-  }
-
-  .h4 {
-    font-weight: 400;
-  }
-
-  .title {
-    > * {
-      margin: var(--spacing-8) 0;
-      max-width: 75ch;
-    }
-
-    .h3 {
-      margin-top: 0;
-      font-size: 1.4rem;
-    }
-  }
-
   .stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -391,30 +359,6 @@
       grid-column-end: span 2;
     }
   }
-
-  .chart-download {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .settings {
-    width: 100%;
-    display: grid;
-    grid-gap: var(--spacing-8);
-    grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
-
-    .block {
-      background-color: var(--gray-20);
-      height: auto;
-    }
-  }
-
-  .center-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
 </style>
 
 {#if isLoading}
@@ -423,6 +367,15 @@
 
 <Dashboard>
   <div slot="title" class="block title">
+    <Button
+      class="btn-change-location"
+      size="small"
+      icon="{Location16}"
+      kind="ghost"
+      on:click="{loadLocation}"
+    >
+      Change Station
+    </Button>
     <div class="h3">
       {$location.title} ({$location.geometry.coordinates[0]}°, {$location
         .geometry.coordinates[1]}°)
@@ -602,23 +555,13 @@
         height="{350}"
         on:click="{loadLocation}"
       />
-      <div class="center-row">
-        <LearnMoreButton
-          on:click="{() =>
-            loadLearnMore({
-              content: SELECT_STATION_DESCRIPTION,
-              header: 'Select Station',
-            })}"
-        />
-        <Button
-          size="small"
-          icon="{Location16}"
-          kind="ghost"
-          on:click="{loadLocation}"
-        >
-          Change Station
-        </Button>
-      </div>
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: SELECT_STATION_DESCRIPTION,
+            header: 'Select Station',
+          })}"
+      />
     </div>
     <div class="block">
       <SelectClimvar
