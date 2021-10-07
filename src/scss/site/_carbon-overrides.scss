@@ -46,8 +46,8 @@
 }
 
 .content {
-  ul,
-  ol {
+  ul:not(.bx--tabs__nav),
+  ol:not(.bx--tabs__nav) {
     padding-left: 2rem;
     margin-bottom: 1rem;
   }
