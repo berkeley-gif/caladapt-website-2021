@@ -28,7 +28,7 @@
     SelectThresholdNumeric,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
-  import { Map } from "~/components/tools/Map";
+  import { Map, NavigationControl } from "~/components/tools/Map";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { RangeAvg } from "~/components/tools/Stats";
 
@@ -211,7 +211,9 @@
     slot="tab_content_slippy_map"
     class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
   >
-    <Map />
+    <Map>
+      <NavigationControl />
+    </Map>
   </div>
 
   <div slot="tab_content_map">

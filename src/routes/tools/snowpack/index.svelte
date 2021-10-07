@@ -208,6 +208,10 @@
 
 <svelte:head>
   <title>{tool.title}</title>
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css"
+    rel="stylesheet"
+  />
 </svelte:head>
 
 <Header iconPaths="{tool.icons}" title="{tool.title}">
