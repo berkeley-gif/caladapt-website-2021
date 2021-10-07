@@ -367,6 +367,15 @@
 
 <Dashboard>
   <div slot="title" class="block title">
+    <Button
+      class="btn-change-location"
+      size="small"
+      icon="{Location16}"
+      kind="ghost"
+      on:click="{loadLocation}"
+    >
+      Change Station
+    </Button>
     <div class="h3">
       {$location.title} ({$location.geometry.coordinates[0]}°, {$location
         .geometry.coordinates[1]}°)
@@ -546,23 +555,13 @@
         height="{350}"
         on:click="{loadLocation}"
       />
-      <div class="center-row">
-        <LearnMoreButton
-          on:click="{() =>
-            loadLearnMore({
-              content: SELECT_STATION_DESCRIPTION,
-              header: 'Select Station',
-            })}"
-        />
-        <Button
-          size="small"
-          icon="{Location16}"
-          kind="ghost"
-          on:click="{loadLocation}"
-        >
-          Change Station
-        </Button>
-      </div>
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: SELECT_STATION_DESCRIPTION,
+            header: 'Select Station',
+          })}"
+      />
     </div>
     <div class="block">
       <SelectClimvar
