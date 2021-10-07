@@ -27,7 +27,7 @@
     minZoom,
     maxZoom,
     attributionControl,
-    scrollZoon: false,
+    scrollZoom: false,
   };
   let canvas;
 
