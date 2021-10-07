@@ -142,6 +142,9 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+  }
+
+  .stat-data-item {
     margin: 0.75rem 0;
   }
 
@@ -160,7 +163,7 @@
 
   .stat-value {
     font-size: 1.5rem;
-    line-height: 1.5;
+    line-height: 1;
   }
 
   .stat-units {
