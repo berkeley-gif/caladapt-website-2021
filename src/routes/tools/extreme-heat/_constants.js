@@ -37,7 +37,7 @@ export const CLIMATE_INDICATORS = [
   },
   {
     id: "duration",
-    label: "Duration",
+    label: "Maximum Duration",
     title: "Longest Stretch of Consecutive Extreme Heat Days per Year",
     units: "days/yr",
     decimals: 1,
