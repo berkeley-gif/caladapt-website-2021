@@ -105,9 +105,6 @@
 </script>
 
 {#if data}
-  <div class="chart-legend">
-    <Legend />
-  </div>
   <div style="{`height:${height}`}" bind:this="{chartContainer}">
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
@@ -155,6 +152,9 @@
         />
       </Html>
     </LayerCake>
+  </div>
+  <div class="chart-legend">
+    <Legend />
   </div>
 {:else}
   <div class="chart-legend">

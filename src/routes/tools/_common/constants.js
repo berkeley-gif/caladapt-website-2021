@@ -112,3 +112,10 @@ export const MONTHS_LIST = range(0, 12).map((d) => ({
   id: parseInt(d),
   text: timeFormat("%B")(new Date(2020, d, 1)),
 }));
+
+export const SELECT_LOCATION_DESCRIPTION = `<p>Change location 
+to get data for your area of interest. You can get data for 
+a grid cell or aggregate data a boundary e.g. county boundary.
+You can also you can upload your own file with a feature for 
+spatial aggregation (see <a href="/help/faqs/can-i-get-data-for-my-aoi/"
+target="_blank">FAQs</a>)</p>`;

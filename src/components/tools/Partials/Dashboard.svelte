@@ -9,7 +9,7 @@
       padding-right: 0;
     }
 
-    .settings {
+    .sidebar {
       width: 25%;
       padding-left: 0;
     }
@@ -28,7 +28,7 @@
         padding-right: 1rem;
       }
 
-      .settings {
+      .sidebar {
         width: 100%;
         padding-left: 2rem;
       }
@@ -41,7 +41,7 @@
         padding-right: 0;
       }
 
-      .settings {
+      .sidebar {
         padding-left: 1rem;
       }
     }
@@ -51,12 +51,7 @@
 <div class="dashboard">
   <div class="bx--grid bx--grid--narrow content">
     <div class="bx--row margin--v-16">
-      <div
-        class="bx--col-lg-4 bx--col-md-2 bx--col-sm-4 bx--aspect-ratio bx--aspect-ratio--1x1"
-      >
-        <slot name="map">map</slot>
-      </div>
-      <div class="bx--col-lg-12 bx--col-md-6 bx--col-sm-4">
+      <div class="bx--col-lg-16 bx--col-md-6 bx--col-sm-4">
         <slot name="title">title</slot>
       </div>
     </div>
@@ -71,13 +66,8 @@
       </div>
     </div>
   </div>
-  <aside class="bx--grid bx--grid--condensed settings">
+  <aside class="bx--grid bx--grid--condensed sidebar">
     <div class="is-sticky">
-      <div class="bx--row margin--v-16">
-        <div class="bx--col">
-          <span class="h4">Change Settings:</span>
-        </div>
-      </div>
       <div class="bx--row margin--v-16">
         <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
           <slot name="settings">settings with columns</slot>
