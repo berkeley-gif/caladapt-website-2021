@@ -263,7 +263,7 @@
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
-<div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
+<div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if initReady}
     <ExploreData
       on:ready="{() => {
