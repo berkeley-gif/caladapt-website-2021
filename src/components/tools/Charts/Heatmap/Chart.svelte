@@ -103,12 +103,6 @@
 </script>
 
 {#if data}
-  <div class="chart-controls">
-    <Control />
-  </div>
-  <div class="chart-legend">
-    <Legend />
-  </div>
   <div style="{`height:${height}`}" bind:this="{chartContainer}">
     <LayerCake
       padding="{{ top: 10, right: 10, bottom: 30, left: 25 }}"
@@ -134,6 +128,12 @@
         </g>
       </Svg>
     </LayerCake>
+  </div>
+  <div class="chart-legend">
+    <Legend />
+  </div>
+  <div class="chart-controls">
+    <Control />
   </div>
 {:else}
   <div class="chart-legend">
