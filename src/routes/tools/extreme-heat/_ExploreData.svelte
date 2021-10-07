@@ -134,6 +134,10 @@
   $: if (modelsInit) dispatch("ready");
 
   $: formatFn = format(`.${$indicator.decimals}f`);
+  $: indicatorTitle =
+    $climvar.id === "tasmin"
+      ? $indicator.title.replace("Extreme Heat Days", "Warm Nights")
+      : $indicator.title;
 
   $: if ($data) {
     statsData = $data.filter((d) => d.type !== "area");
@@ -269,7 +273,7 @@
       </div>
     {:else}
       <div class="h4">
-        Projected changes in <span class="annotate">{$indicator.title}</span>
+        Projected changes in <span class="annotate">{indicatorTitle}</span>
         when <span class="annotate">{$climvar.title}</span> is above
         <span class="annotate">{$thresholdStore} °F</span>
         under a
