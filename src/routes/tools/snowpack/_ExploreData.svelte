@@ -28,6 +28,7 @@
     SelectThresholdNumeric,
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
+  import { Map } from "~/components/tools/Map";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { RangeAvg } from "~/components/tools/Stats";
 
@@ -199,11 +200,6 @@
       height: auto;
     }
   }
-
-  .slippy-map {
-    height: 500px;
-    background-color: var(--gray-20);
-  }
 </style>
 
 {#if $isFetchingStore}
@@ -211,8 +207,11 @@
 {/if}
 
 <Dashboard useTabs="{true}" on:tabChange="{handleTabChange}">
-  <div slot="tab_content_slippy_map" class="graphic block">
-    <div class="slippy-map"></div>
+  <div
+    slot="tab_content_slippy_map"
+    class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
+  >
+    <Map />
   </div>
 
   <div slot="tab_content_map">
@@ -307,9 +306,14 @@
   </div>
 
   <div slot="settings" class="settings">
-    <div class="block"></div>
-    <div class="block"></div>
-    <div class="block"></div>
-    <div class="block"></div>
+    {#if activeTab === "map"}
+      <div class="block"></div>
+      <div class="block"></div>
+    {:else}
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    {/if}
   </div>
 </Dashboard>
