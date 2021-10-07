@@ -51,7 +51,7 @@
 <div class="dashboard">
   <div class="bx--grid bx--grid--narrow content">
     <div class="bx--row margin--v-16">
-      <div class="bx--col-lg-16 bx--col-md-6 bx--col-sm-4">
+      <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
         <slot name="title">title</slot>
       </div>
     </div>
