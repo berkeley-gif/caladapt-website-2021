@@ -89,7 +89,7 @@
   // TODO: This prop can be removed when Resources and Help
   // content are available for the tool
   const pageNavItems = [
-    { id: "explore", label: "Explore Data" },
+    { id: "explore-data", label: "Explore Data" },
     { id: "about", label: "About the Tool" },
   ];
 
@@ -226,7 +226,7 @@
 
 <ToolNavigation pageNavItems="{pageNavItems}" href="{`/tools/${tool.slug}`}" />
 
-<div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
+<div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
     <ExploreData />
   {:else}
