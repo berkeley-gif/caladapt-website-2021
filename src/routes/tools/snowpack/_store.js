@@ -47,5 +47,3 @@ export const overlayStore = writable({
     [-124.60693359374999, 31.034108344903512],
   ],
 });
-
-export const viewStore = writable("timeseries");
