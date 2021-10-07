@@ -15,10 +15,6 @@
     }
   }
 
-  .is-sticky {
-    top: -1px;
-  }
-
   @media (max-width: 1000px) {
     .dashboard {
       flex-direction: column;
