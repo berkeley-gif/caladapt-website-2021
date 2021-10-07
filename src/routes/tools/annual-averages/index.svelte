@@ -72,7 +72,7 @@
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
 
   // Components
-  import ExploreData from "./ExploreData.svelte";
+  import ExploreData from "./_ExploreData.svelte";
   import {
     Header,
     About,
