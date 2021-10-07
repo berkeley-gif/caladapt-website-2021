@@ -24,6 +24,7 @@
     display: flex;
     max-width: 99rem;
     margin: 2rem auto;
+    gap: 1rem;
 
     .content {
       width: 75%;
@@ -45,12 +46,12 @@
     padding: 0;
   }
 
-  :global(.bx--tabs__nav-link) {
-    font-size: 0.875rem;
-  }
-
   :global(.bx--grid--full-width) {
     padding: 0;
+  }
+
+  :global(.bx--tabs__nav-link) {
+    font-size: 0.875rem;
   }
 
   div[slot="content"] {
@@ -88,56 +89,59 @@
 </style>
 
 <div class="dashboard">
-  <div class="bx--grid bx--grid--narrow content">
+  <div class="bx--grid content">
     {#if useTabs}
       <div class="bx--row">
-        <Tabs type="container" bind:selected="{activeTab}">
-          <Tab label="Map" />
-          <Tab label="Chart" />
-          <div slot="content">
-            <TabContent>
-              <div class="bx--grid bx--grid--full-width">
-                <div class="bx--row bx--no-gutter margin--v-16">
-                  <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                    <slot name="tab_content_slippy_map"
-                      >tab_content_slippy_map</slot
+        <div class="bx--col">
+          <Tabs type="container" bind:selected="{activeTab}">
+            <Tab label="Map" />
+            <Tab label="Chart" />
+            <div slot="content">
+              <TabContent>
+                <div class="bx--grid bx--grid--full-width">
+                  <div class="bx--row margin--v-16">
+                    <div class="bx--col">
+                      <slot name="tab_content_slippy_map"
+                        >tab_content_slippy_map</slot
+                      >
+                    </div>
+                  </div>
+                </div>
+              </TabContent>
+
+              <TabContent>
+                <div class="bx--grid bx--grid--full-width">
+                  <div class="bx--row margin--v-16">
+                    <div
+                      class="bx--col-lg-4 bx--col-md-2 bx--col-sm-4 bx--aspect-ratio bx--aspect-ratio--1x1"
                     >
+                      <slot name="tab_content_map">tab_content_map</slot>
+                    </div>
+                    <div class="bx--col-lg-12 bx--col-md-6 bx--col-sm-4">
+                      <slot name="tab_content_title">tab_content_title</slot>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </TabContent>
 
-            <TabContent>
-              <div class="bx--grid bx--grid--full-width">
-                <div class="bx--row margin--v-16">
-                  <div
-                    class="bx--col-lg-4 bx--col-md-2 bx--col-sm-4 bx--aspect-ratio bx--aspect-ratio--1x1"
-                  >
-                    <slot name="tab_content_map">tab_content_map</slot>
+                  <div class="bx--row margin--v-16">
+                    <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
+                      <slot name="tab_content_stats">tab_content_stats</slot>
+                    </div>
                   </div>
-                  <div class="bx--col-lg-12 bx--col-md-6 bx--col-sm-4">
-                    <slot name="tab_content_title">tab_content_title</slot>
-                  </div>
-                </div>
 
-                <div class="bx--row bx--no-gutter margin--v-16">
-                  <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                    <slot name="tab_content_stats">tab_content_stats</slot>
+                  <div class="bx--row margin--v-16">
+                    <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
+                      <slot name="tab_content_graphic">tab_content_graphic</slot
+                      >
+                    </div>
                   </div>
                 </div>
-
-                <div class="bx--row bx--no-gutter margin--v-16">
-                  <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                    <slot name="tab_content_graphic">tab_content_graphic</slot>
-                  </div>
-                </div>
-              </div>
-            </TabContent>
-          </div>
-        </Tabs>
+              </TabContent>
+            </div>
+          </Tabs>
+        </div>
       </div>
     {:else}
-      <div class="bx--row margin--v-16">
+      <div class="bx--row">
         <div
           class="bx--col-lg-4 bx--col-md-2 bx--col-sm-4 bx--aspect-ratio bx--aspect-ratio--1x1"
         >
@@ -162,7 +166,7 @@
     {/if}
   </div>
 
-  <aside class="bx--grid bx--grid--condensed settings">
+  <aside class="bx--grid settings">
     <div class="is-sticky">
       <div class="bx--row margin--v-16">
         <div class="bx--col">
