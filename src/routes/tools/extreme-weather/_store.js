@@ -3,14 +3,17 @@ import { timeFormat } from "d3-time-format";
 import { timeDay } from "d3-time";
 import { format } from "d3-format";
 import { quantile, sort, extent } from "d3-array";
-import { climvarList } from "./_helpers";
+import climvars from "~/helpers/climate-variables";
+import {
+  CLIMATE_VARIABLES,
+  DEFAULT_CLIMATE_VARIABLE,
+  DEFAULT_PERCENTILES,
+  DEFAULT_DAY,
+} from "./_constants";
 
 const numberFormat = timeFormat("%j");
 const textFormat = timeFormat("%B %e");
-const today = new Date();
 const dateFormat = timeFormat("%B %-e, %Y");
-
-const percentiles = [1, 10, 90, 99];
 const formatFn = format(".1f");
 
 function formatRecord(d) {
@@ -20,8 +23,15 @@ function formatRecord(d) {
   };
 }
 
+export const climvarList = climvars
+  .filter((d) => CLIMATE_VARIABLES.includes(d.id))
+  .map((d) => {
+    const title = d.label;
+    return { ...d, title };
+  });
+
 export const climvarStore = (() => {
-  const store = writable("tasmax");
+  const store = writable(DEFAULT_CLIMATE_VARIABLE);
   const { set, subscribe } = store;
   return {
     set,
@@ -35,11 +45,11 @@ export const climvarStore = (() => {
   };
 })();
 
-export const forecastDate = readable(dateFormat(today));
+export const forecastDate = readable(dateFormat(DEFAULT_DAY));
 
 export const measuredDateRange = readable({
-  start: timeFormat("%Y-%m-%d")(timeDay.offset(today, -10)),
-  end: timeFormat("%Y-%m-%d")(today),
+  start: timeFormat("%Y-%m-%d")(timeDay.offset(DEFAULT_DAY, -10)),
+  end: timeFormat("%Y-%m-%d")(DEFAULT_DAY),
 });
 
 export const unitsStore = writable({ imperial: true });
@@ -47,7 +57,7 @@ export const unitsStore = writable({ imperial: true });
 export const extremesStore = writable("high");
 
 export const doyStore = (() => {
-  const store = writable(today);
+  const store = writable(DEFAULT_DAY);
   const { set, subscribe } = store;
   return {
     set,
@@ -136,77 +146,6 @@ export const hadisdStore = (() => {
         return $store.returnLevels.gevisf;
       });
     },
-    /*    get begin() {
-      return derived(store, ($store) => {
-        if (!$store) return null;
-        const { month, date } = $store.returnLevels.begin;
-        return textFormat(new Date(2021, month, date));
-      });
-    },
-    get end() {
-      return derived(store, ($store) => {
-        if (!$store) return null;
-        const { month, date } = $store.returnLevels.end;
-        return textFormat(new Date(2021, month, date + 1));
-      });
-    },
-    get baseline() {
-      return derived(store, ($store) => {
-        if (!$store) return null;
-
-        // Get start and end dates to filter observations for 20 day period
-        const { begin, end } = $store.returnLevels;
-
-        // Filter by 20 day period around selected date
-        const filterBy20DayPeriod = $store.values.filter((d) => {
-          const year = d.date.getFullYear();
-          const s = new Date(year, begin.month, begin.date);
-          const e = new Date(year, end.month, end.date + 1);
-          if (
-            d.date.getTime() >= s.getTime() &&
-            d.date.getTime() <= e.getTime()
-          ) {
-            return true;
-          }
-          return false;
-        });
-        console.log('filterBy20DayPeriod', filterBy20DayPeriod);
-
-        // Calculate min max from entire historical record
-        // for the 20 day period in each year
-        const sorted = sort(filterBy20DayPeriod, (d) => +d.value);
-        const recordLow = formatRecord(sorted[0]);
-        const recordHigh = formatRecord(sorted[sorted.length - 1]);
-
-        // Filter by baseline period (30 years, e.g. 1991-2020)
-        const filteredData = filterBy20DayPeriod.filter((d) => {
-          const year = +d.date.getFullYear();
-          if (year >= begin.year && year <= end.year) {
-            return true;
-          }
-          return false;
-        });
-        console.log('filteredData', filteredData);
-
-        // Calculate percentiles from 30 year data
-        const values = filteredData.map((d) => +d.value).sort();
-        const stats = percentiles.map((d) => {
-          return {
-            percentile: d,
-            label: `p${d}`,
-            value: +formatFn(quantile(values, d / 100)),
-          };
-        });
-
-        return {
-          values: filteredData,
-          low: recordLow,
-          high: recordHigh,
-          percentiles: stats,
-          dataExtent: extent(values),
-        };
-      });
-    },*/
   };
 })();
 
@@ -291,7 +230,7 @@ export const baseline = derived(
 
     // Calculate percentiles from 30 year data
     const values = filteredData.map((d) => +d.value).sort();
-    const stats = percentiles.map((d) => {
+    const stats = DEFAULT_PERCENTILES.map((d) => {
       return {
         percentile: d,
         label: `p${d}`,
