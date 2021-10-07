@@ -350,38 +350,6 @@
 </script>
 
 <style lang="scss">
-  .block {
-    background-color: var(--white);
-    box-shadow: var(--box-shadow);
-    height: 100%;
-    box-sizing: border-box;
-    padding: var(--spacing-16);
-  }
-
-  .annotate {
-    font-weight: 600;
-
-    &.threshold {
-      color: red;
-    }
-  }
-
-  .h4 {
-    font-weight: 400;
-  }
-
-  .title {
-    > * {
-      margin: var(--spacing-8) 0;
-      max-width: 75ch;
-    }
-
-    .h3 {
-      margin-top: 0;
-      font-size: 1.4rem;
-    }
-  }
-
   .stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -390,30 +358,6 @@
     .wide {
       grid-column-end: span 2;
     }
-  }
-
-  .chart-download {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .settings {
-    width: 100%;
-    display: grid;
-    grid-gap: var(--spacing-8);
-    grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
-
-    .block {
-      background-color: var(--gray-20);
-      height: auto;
-    }
-  }
-
-  .center-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 </style>
 
