@@ -115,7 +115,7 @@
       ["climate indicator", $climvar.label],
       ["units", $climvar.units.imperial],
     ];
-    printContainer = document.querySelector("#explore");
+    printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")

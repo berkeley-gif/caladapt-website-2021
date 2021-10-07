@@ -4,7 +4,7 @@
   export let href;
   export let selectedItem;
   export let pageNavItems = [
-    { id: "explore", label: "Explore Data" },
+    { id: "explore-data", label: "Explore Data" },
     { id: "about", label: "About the Tool" },
     { id: "resources", label: "Resources" },
     { id: "help", label: "Help" },
