@@ -4,6 +4,11 @@
   // the data we need to render the page. It only runs once
   // during export.
   import resourcesList from "../../../../content/resources/data";
+  import {
+    DEFAULT_STATION_ID,
+    DEFAULT_CLIMATE_VARIABLE,
+    TOOL_SLUG,
+  } from "./_constants";
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -14,19 +19,13 @@
       });
 
     // Filter metadata for current tool
-    const tool = toolsList.find((d) => d.slug === "extreme-weather");
+    const tool = toolsList.find((d) => d.slug === TOOL_SLUG);
     const relatedTools = toolsList
       .filter((d) => tool.related.includes(d.slug))
       .map((d) => ({ ...d, category: "caladapt" }));
     const externalResources = resourcesList
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
-
-    const glossary = await this.fetch(`help/glossary.json`)
-      .then((r) => r.json())
-      .then((json) => {
-        return json.data;
-      });
 
     // Set intitial config for tool
     let initialConfig;
@@ -40,13 +39,13 @@
       };
     } else {
       initialConfig = {
-        stationId: 11,
-        climvarId: "tasmax",
+        stationId: DEFAULT_STATION_ID,
+        climvarId: DEFAULT_CLIMATE_VARIABLE,
         imperial: true,
       };
     }
 
-    return { initialConfig, glossary, tool, relatedTools, externalResources };
+    return { initialConfig, tool, relatedTools, externalResources };
   }
 </script>
 
@@ -61,7 +60,7 @@
 
   // Components
   import { Header, About, ToolNavigation } from "~/components/tools/Partials";
-  import ExploreData from "./ExploreData.svelte";
+  import ExploreData from "./_ExploreData.svelte";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Store
@@ -73,13 +72,10 @@
     queryParams,
     hadisdStore,
     extremesStore,
-    //datasetStore,
-    threshCIStore,
   } from "./_store";
   import { getObservedValues, getObservedReturnLevels } from "./_data";
 
   export let initialConfig;
-  export let glossary;
   export let tool;
   //export let relatedTools;
   //export let externalResources;
@@ -88,129 +84,13 @@
   const { climvar } = climvarStore;
 
   // Local props
-  let showInfo = false;
-  let definitionText;
-  let definitionTitle;
   let appReady = false;
 
   // TODO: This prop can be removed when Resources and Help
   // content are available for the tool
   const pageNavItems = [
-    { id: "explore", label: "Explore Data" },
+    { id: "explore-data", label: "Explore Data" },
     { id: "about", label: "About the Tool" },
-  ];
-
-  // Add tool specific content to glossary
-  // TODO: Review when Glossary items are updated
-  glossary = [
-    ...glossary,
-    {
-      slug: "threshold",
-      metadata: {
-        title: "",
-      },
-      html: `
-        <div>
-          <p>The threshold sets the conditions for which a weather event is considered “extreme“.</p>
-          <p>Due to the nature of the extreme value statistics, only threshold values at or above the 90th percentile for Maximum Temperature, and at or below the 10th percentile for Minimum Temperature, are allowed for this input.</p>
-        </div>
-      `,
-    },
-    {
-      slug: "extreme-event",
-      metadata: {
-        title: "",
-      },
-      html: `
-        <div>
-          <p>According to WMO (<a href="https://ane4bf-datap1.s3-eu-west-1.amazonaws.com/wmocms/s3fs-public/event/related_docs/DraftversionoftheGuidelinesontheDefinitionandMonitoringofExtremeWeatherandClimateEvents.pdf?h2Kr0f7dXp6CXZzoclQYveoEQ9FNoO5r" target="_blank">2016</a>), an extreme can be identified when a single climate variable exceeds its specific threshold, which can be varying percentile-based values, fixed absolute values and return period.</p>
-          <p>This tool uses Extreme Value Theory (<a href="https://link.springer.com/book/10.1007%2F978-1-4471-3675-0" target="_blank">Coles, 2001</a>) to evaluate the exceedance probability of rare events that lie far in the tails (upper and lower ranges) of the probability distribution of a weather variable.</p>
-          <p>The following descriptive terms are used for labeling extreme events:
-          <ul style="padding-left:1.5rem;">
-            <li><strong>Extreme</strong>: Exceedance Probability <= 1%</li>
-            <li><strong>Rare</strong>: Exceedance Probability > 1% and < 25%</li>
-            <li><strong>Common</strong>: Exceedance Probability <= 25% is</li>
-          </ul>
-        </div>
-      `,
-    },
-    {
-      slug: "probability",
-      metadata: {
-        title: "",
-      },
-      html: `
-        <div>
-          <p>
-            The Exceedance Probability describes the likelihood of a specific threshold temperature being exceeded in any given year. Annual maxima from 30 years of observed data for the Baseline Period are used to calculate the estimated exceedance probability.
-          </p>
-        </div>
-      `,
-    },
-    {
-      slug: "doy",
-      metadata: {
-        title: "",
-      },
-      html: `
-        <div>
-          <p>This can be any day of the year you wish to see data for. Selecting a different year has no effect. Please note that the Near-Term forecast & Recent Observations are for today's date only and do not change if you select a different day of year.</p>
-        </div>
-      `,
-    },
-    {
-      slug: "extremes",
-      metadata: {
-        title: "",
-      },
-      html: `
-        <div>
-          <h5>High Extremes</h5>
-          <p>For Maximum Temperature, selecting High Extremes (the default) focuses on days with the highest values (right tail) of maximum daily temperature, while selecting Low Extremes focuses on days with the lowest values of maximum daily temperature.</p>
-          <h5>Low Extremes</h5>
-          <p>For Minimum Temperature, selecting High Extremes focuses on days with the warmest minimum daily temperatures, while selecting Low Extremes (the default) focuses on days with the coolest minimum daily temperatures. </p>
-        </div>
-      `,
-    },
-    {
-      slug: "chart",
-      metadata: {
-        title: "",
-      },
-      html: `
-        <div>
-          <h5>Histogram</>
-          <p>The histogram shows the distribution of selected climate variable around a 21 day window for the Baseline Period (1991-2020). The data values for a climate variable are grouped into buckets and represented by columns along the X axis. The Y axis represents the percentage of occurences in the data for each column.</p>
-          <h5>Forecast</>
-          <p>This section of the chart can be displayed or hidden by using the checkbox at top of the chart. It shows the Near-Term forecast from the National Weather Service (NWS) for selected climate variable and location (latitide, longitude).</p>
-          <h5>Recent Observations</>
-          <p>This section of the chart can be displayed or hidden by using the checkbox at top of the chart. It shows archived daily observations from the National Centers for Environmental Information (NCEI), for selected climate variable and station. There is usually a time lag of 2-3 days in the data provided by NCEI, so you may not see data for the last 2-3 days.</p>
-          <p>Both the NWS Forecast and Recent Observations are presented with respect to <strong>today's date</strong> and <strong>do not change</strong> if you select another Day of Year value.
-        </div>
-      `,
-    },
-    {
-      slug: "tasmax",
-      metadata: {
-        title: "Daily Maximum Temperature",
-      },
-      html: `
-        <div>
-          <p>The daily maximum temperature is the highest near-surface air temperature for a day. It usually occurs in the afternoon.</p>
-        </div>
-      `,
-    },
-    {
-      slug: "tasmin",
-      metadata: {
-        title: "Daily Minimum Temperature",
-      },
-      html: `
-        <div>
-          <p>The daily minimum temperature is the lowest near-surface air temperature for a day. It usually occurs in the early morning.</p>
-        </div>
-      `,
-    },
   ];
 
   // Monitor sections as they enter & leave viewport
@@ -251,33 +131,33 @@
     }
   }
 
-  function showDefinition(e) {
-    const { topics, title } = e.detail;
-    const items = glossary.filter((d) => topics.includes(d.slug));
-    definitionText = items
-      .map((item) => {
-        if (title === "What is Exceedance Probability?") {
-          return `
-          <div>
-            <h5>${item.metadata.title}</h5>
-            ${item.html}
-            <p>The <strong>95% Confidence Intervals</strong> for your selected threshold value are <strong>[${$threshCIStore[0].toFixed(
-              1
-            )}, ${$threshCIStore[1].toFixed(1)}] °F</strong></p>
-          </div>
-          `;
-        }
-        return `
-        <div>
-          <h5>${item.metadata.title}</h5>
-          ${item.html}
-        </div>
-        `;
-      })
-      .join("<br/>");
-    definitionTitle = title;
-    showInfo = true;
-  }
+  // function showDefinition(e) {
+  //   const { topics, title } = e.detail;
+  //   const items = glossary.filter((d) => topics.includes(d.slug));
+  //   definitionText = items
+  //     .map((item) => {
+  //       if (title === "What is Exceedance Probability?") {
+  //         return `
+  //         <div>
+  //           <h5>${item.metadata.title}</h5>
+  //           ${item.html}
+  //           <p>The <strong>95% Confidence Intervals</strong> for your selected threshold value are <strong>[${$threshCIStore[0].toFixed(
+  //             1
+  //           )}, ${$threshCIStore[1].toFixed(1)}] °F</strong></p>
+  //         </div>
+  //         `;
+  //       }
+  //       return `
+  //       <div>
+  //         <h5>${item.metadata.title}</h5>
+  //         ${item.html}
+  //       </div>
+  //       `;
+  //     })
+  //     .join("<br/>");
+  //   definitionTitle = title;
+  //   showInfo = true;
+  // }
 
   async function initApp(config) {
     const { stationId, climvarId, imperial, doy } = config;
@@ -346,9 +226,9 @@
 
 <ToolNavigation pageNavItems="{pageNavItems}" href="{`/tools/${tool.slug}`}" />
 
-<div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
+<div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData on:define="{showDefinition}" />
+    <ExploreData />
   {:else}
     <Loading />
   {/if}
@@ -530,17 +410,5 @@
 </div>
 
 <div class="spacing--v-96"></div>
-
-<Modal
-  id="definition"
-  size="sm"
-  passiveModal
-  bind:open="{showInfo}"
-  modalHeading="{definitionTitle}"
-  on:open
-  on:close
->
-  <div>{@html definitionText}</div>
-</Modal>
 
 <NotificationDisplay />

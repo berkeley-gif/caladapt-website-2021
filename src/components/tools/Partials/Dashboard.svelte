@@ -31,7 +31,7 @@
       padding-right: 0;
     }
 
-    .settings {
+    .sidebar {
       width: 25%;
       padding-left: 0;
     }
@@ -68,7 +68,7 @@
         padding-right: 1rem;
       }
 
-      .settings {
+      .sidebar {
         width: 100%;
         padding-left: 2rem;
       }
@@ -81,7 +81,7 @@
         padding-right: 0;
       }
 
-      .settings {
+      .sidebar {
         padding-left: 1rem;
       }
     }
@@ -168,11 +168,6 @@
 
   <aside class="bx--grid settings">
     <div class="is-sticky">
-      <div class="bx--row margin--v-16">
-        <div class="bx--col">
-          <span class="h4">Change Settings:</span>
-        </div>
-      </div>
       <div class="bx--row margin--v-16">
         <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
           <slot name="settings">settings with columns</slot>

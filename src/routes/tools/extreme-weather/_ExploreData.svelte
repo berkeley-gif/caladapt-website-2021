@@ -14,7 +14,16 @@
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
-  import { climvarList, stationsLayer } from "./_helpers";
+  import {
+    DEFAULT_STATION_LAYER,
+    CHART_DESCRIPTION,
+    SELECT_STATION_DESCRIPTION,
+    THRESHOLD_DESCRIPTION,
+    EXTREME_EVENT_DESCRIPTION,
+    PROPBABILITY_DESCRIPTION,
+    DOY_DESCRIPTION,
+    EXTREMES_DESCRIPTION,
+  } from "./_constants";
   import {
     getObservedReturnLevels,
     filterPercentiles,
@@ -29,25 +38,21 @@
   } from "./_data";
 
   // Components
-  import { Dashboard } from "~/components/tools/Partials";
-  import {
-    SelectClimvar,
-    SelectDayOfYear,
-    ShowDefinition,
-  } from "~/components/tools/Settings";
+  import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
+  import { SelectClimvar, SelectDayOfYear } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { Histogram, Observations } from "~/components/tools/Charts";
   import { notifier } from "~/components/notifications";
 
   // Store
   import {
+    climvarList,
     climvarStore,
     locationStore,
-    bookmark,
     doyStore,
     thresholdStore,
     hadisdStore,
-    //datasetStore,
+    unitsStore,
     extremesStore,
     forecastDate,
     forecastStore,
@@ -70,10 +75,16 @@
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
+  let showLearnMore = false;
 
   let ChangeStation;
   let DownloadChart;
   let ShareLink;
+  let LearnMoreModal;
+
+  let bookmark;
+
+  let learnMoreProps = {};
 
   let metadata;
   let csvData;
@@ -90,6 +101,7 @@
   let threshExceedances;
   let threshCI;
   let threshCILoading = true;
+  let probability_description_with_ci = PROPBABILITY_DESCRIPTION;
 
   let showForecast = false;
   let forecast = null;
@@ -125,7 +137,25 @@
     return [dataExtent[0] - 2, dataExtent[1] + 2];
   }
 
+  async function loadLearnMore({
+    slugs = [],
+    content = "",
+    header = "Glossary",
+  }) {
+    learnMoreProps = { slugs, content, header };
+    showLearnMore = true;
+    LearnMoreModal = (
+      await import(
+        "~/components/tools/Partials/LearnMore/LearnMoreModal.svelte"
+      )
+    ).default;
+  }
+
   async function loadShare() {
+    const id = $locationStore.id;
+    const { imperial } = $unitsStore;
+    const { doy } = $doyStore;
+    bookmark = `climvar=${$climvarStore}&imperial=${imperial}&station=${id}&doy=${doy}&extremes=${$extremesStore}`;
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -148,7 +178,7 @@
       ["record low", `{$baseline.low.value} on {$baseline.low.date}`],
     ];
     csvData = $baseline.values;
-    printContainer = document.querySelector("#explore");
+    printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings", "chart-controls"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
@@ -220,6 +250,10 @@
     threshCILoading = true;
     threshCI = await getProbabilityCI(threshProbability.rp);
     threshCIStore.set(threshCI);
+    probability_description_with_ci = `${PROPBABILITY_DESCRIPTION}
+    <p>The <strong>95% Confidence Intervals</strong> for your selected 
+    threshold value are <strong>[${$threshCIStore[0].toFixed(1)}, 
+    ${$threshCIStore[1].toFixed(1)}] °F</strong></p>`;
     threshCILoading = false;
   }
 
@@ -316,36 +350,6 @@
 </script>
 
 <style lang="scss">
-  .block {
-    background-color: var(--white);
-    box-shadow: var(--box-shadow);
-    height: 100%;
-    box-sizing: border-box;
-    padding: var(--spacing-16);
-  }
-
-  .annotate {
-    font-weight: 600;
-
-    &.threshold {
-      color: red;
-    }
-  }
-
-  .h4 {
-    font-weight: 400;
-  }
-
-  .title {
-    > * {
-      margin: var(--spacing-8) 0;
-    }
-
-    .h3 {
-      margin-top: 0;
-    }
-  }
-
   .stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -355,24 +359,6 @@
       grid-column-end: span 2;
     }
   }
-
-  .chart-download {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .settings {
-    width: 100%;
-    display: grid;
-    grid-gap: var(--spacing-8);
-    grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
-
-    .block {
-      background-color: var(--gray-20);
-      height: auto;
-    }
-  }
 </style>
 
 {#if isLoading}
@@ -380,10 +366,6 @@
 {/if}
 
 <Dashboard>
-  <div slot="map">
-    <StaticMap location="{$location}" width="{500}" height="{500}" />
-  </div>
-
   <div slot="title" class="block title">
     <div class="h3">
       {$location.title} ({$location.geometry.coordinates[0]}°, {$location
@@ -395,9 +377,6 @@
         >&#177;10 days</span
       >) from 1991-2020.
     </div>
-    <Button size="small" icon="{Location16}" on:click="{loadLocation}">
-      Change Location
-    </Button>
   </div>
 
   <div slot="stats" class="stats">
@@ -428,17 +407,21 @@
           times between <span class="annotate">{$begin}</span> and
           <span class="annotate">{$end}</span>.
         </p>
-        <ShowDefinition
-          topics="{['extreme-event']}"
-          title="What is an extreme event?"
-          cta="Extreme Events"
-          on:define
+        <LearnMoreButton
+          cta="{'Extreme Events'}"
+          on:click="{() =>
+            loadLearnMore({
+              content: EXTREME_EVENT_DESCRIPTION,
+              header: 'What is an extreme event?',
+            })}"
         />
-        <ShowDefinition
-          topics="{['probability']}"
-          title="What is Exceedance Probability?"
-          cta="Exceedance Probability"
-          on:define
+        <LearnMoreButton
+          cta="{'Exceedance Probability'}"
+          on:click="{() =>
+            loadLearnMore({
+              content: probability_description_with_ci,
+              header: 'What is Exceedance Probability?',
+            })}"
         />
       {:else}
         <SkeletonText paragraph />
@@ -529,17 +512,19 @@
         units="{$climvar.units.imperial}"
       />
     {/if}
-    <div class="chart-notes margin--v-8">
+    <div class="chart-notes margin--v-16">
       <p>
         Source: Cal-Adapt. Data: {dataSourceTitles.join(", ")}.
       </p>
     </div>
     <div class="chart-download margin--v-8">
-      <ShowDefinition
-        topics="{['chart']}"
-        title="About the Chart"
-        cta="Explain Chart"
-        on:define
+      <LearnMoreButton
+        cta="{'Explain Chart'}"
+        on:click="{() =>
+          loadLearnMore({
+            content: CHART_DESCRIPTION,
+            header: 'About this Chart',
+          })}"
       />
       <div>
         <Button size="small" icon="{Download16}" on:click="{loadDownload}">
@@ -554,16 +539,43 @@
 
   <div slot="settings" class="settings">
     <div class="block">
+      <span class="bx--label">Select Station</span>
+      <StaticMap
+        location="{$location}"
+        width="{350}"
+        height="{350}"
+        on:click="{loadLocation}"
+      />
+      <div class="center-row">
+        <LearnMoreButton
+          on:click="{() =>
+            loadLearnMore({
+              content: SELECT_STATION_DESCRIPTION,
+              header: 'Select Station',
+            })}"
+        />
+        <Button
+          size="small"
+          icon="{Location16}"
+          kind="ghost"
+          on:click="{loadLocation}"
+        >
+          Change Station
+        </Button>
+      </div>
+    </div>
+    <div class="block">
       <SelectClimvar
         labelText="Select Climate Variable"
         selectedId="{$climvarStore}"
         items="{climvarList}"
         on:change="{changeClimvar}"
       />
-      <ShowDefinition
-        on:define
-        topics="{['tasmax', 'tasmin']}"
-        title="Climate Variables"
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            slugs: ['daily-maximum-temp', 'daily-minimum-temp'],
+          })}"
       />
     </div>
     <div class="block">
@@ -576,10 +588,12 @@
         <RadioButton labelText="High Extremes" value="high" />
         <RadioButton labelText="Low Extremes" value="low" />
       </RadioButtonGroup>
-      <ShowDefinition
-        on:define
-        topics="{['extremes']}"
-        title="Type of Extremes"
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: EXTREMES_DESCRIPTION,
+            header: 'Type of Extremes',
+          })}"
       />
     </div>
     <div class="block">
@@ -588,7 +602,13 @@
         value="{$doyStore}"
         on:change="{changeDayOfYear}"
       />
-      <ShowDefinition on:define topics="{['doy']}" title="Day of Year" />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: DOY_DESCRIPTION,
+            header: 'Day of Year',
+          })}"
+      />
     </div>
     <div class="block">
       <NumberInput
@@ -598,22 +618,34 @@
         value="{$thresholdStore}"
         on:change="{changeThreshold}"
       />
-      <ShowDefinition on:define topics="{['threshold']}" title="Threshold" />
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: THRESHOLD_DESCRIPTION,
+            header: 'Threshold',
+          })}"
+      />
     </div>
   </div>
 </Dashboard>
 
 <svelte:component
+  this="{LearnMoreModal}"
+  bind:open="{showLearnMore}"
+  {...learnMoreProps}
+/>
+
+<svelte:component
   this="{ShareLink}"
   bind:open="{showShare}"
-  state="{$bookmark}"
+  state="{bookmark}"
 />
 
 <svelte:component
   this="{ChangeStation}"
   bind:open="{showChangeLocation}"
   location="{$location}"
-  stationsLayer="{stationsLayer}"
+  stationsLayer="{DEFAULT_STATION_LAYER}"
   on:change="{changeLocation}"
 />
 

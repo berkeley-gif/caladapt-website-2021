@@ -9,9 +9,9 @@
     DEFAULT_SCENARIOS,
     SMALL_SCALE_BOUNDARIES,
     MONTHS_LIST,
+    SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
   import {
-    DEFAULT_SELECTED_MONTHS,
     MAX_THRESHOLD_DEGREES_F,
     MIN_THRESHOLD_DEGREES_F,
   } from "./_constants";
@@ -168,7 +168,7 @@
       ["climate indicator", $indicator],
       ["units", $indicator.units],
     ];
-    printContainer = document.querySelector("#explore");
+    printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
@@ -224,70 +224,11 @@
   }
 </script>
 
-<style lang="scss">
-  .block {
-    background-color: var(--white);
-    box-shadow: var(--box-shadow);
-    height: 100%;
-    box-sizing: border-box;
-    padding: var(--spacing-16);
-  }
-
-  .annotate {
-    font-weight: 600;
-  }
-
-  .h4 {
-    font-weight: 400;
-  }
-
-  .title {
-    > * {
-      margin: var(--spacing-8) 0;
-    }
-
-    .h3 {
-      margin-top: 0;
-    }
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    grid-gap: var(--spacing-16);
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .chart-download {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .settings {
-    width: 100%;
-    display: grid;
-    grid-gap: var(--spacing-8);
-    grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
-
-    .block {
-      background-color: var(--gray-20);
-      height: auto;
-    }
-  }
-</style>
-
 {#if $isFetchingStore}
   <Loading />
 {/if}
 
 <Dashboard>
-  <div slot="map">
-    <StaticMap location="{$location}" width="{500}" height="{500}" />
-  </div>
-
   <div slot="title" class="block title">
     <div class="h3">
       {$location.title}
@@ -305,9 +246,6 @@
         for the months of <span class="annotate">{monthsLabel}</span>.
       {/if}
     </div>
-    <Button size="small" icon="{Location16}" on:click="{loadLocation}">
-      Change Location
-    </Button>
   </div>
 
   <div slot="stats">
@@ -357,7 +295,7 @@
       }}"
     />
 
-    <div class="chart-notes margin--v-8">
+    <div class="chart-notes margin--v-16">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
@@ -383,6 +321,32 @@
   </div>
 
   <div slot="settings" class="settings">
+    <div class="block">
+      <span class="bx--label">Select Location</span>
+      <StaticMap
+        location="{$location}"
+        width="{350}"
+        height="{350}"
+        on:click="{loadLocation}"
+      />
+      <div class="center-row">
+        <LearnMoreButton
+          on:click="{() =>
+            loadLearnMore({
+              content: SELECT_LOCATION_DESCRIPTION,
+              header: 'Select Location',
+            })}"
+        />
+        <Button
+          size="small"
+          icon="{Location16}"
+          kind="ghost"
+          on:click="{loadLocation}"
+        >
+          Change Location
+        </Button>
+      </div>
+    </div>
     <div class="block">
       <RadioBtnGroup
         selected="{$indicatorsStore}"

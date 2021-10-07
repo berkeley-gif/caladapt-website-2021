@@ -72,7 +72,7 @@
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
 
   // Components
-  import ExploreData from "./ExploreData.svelte";
+  import ExploreData from "./_ExploreData.svelte";
   import {
     Header,
     About,
@@ -200,7 +200,7 @@
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
-<div id="explore" use:inview="{{}}" on:enter="{handleEntry}">
+<div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
     <ExploreData />
   {:else}
