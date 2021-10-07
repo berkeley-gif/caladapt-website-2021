@@ -230,6 +230,15 @@
 
 <Dashboard>
   <div slot="title" class="block title">
+    <Button
+      class="btn-change-location"
+      size="small"
+      icon="{Location16}"
+      kind="ghost"
+      on:click="{loadLocation}"
+    >
+      Change Location
+    </Button>
     <div class="h3">
       {$location.title}
     </div>
@@ -329,23 +338,13 @@
         height="{350}"
         on:click="{loadLocation}"
       />
-      <div class="center-row">
-        <LearnMoreButton
-          on:click="{() =>
-            loadLearnMore({
-              content: SELECT_LOCATION_DESCRIPTION,
-              header: 'Select Location',
-            })}"
-        />
-        <Button
-          size="small"
-          icon="{Location16}"
-          kind="ghost"
-          on:click="{loadLocation}"
-        >
-          Change Location
-        </Button>
-      </div>
+      <LearnMoreButton
+        on:click="{() =>
+          loadLearnMore({
+            content: SELECT_LOCATION_DESCRIPTION,
+            header: 'Select Location',
+          })}"
+      />
     </div>
     <div class="block">
       <RadioBtnGroup
