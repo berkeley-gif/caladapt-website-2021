@@ -86,11 +86,7 @@ const tools = [
   },
   {
     title: 'Extreme Heat Days & Warm Nights',
-    desc: `For most areas around the state, the climate models project a significant 
-    rise in the number of days exceeding what is now considered extremely hot 
-    for the given area. Explore how the frequency and timing of extreme heat 
-      days and warm nights is expected to change under different emission 
-    scenarios for your location.`,
+    desc: `Projected frequency and duration of extreme heat days and warm nights.`,
     categories: ['Temperature'],
     slug: 'extreme-heat',
     icons: [
