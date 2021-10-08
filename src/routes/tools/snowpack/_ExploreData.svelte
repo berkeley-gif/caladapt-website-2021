@@ -360,3 +360,35 @@
     {/if}
   </div>
 </Dashboard>
+
+<svelte:component
+  this="{LearnMoreModal}"
+  bind:open="{showLearnMore}"
+  {...learnMoreProps}
+/>
+
+<svelte:component
+  this="{ShareLink}"
+  bind:open="{showShare}"
+  state="{bookmark}"
+/>
+
+<svelte:component
+  this="{ChangeLocation}"
+  bind:open="{showChangeLocation}"
+  location="{$location}"
+  boundary="{$boundary}"
+  boundaryList="{DEFAULT_BOUNDARIES}"
+  addStateBoundary="{true}"
+  enableUpload="{true}"
+  on:change="{changeLocation}"
+/>
+
+<svelte:component
+  this="{DownloadChart}"
+  metadata="{metadata}"
+  csvData="{csvData}"
+  printContainer="{printContainer}"
+  printSkipElements="{printSkipElements}"
+  bind:open="{showDownload}"
+/>
