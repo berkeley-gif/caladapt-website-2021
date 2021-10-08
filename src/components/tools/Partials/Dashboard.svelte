@@ -161,7 +161,7 @@
     {/if}
   </div>
 
-  <aside class="bx--grid settings">
+  <aside class="bx--grid sidebar">
     <div class="is-sticky">
       <div class="bx--row margin--v-16">
         <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
