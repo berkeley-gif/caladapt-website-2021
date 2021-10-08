@@ -42,7 +42,7 @@ models.forEach((d) => {
 export const seriesList = series;
 
 export const monthsList = range(0, 12).map((d) => {
-  const day = new Date(2020, d, 1);
+  const day = new Date(Date.UTC(2020, d, 1));
   return { id: parseInt(d), label: timeFormat("%B")(day) };
 });
 
