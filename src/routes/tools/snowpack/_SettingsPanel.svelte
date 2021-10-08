@@ -23,17 +23,15 @@
   // props
   export let activeTab = 0;
 
-  const dispatchShowLearnMore = createEventDispatcher();
-  const dispatchShowLoadLocation = createEventDispatcher();
-
+  const dispatch = createEventDispatcher();
   const { location } = locationStore;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
-    dispatchShowLearnMore("showLearnMore", { slugs, content, header });
+    dispatch("showLearnMore", { slugs, content, header });
   }
 
   function showChangeLocation() {
-    dispatchShowLoadLocation("showLoadLocation");
+    dispatch("showLoadLocation");
   }
 
   function changeScenario(e) {
