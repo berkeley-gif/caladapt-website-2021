@@ -3,14 +3,7 @@
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
-  import {
-    PRIORITY_10_MODELS,
-    DEFAULT_SCENARIOS,
-    SELECT_LOCATION_DESCRIPTION,
-    DEFAULT_BOUNDARIES,
-    MONTHS_LIST,
-  } from "../_common/constants";
-  import { LEARN_MORE_SELECT_MONTH } from "./_constants";
+  import { DEFAULT_BOUNDARIES } from "../_common/constants";
 
   import {
     flattenData,
@@ -21,17 +14,10 @@
   import { serialize } from "~/helpers/utilities";
 
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
-  import {
-    RadioBtnGroup,
-    SelectMonth,
-    SelectScenario,
-    SelectModels,
-    SelectThresholdNumeric,
-  } from "~/components/tools/Settings";
-  import { StaticMap } from "~/components/tools/Location";
   import { Map, NavigationControl } from "~/components/tools/Map";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { RangeAvg } from "~/components/tools/Stats";
+  import SettingsPanel from "./_SettingsPanel.svelte";
 
   import {
     scenarioStore,
@@ -153,14 +139,6 @@
     activeTab = event.detail;
   }
 
-  function changeScenario(e) {
-    scenarioStore.set(e.detail.id);
-  }
-
-  function changeModels(e) {
-    modelsStore.set(e.detail.selectedIds);
-  }
-
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
       locationStore.updateBoundary("locagrid");
@@ -169,10 +147,6 @@
       locationStore.updateBoundary(e.detail.boundaryId);
       locationStore.updateLocation(e.detail.location);
     }
-  }
-
-  function changeSelectedMonth(e) {
-    monthStore.set(e.detail.id);
   }
 </script>
 
@@ -194,20 +168,14 @@
     </Map>
   </div>
 
-  <div slot="tab_content_map">
-    <StaticMap location="{$location}" width="{500}" height="{500}" />
-  </div>
-
   <div slot="tab_content_title" class="block title">
     <div class="h3">
+      <!-- FIXME: bug where this never seems to update?  -->
       {$location.title}
     </div>
     <div class="h4">
       Projected changes in Snow Water Equivalence under a {$scenario.labelLong}
     </div>
-    <Button size="small" icon="{Location16}" on:click="{loadLocation}">
-      Change Location
-    </Button>
   </div>
 
   <div slot="tab_content_stats">
@@ -225,7 +193,6 @@
         <RangeAvg
           units="{$climvar.units.imperial}"
           data="{statsData}"
-          isHistorical="{false}"
           series="{'future'}"
           period="{'mid-century'}"
           format="{formatFn}"
@@ -235,7 +202,6 @@
         <RangeAvg
           units="{$climvar.units.imperial}"
           data="{statsData}"
-          isHistorical="{false}"
           series="{'future'}"
           period="{'end-century'}"
           format="{formatFn}"
@@ -282,84 +248,11 @@
   </div>
 
   <div slot="settings" class="settings">
-    {#if activeTab === 0}
-      <div class="block">
-        <SelectScenario
-          selectedId="{$scenarioStore}"
-          items="{DEFAULT_SCENARIOS}"
-          on:change="{changeScenario}"
-        />
-        <LearnMoreButton
-          on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
-        />
-      </div>
-
-      <div class="block">
-        <SelectMonth
-          items="{MONTHS_LIST}"
-          selectedId="{$monthStore}"
-          on:change="{changeSelectedMonth}"
-        />
-        <LearnMoreButton
-          on:click="{() => loadLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
-        />
-      </div>
-    {:else}
-      <div class="block">
-        <span class="bx--label">Select Location</span>
-        <StaticMap
-          location="{$location}"
-          width="{350}"
-          height="{350}"
-          on:click="{loadLocation}"
-        />
-        <div class="center-row">
-          <LearnMoreButton
-            on:click="{() =>
-              loadLearnMore({
-                content: SELECT_LOCATION_DESCRIPTION,
-                header: 'Select Location',
-              })}"
-          />
-        </div>
-      </div>
-
-      <div class="block">
-        <SelectScenario
-          selectedId="{$scenarioStore}"
-          items="{DEFAULT_SCENARIOS}"
-          on:change="{changeScenario}"
-        />
-        <LearnMoreButton
-          on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
-        />
-      </div>
-
-      <div class="block">
-        <SelectMonth
-          items="{MONTHS_LIST}"
-          selectedId="{$monthStore}"
-          on:change="{changeSelectedMonth}"
-        />
-        <LearnMoreButton
-          on:click="{() => loadLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
-        />
-      </div>
-
-      <div class="block">
-        <SelectModels
-          selectedIds="{$modelsStore}"
-          items="{PRIORITY_10_MODELS}"
-          on:change="{changeModels}"
-        />
-        <LearnMoreButton
-          on:click="{() =>
-            loadLearnMore({
-              slugs: ['cooling-degree-day', 'heating-degree-day'],
-            })}"
-        />
-      </div>
-    {/if}
+    <SettingsPanel
+      activeTab="{activeTab}"
+      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
+      on:showLoadLocation="{() => loadLocation()}"
+    />
   </div>
 </Dashboard>
 
