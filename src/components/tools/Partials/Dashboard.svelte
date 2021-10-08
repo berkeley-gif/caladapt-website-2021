@@ -3,10 +3,9 @@
   import { Tabs, Tab, TabContent } from "carbon-components-svelte";
 
   export let useTabs = false;
+  export let activeTab = 0;
 
   const activeTabDispatcher = createEventDispatcher();
-
-  let activeTab = 0;
 
   $: activeTab, dispatchActiveTab();
 
@@ -15,7 +14,7 @@
   });
 
   function dispatchActiveTab() {
-    activeTabDispatcher("tabChange", activeTab ? "chart" : "map");
+    activeTabDispatcher("tabChange", activeTab);
   }
 </script>
 
