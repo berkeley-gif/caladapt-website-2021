@@ -245,16 +245,16 @@
   </div>
 
   <div slot="tab_content_graphic" class="graphic block">
-    <!-- <LineAreaChart
+    <LineAreaChart
       data="{$dataStore}"
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
-        label: `Number of ${$indicator.label} (Base temperature ${$thresholdStore}˚F)`,
+        label: `Number of ${$climvar.label}`,
         tickFormat: formatFn,
-        units: `${$indicator.units}`,
+        units: `${$climvar.units.imperial}`,
       }}"
-    /> -->
+    />
 
     <div class="chart-notes margin--v-8">
       <p>
@@ -359,10 +359,6 @@
             })}"
         />
       </div>
-
-      <div class="block"></div>
-      <div class="block"></div>
-      <div class="block"></div>
     {/if}
   </div>
 </Dashboard>
