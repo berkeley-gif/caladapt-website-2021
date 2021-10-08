@@ -19,7 +19,7 @@
   let ready = false;
   let selectedIdsArr = multi && selectedId;
 
-  $: idSet = new Set(selectedIdsArr);
+  $: idSet = new Set(multi ? selectedIdsArr : []);
   $: feedback = idSet.size
     ? items
         .filter(({ id }) => idSet.has(id))
@@ -80,11 +80,11 @@
     <Select
       class="month-select"
       labelText="{title}"
-      selectedIds="{selectedId}"
+      selected="{selectedId}"
       on:change="{change}"
     >
       {#each items as opt}
-        <SelectItem value="{opt.id}" text="{opt.label}" />
+        <SelectItem value="{opt.id}" text="{opt.label || opt.text}" />
       {/each}
     </Select>
   {/if}
