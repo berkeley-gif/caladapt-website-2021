@@ -6,10 +6,11 @@
   import {
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
+    SELECT_LOCATION_DESCRIPTION,
     SMALL_SCALE_BOUNDARIES,
     MONTHS_LIST,
   } from "../_common/constants";
-  import { DEFAULT_SELECTED_MONTH } from "./_constants";
+  import { LEARN_MORE_SELECT_MONTH } from "./_constants";
 
   import {
     flattenData,
@@ -145,6 +146,28 @@
   function handleTabChange(event) {
     activeTab = event.detail;
   }
+
+  function changeScenario(e) {
+    scenarioStore.set(e.detail.id);
+  }
+
+  function changeModels(e) {
+    modelsStore.set(e.detail.selectedIds);
+  }
+
+  function changeLocation(e) {
+    if (e.detail.boundaryId === "custom") {
+      locationStore.updateBoundary("locagrid");
+      locationStore.updateLocation(e.detail.location, true);
+    } else {
+      locationStore.updateBoundary(e.detail.boundaryId);
+      locationStore.updateLocation(e.detail.location);
+    }
+  }
+
+  function changeSelectedMonth(e) {
+    monthStore.set(e.detail.id);
+  }
 </script>
 
 {#if $isFetchingStore}
@@ -254,10 +277,83 @@
 
   <div slot="settings" class="settings">
     {#if activeTab === "map"}
-      <div class="block"></div>
-      <div class="block"></div>
+      <div class="block">
+        <SelectScenario
+          selectedId="{$scenarioStore}"
+          items="{DEFAULT_SCENARIOS}"
+          on:change="{changeScenario}"
+        />
+        <LearnMoreButton
+          on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
+        />
+      </div>
+
+      <div class="block">
+        <SelectMonth
+          items="{MONTHS_LIST}"
+          selectedId="{$monthStore}"
+          on:change="{changeSelectedMonth}"
+        />
+        <LearnMoreButton
+          on:click="{() => loadLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
+        />
+      </div>
     {:else}
-      <div class="block"></div>
+      <div class="block">
+        <span class="bx--label">Select Location</span>
+        <StaticMap
+          location="{$location}"
+          width="{350}"
+          height="{350}"
+          on:click="{loadLocation}"
+        />
+        <div class="center-row">
+          <LearnMoreButton
+            on:click="{() =>
+              loadLearnMore({
+                content: SELECT_LOCATION_DESCRIPTION,
+                header: 'Select Location',
+              })}"
+          />
+        </div>
+      </div>
+
+      <div class="block">
+        <SelectScenario
+          selectedId="{$scenarioStore}"
+          items="{DEFAULT_SCENARIOS}"
+          on:change="{changeScenario}"
+        />
+        <LearnMoreButton
+          on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
+        />
+      </div>
+
+      <div class="block">
+        <SelectMonth
+          items="{MONTHS_LIST}"
+          selectedId="{$monthStore}"
+          on:change="{changeSelectedMonth}"
+        />
+        <LearnMoreButton
+          on:click="{() => loadLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
+        />
+      </div>
+
+      <div class="block">
+        <SelectModels
+          selectedIds="{$modelsStore}"
+          items="{PRIORITY_10_MODELS}"
+          on:change="{changeModels}"
+        />
+        <LearnMoreButton
+          on:click="{() =>
+            loadLearnMore({
+              slugs: ['cooling-degree-day', 'heating-degree-day'],
+            })}"
+        />
+      </div>
+
       <div class="block"></div>
       <div class="block"></div>
       <div class="block"></div>
