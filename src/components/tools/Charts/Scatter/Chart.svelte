@@ -58,21 +58,15 @@
 
     // Set Legend
     legendItems.set(
-      data.map((series) => {
-        return {
-          key: series.key,
-          label: series.label,
-          color: series.color,
-          visible: series.visible,
-          mark: series.mark,
-        };
+      data.map(({ id, label, color, visible, mark }) => {
+        return { id, label, color, visible, mark };
       })
     );
     setContext("Legend", legendItems);
   }
 
   function getTooltipLabel(d) {
-    const item = data.find((series) => series.key === d);
+    const item = data.find((series) => series.id === d);
     if (item) {
       return item.label;
     } else {
@@ -81,7 +75,7 @@
   }
 
   function getTooltipColor(d) {
-    const item = data.find((series) => series.key === d);
+    const item = data.find((series) => series.id === d);
     if (item) {
       return item.color;
     } else {
@@ -99,9 +93,6 @@
 </script>
 
 {#if data}
-  <div class="chart-legend">
-    <Legend />
-  </div>
   <div style="{`height:${height}`}" bind:this="{chartContainer}">
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
@@ -140,6 +131,9 @@
         />
       </Html>
     </LayerCake>
+  </div>
+  <div class="chart-legend">
+    <Legend />
   </div>
 {:else}
   <div class="chart-legend">

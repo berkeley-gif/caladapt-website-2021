@@ -1,61 +1,64 @@
 import { writable, derived } from "svelte/store";
-import { rollup, range, max, sum } from "d3-array";
-import { timeFormat } from "d3-time-format";
+import climvars from "~/helpers/climate-variables";
+import {
+  CLIMATE_VARIABLES,
+  CLIMATE_INDICATORS,
+  DEFAULT_CLIMATE_VARIABLE,
+  DEFAULT_CLIMATE_INDICATOR,
+  DEFAULT_DURATION,
+} from "./_constants";
 
-import { groupConsecutiveDates } from "../../../helpers/utilities";
+import {
+  calcHeatwaveCount,
+  calcMaxDuration,
+  calcDaysCount,
+  groupDataByYear,
+} from "./_data";
 
-import scenarioList from "../../../helpers/climate-scenarios";
-import boundaryList from "../../../helpers/mapbox-layers";
-import { climvarList, indicatorList } from "./_helpers";
+export const climvarList = climvars
+  .filter((d) => CLIMATE_VARIABLES.includes(d.id))
+  .map((d) => {
+    return {
+      ...d,
+      label: d.id === "tasmax" ? "Extreme Heat Days" : "Warm Nights",
+      title:
+        d.id === "tasmax"
+          ? "daily maximum temperature"
+          : "daily minimum temperature",
+    };
+  });
 
 export const climvarStore = (() => {
-  const store = writable("tasmax");
+  const store = writable(DEFAULT_CLIMATE_VARIABLE);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
     get climvar() {
       return derived(store, ($store) => {
-        const selected = climvarList.find((d) => d.id === $store);
-        return selected;
+        return climvarList.find((d) => d.id === $store);
       });
     },
   };
 })();
 
-export const scenarioStore = (() => {
-  const store = writable("rcp45");
+export const indicatorList = CLIMATE_INDICATORS;
+
+export const indicatorStore = (() => {
+  const store = writable(DEFAULT_CLIMATE_INDICATOR);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get scenario() {
+    get indicator() {
       return derived(store, ($store) => {
-        const selected = scenarioList.find((d) => d.id === $store);
-        return selected;
+        return indicatorList.find((d) => d.id === $store);
       });
     },
   };
 })();
 
-export const modelsStore = (() => {
-  const store = writable("HadGEM2-ES,CNRM-CM5,CanESM2,MIROC5");
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get models() {
-      return derived(store, ($store) => {
-        const arr = $store.split(",");
-        return arr;
-      });
-    },
-  };
-})();
-
-export const unitsStore = writable({ imperial: true });
-
-export const thresholdStore = writable();
+export const thresholdStore = writable(null);
 
 export const thresholdListStore = (() => {
   let uid = 1;
@@ -64,8 +67,8 @@ export const thresholdListStore = (() => {
   return {
     subscribe,
     reset(value, label) {
-      update((prev) => {
-        const next = prev.map((t) => {
+      update((store) => {
+        const next = store.map((t) => {
           if (t.label === label) {
             t.value = value;
           }
@@ -74,323 +77,62 @@ export const thresholdListStore = (() => {
         return next;
       });
     },
-    add(value, label = "Custom") {
+    add(value, label = "") {
       const thresh = {
         id: uid++,
         label,
         value,
       };
-      update((prev) => {
-        return [...prev, thresh];
-      });
-    },
-    remove(thresh) {
-      update((prev) => {
-        return prev.filter((t) => t !== thresh);
+      update((store) => {
+        return [...store, thresh];
       });
     },
   };
 })();
 
-// export function createThresholdListStore(initialValue = []) {
-//   let uid = 1;
-//   const { subscribe, update } = writable(initialValue.map((t) => {
-//     t.id = uid++;
-//     return t;
-//   }));
-//   return {
-//     subscribe,
-//     update(value, label) {
-//       update((prev) => {
-//         const next = prev.map((t) => {
-//           if (t.label === label) {
-//             t.value = value;
-//           }
-//           return t;
-//         })
-//         return next;
-//       })
-//     },
-//     add(value, label='Custom') {
-//       const thresh = {
-//         id: uid++,
-//         label,
-//         value,
-//       };
-//       update((prev) => {
-//         return [...prev, thresh]
-//       })
-//     },
-//     remove(thresh) {
-//       update((prev) => {
-//         return prev.filter(t => t !== thresh);
-//       })
-//     },
-//   };
-// }
+export const durationStore = writable(DEFAULT_DURATION);
 
-export const periodStore = writable(4);
-
-export const locationStore = (() => {
+// Data Store
+export const dataStore = (() => {
   const store = writable({
-    lat: 38.59,
-    lng: -122.46,
-    boundaryId: "locagrid",
-    location: {
-      id: null,
-      title: "850 Friesen Drive",
-      address: "Angwin, California 94508, United States",
-      geometry: {
-        type: "Point",
-        coordinates: [-122.4587538, 38.5903761],
-      },
-      center: [-122.4587538, 38.5903761],
-      bbox: [-122.4587538, 38.5903761, -122.4587538, 38.5903761],
-    },
+    daily: null,
+    annual: null,
   });
   const { update, subscribe } = store;
   return {
     subscribe,
-    updateLocation: (loc) =>
+    updateData: (data) =>
       update((store) => {
-        if (!loc) return;
-        store.lng = +loc.center[0].toFixed(4);
-        store.lat = +loc.center[1].toFixed(4);
-        store.location = loc;
+        if (!data) return;
+        store.daily = data;
+        store.annual = data.map((series) => groupDataByYear(series));
         return store;
       }),
-    updateBoundary: (val) =>
+    reset: () =>
       update((store) => {
-        store.boundaryId = val;
+        store.daily = null;
+        store.annual = null;
         return store;
       }),
-    get location() {
-      return derived(store, ($store) => {
-        return $store.location;
-      });
-    },
-    get boundary() {
-      return derived(store, ($store) => {
-        const selected = boundaryList.find((d) => d.id === $store.boundaryId);
-        return selected;
-      });
-    },
-    get lngLat() {
-      return derived(store, ($store) => {
-        return [$store.lng, $store.lat];
-      });
-    },
-  };
-})();
-
-// Indicator Store
-export const indicatorStore = (() => {
-  const store = writable(indicatorList[0]);
-  const { subscribe, update } = store;
-  return {
-    subscribe,
-    updateIndicator: (val) =>
-      update(() => {
-        return indicatorList.find((d) => d.id === val);
-      }),
-    get indicator() {
-      return derived([climvarStore, store], ([$climvarStore, $store]) => {
-        const indicator = $store;
-        if ($climvarStore === "tasmin") {
-          // Replace text 'Extreme Heat Days' text with 'Warm Nights'
-          let helperText = indicator.helperText.replace("Days", "Nights");
-          helperText = helperText.replace("maximum", "minimum");
-          return {
-            ...indicator,
-            title: indicator.title.replace("Extreme Heat Days", "Warm Nights"),
-            helperText,
-          };
-        }
-        return indicator;
-      });
-    },
-  };
-})();
-
-// Functions for reformatting data for different chart views
-const countByYear = (series) => {
-  let yearRange;
-  if (series.key === "observed") {
-    yearRange = range(1950, 2006);
-  } else {
-    yearRange = range(1950, 2100);
-  }
-  const counts = rollup(
-    series.values,
-    (v) => v.length,
-    (d) => d.date.getFullYear()
-  );
-  return {
-    ...series,
-    values: yearRange.map((year) => ({
-      date: new Date(year, 0, 1),
-      value: counts.get(year) || 0,
-    })),
-  };
-};
-
-const longestByYear = (series) => {
-  let yearRange;
-  if (series.key === "observed") {
-    yearRange = range(1950, 2006);
-  } else {
-    yearRange = range(1950, 2100);
-  }
-  const daysByYear = rollup(
-    series.values,
-    (v) => v,
-    (d) => d.date.getFullYear()
-  );
-  const values = [];
-  yearRange.forEach((year) => {
-    let duration = 0;
-    if (daysByYear.has(year)) {
-      const arr = daysByYear.get(year);
-      const groupedDates = groupConsecutiveDates(arr);
-      const groupLengths = groupedDates.map((arr) => arr.length);
-      duration = max(groupLengths);
-    }
-    values.push({ date: new Date(year, 0, 1), value: duration });
-  });
-  return {
-    ...series,
-    values,
-  };
-};
-
-const heatwaveByYear = (series, period) => {
-  let yearRange;
-  if (series.key === "observed") {
-    yearRange = range(1950, 2006);
-  } else {
-    yearRange = range(1950, 2100);
-  }
-  const daysByYear = rollup(
-    series.values,
-    (v) => v,
-    (d) => d.date.getFullYear()
-  );
-  const values = [];
-  yearRange.forEach((year) => {
-    let count = 0;
-    if (daysByYear.has(year)) {
-      const arr = daysByYear.get(year);
-      const groupedDates = groupConsecutiveDates(arr);
-      const groupCounts = groupedDates.map((arr) =>
-        Math.floor(arr.length / period)
-      );
-      count = sum(groupCounts);
-    }
-    values.push({ date: new Date(year, 0, 1), value: count });
-  });
-  return {
-    ...series,
-    values,
-  };
-};
-
-const dailyHeatmap = (series) => {
-  const dayNumberFormat = timeFormat("%j");
-  return {
-    ...series,
-    values: series.values.map((d) => ({ ...d, day: +dayNumberFormat(d.date) })),
-  };
-};
-
-// Data Store
-export const dataStore = (() => {
-  const store = writable();
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
     get data() {
       return derived(
-        [store, indicatorStore, periodStore],
-        ([$store, $indicatorStore, $periodStore]) => {
-          if (!$store) return null;
-          switch ($indicatorStore.id) {
+        [store, indicatorStore, durationStore],
+        ([$store, $indicatorStore, $durationStore]) => {
+          if (!store || !$store.daily) return null;
+          switch ($indicatorStore) {
             case "frequency":
-              return $store.map((series) => countByYear(series));
+              return $store.annual.map((series) => calcDaysCount(series));
             case "duration":
-              return $store.map((series) => longestByYear(series));
+              return $store.annual.map((series) => calcMaxDuration(series));
             case "waves":
-              return $store.map((series) =>
-                heatwaveByYear(series, $periodStore)
+              return $store.annual.map((series) =>
+                calcHeatwaveCount(series, $durationStore)
               );
-            case "timing":
-              return $store.map((series) => dailyHeatmap(series));
             default:
-              return $store;
+              return $store.daily;
           }
         }
       );
     },
   };
 })();
-
-// DERIVED STORES
-// Query params store
-export const queryParams = derived(
-  [unitsStore, locationStore],
-  ([$unitsStore, $locationStore]) => {
-    const { lng, lat, boundaryId } = $locationStore;
-    const id = $locationStore.location.id;
-    const { imperial } = $unitsStore;
-    const params = {};
-    switch (boundaryId) {
-      case "locagrid":
-        params.g = `Point(${lng} ${lat})`;
-        params.imperial = imperial;
-        break;
-      case "ca":
-        params.ref = "/media/ca.json";
-        params.stat = "mean";
-        params.imperial = imperial;
-        break;
-      default:
-        params.ref = `/api/${boundaryId}/${id}/`;
-        params.stat = "mean";
-        params.imperial = imperial;
-    }
-    return params;
-  }
-);
-
-// Bookmark store
-export const bookmark = derived(
-  [
-    climvarStore,
-    scenarioStore,
-    modelsStore,
-    unitsStore,
-    locationStore,
-    thresholdStore,
-    periodStore,
-  ],
-  ([
-    $climvarStore,
-    $scenarioStore,
-    $modelsStore,
-    $unitsStore,
-    $locationStore,
-    $thresholdStore,
-    $periodStore,
-  ]) => {
-    const { lng, lat, boundaryId } = $locationStore;
-    const { imperial } = $unitsStore;
-    const { threshold } = $thresholdStore;
-    const period = $periodStore;
-    const bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${$modelsStore}
-    &imperial=${imperial}&lng=${lng}&lat=${lat}&boundary=${boundaryId}&period=${period}&thresh=${threshold}`;
-    if (process.browser) {
-      return `${window.location.href}?${bookmark}`;
-    }
-    return null;
-  }
-);

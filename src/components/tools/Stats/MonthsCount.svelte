@@ -1,26 +1,73 @@
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
-  import { extent, mean, merge, groups, rollup } from "d3-array";
-  import { timeFormat, timeParse } from "d3-time-format";
-  import { Tooltip, Button, SkeletonText } from "carbon-components-svelte";
-  import SettingsAdjust16 from "carbon-icons-svelte/lib/SettingsAdjust16";
-  import Settings from ".../../../static/img/icons/gear.svg";
+  import { rollup, mean, merge } from "d3-array";
+  import { timeFormat } from "d3-time-format";
+  import { Button, SkeletonText, Modal } from "carbon-components-svelte";
+  import { Information16, Calendar16 } from "carbon-icons-svelte";
   import ChangeTimePeriod from "./ChangeTimePeriod.svelte";
 
-  export let title = "Observed Data";
-  export let subtitle = "Baseline (1961-1990)";
-  export let note = "";
+  export let units = "inches";
   export let data;
-  export let historicalOnly = false;
-  export let start = 1961;
-  export let end = 1990;
+  export let series = "historical";
+  export let period = "baseline";
 
-  const dispatch = createEventDispatcher();
-  //const dateFormat = timeFormat('%b %d');
+  const periodList = [
+    {
+      id: "baseline",
+      label: "Baseline (1961-1990)",
+      start: 1961,
+      end: 1990,
+      historical: true,
+    },
+    {
+      id: "mid-century",
+      label: "Mid-Century (2035-2064)",
+      start: 2035,
+      end: 2064,
+      historical: false,
+    },
+    {
+      id: "end-century",
+      label: "End-Century (2070-2099)",
+      start: 2070,
+      end: 2099,
+      historical: false,
+    },
+  ];
+
+  const seriesList = [
+    {
+      id: "observed",
+      label: "Observed Historical",
+      historical: true,
+    },
+    {
+      id: "historical",
+      label: "Modeled Historical",
+      historical: true,
+    },
+    {
+      id: "future",
+      label: "Future Projections",
+      historical: false,
+    },
+  ];
+
   const dateFormat = timeFormat("%B");
-  let ready = false;
+
+  let isHistorical = series === "historical" || series === "observed";
+
+  let selectedSeries = seriesList.find((d) => d.id === series);
+  let selectedPeriod = periodList.find((d) => d.id === period);
+
   let showSettings = false;
+  let showInfo = false;
   let stats = null;
+  let note = "Learn More";
+  let modelCount = 0;
+
+  $: if (data && !isHistorical) {
+    modelCount = data.filter((d) => d.key !== "observed").length;
+  }
 
   function subsetByYearRange(range) {
     return function (d) {
@@ -33,167 +80,163 @@
 
   function calculateGroupAvg(v) {
     // Map all dates to same year. Does not matter which year.
-    const group = v.map((d) => new Date(2010, d.getMonth(), d.getDate()));
+    const group = v.map(
+      (d) => new Date(2010, d.date.getMonth(), d.date.getDate())
+    );
     return new Date(mean(group));
   }
 
-  function getWeekOfMonth(d) {
-    const weekNumYear = +timeFormat("%U")(d);
-    const weekNumMonthStart = +timeFormat("%U")(
-      new Date(d.getFullYear(), d.getMonth(), 1)
-    );
-    return weekNumYear - weekNumMonthStart + 1;
-  }
-
   function updateStats(e) {
-    const { period, range } = e.detail;
-    subtitle = `${period} (${range[0]}-${range[1]})`;
+    const { seriesId, periodId, range } = e.detail;
+    selectedSeries = seriesList.find((d) => d.id === seriesId);
+    if (periodId === "custom") {
+      selectedPeriod = {
+        id: "custom",
+        label: `${range[0]}-${range[1]}`,
+        start: range[0],
+        end: range[1],
+      };
+    } else {
+      selectedPeriod = periodList.find((d) => d.id === periodId);
+    }
     showSettings = false;
-    stats = calculateStats(data, range);
+    let filteredData;
+    if (seriesId === "observed") {
+      filteredData = data.filter((d) => d.key === "observed");
+    } else {
+      filteredData = data.filter((d) => d.key !== "observed");
+    }
+    stats = calculateStats(filteredData, range);
   }
 
   function calculateStats(_data, range) {
-    if (_data.length === 0) {
-      return [
-        { label: "Earliest", value: "_" },
-        { label: "Latest", value: "_" },
-      ];
+    const content = [];
+    if (!_data || _data.length === 0) {
+      content.push(
+        { label: "Earliest", value: "–" },
+        { label: "Latest", value: "–" }
+      );
+      return content;
     }
-
     const values = merge(_data.map((series) => series.values));
-    const filteredData = values
-      .filter(subsetByYearRange(range))
-      .map((d) => d.date);
-
+    const filteredValues = values.filter(subsetByYearRange(range));
     const groupByMonth = rollup(
-      filteredData,
+      filteredValues,
       (v) => calculateGroupAvg(v),
-      (d) => parseInt(d.getMonth())
+      (d) => parseInt(d.date.getMonth())
     );
-    console.log(title, groupByMonth);
     const months = Array.from(groupByMonth.keys()).sort();
     const earliest = groupByMonth.get(months[0]);
     const latest = groupByMonth.get(months[months.length - 1]);
 
-    return [
+    content.push(
       { label: "Earliest", value: dateFormat(earliest) },
-      { label: "Latest", value: dateFormat(latest) },
-    ];
+      { label: "Latest", value: dateFormat(latest) }
+    );
+
+    return content;
   }
 
   $: if (data) {
-    stats = calculateStats(data, [start, end]);
+    stats = calculateStats(data, [selectedPeriod.start, selectedPeriod.end]);
   } else {
     stats = null;
   }
-
-  onMount(() => {
-    ready = true;
-    dispatch("ready");
-  });
 </script>
 
 <style lang="scss">
+  .stat {
+    position: relative;
+  }
+
   .stat-data {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: space-between;
     margin: 0.75rem 0;
   }
 
   .stat-title {
+    display: block;
+    line-height: 1.29;
+    font-weight: 600;
     font-size: 1rem;
-    font-weight: bold;
   }
 
-  .stat-subtitle {
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-  }
-
-  .stat-data-label {
-    font-size: 0.8rem;
+  .stat-text {
+    font-size: 0.75rem;
     color: var(--gray-70);
+    text-transform: uppercase;
   }
 
-  .stat-data-value {
+  .stat-value {
     font-size: 1.5rem;
     line-height: 1.5;
   }
 
-  .stat-note {
-    margin-top: 1rem;
-    font-style: italic;
+  .stat-units {
     font-size: 0.75rem;
-    color: var(--teal-60);
+    color: var(--gray-70);
+  }
+
+  .stat-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stat-note {
+    font-size: 0.875rem;
+    color: #0f62fe;
     display: flex;
     align-items: center;
-    line-height: 1;
   }
 
-  #stat-tooltip {
-    font-style: italic;
-  }
-
-  :global(.settings.bx--btn--sm) {
-    padding: calc(0.375rem - 3px);
-  }
-
-  :global(.settings #icon) {
-    height: 1rem;
-    width: 1rem;
+  :global(.stat .bx--btn) {
+    padding-left: 0;
   }
 </style>
 
-{#if ready && stats}
+{#if stats}
   <div class="stat">
     <!-- title -->
     <div class="stat-header">
-      <div class="stat-title">{title}</div>
-      <div class="stat-subtitle">
-        {subtitle}
-        <span>
-          <Button
-            class="settings"
-            tooltipPosition="bottom"
-            tooltipAlignment="center"
-            iconDescription="Change Time Period"
-            size="small"
-            kind="ghost"
-            on:click="{() => (showSettings = true)}"
-          >
-            {@html Settings}
-          </Button>
-        </span>
-      </div>
+      <span class="stat-text">{selectedSeries.label}</span>
+      <span class="stat-title">{selectedPeriod.label}</span>
+      <Button
+        icon="{Calendar16}"
+        kind="ghost"
+        size="small"
+        on:click="{() => (showSettings = true)}"
+      >
+        Change Period
+      </Button>
     </div>
     <!-- values -->
     <div class="stat-data">
       {#each stats as item}
-        <div>
-          <div class="stat-data-label">{item.label}</div>
-          <div class="stat-data-value">{item.value}</div>
+        <div class="stat-data-item">
+          <div class="stat-text">{item.label}</div>
+          <div class="stat-value">
+            {item.value}
+            <sup><span class="stat-units">{units}</span></sup>
+          </div>
         </div>
       {/each}
     </div>
-    <!-- note -->
-    {#if note}
+    <!-- controls -->
+    <div class="stat-controls">
       <div class="stat-note">
-        <span>{note}.</span>
-        <Tooltip tooltipBodyId="stat-tooltip">
-          <div id="stat-tooltip">
-            <p>
-              To calculate the earliest/latest months we group extreme heat
-              days/warm nights from all selected models by month.
-            </p>
-            <p>
-              List of selected models can be changed in the Settings Panel under
-              Models. Select preset or custom time periods in the Stats Panel.
-            </p>
-          </div>
-        </Tooltip>
+        <Button
+          icon="{Information16}"
+          kind="ghost"
+          size="small"
+          on:click="{() => (showInfo = true)}"
+        >
+          {note}
+        </Button>
       </div>
-    {/if}
+    </div>
   </div>
 {:else}
   <div class="stat">
@@ -204,6 +247,36 @@
 
 <ChangeTimePeriod
   open="{showSettings}"
-  historicalOnly="{historicalOnly}"
+  isHistorical="{isHistorical}"
+  seriesList="{seriesList.filter((d) => d.historical === isHistorical)}"
+  periodList="{periodList.filter((d) => d.historical === isHistorical)}"
+  seriesId="{selectedSeries.id}"
+  periodId="{selectedPeriod.id}"
   on:change="{updateStats}"
+  on:cancel="{() => (showSettings = false)}"
 />
+
+<Modal
+  id="definition"
+  size="sm"
+  passiveModal
+  bind:open="{showInfo}"
+  modalHeading="Summary Statistics"
+  on:open
+  on:close="{() => (showInfo = false)}"
+>
+  <div>
+    {#if isHistorical}
+      <p>
+        The average is calculated using data values between {selectedPeriod.start}
+        and {selectedPeriod.end} from the Observed Historical timeseries.
+      </p>
+    {:else}
+      <p>
+        The range and average are calculated using data values between {selectedPeriod.start}
+        and {selectedPeriod.end} from the {modelCount} models shown in the chart
+        below.
+      </p>
+    {/if}
+  </div>
+</Modal>

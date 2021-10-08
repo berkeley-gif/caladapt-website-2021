@@ -12,29 +12,12 @@
     margin: 0.75rem 0;
   }
 
-  .legend-group .legend-item {
-    margin: 3px;
-  }
-
   .legend-item {
-    /*    opacity: 0.4;*/
-    opacity: 1;
+    margin: 3px;
     padding: 0.1rem 0.5rem;
     font-size: 0.9rem;
     font-weight: 400;
-    background: #fff;
-    border: 1px solid #dadee1;
-    border-radius: 0.975rem;
-    /*    cursor: pointer;*/
   }
-
-  /*  .legend-item:hover {
-    background: var(--gray-30);
-  }*/
-
-  /*  .legend-item.show {
-    opacity: 1;
-  }*/
 
   span.key {
     display: inline-block;
@@ -46,9 +29,9 @@
 
 <div class="legend-group">
   {#each $legendItems as item}
-    <button size="{'sm'}" class="legend-item" role="{'button'}" tabindex="{0}">
+    <div class="legend-item">
       <span class="key" style="{`background:${item.color};`}"
       ></span>{item.label}
-    </button>
+    </div>
   {/each}
 </div>

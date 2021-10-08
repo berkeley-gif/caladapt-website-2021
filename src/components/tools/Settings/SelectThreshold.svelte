@@ -2,29 +2,32 @@
   import { onMount, createEventDispatcher } from "svelte";
   import {
     Button,
+    Form,
+    FormGroup,
     RadioButton,
     RadioButtonGroup,
     RadioButtonSkeleton,
+    NumberInput,
   } from "carbon-components-svelte";
-  import Delete16 from "carbon-icons-svelte/lib/Delete16";
 
   export let items;
   export let selected;
   export let units;
   export let title = "Select Threshold";
-
-  $: selected, dispatch("change", selected);
+  export let helperText;
 
   const dispatch = createEventDispatcher();
   let ready = false;
 
-  function addThreshold(e) {
-    if (e.key === "Enter") {
-      const value = Number(e.target.value);
-      dispatch("add", value);
-      e.target.value = "";
-    }
-  }
+  $: selected, dispatch("change", selected);
+
+  const addThreshold = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formProps = Object.fromEntries(formData);
+    dispatch("add", formProps.newThreshold);
+    e.target.reset();
+  };
 
   onMount(() => {
     ready = true;
@@ -33,61 +36,39 @@
 </script>
 
 <style>
-  .flex-center {
+  .add-threshold :global(.bx--fieldset) {
     display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
   }
 
-  .input-label {
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.34;
-    letter-spacing: 0.32px;
-    display: inline-block;
-    margin: 0.5rem 0;
-    color: var(--gray-70);
-    font-weight: 400;
-    line-height: 1rem;
-    vertical-align: baseline;
+  .bx--form__helper-text {
+    margin-bottom: 0.25rem;
   }
 </style>
 
 {#if ready}
   <RadioButtonGroup legendText="{title}" orientation="vertical" bind:selected>
+    <div class="bx--form__helper-text">{helperText}</div>
     {#each items as threshold (threshold.id)}
-      <div class="flex-center">
+      {#if threshold.label.includes("Percentile")}
         <RadioButton
-          labelText="{`${threshold.label} - ${threshold.value} ${units}`}"
+          labelText="{`${threshold.value} ${units} (${threshold.label})`}"
           value="{threshold.value}"
         />
-        {#if threshold.label === "Custom"}
-          <Button
-            size="small"
-            kind="ghost"
-            iconDescription="Remove value"
-            icon="{Delete16}"
-            on:click="{() => items.remove(threshold)}"
-          />
-        {/if}
-      </div>
+      {:else}
+        <RadioButton
+          labelText="{`${threshold.value} ${units}`}"
+          value="{threshold.value}"
+        />
+      {/if}
     {/each}
   </RadioButtonGroup>
-  <div class="bx--form-item">
-    <div class="bx--number bx--number--sm">
-      <label for="threshold-input" class="input-label"
-        >Add custom threshold</label
-      >
-      <div class="bx--number__input-wrapper">
-        <input
-          style="padding-right:0.5rem;width:50%;"
-          type="number"
-          id="threshold-input"
-          step="1"
-          on:keydown="{addThreshold}"
-        />
-      </div>
-    </div>
+  <div class="add-threshold">
+    <Form on:submit="{addThreshold}">
+      <FormGroup noMargin>
+        <NumberInput name="newThreshold" hideLabel hideSteppers required />
+        <Button size="small" type="submit" kind="tertiary">Add</Button>
+      </FormGroup>
+    </Form>
   </div>
 {:else}
   <RadioButtonGroup orientation="vertical">
