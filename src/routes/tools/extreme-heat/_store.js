@@ -78,12 +78,14 @@ export const thresholdListStore = (() => {
       });
     },
     add(value, label = "") {
-      const thresh = {
-        id: uid++,
-        label,
-        value,
-      };
       update((store) => {
+        console.log("store", store);
+        if (store.find((d) => d.value === value)) return;
+        const thresh = {
+          id: uid++,
+          label,
+          value,
+        };
         return [...store, thresh];
       });
     },
