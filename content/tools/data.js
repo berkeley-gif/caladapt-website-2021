@@ -85,7 +85,7 @@ const tools = [
     ],
   },
   {
-    title: 'Extreme Heat',
+    title: 'Extreme Heat Days & Warm Nights',
     desc: `Projected frequency and duration of extreme heat days and warm nights.`,
     categories: ['Temperature'],
     slug: 'extreme-heat',
