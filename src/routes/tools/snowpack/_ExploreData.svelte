@@ -12,11 +12,11 @@
 
   import { serialize } from "~/helpers/utilities";
 
-  import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
-  import { Map, NavigationControl } from "~/components/tools/Map";
+  import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
   import SnowpackChart from "./_SnowpackChart.svelte";
+  import SnowpackMap from "./_SnowpackMap.svelte";
 
   import {
     scenarioStore,
@@ -158,9 +158,7 @@
     slot="tab_content_slippy_map"
     class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
   >
-    <Map bind:this="{mapboxMap}">
-      <NavigationControl />
-    </Map>
+    <SnowpackMap bind:mapboxMap />
   </div>
 
   <div slot="tab_content_title" class="block title">
