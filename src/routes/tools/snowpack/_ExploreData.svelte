@@ -16,8 +16,8 @@
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
   import { Map, NavigationControl } from "~/components/tools/Map";
   import { LineAreaChart } from "~/components/tools/Charts";
-  import { RangeAvg } from "~/components/tools/Stats";
   import SettingsPanel from "./_SettingsPanel.svelte";
+  import StatsPanel from "./_StatsPanel.svelte";
 
   import {
     scenarioStore,
@@ -179,35 +179,9 @@
   </div>
 
   <div slot="tab_content_stats">
-    <ul class="stats">
-      <li class="block">
-        <RangeAvg
-          units="{$climvar.units.imperial}"
-          data="{statsData}"
-          series="{'historical'}"
-          period="{'baseline'}"
-          format="{formatFn}"
-        />
-      </li>
-      <li class="block">
-        <RangeAvg
-          units="{$climvar.units.imperial}"
-          data="{statsData}"
-          series="{'future'}"
-          period="{'mid-century'}"
-          format="{formatFn}"
-        />
-      </li>
-      <li class="block">
-        <RangeAvg
-          units="{$climvar.units.imperial}"
-          data="{statsData}"
-          series="{'future'}"
-          period="{'end-century'}"
-          format="{formatFn}"
-        />
-      </li>
-    </ul>
+    <StatsPanel
+      {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
+    />
   </div>
 
   <div slot="tab_content_graphic" class="graphic block">
