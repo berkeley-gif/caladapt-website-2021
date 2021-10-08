@@ -141,7 +141,6 @@
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
-        monthId: $monthStore,
       };
 
       const { params, method } = getQueryParams({
@@ -149,12 +148,14 @@
         boundary: $boundary,
         imperial: true,
       });
+      params.months = $monthStore;
 
       isFetchingStore.set(true);
 
       const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(config, params, method);
       const models = await getModels(config, params, method);
+
       dataStore.set([].concat(envelope).concat(observed).concat(models));
     } catch (error) {
       console.error("updateData", error);
