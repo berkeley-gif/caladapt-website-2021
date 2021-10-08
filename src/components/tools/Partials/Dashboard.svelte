@@ -112,12 +112,7 @@
               <TabContent>
                 <div class="bx--grid bx--grid--full-width">
                   <div class="bx--row margin--v-16">
-                    <div
-                      class="bx--col-lg-4 bx--col-md-2 bx--col-sm-4 bx--aspect-ratio bx--aspect-ratio--1x1"
-                    >
-                      <slot name="tab_content_map">tab_content_map</slot>
-                    </div>
-                    <div class="bx--col-lg-12 bx--col-md-6 bx--col-sm-4">
+                    <div class="bx--col">
                       <slot name="tab_content_title">tab_content_title</slot>
                     </div>
                   </div>
