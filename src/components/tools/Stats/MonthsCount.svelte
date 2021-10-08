@@ -1,5 +1,5 @@
 <script>
-  import { rollup, mean, merge } from "d3-array";
+  import { rollups, mean, merge } from "d3-array";
   import { timeFormat } from "d3-time-format";
   import { Button, SkeletonText, Modal } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
@@ -120,18 +120,19 @@
     }
     const values = merge(_data.map((series) => series.values));
     const filteredValues = values.filter(subsetByYearRange(range));
-    const groupByMonth = rollup(
+    const groupByMonth = rollups(
       filteredValues,
       (v) => calculateGroupAvg(v),
-      (d) => parseInt(d.date.getMonth())
+      (d) => d.date.getMonth()
     );
-    const months = Array.from(groupByMonth.keys()).sort();
-    const earliest = groupByMonth.get(months[0]);
-    const latest = groupByMonth.get(months[months.length - 1]);
+    const months = groupByMonth.map((d) => d[0]).sort((a, b) => a - b);
 
     content.push(
-      { label: "Earliest", value: dateFormat(earliest) },
-      { label: "Latest", value: dateFormat(latest) }
+      { label: "Earliest", value: dateFormat(new Date(2020, months[0], 1)) },
+      {
+        label: "Latest",
+        value: dateFormat(new Date(2020, months[months.length - 1], 1)),
+      }
     );
 
     return content;
@@ -153,6 +154,9 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+  }
+
+  .stat-data-item {
     margin: 0.75rem 0;
   }
 
@@ -171,7 +175,7 @@
 
   .stat-value {
     font-size: 1.5rem;
-    line-height: 1.5;
+    line-height: 1;
   }
 
   .stat-units {
