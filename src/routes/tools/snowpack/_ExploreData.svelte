@@ -7,7 +7,7 @@
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
     SELECT_LOCATION_DESCRIPTION,
-    SMALL_SCALE_BOUNDARIES,
+    DEFAULT_BOUNDARIES,
     MONTHS_LIST,
   } from "../_common/constants";
   import { LEARN_MORE_SELECT_MONTH } from "./_constants";

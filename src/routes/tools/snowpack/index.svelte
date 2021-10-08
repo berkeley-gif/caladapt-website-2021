@@ -1,8 +1,9 @@
 <script context="module">
   import {
-    TOOL_SLUG,
-    DEFAULT_SELECTED_MONTH,
+    DEFAULT_CENTER,
     DEFAULT_CLIMVAR,
+    DEFAULT_SELECTED_MONTH,
+    TOOL_SLUG,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
   import resourcesList from "content/resources/data";
@@ -55,6 +56,8 @@
         ...INITIAL_CONFIG,
         month: DEFAULT_SELECTED_MONTH,
         climvarId: DEFAULT_CLIMVAR,
+        lng: DEFAULT_CENTER[0],
+        lat: DEFAULT_CENTER[1],
       };
     }
 
