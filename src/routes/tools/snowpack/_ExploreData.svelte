@@ -1,7 +1,6 @@
 <script>
-  import { Button, Loading } from "carbon-components-svelte";
+  import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
 
@@ -15,9 +14,9 @@
 
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
   import { Map, NavigationControl } from "~/components/tools/Map";
-  import { LineAreaChart } from "~/components/tools/Charts";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
+  import SnowpackChart from "./_SnowpackChart.svelte";
 
   import {
     scenarioStore,
@@ -53,10 +52,6 @@
   let bookmark;
 
   let learnMoreProps = {};
-  let chartDescription = `<p>The colored lines on this visualization represent 
-    a timeseries of montly average values from individual downscaled GCMs. The historical observed data is represented by 
-    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
-    corresponding timeseries.</p>`;
 
   let metadata;
   let csvData;
@@ -185,40 +180,17 @@
   </div>
 
   <div slot="tab_content_graphic" class="graphic block">
-    <LineAreaChart
+    <SnowpackChart
       data="{$dataStore}"
       dataByDate="{dataByDate}"
-      yAxis="{{
-        key: 'value',
-        label: `Number of ${$climvar.label}`,
-        tickFormat: formatFn,
-        units: `${$climvar.units.imperial}`,
-      }}"
+      formatFn="{formatFn}"
+      units="{$climvar.units.imperial}"
+      label="{$climvar.label}"
+      dataSource="{$titles.join(', ')}"
+      on:showDownload="{loadDownload}"
+      on:showShare="{loadShare}"
+      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
     />
-
-    <div class="chart-notes margin--v-8">
-      <p>
-        Source: Cal-Adapt. Data: {$titles.join(", ")}.
-      </p>
-    </div>
-    <div class="chart-download margin--v-8">
-      <LearnMoreButton
-        cta="{'Explain Chart'}"
-        on:click="{() =>
-          loadLearnMore({
-            content: chartDescription,
-            header: 'About this Chart',
-          })}"
-      />
-      <div>
-        <Button size="small" icon="{Download16}" on:click="{loadDownload}">
-          Download Chart
-        </Button>
-        <Button size="small" icon="{Share16}" on:click="{loadShare}">
-          Share
-        </Button>
-      </div>
-    </div>
   </div>
 
   <div slot="settings" class="settings">
