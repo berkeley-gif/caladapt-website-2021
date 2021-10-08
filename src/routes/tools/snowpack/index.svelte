@@ -1,8 +1,9 @@
 <script context="module">
   import {
-    TOOL_SLUG,
-    DEFAULT_SELECTED_MONTH,
+    DEFAULT_CENTER,
     DEFAULT_CLIMVAR,
+    DEFAULT_SELECTED_MONTH,
+    TOOL_SLUG,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
   import resourcesList from "content/resources/data";
@@ -55,6 +56,8 @@
         ...INITIAL_CONFIG,
         month: DEFAULT_SELECTED_MONTH,
         climvarId: DEFAULT_CLIMVAR,
+        lng: DEFAULT_CENTER[0],
+        lat: DEFAULT_CENTER[1],
       };
     }
 
@@ -141,7 +144,6 @@
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
-        monthId: $monthStore,
       };
 
       const { params, method } = getQueryParams({
@@ -149,12 +151,14 @@
         boundary: $boundary,
         imperial: true,
       });
+      params.months = $monthStore;
 
       isFetchingStore.set(true);
 
       const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(config, params, method);
       const models = await getModels(config, params, method);
+
       dataStore.set([].concat(envelope).concat(observed).concat(models));
     } catch (error) {
       console.error("updateData", error);
