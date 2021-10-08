@@ -25,7 +25,7 @@
 
   function createOverlay(geojson, tolerance = 0.005) {
     const overlay = encodeURIComponent(JSON.stringify(geojson));
-    if (overlay.length < 11000) {
+    if (overlay.length < 7500) {
       return overlay;
     }
     const simplifiedGeojson = simplify(geojson, {
