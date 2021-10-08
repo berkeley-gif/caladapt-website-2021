@@ -159,7 +159,7 @@
       const observed = await getObserved(config, params, method);
       const models = await getModels(config, params, method);
 
-      dataStore.set([].concat(envelope).concat(observed).concat(models));
+      dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);
       notifier.error("Error", error, 2000);

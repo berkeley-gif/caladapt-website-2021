@@ -61,6 +61,9 @@
   let ShareLink;
   let LearnMoreModal;
 
+  // reference to mapbox slippy map
+  let mapboxMap;
+
   let bookmark;
 
   let learnMoreProps = {};
@@ -74,10 +77,13 @@
   let printContainer;
   let printSkipElements;
 
-  let activeTab;
+  let activeTab = 1;
+  $: activeTab, mapboxMap && mapboxMap.resize();
+
+  $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.type !== "area");
+    statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
   } else {
     statsData = null;
@@ -174,12 +180,16 @@
   <Loading />
 {/if}
 
-<Dashboard useTabs="{true}" on:tabChange="{handleTabChange}">
+<Dashboard
+  useTabs="{true}"
+  activeTab="{activeTab}"
+  on:tabChange="{handleTabChange}"
+>
   <div
     slot="tab_content_slippy_map"
     class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
   >
-    <Map>
+    <Map bind:this="{mapboxMap}">
       <NavigationControl />
     </Map>
   </div>
@@ -202,14 +212,10 @@
 
   <div slot="tab_content_stats">
     <ul class="stats">
-      <li class="block"></li>
-      <li class="block"></li>
-      <li class="block"></li>
-      <!-- <li class="block">
+      <li class="block">
         <RangeAvg
-          units="{$indicator.units}"
+          units="{$climvar.units.imperial}"
           data="{statsData}"
-          isHistorical="{true}"
           series="{'historical'}"
           period="{'baseline'}"
           format="{formatFn}"
@@ -217,7 +223,7 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$indicator.units}"
+          units="{$climvar.units.imperial}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
@@ -227,14 +233,14 @@
       </li>
       <li class="block">
         <RangeAvg
-          units="{$indicator.units}"
+          units="{$climvar.units.imperial}"
           data="{statsData}"
           isHistorical="{false}"
           series="{'future'}"
           period="{'end-century'}"
           format="{formatFn}"
         />
-      </li> -->
+      </li>
     </ul>
   </div>
 
@@ -276,7 +282,7 @@
   </div>
 
   <div slot="settings" class="settings">
-    {#if activeTab === "map"}
+    {#if activeTab === 0}
       <div class="block">
         <SelectScenario
           selectedId="{$scenarioStore}"
