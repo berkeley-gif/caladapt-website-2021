@@ -142,12 +142,7 @@
       </div>
     {:else}
       <div class="bx--row">
-        <div
-          class="bx--col-lg-4 bx--col-md-2 bx--col-sm-4 bx--aspect-ratio bx--aspect-ratio--1x1"
-        >
-          <slot name="map">map</slot>
-        </div>
-        <div class="bx--col-lg-12 bx--col-md-6 bx--col-sm-4">
+        <div class="bx--col">
           <slot name="title">title</slot>
         </div>
       </div>
