@@ -185,7 +185,7 @@
   </div>
 
   <div slot="tab_content_slippy_map_controls" class="graphic block">
-    <MapTimeSlider />
+    <MapTimeSlider on:change="{handleSliderChange}" />
   </div>
 
   <div slot="tab_content_title" class="block title">

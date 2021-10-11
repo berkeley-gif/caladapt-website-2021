@@ -8,7 +8,11 @@
 
   export let isLoading;
 
+  const intervalMs = 750;
+
   let isPlaying = false;
+  let timerId;
+  let sliderComponent;
 
   function multiLineLabel(selection, datum) {
     selection
@@ -22,6 +26,11 @@
 
   function handlePlayPause() {
     isPlaying = !isPlaying;
+    if (isPlaying) {
+      timerId = window.setInterval(sliderComponent.next, intervalMs);
+    } else {
+      window.clearInterval(timerId);
+    }
   }
 </script>
 
@@ -34,6 +43,7 @@
 
 <div>
   <TimeSlider
+    bind:this="{sliderComponent}"
     start="{1960}"
     end="{2100}"
     step="{$durationStore}"
