@@ -51,6 +51,10 @@
   function changeSelectedMonth(e) {
     monthStore.set(e.detail.id);
   }
+
+  function changeDuration(e) {
+    durationStore.set(e.detail);
+  }
 </script>
 
 {#if activeTab === 0}
@@ -82,6 +86,7 @@
       items="{TIME_DURATIONS}"
       selected="{$durationStore}"
       title="{'Select Duration'}"
+      on:change="{changeDuration}"
     />
   </div>
 
