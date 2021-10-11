@@ -14,11 +14,11 @@
   import { getImgOverlayPath } from "./_data";
 
   import { Dashboard } from "~/components/tools/Partials";
-  import { TimeSlider } from "~/components/tools/Settings";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
   import SnowpackChart from "./_SnowpackChart.svelte";
   import SnowpackMap from "./_SnowpackMap.svelte";
+  import MapTimeSlider from "./_MapTimeSlider.svelte";
 
   import {
     scenarioStore,
@@ -185,12 +185,7 @@
   </div>
 
   <div slot="tab_content_slippy_map_controls" class="graphic block">
-    <TimeSlider
-      start="{1960}"
-      end="{2100}"
-      step="{$durationStore}"
-      on:change="{handleSliderChange}"
-    />
+    <MapTimeSlider />
   </div>
 
   <div slot="tab_content_title" class="block title">
