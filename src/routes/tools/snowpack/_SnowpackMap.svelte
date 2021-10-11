@@ -1,6 +1,5 @@
 <script>
   import { Map, NavigationControl, ImageOverlay } from "~/components/tools/Map";
-
   export let imgOverlayPath;
 </script>
 

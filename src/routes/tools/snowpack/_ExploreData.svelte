@@ -179,17 +179,18 @@
 >
   <div
     slot="tab_content_slippy_map"
-    class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
+    class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
-    <div>
-      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
-      <TimeSlider
-        start="{1960}"
-        end="{2100}"
-        step="{$durationStore}"
-        on:change="{handleSliderChange}"
-      />
-    </div>
+    <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+  </div>
+
+  <div slot="tab_content_slippy_map_controls" class="graphic block">
+    <TimeSlider
+      start="{1960}"
+      end="{2100}"
+      step="{$durationStore}"
+      on:change="{handleSliderChange}"
+    />
   </div>
 
   <div slot="tab_content_title" class="block title">
