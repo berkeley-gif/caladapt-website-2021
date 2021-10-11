@@ -1,6 +1,10 @@
 #explore-data {
   min-height: 50vh;
 
+  .static-map img {
+    max-height: 250px;
+  }
+
   .block {
     background-color: var(--white);
     box-shadow: var(--box-shadow);
@@ -58,6 +62,7 @@
     .block {
       background-color: var(--gray-20);
       height: auto;
+      padding-bottom: var(--spacing-8);
     }
   }
 
