@@ -78,7 +78,7 @@
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
-    a timeseries of annual average values from individual downscaled GCMs. The historical observed data is represented by 
+    a timeseries of CDDs or HDDs averaged annually or over the selected months from individual downscaled GCMs. The historical observed data is represented by 
     a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
     corresponding timeseries.</p>`;
 
@@ -303,13 +303,12 @@
         units: `${$indicator.units}`,
       }}"
     />
-
-    <div class="chart-notes margin--v-16">
+    <div class="chart-notes margin--v-32">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
-    <div class="chart-download margin--v-8">
+    <div class="chart-download margin--v-16">
       <LearnMoreButton
         cta="{'Explain Chart'}"
         on:click="{() =>
@@ -379,7 +378,7 @@
         items="{frequencyList}"
         on:change="{changeFrequency}"
       />
-      <div class="spacing--v-16"></div>
+      <div class="spacing--v-8"></div>
       {#if $frequencyStore === "M"}
         <SelectMonth
           multi="{true}"
@@ -413,10 +412,7 @@
         on:change="{changeModels}"
       />
       <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            slugs: ['cooling-degree-day', 'heating-degree-day'],
-          })}"
+        on:click="{() => loadLearnMore({ slugs: ['global-climate-model'] })}"
       />
     </div>
   </div>
