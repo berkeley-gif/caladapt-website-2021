@@ -26,7 +26,7 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, monthStore } from "./_store";
+  import { climvarStore, monthStore, modelSingleStore } from "./_store";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
@@ -58,7 +58,7 @@
   let printContainer;
   let printSkipElements;
 
-  let activeTab = 1;
+  let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
 
   $: formatFn = format(`.${$climvar.decimals}f`);
@@ -158,7 +158,15 @@
     slot="tab_content_slippy_map"
     class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
   >
-    <SnowpackMap bind:mapboxMap />
+    <SnowpackMap
+      bind:mapboxMap
+      modelId="{$modelSingleStore}"
+      climvarId="{$climvarStore}"
+      scenarioId="{$scenarioStore}"
+      yearStart="{2030}"
+      yearEnd="{2039}"
+      monthNumber="{$monthStore}"
+    />
   </div>
 
   <div slot="tab_content_title" class="block title">

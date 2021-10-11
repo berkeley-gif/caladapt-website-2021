@@ -14,6 +14,21 @@ import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
 
+export const getImgOverlayPath = ({
+  climvarId,
+  modelId,
+  scenarioId,
+  yearStart,
+  yearEnd,
+  monthNumber,
+}) => {
+  const slug =
+    yearEnd < 2010
+      ? `${climvarId}_month_livneh`
+      : `${climvarId}_month_${modelId}_${scenarioId}`;
+  return `${apiEndpoint}/series/${slug}/${yearStart}-${yearEnd}/${monthNumber}.png`;
+};
+
 /**
  * The following 3 functions take the list of observed, models and ensemble
  * raster series and add extra props. These props describe how the data
