@@ -7,19 +7,20 @@
     SELECT_LOCATION_DESCRIPTION,
     MONTHS_LIST,
   } from "../_common/constants";
-  import { LEARN_MORE_SELECT_MONTH } from "./_constants";
+  import { LEARN_MORE_SELECT_MONTH, TIME_DURATIONS } from "./_constants";
 
   import {
     SelectMonth,
     SelectScenario,
     SelectModels,
     Select,
+    RadioBtnGroup,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
 
   import { scenarioStore, locationStore, modelsStore } from "../_common/stores";
-  import { monthStore, modelSingleStore } from "./_store";
+  import { durationStore, monthStore, modelSingleStore } from "./_store";
 
   // props
   export let activeTab = 0;
@@ -73,6 +74,14 @@
     />
     <LearnMoreButton
       on:click="{() => showLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
+    />
+  </div>
+
+  <div class="block">
+    <RadioBtnGroup
+      items="{TIME_DURATIONS}"
+      selected="{$durationStore}"
+      title="{'Select Duration'}"
     />
   </div>
 

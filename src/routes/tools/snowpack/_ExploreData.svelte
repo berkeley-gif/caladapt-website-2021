@@ -11,8 +11,10 @@
   } from "../_common/helpers";
 
   import { serialize } from "~/helpers/utilities";
+  import { getImgOverlayPath } from "./_data";
 
   import { Dashboard } from "~/components/tools/Partials";
+  import { TimeSlider } from "~/components/tools/Settings";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
   import SnowpackChart from "./_SnowpackChart.svelte";
@@ -26,7 +28,13 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, monthStore, modelSingleStore } from "./_store";
+  import {
+    climvarStore,
+    durationStore,
+    monthStore,
+    modelSingleStore,
+    yearStore,
+  } from "./_store";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
@@ -62,6 +70,15 @@
   $: activeTab, mapboxMap && mapboxMap.resize();
 
   $: formatFn = format(`.${$climvar.decimals}f`);
+
+  $: imgOverlayPath = getImgOverlayPath({
+    climvarId: $climvarStore,
+    modelId: $modelSingleStore,
+    scenarioId: $scenarioStore,
+    yearStart: $yearStore,
+    yearEnd: $yearStore + $durationStore - 1,
+    monthNumber: $monthStore,
+  });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.mark !== "area");
@@ -143,6 +160,12 @@
       locationStore.updateLocation(e.detail.location);
     }
   }
+
+  function handleSliderChange(e) {
+    if (e && e.detail && typeof e.detail === "number") {
+      yearStore.set(e.detail);
+    }
+  }
 </script>
 
 {#if $isFetchingStore}
@@ -158,15 +181,15 @@
     slot="tab_content_slippy_map"
     class="graphic block bx--aspect-ratio bx--aspect-ratio--16x9"
   >
-    <SnowpackMap
-      bind:mapboxMap
-      modelId="{$modelSingleStore}"
-      climvarId="{$climvarStore}"
-      scenarioId="{$scenarioStore}"
-      yearStart="{2030}"
-      yearEnd="{2039}"
-      monthNumber="{$monthStore}"
-    />
+    <div>
+      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+      <TimeSlider
+        start="{1960}"
+        end="{2100}"
+        step="{$durationStore}"
+        on:change="{handleSliderChange}"
+      />
+    </div>
   </div>
 
   <div slot="tab_content_title" class="block title">
