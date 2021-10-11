@@ -105,6 +105,14 @@
                       >
                     </div>
                   </div>
+
+                  <div class="bx--row">
+                    <div class="bx--col">
+                      <slot name="tab_content_slippy_map_controls">
+                        tab_content_slippy_map_controls
+                      </slot>
+                    </div>
+                  </div>
                 </div>
               </TabContent>
 
