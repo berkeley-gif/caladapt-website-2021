@@ -13,12 +13,13 @@
     SelectMonth,
     SelectScenario,
     SelectModels,
+    Select,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
 
   import { scenarioStore, locationStore, modelsStore } from "../_common/stores";
-  import { monthStore } from "./_store";
+  import { monthStore, modelSingleStore } from "./_store";
 
   // props
   export let activeTab = 0;
@@ -42,12 +43,17 @@
     modelsStore.set(e.detail.selectedIds);
   }
 
+  function changeModelSingle(e) {
+    modelSingleStore.set(e.detail);
+  }
+
   function changeSelectedMonth(e) {
     monthStore.set(e.detail.id);
   }
 </script>
 
 {#if activeTab === 0}
+  <!-- Map Settings -->
   <div class="block">
     <SelectScenario
       selectedId="{$scenarioStore}"
@@ -69,7 +75,20 @@
       on:click="{() => showLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
     />
   </div>
+
+  <div class="block">
+    <Select
+      title="Select Model"
+      items="{PRIORITY_10_MODELS}"
+      selectedId="{$modelSingleStore}"
+      on:change="{changeModelSingle}"
+    />
+    <LearnMoreButton
+      on:click="{() => showLearnMore({ content: 'TODO: add scenario info' })}"
+    />
+  </div>
 {:else}
+  <!-- Chart Settings -->
   <div class="block">
     <span class="bx--label">Select Location</span>
     <StaticMap

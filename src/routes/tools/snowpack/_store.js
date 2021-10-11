@@ -33,6 +33,8 @@ export const monthStore = (() => {
   };
 })();
 
+export const modelSingleStore = writable("HadGEM2-ES");
+
 // Ticks for time slider
 export const timeTicksStore = writable(range(1950, 2100, 10));
 
