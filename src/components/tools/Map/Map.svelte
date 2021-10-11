@@ -145,9 +145,9 @@
 
 <style>
   div {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
+    width: var(--map-width, 100%);
+    height: var(--map-height, 100%);
+    min-height: var(--map-min-height, 300px);
   }
 </style>
 
