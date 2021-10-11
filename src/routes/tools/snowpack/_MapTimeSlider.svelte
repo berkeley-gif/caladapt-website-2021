@@ -14,14 +14,14 @@
   let timerId;
   let sliderComponent;
 
-  function multiLineLabel(selection, datum) {
+  function multiLineLabel(selection, datum, step) {
     selection
       .append("tspan")
       .text(datum)
       .append("tspan")
       .attr("dy", 12)
       .attr("x", 0)
-      .text(`–${datum + 9}`);
+      .text(`–${datum + step - 1}`);
   }
 
   function handlePlayPause() {
