@@ -51,13 +51,16 @@
   $: max = data[data.length - 1];
   $: trackWidth = width - margin.left - margin.right;
   $: xScale = scaleLinear().domain([min, max]).range([0, trackWidth]);
-  $: tickPositions = data.map((d) => xScale(d));
+  $: tickPositions = data.map((d) => ({
+    id: `${d}-${d + step}`,
+    xPos: xScale(d),
+  }));
 
   // Helper Functions
   //--------------------
   function makeLabel(node, d) {
     const selection = select(node);
-    labelFn(selection, d);
+    labelFn(selection, d, step);
   }
 
   function getClosest(arr, goal) {
@@ -138,8 +141,8 @@
   <svg>
     <g transform="{`translate(${margin.left}, ${margin.top})`}">
       <g class="range-slider-ticks">
-        {#each tickPositions as tickPos, i}
-          <g class="tick" transform="{`translate(${tickPos}, 0)`}">
+        {#each tickPositions as tickPos, i (tickPos.id)}
+          <g class="tick" transform="{`translate(${tickPos.xPos}, 0)`}">
             <line y2="11"></line>
             <text y="25" use:makeLabel="{data[i]}"></text>
           </g>
