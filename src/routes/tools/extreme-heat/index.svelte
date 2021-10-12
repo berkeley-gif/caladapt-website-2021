@@ -292,7 +292,7 @@
           emission scenarios. This data is derived from daily climate
           projections which have been downscaled from global climate models from
           the <a
-            href="http://cmip-pcmdi.llnl.gov/cmip5/data_portal.html"
+            href="https://esgf-node.llnl.gov/projects/cmip5/"
             target="_blank">CMIP5</a
           >
           archive, using the
@@ -329,7 +329,7 @@
           for threshold temperature or reset back to the 98th percentile value.
         </p>
 
-        <p class="h4">What is warm night?</p>
+        <p class="h4">What is a warm night?</p>
         <p>
           For purposes of this tool, a warm night is defined as a day in April
           through October when the daily minimum temperature exceeds the 98th
