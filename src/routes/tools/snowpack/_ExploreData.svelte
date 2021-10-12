@@ -57,6 +57,9 @@
   // reference to mapbox slippy map
   let mapboxMap;
 
+  // reference to time slider
+  let timeSlider;
+
   let bookmark;
 
   let learnMoreProps = {};
@@ -68,6 +71,7 @@
 
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
+  $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 

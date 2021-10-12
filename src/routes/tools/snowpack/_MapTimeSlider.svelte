@@ -6,11 +6,14 @@
   import { TimeSlider } from "~/components/tools/Settings";
   import { durationStore } from "./_store";
 
-  export let isLoading;
+  export function cancelAnimation() {
+    window.clearInterval(timerId);
+  }
 
   const intervalMs = 750;
 
   let isPlaying = false;
+  let isLoading = false;
   let timerId;
   let sliderComponent;
 
