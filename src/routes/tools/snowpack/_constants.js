@@ -19,5 +19,5 @@ export const TIME_DURATIONS = [
 
 export const MONTHS_LIST_ONE_INDEXED = range(0, 12).map((d) => ({
   id: d + 1,
-  label: timeFormat("%B")(new Date(new Date().getFullYear(), d, 1, 0, 0, 0)),
+  label: timeFormat("%B")(new Date(new Date().getUTCFullYear(), d, 1, 0, 0, 0)),
 }));
