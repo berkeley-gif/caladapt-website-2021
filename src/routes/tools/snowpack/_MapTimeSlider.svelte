@@ -86,9 +86,7 @@
 <div>
   <TimeSlider
     bind:this="{sliderComponent}"
-    start="{1960}"
-    end="{2100}"
-    step="{$durationStore}"
+    intervals="{years}"
     labelFn="{multiLineLabel}"
     on:change
   />
