@@ -5,9 +5,12 @@
     PRIORITY_10_MODELS,
     DEFAULT_SCENARIOS,
     SELECT_LOCATION_DESCRIPTION,
-    MONTHS_LIST,
   } from "../_common/constants";
-  import { LEARN_MORE_SELECT_MONTH, TIME_DURATIONS } from "./_constants";
+  import {
+    LEARN_MORE_SELECT_MONTH,
+    TIME_DURATIONS,
+    MONTHS_LIST_ONE_INDEXED,
+  } from "./_constants";
 
   import {
     SelectMonth,
@@ -72,7 +75,7 @@
 
   <div class="block">
     <SelectMonth
-      items="{MONTHS_LIST}"
+      items="{MONTHS_LIST_ONE_INDEXED}"
       selectedId="{$monthStore}"
       on:change="{changeSelectedMonth}"
     />
@@ -135,7 +138,7 @@
 
   <div class="block">
     <SelectMonth
-      items="{MONTHS_LIST}"
+      items="{MONTHS_LIST_ONE_INDEXED}"
       selectedId="{$monthStore}"
       on:change="{changeSelectedMonth}"
     />

@@ -1,10 +1,11 @@
 import { writable, derived } from "svelte/store";
-import { climvarList, monthsList } from "./_helpers";
+import { climvarList } from "./_helpers";
 import {
   DEFAULT_SELECTED_MONTH,
   DEFAULT_SELECTED_DURATION,
   DEFAULT_SELECTED_YEAR,
   DEFAULT_CLIMVAR,
+  MONTHS_LIST_ONE_INDEXED,
   TIME_DURATIONS,
 } from "./_constants";
 
@@ -31,7 +32,7 @@ export const monthStore = (() => {
     subscribe,
     get month() {
       return derived(store, ($store) => {
-        const selected = monthsList.find((d) => d.id === $store);
+        const selected = MONTHS_LIST_ONE_INDEXED.find((d) => d.id === $store);
         return selected;
       });
     },
