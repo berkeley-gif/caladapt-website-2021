@@ -1,5 +1,3 @@
-import { range } from "d3-array";
-import { timeFormat } from "d3-time-format";
 import config from "~/helpers/api-config";
 import models from "../../../helpers/climate-models";
 import scenarios from "../../../helpers/climate-scenarios";

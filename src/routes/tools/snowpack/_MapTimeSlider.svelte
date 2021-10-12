@@ -1,11 +1,12 @@
 <script>
   import { range } from "d3-array";
+  import { createEventDispatcher } from "svelte";
   import { Button } from "carbon-components-svelte";
   import PlayFilledAlt16 from "carbon-icons-svelte/lib/PlayFilledAlt16";
   import PauseFilled16 from "carbon-icons-svelte/lib/PauseFilled16";
 
   import { TimeSlider } from "~/components/tools/Settings";
-  import { durationStore } from "./_store";
+  import { LearnMoreButton } from "~/components/tools/Partials";
   import { getMapImages } from "./_helpers";
 
   export function cancelAnimation() {
@@ -18,6 +19,7 @@
   export let duration;
 
   const intervalMs = 750;
+  const dispatch = createEventDispatcher();
 
   let isPlaying = false;
   let isLoading = false;
@@ -74,12 +76,17 @@
       isLoading = false;
     }
   }
+
+  function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
+    dispatch("showLearnMore", { slugs, content, header });
+  }
 </script>
 
 <style>
   div {
     display: flex;
     gap: 1rem;
+    margin-bottom: 0.5rem;
   }
 </style>
 
@@ -97,3 +104,9 @@
     on:click="{handlePlayPause}"
   />
 </div>
+<LearnMoreButton
+  on:click="{() =>
+    showLearnMore({
+      content: 'TODO: something about livneh & models both being used here?',
+    })}"
+/>

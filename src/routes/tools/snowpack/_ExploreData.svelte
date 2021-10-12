@@ -196,6 +196,7 @@
     <MapTimeSlider
       bind:this="{timeSlider}"
       on:change="{handleSliderChange}"
+      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
       climvarId="{$climvarStore}"
       modelId="{$modelSingleStore}"
       scenarioId="{$scenarioStore}"
