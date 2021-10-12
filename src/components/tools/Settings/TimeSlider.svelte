@@ -101,7 +101,7 @@
   }
 
   .range-slider-track {
-    stroke: #dadee1;
+    stroke: var(--gray-60);
     stroke-width: 1;
     stroke-linecap: "square";
   }
@@ -127,11 +127,11 @@
   }
 
   .tick line {
-    stroke: #dadee1;
+    stroke: var(--gray-60);
   }
 
   .tick text {
-    fill: #474440;
+    fill: var(--gray-80);
     text-anchor: middle;
     font-size: 0.7rem;
   }
