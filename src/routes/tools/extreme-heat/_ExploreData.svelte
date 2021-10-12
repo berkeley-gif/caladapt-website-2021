@@ -11,7 +11,7 @@
     SMALL_SCALE_BOUNDARIES,
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
-  import { HEATMAP_COLOR_SCALE } from "./_constants";
+  import { HEATMAP_COLOR_SCALE, INDICATOR_DESCRIPTION } from "./_constants";
   import {
     flattenData,
     getDataByDate,
@@ -121,10 +121,10 @@
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      ["climate indicator", $climvar.label],
-      ["units", $climvar.units.imperial],
+      ["climate indicator", `${$climvar.label} ${$indicator.label}`],
+      ["threshold", `${thresholdStore} ${$climvar.units.imperial}`],
     ];
-    printContainer = document.querySelector("#explore");
+    printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
@@ -269,6 +269,7 @@
   <div slot="graphic" class="graphic block">
     <svelte:component
       this="{$indicator.chartComponent}"
+      height="400px"
       data="{$data}"
       dataByDate="{dataByDate}"
       yAxis="{{
@@ -280,12 +281,12 @@
       }}"
       colors="{HEATMAP_COLOR_SCALE}"
     />
-    <div class="chart-notes margin--v-16">
+    <div class="chart-notes margin--v-32">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
-    <div class="chart-download margin--v-8">
+    <div class="chart-download margin--v-16">
       <LearnMoreButton
         cta="{'Explain Chart'}"
         on:click="{() =>
@@ -326,7 +327,7 @@
       <RadioBtnGroup
         selected="{$climvarStore}"
         items="{climvarList}"
-        title="Select Indicator"
+        title="Select Climate Variable"
         on:change="{changeClimvar}"
       />
       <LearnMoreButton
@@ -338,7 +339,7 @@
     </div>
     <div class="block">
       <SelectClimvar
-        title="Select View"
+        title="Select Indicator"
         selectedId="{$indicatorStore}"
         items="{indicatorList}"
         on:change="{changeIndicator}"
@@ -346,7 +347,7 @@
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({
-            slugs: ['extreme-heat-day', 'warm-night'],
+            content: INDICATOR_DESCRIPTION,
           })}"
       />
     </div>
@@ -366,7 +367,6 @@
           label="Change Heat Wave Duration"
           min="{2}"
           max="{7}"
-          helperText="A number between 2-7. This updates the number of consecutive days in a heat wave."
           value="{$durationStore}"
           on:change="{changeDuration}"
         />
