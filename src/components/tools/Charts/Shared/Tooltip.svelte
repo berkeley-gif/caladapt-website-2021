@@ -26,7 +26,7 @@
 
   function setContents(result) {
     if (Object.keys(result).length === 0) return "";
-    const year = result.date.getFullYear();
+    const year = result.date.getUTCFullYear();
     const rows = result.values;
 
     const visibleRows = rows.filter((row) => {
