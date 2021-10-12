@@ -136,11 +136,11 @@
     <Control />
   </div>
 {:else}
+  <div style="{`height:${height}`}">
+    <SkeletonPlaceholder style="height:100%;width:100%;" />
+  </div>
   <div class="chart-legend">
     <SkeletonText />
     <SkeletonText />
-  </div>
-  <div style="{`height:${height}`}">
-    <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
 {/if}
