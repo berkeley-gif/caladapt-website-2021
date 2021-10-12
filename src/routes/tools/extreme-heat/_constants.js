@@ -72,3 +72,15 @@ export const DEFAULT_DURATION = 4;
 export const HEATMAP_COLOR_SCALE = ["#fed976", "#fd8d3c", "#e31a1c", "#800026"];
 
 export const DEFAULT_THRESHOLDS = [100, 65];
+
+export const INDICATOR_DESCRIPTION = `
+<p>Indicators presented in this tool examine projected trends in four key characteristics of 
+Extreme Heat Days and Warm Nights:</p>
+<ul>
+  <li><strong>Frequency</strong>: The number of Extreme Heat Days/Warm Nights that occur every year.</li>
+  <li><strong>Timing</strong>: The length of the season between the first Extreme Heat Day/Warm 
+  Night and the last.</li>
+  <li><strong>Maximum Duration</strong>: The length of the longest heat wave.</li>
+  <li><strong>Heat Waves</strong>: The number of Heat Wave events that occur every year. The duration 
+  (number of days) of a Heat Wave event can be set by the user.</li>
+</ul>`;
