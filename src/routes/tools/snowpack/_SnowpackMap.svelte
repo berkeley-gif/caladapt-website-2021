@@ -15,6 +15,7 @@
   <Legend
     values="{colorValues}"
     ramp="{colorRamp}"
-    title="SWE (inches per month)"
+    title="Snow Water Equivalent"
+    subtitle="Inches per month"
   />
 </Map>

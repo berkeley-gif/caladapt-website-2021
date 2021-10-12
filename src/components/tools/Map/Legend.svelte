@@ -5,6 +5,7 @@
   export let height = 240;
   export let margin = { top: 8, left: 0, right: 8, bottom: 0 };
   export let title = "Legend";
+  export let subtitle = "";
   export let ramp = [];
   export let values = [];
   export let padding = 0.5;
@@ -44,7 +45,14 @@
 
   p {
     margin: 0;
+  }
+
+  .legend--title-text {
     font-weight: 600;
+  }
+
+  .legend--subtitle-text {
+    font-weight: 400;
   }
 
   .legend--item-text {
@@ -53,7 +61,10 @@
 </style>
 
 <div style="--width:{width}px; --padding:{padding}rem;">
-  <p>{title}</p>
+  <p class="legend--title-text">{title}</p>
+  {#if subtitle}
+    <p class="legend--subtitle-text">{subtitle}</p>
+  {/if}
   <svg
     viewBox="0 0 {width} {height}"
     role="presentation"
