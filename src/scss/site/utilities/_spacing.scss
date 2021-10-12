@@ -49,49 +49,61 @@
 
 // Vertical Margins
 .margin--v-1 {
-  margin: $spacing-1 0;
+  margin-top: $spacing-1;
+  margin-bottom: $spacing-1;
 }
 
 .margin--v-2 {
-  margin: $spacing-2 0;
+  margin-top: $spacing-2;
+  margin-bottom: $spacing-2;
 }
 
 .margin--v-4 {
-  margin: $spacing-4 0;
+  margin-top: $spacing-4;
+  margin-bottom: $spacing-4;
 }
 
 .margin--v-8 {
-  margin: $spacing-8 0;
+  margin-top: $spacing-8;
+  margin-bottom: $spacing-8;
 }
 
 .margin--v-12 {
-  margin: $spacing-12 0;
+  margin-top: $spacing-12;
+  margin-bottom: $spacing-12;
 }
 
 .margin--v-16 {
-  margin: $spacing-16 0;
+  margin-top: $spacing-16;
+  margin-bottom: $spacing-16;
 }
 
 .margin--v-24 {
-  margin: $spacing-24 0;
+  margin-top: $spacing-24;
+  margin-bottom: $spacing-24;
 }
 
 .margin--v-32 {
-  margin: $spacing-32 0;
+  margin-top: $spacing-32;
+  margin-bottom: $spacing-32;
 }
 
 .margin--v-40 {
-  margin: $spacing-40 0;
+  margin-top: $spacing-40;
+  margin-bottom: $spacing-40;
 }
 
 .margin--v-48 {
-  margin: $spacing-48 0;
+  margin-top: $spacing-48;
+  margin-bottom: $spacing-48;
 }
 
 .margin--v-96 {
-  margin: $spacing-96 0;
+  margin-top: $spacing-96;
+  margin-bottom: $spacing-96;
 }
 
 .margin--v-160 {
-  margin: $spacing-160 0;
+  margin-top: $spacing-160;
+  margin-bottom: $spacing-160;
 }

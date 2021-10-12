@@ -2,16 +2,13 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { spring } from "svelte/motion";
   import { scaleLinear } from "d3-scale";
-  import { range } from "d3-array";
   import { select } from "d3-selection";
   import { pannable } from "../../../actions/pannable";
 
   // Props
   //------
   export let width = 500;
-  export let start = 1;
-  export let end = 11;
-  export let step = 1;
+  export let intervals = [1, 2];
   export let margin = { top: 10, right: 20, bottom: 5, left: 20 };
   export let labelFn = (sel, d) => {
     sel.text(d);
@@ -19,7 +16,7 @@
   // Function for autoplaying slider
   export function next() {
     if (value >= max) {
-      value = data[0];
+      value = intervals[0];
     } else {
       value = value + step;
     }
@@ -45,19 +42,22 @@
 
   // Reactive functionality
   //------------------------
-  $: data = range(start, end, step);
-  $: value = data[0];
-  $: min = data[0];
-  $: max = data[data.length - 1];
+  $: value = intervals[0];
+  $: min = intervals[0];
+  $: max = intervals[intervals.length - 1];
+  $: step = intervals[1] - intervals[0];
   $: trackWidth = width - margin.left - margin.right;
   $: xScale = scaleLinear().domain([min, max]).range([0, trackWidth]);
-  $: tickPositions = data.map((d) => xScale(d));
+  $: tickPositions = intervals.map((d) => ({
+    id: `${d}-${d + step}`,
+    xPos: xScale(d),
+  }));
 
   // Helper Functions
   //--------------------
   function makeLabel(node, d) {
     const selection = select(node);
-    labelFn(selection, d);
+    labelFn(selection, d, step);
   }
 
   function getClosest(arr, goal) {
@@ -98,7 +98,7 @@
   }
 
   .range-slider-track {
-    stroke: #dadee1;
+    stroke: var(--gray-60);
     stroke-width: 1;
     stroke-linecap: "square";
   }
@@ -124,13 +124,13 @@
   }
 
   .tick line {
-    stroke: #dadee1;
+    stroke: var(--gray-60);
   }
 
   .tick text {
-    fill: #474440;
+    fill: var(--gray-80);
     text-anchor: middle;
-    font-size: 0.7rem;
+    font-size: 0.6875rem;
   }
 </style>
 
@@ -138,10 +138,10 @@
   <svg>
     <g transform="{`translate(${margin.left}, ${margin.top})`}">
       <g class="range-slider-ticks">
-        {#each tickPositions as tickPos, i}
-          <g class="tick" transform="{`translate(${tickPos}, 0)`}">
+        {#each tickPositions as tickPos, i (tickPos.id)}
+          <g class="tick" transform="{`translate(${tickPos.xPos}, 0)`}">
             <line y2="11"></line>
-            <text y="25" use:makeLabel="{data[i]}"></text>
+            <text y="25" use:makeLabel="{intervals[i]}"></text>
           </g>
         {/each}
       </g>
