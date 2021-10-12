@@ -16,6 +16,7 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
+  let src;
 
   function createSrcUrl({ overlay, bounds, params }) {
     return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -73,7 +74,9 @@
     }
   }
 
-  $: src = location && location.geometry ? handleLocation(location) : "";
+  $: if (location) {
+    src = location.geometry ? handleLocation(location) : "";
+  }
   $: alt = location ? `map of ${location.title}` : "";
 </script>
 
