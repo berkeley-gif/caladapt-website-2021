@@ -21,3 +21,33 @@ export const MONTHS_LIST_ONE_INDEXED = range(0, 12).map((d) => ({
   id: d + 1,
   label: timeFormat("%B")(new Date(new Date().getUTCFullYear(), d, 1, 0, 0, 0)),
 }));
+
+export const colorRamp = [
+  "var(--gray-10)",
+  "#ffffcc",
+  "#d9f0ca",
+  "#b3e1c8",
+  "#8dd3c7",
+  "#67c4c5",
+  "#41b6c4",
+  "#3a95b8",
+  "#3375ac",
+  "#2c54a0",
+  "#253494",
+  "#00001d",
+];
+
+export const colorValues = [
+  "0-1",
+  "1-4",
+  "4-8",
+  "8-12",
+  "12-16",
+  "16-20",
+  "20-24",
+  "24-28",
+  "28-32",
+  "32-36",
+  "36–40",
+  ">40",
+];
