@@ -1,10 +1,13 @@
 import { range } from "d3-array";
 import { timeFormat } from "d3-time-format";
+import config from "~/helpers/api-config";
 import models from "../../../helpers/climate-models";
 import scenarios from "../../../helpers/climate-scenarios";
 import boundaries from "../../../helpers/mapbox-layers";
 import climvars from "../../../helpers/climate-variables";
 import { tools } from "../../../../content/tools/data";
+
+const { apiEndpoint } = config.env.production;
 
 export const climvarList = climvars
   .filter((d) => ["swe"].includes(d.id))
@@ -40,11 +43,6 @@ models.forEach((d) => {
 });
 
 export const seriesList = series;
-
-export const monthsList = range(0, 12).map((d) => {
-  const day = new Date(Date.UTC(2020, d, 1));
-  return { id: parseInt(d), label: timeFormat("%B")(day) };
-});
 
 export const boundaryList = boundaries
   .filter((d) => d.metadata.group === "Boundaries")
@@ -124,17 +122,21 @@ export const resources = [
   },
 ];
 
-export function getMapImages({ model, ticks, scenario, month }) {
-  console.log("getmapimages", model);
-  const urls = ticks.map((tick) => {
-    const start = parseInt(tick);
-    const end = start + 9;
-    const useScenario = tick < 2000 ? "historical" : scenario;
+export const getMapImages = ({
+  climvarId,
+  modelId,
+  years,
+  duration,
+  scenarioId,
+  monthNumber,
+}) =>
+  years.map((year) => {
+    const start = parseInt(year);
+    const end = start + duration;
+    const useScenario = year < 2010 ? "livneh" : `${modelId}_${scenarioId}`;
     return {
       id: start,
       text: `${start}-${end}`,
-      src: `https://api.cal-adapt.org/api/series/swe_month_${model}_${useScenario}/${start}-${end}/${month}.png?style=swe&scale=10`,
+      src: `${apiEndpoint}/series/${climvarId}_month_${useScenario}/${start}-${end}/${monthNumber}.png?style=swe&scale=10`,
     };
   });
-  return urls;
-}

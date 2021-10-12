@@ -1,14 +1,21 @@
 <script>
+  import { range } from "d3-array";
   import { Button } from "carbon-components-svelte";
   import PlayFilledAlt16 from "carbon-icons-svelte/lib/PlayFilledAlt16";
   import PauseFilled16 from "carbon-icons-svelte/lib/PauseFilled16";
 
   import { TimeSlider } from "~/components/tools/Settings";
   import { durationStore } from "./_store";
+  import { getMapImages } from "./_helpers";
 
   export function cancelAnimation() {
     window.clearInterval(timerId);
   }
+  export let climvarId;
+  export let modelId;
+  export let scenarioId;
+  export let monthNumber;
+  export let duration;
 
   const intervalMs = 750;
 
@@ -16,6 +23,18 @@
   let isLoading = false;
   let timerId;
   let sliderComponent;
+
+  $: years = range(1960, 2100, duration);
+
+  $: imagePaths = getMapImages({
+    climvarId,
+    modelId,
+    scenarioId,
+    duration,
+    years,
+    monthNumber,
+  });
+  $: imagePaths, preloadAllImages(imagePaths);
 
   function multiLineLabel(selection, datum, step) {
     selection
@@ -33,6 +52,26 @@
       timerId = window.setInterval(sliderComponent.next, intervalMs);
     } else {
       window.clearInterval(timerId);
+    }
+  }
+
+  function preloadImage(src) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = src;
+    });
+  }
+
+  async function preloadAllImages(imagesData) {
+    isLoading = true;
+    try {
+      await Promise.all(imagesData.map((url) => preloadImage(url.src)));
+    } catch (error) {
+      console.warn(error.message);
+    } finally {
+      isLoading = false;
     }
   }
 </script>

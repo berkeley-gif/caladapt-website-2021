@@ -188,8 +188,20 @@
     <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
   </div>
 
-  <div slot="tab_content_slippy_map_controls" class="graphic block">
-    <MapTimeSlider on:change="{handleSliderChange}" />
+  <div
+    slot="tab_content_slippy_map_controls"
+    class="graphic block"
+    style="background-color: var(--gray-20);"
+  >
+    <MapTimeSlider
+      bind:this="{timeSlider}"
+      on:change="{handleSliderChange}"
+      climvarId="{$climvarStore}"
+      modelId="{$modelSingleStore}"
+      scenarioId="{$scenarioStore}"
+      monthNumber="{$monthStore}"
+      duration="{$durationStore}"
+    />
   </div>
 
   <div slot="tab_content_title" class="block title">
