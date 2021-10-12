@@ -13,7 +13,7 @@
   export let items;
   export let selected;
   export let units;
-  export let title = "Select Threshold";
+  export let title = "Set Threshold";
   export let helperText;
 
   const dispatch = createEventDispatcher();
