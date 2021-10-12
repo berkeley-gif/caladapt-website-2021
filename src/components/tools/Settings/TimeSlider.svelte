@@ -133,7 +133,7 @@
   .tick text {
     fill: var(--gray-80);
     text-anchor: middle;
-    font-size: 0.7rem;
+    font-size: 0.6875rem;
   }
 </style>
 
