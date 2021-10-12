@@ -12,12 +12,12 @@ export function buildEnvelope(_data) {
   const dataArr = rollups(
     _data,
     (v) => v.map((i) => i.value),
-    (d) => d.date.getFullYear()
+    (d) => d.date.getUTCFullYear()
   );
   return dataArr.map(([key, value]) => {
     const sortedArr = sort(value);
     return {
-      date: new Date(key, 11, 31),
+      date: new Date(Date.UTC(key, 11, 31)),
       min: sortedArr[0],
       max: sortedArr[1],
     };
@@ -50,7 +50,7 @@ export function flattenData(_data) {
     const seriesValues = series.values.map((d) => {
       return {
         ...d,
-        year: +d.date.getFullYear(),
+        year: +d.date.getUTCFullYear(),
         id: series.id,
         label: series.label,
       };
@@ -89,7 +89,7 @@ export function getDataByDate(_arr) {
   return Array.from(
     group(_arr, (d) => d.year),
     ([year, values]) => {
-      const date = new Date(year, 11, 31);
+      const date = new Date(Date.UTC(year, 0, 1));
       const rows = values.map((d) => {
         if ("min" in d && "max" in d) {
           return {
@@ -137,7 +137,7 @@ export function getDataByDate(_arr) {
 export function formatDataForExport(_arr) {
   return _arr.map((item) => {
     const row = {};
-    row.year = item.date.getFullYear();
+    row.year = item.date.getUTCFullYear();
     item.values.forEach((d) => {
       if (Array.isArray(d.value)) {
         row[`${d.label} Min`] = d.value[0];
