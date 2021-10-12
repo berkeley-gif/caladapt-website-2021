@@ -100,7 +100,8 @@
   $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
   $: frequencyLabel =
     $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
-  $: monthsLabel = $frequencyStore === "M" ? getMonthsLabel() : "";
+  $: monthsLabel =
+    $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.type !== "area");
