@@ -132,15 +132,15 @@
       </Html>
     </LayerCake>
   </div>
-  <div class="chart-legend">
+  <div class="chart-legend margin--v-16">
     <Legend />
   </div>
 {:else}
+  <div style="{`height:${height}`}">
+    <SkeletonPlaceholder style="height:100%;width:100%;" />
+  </div>
   <div class="chart-legend">
     <SkeletonText />
     <SkeletonText />
-  </div>
-  <div style="{`height:${height}`}">
-    <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
 {/if}

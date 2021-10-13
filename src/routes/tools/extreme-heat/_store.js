@@ -79,7 +79,6 @@ export const thresholdListStore = (() => {
     },
     add(value, label = "") {
       update((store) => {
-        console.log("store", store);
         if (store.find((d) => d.value === value)) return;
         const thresh = {
           id: uid++,

@@ -30,7 +30,7 @@
       {#if i === +tickVals.length - 1}
         <text
           y="-4"
-          x="{$padding.left}"
+          x="{$padding.left + 10}"
           class="label"
           style="font-size:14px;fill:#666">{label}</text
         >
