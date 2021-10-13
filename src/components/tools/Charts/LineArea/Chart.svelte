@@ -110,6 +110,7 @@
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
       x="{xAxis.key}"
       y="{yAxis.key}"
+      yNice="{true}"
       xScale="{scaleTime()}"
       xDomain="{[xmin, xmax]}"
       yDomain="{[ymin, ymax]}"
