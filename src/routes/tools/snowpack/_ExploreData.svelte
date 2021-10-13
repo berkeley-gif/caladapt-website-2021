@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -19,6 +20,7 @@
   import SnowpackChart from "./_SnowpackChart.svelte";
   import SnowpackMap from "./_SnowpackMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
+  import ChartTitle from "./_ChartTitle.svelte";
 
   import {
     scenarioStore,
@@ -57,7 +59,7 @@
   // reference to mapbox slippy map
   let mapboxMap;
 
-  // reference to time slider
+  // reference to time slider component
   let timeSlider;
 
   let bookmark;
@@ -69,9 +71,13 @@
   let printContainer;
   let printSkipElements;
 
+  let chartTitle = "";
+
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
+
+  $: chartSubtitle = `Projected changes in Snow Water Equivalence under a ${$scenario.labelLong}`;
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
@@ -91,6 +97,14 @@
     statsData = null;
     dataByDate = null;
   }
+
+  afterUpdate(() => {
+    // Note: for some reason the chartTitle variable will only update
+    // when setting it here.
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
@@ -181,6 +195,7 @@
   activeTab="{activeTab}"
   on:tabChange="{handleTabChange}"
 >
+  <!-- Map components -->
   <div
     slot="tab_content_slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
@@ -209,15 +224,10 @@
     {/if}
   </div>
 
+  <!-- Chart components -->
   <div slot="tab_content_title" class="block title">
     {#if activeTab}
-      <div class="h3">
-        <!-- FIXME: bug where this never seems to update?  -->
-        {$location.title}
-      </div>
-      <div class="h4">
-        Projected changes in Snow Water Equivalence under a {$scenario.labelLong}
-      </div>
+      <ChartTitle title="{chartTitle}" subtitle="{chartSubtitle}" />
     {/if}
   </div>
 
@@ -245,6 +255,7 @@
     {/if}
   </div>
 
+  <!-- Settings component shared by both Map & Chart -->
   <div slot="settings" class="settings">
     <SettingsPanel
       activeTab="{activeTab}"
@@ -254,6 +265,7 @@
   </div>
 </Dashboard>
 
+<!-- Modal Components -->
 <svelte:component
   this="{LearnMoreModal}"
   bind:open="{showLearnMore}"
