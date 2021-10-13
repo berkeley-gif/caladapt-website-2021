@@ -91,6 +91,9 @@
       title="{'Select Duration'}"
       on:change="{changeDuration}"
     />
+    <LearnMoreButton
+      on:click="{() => showLearnMore({ content: 'TODO: add duration info' })}"
+    />
   </div>
 
   <div class="block">
@@ -101,7 +104,7 @@
       on:change="{changeModelSingle}"
     />
     <LearnMoreButton
-      on:click="{() => showLearnMore({ content: 'TODO: add scenario info' })}"
+      on:click="{() => showLearnMore({ slugs: ['global-climate-model'] })}"
     />
   </div>
 {:else}
@@ -156,7 +159,7 @@
     <LearnMoreButton
       on:click="{() =>
         showLearnMore({
-          slugs: ['cooling-degree-day', 'heating-degree-day'],
+          slugs: ['global-climate-model'],
         })}"
     />
   </div>
