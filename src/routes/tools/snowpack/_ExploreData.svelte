@@ -185,7 +185,9 @@
     slot="tab_content_slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
-    <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+    {#if !activeTab}
+      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+    {/if}
   </div>
 
   <div
@@ -193,46 +195,54 @@
     class="graphic block"
     style="background-color: var(--gray-20);"
   >
-    <MapTimeSlider
-      bind:this="{timeSlider}"
-      on:change="{handleSliderChange}"
-      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
-      climvarId="{$climvarStore}"
-      modelId="{$modelSingleStore}"
-      scenarioId="{$scenarioStore}"
-      monthNumber="{$monthStore}"
-      duration="{$durationStore}"
-    />
+    {#if !activeTab}
+      <MapTimeSlider
+        bind:this="{timeSlider}"
+        on:change="{handleSliderChange}"
+        on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
+        climvarId="{$climvarStore}"
+        modelId="{$modelSingleStore}"
+        scenarioId="{$scenarioStore}"
+        monthNumber="{$monthStore}"
+        duration="{$durationStore}"
+      />
+    {/if}
   </div>
 
   <div slot="tab_content_title" class="block title">
-    <div class="h3">
-      <!-- FIXME: bug where this never seems to update?  -->
-      {$location.title}
-    </div>
-    <div class="h4">
-      Projected changes in Snow Water Equivalence under a {$scenario.labelLong}
-    </div>
+    {#if activeTab}
+      <div class="h3">
+        <!-- FIXME: bug where this never seems to update?  -->
+        {$location.title}
+      </div>
+      <div class="h4">
+        Projected changes in Snow Water Equivalence under a {$scenario.labelLong}
+      </div>
+    {/if}
   </div>
 
   <div slot="tab_content_stats">
-    <StatsPanel
-      {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
-    />
+    {#if activeTab}
+      <StatsPanel
+        {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
+      />
+    {/if}
   </div>
 
   <div slot="tab_content_graphic" class="graphic block">
-    <SnowpackChart
-      data="{$dataStore}"
-      dataByDate="{dataByDate}"
-      formatFn="{formatFn}"
-      units="{$climvar.units.imperial}"
-      label="{$climvar.label}"
-      dataSource="{$titles.join(', ')}"
-      on:showDownload="{loadDownload}"
-      on:showShare="{loadShare}"
-      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
-    />
+    {#if activeTab}
+      <SnowpackChart
+        data="{$dataStore}"
+        dataByDate="{dataByDate}"
+        formatFn="{formatFn}"
+        units="{$climvar.units.imperial}"
+        label="{$climvar.label}"
+        dataSource="{$titles.join(', ')}"
+        on:showDownload="{loadDownload}"
+        on:showShare="{loadShare}"
+        on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+      />
+    {/if}
   </div>
 
   <div slot="settings" class="settings">
