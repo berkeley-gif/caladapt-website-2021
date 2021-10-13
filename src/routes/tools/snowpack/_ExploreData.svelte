@@ -227,7 +227,11 @@
   <!-- Chart components -->
   <div slot="tab_content_title" class="block title">
     {#if activeTab}
-      <ChartTitle title="{chartTitle}" subtitle="{chartSubtitle}" />
+      <ChartTitle
+        title="{chartTitle}"
+        subtitle="{chartSubtitle}"
+        loadLocation="{loadLocation}"
+      />
     {/if}
   </div>
 
