@@ -91,6 +91,7 @@
   }
 </style>
 
+<p class="bx--label">Select Time Range</p>
 <div>
   <TimeSlider
     bind:this="{sliderComponent}"
