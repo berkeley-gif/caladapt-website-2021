@@ -17,23 +17,27 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
+
+  const image = new Image();
+  image.onload = () => {
+    loading = false;
+    loaded = true;
+  };
+  image.onerror = () => {
+    loading = false;
+    error = true;
+  };
+
   // Set to `true` when `loaded` is `true` and `error` is false
   let loading = false;
   // Set to `true` when the image is loaded
   let loaded = false;
   // Set to `true` if an error occurs when loading the image
   let error = false;
-  let image;
 
-  const loadImage = (url) => {
-    image = null;
-    loaded = false;
-    image = new Image();
-    error = false;
-    image.src = url;
-    image.onload = () => (loaded = true);
-    image.onerror = () => (error = true);
-  };
+  $: src = location && location.geometry ? handleLocation(location) : "";
+  $: alt = location ? `map of ${location.title}` : "";
+  $: if (src) image.src = src;
 
   function createSrcUrl({ overlay, bounds, params }) {
     return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -90,10 +94,6 @@
       return getPolygonImgSrc(location);
     }
   }
-
-  $: src = location && location.geometry ? handleLocation(location) : "";
-  $: alt = location ? `map of ${location.title}` : "";
-  $: if (src) loadImage(src);
 </script>
 
 <style>
@@ -118,8 +118,7 @@
 <button class="static-map" on:click>
   {#if loading}
     <InlineLoading description="Loading location map..." />
-  {/if}
-  {#if loaded}
+  {:else if loaded}
     <img
       {...$$restProps}
       style="width: 100%;{$$restProps.style}"
@@ -127,8 +126,9 @@
       alt="{alt}"
       transition:fade
     />
-  {/if}
-  {#if error}
+  {:else if error}
     <div class="error-text">An error occurred. Unable to load map.</div>
+  {:else}
+    <p>Something went wrong.</p>
   {/if}
 </button>
