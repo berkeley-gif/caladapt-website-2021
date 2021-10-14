@@ -17,7 +17,6 @@
 </script>
 
 <script>
-  import { InlineNotification } from "carbon-components-svelte";
   import Embed from "~/partials/Embed.svelte";
 
   export let tool;
