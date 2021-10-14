@@ -29,7 +29,7 @@
   }
 
   .legend--columns {
-    column-count: 2;
+    column-count: var(--columns);
     column-width: auto;
   }
 
