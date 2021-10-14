@@ -2,7 +2,10 @@
   import {
     DEFAULT_CENTER,
     DEFAULT_CLIMVAR,
+    DEFAULT_SELECTED_DURATION,
     DEFAULT_SELECTED_MONTH,
+    DEFAULT_SELECTED_YEAR,
+    DEFAULT_SELECTED_MODEL_SINGLE,
     TOOL_SLUG,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
@@ -39,9 +42,20 @@
     // Set intitial config for tool
     let initialConfig;
 
-    if (Object.keys(query).length > 0) {
+    if (Object.keys(query).length) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng, month } = query;
+      const {
+        boundary,
+        climvar,
+        scenario,
+        models,
+        modelSingle,
+        lat,
+        lng,
+        month,
+        year,
+        duration,
+      } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
@@ -50,11 +64,17 @@
         lat: +lat,
         lng: +lng,
         month: +month,
+        year: +year,
+        modelSingle,
+        duration: +duration,
       };
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
         month: DEFAULT_SELECTED_MONTH,
+        year: DEFAULT_SELECTED_YEAR,
+        duration: DEFAULT_SELECTED_DURATION,
+        modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
         climvarId: DEFAULT_CLIMVAR,
         lng: DEFAULT_CENTER[0],
         lat: DEFAULT_CENTER[1],
@@ -98,7 +118,13 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, monthStore } from "./_store";
+  import {
+    climvarStore,
+    durationStore,
+    modelSingleStore,
+    monthStore,
+    yearStore,
+  } from "./_store";
 
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
 
@@ -176,6 +202,9 @@
     climvarId,
     modelIds,
     month,
+    year,
+    modelSingle,
+    duration,
     imperial,
   }) {
     climvarStore.set(climvarId);
@@ -183,6 +212,9 @@
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     monthStore.set(month);
+    yearStore.set(year);
+    modelSingleStore.set(modelSingle);
+    durationStore.set(duration);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);

@@ -6,6 +6,7 @@ export const DEFAULT_CENTER = [-119.96, 38.9];
 export const DEFAULT_SELECTED_MONTH = 4;
 export const DEFAULT_SELECTED_DURATION = 10;
 export const DEFAULT_SELECTED_YEAR = 1960;
+export const DEFAULT_SELECTED_MODEL_SINGLE = "HadGEM2-ES";
 
 export const TOOL_SLUG = "snowpack";
 
