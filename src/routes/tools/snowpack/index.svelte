@@ -2,7 +2,10 @@
   import {
     DEFAULT_CENTER,
     DEFAULT_CLIMVAR,
+    DEFAULT_SELECTED_DURATION,
     DEFAULT_SELECTED_MONTH,
+    DEFAULT_SELECTED_YEAR,
+    DEFAULT_SELECTED_MODEL_SINGLE,
     TOOL_SLUG,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
@@ -39,9 +42,20 @@
     // Set intitial config for tool
     let initialConfig;
 
-    if (Object.keys(query).length > 0) {
+    if (Object.keys(query).length) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng, month } = query;
+      const {
+        boundary,
+        climvar,
+        scenario,
+        models,
+        modelSingle,
+        lat,
+        lng,
+        month,
+        year,
+        duration,
+      } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
@@ -50,11 +64,17 @@
         lat: +lat,
         lng: +lng,
         month: +month,
+        year: +year,
+        modelSingle,
+        duration: +duration,
       };
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
         month: DEFAULT_SELECTED_MONTH,
+        year: DEFAULT_SELECTED_YEAR,
+        duration: DEFAULT_SELECTED_DURATION,
+        modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
         climvarId: DEFAULT_CLIMVAR,
         lng: DEFAULT_CENTER[0],
         lat: DEFAULT_CENTER[1],
@@ -98,7 +118,13 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, monthStore } from "./_store";
+  import {
+    climvarStore,
+    durationStore,
+    modelSingleStore,
+    monthStore,
+    yearStore,
+  } from "./_store";
 
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
 
@@ -176,6 +202,9 @@
     climvarId,
     modelIds,
     month,
+    year,
+    modelSingle,
+    duration,
     imperial,
   }) {
     climvarStore.set(climvarId);
@@ -183,6 +212,9 @@
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     monthStore.set(month);
+    yearStore.set(year);
+    modelSingleStore.set(modelSingle);
+    durationStore.set(duration);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
@@ -243,7 +275,19 @@
       datasets="{datasets}"
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
-      <div slot="description"></div>
+      <div slot="description">
+        <p>
+          If heat-trapping emissions continue unabated, more precipitation will
+          fall as rain instead of snow, and the snow that does fall will melt
+          earlier, reducing the Sierra Nevada spring snowpack by as much as 70
+          to 90 percent. How much snowpack will be lost depends in part on
+          future precipitation patterns, the projections for which remain
+          uncertain. However, even under wetter climate projections, the loss of
+          snowpack would pose challenges to water managers, hamper hydropower
+          generation, and nearly eliminate skiing and other snow-related
+          recreational activities.
+        </p>
+      </div>
     </About>
   </div>
 

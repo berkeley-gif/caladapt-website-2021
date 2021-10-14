@@ -15,7 +15,7 @@
   <Legend
     values="{colorValues}"
     ramp="{colorRamp}"
-    title="Snow Water Equivalent"
-    subtitle="Inches per month"
+    title="Snow Water Equivalent (inches)"
+    columns="{3}"
   />
 </Map>

@@ -132,9 +132,23 @@ const tools = [
     icons: [
       'img/icons/snowflake.svg',
     ],
-    datasets: [],
-    related: [],
-    resources: []
+    datasets: [
+      {
+        slug: "e3463df5-5ecc-42fb-a947-07868a8eee8c",
+        logo: "gif_80x80.png"
+      },
+      {
+        slug: "bac951c9-a781-40e1-b65d-5a14578157e9",
+        logo: "gif_80x80.png"
+      }
+    ],
+    related: [
+      'maps-of-projected-change'
+    ],
+    resources: [
+      "California's Adaptation Clearinghouse",
+      "Regional Reports: California's 4th Climate Change Assessment"
+    ]
   },
   {
     title: 'Wildfire',

@@ -1,6 +1,7 @@
 import { writable, derived } from "svelte/store";
-import { climvarList } from "./_helpers";
+import climvars from "~/helpers/climate-variables";
 import {
+  DEFAULT_SELECTED_MODEL_SINGLE,
   DEFAULT_SELECTED_MONTH,
   DEFAULT_SELECTED_DURATION,
   DEFAULT_SELECTED_YEAR,
@@ -17,7 +18,7 @@ export const climvarStore = (() => {
     subscribe,
     get climvar() {
       return derived(store, ($store) => {
-        const selected = climvarList.find((d) => d.id === $store);
+        const selected = climvars.find((d) => d.id === $store);
         return selected;
       });
     },
@@ -39,7 +40,7 @@ export const monthStore = (() => {
   };
 })();
 
-export const modelSingleStore = writable("HadGEM2-ES");
+export const modelSingleStore = writable(DEFAULT_SELECTED_MODEL_SINGLE);
 
 export const durationStore = (() => {
   const store = writable(DEFAULT_SELECTED_DURATION);

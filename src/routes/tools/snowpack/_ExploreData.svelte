@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -19,6 +20,7 @@
   import SnowpackChart from "./_SnowpackChart.svelte";
   import SnowpackMap from "./_SnowpackMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
+  import ChartTitle from "./_ChartTitle.svelte";
 
   import {
     scenarioStore,
@@ -40,6 +42,7 @@
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
+  const { month } = monthStore;
 
   let dataByDate;
   let statsData;
@@ -57,7 +60,7 @@
   // reference to mapbox slippy map
   let mapboxMap;
 
-  // reference to time slider
+  // reference to time slider component
   let timeSlider;
 
   let bookmark;
@@ -69,9 +72,13 @@
   let printContainer;
   let printSkipElements;
 
+  let chartTitle = "";
+
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
+
+  $: chartSubtitle = `Projected changes in Snow Water Equivalent for the month of ${$month.label} under a`;
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
@@ -91,6 +98,14 @@
     statsData = null;
     dataByDate = null;
   }
+
+  afterUpdate(() => {
+    // Note: for some reason the chartTitle variable will only update
+    // when setting it here.
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
@@ -116,7 +131,10 @@
         climvar: $climvarStore,
         scenario: $scenarioStore,
         models: modelsStr,
+        modelSingle: $modelSingleStore,
+        year: $yearStore,
         month: $monthStore,
+        duration: $durationStore,
         lng,
         lat,
         boundary: $boundary.id,
@@ -144,8 +162,8 @@
       ["scenario", $scenario.label],
       ["climate variable", $climvar.label],
     ];
-    printContainer = document.querySelector("#explore");
-    printSkipElements = ["settings"];
+    printContainer = document.querySelector("#explore-data");
+    printSkipElements = ["settings", "bx--tabs--container"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
@@ -181,11 +199,14 @@
   activeTab="{activeTab}"
   on:tabChange="{handleTabChange}"
 >
+  <!-- Map components -->
   <div
     slot="tab_content_slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
-    <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+    {#if !activeTab}
+      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+    {/if}
   </div>
 
   <div
@@ -193,48 +214,57 @@
     class="graphic block"
     style="background-color: var(--gray-20);"
   >
-    <MapTimeSlider
-      bind:this="{timeSlider}"
-      on:change="{handleSliderChange}"
-      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
-      climvarId="{$climvarStore}"
-      modelId="{$modelSingleStore}"
-      scenarioId="{$scenarioStore}"
-      monthNumber="{$monthStore}"
-      duration="{$durationStore}"
-    />
+    {#if !activeTab}
+      <MapTimeSlider
+        bind:this="{timeSlider}"
+        on:change="{handleSliderChange}"
+        on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
+        climvarId="{$climvarStore}"
+        modelId="{$modelSingleStore}"
+        scenarioId="{$scenarioStore}"
+        monthNumber="{$monthStore}"
+        duration="{$durationStore}"
+      />
+    {/if}
   </div>
 
+  <!-- Chart components -->
   <div slot="tab_content_title" class="block title">
-    <div class="h3">
-      <!-- FIXME: bug where this never seems to update?  -->
-      {$location.title}
-    </div>
-    <div class="h4">
-      Projected changes in Snow Water Equivalence under a {$scenario.labelLong}
-    </div>
+    {#if activeTab}
+      <ChartTitle
+        title="{chartTitle}"
+        subtitle="{chartSubtitle}"
+        scenarioLabel="{$scenario.labelLong}"
+        loadLocation="{loadLocation}"
+      />
+    {/if}
   </div>
 
   <div slot="tab_content_stats">
-    <StatsPanel
-      {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
-    />
+    {#if activeTab}
+      <StatsPanel
+        {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
+      />
+    {/if}
   </div>
 
   <div slot="tab_content_graphic" class="graphic block">
-    <SnowpackChart
-      data="{$dataStore}"
-      dataByDate="{dataByDate}"
-      formatFn="{formatFn}"
-      units="{$climvar.units.imperial}"
-      label="{$climvar.label}"
-      dataSource="{$titles.join(', ')}"
-      on:showDownload="{loadDownload}"
-      on:showShare="{loadShare}"
-      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
-    />
+    {#if activeTab}
+      <SnowpackChart
+        data="{$dataStore}"
+        dataByDate="{dataByDate}"
+        formatFn="{formatFn}"
+        units="{$climvar.units.imperial}"
+        label="{$month.label} {$climvar.label}"
+        dataSource="{$titles.join(', ')}"
+        on:showDownload="{loadDownload}"
+        on:showShare="{loadShare}"
+        on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+      />
+    {/if}
   </div>
 
+  <!-- Settings component shared by both Map & Chart -->
   <div slot="settings" class="settings">
     <SettingsPanel
       activeTab="{activeTab}"
@@ -244,6 +274,7 @@
   </div>
 </Dashboard>
 
+<!-- Modal Components -->
 <svelte:component
   this="{LearnMoreModal}"
   bind:open="{showLearnMore}"
