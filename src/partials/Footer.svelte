@@ -68,7 +68,7 @@
 </style>
 
 <footer>
-  <div class="bx--grid bx--grid--full-width footer-logos">
+  <div class="bx--grid footer-logos">
     <div class="bx--row bx--row-padding">
       <div
         class="bx--offset-lg-2 bx--col-lg-6 bx--offset-md-1 bx--col-md-6 about-text"
