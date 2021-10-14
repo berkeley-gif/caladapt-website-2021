@@ -162,8 +162,8 @@
       ["scenario", $scenario.label],
       ["climate variable", $climvar.label],
     ];
-    printContainer = document.querySelector("#explore");
-    printSkipElements = ["settings"];
+    printContainer = document.querySelector("#explore-data");
+    printSkipElements = ["settings", "bx--tabs--container"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
