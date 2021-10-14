@@ -53,8 +53,12 @@
     }
 
     // Set Y Domain
-    ymin = min(data, (arr) => min(arr.values, (d) => d.value || d.min));
-    ymax = max(data, (arr) => max(arr.values, (d) => d.value || d.max));
+    ymin = min(data, (arr) =>
+      min(arr.values, (d) => (min in d ? d.min : d.value))
+    );
+    ymax = max(data, (arr) =>
+      max(arr.values, (d) => (max in d ? d.max : d.value))
+    );
     if (yAxis.baseValue === 0) {
       ymin = yAxis.baseValue;
     }
