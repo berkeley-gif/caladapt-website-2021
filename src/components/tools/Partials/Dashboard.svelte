@@ -40,12 +40,12 @@
     top: -1px;
   }
 
-  // overrides for tab content area
-  :global(.bx--tab-content) {
+  .bx--grid--tab-content {
     padding: 0;
   }
 
-  :global(.bx--grid--full-width) {
+  // overrides for tab content area
+  :global(.bx--tab-content) {
     padding: 0;
   }
 
@@ -97,7 +97,9 @@
             <Tab label="Chart" />
             <div slot="content">
               <TabContent>
-                <div class="bx--grid bx--grid--full-width">
+                <div
+                  class="bx--grid bx--grid--full-width bx--grid--tab-content"
+                >
                   <div class="bx--row margin--v-16">
                     <div class="bx--col">
                       <slot name="tab_content_slippy_map"
@@ -117,7 +119,9 @@
               </TabContent>
 
               <TabContent>
-                <div class="bx--grid bx--grid--full-width">
+                <div
+                  class="bx--grid bx--grid--full-width bx--grid--tab-content"
+                >
                   <div class="bx--row margin--v-16">
                     <div class="bx--col">
                       <slot name="tab_content_title">tab_content_title</slot>
