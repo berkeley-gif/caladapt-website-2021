@@ -1,5 +1,6 @@
 <script>
-  import { ImageLoader, InlineLoading } from "carbon-components-svelte";
+  import { fade } from "svelte/transition";
+  import { InlineLoading } from "carbon-components-svelte";
   import simplify from "@turf/simplify";
   import truncate from "@turf/truncate";
 
@@ -16,6 +17,27 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
+
+  const image = new Image();
+  image.onload = () => {
+    loading = false;
+    loaded = true;
+  };
+  image.onerror = () => {
+    loading = false;
+    error = true;
+  };
+
+  // Set to `true` when `loaded` is `true` and `error` is false
+  let loading = false;
+  // Set to `true` when the image is loaded
+  let loaded = false;
+  // Set to `true` if an error occurs when loading the image
+  let error = false;
+
+  $: src = location && location.geometry ? handleLocation(location) : "";
+  $: alt = location ? `map of ${location.title}` : "";
+  $: if (src) image.src = src;
 
   function createSrcUrl({ overlay, bounds, params }) {
     return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -72,9 +94,6 @@
       return getPolygonImgSrc(location);
     }
   }
-
-  $: src = location && location.geometry ? handleLocation(location) : "";
-  $: alt = location ? `map of ${location.title}` : "";
 </script>
 
 <style>
@@ -97,12 +116,19 @@
 </style>
 
 <button class="static-map" on:click>
-  <ImageLoader src="{src}" alt="{alt}" fadeIn>
-    <div slot="loading">
-      <InlineLoading description="Loading location map..." />
-    </div>
-    <div slot="error">
-      <span class="error-text">An error occurred. Unable to load map.</span>
-    </div>
-  </ImageLoader>
+  {#if loading}
+    <InlineLoading description="Loading location map..." />
+  {:else if loaded}
+    <img
+      {...$$restProps}
+      style="width: 100%;{$$restProps.style}"
+      src="{src}"
+      alt="{alt}"
+      transition:fade
+    />
+  {:else if error}
+    <div class="error-text">An error occurred. Unable to load map.</div>
+  {:else}
+    <p>Something went wrong.</p>
+  {/if}
 </button>

@@ -100,7 +100,8 @@
   $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
   $: frequencyLabel =
     $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
-  $: monthsLabel = $frequencyStore === "M" ? getMonthsLabel() : "";
+  $: monthsLabel =
+    $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.type !== "area");
@@ -301,6 +302,7 @@
         label: `Number of ${$indicator.label} (Base temperature ${$thresholdStore}˚F)`,
         tickFormat: formatFn,
         units: `${$indicator.units}`,
+        baseValue: 0,
       }}"
     />
     <div class="chart-notes margin--v-32">

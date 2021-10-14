@@ -13,9 +13,8 @@
   $: if (ticks) {
     tickVals = Array.isArray(ticks) ? ticks : $yScale.ticks(ticks);
   } else {
-    tickVals = $yScale.ticks();
+    tickVals = $yScale.ticks().map(formatTick);
   }
-
   $: d = `M 0 0 L ${$width + $padding.left} 0`;
 </script>
 
@@ -26,7 +25,7 @@
         <path class="gridline" d="{d}" style="stroke:#aaa;stroke-dasharray:2;"
         ></path>
       {/if}
-      <text y="-4" style="font-size:12px;fill:#666">{formatTick(tick)}</text>
+      <text y="-4" style="font-size:12px;fill:#666">{tick}</text>
       {#if i === +tickVals.length - 1}
         <text
           y="-4"
