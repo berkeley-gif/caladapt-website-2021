@@ -33,9 +33,9 @@
   dataByDate="{dataByDate}"
   yAxis="{{
     key: 'value',
-    label: `Number of ${label}`,
+    label,
     tickFormat: formatFn,
-    units: `${units}`,
+    units,
   }}"
 />
 

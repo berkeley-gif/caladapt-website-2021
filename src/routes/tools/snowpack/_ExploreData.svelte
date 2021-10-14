@@ -42,6 +42,7 @@
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
+  const { month } = monthStore;
 
   let dataByDate;
   let statsData;
@@ -77,7 +78,7 @@
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
-  $: chartSubtitle = `Projected changes in Snow Water Equivalence under a ${$scenario.labelLong}`;
+  $: chartSubtitle = `Projected changes in Snow Water Equivalent for the month of ${$month.label} under a`;
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
@@ -233,6 +234,7 @@
       <ChartTitle
         title="{chartTitle}"
         subtitle="{chartSubtitle}"
+        scenarioLabel="{$scenario.labelLong}"
         loadLocation="{loadLocation}"
       />
     {/if}
@@ -253,7 +255,7 @@
         dataByDate="{dataByDate}"
         formatFn="{formatFn}"
         units="{$climvar.units.imperial}"
-        label="{$climvar.label}"
+        label="{$month.label} {$climvar.label}"
         dataSource="{$titles.join(', ')}"
         on:showDownload="{loadDownload}"
         on:showShare="{loadShare}"

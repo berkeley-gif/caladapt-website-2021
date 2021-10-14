@@ -4,6 +4,7 @@
 
   export let title;
   export let subtitle;
+  export let scenarioLabel;
   export let loadLocation;
 </script>
 
@@ -21,4 +22,5 @@
 </div>
 <div class="h4">
   {subtitle}
+  <span class="annotate">{scenarioLabel}</span>.
 </div>
