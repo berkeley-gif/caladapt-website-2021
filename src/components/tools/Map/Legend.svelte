@@ -73,12 +73,12 @@
 
 <div
   class="legend legend--container"
-  style="{`--width:${width};
-    --height:${height};
-    --padding:${padding};
-    --rectWidth:${rectWidth};
-    --rectHeight:${rectHeight};
-    --columns:${columns}`}"
+  style="--width:{width};
+    --height:{height};
+    --padding:{padding};
+    --rectWidth:{rectWidth};
+    --rectHeight:{rectHeight};
+    --columns:{columns};"
 >
   <p class="legend--title-text">{title}</p>
   {#if subtitle}
