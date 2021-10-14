@@ -79,8 +79,9 @@
         error,
         2000
       );
+    } finally {
+      open = false;
     }
-    open = false;
   }
 </script>
 
