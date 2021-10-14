@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { climvarList } from "./_helpers";
+import climvars from "~/helpers/climate-variables";
 import {
   DEFAULT_SELECTED_MODEL_SINGLE,
   DEFAULT_SELECTED_MONTH,
@@ -18,7 +18,7 @@ export const climvarStore = (() => {
     subscribe,
     get climvar() {
       return derived(store, ($store) => {
-        const selected = climvarList.find((d) => d.id === $store);
+        const selected = climvars.find((d) => d.id === $store);
         return selected;
       });
     },
