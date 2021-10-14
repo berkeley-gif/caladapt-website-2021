@@ -1,50 +1,65 @@
 <script>
-  import { scaleBand, scaleOrdinal } from "d3-scale";
+  import { scaleOrdinal } from "d3-scale";
 
-  export let width = 80;
-  export let height = 240;
-  export let margin = { top: 8, left: 0, right: 8, bottom: 0 };
   export let title = "Legend";
   export let subtitle = "";
+  export let width = "";
+  export let height = "";
+  export let rectWidth = "";
+  export let rectHeight = "";
+  export let padding = "";
   export let ramp = [];
   export let values = [];
-  export let padding = 0.5;
-
-  const rectWidth = 30;
-
-  $: yPos = scaleBand()
-    .domain(values)
-    .range([height - margin.bottom, margin.top])
-    .paddingInner(0.2);
+  export let columns = 0;
 
   $: color = scaleOrdinal().domain(values).range(ramp);
 </script>
 
 <style>
-  div {
+  .legend--container {
     position: absolute;
     right: 0.5rem;
     bottom: 0.5rem;
-    width: var(--width, 100%);
-    padding: var(--padding);
+    width: var(--width, auto);
+    height: var(--height, auto);
+    padding: var(--padding, 0.5rem);
     background-color: var(--white, #fff);
-    border: 1px solid var(--gray-40);
+    border: 0.0625rem solid var(--gray-40);
     box-sizing: content-box;
   }
 
-  svg {
-    max-width: 100%;
-    height: auto;
-  }
-
-  p,
-  text {
-    font-size: 0.875rem;
-    fill: var(--gray-80, #333);
+  .legend--columns {
+    column-count: 2;
+    column-width: auto;
   }
 
   p {
+    font-size: 0.875rem;
+    fill: var(--gray-80, #333);
     margin: 0;
+  }
+
+  ul {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  li p {
+    display: inline-block;
+  }
+
+  span {
+    width: var(--rectWidth, 2rem);
+    height: var(--rectHeight, 1rem);
+    display: inline-block;
+    border: 0.0625rem solid var(--gray-40);
   }
 
   .legend--title-text {
@@ -54,35 +69,29 @@
   .legend--subtitle-text {
     font-weight: 400;
   }
-
-  .legend--item-text {
-    vertical-align: middle;
-  }
 </style>
 
-<div style="--width:{width}px; --padding:{padding}rem;">
+<div
+  class="legend legend--container"
+  style="{`--width:${width};
+    --height:${height};
+    --padding:${padding};
+    --rectWidth:${rectWidth};
+    --rectHeight:${rectHeight};
+    --columns:${columns}`}"
+>
   <p class="legend--title-text">{title}</p>
   {#if subtitle}
     <p class="legend--subtitle-text">{subtitle}</p>
   {/if}
-  <svg
-    viewBox="0 0 {width} {height}"
-    role="presentation"
-    aria-label="map legend"
-  >
-    <g transform="{`translate(${margin.left}, ${0})`}">
-      {#each values as v, i (`${v}`)}
-        <g transform="{`translate(0, ${yPos(v)})`}">
-          <rect
-            fill="{color(v)}"
-            x="0"
-            y="0"
-            width="{rectWidth}"
-            height="{yPos.bandwidth()}"
-            stroke="var(--gray-40)"></rect>
-          <text class="legend--item-text" x="{rectWidth + 4}" y="12">{v}</text>
-        </g>
-      {/each}
-    </g>
-  </svg>
+  <ul class="{columns ? 'legend--columns' : ''}">
+    {#each values as v, i (`${v}`)}
+      <li>
+        <span style="background-color:{color(v)}"></span>
+        <p>
+          {v}
+        </p>
+      </li>
+    {/each}
+  </ul>
 </div>
