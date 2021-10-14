@@ -8,6 +8,7 @@
   import { TimeSlider } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { getMapImages } from "./_helpers";
+  import { LEARN_MORE_TIME_SLIDER } from "./_constants";
 
   export function cancelAnimation() {
     window.clearInterval(timerId);
@@ -107,6 +108,6 @@
 <LearnMoreButton
   on:click="{() =>
     showLearnMore({
-      content: 'TODO: something about livneh & models both being used here?',
+      content: LEARN_MORE_TIME_SLIDER,
     })}"
 />

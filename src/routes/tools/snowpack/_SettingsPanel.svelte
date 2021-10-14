@@ -8,6 +8,7 @@
   } from "../_common/constants";
   import {
     LEARN_MORE_SELECT_MONTH,
+    LEARN_MORE_YEARLY_PERIOD,
     TIME_DURATIONS,
     MONTHS_LIST_ONE_INDEXED,
   } from "./_constants";
@@ -88,11 +89,11 @@
     <RadioBtnGroup
       items="{TIME_DURATIONS}"
       selected="{$durationStore}"
-      title="{'Select Duration'}"
+      title="{'Select Period'}"
       on:change="{changeDuration}"
     />
     <LearnMoreButton
-      on:click="{() => showLearnMore({ content: 'TODO: add duration info' })}"
+      on:click="{() => showLearnMore({ content: LEARN_MORE_YEARLY_PERIOD })}"
     />
   </div>
 

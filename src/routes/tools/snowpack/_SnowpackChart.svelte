@@ -4,6 +4,7 @@
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
+  import { EXPLAIN_CHART } from "./_constants";
 
   export let data;
   export let dataByDate;
@@ -11,11 +12,6 @@
   export let units;
   export let label;
   export let dataSource;
-
-  const chartDescription = `<p>The colored lines on this visualization represent 
-    a timeseries of montly average values from individual downscaled GCMs. The historical observed data is represented by 
-    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
-    corresponding timeseries.</p>`;
 
   const dispatch = createEventDispatcher();
 
@@ -53,7 +49,7 @@
     cta="{'Explain Chart'}"
     on:click="{() =>
       showLearnMore({
-        content: chartDescription,
+        content: EXPLAIN_CHART,
         header: 'About this Chart',
       })}"
   />
