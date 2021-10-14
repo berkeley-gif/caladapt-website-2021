@@ -17,5 +17,6 @@
     ramp="{colorRamp}"
     title="Snow Water Equivalent"
     subtitle="Inches per month"
+    columns="{2}"
   />
 </Map>
