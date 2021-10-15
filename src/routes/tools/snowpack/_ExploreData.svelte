@@ -79,7 +79,9 @@
   } 
     for ${$modelSingleStore} averaged over ${$yearStore} – ${
     $yearStore + $durationStore - 1
-  }`;
+  }*`;
+  let mapCaveat =
+    "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled data.";
 
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
@@ -208,7 +210,7 @@
 >
   <!-- Map components -->
   <div slot="tab_content_map_title" class="block">
-    <MapTitle title="{mapTitle}" />
+    <MapTitle title="{mapTitle}" caveat="{mapCaveat}" />
   </div>
 
   <div
