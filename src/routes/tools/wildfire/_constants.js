@@ -3,7 +3,7 @@ import { timeFormat } from "d3-time-format";
 
 export const DEFAULT_CLIMVAR = "swe";
 export const DEFAULT_CENTER = [-119.96, 38.9];
-export const DEFAULT_SELECTED_MONTH = 4;
+export const DEFAULT_SELECTED_MONTH = 7;
 export const DEFAULT_SELECTED_DURATION = 10;
 export const DEFAULT_SELECTED_YEAR = 1960;
 export const DEFAULT_SELECTED_MODEL_SINGLE = "HadGEM2-ES";
@@ -27,6 +27,13 @@ export const MONTHS_LIST_ONE_INDEXED = range(0, 12).map((d) => ({
   id: d + 1,
   label: timeFormat("%B")(new Date(new Date().getUTCFullYear(), d, 1, 0, 0, 0)),
 }));
+
+export const DEFAULT_OVERLAY_BOUNDS = [
+  [-124.5625, 42.75],
+  [-113.75, 42.75],
+  [-113.75, 31.5625],
+  [-124.5625, 31.5625],
+];
 
 export const colorRamp = [
   "var(--gray-10)",
