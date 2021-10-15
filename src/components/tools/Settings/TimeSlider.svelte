@@ -74,7 +74,10 @@
   }
 
   function handlePanEnd() {
-    const x = getClosest(tickPositions, $coords.x);
+    const x = getClosest(
+      tickPositions.map((d) => d.xPos),
+      $coords.x
+    );
     $coords.x = x;
     value = Math.round(xScale.invert(x));
     dispatch("change", value);
