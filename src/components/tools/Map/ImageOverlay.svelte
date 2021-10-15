@@ -12,11 +12,12 @@
     [-113.291015625, 31.034108344903512],
     [-124.60693359374999, 31.034108344903512],
   ];
+  export let debug = false;
 
   $: overlay, updatePath();
 
   function updatePath() {
-    console.log("updated overlay", overlay);
+    if (debug) console.log("updated overlay", overlay);
     if (map.getSource("animation-layer")) {
       map.getSource("animation-layer").updateImage({ url: overlay });
     }
@@ -36,7 +37,7 @@
   };
 
   onMount(() => {
-    console.log("on mount mapImageOverlay", overlay);
+    if (debug) console.log("on mount mapImageOverlay", overlay);
     map.addLayer(layer);
   });
 
