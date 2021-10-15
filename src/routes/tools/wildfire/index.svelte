@@ -277,15 +277,26 @@
     >
       <div slot="description">
         <p>
-          If heat-trapping emissions continue unabated, more precipitation will
-          fall as rain instead of snow, and the snow that does fall will melt
-          earlier, reducing the Sierra Nevada spring snowpack by as much as 70
-          to 90 percent. How much snowpack will be lost depends in part on
-          future precipitation patterns, the projections for which remain
-          uncertain. However, even under wetter climate projections, the loss of
-          snowpack would pose challenges to water managers, hamper hydropower
-          generation, and nearly eliminate skiing and other snow-related
-          recreational activities.
+          The frequency, severity and impacts of wildfire are sensitive to
+          climate change as well as many other factors, including development
+          patterns, temperature increases, wind patterns, precipitation change
+          and pest infestations. Therefore, it is more difficult to project
+          exactly where and how fires will burn. Instead, climate models
+          estimate increased risk to wildfires.
+        </p>
+        <p>
+          The Annual or Monthly Average Area Burned can help inform at a high
+          level if wildfire activity is likely to increase. However, this
+          information is not complete - many regions across the state have no
+          projections (such as regions outside combined fire state and federal
+          protection responsibility areas), and more detailed analyses and
+          projections are needed for local decision-making.
+        </p>
+        <p>
+          These projections are most robust for the Sierra Nevada given model
+          inputs. However, as we have seen in recent years, much of California
+          can expect an increased risk of wildfire, with a wildfire season that
+          starts earlier, runs longer, and features more extreme fire events.
         </p>
       </div>
     </About>
