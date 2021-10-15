@@ -22,17 +22,10 @@
   export let tool;
 </script>
 
-<style>
-  .iframe-container {
-    width: 100vw;
-    height: 100vh;
-  }
-</style>
-
 <svelte:head>
   <title>{tool.title}</title>
 </svelte:head>
 
-<div class="iframe-container">
+<div>
   <Embed path="{`tools/${tool.slug}`}" title="{tool.title}" />
 </div>
