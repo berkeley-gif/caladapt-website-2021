@@ -210,7 +210,14 @@
 >
   <!-- Map components -->
   <div slot="tab_content_map_title" class="block">
-    <MapTitle title="{mapTitle}" caveat="{mapCaveat}" />
+    <MapTitle
+      month="{$month.label}"
+      scenarioLabel="{$scenario.labelLong}"
+      model="{$modelSingleStore}"
+      year="{$yearStore}"
+      duration="{$durationStore}"
+      caveat="{mapCaveat}"
+    />
   </div>
 
   <div
