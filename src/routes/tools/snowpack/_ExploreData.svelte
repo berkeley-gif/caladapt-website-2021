@@ -81,7 +81,7 @@
     $yearStore + $durationStore - 1
   }*`;
   let mapCaveat =
-    "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled data.";
+    "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled projections.";
 
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
