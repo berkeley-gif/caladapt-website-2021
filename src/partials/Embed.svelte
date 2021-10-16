@@ -10,9 +10,11 @@
   onMount(() => {
     window.addEventListener("message", (e) => {
       // use message data that was passed from iframe page to set height
-      if (typeof e.data.height !== "number")
-        return console.warn("postMessage from iframe not received!");
-      return (v2_frame.style.height = `${e.data.height}px`);
+      if (e.data.height && typeof e.data.height === "number") {
+        v2_frame.style.height = `${e.data.height}px`;
+      } else {
+        console.warn("postMessage from iframe not received!");
+      }
     });
   });
 </script>
