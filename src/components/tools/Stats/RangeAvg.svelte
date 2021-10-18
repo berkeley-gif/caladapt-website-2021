@@ -1,136 +1,94 @@
 <script>
+  import { tick } from "svelte";
   import { extent, mean, merge } from "d3-array";
   import { Button, SkeletonText, Modal } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
-  import ChangeTimePeriod from "./ChangeTimePeriod.svelte";
+  import ChangeGroupPeriod from "./ChangeGroupPeriod.svelte";
 
-  export let units = "inches";
+  export let units;
   export let data;
-  export let series = "historical";
-  export let period = "baseline";
+  export let groupList;
+  export let periodList;
   export let format = (d) => d;
 
-  const periodList = [
-    {
-      id: "baseline",
-      label: "Baseline (1961-1990)",
-      start: 1961,
-      end: 1990,
-      historical: true,
-    },
-    {
-      id: "mid-century",
-      label: "Mid-Century (2035-2064)",
-      start: 2035,
-      end: 2064,
-      historical: false,
-    },
-    {
-      id: "end-century",
-      label: "End-Century (2070-2099)",
-      start: 2070,
-      end: 2099,
-      historical: false,
-    },
-  ];
-
-  const seriesList = [
-    {
-      id: "observed",
-      label: "Observed Historical",
-      historical: true,
-    },
-    {
-      id: "historical",
-      label: "Modeled Historical",
-      historical: true,
-    },
-    {
-      id: "future",
-      label: "Future Projections",
-      historical: false,
-    },
-  ];
-
-  let isHistorical = series === "historical" || series === "observed";
-
-  let selectedSeries = seriesList.find((d) => d.id === series);
-  let selectedPeriod = periodList.find((d) => d.id === period);
-
-  let showSettings = false;
+  let group = groupList[0];
+  let period = periodList[0];
+  let showChangeGroupPeriod = false;
   let showInfo = false;
-  let stats = null;
-  let showRange = true;
-  let note = "Learn More";
-  let modelCount = 0;
 
-  $: if (data && !isHistorical) {
-    modelCount = data.filter((d) => d.key !== "observed").length;
-  }
-
-  function subsetByYearRange(range) {
+  function subsetByYears({ start, end }) {
     return function (d) {
       return (
-        d.date >= new Date(range[0], 0, 1) &&
-        d.date <= new Date(range[1], 11, 31)
+        d.date >= new Date(Date.UTC(start, 0, 1)) &&
+        d.date <= new Date(Date.UTC(end, 11, 31))
       );
     };
   }
 
-  function updateStats(e) {
-    const { seriesId, periodId, range } = e.detail;
-    selectedSeries = seriesList.find((d) => d.id === seriesId);
-    if (periodId === "custom") {
-      selectedPeriod = {
-        id: "custom",
-        label: `${range[0]}-${range[1]}`,
-        start: range[0],
-        end: range[1],
-      };
-    } else {
-      selectedPeriod = periodList.find((d) => d.id === periodId);
+  function calculateAverage(values) {
+    if (Array.isArray(values) && values.length) {
+      return mean(values, (d) => d.value);
     }
-    showSettings = false;
-    let filteredData;
-    if (seriesId === "observed") {
-      filteredData = data.filter((d) => d.key === "observed");
-      showRange = false;
-    } else {
-      filteredData = data.filter((d) => d.key !== "observed");
-      showRange = true;
-    }
-    stats = calculateStats(filteredData, range);
+    return "-";
   }
 
-  function calculateStats(_data, range) {
-    const yearCount = range[1] - range[0] + 1;
-    const content = [];
-    if (!_data || _data.length === 0) {
-      content.push({ label: `${yearCount} YEAR AVG`, value: "–" });
-      if (showRange) {
-        content.push({ label: `${yearCount} YEAR RANGE`, value: "–" });
-      }
-      return content;
+  function calculateRange(values) {
+    if (Array.isArray(values) && values.length) {
+      const minmax = extent(values, (d) => d.value);
+      return `${format(minmax[0])}–${format(minmax[1])}`;
     }
-    const values = merge(_data.map((series) => series.values));
-    const filteredValues = values.filter(subsetByYearRange(range));
-    const avg = mean(filteredValues, (d) => d.value);
-    content.push({ label: `${yearCount} YEAR AVG`, value: format(avg) });
-    if (showRange) {
-      const minmax = extent(filteredValues, (d) => d.value);
-      content.push({
-        label: `${yearCount} YEAR RANGE`,
-        value: `${format(minmax[0])}–${format(minmax[1])}`,
-      });
-    }
-    return content;
+    return "-";
   }
 
-  $: if (data) {
-    stats = calculateStats(data, [selectedPeriod.start, selectedPeriod.end]);
-  } else {
-    stats = null;
+  async function calculateMetrics() {
+    await tick();
+    console.log("calculate metrics");
+    const filterByPeriod = data.filter(subsetByYears(period));
+    console.log("filterByPeriod", filterByPeriod);
+    const values = merge(filterByPeriod.map(({ values }) => values));
+    let filterBySeries;
+    if (group.id === "livneh") {
+      filterBySeries = values.filter(({ id }) => id === "livneh");
+      console.log("1 filterBySeries", filterBySeries);
+      return [
+        {
+          id: "average",
+          label: `${years} YEAR AVG`,
+          value: calculateAverage(filterBySeries),
+        },
+      ];
+    }
+    filterBySeries = values.filter(({ id }) => id !== "livneh");
+    console.log("2 filterBySeries", filterBySeries);
+    return [
+      {
+        id: "average",
+        label: `${years} YEAR AVG`,
+        value: calculateAverage(filterBySeries),
+      },
+      {
+        id: "range",
+        label: `${years} YEAR RANGE`,
+        value: calculateRange(filterBySeries),
+      },
+    ];
   }
+
+  function update({ detail }) {
+    showChangeGroupPeriod = false;
+    const { groupId, periodId } = detail;
+    console.log("update group period", groupId, periodId);
+    group = groupList.find(({ id }) => id === groupId);
+    period = periodList.find(({ id }) => id === periodId);
+    console.log("update", group, period);
+  }
+
+  $: dataExtent = data ? extent(data, (d) => d.date.getUTCFullYear()) : [];
+  $: metrics = data ? calculateMetrics() : [];
+  $: console.log("metrics", metrics);
+  $: years = period.end - period.start + 1;
+  $: note = `The average is calculated using values between ${period.start}
+    and ${period.end} from the ${group.label} data.`;
 </script>
 
 <style lang="scss">
@@ -189,67 +147,58 @@
   }
 </style>
 
-{#if stats}
-  <div class="stat">
-    <!-- title -->
-    <div class="stat-header">
-      <span class="stat-text">{selectedSeries.label}</span>
-      <span class="stat-title">{selectedPeriod.label}</span>
-      <Button
-        icon="{Calendar16}"
-        kind="ghost"
-        size="small"
-        on:click="{() => (showSettings = true)}"
-      >
-        Change Period
-      </Button>
-    </div>
-    <!-- values -->
-    <div class="stat-data">
-      {#each stats as item}
-        <div class="stat-data-item">
-          <div class="stat-text">{item.label}</div>
-          <div class="stat-value">
-            {item.value}
-            <sup><span class="stat-units">{units}</span></sup>
-          </div>
-        </div>
-      {/each}
-    </div>
-    <!-- controls -->
-    <div class="stat-controls">
-      <div class="stat-note">
-        <Button
-          icon="{Information16}"
-          kind="ghost"
-          size="small"
-          on:click="{() => (showInfo = true)}"
-        >
-          {note}
-        </Button>
-      </div>
-    </div>
+<div class="stat">
+  <!-- title -->
+  <div class="stat-header">
+    <span class="stat-text">{group.label}</span>
+    <span class="stat-title">{period.label}</span>
   </div>
-{:else}
-  <div class="stat">
-    <SkeletonText heading />
-    <SkeletonText paragraph lines="{4}" />
-  </div>
-{/if}
 
-<ChangeTimePeriod
-  open="{showSettings}"
-  isHistorical="{isHistorical}"
-  seriesList="{seriesList.filter((d) => d.historical === isHistorical)}"
-  periodList="{periodList.filter((d) => d.historical === isHistorical)}"
-  seriesId="{selectedSeries.id}"
-  periodId="{selectedPeriod.id}"
-  on:change="{updateStats}"
-  on:cancel="{() => (showSettings = false)}"
+  <!-- change period -->
+  <Button
+    icon="{Calendar16}"
+    kind="ghost"
+    size="small"
+    on:click="{() => (showChangeGroupPeriod = true)}"
+  >
+    Change Period
+  </Button>
+
+  <!-- metrics -->
+  <div class="stat-data">
+    {#each metrics as item (item.id)}
+      <div class="stat-data-item">
+        <div class="stat-text">{item.label}</div>
+        <div class="stat-value">
+          {item.value}
+          <sup><span class="stat-units">{units}</span></sup>
+        </div>
+      </div>
+    {/each}
+  </div>
+
+  <!-- learn more -->
+  <Button
+    icon="{Information16}"
+    kind="ghost"
+    size="small"
+    on:click="{() => (showInfo = true)}"
+  >
+    Learn More
+  </Button>
+</div>
+
+<ChangeGroupPeriod
+  open="{showChangeGroupPeriod}"
+  groupList="{groupList}"
+  periodList="{periodList}"
+  dataExtent="{dataExtent}"
+  on:change="{update}"
+  on:cancel="{() => (showChangeGroupPeriod = false)}"
 />
 
 <Modal
-  id="definition"
+  id="stats-about"
   size="sm"
   passiveModal
   bind:open="{showInfo}"
@@ -258,17 +207,6 @@
   on:close="{() => (showInfo = false)}"
 >
   <div>
-    {#if isHistorical}
-      <p>
-        The average is calculated using data values between {selectedPeriod.start}
-        and {selectedPeriod.end} from the {selectedSeries.label} timeseries.
-      </p>
-    {:else}
-      <p>
-        The range and average are calculated using data values between {selectedPeriod.start}
-        and {selectedPeriod.end} from the {modelCount} models shown in the chart
-        below.
-      </p>
-    {/if}
+    {note}
   </div>
 </Modal>
