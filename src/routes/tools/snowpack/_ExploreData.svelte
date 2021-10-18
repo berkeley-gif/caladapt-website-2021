@@ -21,6 +21,7 @@
   import SnowpackMap from "./_SnowpackMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
   import ChartTitle from "./_ChartTitle.svelte";
+  import MapTitle from "./_MapTitle.svelte";
 
   import {
     scenarioStore,
@@ -73,6 +74,14 @@
   let printSkipElements;
 
   let chartTitle = "";
+  $: mapTitle = `${$month.label} Snow Water Equivalent under a ${
+    $scenario.labelLong
+  } 
+    for ${$modelSingleStore} averaged over ${$yearStore} – ${
+    $yearStore + $durationStore - 1
+  }*`;
+  let mapCaveat =
+    "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled projections.";
 
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
@@ -200,6 +209,17 @@
   on:tabChange="{handleTabChange}"
 >
   <!-- Map components -->
+  <div slot="tab_content_map_title" class="block">
+    <MapTitle
+      month="{$month.label}"
+      scenarioLabel="{$scenario.labelLong}"
+      model="{$modelSingleStore}"
+      year="{$yearStore}"
+      duration="{$durationStore}"
+      caveat="{mapCaveat}"
+    />
+  </div>
+
   <div
     slot="tab_content_slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"

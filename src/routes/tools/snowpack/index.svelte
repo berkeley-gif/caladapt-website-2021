@@ -139,6 +139,7 @@
   const { scenario } = scenarioStore;
 
   let appReady = false;
+  let debug = process.env.NODE_ENV !== "production";
 
   // Monitor sections as they enter & leave viewport
   let currentView;
@@ -153,7 +154,7 @@
   $: resources = [...externalResources, ...relatedTools];
   $: $climvar, $scenario, $modelsStore, $locationStore, $monthStore, update();
 
-  $: {
+  $: if (debug) {
     console.groupCollapsed("STORE UPDATES");
     console.table($dataStore);
     console.table($locationStore);
@@ -227,7 +228,7 @@
     try {
       await initApp(initialConfig);
       appReady = true;
-      console.log("app ready");
+      if (debug) console.log("app ready");
       await update();
     } catch (error) {
       console.error("init error", error);

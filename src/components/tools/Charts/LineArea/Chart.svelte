@@ -53,14 +53,15 @@
     }
 
     // Set Y Domain
-    ymin = min(data, (arr) =>
-      min(arr.values, (d) => (min in d ? d.min : d.value))
-    );
     ymax = max(data, (arr) =>
-      max(arr.values, (d) => (max in d ? d.max : d.value))
+      max(arr.values, (d) => ("max" in d ? d.max : d.value))
     );
-    if (yAxis.baseValue === 0) {
+    if (!isNaN(yAxis.baseValue)) {
       ymin = yAxis.baseValue;
+    } else {
+      ymin = min(data, (arr) =>
+        min(arr.values, (d) => ("min" in d ? d.min : d.value))
+      );
     }
 
     // Set Legend
