@@ -9,6 +9,8 @@
     DEFAULT_SCENARIOS,
     DEFAULT_BOUNDARIES,
     SELECT_LOCATION_DESCRIPTION,
+    DEFAULT_STAT_GROUPS,
+    DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
     flattenData,
@@ -125,8 +127,15 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($dataStore) {
-    statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
+    statsData = dataByDate.map(({ date, values }) => {
+      return {
+        date,
+        values: values.filter(({ id }) => !id.includes("range")),
+      };
+    });
+    console.log("dataByDate", dataByDate);
+    console.log("statsdata", statsData);
     isLoading = false;
   } else {
     statsData = null;
@@ -190,14 +199,16 @@
       <li class="block">
         <RangeAvg
           units="{$climvar.units.imperial}"
-          data="{statsData}"
+          data="{statsData
+            ? statsData.filter((d) => d.date.getUTCFullYear() < 2006)
+            : null}"
           isHistorical="{true}"
-          series="{'historical'}"
-          period="{'baseline'}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
         />
       </li>
-      <li class="block">
+      <!--       <li class="block">
         <RangeAvg
           units="{$climvar.units.imperial}"
           data="{statsData}"
@@ -206,8 +217,8 @@
           period="{'mid-century'}"
           format="{formatFn}"
         />
-      </li>
-      <li class="block">
+      </li> -->
+      <!--       <li class="block">
         <RangeAvg
           units="{$climvar.units.imperial}"
           data="{statsData}"
@@ -216,7 +227,7 @@
           period="{'end-century'}"
           format="{formatFn}"
         />
-      </li>
+      </li> -->
     </ul>
   </div>
 
@@ -271,23 +282,6 @@
           loadLearnMore({
             content: SELECT_LOCATION_DESCRIPTION,
             header: 'Select Location',
-          })}"
-      />
-    </div>
-    <div class="block">
-      <SelectClimvar
-        selectedId="{$climvarStore}"
-        items="{climvarList}"
-        on:change="{changeClimvar}"
-      />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            slugs: [
-              'annual-average-tasmax',
-              'annual-average-tasmin',
-              'annual-average-pr',
-            ],
           })}"
       />
     </div>
