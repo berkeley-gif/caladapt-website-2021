@@ -17,8 +17,8 @@
   import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
-  import SnowpackChart from "./_SnowpackChart.svelte";
-  import SnowpackMap from "./_SnowpackMap.svelte";
+  import WildfireChart from "./_WildfireChart.svelte";
+  import WildfireMap from "./_WildfireMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
   import ChartTitle from "./_ChartTitle.svelte";
 
@@ -205,7 +205,7 @@
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
     {#if !activeTab}
-      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+      <WildfireMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
     {/if}
   </div>
 
@@ -250,7 +250,7 @@
 
   <div slot="tab_content_graphic" class="graphic block">
     {#if activeTab}
-      <SnowpackChart
+      <WildfireChart
         data="{$dataStore}"
         dataByDate="{dataByDate}"
         formatFn="{formatFn}"
