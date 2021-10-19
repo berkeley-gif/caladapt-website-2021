@@ -9,11 +9,18 @@
 
   onMount(() => {
     window.addEventListener("message", (e) => {
+      window.alert("Here");
       // use message data that was passed from iframe page to set height
       if (e.data.height && typeof e.data.height === "number") {
-        v2_frame.style.height = `${e.data.height}px`;
+        v2_frame.style.height = `${e.data.height + 300}px`;
       } else {
-        console.warn("postMessage from iframe not received!");
+        console.warn("postMessage height data from iframe not received!");
+      }
+      // use message data that was passed from iframe page to set width
+      if (e.data.width && typeof e.data.width === "number") {
+        v2_frame.style.width = `${e.data.width}px`;
+      } else {
+        console.warn("postMessage width data from iframe not received!");
       }
     });
   });
@@ -21,9 +28,8 @@
 
 <style>
   iframe {
-    width: 100vw;
+    width: 95vw;
     height: 100vw;
-    overflow-y: hidden;
   }
 </style>
 
