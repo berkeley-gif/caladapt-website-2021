@@ -152,12 +152,30 @@ const tools = [
   },
   {
     title: 'Wildfire',
-    desc: `Annual averages of area burned for 4 GCMs, 2 RCPs and 3 population growth scenarios.`,
+    desc: `Annual and monthly averages of area burned and decadal fire probability for 4 GCMs, and 2 RCPs.`,
     categories: ['Wildfire'],
     slug: 'wildfire',
     icons: [
       'img/icons/wildfire.svg',
     ],
+    datasets: [
+      {
+        slug: 'bfa874e7-90b4-4948-a3ba-b5611e63cf2a',
+        logo: 'uc-merced-snri.png'
+      },
+      {
+        slug: 'e852c07a-9241-4123-98f9-8ed553ed1781',
+        logo: 'gif_80x80.png'
+      }
+    ],
+    related: [
+      'extreme-heat',
+      'maps-of-projected-change',
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ]
   },
   {
     title: 'Cooling Degree Days and Heating Degree Days',
