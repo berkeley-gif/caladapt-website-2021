@@ -46,7 +46,6 @@
 
   let isLoading = true;
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -128,17 +127,8 @@
 
   $: if ($dataStore) {
     dataByDate = getDataByDate(flattenData($dataStore));
-    statsData = dataByDate.map(({ date, values }) => {
-      return {
-        date,
-        values: values.filter(({ id }) => !id.includes("range")),
-      };
-    });
-    console.log("dataByDate", dataByDate);
-    console.log("statsdata", statsData);
     isLoading = false;
   } else {
-    statsData = null;
     dataByDate = null;
     isLoading = true;
   }
@@ -199,35 +189,44 @@
       <li class="block">
         <RangeAvg
           units="{$climvar.units.imperial}"
-          data="{statsData
-            ? statsData.filter((d) => d.date.getUTCFullYear() < 2006)
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
             : null}"
           isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
-      <!--       <li class="block">
+      <li class="block">
         <RangeAvg
           units="{$climvar.units.imperial}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'mid-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="mid-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
-      </li> -->
-      <!--       <li class="block">
+      </li>
+      <li class="block">
         <RangeAvg
           units="{$climvar.units.imperial}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'end-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="end-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
-      </li> -->
+      </li>
     </ul>
   </div>
 
