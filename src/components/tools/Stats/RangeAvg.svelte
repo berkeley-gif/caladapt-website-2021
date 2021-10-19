@@ -1,20 +1,42 @@
 <script>
-  import { tick } from "svelte";
   import { extent, mean, merge } from "d3-array";
-  import { Button, SkeletonText, Modal } from "carbon-components-svelte";
+  import { Button } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
-  import ChangeGroupPeriod from "./ChangeGroupPeriod.svelte";
+  import StatOptions from "./StatOptions.svelte";
+  import StatAbout from "./StatAbout.svelte";
 
   export let units;
   export let data;
   export let groupList;
   export let periodList;
+  export let groupId;
+  export let periodId;
+  export let models;
   export let format = (d) => d;
 
-  let group = groupList[0];
-  let period = periodList[0];
-  let showChangeGroupPeriod = false;
-  let showInfo = false;
+  let group = groupId
+    ? groupList.find(({ id }) => id === groupId)
+    : groupList[0];
+  let period = periodId
+    ? periodList.find(({ id }) => id === periodId)
+    : periodList[0];
+  let metrics = [];
+  let updateMetrics = false;
+  let showOptions = false;
+  let showAbout = false;
+
+  let AboutModal;
+  let OptionsModal;
+
+  async function loadAbout() {
+    showAbout = true;
+    AboutModal = (await import("./StatAbout.svelte")).default;
+  }
+
+  async function loadOptions() {
+    showOptions = true;
+    OptionsModal = (await import("./StatOptions.svelte")).default;
+  }
 
   function subsetByYears({ start, end }) {
     return function (d) {
@@ -27,7 +49,7 @@
 
   function calculateAverage(values) {
     if (Array.isArray(values) && values.length) {
-      return mean(values, (d) => d.value);
+      return format(mean(values, (d) => d.value));
     }
     return "-";
   }
@@ -40,55 +62,63 @@
     return "-";
   }
 
-  async function calculateMetrics() {
-    await tick();
+  function calculateMetrics() {
+    updateMetrics = false;
     console.log("calculate metrics");
     const filterByPeriod = data.filter(subsetByYears(period));
-    console.log("filterByPeriod", filterByPeriod);
+    const years = period.end - period.start + 1;
     const values = merge(filterByPeriod.map(({ values }) => values));
     let filterBySeries;
-    if (group.id === "livneh") {
-      filterBySeries = values.filter(({ id }) => id === "livneh");
-      console.log("1 filterBySeries", filterBySeries);
+    if (group.id.includes("model")) {
+      filterBySeries = values.filter(({ id }) => models.includes(id));
       return [
         {
           id: "average",
           label: `${years} YEAR AVG`,
           value: calculateAverage(filterBySeries),
         },
+        {
+          id: "range",
+          label: `${years} YEAR RANGE`,
+          value: calculateRange(filterBySeries),
+        },
       ];
     }
-    filterBySeries = values.filter(({ id }) => id !== "livneh");
-    console.log("2 filterBySeries", filterBySeries);
+    filterBySeries = values.filter(
+      ({ id }) => !models.includes(id) && !id.includes("range")
+    );
     return [
       {
         id: "average",
         label: `${years} YEAR AVG`,
         value: calculateAverage(filterBySeries),
       },
-      {
-        id: "range",
-        label: `${years} YEAR RANGE`,
-        value: calculateRange(filterBySeries),
-      },
     ];
   }
 
-  function update({ detail }) {
-    showChangeGroupPeriod = false;
-    const { groupId, periodId } = detail;
-    console.log("update group period", groupId, periodId);
+  function updateOptions({ detail }) {
+    showOptions = false;
+    const { groupId, periodId, start, end } = detail;
+    console.log("update options", groupId, periodId, start, end);
     group = groupList.find(({ id }) => id === groupId);
-    period = periodList.find(({ id }) => id === periodId);
-    console.log("update", group, period);
+    if (periodId === "custom") {
+      period = {
+        id: "custom",
+        label: `${start}-${end}`,
+        start,
+        end,
+      };
+    } else {
+      period = periodList.find(({ id }) => id === periodId);
+    }
+    updateMetrics = true;
   }
 
   $: dataExtent = data ? extent(data, (d) => d.date.getUTCFullYear()) : [];
-  $: metrics = data ? calculateMetrics() : [];
-  $: console.log("metrics", metrics);
-  $: years = period.end - period.start + 1;
-  $: note = `The average is calculated using values between ${period.start}
-    and ${period.end} from the ${group.label} data.`;
+  $: updateMetrics = data ? true : false;
+  $: if (updateMetrics) {
+    metrics = calculateMetrics();
+  }
 </script>
 
 <style lang="scss">
@@ -129,19 +159,6 @@
     color: var(--gray-70);
   }
 
-  .stat-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .stat-note {
-    font-size: 0.875rem;
-    color: #0f62fe;
-    display: flex;
-    align-items: center;
-  }
-
   :global(.stat .bx--btn) {
     padding-left: 0;
   }
@@ -159,9 +176,9 @@
     icon="{Calendar16}"
     kind="ghost"
     size="small"
-    on:click="{() => (showChangeGroupPeriod = true)}"
+    on:click="{loadOptions}"
   >
-    Change Period
+    Change
   </Button>
 
   <!-- metrics -->
@@ -182,31 +199,28 @@
     icon="{Information16}"
     kind="ghost"
     size="small"
-    on:click="{() => (showInfo = true)}"
+    on:click="{loadAbout}"
   >
     Learn More
   </Button>
 </div>
 
-<ChangeGroupPeriod
-  open="{showChangeGroupPeriod}"
+<svelte:component
+  this="{OptionsModal}"
+  bind:open="{showOptions}"
+  group="{group}"
+  period="{period}"
   groupList="{groupList}"
   periodList="{periodList}"
   dataExtent="{dataExtent}"
-  on:change="{update}"
-  on:cancel="{() => (showChangeGroupPeriod = false)}"
+  on:change="{updateOptions}"
+  on:cancel="{() => (showOptions = false)}"
 />
 
-<Modal
-  id="stats-about"
-  size="sm"
-  passiveModal
-  bind:open="{showInfo}"
-  modalHeading="Summary Statistics"
-  on:open
-  on:close="{() => (showInfo = false)}"
->
-  <div>
-    {note}
-  </div>
-</Modal>
+<svelte:component
+  this="{AboutModal}"
+  bind:open="{showAbout}"
+  group="{group}"
+  period="{period}"
+  models="{models}"
+/>
