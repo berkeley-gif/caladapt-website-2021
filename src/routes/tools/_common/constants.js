@@ -128,7 +128,7 @@ export const DEFAULT_STAT_GROUPS = [
     historical: true,
   },
   {
-    id: "livneh",
+    id: "observed",
     label: "Observed Historical",
     historical: true,
   },
