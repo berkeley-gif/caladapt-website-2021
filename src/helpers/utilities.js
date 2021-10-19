@@ -5,8 +5,11 @@ import shp from "shpjs";
 import tj from "@mapbox/togeojson";
 import throttle from "lodash.throttle";
 import { range } from "d3-array";
+import leftPad from "just-left-pad";
 
 const { apiEndpoint } = config.env.production;
+
+export { throttle, leftPad };
 
 /**
  * Split and parse location hash string into an object
@@ -519,8 +522,6 @@ export async function getDataset(opt) {
 export function isLeapYear(year) {
   return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
-
-export { throttle };
 
 /**
  * Check if date is today
