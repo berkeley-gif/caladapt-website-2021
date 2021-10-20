@@ -35,8 +35,16 @@
         text-anchor="middle"
         style="font-weight:600;"
       >
-        <tspan x="{$xScale(d.value)}" y="{-10}">{d.label} {units}</tspan>
-        <tspan x="{$xScale(d.value)}" y="{5}">{d.value} {units}</tspan>
+        {d.label}
+      </text>
+      <text
+        x="{$xScale(d.value)}"
+        y="{8}"
+        text-anchor="middle"
+        style="font-weight:600;"
+      >
+        <tspan>{d.value}</tspan>
+        <tspan dx="2">{units}</tspan>
       </text>
     {/each}
   </g>
@@ -48,8 +56,8 @@
         y="{35}"
         style="font-weight:600;fill:red;"
       >
-        {threshold}
-        {units}
+        <tspan>{threshold}</tspan>
+        <tspan dx="2">{units}</tspan>
       </text>
     </g>
   {/if}
