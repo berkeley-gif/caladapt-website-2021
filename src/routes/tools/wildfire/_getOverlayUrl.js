@@ -34,7 +34,7 @@ const getModelScenarioStr = (model, scenario, climvar, period, month) =>
   }`;
 
 const getFireProbStr = (period, month) =>
-  period === "month" ? `_${leftPad(month, 2, "0")}` : "";
+  period === "month" ? `_${leftPad(`${month}`, 2, "0")}` : "";
 
 const getIndicatorStr = (climvar, period) => {
   if (climvar === "fire") {
