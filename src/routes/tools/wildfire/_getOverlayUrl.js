@@ -1,4 +1,7 @@
 import { leftPad } from "~/helpers/utilities";
+import config from "~/helpers/api-config";
+
+const { apiEndpoint } = config.env.production;
 
 export const getMapOverlayImgURL = ({
   year = 1960,
@@ -7,10 +10,10 @@ export const getMapOverlayImgURL = ({
   model = "CanESM2",
   scenario = "rcp45",
   palette = "YlOrRd",
-  period = "annual",
+  period = "year",
   month = 8,
 }) =>
-  `https://api.cal-adapt.org/api/series/${climvar}_${getIndicatorStr(
+  `${apiEndpoint}/series/${climvar}_${getIndicatorStr(
     climvar,
     period
   )}_${getModelScenarioStr(

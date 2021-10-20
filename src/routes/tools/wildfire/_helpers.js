@@ -1,6 +1,9 @@
 import config from "~/helpers/api-config";
+import { getMapOverlayImgURL } from "./_getOverlayUrl";
 
 const { apiEndpoint } = config.env.production;
+
+export { getMapOverlayImgURL };
 
 export const getMapImages = ({
   climvarId,

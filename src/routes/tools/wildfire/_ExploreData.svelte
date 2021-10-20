@@ -10,9 +10,9 @@
     getDataByDate,
     formatDataForExport,
   } from "../_common/helpers";
+  import { getMapOverlayImgURL } from "./_helpers";
 
   import { serialize } from "~/helpers/utilities";
-  import { getImgOverlayPath } from "./_data";
 
   import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
@@ -82,14 +82,16 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: imgOverlayPath = getImgOverlayPath({
-    climvarId: $climvarStore,
-    modelId: $modelSingleStore,
-    scenarioId: $scenarioStore,
-    yearStart: $yearStore,
-    yearEnd: $yearStore + $durationStore - 1,
-    monthNumber: $monthStore,
+  $: imgOverlayPath = getMapOverlayImgURL({
+    climvar: $climvarStore,
+    model: $modelSingleStore,
+    scenario: $scenarioStore,
+    year: $yearStore,
+    duration: $durationStore,
+    month: $monthStore,
   });
+
+  $: console.log(imgOverlayPath);
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.mark !== "area");

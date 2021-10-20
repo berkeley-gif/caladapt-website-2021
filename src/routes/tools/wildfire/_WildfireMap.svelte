@@ -5,13 +5,16 @@
     ImageOverlay,
     Legend,
   } from "~/components/tools/Map";
-  import { colorRamp, colorValues } from "./_constants";
+  import { DEFAULT_OVERLAY_BOUNDS, colorRamp, colorValues } from "./_constants";
   export let imgOverlayPath;
 </script>
 
 <Map>
   <NavigationControl />
-  <ImageOverlay overlay="{`${imgOverlayPath}?style=swe&scale=10`}" />
+  <ImageOverlay
+    overlay="{imgOverlayPath}"
+    coordinates="{DEFAULT_OVERLAY_BOUNDS}"
+  />
   <Legend
     values="{colorValues}"
     ramp="{colorRamp}"
