@@ -253,7 +253,7 @@
     probability_description_with_ci = `${PROPBABILITY_DESCRIPTION}
     <p>The <strong>95% Confidence Intervals</strong> for your selected 
     threshold value are <strong>[${$threshCIStore[0].toFixed(1)}, 
-    ${$threshCIStore[1].toFixed(1)}] °F</strong></p>`;
+    ${$threshCIStore[1].toFixed(1)}] ${$climvar.units.imperial}</strong></p>`;
     threshCILoading = false;
   }
 
@@ -393,14 +393,18 @@
       {#if threshValid && !threshCILoading}
         <p>
           A daily <span class="annotate">{$climvar.title}</span> of
-          <span class="annotate threshold">{$thresholdStore}°F</span>
+          <span class="annotate threshold"
+            >{$thresholdStore} {$climvar.units.imperial}</span
+          >
           around <span class="annotate">{$doyText}</span> is a
           <span class="annotate">{threshProbability.label}</span>
           event. Based on Extreme Value Theory and historical observations (1991-2020),
           the probability of daily
           <span class="annotate">{$climvar.title}</span>
           being {$extremesStore}er than
-          <span class="annotate threshold">{$thresholdStore}°F</span>
+          <span class="annotate threshold"
+            >{$thresholdStore} {$climvar.units.imperial}</span
+          >
           at least once between <span class="annotate">{$begin}</span> and
           <span class="annotate">{$end}</span>
           is {threshProbability.append}
@@ -411,7 +415,9 @@
             >{$climvar.title}</span
           >
           {$extremesStore}er than
-          <span class="annotate threshold">{$thresholdStore} °F</span>
+          <span class="annotate threshold"
+            >{$thresholdStore} {$climvar.units.imperial}</span
+          >
           occurred <span class="annotate">{threshExceedances}</span>
           times between <span class="annotate">{$begin}</span> and
           <span class="annotate">{$end}</span>.
@@ -446,12 +452,16 @@
         </p>
         <p>
           A <span class="annotate">Record Low</span> of
-          <span class="annotate">{$baseline.low.value}</span>
+          <span class="annotate"
+            >{$baseline.low.value} {$climvar.units.imperial}</span
+          >
           was observed on <span class="annotate">{$baseline.low.date}</span>
         </p>
         <p>
           A <span class="annotate">Record High</span> of
-          <span class="annotate">{$baseline.high.value}</span>
+          <span class="annotate"
+            >{$baseline.high.value} {$climvar.units.imperial}</span
+          >
           was observed on <span class="annotate">{$baseline.high.date}</span>
         </p>
       {/if}
@@ -518,7 +528,6 @@
         height="{180}"
         y1="{showMeasured ? 320 : 80}"
         xDomain="{xDomain}"
-        units="{$climvar.units.imperial}"
       />
     {/if}
     <div class="chart-notes margin--v-16">

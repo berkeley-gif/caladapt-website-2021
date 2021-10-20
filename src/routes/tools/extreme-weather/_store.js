@@ -18,7 +18,7 @@ const formatFn = format(".1f");
 
 function formatRecord(d) {
   return {
-    value: `${formatFn(d.value)}°F`,
+    value: `${formatFn(d.value)}`,
     date: dateFormat(d.date),
   };
 }
