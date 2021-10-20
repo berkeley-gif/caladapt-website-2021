@@ -14,6 +14,7 @@
   export let height = 400;
   export let threshold;
   export let xDomain;
+  export let zeroBase = false;
 
   export let yAxis = {
     label: "YAxis Label",
@@ -85,8 +86,13 @@
         <Column
           strokeWidth="{1}"
           total="{data.length}"
-          on:mousemove="{(event) => (evt = hideTooltip = event)}"
-          on:mouseout="{() => (hideTooltip = true)}"
+          on:mousemove="{(event) => {
+            evt = event;
+            hideTooltip = false;
+          }}"
+          on:mouseout="{() => {
+            hideTooltip = true;
+          }}"
         />
         <Annotation
           units="{xAxis.units}"

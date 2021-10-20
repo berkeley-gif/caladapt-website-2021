@@ -13,8 +13,7 @@
   export let padding = { top: 16, right: 16, bottom: 32, left: 32 };
   export let y1 = 80;
   export let xDomain;
-  export let units;
-  export let tooltipFn = (d) => `${d.value} ${units}`;
+  export let tooltipFn = (d) => `${d.valueLabel}`;
   export let yAxis = {
     key: "label",
     tickFormat: (d) => d,
@@ -23,6 +22,8 @@
     key: "value",
     tickFormat: (d) => d,
   };
+
+  $: console.log("data", data);
 
   let yDomain;
 
@@ -66,9 +67,13 @@
         <AxisY gridlines="{true}" />
         <Circles
           y1="{-y1}"
-          units="{units}"
-          on:mousemove="{(event) => (evt = hideTooltip = event)}"
-          on:mouseout="{() => (hideTooltip = true)}"
+          on:mousemove="{(event) => {
+            evt = event;
+            hideTooltip = false;
+          }}"
+          on:mouseout="{() => {
+            hideTooltip = true;
+          }}"
         />
       </Svg>
       <Html pointerEvents="{false}">
