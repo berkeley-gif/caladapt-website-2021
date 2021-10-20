@@ -9,7 +9,7 @@
   export let imgOverlayPath;
 </script>
 
-<Map>
+<Map minZoom="{4}" maxZoom="{8}">
   <NavigationControl />
   <ImageOverlay overlay="{`${imgOverlayPath}?style=swe&scale=10`}" />
   <Legend

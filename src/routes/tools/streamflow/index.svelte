@@ -17,8 +17,7 @@
 </script>
 
 <script>
-  import { InlineNotification } from "carbon-components-svelte";
-  import { Header } from "~/components/tools/Partials";
+  import Embed from "~/partials/Embed.svelte";
 
   export let tool;
 </script>
@@ -27,19 +26,4 @@
   <title>{tool.title}</title>
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      <InlineNotification
-        hideCloseButton
-        lowContrast
-        kind="warning-alt"
-        title="Under Construction"
-        subtitle=""
-      />
-    </p>
-  </div>
-</Header>
-
-<!-- placeholder div to add height -->
-<div id="explore"></div>
+<Embed path="{`tools/${tool.slug}`}" title="{tool.title}" />

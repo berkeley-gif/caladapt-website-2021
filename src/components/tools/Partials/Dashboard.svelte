@@ -102,6 +102,14 @@
                 >
                   <div class="bx--row margin--v-16">
                     <div class="bx--col">
+                      <slot name="tab_content_map_title"
+                        >tab_content_map_title</slot
+                      >
+                    </div>
+                  </div>
+
+                  <div class="bx--row margin--v-16">
+                    <div class="bx--col">
                       <slot name="tab_content_slippy_map"
                         >tab_content_slippy_map</slot
                       >

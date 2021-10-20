@@ -100,9 +100,7 @@
                 <p class="source-text">Download dataset:</p>
                 <ul class="source-list">
                   <li class="source-list-item">
-                    <a href="/data/download/" target="_blank"
-                      >Cal-Adapt Data Download Tool</a
-                    >
+                    <a href="/data/download/">Cal-Adapt Data Download Tool</a>
                   </li>
                   {#each item.resources.filter((d) => d.format !== "reference") as ref}
                     <li class="source-list-item">
@@ -112,14 +110,17 @@
                     </li>
                   {/each}
                 </ul>
-                <p class="source-text">References:</p>
-                <ul class="source-list">
-                  {#each item.resources.filter((d) => d.format === "reference") as ref}
-                    <li class="source-list-item">
-                      {ref.name} (<a href="{ref.url}" target="_blank">link</a>)
-                    </li>
-                  {/each}
-                </ul>
+                {#if item.resources.filter((d) => d.format === "reference").length}
+                  <p class="source-text">References:</p>
+                  <ul class="source-list">
+                    {#each item.resources.filter((d) => d.format === "reference") as ref}
+                      <li class="source-list-item">
+                        {ref.name} (<a href="{ref.url}" target="_blank">link</a
+                        >)
+                      </li>
+                    {/each}
+                  </ul>
+                {/if}
               </div>
             </div>
           {/each}
