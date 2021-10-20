@@ -7,7 +7,7 @@ export const DEFAULT_STATION_LAYER = layers.find(
 );
 export const DEFAULT_STATION_ID = 11;
 
-export const CLIMATE_VARIABLES = ["tasmax", "tasmin"];
+export const CLIMATE_VARIABLES = ["tasmax", "tasmin", "wspeed"];
 export const DEFAULT_CLIMATE_VARIABLE = "tasmax";
 
 export const DEFAULT_PERCENTILES = [1, 10, 90, 99];
