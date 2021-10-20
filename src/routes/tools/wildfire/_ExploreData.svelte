@@ -20,6 +20,7 @@
   import WildfireChart from "./_WildfireChart.svelte";
   import WildfireMap from "./_WildfireMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
+  import MapTitle from "./_MapTitle.svelte";
   import ChartTitle from "./_ChartTitle.svelte";
 
   import {
@@ -202,6 +203,17 @@
   on:tabChange="{handleTabChange}"
 >
   <!-- Map components -->
+  <div slot="tab_content_map_title">
+    <MapTitle
+      period="{$periodStore}"
+      scenario="{$scenario.labelLong}"
+      climvar="{$climvarStore}"
+      year="{$yearStore}"
+      model="{$modelSingleStore}"
+      month="{$monthStore}"
+    />
+  </div>
+
   <div
     slot="tab_content_slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
