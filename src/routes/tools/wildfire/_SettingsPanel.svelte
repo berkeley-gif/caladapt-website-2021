@@ -17,7 +17,6 @@
   import {
     SelectMonth,
     SelectScenario,
-    SelectModels,
     Select,
     RadioBtnGroup,
   } from "~/components/tools/Settings";
@@ -62,7 +61,7 @@
     monthStore.set(e.detail.id);
   }
 
-  function changeDuration(e) {
+  function changePeriod(e) {
     periodStore.set(e.detail);
   }
 
@@ -71,67 +70,8 @@
   }
 </script>
 
-{#if activeTab === 0}
-  <!-- Map Settings -->
-  <div class="block">
-    <RadioBtnGroup
-      items="{CLIMATE_VARIABLES}"
-      selected="{$climvarStore}"
-      title="{'Select Climate Variable'}"
-      on:change="{changeClimvar}"
-    />
-    <LearnMoreButton on:click="{() => showLearnMore({ content: 'TODO' })}" />
-  </div>
-
-  <div class="block">
-    <SelectScenario
-      selectedId="{$scenarioStore}"
-      items="{DEFAULT_SCENARIOS}"
-      on:change="{changeScenario}"
-    />
-    <LearnMoreButton
-      on:click="{() => showLearnMore({ slugs: ['emissions-scenario'] })}"
-    />
-  </div>
-
-  <div class="block">
-    <RadioBtnGroup
-      items="{TIME_PERIODS}"
-      selected="{$periodStore}"
-      title="{'Select Period'}"
-      on:change="{changeDuration}"
-    />
-    <LearnMoreButton
-      on:click="{() => showLearnMore({ content: LEARN_MORE_YEARLY_PERIOD })}"
-    />
-  </div>
-
-  {#if $periodStore === "month"}
-    <div class="block">
-      <SelectMonth
-        items="{MONTHS_LIST_ONE_INDEXED}"
-        selectedId="{$monthStore}"
-        on:change="{changeSelectedMonth}"
-      />
-      <LearnMoreButton
-        on:click="{() => showLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
-      />
-    </div>
-  {/if}
-
-  <div class="block">
-    <Select
-      title="Select Model"
-      items="{PRIORITY_4_MODELS}"
-      selectedId="{$modelSingleStore}"
-      on:change="{changeModelSingle}"
-    />
-    <LearnMoreButton
-      on:click="{() => showLearnMore({ slugs: ['global-climate-model'] })}"
-    />
-  </div>
-{:else}
-  <!-- Chart Settings -->
+{#if activeTab}
+  <!-- Chart only settings -->
   <div class="block">
     <span class="bx--label">Select Location</span>
     <StaticMap
@@ -150,18 +90,42 @@
       />
     </div>
   </div>
+{/if}
 
-  <div class="block">
-    <SelectScenario
-      selectedId="{$scenarioStore}"
-      items="{DEFAULT_SCENARIOS}"
-      on:change="{changeScenario}"
-    />
-    <LearnMoreButton
-      on:click="{() => showLearnMore({ slugs: ['emissions-scenario'] })}"
-    />
-  </div>
+<!-- Shared Chart and Map settings -->
+<div class="block">
+  <RadioBtnGroup
+    items="{CLIMATE_VARIABLES}"
+    selected="{$climvarStore}"
+    title="{'Select Indicator'}"
+    on:change="{changeClimvar}"
+  />
+  <LearnMoreButton on:click="{() => showLearnMore({ content: 'TODO' })}" />
+</div>
+<div class="block">
+  <SelectScenario
+    selectedId="{$scenarioStore}"
+    items="{DEFAULT_SCENARIOS}"
+    on:change="{changeScenario}"
+  />
+  <LearnMoreButton
+    on:click="{() => showLearnMore({ slugs: ['emissions-scenario'] })}"
+  />
+</div>
 
+<div class="block">
+  <RadioBtnGroup
+    items="{TIME_PERIODS}"
+    selected="{$periodStore}"
+    title="{'Select Period'}"
+    on:change="{changePeriod}"
+  />
+  <LearnMoreButton
+    on:click="{() => showLearnMore({ content: LEARN_MORE_YEARLY_PERIOD })}"
+  />
+</div>
+
+{#if $periodStore === "month"}
   <div class="block">
     <SelectMonth
       items="{MONTHS_LIST_ONE_INDEXED}"
@@ -172,18 +136,16 @@
       on:click="{() => showLearnMore({ content: LEARN_MORE_SELECT_MONTH })}"
     />
   </div>
-
-  <div class="block">
-    <SelectModels
-      selectedIds="{$modelsStore}"
-      items="{PRIORITY_4_MODELS}"
-      on:change="{changeModels}"
-    />
-    <LearnMoreButton
-      on:click="{() =>
-        showLearnMore({
-          slugs: ['global-climate-model'],
-        })}"
-    />
-  </div>
 {/if}
+
+<div class="block">
+  <Select
+    title="Select Model"
+    items="{PRIORITY_4_MODELS}"
+    selectedId="{$modelSingleStore}"
+    on:change="{changeModelSingle}"
+  />
+  <LearnMoreButton
+    on:click="{() => showLearnMore({ slugs: ['global-climate-model'] })}"
+  />
+</div>

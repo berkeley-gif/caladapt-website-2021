@@ -30,7 +30,7 @@ export const CLIMATE_VARIABLES = [
   },
   {
     id: "fireprob",
-    label: "Decadal fire probability",
+    label: "Decadal wildfire probability",
   },
 ];
 
