@@ -215,10 +215,9 @@
     </p>
     <p>
       <em
-        >Note: This tool is still under development. We are working on adding
-        wind speed to the list of climate variables and soliciting feedback from
-        our users. Please email us at support@cal-adapt.org with your comments
-        and questions.</em
+        >Note: This tool is still under development. We are soliciting feedback
+        from our users. Please email us at support@cal-adapt.org with your
+        comments and questions.</em
       >
     </p>
   </div>
