@@ -176,5 +176,16 @@ const variables = [
     },
     decimals: 0,
   },
+  {
+    id: "wspeed",
+    label: "Wind Speed",
+    text: "Wind Speed",
+    icon: "",
+    units: {
+      imperial: "mph",
+      metric: "m/s",
+    },
+    decimals: 0,
+  },
 ];
 export default variables;
