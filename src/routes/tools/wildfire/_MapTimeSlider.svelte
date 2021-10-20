@@ -17,7 +17,7 @@
   export let modelId;
   export let scenarioId;
   export let monthNumber;
-  export let duration;
+  export let period;
 
   const intervalMs = 750;
   const dispatch = createEventDispatcher();
@@ -27,13 +27,13 @@
   let timerId;
   let sliderComponent;
 
-  $: years = range(1960, 2100, duration);
+  $: years = range(1960, 2100, 10);
 
   $: imagePaths = getMapImages({
     climvarId,
     modelId,
     scenarioId,
-    duration,
+    period,
     years,
     monthNumber,
   });
@@ -70,7 +70,7 @@
   async function preloadAllImages(imagesData) {
     isLoading = true;
     try {
-      await Promise.all(imagesData.map((url) => preloadImage(url.src)));
+      await Promise.all(imagesData.map((url) => preloadImage(url)));
     } catch (error) {
       console.warn(error.message);
     } finally {

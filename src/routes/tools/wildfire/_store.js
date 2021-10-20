@@ -3,11 +3,11 @@ import climvars from "~/helpers/climate-variables";
 import {
   DEFAULT_SELECTED_MODEL_SINGLE,
   DEFAULT_SELECTED_MONTH,
-  DEFAULT_SELECTED_DURATION,
+  DEFAULT_SELECTED_PERIOD,
   DEFAULT_SELECTED_YEAR,
   DEFAULT_CLIMVAR,
   MONTHS_LIST_ONE_INDEXED,
-  TIME_DURATIONS,
+  TIME_PERIODS,
 } from "./_constants";
 
 export const climvarStore = (() => {
@@ -42,15 +42,15 @@ export const monthStore = (() => {
 
 export const modelSingleStore = writable(DEFAULT_SELECTED_MODEL_SINGLE);
 
-export const durationStore = (() => {
-  const store = writable(DEFAULT_SELECTED_DURATION);
+export const periodStore = (() => {
+  const store = writable(DEFAULT_SELECTED_PERIOD);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get duration() {
+    get period() {
       return derived(store, ($store) => {
-        return TIME_DURATIONS.find((d) => d.id === $store);
+        return TIME_PERIODS.find((d) => d.id === $store);
       });
     },
   };

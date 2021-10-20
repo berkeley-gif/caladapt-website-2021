@@ -32,7 +32,7 @@
   } from "../_common/stores";
   import {
     climvarStore,
-    durationStore,
+    periodStore,
     monthStore,
     modelSingleStore,
     yearStore,
@@ -87,7 +87,7 @@
     model: $modelSingleStore,
     scenario: $scenarioStore,
     year: $yearStore,
-    duration: $durationStore,
+    period: $periodStore,
     month: $monthStore,
   });
 
@@ -136,7 +136,7 @@
         modelSingle: $modelSingleStore,
         year: $yearStore,
         month: $monthStore,
-        duration: $durationStore,
+        period: $periodStore,
         lng,
         lat,
         boundary: $boundary.id,
@@ -225,7 +225,7 @@
         modelId="{$modelSingleStore}"
         scenarioId="{$scenarioStore}"
         monthNumber="{$monthStore}"
-        duration="{$durationStore}"
+        period="{$periodStore}"
       />
     {/if}
   </div>

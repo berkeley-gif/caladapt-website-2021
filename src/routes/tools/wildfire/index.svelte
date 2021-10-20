@@ -2,7 +2,7 @@
   import {
     DEFAULT_CENTER,
     DEFAULT_CLIMVAR,
-    DEFAULT_SELECTED_DURATION,
+    DEFAULT_SELECTED_PERIOD,
     DEFAULT_SELECTED_MONTH,
     DEFAULT_SELECTED_YEAR,
     DEFAULT_SELECTED_MODEL_SINGLE,
@@ -73,7 +73,7 @@
         ...INITIAL_CONFIG,
         month: DEFAULT_SELECTED_MONTH,
         year: DEFAULT_SELECTED_YEAR,
-        duration: DEFAULT_SELECTED_DURATION,
+        duration: DEFAULT_SELECTED_PERIOD,
         modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
         climvarId: DEFAULT_CLIMVAR,
         lng: DEFAULT_CENTER[0],
@@ -120,7 +120,7 @@
   } from "../_common/stores";
   import {
     climvarStore,
-    durationStore,
+    periodStore,
     modelSingleStore,
     monthStore,
     yearStore,
@@ -214,7 +214,7 @@
     monthStore.set(month);
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
-    durationStore.set(duration);
+    periodStore.set(duration);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
