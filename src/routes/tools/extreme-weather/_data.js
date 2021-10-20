@@ -173,18 +173,47 @@ export async function getForecastData({ lng, lat }) {
     throw new Error(dataError);
   }
   const periods = data.properties.periods.map((d) => {
-    const startTime = startTimeParse(d.startTime);
-    const label = startTimeFormat(startTime);
-    return { ...d, date: startTime, label, value: d.temperature };
+    const { startTime, isDaytime, windSpeed } = d;
+    const windSpeedArr = windSpeed.match(/\d+/g).map((d) => +d);
+    const date = startTimeParse(startTime);
+    const dateLabel = startTimeFormat(date);
+    return {
+      ...d,
+      date,
+      label: isDaytime ? `${dateLabel} AM` : `${dateLabel} PM`,
+      windSpeedArr,
+    };
   });
   return periods.sort((a, b) => b.date - a.date);
 }
 
 export function filterForecast(climvarId, forecast) {
-  if (climvarId === "tasmin") {
-    return forecast.filter((d) => d.isDaytime === false);
+  switch (climvarId) {
+    case "tasmin":
+      return forecast
+        .filter((d) => !d.isDaytime)
+        .map(({ label, temperature, temperatureUnit }) => ({
+          label,
+          value: temperature,
+          valueLabel: `${temperature} °${temperatureUnit}`,
+        }));
+    case "tasmax":
+      return forecast
+        .filter((d) => d.isDaytime)
+        .map(({ label, temperature, temperatureUnit }) => ({
+          label,
+          value: temperature,
+          valueLabel: `${temperature} °${temperatureUnit}`,
+        }));
+    default:
+      return forecast.map(
+        ({ label, windSpeedArr, windSpeed, windDirection }) => ({
+          label,
+          value: windSpeedArr,
+          valueLabel: `${windSpeed} ${windDirection}`,
+        })
+      );
   }
-  return forecast.filter((d) => d.isDaytime === true);
 }
 
 export async function getMeasuredData({ stationId, startDate, endDate }) {
