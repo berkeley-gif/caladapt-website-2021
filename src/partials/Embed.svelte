@@ -9,10 +9,9 @@
 
   onMount(() => {
     window.addEventListener("message", (e) => {
-      window.alert("Here");
       // use message data that was passed from iframe page to set height
       if (e.data.height && typeof e.data.height === "number") {
-        v2_frame.style.height = `${e.data.height + 300}px`;
+        v2_frame.style.height = `${e.data.height + 100}px`;
       } else {
         console.warn("postMessage height data from iframe not received!");
       }
@@ -28,8 +27,9 @@
 
 <style>
   iframe {
-    width: 95vw;
+    width: 100vw;
     height: 100vw;
+    display: block;
   }
 </style>
 
