@@ -9,17 +9,21 @@
 
   onMount(() => {
     window.addEventListener("message", (e) => {
-      // use message data that was passed from iframe page to set height
-      if (e.data.height && typeof e.data.height === "number") {
-        v2_frame.style.height = `${e.data.height + 100}px`;
+      // use message data that was passed from iframe page to set height and width
+      if (e.data.height && e.data.width) {
+        if (
+          typeof e.data.height === "number" &&
+          typeof e.data.width === "number"
+        ) {
+          v2_frame.style.height = `${e.data.height + 100}px`;
+          v2_frame.style.width = `${e.data.width}px`;
+        } else {
+          console.warn(
+            "postMessage height and/or width data from iframe not a valid number!"
+          );
+        }
       } else {
-        console.warn("postMessage height data from iframe not received!");
-      }
-      // use message data that was passed from iframe page to set width
-      if (e.data.width && typeof e.data.width === "number") {
-        v2_frame.style.width = `${e.data.width}px`;
-      } else {
-        console.warn("postMessage width data from iframe not received!");
+        console.warn("postMessage data from iframe not received!");
       }
     });
   });
