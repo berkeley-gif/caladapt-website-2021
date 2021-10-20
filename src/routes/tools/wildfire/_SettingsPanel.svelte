@@ -11,6 +11,7 @@
     LEARN_MORE_YEARLY_PERIOD,
     TIME_PERIODS,
     MONTHS_LIST_ONE_INDEXED,
+    CLIMATE_VARIABLES,
   } from "./_constants";
 
   import {
@@ -24,7 +25,12 @@
   import { StaticMap } from "~/components/tools/Location";
 
   import { scenarioStore, locationStore, modelsStore } from "../_common/stores";
-  import { periodStore, monthStore, modelSingleStore } from "./_store";
+  import {
+    climvarStore,
+    periodStore,
+    monthStore,
+    modelSingleStore,
+  } from "./_store";
 
   // props
   export let activeTab = 0;
@@ -59,10 +65,24 @@
   function changeDuration(e) {
     periodStore.set(e.detail);
   }
+
+  function changeClimvar(e) {
+    climvarStore.set(e.detail);
+  }
 </script>
 
 {#if activeTab === 0}
   <!-- Map Settings -->
+  <div class="block">
+    <RadioBtnGroup
+      items="{CLIMATE_VARIABLES}"
+      selected="{$climvarStore}"
+      title="{'Select Climate Variable'}"
+      on:change="{changeClimvar}"
+    />
+    <LearnMoreButton on:click="{() => showLearnMore({ content: 'TODO' })}" />
+  </div>
+
   <div class="block">
     <SelectScenario
       selectedId="{$scenarioStore}"

@@ -155,9 +155,12 @@
 
   $: {
     console.groupCollapsed("STORE UPDATES");
-    console.table($dataStore);
+    console.table($climvarStore);
+    console.table($monthStore);
+    console.table($periodStore);
     console.table($locationStore);
     console.table($modelsStore);
+    console.table($dataStore);
     console.groupEnd();
   }
 

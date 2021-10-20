@@ -23,6 +23,17 @@ export const TIME_PERIODS = [
   { id: "month", label: "Monthly" },
 ];
 
+export const CLIMATE_VARIABLES = [
+  {
+    id: "fire",
+    label: "Modeled area burned",
+  },
+  {
+    id: "fireprob",
+    label: "Decadal fire probability",
+  },
+];
+
 export const MONTHS_LIST_ONE_INDEXED = range(0, 12).map((d) => ({
   id: d + 1,
   label: timeFormat("%B")(new Date(new Date().getUTCFullYear(), d, 1, 0, 0, 0)),
