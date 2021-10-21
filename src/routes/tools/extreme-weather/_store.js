@@ -8,10 +8,12 @@ import {
   CLIMATE_VARIABLES,
   DEFAULT_CLIMATE_VARIABLE,
   DEFAULT_PERCENTILES,
-  DEFAULT_DAY,
+  DEFAULT_SELECTED_DAY,
+  DEFAULT_STATION,
+  DEFAULT_THRESHOLD,
 } from "./_constants";
+import { closest } from "~/helpers/utilities";
 
-const numberFormat = timeFormat("%j");
 const textFormat = timeFormat("%B %e");
 const dateFormat = timeFormat("%B %-e, %Y");
 const formatFn = format(".1f");
@@ -45,11 +47,11 @@ export const climvarStore = (() => {
   };
 })();
 
-export const forecastDate = readable(dateFormat(DEFAULT_DAY));
+export const forecastDate = readable(dateFormat(DEFAULT_SELECTED_DAY));
 
 export const measuredDateRange = readable({
-  start: timeFormat("%Y-%m-%d")(timeDay.offset(DEFAULT_DAY, -10)),
-  end: timeFormat("%Y-%m-%d")(DEFAULT_DAY),
+  start: timeFormat("%Y-%m-%d")(timeDay.offset(DEFAULT_SELECTED_DAY, -10)),
+  end: timeFormat("%Y-%m-%d")(DEFAULT_SELECTED_DAY),
 });
 
 export const unitsStore = writable({ imperial: true });
@@ -57,58 +59,42 @@ export const unitsStore = writable({ imperial: true });
 export const extremesStore = writable("high");
 
 export const doyStore = (() => {
-  const store = writable(DEFAULT_DAY);
+  const store = writable(DEFAULT_SELECTED_DAY);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get doyNumber() {
-      return derived(store, ($store) => {
-        return +numberFormat($store);
-      });
-    },
     get doyText() {
       return derived(store, ($store) => {
         return textFormat($store);
       });
     },
-    get begin() {
+    get doyRange() {
       return derived(store, ($store) => {
-        const rangeStart = timeDay.offset($store, -10);
-        return textFormat(rangeStart);
+        const dateStart = timeDay.offset($store, -10);
+        const dateEnd = timeDay.offset($store, +10);
+        return [dateStart, dateEnd];
       });
     },
-    get end() {
+    get doyRangeStart() {
       return derived(store, ($store) => {
-        const rangeEnd = timeDay.offset($store, +10);
-        return textFormat(rangeEnd);
+        const date = timeDay.offset($store, -10);
+        return textFormat(date);
+      });
+    },
+    get doyRangeEnd() {
+      return derived(store, ($store) => {
+        const date = timeDay.offset($store, +10);
+        return textFormat(date);
       });
     },
   };
 })();
 
-export const thresholdStore = writable(100);
+export const thresholdStore = writable(DEFAULT_THRESHOLD);
 
 export const locationStore = (() => {
-  const store = writable({
-    title:
-      "Weather Station at Fresno Yosemite International Airport, Fresno, CA",
-    geometry: {
-      type: "Point",
-      coordinates: [-119.719, 36.78],
-    },
-    id: 11,
-    properties: {
-      name: "Fresno Yosemite International Airport",
-      usaf: 723890,
-      wban: 93193,
-      elevation_m: 101.5,
-      icao: "KFAT",
-      city: "Fresno",
-      climdiv: 5,
-    },
-    bbox: [-119.719, 36.78, -119.719, 36.78],
-  });
+  const store = writable(DEFAULT_STATION);
   const { update, subscribe } = store;
   return {
     subscribe,
@@ -168,34 +154,7 @@ export const datasetStore = (() => {
   };
 })();
 
-export const threshCIStore = writable([]);
-
 // DERIVED STORES
-// Query params store
-export const queryParams = derived(
-  [doyStore, locationStore, extremesStore],
-  ([$doyStore, $locationStore, $extremesStore]) => {
-    const params = {
-      g: `POINT(${$locationStore.geometry.coordinates[0]} ${$locationStore.geometry.coordinates[1]})`,
-      doy: numberFormat($doyStore),
-      imperial: true,
-      extype: $extremesStore,
-    };
-    return { params, method: "GET" };
-  }
-);
-
-// Bookmark store
-export const bookmark = derived(
-  [climvarStore, unitsStore, locationStore, doyStore, extremesStore],
-  ([$climvarStore, $unitsStore, $locationStore, $doyStore, $extremesStore]) => {
-    const id = $locationStore.id;
-    const { imperial } = $unitsStore;
-    const { doy } = $doyStore;
-    return `climvar=${$climvarStore}&imperial=${imperial}&station=${id}&doy=${doy}&extremes=${$extremesStore}`;
-  }
-);
-
 // Baseline store
 export const baseline = derived(
   [doyStore, hadisdStore],
@@ -245,5 +204,115 @@ export const baseline = derived(
       percentiles: stats,
       dataExtent: extent(values),
     };
+  }
+);
+
+// Threshold Bounds
+export const thresholdBound = derived(
+  [extremesStore, baseline, thresholdStore],
+  ([$extremesStore, $baseline]) => {
+    if (!$extremesStore || !$baseline) return null;
+    const { percentiles } = $baseline;
+    if ($extremesStore === "high") {
+      return percentiles.find((d) => d.percentile === 90).value;
+    } else {
+      return percentiles.find((d) => d.percentile === 10).value;
+    }
+  }
+);
+
+// Threshold Props
+export const thresholdProps = derived(
+  [extremesStore, thresholdBound, thresholdStore],
+  ([$extremesStore, $thresholdBound, $thresholdStore]) => {
+    if (!$extremesStore || !$thresholdBound || !$thresholdStore) {
+      return {
+        invalid: false,
+        invalidText: "",
+      };
+    }
+    if ($extremesStore === "high") {
+      return {
+        invalid: $thresholdStore < $thresholdBound,
+        invalidText: `Value must be >= 90th percentile value of ${$thresholdBound}`,
+      };
+    } else {
+      return {
+        invalid: $thresholdStore > $thresholdBound,
+        invalidText: `Value must be <= 10th percentile value of ${$thresholdBound}`,
+      };
+    }
+  }
+);
+
+export const thresholdExceedances = derived(
+  [extremesStore, baseline, thresholdStore],
+  ([$extremesStore, $baseline, $thresholdStore]) => {
+    if (!$extremesStore || !$baseline || !$thresholdStore) return null;
+    const { values } = $baseline;
+    if ($extremesStore === "high") {
+      return values.filter(({ value }) => value > $thresholdStore).length;
+    } else {
+      return values.filter(({ value }) => value < $thresholdStore).length;
+    }
+  }
+);
+
+// Threshold Stats
+export const thresholdProbability = derived(
+  [hadisdStore, thresholdStore],
+  ([$hadisdStore, $thresholdStore]) => {
+    if (!$hadisdStore || !$thresholdStore) {
+      return {
+        append: "",
+        value: "",
+        label: "",
+        rp: "",
+      };
+    }
+    const { gevisf } = $hadisdStore.returnLevels;
+    const { probabilities, values } = gevisf;
+    const valuesArr = values.map((d) => +d);
+    const closestValue = closest(+$thresholdStore, valuesArr);
+    const probability = +probabilities[closestValue.index];
+    const rp = +format(".0f")(1 / probability);
+    let label;
+    if (probability <= 0.01) {
+      label = "Extreme";
+    } else if (probability > 0.01 && probability < 0.25) {
+      label = "Rare";
+    } else {
+      label = "Common";
+    }
+    const value = +format(".2f")(probability * 100);
+    let append;
+    if (value === 50) {
+      append = "at least";
+    } else if (value === 0.1) {
+      append = "less than";
+    } else {
+      append = "";
+    }
+    return {
+      append,
+      value,
+      label,
+      rp,
+    };
+  }
+);
+
+export const histogramPercentiles = derived(
+  [extremesStore, baseline],
+  ([$extremesStore, $baseline]) => {
+    if (!$extremesStore || !$baseline) {
+      return [];
+    }
+    const { percentiles } = $baseline;
+    if ($extremesStore === "high") {
+      return percentiles.filter((d) => d.percentile > 45);
+    } else {
+      return percentiles.filter((d) => d.percentile < 55);
+    }
   }
 );
