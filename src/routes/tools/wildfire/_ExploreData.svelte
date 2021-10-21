@@ -20,8 +20,7 @@
   import WildfireChart from "./_WildfireChart.svelte";
   import WildfireMap from "./_WildfireMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
-  import MapTitle from "./_MapTitle.svelte";
-  import ChartTitle from "./_ChartTitle.svelte";
+  import Title from "./_Title.svelte";
 
   import {
     scenarioStore,
@@ -203,8 +202,8 @@
   on:tabChange="{handleTabChange}"
 >
   <!-- Map components -->
-  <div slot="tab_content_map_title">
-    <MapTitle
+  <div slot="tab_content_map_title" class="block title">
+    <Title
       period="{$periodStore}"
       scenario="{$scenario.labelLong}"
       climvar="{$climvarStore}"
@@ -245,10 +244,12 @@
   <!-- Chart components -->
   <div slot="tab_content_title" class="block title">
     {#if activeTab}
-      <ChartTitle
-        title="{chartTitle}"
-        subtitle="{chartSubtitle}"
-        scenarioLabel="{$scenario.labelLong}"
+      <Title
+        period="{$periodStore}"
+        scenario="{$scenario.labelLong}"
+        climvar="{$climvarStore}"
+        month="{$monthStore}"
+        location="{$location.title}"
         loadLocation="{loadLocation}"
       />
     {/if}
