@@ -1,5 +1,6 @@
 // Node modules
 import { merge } from "d3-array";
+import { leftPad } from "~/helpers/utilities";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -8,7 +9,7 @@ import {
   ENSEMBLES,
   OBSERVED,
   OBSERVED_FILTER_YEAR,
-  PRIORITY_10_MODELS,
+  PRIORITY_4_MODELS,
 } from "../_common/constants";
 import { buildEnvelope } from "../_common/helpers";
 
@@ -28,6 +29,18 @@ export const getImgOverlayPath = ({
       : `${climvarId}_month_${modelId}_${scenarioId}`;
   return `${apiEndpoint}/series/${slug}/${yearStart}-${yearEnd}/${monthNumber}.png`;
 };
+
+const getClimvarStr = (climvarId, period) =>
+  climvarId === "fire" ? `${climvarId}_${period}` : `${climvarId}_10y`;
+
+const getBauStr = (climvarId, period, monthNumber) =>
+  climvarId === "fire"
+    ? "bau_mu"
+    : period === "month"
+    ? `bau_${getPaddedMonth(monthNumber)}`
+    : "bau";
+
+const getPaddedMonth = (monthNumber) => leftPad(`${monthNumber}`, 2, "0");
 
 /**
  * The following 3 functions take the list of observed, models and ensemble
@@ -53,11 +66,20 @@ const getObservedSeries = ({ climvarId }) => {
 
 // For each model, there are usually 2 raster series in the API,
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
-const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
-  return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
+const getModelSeries = ({
+  climvarId,
+  scenarioId,
+  modelIds,
+  period,
+  monthNumber,
+}) => {
+  return PRIORITY_4_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
     const slugs = [
-      `${climvarId}_month_${d.id}_historical`,
-      `${climvarId}_month_${d.id}_${scenarioId}`,
+      `${getClimvarStr(climvarId, period)}_${d.id}_${scenarioId}_${getBauStr(
+        climvarId,
+        period,
+        monthNumber
+      )}`,
     ];
     return { ...d, slugs, mark: "line", visible: true };
   });
@@ -65,13 +87,19 @@ const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
 
 // The ensemble has to be assembled from the max and min of 10/all models
 // Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = ({ climvarId, scenarioId }) => {
+const getEnsembleSeries = ({ climvarId, scenarioId, period, monthNumber }) => {
   return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
     const slugs = [
-      `${climvarId}_month_ens32min_historical`,
-      `${climvarId}_month_ens32min_${scenarioId}`,
-      `${climvarId}_month_ens32max_historical`,
-      `${climvarId}_month_ens32max_${scenarioId}`,
+      `${getClimvarStr(climvarId, period)}_ens32min_${scenarioId}_${getBauStr(
+        climvarId,
+        period,
+        monthNumber
+      )}`,
+      `${getClimvarStr(climvarId, period)}_ens32max_${scenarioId}_${getBauStr(
+        climvarId,
+        period,
+        monthNumber
+      )}`,
     ];
     return { ...d, slugs, mark: "area", visible: true };
   });
@@ -192,8 +220,17 @@ export async function getEnsemble(config, params, method = "GET") {
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({ location, boundary, imperial = true }) {
-  const params = { imperial };
+export function getQueryParams({
+  location,
+  boundary,
+  period,
+  monthNumber,
+  imperial = true,
+}) {
+  const params = {
+    imperial,
+    ...(period === "month" && { months: monthNumber }),
+  };
   let method;
   switch (boundary.id) {
     case "locagrid":
@@ -202,12 +239,12 @@ export function getQueryParams({ location, boundary, imperial = true }) {
       return { params, method };
     case "custom":
       params.g = JSON.stringify(location.geometry);
-      params.stat = "mean";
+      params.stat = "sum";
       method = "POST";
       return { params, method };
     default:
       params.ref = `/api/${boundary.id}/${location.id}/`;
-      params.stat = "mean";
+      params.stat = "sum";
       method = "GET";
       return { params, method };
   }

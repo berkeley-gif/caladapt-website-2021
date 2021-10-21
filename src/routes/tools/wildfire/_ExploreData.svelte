@@ -72,13 +72,9 @@
   let printContainer;
   let printSkipElements;
 
-  let chartTitle = "";
-
-  let activeTab = 0;
+  let activeTab = 1;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
-
-  $: chartSubtitle = `Projected changes in Snow Water Equivalent for the month of ${$month.label} under a`;
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
@@ -91,8 +87,6 @@
     month: $monthStore,
   });
 
-  $: console.log(imgOverlayPath);
-
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
@@ -100,14 +94,6 @@
     statsData = null;
     dataByDate = null;
   }
-
-  afterUpdate(() => {
-    // Note: for some reason the chartTitle variable will only update
-    // when setting it here.
-    if ($location && $location.title) {
-      chartTitle = $location.title;
-    }
-  });
 
   async function loadLearnMore({
     slugs = [],

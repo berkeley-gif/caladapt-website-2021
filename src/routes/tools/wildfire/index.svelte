@@ -126,7 +126,7 @@
     yearStore,
   } from "./_store";
 
-  import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
+  import { getModels, getEnsemble, getQueryParams } from "./_data";
 
   export let initialConfig;
   export let tool;
@@ -151,7 +151,13 @@
 
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $modelsStore, $locationStore, $monthStore, update();
+  $: $climvar,
+    $scenario,
+    $modelsStore,
+    $locationStore,
+    $monthStore,
+    $periodStore,
+    update();
 
   $: {
     console.groupCollapsed("STORE UPDATES");
@@ -173,22 +179,24 @@
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
+        period: $periodStore,
+        monthNumber: $monthStore,
       };
 
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
+        period: $periodStore,
+        monthNumber: $monthStore,
         imperial: true,
       });
-      params.months = $monthStore;
 
       isFetchingStore.set(true);
 
-      const envelope = await getEnsemble(config, params, method);
-      const observed = await getObserved(config, params, method);
+      // const envelope = await getEnsemble(config, params, method);
       const models = await getModels(config, params, method);
 
-      dataStore.set([...envelope, ...observed, ...models]);
+      dataStore.set([...models]);
     } catch (error) {
       console.error("updateData", error);
       notifier.error("Error", error, 2000);
