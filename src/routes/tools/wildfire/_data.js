@@ -5,12 +5,7 @@ import { leftPad } from "~/helpers/utilities";
 // Helpers
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
-import {
-  ENSEMBLES,
-  OBSERVED_FILTER_YEAR,
-  PRIORITY_4_MODELS,
-} from "../_common/constants";
-import { buildEnvelope } from "../_common/helpers";
+import { OBSERVED_FILTER_YEAR, PRIORITY_4_MODELS } from "../_common/constants";
 
 const { apiEndpoint } = config.env.production;
 
@@ -41,22 +36,6 @@ const getBauStr = (climvarId, period, monthNumber) =>
 
 const getPaddedMonth = (monthNumber) => leftPad(`${monthNumber}`, 2, "0");
 
-/**
- * The following 3 functions take the list of observed, models and ensemble
- * raster series and add extra props. These props describe how the data
- * should be fetched from the API or how the data is shown in the charts.
- * List of extra props:
- * slugs - list of raster series names in API
- * mark - describes how the timeseries will be displayed in the chart (line/area)
- * visible - controls whether line/area in chart is hidden/shown
- *      when user clicks on corresponding legend key. Note: The stats component
- *      also uses this prop to include/remove series from summary calculations
- * @param {object} config
- * @return {array}
- */
-
-// For each model, there are usually 2 raster series in the API,
-// the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
 const getModelSeries = ({
   climvarId,
   scenarioId,
@@ -73,26 +52,6 @@ const getModelSeries = ({
       )}`,
     ];
     return { ...d, slugs, mark: "line", visible: true };
-  });
-};
-
-// The ensemble has to be assembled from the max and min of 10/all models
-// Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = ({ climvarId, scenarioId, period, monthNumber }) => {
-  return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
-    const slugs = [
-      `${getClimvarStr(climvarId, period)}_ens32min_${scenarioId}_${getBauStr(
-        climvarId,
-        period,
-        monthNumber
-      )}`,
-      `${getClimvarStr(climvarId, period)}_ens32max_${scenarioId}_${getBauStr(
-        climvarId,
-        period,
-        monthNumber
-      )}`,
-    ];
-    return { ...d, slugs, mark: "area", visible: true };
   });
 };
 
@@ -151,17 +110,6 @@ const fetchSeries = async ({
   }
 };
 
-/**
- * The following 3 functions get observed, models and ensemble data
- * params - obj with props for geometry, stat, units, etc.
- * method - default is GET, POST used for user uploaded boundaries
- * @param {object} config - props for climate variable/indicator, scenario, models, etc.
- * @param {object} params - props for for geometry, stat, units, etc.
-  console.log(config, params);
- * @param {string} method - default is GET, POST for uploaded boundaries
- * @return {array}
- */
-
 export async function getModels(config, params, method = "GET") {
   try {
     const seriesList = getModelSeries(config);
@@ -170,21 +118,6 @@ export async function getModels(config, params, method = "GET") {
     );
     const data = await Promise.all(promises);
     return data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-}
-
-export async function getEnsemble(config, params, method = "GET") {
-  try {
-    const seriesList = getEnsembleSeries(config);
-    const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
-    );
-    const data = await Promise.all(promises);
-    return data.map((d) => {
-      return { ...d, values: buildEnvelope(d.values) };
-    });
   } catch (error) {
     throw new Error(error.message);
   }

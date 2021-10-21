@@ -126,7 +126,7 @@
     yearStore,
   } from "./_store";
 
-  import { getModels, getEnsemble, getQueryParams } from "./_data";
+  import { getModels, getQueryParams } from "./_data";
 
   export let initialConfig;
   export let tool;
@@ -159,9 +159,9 @@
     $periodStore,
     update();
 
-  $: {
+  $: if (process.env.NODE_ENV !== "production") {
     console.groupCollapsed("STORE UPDATES");
-    console.table($climvarStore);
+    console.table($climvar);
     console.table($monthStore);
     console.table($periodStore);
     console.table($locationStore);
@@ -192,11 +192,8 @@
       });
 
       isFetchingStore.set(true);
-
-      // const envelope = await getEnsemble(config, params, method);
       const models = await getModels(config, params, method);
-
-      dataStore.set([...models]);
+      dataStore.set(models);
     } catch (error) {
       console.error("updateData", error);
       notifier.error("Error", error, 2000);
