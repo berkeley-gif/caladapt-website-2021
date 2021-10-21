@@ -7,7 +7,6 @@ import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import {
   ENSEMBLES,
-  OBSERVED,
   OBSERVED_FILTER_YEAR,
   PRIORITY_4_MODELS,
 } from "../_common/constants";
@@ -55,14 +54,6 @@ const getPaddedMonth = (monthNumber) => leftPad(`${monthNumber}`, 2, "0");
  * @param {object} config
  * @return {array}
  */
-
-// The observed data is usually a single raster series, so only 1 slug
-const getObservedSeries = ({ climvarId }) => {
-  return OBSERVED.map((d) => {
-    const slugs = [`${climvarId}_month_${d.id}`];
-    return { ...d, slugs, mark: "line", visible: true };
-  });
-};
 
 // For each model, there are usually 2 raster series in the API,
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
@@ -166,23 +157,10 @@ const fetchSeries = async ({
  * method - default is GET, POST used for user uploaded boundaries
  * @param {object} config - props for climate variable/indicator, scenario, models, etc.
  * @param {object} params - props for for geometry, stat, units, etc.
+  console.log(config, params);
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-
-export async function getObserved(config, params, method = "GET") {
-  try {
-    const { indicatorId, monthIds } = config;
-    const seriesList = getObservedSeries(config);
-    const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, indicatorId, monthIds })
-    );
-    const data = await Promise.all(promises);
-    return data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-}
 
 export async function getModels(config, params, method = "GET") {
   try {
