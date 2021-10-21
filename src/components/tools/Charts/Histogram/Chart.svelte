@@ -14,7 +14,6 @@
   export let height = 400;
   export let threshold;
   export let xDomain;
-  export let zeroBase = false;
 
   export let yAxis = {
     label: "YAxis Label",
@@ -62,7 +61,7 @@
 {#if data}
   <div style="{style}">
     <LayerCake
-      padding="{{ top: 80, right: 16, bottom: 64, left: 16 }}"
+      padding="{{ top: 16, right: 16, bottom: 64, left: 32 }}"
       x="{xKey}"
       y="{yKey}"
       data="{bins}"
