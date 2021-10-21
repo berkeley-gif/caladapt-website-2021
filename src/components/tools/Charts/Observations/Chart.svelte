@@ -9,9 +9,9 @@
 
   export let data;
   export let title;
-  export let height = 240;
-  export let padding = { top: 16, right: 16, bottom: 32, left: 32 };
-  export let y1 = 80;
+  export let height;
+  export let padding = { top: 32, right: 16, bottom: 32, left: 32 };
+  export let y1 = 96;
   export let xDomain;
   export let tooltipFn = (d) => `${d.valueLabel}`;
   export let yAxis = {
@@ -23,8 +23,6 @@
     tickFormat: (d) => d,
   };
 
-  $: console.log("data", data);
-
   let yDomain;
 
   let evt;
@@ -33,6 +31,7 @@
   $: style = `height:${height}px`;
 
   $: if (data) {
+    console.log("data", data);
     yDomain = data.map((d) => d[yAxis.key]);
   }
 
@@ -61,7 +60,7 @@
       yDomain="{yDomain}"
     >
       <Svg>
-        <text x="{-padding.top}" y="{-padding.top}" class="title">
+        <text x="{0}" y="{-padding.top}" class="title">
           {title}
         </text>
         <AxisY gridlines="{true}" />
