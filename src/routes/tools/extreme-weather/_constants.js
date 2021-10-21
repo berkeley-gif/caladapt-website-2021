@@ -9,10 +9,34 @@ export const DEFAULT_STATION_ID = 11;
 
 export const CLIMATE_VARIABLES = ["tasmax", "tasmin", "wspeed"];
 export const DEFAULT_CLIMATE_VARIABLE = "tasmax";
+export const DEFAULT_SELECTED_EXTREME = "high";
+export const DEFAULT_SELECTED_DAY = new Date();
+export const DEFAULT_STATION = {
+  title: "Weather Station at Fresno Yosemite International Airport, Fresno, CA",
+  geometry: {
+    type: "Point",
+    coordinates: [-119.719, 36.78],
+  },
+  id: 11,
+  properties: {
+    name: "Fresno Yosemite International Airport",
+    usaf: 723890,
+    wban: 93193,
+    elevation_m: 101.5,
+    icao: "KFAT",
+    city: "Fresno",
+    climdiv: 5,
+  },
+  bbox: [-119.719, 36.78, -119.719, 36.78],
+};
 
 export const DEFAULT_PERCENTILES = [1, 10, 90, 99];
+export const DEFAULT_THRESHOLD = 100;
 
-export const DEFAULT_DAY = new Date();
+export const EXTREMES = [
+  { id: "high", label: "High Extremes" },
+  { id: "low", label: "Low Extremes" },
+];
 
 export const CHART_DESCRIPTION = `<h5>Histogram</>
 	<p>The histogram shows the distribution 
