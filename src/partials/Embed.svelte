@@ -11,7 +11,7 @@
     window.addEventListener("message", (e) => {
       // use message data that was passed from iframe page to set height
       if (e.data && e.data.height && !isNaN(e.data.height)) {
-        v2_frame.style.height = `${e.data.height + 100}px`;
+        v2_frame.style.height = `${e.data.height}px`;
       } else {
         console.warn("Embed did not receive postMessage width value");
       }
