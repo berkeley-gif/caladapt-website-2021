@@ -24,7 +24,7 @@
   }
 </style>
 
-<div class="h3">
+<div class="h4">
   <span>{month}</span> Snow Water Equivalent under a
   <span>{scenarioLabel}</span>
   for <span>{model}</span> averaged over
