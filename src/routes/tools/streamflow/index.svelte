@@ -22,12 +22,6 @@
   export let tool;
 </script>
 
-<style>
-  /* div {
-    overflow-x: auto;
-  } */
-</style>
-
 <svelte:head>
   <title>{tool.title}</title>
 </svelte:head>

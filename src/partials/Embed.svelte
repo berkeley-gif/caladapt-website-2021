@@ -9,21 +9,11 @@
 
   onMount(() => {
     window.addEventListener("message", (e) => {
-      // use message data that was passed from iframe page to set height and width
-      if (e.data.height && e.data.width) {
-        if (
-          typeof e.data.height === "number" &&
-          typeof e.data.width === "number"
-        ) {
-          v2_frame.style.height = `${e.data.height + 100}px`;
-          // v2_frame.style.width = `${e.data.width}px`;
-        } else {
-          console.warn(
-            "postMessage height and/or width data from iframe not a valid number!"
-          );
-        }
+      // use message data that was passed from iframe page to set height
+      if (e.data && e.data.height && !isNaN(e.data.height)) {
+        v2_frame.style.height = `${e.data.height + 100}px`;
       } else {
-        console.warn("postMessage data from iframe not received!");
+        console.warn("Embed did not receive postMessage width value");
       }
     });
   });
@@ -32,7 +22,7 @@
 <style>
   iframe {
     width: 100%;
-    height: 100vw;
+    height: 100vh;
     display: block;
     margin: 0 auto;
     overflow: hidden;
