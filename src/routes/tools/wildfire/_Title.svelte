@@ -54,8 +54,7 @@
   {/if}
 
   under a {scenario} and Central Population Growth scenario
-
   {#if model}
     for <span class="annotate">{model}</span>
-  {/if}.
+  {/if}
 </div>
