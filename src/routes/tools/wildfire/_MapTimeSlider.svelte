@@ -18,6 +18,7 @@
   export let scenarioId;
   export let monthNumber;
   export let period;
+  export let palette;
 
   const intervalMs = 750;
   const dispatch = createEventDispatcher();
@@ -36,6 +37,7 @@
     period,
     years,
     monthNumber,
+    palette,
   });
   $: imagePaths, preloadAllImages(imagePaths);
 

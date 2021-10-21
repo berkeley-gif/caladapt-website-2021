@@ -9,6 +9,7 @@ export const getMapImages = ({
   period,
   scenarioId,
   monthNumber,
+  palette,
 }) =>
   years.map((year) =>
     getMapOverlayImgURL({
@@ -18,5 +19,6 @@ export const getMapImages = ({
       scenario: scenarioId,
       period,
       month: monthNumber,
+      palette,
     })
   );

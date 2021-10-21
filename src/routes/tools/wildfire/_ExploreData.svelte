@@ -72,11 +72,13 @@
   let printContainer;
   let printSkipElements;
 
-  let activeTab = 1;
+  let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
   $: formatFn = format(`.${$climvar.decimals}f`);
+
+  $: palette = $climvarStore === "fire" ? "YlOrRd" : "PuRd";
 
   $: imgOverlayPath = getMapOverlayImgURL({
     climvar: $climvarStore,
@@ -85,6 +87,7 @@
     year: $yearStore,
     period: $periodStore,
     month: $monthStore,
+    palette,
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
@@ -223,6 +226,7 @@
         scenarioId="{$scenarioStore}"
         monthNumber="{$monthStore}"
         period="{$periodStore}"
+        palette="{palette}"
       />
     {/if}
   </div>
