@@ -2,7 +2,7 @@
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
 
-  const { data, xGet, yGet, xScale, yScale } = getContext("LayerCake");
+  const { data, xGet, yGet, yScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
   export let y1;
@@ -48,36 +48,7 @@
 
 <g class="data">
   {#each $data as d}
-    {#if Array.isArray(d.value)}
-      {#each d.value as val, i}
-        <g>
-          <circle
-            cy="{$yGet(d) + midHeight}"
-            cx="{$xScale(val)}"
-            class="circle"
-            r="{5}"
-          >
-          </circle>
-          {#if i == 1}
-            <line
-              x1="{$xScale(val)}"
-              x2="{$xScale(val)}"
-              y1="{y1}"
-              y2="{$yGet(d) + midHeight}"
-              class="line"
-            >
-            </line>
-            <text
-              y="{$yGet(d) + midHeight + 4}"
-              x="{$xScale(i) + 10}"
-              class="label"
-            >
-              {d.valueLabel}
-            </text>
-          {/if}
-        </g>
-      {/each}
-    {:else if !isNaN(d.value)}
+    {#if !isNaN(d.value)}
       <g>
         <line
           x1="{$xGet(d)}"
@@ -103,7 +74,7 @@
       </g>
     {:else}
       <g>
-        <text y="{$yGet(d) + midHeight + 4}" x="{40}" class="label-na">
+        <text y="{$yGet(d) + midHeight - 5}" x="{45}" class="label-na">
           Data Not Available
         </text>
       </g>
