@@ -52,7 +52,7 @@
 <script>
   import { onMount } from "svelte";
   import { timeParse } from "d3-time-format";
-  import { Modal, Loading } from "carbon-components-svelte";
+  import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
   // Helpers
@@ -64,16 +64,20 @@
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Store
+  import { isFetchingStore } from "../_common/stores";
   import {
     climvarStore,
     unitsStore,
     locationStore,
     doyStore,
-    queryParams,
     hadisdStore,
     extremesStore,
   } from "./_store";
-  import { getObservedValues, getObservedReturnLevels } from "./_data";
+  import {
+    getObservedValues,
+    getObservedReturnLevels,
+    getQueryParams,
+  } from "./_data";
 
   export let initialConfig;
   export let tool;
@@ -114,7 +118,15 @@
       const config = {
         climvarId: $climvarStore,
       };
-      const { params } = $queryParams;
+      const { params } = getQueryParams({
+        location: $locationStore,
+        doy: $doyStore,
+        extype: $extremesStore,
+        imperial: true,
+      });
+
+      isFetchingStore.set(true);
+
       const values = await getObservedValues(config, {
         g: params.g,
         imperial: params.imperial,
@@ -128,36 +140,10 @@
       // TODO: notify user of error
       console.log("updateData", err);
       notifier.error("Error", err, 2000);
+    } finally {
+      isFetchingStore.set(false);
     }
   }
-
-  // function showDefinition(e) {
-  //   const { topics, title } = e.detail;
-  //   const items = glossary.filter((d) => topics.includes(d.slug));
-  //   definitionText = items
-  //     .map((item) => {
-  //       if (title === "What is Exceedance Probability?") {
-  //         return `
-  //         <div>
-  //           <h5>${item.metadata.title}</h5>
-  //           ${item.html}
-  //           <p>The <strong>95% Confidence Intervals</strong> for your selected threshold value are <strong>[${$threshCIStore[0].toFixed(
-  //             1
-  //           )}, ${$threshCIStore[1].toFixed(1)}] °F</strong></p>
-  //         </div>
-  //         `;
-  //       }
-  //       return `
-  //       <div>
-  //         <h5>${item.metadata.title}</h5>
-  //         ${item.html}
-  //       </div>
-  //       `;
-  //     })
-  //     .join("<br/>");
-  //   definitionTitle = title;
-  //   showInfo = true;
-  // }
 
   async function initApp(config) {
     const { stationId, climvarId, imperial, doy } = config;
