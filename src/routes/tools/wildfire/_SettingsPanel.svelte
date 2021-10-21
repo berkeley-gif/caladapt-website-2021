@@ -16,6 +16,7 @@
 
   import {
     SelectMonth,
+    SelectModels,
     SelectScenario,
     Select,
     RadioBtnGroup,
@@ -138,14 +139,32 @@
   </div>
 {/if}
 
-<div class="block">
-  <Select
-    title="Select Model"
-    items="{PRIORITY_4_MODELS}"
-    selectedId="{$modelSingleStore}"
-    on:change="{changeModelSingle}"
-  />
-  <LearnMoreButton
-    on:click="{() => showLearnMore({ slugs: ['global-climate-model'] })}"
-  />
-</div>
+{#if activeTab}
+  <!-- Chart -->
+  <div class="block">
+    <SelectModels
+      selectedIds="{$modelsStore}"
+      items="{PRIORITY_4_MODELS}"
+      on:change="{changeModels}"
+    />
+    <LearnMoreButton
+      on:click="{() =>
+        showLearnMore({
+          slugs: ['global-climate-model'],
+        })}"
+    />
+  </div>
+{:else}
+  <!-- Map -->
+  <div class="block">
+    <Select
+      title="Select Model"
+      items="{PRIORITY_4_MODELS}"
+      selectedId="{$modelSingleStore}"
+      on:change="{changeModelSingle}"
+    />
+    <LearnMoreButton
+      on:click="{() => showLearnMore({ slugs: ['global-climate-model'] })}"
+    />
+  </div>
+{/if}
