@@ -22,8 +22,16 @@
   export let tool;
 </script>
 
+<style>
+  div {
+    overflow-x: auto;
+  }
+</style>
+
 <svelte:head>
   <title>{tool.title}</title>
 </svelte:head>
 
-<Embed path="{`tools/${tool.slug}`}" title="{tool.title}" />
+<div>
+  <Embed path="{`tools/${tool.slug}`}" title="{tool.title}" />
+</div>

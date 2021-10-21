@@ -34,6 +34,7 @@
     width: 100vw;
     height: 100vw;
     display: block;
+    margin: 0 auto;
   }
 </style>
 
