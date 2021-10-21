@@ -23,9 +23,9 @@
 </script>
 
 <style>
-  div {
+  /* div {
     overflow-x: auto;
-  }
+  } */
 </style>
 
 <svelte:head>

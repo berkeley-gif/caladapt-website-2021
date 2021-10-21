@@ -16,7 +16,7 @@
           typeof e.data.width === "number"
         ) {
           v2_frame.style.height = `${e.data.height + 100}px`;
-          v2_frame.style.width = `${e.data.width}px`;
+          // v2_frame.style.width = `${e.data.width}px`;
         } else {
           console.warn(
             "postMessage height and/or width data from iframe not a valid number!"
@@ -31,10 +31,11 @@
 
 <style>
   iframe {
-    width: 100vw;
+    width: 100%;
     height: 100vw;
     display: block;
     margin: 0 auto;
+    overflow: hidden;
   }
 </style>
 
