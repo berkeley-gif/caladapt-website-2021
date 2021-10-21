@@ -8,17 +8,7 @@
   export let units;
 </script>
 
-<style>
-  .title {
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-</style>
-
 <g class="annotation-group">
-  <g class="title">
-    <text x="{0}" y="{-35}" class="title"> Baseline Period (1991-2020) </text>
-  </g>
   <g class="line-labels">
     {#each lines as d}
       <line
