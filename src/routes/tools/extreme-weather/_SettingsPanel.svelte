@@ -55,7 +55,6 @@
     const { extremes } = DEFAULT_CLIMVAR_EXTREMES.find(
       ({ climvar }) => id === climvar
     );
-    console.log("extreme extremesSideEffect", id, extremes);
     extremesStore.set(extremes);
   }
 
