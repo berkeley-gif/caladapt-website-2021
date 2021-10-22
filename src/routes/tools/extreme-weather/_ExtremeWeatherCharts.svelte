@@ -45,11 +45,13 @@
   // when location changes.
   $: $location, resetObservations();
 
-  // When checked in true fetch NWS/NCEI data for all 3 climvars for a location
-  // if it's not already in the respective stores. If the data is already loaded
-  // no need to fetch it again. The derived stores climvarForecast or climvarRecentObs
+  // When checked is true:
+  // Fetch NWS/NCEI data for all 3 climvars for a location if it's not already in
+  // the respective stores. If the data is already loaded, there's no need to fetch
+  // it again. The derived stores climvarForecast or climvarRecentObs
   // will update & provide data corresponding to current climvar.
-  // When checked is false, remove data source name from list
+  // When checked is false:
+  // Remove data source name from list
   $: if (showForecast) {
     if (!$isForecastLoaded) {
       getForecast();
@@ -167,7 +169,7 @@
 
 <div class="chart-controls">
   {#if showRecentObs && !$isRecentObsLoaded}
-    <InlineLoading description="Fetching recent observations from NCEI..." />
+    <InlineLoading description="Loading recent observations from NCEI..." />
   {:else}
     <div class="measured-toggle">
       <Checkbox
@@ -177,7 +179,7 @@
     </div>
   {/if}
   {#if showForecast && !$isForecastLoaded}
-    <InlineLoading description="Fetching forecast from NWS..." />
+    <InlineLoading description="Loading forecast from NWS..." />
   {:else}
     <div class="forecast-toggle">
       <Checkbox
