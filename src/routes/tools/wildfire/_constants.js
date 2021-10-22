@@ -47,11 +47,11 @@ export const DEFAULT_OVERLAY_BOUNDS = [
 ];
 
 export const colorRampFire = [
-  "#ffffb2",
-  "#fecc5c",
+  "#ffffcc",
+  "#fed976",
   "#fd8d3c",
-  "#f03b20",
-  "#bd0026",
+  "#e31a1c",
+  "#800026",
 ];
 export const colorRampFireprob = [];
 
