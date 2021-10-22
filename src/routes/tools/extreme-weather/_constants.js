@@ -37,6 +37,11 @@ export const EXTREMES = [
   { id: "high", label: "High Extremes" },
   { id: "low", label: "Low Extremes" },
 ];
+export const DEFAULT_CLIMVAR_EXTREMES = [
+  { climvar: "tasmax", extremes: "high" },
+  { climvar: "tasmin", extremes: "low" },
+  { climvar: "wspeed", extremes: "high" },
+];
 
 export const CHART_DESCRIPTION = `<h5>Histogram</>
 	<p>The histogram shows the distribution 

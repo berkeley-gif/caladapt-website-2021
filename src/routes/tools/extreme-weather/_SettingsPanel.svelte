@@ -8,6 +8,7 @@
     DOY_DESCRIPTION,
     EXTREMES_DESCRIPTION,
     EXTREMES,
+    DEFAULT_CLIMVAR_EXTREMES,
   } from "./_constants";
 
   import {
@@ -39,16 +40,23 @@
     dispatch("showLoadLocation");
   }
 
-  function changeClimvar(e) {
-    climvarStore.set(e.detail.id);
-    if (e.detail.id === "tasmax") {
-      extremesStore.set("high");
-    } else if (e.detail.id === "tasmin") {
-      extremesStore.set("low");
-    } else {
-      extremesStore.set("high");
-    }
+  function changeClimvarExtremes({ detail }) {
+    const { id } = detail;
+    changeClimvar(id);
+    extremesSideEffect(id);
+  }
+
+  function changeClimvar(id) {
+    climvarStore.set(id);
     console.log("climvar change");
+  }
+
+  function extremesSideEffect(id) {
+    const { extremes } = DEFAULT_CLIMVAR_EXTREMES.find(
+      ({ climvar }) => id === climvar
+    );
+    console.log("extreme extremesSideEffect", id, extremes);
+    extremesStore.set(extremes);
   }
 
   function changeExtremes(e) {
@@ -88,7 +96,7 @@
     labelText="Select Climate Variable"
     selectedId="{$climvarStore}"
     items="{climvarList}"
-    on:change="{changeClimvar}"
+    on:change="{changeClimvarExtremes}"
   />
   <LearnMoreButton
     on:click="{() =>
