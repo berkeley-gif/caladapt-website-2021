@@ -113,7 +113,7 @@
       ["record low", `{$baseline.low.value} on {$baseline.low.date}`],
     ];
     printContainer = document.querySelector("#explore-data");
-    printSkipElements = ["settings"];
+    printSkipElements = ["settings", "chart-controls"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
