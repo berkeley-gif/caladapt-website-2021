@@ -1,5 +1,4 @@
 <script>
-  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -70,12 +69,6 @@
     chartTitle = `${$location.title} (${$location.geometry.coordinates[0]}°, ${$location.geometry.coordinates[1]}°)`;
   }
 
-  // afterUpdate(() => {
-  //   // Note: for some reason the chartTitle variable will only update
-  //   // when setting it here.
-
-  // });
-
   async function loadLearnMore({
     slugs = [],
     content = "",
@@ -120,7 +113,7 @@
       ["record low", `{$baseline.low.value} on {$baseline.low.date}`],
     ];
     printContainer = document.querySelector("#explore-data");
-    printSkipElements = ["settings", "bx--tabs--container"];
+    printSkipElements = ["settings"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
