@@ -2,9 +2,9 @@
   import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { extent } from "d3-array";
 
   import { serialize } from "~/helpers/utilities";
+
   import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
@@ -12,9 +12,7 @@
   import ExtremeWeatherCharts from "./_ExtremeWeatherCharts.svelte";
 
   import { DEFAULT_STATION_LAYER } from "./_constants";
-
   import { isFetchingStore } from "../_common/stores";
-
   import {
     climvarStore,
     locationStore,
@@ -55,7 +53,6 @@
   let chartTitle = "";
 
   let histogramData = null;
-  let histogramXDomain = [];
 
   $: chartSubtitle = `Distribution of daily <span class="annotate">${$climvar.title}s</span>
       around <span class="annotate">${$doyText}</span> 
@@ -65,10 +62,8 @@
   $: if ($baseline) {
     thresholdStore.set($thresholdBound);
     histogramData = $baseline.values.map((d) => +d.value);
-    histogramXDomain = updateDataExtent(histogramData);
   } else {
     histogramData = null;
-    histogramXDomain = [];
   }
 
   afterUpdate(() => {
@@ -78,11 +73,6 @@
       chartTitle = `${$location.title} (${$location.geometry.coordinates[0]}°, ${$location.geometry.coordinates[1]}°)`;
     }
   });
-
-  function updateDataExtent(arr) {
-    const dataExtent = extent(arr);
-    return [dataExtent[0] - 2, dataExtent[1] + 2];
-  }
 
   async function loadLearnMore({
     slugs = [],
@@ -146,7 +136,7 @@
 {/if}
 
 <Dashboard useTabs="{false}">
-  <!-- Chart components -->
+  <!-- Chart Title component -->
   <div slot="title" class="block title">
     <ChartTitle
       title="{chartTitle}"
@@ -155,15 +145,16 @@
     />
   </div>
 
+  <!-- Stats component -->
   <div slot="stats">
-    <StatsPanel on:showLearnMore="{(e) => loadLearnMore(e.detail)}" />
+    <StatsPanel on:showLearnMore="{({ detail }) => loadLearnMore(detail)}" />
   </div>
 
+  <!-- Collection of charts component -->
   <div slot="graphic" class="graphic block">
     <ExtremeWeatherCharts
       histogramData="{histogramData}"
-      histogramXDomain="{histogramXDomain}"
-      dataSource="{titles.join(', ')}"
+      dataSource="{titles}"
       histogramXAxis="{{
         label: `${$climvar.title} (${$climvar.units.imperial})`,
         tickFormat: formatFn,
@@ -178,10 +169,10 @@
     />
   </div>
 
-  <!-- Settings component shared by both Map & Chart -->
+  <!-- Settings component -->
   <div slot="settings" class="settings">
     <SettingsPanel
-      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
+      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
       on:showLoadLocation="{() => loadLocation()}"
     />
   </div>

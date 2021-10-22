@@ -118,14 +118,14 @@ export async function getForecastData({ lng, lat }) {
     return {
       ...d,
       date,
-      label: isDaytime ? `${dateLabel} AM` : `${dateLabel} PM`,
+      label: isDaytime ? `${dateLabel} am` : `${dateLabel} pm`,
       windSpeedMax: windSpeedArr[windSpeedArr.length - 1],
     };
   });
   return periods.sort((a, b) => b.date - a.date);
 }
 
-export async function getMeasuredData({ stationId, startDate, endDate }) {
+export async function getRecentObsData({ stationId, startDate, endDate }) {
   const params = {
     dataset: "daily-summaries",
     stations: stationId,

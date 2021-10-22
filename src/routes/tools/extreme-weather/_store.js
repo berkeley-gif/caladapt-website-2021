@@ -49,7 +49,7 @@ export const climvarStore = (() => {
 
 export const forecastDate = readable(dateFormat(DEFAULT_SELECTED_DAY));
 
-export const measuredDateRange = readable({
+export const recentObsDateRange = readable({
   start: timeFormat("%Y-%m-%d")(timeDay.offset(DEFAULT_SELECTED_DAY, -10)),
   end: timeFormat("%Y-%m-%d")(DEFAULT_SELECTED_DAY),
 });
@@ -135,8 +135,35 @@ export const hadisdStore = (() => {
   };
 })();
 
-export const forecastStore = writable(null);
-export const measuredStore = writable(null);
+export const forecastStore = (() => {
+  const store = writable(null);
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get isForecastLoaded() {
+      return derived(store, ($store) => {
+        if (!$store || $store.length === 0) return false;
+        return true;
+      });
+    },
+  };
+})();
+
+export const recentObsStore = (() => {
+  const store = writable(null);
+  const { set, subscribe } = store;
+  return {
+    set,
+    subscribe,
+    get isRecentObsLoaded() {
+      return derived(store, ($store) => {
+        if (!$store || $store.length === 0) return false;
+        return true;
+      });
+    },
+  };
+})();
 
 // Data store for list of datasets used in the tool
 export const datasetStore = (() => {
@@ -313,6 +340,75 @@ export const histogramPercentiles = derived(
       return percentiles.filter((d) => d.percentile > 45);
     } else {
       return percentiles.filter((d) => d.percentile < 55);
+    }
+  }
+);
+
+export const climvarForecast = derived(
+  [climvarStore, forecastStore],
+  ([$climvarStore, $forecastStore]) => {
+    if (!$climvarStore || !$forecastStore) return null;
+    switch ($climvarStore) {
+      case "tasmin":
+        return $forecastStore
+          .filter((d) => !d.isDaytime)
+          .map(({ label, temperature, temperatureUnit, detailedForecast }) => ({
+            label,
+            value: temperature,
+            valueLabel: `${temperature} °${temperatureUnit}`,
+            detailedForecast,
+          }));
+      case "tasmax":
+        return $forecastStore
+          .filter((d) => d.isDaytime)
+          .map(({ label, temperature, temperatureUnit, detailedForecast }) => ({
+            label,
+            value: temperature,
+            valueLabel: `${temperature} °${temperatureUnit}`,
+            detailedForecast,
+          }));
+      default:
+        return $forecastStore.map(
+          ({
+            label,
+            windSpeedMax,
+            windSpeed,
+            windDirection,
+            detailedForecast,
+          }) => ({
+            label,
+            value: windSpeedMax,
+            valueLabel: `${windSpeed} ${windDirection}`,
+            detailedForecast,
+          })
+        );
+    }
+  }
+);
+
+export const climvarRecentObs = derived(
+  [climvarStore, recentObsStore],
+  ([$climvarStore, $recentObsStore]) => {
+    if (!$climvarStore || !$recentObsStore) return null;
+    switch ($climvarStore) {
+      case "tasmin":
+        return $recentObsStore.map(({ label, TMIN }) => ({
+          label,
+          value: +TMIN,
+          valueLabel: `${TMIN} °F`,
+        }));
+      case "tasmax":
+        return $recentObsStore.map(({ label, TMAX }) => ({
+          label,
+          value: +TMAX,
+          valueLabel: `${TMAX} °F`,
+        }));
+      default:
+        return $recentObsStore.map(({ label, AWND }) => ({
+          label,
+          value: +AWND,
+          valueLabel: `${AWND} mph`,
+        }));
     }
   }
 );
