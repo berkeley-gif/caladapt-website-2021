@@ -207,7 +207,11 @@
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
     {#if !activeTab}
-      <WildfireMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+      <WildfireMap
+        bind:mapboxMap
+        imgOverlayPath="{imgOverlayPath}"
+        climvarId="{$climvarStore}"
+      />
     {/if}
   </div>
 

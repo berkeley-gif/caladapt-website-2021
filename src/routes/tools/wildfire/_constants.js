@@ -53,7 +53,13 @@ export const colorRampFire = [
   "#e31a1c",
   "#800026",
 ];
-export const colorRampFireprob = [];
+export const colorRampFireprob = [
+  "#f7f4f9",
+  "#d4b9da",
+  "#df65b0",
+  "#ce1256",
+  "#67001f",
+];
 
 export const colorValuesFire = [1, ...range(25, 101, 25)];
-export const colorValuesFireprob = range(0.1, 1.1, 0.1);
+export const colorValuesFireprob = [0.1, ...range(0.25, 1.1, 0.25)];
