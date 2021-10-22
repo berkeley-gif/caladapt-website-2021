@@ -44,7 +44,7 @@
   let lineData;
   let areaData;
 
-  $: if (data) {
+  $: if (Array.isArray(data) && data.length) {
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
     xmax = max(data, (arr) => max(arr.values, (d) => d.date));
@@ -80,6 +80,15 @@
 
     lineData = data.filter((d) => d.mark === "line");
     areaData = data.filter((d) => d.mark === "area");
+  }
+
+  $: if (Array.isArray(data) && !data.length) {
+    xmin = new Date(Date.UTC(1950, 0, 1));
+    xmax = new Date(Date.UTC(2099, 0, 1));
+    lineData = [];
+    areaData = [];
+    legendItems.set([]);
+    setContext("Legend", legendItems);
   }
 
   function getTooltipLabel(d) {
