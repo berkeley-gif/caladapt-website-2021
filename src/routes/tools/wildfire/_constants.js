@@ -46,32 +46,14 @@ export const DEFAULT_OVERLAY_BOUNDS = [
   [-124.5625, 31.5625],
 ];
 
-export const colorRamp = [
-  "var(--gray-10)",
-  "#ffffcc",
-  "#d9f0ca",
-  "#b3e1c8",
-  "#8dd3c7",
-  "#67c4c5",
-  "#41b6c4",
-  "#3a95b8",
-  "#3375ac",
-  "#2c54a0",
-  "#253494",
-  "#00001d",
+export const colorRampFire = [
+  "#ffffb2",
+  "#fecc5c",
+  "#fd8d3c",
+  "#f03b20",
+  "#bd0026",
 ];
+export const colorRampFireprob = [];
 
-export const colorValues = [
-  "0-1",
-  "1-4",
-  "4-8",
-  "8-12",
-  "12-16",
-  "16-20",
-  "20-24",
-  "24-28",
-  "28-32",
-  "32-36",
-  "36–40",
-  ">40",
-];
+export const colorValuesFire = [1, ...range(25, 101, 25)];
+export const colorValuesFireprob = range(0.1, 1.1, 0.1);
