@@ -28,6 +28,7 @@
 
   .tick text {
     fill: #666;
+    font-size: 0.8rem;
   }
 
   .tick.tick-0 line {
