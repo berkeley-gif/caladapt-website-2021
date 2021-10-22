@@ -81,7 +81,7 @@ export const EXTREME_EVENT_DESCRIPTION = `<p>According to WMO
 	<ul style="padding-left:1.5rem;">
 	<li><strong>Extreme</strong>: Exceedance Probability <= 1%</li>
 	<li><strong>Rare</strong>: Exceedance Probability > 1% and < 25%</li>
-	<li><strong>Common</strong>: Exceedance Probability <= 25% is</li>
+	<li><strong>Common</strong>: Exceedance Probability <= 25%</li>
 	</ul>`;
 
 export const PROPBABILITY_DESCRIPTION = `<p>The Exceedance Probability describes the 
