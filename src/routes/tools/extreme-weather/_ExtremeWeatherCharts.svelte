@@ -1,4 +1,5 @@
 <script>
+  import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import { Button, InlineLoading, Checkbox } from "carbon-components-svelte";
   import { Download16, Share16 } from "carbon-icons-svelte";
@@ -212,7 +213,7 @@
   <div class="h4">
     <span class="annotate">Recent Observations</span>
   </div>
-  <div>
+  <div transition:fade>
     <Observations
       data="{$climvarRecentObs}"
       height="{recentObsChartHeight}"
@@ -226,7 +227,7 @@
   <div class="h4">
     <span class="annotate">Forecast for {$forecastDate}</span>
   </div>
-  <div>
+  <div transition:fade>
     <Observations
       data="{$climvarForecast}"
       height="{forecastChartHeight}"
