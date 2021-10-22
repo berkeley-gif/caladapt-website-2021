@@ -93,7 +93,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        slugs: ['daily-maximum-temp', 'daily-minimum-temp'],
+        slugs: ['daily-maximum-temp', 'daily-minimum-temp', 'daily-wind-speed'],
       })}"
   />
 </div>
