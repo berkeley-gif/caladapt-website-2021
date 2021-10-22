@@ -104,13 +104,13 @@
 
   async function loadDownload() {
     showDownload = true;
-    csvData = [];
+    csvData = $baseline.values;
     metadata = [
       ["station", $location.title],
       ["variable", $climvar.label],
       ["units", $climvar.units.imperial],
-      ["record high", `{$baseline.high.value} on {$baseline.high.date}`],
-      ["record low", `{$baseline.low.value} on {$baseline.low.date}`],
+      ["record high", `${$baseline.high.value} on ${$baseline.high.date}`],
+      ["record low", `${$baseline.low.value} on ${$baseline.low.date}`],
     ];
     printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings", "chart-controls"];
