@@ -66,13 +66,15 @@
     histogramData = null;
   }
 
-  afterUpdate(() => {
-    // Note: for some reason the chartTitle variable will only update
-    // when setting it here.
-    if ($location && $location.title) {
-      chartTitle = `${$location.title} (${$location.geometry.coordinates[0]}°, ${$location.geometry.coordinates[1]}°)`;
-    }
-  });
+  $: if ($location && $location.title) {
+    chartTitle = `${$location.title} (${$location.geometry.coordinates[0]}°, ${$location.geometry.coordinates[1]}°)`;
+  }
+
+  // afterUpdate(() => {
+  //   // Note: for some reason the chartTitle variable will only update
+  //   // when setting it here.
+
+  // });
 
   async function loadLearnMore({
     slugs = [],
