@@ -28,6 +28,11 @@
   let confidenceIntervals;
   let probability_description_with_ci = PROPBABILITY_DESCRIPTION;
 
+  // Get confidence intervals for valid threshold value
+  $: if (!$thresholdProps.invalid && $thresholdProbability.rp) {
+    getThresholdCI();
+  }
+
   async function getThresholdCI() {
     try {
       const config = {
@@ -53,10 +58,6 @@
       <p>Unable to calculate the <strong>95% Confidence Intervals</strong> for your selected 
       threshold value</p>`;
     }
-  }
-
-  $: if (!$thresholdProps.invalid && $thresholdProbability.rp) {
-    getThresholdCI();
   }
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
