@@ -15,13 +15,13 @@
         x1="{$xScale(d.value)}"
         x2="{$xScale(d.value)}"
         y1="{$yScale(0)}"
-        y2="{10}"
+        y2="{13}"
         stroke-dasharray="3,3"
         stroke="black"
         stroke-width="2px"></line>
       <text
         x="{$xScale(d.value)}"
-        y="{-10}"
+        y="{0}"
         text-anchor="{i % 2 ? 'start' : 'end'}"
         style="font-weight:600;"
       >
@@ -29,7 +29,7 @@
       </text>
       <text
         x="{$xScale(d.value)}"
-        y="{8}"
+        y="{15}"
         text-anchor="{i % 2 ? 'start' : 'end'}"
         style="font-weight:600;"
       >
@@ -40,10 +40,10 @@
   </g>
   {#if threshold}
     <g class="threshold">
-      <circle cy="{30}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
+      <circle cy="{35}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
       <text
         x="{$xScale(+threshold) + 10}"
-        y="{35}"
+        y="{40}"
         style="font-weight:600;fill:red;"
       >
         <tspan>{threshold}</tspan>
