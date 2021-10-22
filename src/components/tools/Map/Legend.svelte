@@ -5,7 +5,7 @@
   import { scaleOrdinal, scaleLinear } from "d3-scale";
   import { interpolate, interpolateHcl, quantize } from "d3-interpolate";
 
-  export let scaleType = "discrete";
+  export let scaleType = "discrete"; // or "continuous"
   export let title = "Legend";
   export let subtitle = "";
   export let width = "";
@@ -20,6 +20,7 @@
   export let ticks = width / 64; // continuous only
   export let tickValues; // continuous only
 
+  // TODO: consider splitting this all into separate components that render each type of legend
   // continuous only
   const margin = { top: 8, right: 8, bottom: 16, left: 8 };
 
@@ -39,13 +40,12 @@
     x = color
       .copy()
       .rangeRound(quantize(interpolate(margin.left, width - margin.right), n));
-    height += tickSize;
-    margin.bottom += tickSize;
+    renderAxis();
   }
 
   onMount(() => {
     if (scaleType === "continuous") {
-      legendAxis();
+      renderAxis();
     }
   });
 
@@ -61,7 +61,7 @@
     return canvas;
   }
 
-  function legendAxis() {
+  function renderAxis() {
     if (!xAxisGroup) return;
     select(xAxisGroup)
       .call(
