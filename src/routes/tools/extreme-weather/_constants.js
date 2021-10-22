@@ -66,7 +66,7 @@ the map or search for the nearest station to your area of interest.</p>`;
 export const THRESHOLD_DESCRIPTION = `<p>The threshold sets the conditions for which a 
 	weather event is considered “extreme“.</p>
   <p>Due to the nature of the extreme value statistics, only threshold values at 
-  or above the 90th percentile for Maximum Temperature, and at or below the 10th 
+  or above the 90th percentile for Maximum Temperature & Wind Speed, and at or below the 10th 
   percentile for Minimum Temperature, are allowed for this input.</p>`;
 
 export const EXTREME_EVENT_DESCRIPTION = `<p>According to WMO 
@@ -101,4 +101,7 @@ export const EXTREMES_DESCRIPTION = `<h5>High Extremes</h5>
   <h5>Low Extremes</h5>
   <p>For Minimum Temperature, selecting High Extremes focuses on days with the warmest 
   minimum daily temperatures, while selecting Low Extremes (the default) focuses on 
-  days with the coolest minimum daily temperatures. </p>`;
+  days with the coolest minimum daily temperatures. </p>
+  <p>For Wind Speed, selecting High Extremes (the default) focuses on days with the highest average 
+  daily wind speeds, while selecting Low Extremes focuses on days with the lowest 
+  daily wind speeds. </p>`;
