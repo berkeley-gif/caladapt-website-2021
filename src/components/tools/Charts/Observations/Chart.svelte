@@ -8,10 +8,9 @@
   import Circles from "./Circles.svelte";
 
   export let data;
-  export let title;
   export let height;
-  export let padding = { top: 32, right: 16, bottom: 32, left: 32 };
-  export let y1 = 96;
+  export let padding = { top: 16, right: 16, bottom: 16, left: 16 };
+  export let y1 = 100;
   export let xDomain;
   export let tooltipFn = (d) => `${d.valueLabel}`;
   export let yAxis = {
@@ -31,7 +30,6 @@
   $: style = `height:${height}px`;
 
   $: if (data) {
-    console.log("data", data);
     yDomain = data.map((d) => d[yAxis.key]);
   }
 
@@ -39,13 +37,6 @@
     return tooltipFn(d);
   }
 </script>
-
-<style>
-  .title {
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-</style>
 
 {#if data}
   <div style="{style}">
@@ -60,9 +51,6 @@
       yDomain="{yDomain}"
     >
       <Svg>
-        <text x="{0}" y="{-padding.top}" class="title">
-          {title}
-        </text>
         <AxisY gridlines="{true}" />
         <Circles
           y1="{-y1}"
