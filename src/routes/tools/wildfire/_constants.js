@@ -2,7 +2,7 @@ import { range } from "d3-array";
 import { timeFormat } from "d3-time-format";
 
 export const DEFAULT_CLIMVAR = "fire";
-export const DEFAULT_CENTER = [-119.96, 38.9];
+export const DEFAULT_CENTER = [-122.46, 38.59];
 export const DEFAULT_SELECTED_MONTH = 7;
 export const DEFAULT_SELECTED_PERIOD = "year";
 export const DEFAULT_SELECTED_YEAR = 1960;
