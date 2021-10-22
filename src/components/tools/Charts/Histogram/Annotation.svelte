@@ -10,7 +10,7 @@
 
 <g class="annotation-group">
   <g class="line-labels">
-    {#each lines as d}
+    {#each lines as d, i}
       <line
         x1="{$xScale(d.value)}"
         x2="{$xScale(d.value)}"
@@ -22,7 +22,7 @@
       <text
         x="{$xScale(d.value)}"
         y="{-10}"
-        text-anchor="middle"
+        text-anchor="{i % 2 ? 'start' : 'end'}"
         style="font-weight:600;"
       >
         {d.label}
@@ -30,7 +30,7 @@
       <text
         x="{$xScale(d.value)}"
         y="{8}"
-        text-anchor="middle"
+        text-anchor="{i % 2 ? 'start' : 'end'}"
         style="font-weight:600;"
       >
         <tspan>{d.value}</tspan>
