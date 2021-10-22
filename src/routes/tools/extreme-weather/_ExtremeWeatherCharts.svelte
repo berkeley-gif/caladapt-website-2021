@@ -84,7 +84,9 @@
       ...xDomain,
       ...$climvarForecast.map(({ value }) => value),
     ]);
-    dataSource = [...dataSource, "Near-Term Forecast (NWS)"];
+    if (!dataSource.find((d) => d.includes("NWS"))) {
+      dataSource = [...dataSource, "Near-Term Forecast (NWS)"];
+    }
   }
   $: if (Array.isArray($climvarRecentObs) && $climvarRecentObs.length) {
     recentObsChartHeight = $climvarRecentObs.length * 25;
@@ -92,7 +94,9 @@
       ...xDomain,
       ...$climvarRecentObs.map(({ value }) => value),
     ]);
-    dataSource = [...dataSource, "GHCN-Daily (NCEI)"];
+    if (!dataSource.find((d) => d.includes("NCEI"))) {
+      dataSource = [...dataSource, "GHCN-Daily (NCEI)"];
+    }
   }
 
   function resetObservations() {
