@@ -48,7 +48,7 @@
       const returnLevels = await getObservedReturnLevels(config, params);
       const level = returnLevels[0].levels[0];
       const { lowerci, upperci } = level;
-      confidenceIntervals = `[${lowerci.toFixed(1)}, ${upperci.toFixed(1)}]`;
+      confidenceIntervals = `${lowerci.toFixed(1)}, ${upperci.toFixed(1)}`;
       probability_description_with_ci = `${PROPBABILITY_DESCRIPTION}
       <p>The <strong>95% Confidence Intervals</strong> for your selected 
       threshold value are <strong>[${confidenceIntervals}] ${$climvar.units.imperial}</strong></p>`;
