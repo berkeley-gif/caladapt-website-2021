@@ -7,12 +7,41 @@ export const DEFAULT_STATION_LAYER = layers.find(
 );
 export const DEFAULT_STATION_ID = 11;
 
-export const CLIMATE_VARIABLES = ["tasmax", "tasmin"];
+export const CLIMATE_VARIABLES = ["tasmax", "tasmin", "wspeed"];
 export const DEFAULT_CLIMATE_VARIABLE = "tasmax";
+export const DEFAULT_SELECTED_EXTREME = "high";
+export const DEFAULT_SELECTED_DAY = new Date();
+export const DEFAULT_STATION = {
+  title: "Weather Station at Fresno Yosemite International Airport, Fresno, CA",
+  geometry: {
+    type: "Point",
+    coordinates: [-119.719, 36.78],
+  },
+  id: 11,
+  properties: {
+    name: "Fresno Yosemite International Airport",
+    usaf: 723890,
+    wban: 93193,
+    elevation_m: 101.5,
+    icao: "KFAT",
+    city: "Fresno",
+    climdiv: 5,
+  },
+  bbox: [-119.719, 36.78, -119.719, 36.78],
+};
 
 export const DEFAULT_PERCENTILES = [1, 10, 90, 99];
+export const DEFAULT_THRESHOLD = 100;
 
-export const DEFAULT_DAY = new Date();
+export const EXTREMES = [
+  { id: "high", label: "High Extremes" },
+  { id: "low", label: "Low Extremes" },
+];
+export const DEFAULT_CLIMVAR_EXTREMES = [
+  { climvar: "tasmax", extremes: "high" },
+  { climvar: "tasmin", extremes: "low" },
+  { climvar: "wspeed", extremes: "high" },
+];
 
 export const CHART_DESCRIPTION = `<h5>Histogram</>
 	<p>The histogram shows the distribution 
@@ -42,7 +71,7 @@ the map or search for the nearest station to your area of interest.</p>`;
 export const THRESHOLD_DESCRIPTION = `<p>The threshold sets the conditions for which a 
 	weather event is considered “extreme“.</p>
   <p>Due to the nature of the extreme value statistics, only threshold values at 
-  or above the 90th percentile for Maximum Temperature, and at or below the 10th 
+  or above the 90th percentile for Maximum Temperature & Wind Speed, and at or below the 10th 
   percentile for Minimum Temperature, are allowed for this input.</p>`;
 
 export const EXTREME_EVENT_DESCRIPTION = `<p>According to WMO 
@@ -57,7 +86,7 @@ export const EXTREME_EVENT_DESCRIPTION = `<p>According to WMO
 	<ul style="padding-left:1.5rem;">
 	<li><strong>Extreme</strong>: Exceedance Probability <= 1%</li>
 	<li><strong>Rare</strong>: Exceedance Probability > 1% and < 25%</li>
-	<li><strong>Common</strong>: Exceedance Probability <= 25% is</li>
+	<li><strong>Common</strong>: Exceedance Probability <= 25%</li>
 	</ul>`;
 
 export const PROPBABILITY_DESCRIPTION = `<p>The Exceedance Probability describes the 
@@ -77,4 +106,7 @@ export const EXTREMES_DESCRIPTION = `<h5>High Extremes</h5>
   <h5>Low Extremes</h5>
   <p>For Minimum Temperature, selecting High Extremes focuses on days with the warmest 
   minimum daily temperatures, while selecting Low Extremes (the default) focuses on 
-  days with the coolest minimum daily temperatures. </p>`;
+  days with the coolest minimum daily temperatures. </p>
+  <p>For Wind Speed, selecting High Extremes (the default) focuses on days with the highest average 
+  daily wind speeds, while selecting Low Extremes focuses on days with the lowest 
+  daily wind speeds. </p>`;

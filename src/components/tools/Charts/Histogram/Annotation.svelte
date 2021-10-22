@@ -8,48 +8,46 @@
   export let units;
 </script>
 
-<style>
-  .title {
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-</style>
-
 <g class="annotation-group">
-  <g class="title">
-    <text x="{0}" y="{-35}" class="title"> Baseline Period (1991-2020) </text>
-  </g>
   <g class="line-labels">
-    {#each lines as d}
+    {#each lines as d, i}
       <line
         x1="{$xScale(d.value)}"
         x2="{$xScale(d.value)}"
         y1="{$yScale(0)}"
-        y2="{10}"
+        y2="{13}"
         stroke-dasharray="3,3"
         stroke="black"
         stroke-width="2px"></line>
       <text
         x="{$xScale(d.value)}"
-        y="{-10}"
-        text-anchor="middle"
+        y="{0}"
+        text-anchor="{i % 2 ? 'start' : 'end'}"
         style="font-weight:600;"
       >
-        <tspan x="{$xScale(d.value)}" y="{-10}">{d.label} {units}</tspan>
-        <tspan x="{$xScale(d.value)}" y="{5}">{d.value} {units}</tspan>
+        {d.label}
+      </text>
+      <text
+        x="{$xScale(d.value)}"
+        y="{15}"
+        text-anchor="{i % 2 ? 'start' : 'end'}"
+        style="font-weight:600;"
+      >
+        <tspan>{d.value}</tspan>
+        <tspan dx="2">{units}</tspan>
       </text>
     {/each}
   </g>
   {#if threshold}
     <g class="threshold">
-      <circle cy="{30}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
+      <circle cy="{35}" cx="{$xScale(+threshold)}" fill="red" r="{5}"> </circle>
       <text
         x="{$xScale(+threshold) + 10}"
-        y="{35}"
+        y="{40}"
         style="font-weight:600;fill:red;"
       >
-        {threshold}
-        {units}
+        <tspan>{threshold}</tspan>
+        <tspan dx="2">{units}</tspan>
       </text>
     </g>
   {/if}
