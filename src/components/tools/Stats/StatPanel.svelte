@@ -1,31 +1,30 @@
 <script>
+  import { createEventDispatcher } from "svelte";
   import { extent } from "d3-array";
   import { Button } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
-  import { calculateMetrics } from "./metrics.js";
 
   export let units;
   export let data;
-  export let groupList;
-  export let periodList;
+  export let groupList = [];
+  export let periodList = [];
   export let groupId;
   export let periodId;
-  export let models;
-  export let format = (d) => d;
+  export let models = [];
+  export let metrics = [];
 
-  let group = groupId
-    ? groupList.find(({ id }) => id === groupId)
-    : groupList[0];
-  let period = periodId
-    ? periodList.find(({ id }) => id === periodId)
-    : periodList[0];
-  let metrics = [];
-  let updateMetrics = false;
+  const dispatch = createEventDispatcher();
+  let group;
+  let period;
+
   let showOptions = false;
   let showAbout = false;
 
   let AboutModal;
   let OptionsModal;
+
+  $: dataExtent = data ? extent(data, (d) => d.date.getUTCFullYear()) : [];
+  $: data, initializeOptions();
 
   async function loadAbout() {
     showAbout = true;
@@ -42,7 +41,7 @@
     const { groupId, periodId, start, end } = detail;
     console.log("update options", groupId, periodId, start, end);
     group = groupList.find(({ id }) => id === groupId);
-    if (periodId === "custom") {
+    if (start && end) {
       period = {
         id: "custom",
         label: `${start}-${end}`,
@@ -51,15 +50,17 @@
       };
     } else {
       period = periodList.find(({ id }) => id === periodId);
+      console.log("after gfind", period);
     }
-    updateMetrics = true;
+    dispatch("update", { group, period });
   }
 
-  $: dataExtent = data ? extent(data, (d) => d.date.getUTCFullYear()) : [];
-  $: updateMetrics = data ? true : false;
-  $: if (updateMetrics) {
-    metrics = calculateMetrics({ group, period, data, models, format });
-    updateMetrics = false;
+  function initializeOptions() {
+    group = groupId ? groupList.find(({ id }) => id === groupId) : groupList[0];
+    period = periodId
+      ? periodList.find(({ id }) => id === periodId)
+      : periodList[0];
+    dispatch("update", { group, period });
   }
 </script>
 
