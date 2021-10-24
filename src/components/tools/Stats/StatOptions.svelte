@@ -12,12 +12,16 @@
   export let periodList;
   export let group;
   export let period;
-  export let dataExtent;
+  export let dateRange;
   export let open = false;
 
   const dispatch = createEventDispatcher();
 
-  // Props and functions for custom year range selection
+  // Props for binding to RadioButtonGroup
+  let selectedGroup = group.id;
+  let selectedPeriod = period.id;
+
+  // Props and functions for defining a custom period
   let startYear_selectedIndex = -1;
   let endYear_selectedIndex = -1;
   let filteredItems;
@@ -33,25 +37,32 @@
     }
   }
 
-  $: yearRange = range(dataExtent[0], dataExtent[1], 1);
-  $: items = yearRange.map((d) => ({ id: d, text: `${d}` }));
+  $: yearsList = range(dateRange[0], dateRange[1], 1);
+  $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
   $: startYear_selectedIndex, updateLinkedList();
 
-  // If user confirms changes, dispatch change event
-  // with selected groupdId and periodId
-  // If user has selected a custom period, add start and end years.
+  // If user confirms changes, dispatch change event with selected groupd and period
+  // If user has selected a custom period, create a new period object
   function update() {
-    const options = { groupId: group.id, periodId: period.id };
-    if (period.id === "custom") {
-      options.start = formatSelected(startYear_selectedIndex);
-      options.end = formatSelected(endYear_selectedIndex) + 1;
+    group = groupList.find(({ id }) => id === selectedGroup);
+    if (selectedPeriod === "custom") {
+      const start = formatSelected(startYear_selectedIndex);
+      const end = formatSelected(endYear_selectedIndex) + 1;
+      period = {
+        id: "custom",
+        label: `${start}-${end}`,
+        start,
+        end,
+      };
+    } else {
+      period = periodList.find(({ id }) => id === selectedPeriod);
     }
-    dispatch("change", options);
+    dispatch("change", { group, period });
   }
 </script>
 
 <style>
-  .year-select {
+  .years-select {
     display: flex;
     justify-content: space-around;
     margin-top: 0.5rem;
@@ -68,22 +79,22 @@
   on:close="{() => dispatch('cancel')}"
 >
   <h5>Select Group</h5>
-  <RadioButtonGroup bind:selected="{group.id}">
+  <RadioButtonGroup bind:selected="{selectedGroup}">
     {#each groupList as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
     {/each}
   </RadioButtonGroup>
 
   <h5>Select Time Period</h5>
-  <RadioButtonGroup bind:selected="{period.id}">
+  <RadioButtonGroup bind:selected="{selectedPeriod}">
     {#each periodList as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
     {/each}
     <RadioButton labelText="Enter custom year range" value="custom" />
   </RadioButtonGroup>
 
-  {#if period.id === "custom"}
-    <div class="year-select">
+  {#if selectedPeriod === "custom"}
+    <div class="years-select">
       <ComboBox
         bind:selectedIndex="{startYear_selectedIndex}"
         titleText="Start"

@@ -1,30 +1,53 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { extent } from "d3-array";
   import { Button } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
 
-  export let units;
+  export let metrics;
   export let data;
-  export let groupList = [];
-  export let periodList = [];
+  export let groupList;
+  export let periodList;
   export let groupId;
   export let periodId;
-  export let models = [];
-  export let metrics = [];
+  export let models;
+  export let units;
 
   const dispatch = createEventDispatcher();
-  let group;
-  let period;
+
+  let dateRange; // extent of data, used for selecting custom period
+  let group; // current group
+  let period; // current period
 
   let showOptions = false;
   let showAbout = false;
-
   let AboutModal;
   let OptionsModal;
 
-  $: dataExtent = data ? extent(data, (d) => d.date.getUTCFullYear()) : [];
-  $: data, initializeOptions();
+  // Set options to display current group & period
+  $: if (Array.isArray(data)) {
+    setOptions();
+  }
+
+  // Update options when user changes group/period
+  function updateOptions({ detail }) {
+    showOptions = false;
+    group = detail.group;
+    period = detail.period;
+    dispatch("update", detail);
+  }
+
+  function setOptions() {
+    if (data.length) {
+      dateRange = extent(data, (d) => d.date.getUTCFullYear());
+    } else {
+      dateRange = [];
+    }
+    group = groupId ? groupList.find(({ id }) => id === groupId) : groupList[0];
+    period = periodId
+      ? periodList.find(({ id }) => id === periodId)
+      : periodList[0];
+  }
 
   async function loadAbout() {
     showAbout = true;
@@ -36,32 +59,9 @@
     OptionsModal = (await import("./StatOptions.svelte")).default;
   }
 
-  function updateOptions({ detail }) {
-    showOptions = false;
-    const { groupId, periodId, start, end } = detail;
-    console.log("update options", groupId, periodId, start, end);
-    group = groupList.find(({ id }) => id === groupId);
-    if (start && end) {
-      period = {
-        id: "custom",
-        label: `${start}-${end}`,
-        start,
-        end,
-      };
-    } else {
-      period = periodList.find(({ id }) => id === periodId);
-      console.log("after gfind", period);
-    }
+  onMount(() => {
     dispatch("update", { group, period });
-  }
-
-  function initializeOptions() {
-    group = groupId ? groupList.find(({ id }) => id === groupId) : groupList[0];
-    period = periodId
-      ? periodList.find(({ id }) => id === periodId)
-      : periodList[0];
-    dispatch("update", { group, period });
-  }
+  });
 </script>
 
 <style lang="scss">
@@ -148,6 +148,7 @@
   </Button>
 </div>
 
+<!-- modal showing available stat options -->
 <svelte:component
   this="{OptionsModal}"
   bind:open="{showOptions}"
@@ -155,11 +156,12 @@
   period="{period}"
   groupList="{groupList}"
   periodList="{periodList}"
-  dataExtent="{dataExtent}"
+  dateRange="{dateRange}"
   on:change="{updateOptions}"
   on:cancel="{() => (showOptions = false)}"
 />
 
+<!-- modal showing information about stats -->
 <svelte:component
   this="{AboutModal}"
   bind:open="{showAbout}"
