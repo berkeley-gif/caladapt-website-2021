@@ -142,7 +142,7 @@
       const modelsData = await getModels(config, params, method);
       dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (err) {
-      // TODO: notify user of error
+      dataStore.updateData([]);
       console.log("updateData", err);
       notifier.error("Error", err, 2000);
     }
