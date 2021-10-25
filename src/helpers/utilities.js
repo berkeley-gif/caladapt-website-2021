@@ -178,12 +178,16 @@ export function fetchData(url, params = {}, method = "GET") {
  * @param {object} response - json object
  * @return {array} values
  */
-export function transformResponse(response) {
+export function transformResponse(response, throwNoData = true) {
   const parseDate = utcParse("%Y-%m-%dT%H:%M:%S%Z");
   const { columns, index, data } = response;
 
   if (!data) {
-    throw new Error("No data for this location");
+    if (throwNoData) {
+      throw new Error("No data for this location");
+    } else {
+      return [];
+    }
   }
 
   const values = data.map((row, i) => {
