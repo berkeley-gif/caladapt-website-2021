@@ -9,6 +9,15 @@ import { OBSERVED_FILTER_YEAR, PRIORITY_4_MODELS } from "../_common/constants";
 
 const { apiEndpoint } = config.env.production;
 
+export const getStateBoundary = async () => {
+  try {
+    const res = await fetch(`${apiEndpoint}/states/1/?format=geojson`);
+    return res.json();
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
 export const getImgOverlayPath = ({
   climvarId,
   modelId,

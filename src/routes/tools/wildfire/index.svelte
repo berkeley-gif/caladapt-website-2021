@@ -123,10 +123,11 @@
     periodStore,
     modelSingleStore,
     monthStore,
+    stateBoundaryStore,
     yearStore,
   } from "./_store";
 
-  import { getModels, getQueryParams } from "./_data";
+  import { getStateBoundary, getModels, getQueryParams } from "./_data";
 
   export let initialConfig;
   export let tool;
@@ -223,11 +224,20 @@
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
     periodStore.set(duration);
+
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
+
+    const stateBoundary = await getStateBoundary();
+    if (stateBoundary && stateBoundary.geometry) {
+      stateBoundaryStore.set(stateBoundary);
+    } else {
+      console.warn("stateBoundary geojson failed to load");
+    }
+
     return;
   }
 

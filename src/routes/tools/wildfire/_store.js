@@ -57,3 +57,5 @@ export const periodStore = (() => {
 })();
 
 export const yearStore = writable(DEFAULT_SELECTED_YEAR);
+
+export const stateBoundaryStore = writable(null);
