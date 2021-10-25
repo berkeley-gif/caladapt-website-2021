@@ -10,10 +10,16 @@
   export let dataByDate;
   export let formatFn;
   export let units;
-  export let label;
   export let dataSource;
+  export let period;
+  export let month;
+  export let climvarId;
 
   const dispatch = createEventDispatcher();
+
+  $: label = `${period === "year" ? "Annual" : month} ${
+    climvarId === "fire" ? "acres burned" : "wildfire probability"
+  }`;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
