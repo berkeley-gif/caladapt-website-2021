@@ -19,7 +19,7 @@
   export let stateBoundary;
 
   const height = 34;
-  const width = 320;
+  const width = 280;
   const scaleType = "continuous";
 
   let title;
