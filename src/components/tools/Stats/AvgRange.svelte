@@ -24,10 +24,10 @@
   export let periodList;
 
   /** Id of default group to initialize StatPanel. This prop is optional. Defaults to first item in groupList */
-  export let groupId;
+  export let groupId = "modeled-historical";
 
   /** Id of default period to initialize StatPanel. This prop is optional. Defaults to first item in periodList */
-  export let periodId;
+  export let periodId = "baseline";
 
   /** List of selected models */
   export let models;
