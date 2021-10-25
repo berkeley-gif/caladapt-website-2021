@@ -10,8 +10,8 @@
   export let subtitle = "";
   export let width = "";
   export let height = "";
-  export let rectWidth = ""; // discrete only
-  export let rectHeight = ""; // discrete only
+  export let rectWidth = ""; // discrete only (except no-data legend item)
+  export let rectHeight = ""; // discrete only (except no-data legend item)
   export let padding = ""; // padding around legend
   export let ramp = []; // colors for legend items
   export let values = []; // values for legend items
@@ -19,6 +19,7 @@
   export let tickSize = 6; // continuous only
   export let ticks = width / 64; // continuous only
   export let tickValues; // continuous only
+  export let noDataColor = "";
 
   // TODO: consider splitting this all into separate components that render each type of legend
   // continuous only
@@ -103,10 +104,15 @@
     list-style: none;
   }
 
-  li {
+  li,
+  .no-data {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+  }
+
+  .no-data {
+    margin-top: 0.5rem;
   }
 
   li p {
@@ -175,5 +181,12 @@
         transform="{`translate(0, ${height - margin.bottom})`}"
         bind:this="{xAxisGroup}"></g>
     </svg>
+  {/if}
+
+  {#if noDataColor}
+    <div class="no-data">
+      <span style="background-color:{noDataColor}"></span>
+      <p>= No Data</p>
+    </div>
   {/if}
 </div>
