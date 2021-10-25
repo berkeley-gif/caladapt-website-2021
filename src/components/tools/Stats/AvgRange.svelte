@@ -90,18 +90,20 @@
       ];
     } else {
       // For observed  historical, check if value id is not a model name
-      // and value id is not for the envelope. For now this value id = "livneh"
+      // and value id is not for the envelope. For now this would be
+      // the same as checking for id = "livneh"
       dataByGroup = values.filter(
         ({ id }) => !models.includes(id) && !id.includes("range")
       );
+      // Range is not displayed for observed data
+      return [
+        {
+          id: "average",
+          label: `${periodLength} YEAR AVG`,
+          value: calculateAverage(dataByGroup),
+        },
+      ];
     }
-    return [
-      {
-        id: "average",
-        label: `${periodLength} YEAR AVG`,
-        value: calculateAverage(dataByGroup),
-      },
-    ];
   }
 
   function update({ detail }) {
