@@ -51,7 +51,7 @@
       return format(mean(values, (d) => d.value));
     }
     // Empty state
-    return "-";
+    return "—";
   }
 
   function calculateRange(values) {
@@ -60,7 +60,7 @@
       return `${format(minmax[0])}–${format(minmax[1])}`;
     }
     // Empty state
-    return "-";
+    return "—";
   }
 
   function calculateMetrics({ group, period }) {
