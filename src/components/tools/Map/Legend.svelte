@@ -68,7 +68,8 @@
         axisBottom(x).ticks(ticks).tickSize(tickSize).tickValues(tickValues)
       )
       .call(tickAdjust)
-      .call((g) => g.select(".domain").remove());
+      .call((g) => g.select(".domain").remove())
+      .call((g) => g.selectAll(".tick line").attr("stroke", "white"));
   }
 </script>
 
