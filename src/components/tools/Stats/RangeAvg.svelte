@@ -4,23 +4,23 @@
   import StatBlock from "./StatBlock.svelte";
 
   // Array of data values grouped by date
-  // Each date has an array of values containing 1 or more timeseries
+  // Each date has an array of 1 or more timeseries values
   export let data;
 
-  // List of groups of series
+  // List of groups
   // e.g. modeled historical, modeled projections, observed historical
   export let groupList;
 
-  // List of groups of periods
+  // List of periods
   // e.g. baseline, mid-century, end-century
   export let periodList;
 
-  // Optional, id of default group to initialize StatPanel
-  // defaults to first item in groupList
+  // Id of default group to initialize StatPanel
+  // Optional, defaults to first item in groupList
   export let groupId;
 
-  // Optional, id of default period to initialize StatPanel
-  // defaults to first item in periodList
+  // Id of default period to initialize StatPanel
+  // Optional, defaults to first item in periodList
   export let periodId;
 
   // List of selected models
