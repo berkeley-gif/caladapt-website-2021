@@ -1,5 +1,5 @@
 <script>
-  import { getContext } from "svelte";
+  import { getContext, onDestroy } from "svelte";
   import { contextKey } from "~/helpers/mapbox";
 
   export let data;
@@ -30,4 +30,11 @@
       paint: styleProps,
     });
   }
+
+  onDestroy(() => {
+    if (map.getStyle() && map.getLayer(layerName)) {
+      map.removeLayer(layerName);
+      map.removeSource(layerName);
+    }
+  });
 </script>
