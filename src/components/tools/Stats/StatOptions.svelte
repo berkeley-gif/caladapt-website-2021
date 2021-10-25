@@ -78,14 +78,14 @@
   on:submit="{update}"
   on:close="{() => dispatch('cancel')}"
 >
-  <h5>Select Group</h5>
+  <div class="h5">Select Group</div>
   <RadioButtonGroup bind:selected="{selectedGroup}">
     {#each groupList as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
     {/each}
   </RadioButtonGroup>
 
-  <h5>Select Time Period</h5>
+  <div class="h5">Select Time Period</div>
   <RadioButtonGroup bind:selected="{selectedPeriod}">
     {#each periodList as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
@@ -112,14 +112,12 @@
 
   <p style="margin-top:1.5rem;">
     <strong
-      >Scientists recommend looking at a period of at least a few decades like a
-      30 year period.</strong
+      >Climate scientists recommend a period length of at least three decades.</strong
     >
   </p>
   <p>
-    Future climate projections express natural climate variability. If you
-    analyze just a few years of a future climate projection, you might happen to
-    select years that are anomalous. Analyzing a longer time selected gives you
-    a better sense of overall future conditions.
+    Future climate projections express natural climate variability. Analyzing a
+    longer time period can provide a better sense of overall future conditions
+    compared to analyzing only a few years which may be anomalous.
   </p>
 </Modal>
