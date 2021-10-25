@@ -21,6 +21,9 @@
   const height = 34;
   const width = 280;
   const scaleType = "continuous";
+  const noDataColor = "rgba(51,51,51,0.8)";
+  const rectWidth = "1.25rem";
+  const rectHeight = "0.75rem";
 
   let title;
   let values;
@@ -47,5 +50,18 @@
     overlay="{imgOverlayPath}"
     coordinates="{DEFAULT_OVERLAY_BOUNDS}"
   />
-  <Legend {...{ title, ramp, values, scaleType, width, height, tickValues }} />
+  <Legend
+    {...{
+      title,
+      ramp,
+      values,
+      scaleType,
+      width,
+      height,
+      tickValues,
+      noDataColor,
+      rectWidth,
+      rectHeight,
+    }}
+  />
 </Map>
