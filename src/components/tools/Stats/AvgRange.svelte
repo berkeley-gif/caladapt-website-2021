@@ -3,27 +3,33 @@
   import { extent, mean, merge } from "d3-array";
   import StatBlock from "./StatBlock.svelte";
 
-  // Array of data values grouped by date
-  // Each date has an array of 1 or more timeseries values
+  /** Array of data values grouped by date, e.g.
+  {
+    date:  Date Sat Dec 31 1949 16:00:00 GMT-0800 (Pacific Standard Time),
+    values: [
+      { id: "livneh", label: "Observed", value: 74.6},
+      { id: "CanESM2", label: "CanESM2 (Average)", value: 75.2},
+      { id: "CNRM-CM5", label: "CNRM-CM5 (Cool/Wet)", value: 73.3}
+    ]
+  }
+  */
   export let data;
 
-  // List of groups
-  // e.g. modeled historical, modeled projections, observed historical
+  /** List of 1 or more groups
+   * e.g. modeled historical, modeled projections, observed historical */
   export let groupList;
 
-  // List of periods
-  // e.g. baseline, mid-century, end-century
+  /** List of 1 or more periods
+  e.g. baseline, mid-century, end-century */
   export let periodList;
 
-  // Id of default group to initialize StatPanel
-  // Optional, defaults to first item in groupList
+  /** Id of default group to initialize StatPanel. This prop is optional. Defaults to first item in groupList */
   export let groupId;
 
-  // Id of default period to initialize StatPanel
-  // Optional, defaults to first item in periodList
+  /** Id of default period to initialize StatPanel. This prop is optional. Defaults to first item in periodList */
   export let periodId;
 
-  // List of selected models
+  /** List of selected models */
   export let models;
 
   export let format = (d) => d;
@@ -64,7 +70,7 @@
     // e.g. baseline, mid-century, end-century or a custom period
     const dataByPeriod = data.filter(subsetByYears(start, end));
     const values = merge(dataByPeriod.map(({ values }) => values));
-    // Filter data for selected period by selected group
+    // Filter values for selected group
     // e.g. modeled historical, modeled projections, observed historical
     let dataByGroup;
     // For modeled historical/projections, check if the value id is a model
