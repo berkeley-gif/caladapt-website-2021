@@ -11,7 +11,9 @@ const { apiEndpoint } = config.env.production;
 
 export const getStateBoundary = async () => {
   try {
-    const res = await fetch(`${apiEndpoint}/states/1/?format=geojson`);
+    const res = await fetch(
+      `${apiEndpoint}/states/1/?format=geojson&srs=4326&precision=4`
+    );
     return res.json();
   } catch (error) {
     console.error(error.message);
