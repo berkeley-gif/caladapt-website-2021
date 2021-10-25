@@ -137,10 +137,11 @@
         boundary: $boundary,
         imperial: true,
       });
-      const envelope = await getEnsemble(config, params, method);
+      /*      const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(config, params, method);
-      const modelsData = await getModels(config, params, method);
-      dataStore.set([...envelope, ...observed, ...modelsData]);
+      const modelsData = await getModels(config, params, method);*/
+      //dataStore.set([...envelope, ...observed, ...modelsData]);
+      dataStore.set([]);
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
