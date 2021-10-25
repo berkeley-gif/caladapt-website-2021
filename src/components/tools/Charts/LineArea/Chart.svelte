@@ -125,7 +125,11 @@
 </script>
 
 {#if data}
-  <div class:noData style="{`height:${height}`}" bind:this="{chartContainer}">
+  <div
+    class:no-data="{noData}"
+    style="{`height:${height}`}"
+    bind:this="{chartContainer}"
+  >
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
       x="{xAxis.key}"
