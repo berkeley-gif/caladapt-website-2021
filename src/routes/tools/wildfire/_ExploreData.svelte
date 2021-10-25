@@ -36,6 +36,7 @@
     monthStore,
     modelSingleStore,
     yearStore,
+    stateBoundaryStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -211,6 +212,7 @@
         bind:mapboxMap
         imgOverlayPath="{imgOverlayPath}"
         climvarId="{$climvarStore}"
+        stateBoundary="{$stateBoundaryStore}"
       />
     {/if}
   </div>

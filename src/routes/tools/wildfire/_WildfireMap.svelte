@@ -4,6 +4,7 @@
     NavigationControl,
     ImageOverlay,
     Legend,
+    GeoJsonLayer,
   } from "~/components/tools/Map";
   import {
     DEFAULT_OVERLAY_BOUNDS,
@@ -15,6 +16,7 @@
 
   export let imgOverlayPath;
   export let climvarId;
+  export let stateBoundary;
 
   const height = 34;
   const width = 320;
@@ -40,6 +42,7 @@
 
 <Map>
   <NavigationControl />
+  <GeoJsonLayer data="{stateBoundary}" layerName="no-data" />
   <ImageOverlay
     overlay="{imgOverlayPath}"
     coordinates="{DEFAULT_OVERLAY_BOUNDS}"
