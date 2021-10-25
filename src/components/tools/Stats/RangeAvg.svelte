@@ -1,7 +1,7 @@
 <script>
   import { SkeletonText } from "carbon-components-svelte";
   import { extent, mean, merge } from "d3-array";
-  import StatPanel from "./StatPanel.svelte";
+  import StatBlock from "./StatBlock.svelte";
 
   // Array of data values grouped by date
   // Each date has an array of values containing 1 or more timeseries
@@ -107,7 +107,7 @@
 
 <!-- Show stat panel for array with values and empty array -->
 {#if Array.isArray(data)}
-  <StatPanel
+  <StatBlock
     on:update="{update}"
     units="{units}"
     data="{data}"
