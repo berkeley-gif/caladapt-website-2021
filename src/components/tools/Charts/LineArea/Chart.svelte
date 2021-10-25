@@ -44,7 +44,10 @@
   let lineData;
   let areaData;
 
-  $: if (data) {
+  let noData = false;
+
+  $: if (Array.isArray(data) && data.length) {
+    noData = false;
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
     xmax = max(data, (arr) => max(arr.values, (d) => d.date));
@@ -82,6 +85,18 @@
     areaData = data.filter((d) => d.mark === "area");
   }
 
+  $: if (Array.isArray(data) && !data.length) {
+    noData = true;
+    xmin = new Date(Date.UTC(1950, 0, 1));
+    xmax = new Date(Date.UTC(2099, 0, 1));
+    ymin = 10;
+    ymax = 50;
+    lineData = [];
+    areaData = [];
+    legendItems.set([]);
+    setContext("Legend", legendItems);
+  }
+
   function getTooltipLabel(d) {
     const item = data.find((series) => series.id === d);
     if (item) {
@@ -110,7 +125,11 @@
 </script>
 
 {#if data}
-  <div style="{`height:${height}`}" bind:this="{chartContainer}">
+  <div
+    class:no-data="{noData}"
+    style="{`height:${height}`}"
+    bind:this="{chartContainer}"
+  >
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
       x="{xAxis.key}"
