@@ -114,12 +114,12 @@
 
   <p style="margin-top:1.5rem;">
     <strong
-      >Climate scientists recommend a period length of at least three decades.</strong
+      >Climate scientists recommend a period length of at least a few decades.</strong
     >
   </p>
   <p>
     Future climate projections express natural climate variability. Analyzing a
     longer time period can provide a better sense of overall future conditions
-    compared to analyzing only a few years which may be anomalous.
+    compared to analyzing only a few years which may turn out to be anomalous.
   </p>
 </Modal>
