@@ -58,7 +58,8 @@
     over <span class="annotate">{year} – {year + 9}</span>
   {/if}
 
-  under a {scenario} and Central Population Growth scenario
+  under a <span class="annotate">{scenario}</span> and Central Population Growth
+  scenario
   {#if model}
     for <span class="annotate">{model}</span>
   {/if}
