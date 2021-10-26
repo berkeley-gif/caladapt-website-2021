@@ -555,3 +555,38 @@ export function backFillData({ data, value = 0, start, end, inc = 1 }) {
       }
   );
 }
+
+/**
+ * Logs the values of Svelte Stores to the console when they change
+ * recommend wrapping this in a if (process.env.NODE_ENV !== "production")
+ * @param  {params} stores one or more svelte stores, must have a subscribe method
+ */
+export const logStores = (...stores) => {
+  stores.forEach((store) => logSingleStore(store));
+};
+
+/**
+ * Logs the value of a Svelte Store to the console when it changes
+ * recommend wrapping this in a if (process.env.NODE_ENV !== "production")
+ * @param {object} store svelte store, must have a subscribe method
+ * @param {any} prev previous store value
+ */
+export const logSingleStore = (store, prev) => {
+  store.subscribe((value) => {
+    if (!prev) {
+      prev = value;
+    }
+    if (value !== prev) {
+      console.groupCollapsed(
+        `%cSTORE UPDATED ${store.name || ""}`,
+        "color: hsl(60deg, 100%, 80%); background-color: #000; padding: 2px 4px; border-radius: 2px;"
+      );
+      console.log("%cPREVIOUS:", "color: #47B26B");
+      typeof prev === "object" ? console.table(prev) : console.log(prev);
+      console.log("%cUPDATED:", "color: #FF884D");
+      typeof value === "object" ? console.table(value) : console.log(value);
+      console.groupEnd();
+      prev = value;
+    }
+  });
+};

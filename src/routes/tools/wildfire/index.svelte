@@ -80,6 +80,7 @@
   import { inview } from "svelte-inview/dist/";
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { logStores, logSingleStore } from "~/helpers/utilities";
 
   import {
     About,
@@ -144,14 +145,15 @@
     update();
 
   $: if (process.env.NODE_ENV !== "production") {
-    console.groupCollapsed("STORE UPDATES");
-    console.table($climvar);
-    console.table($monthStore);
-    console.table($simulationStore);
-    console.table($locationStore);
-    console.table($modelsStore);
-    console.table($dataStore);
-    console.groupEnd();
+    logStores(
+      climvar,
+      monthStore,
+      simulationStore,
+      locationStore,
+      modelsStore,
+      modelSingleStore,
+      dataStore
+    );
   }
 
   async function update() {
