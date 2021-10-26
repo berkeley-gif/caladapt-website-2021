@@ -147,7 +147,7 @@ export function getQueryParams({
   boundary,
   period,
   monthNumber,
-  imperial = true,
+  imperial = false,
 }) {
   const params = {
     imperial,

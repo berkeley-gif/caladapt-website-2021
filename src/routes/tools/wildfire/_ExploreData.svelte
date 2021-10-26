@@ -268,7 +268,7 @@
     {#if activeTab}
       <StatsPanel
         {...{
-          units: $climvar.units.imperial,
+          units: $climvar.units.metric,
           dataByDate,
           formatFn,
           models: $modelsStore,
@@ -283,7 +283,7 @@
         data="{$dataStore}"
         dataByDate="{dataByDate}"
         formatFn="{formatFn}"
-        units="{$climvar.units.imperial}"
+        units="{$climvar.units.metric}"
         month="{$month.label}"
         climvarId="{$climvarStore}"
         dataSource="{$titles.join(', ')}"
