@@ -142,8 +142,8 @@
       const modelsData = await getModels(config, params, method);
       dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (err) {
-      // TODO: notify user of error
       console.log("updateData", err);
+      dataStore.set([]);
       notifier.error("Error", err, 2000);
     }
   }
@@ -171,6 +171,7 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        dataStore.set([]);
         notifier.error(
           "Unable to Load Tool",
           "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",

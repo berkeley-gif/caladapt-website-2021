@@ -9,6 +9,8 @@
     DEFAULT_SCENARIOS,
     DEFAULT_BOUNDARIES,
     SELECT_LOCATION_DESCRIPTION,
+    DEFAULT_STAT_GROUPS,
+    DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
     flattenData,
@@ -25,7 +27,7 @@
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
-  import { RangeAvg } from "~/components/tools/Stats";
+  import { AvgRange } from "~/components/tools/Stats";
 
   // Store
   import {
@@ -44,7 +46,6 @@
 
   let isLoading = true;
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -125,11 +126,9 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($dataStore) {
-    statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
     isLoading = false;
   } else {
-    statsData = null;
     dataByDate = null;
     isLoading = true;
   }
@@ -188,33 +187,44 @@
   <div slot="stats">
     <ul class="stats">
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$climvar.units.imperial}"
-          data="{statsData}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
+            : null}"
           isHistorical="{true}"
-          series="{'historical'}"
-          period="{'baseline'}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$climvar.units.imperial}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'mid-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="mid-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$climvar.units.imperial}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'end-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="end-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
     </ul>
@@ -232,12 +242,12 @@
       }}"
     />
 
-    <div class="chart-notes margin--v-16">
+    <div class="chart-notes margin--v-32">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
-    <div class="chart-download margin--v-8">
+    <div class="chart-download margin--v-16">
       <LearnMoreButton
         cta="{'Explain Chart'}"
         on:click="{() =>
@@ -271,23 +281,6 @@
           loadLearnMore({
             content: SELECT_LOCATION_DESCRIPTION,
             header: 'Select Location',
-          })}"
-      />
-    </div>
-    <div class="block">
-      <SelectClimvar
-        selectedId="{$climvarStore}"
-        items="{climvarList}"
-        on:change="{changeClimvar}"
-      />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            slugs: [
-              'annual-average-tasmax',
-              'annual-average-tasmin',
-              'annual-average-pr',
-            ],
           })}"
       />
     </div>
