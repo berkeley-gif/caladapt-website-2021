@@ -7,7 +7,7 @@
   export let open = false;
 
   $: groupLabel = group.id.includes("model")
-    ? `${models.join(", ")} models`
+    ? `${group.label} data (${models.join(", ")} models)`
     : `${group.label} data`;
   $: note = `Summary statistics are calculated using values between ${period.start}
     and ${period.end} from ${groupLabel}.`;
