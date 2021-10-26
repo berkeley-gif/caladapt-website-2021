@@ -1,5 +1,6 @@
 import { range } from "d3-array";
 import { timeFormat } from "d3-time-format";
+import { INITIAL_CONFIG } from "../_common/constants";
 
 export const DEFAULT_CLIMVAR = "fire";
 export const DEFAULT_CENTER = [-122.46, 38.59];
@@ -7,6 +8,18 @@ export const DEFAULT_SELECTED_MONTH = 7;
 export const DEFAULT_SELECTED_SIMULATION = "year";
 export const DEFAULT_SELECTED_YEAR = 1960;
 export const DEFAULT_SELECTED_MODEL_SINGLE = "CanESM2";
+
+export const DEFAULT_INITIAL_CONFIG = {
+  ...INITIAL_CONFIG,
+  month: DEFAULT_SELECTED_MONTH,
+  year: DEFAULT_SELECTED_YEAR,
+  simulation: DEFAULT_SELECTED_SIMULATION,
+  modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
+  climvarId: DEFAULT_CLIMVAR,
+  lng: DEFAULT_CENTER[0],
+  lat: DEFAULT_CENTER[1],
+  imperial: false,
+};
 
 export const TOOL_SLUG = "wildfire";
 

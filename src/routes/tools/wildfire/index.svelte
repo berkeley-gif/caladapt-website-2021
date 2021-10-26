@@ -1,14 +1,5 @@
 <script context="module">
-  import {
-    DEFAULT_CENTER,
-    DEFAULT_CLIMVAR,
-    DEFAULT_SELECTED_SIMULATION,
-    DEFAULT_SELECTED_MONTH,
-    DEFAULT_SELECTED_YEAR,
-    DEFAULT_SELECTED_MODEL_SINGLE,
-    TOOL_SLUG,
-  } from "./_constants";
-  import { INITIAL_CONFIG } from "../_common/constants";
+  import { DEFAULT_INITIAL_CONFIG, TOOL_SLUG } from "./_constants";
   import resourcesList from "content/resources/data";
 
   export async function preload({ query }) {
@@ -54,7 +45,7 @@
         lng,
         month,
         year,
-        duration,
+        simulation,
       } = query;
       initialConfig = {
         boundaryId: boundary,
@@ -66,19 +57,11 @@
         month: +month,
         year: +year,
         modelSingle,
-        duration: +duration,
+        simulation,
+        imperial: false,
       };
     } else {
-      initialConfig = {
-        ...INITIAL_CONFIG,
-        month: DEFAULT_SELECTED_MONTH,
-        year: DEFAULT_SELECTED_YEAR,
-        duration: DEFAULT_SELECTED_SIMULATION,
-        modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
-        climvarId: DEFAULT_CLIMVAR,
-        lng: DEFAULT_CENTER[0],
-        lat: DEFAULT_CENTER[1],
-      };
+      initialConfig = DEFAULT_INITIAL_CONFIG;
     }
 
     return {
@@ -213,7 +196,7 @@
     month,
     year,
     modelSingle,
-    duration,
+    simulation,
     imperial,
   }) {
     climvarStore.set(climvarId);
@@ -223,7 +206,7 @@
     monthStore.set(month);
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
-    simulationStore.set(duration);
+    simulationStore.set(simulation);
 
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
