@@ -30,7 +30,7 @@ export const SIMULATIONS = [
 export const CLIMATE_VARIABLES = [
   {
     id: "fire",
-    label: "Modeled area burned",
+    label: "Area burned",
   },
   {
     id: "fireprob",
