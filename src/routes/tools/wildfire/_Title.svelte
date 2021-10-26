@@ -14,7 +14,7 @@
   export let missingDataMsg;
   export let noDataMsg;
 
-  let indicatorPeriod;
+  let indicatorPeriod = "";
 
   $: {
     if (climvar === "fire" && simulation === "year") {
@@ -26,7 +26,7 @@
     } else if (climvar === "fireprob" && simulation === "month") {
       indicatorPeriod = `Estimated ${month} Fire Probability`;
     } else {
-      throw new Error("Unknown indicatorPeriod");
+      console.warn("Unknown indicatorPeriod for: ", climvar, simulation);
     }
   }
 </script>
