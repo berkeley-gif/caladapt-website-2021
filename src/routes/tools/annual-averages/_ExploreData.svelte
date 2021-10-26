@@ -242,12 +242,12 @@
       }}"
     />
 
-    <div class="chart-notes margin--v-16">
+    <div class="chart-notes margin--v-32">
       <p>
         Source: Cal-Adapt. Data: {$titles.join(", ")}.
       </p>
     </div>
-    <div class="chart-download margin--v-8">
+    <div class="chart-download margin--v-16">
       <LearnMoreButton
         cta="{'Explain Chart'}"
         on:click="{() =>
