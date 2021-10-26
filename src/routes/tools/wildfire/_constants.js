@@ -10,18 +10,17 @@ export const DEFAULT_SELECTED_MODEL_SINGLE = "CanESM2";
 
 export const TOOL_SLUG = "wildfire";
 
-export const LEARN_MORE_SELECT_MONTH = `<p>Select a month to explore the average [fire/fireprob] per year for that month.</p>`;
+export const LEARN_MORE_SELECT_MONTH = `<p>Select a month to explore the monthly simulation of Area Burned or Decadal Wildfire Probability for that month.</p>`;
 
-export const LEARN_MORE_YEARLY_PERIOD = `<p>Select a period to view maps showing projected changes in monthly [fire/fireprob] averaged over 10 or 5 years</p>`;
+export const LEARN_MORE_YEARLY_PERIOD = `<p>View data averaged over a year or individual month.</p>`;
 
-export const LEARN_MORE_TIME_SLIDER = `<p>Drag the slider to view maps showing projected changes in monthly [fire/fireprob] averaged over 10 or 5 years for selected month, GCM and scenario. The maps for the period between 1960-2010 display the observed historical monthly [fire/fireprob] for the selected month. You can also use the Play/Pause button to autoplay the animation.</p>`;
+export const LEARN_MORE_TIME_SLIDER = `<p>Drag the slider to view maps showing projected changes in annual/monthly simulations of average Area Burned averaged over 10 years or annual/monthly simulations of Decadal Fire probability, for selected month, GCM, and scenario. You can also use the Play/Pause button to autoplay the animation.</p>`;
 
-export const EXPLAIN_CHART = `<p>The colored lines on this visualization represent a time series of monthly average values of [fire/fireprob] from individual downscaled GCMs. The gray shaded region in the background represents the range of projections from all 32 downscaled GCMs. The historical observed data is represented by a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight corresponding time series.</p>`;
+export const EXPLAIN_CHART = `<p>The colored lines on this visualization represent a time series of annual/monthly simulations of average Area Burned/Decadal Wildfire Probability from individual downscaled GCMs.</p><p>Click on any of the legend keys to highlight corresponding time series.</p>`;
 
 export const MISSING_DATA_MSG = `This area may contain locations outside the combined fire state and federal protection responsibility areas. 
-  These locations were excluded from these wildfire simulations and have no climate projections.`;
-export const NO_DATA_MSG = `No data is available for this area. Locations exist outside the combined fire state and federal protection responsibility areas. 
-  These locations were excluded from these wildfire simulations and have no climate projections.`;
+Locations outside the combined fire state and federal protection responsibility areas were excluded from these wildfire simulations and have no climate projections.`;
+export const NO_DATA_MSG = `No data is available for this area. Locations outside the combined fire state and federal protection responsibility areas were excluded from these wildfire simulations and have no climate projections.`;
 
 export const TIME_PERIODS = [
   { id: "year", label: "Annually" },
