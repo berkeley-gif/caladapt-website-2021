@@ -26,7 +26,9 @@
   let endYear_selectedIndex = -1;
   let filteredItems;
 
-  const formatSelected = (i) => (items[i] ? +items[i].text : "N/A");
+  const getItem = (i) => (items[i] ? +items[i].text : "N/A");
+  const getFilteredItem = (i) =>
+    filteredItems[i] ? +filteredItems[i].text : "N/A";
 
   function updateLinkedList() {
     if (startYear_selectedIndex < 0) {
@@ -46,8 +48,8 @@
   function update() {
     group = groupList.find(({ id }) => id === selectedGroup);
     if (selectedPeriod === "custom") {
-      const start = formatSelected(startYear_selectedIndex);
-      const end = formatSelected(endYear_selectedIndex) + 1;
+      const start = getItem(startYear_selectedIndex);
+      const end = getFilteredItem(endYear_selectedIndex);
       period = {
         id: "custom",
         label: `${start}-${end}`,
@@ -65,7 +67,7 @@
   .years-select {
     display: flex;
     justify-content: space-around;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
   }
 </style>
 
