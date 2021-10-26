@@ -47,6 +47,11 @@
 
   let dataByDate;
   let statsData;
+
+  let noData = false;
+  let showMissingDataMsg = false;
+  let showNoDataMsg = false;
+
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -94,10 +99,16 @@
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
+    noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
   } else {
     statsData = null;
     dataByDate = null;
   }
+
+  afterUpdate(() => {
+    showMissingDataMsg = $locationStore.boundaryId !== "locagrid";
+    showNoDataMsg = $locationStore.boundaryId === "locagrid" && noData;
+  });
 
   async function loadLearnMore({
     slugs = [],
@@ -247,6 +258,8 @@
         month="{$monthStore}"
         location="{$location.title}"
         loadLocation="{loadLocation}"
+        missingDataMsg="{showMissingDataMsg}"
+        noDataMsg="{showNoDataMsg}"
       />
     {/if}
   </div>

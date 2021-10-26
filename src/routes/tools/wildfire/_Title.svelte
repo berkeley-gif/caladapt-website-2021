@@ -11,8 +11,8 @@
   export let month;
   export let location;
   export let loadLocation;
-  export let missingDataMsg = false;
-  export let noDataMsg = false;
+  export let missingDataMsg;
+  export let noDataMsg;
 
   let indicatorPeriod;
 
@@ -51,14 +51,6 @@
   {/if}
 </div>
 
-{#if missingDataMsg || noDataMsg}
-  <InlineNotification
-    title="Warning"
-    subtitle="{missingDataMsg ? MISSING_DATA_MSG : NO_DATA_MSG}"
-    kind="warning"
-  />
-{/if}
-
 <div class="h4">
   <span class="annotate">{indicatorPeriod}</span>
 
@@ -71,3 +63,13 @@
     for <span class="annotate">{model}</span>
   {/if}
 </div>
+
+{#if missingDataMsg || noDataMsg}
+  <InlineNotification
+    lowContrast
+    hideCloseButton
+    title="Warning"
+    subtitle="{missingDataMsg ? MISSING_DATA_MSG : NO_DATA_MSG}"
+    kind="warning"
+  />
+{/if}

@@ -81,7 +81,7 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
   if (error) {
     throw new Error(error.message);
   }
-  return transformResponse(response);
+  return transformResponse(response, false);
 };
 
 /**
