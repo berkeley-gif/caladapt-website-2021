@@ -4,7 +4,7 @@ import { timeFormat } from "d3-time-format";
 export const DEFAULT_CLIMVAR = "fire";
 export const DEFAULT_CENTER = [-122.46, 38.59];
 export const DEFAULT_SELECTED_MONTH = 7;
-export const DEFAULT_SELECTED_PERIOD = "year";
+export const DEFAULT_SELECTED_SIMULATION = "year";
 export const DEFAULT_SELECTED_YEAR = 1960;
 export const DEFAULT_SELECTED_MODEL_SINGLE = "CanESM2";
 
@@ -12,7 +12,7 @@ export const TOOL_SLUG = "wildfire";
 
 export const LEARN_MORE_SELECT_MONTH = `<p>Select a month to explore the monthly simulation of Area Burned or Decadal Wildfire Probability for that month.</p>`;
 
-export const LEARN_MORE_YEARLY_PERIOD = `<p>View data averaged over a year or individual month.</p>`;
+export const LEARN_MORE_SIMULATION = `<p>View data averaged over a year or individual month.</p>`;
 
 export const LEARN_MORE_TIME_SLIDER = `<p>Drag the slider to view maps showing projected changes in annual/monthly simulations of average Area Burned averaged over 10 years or annual/monthly simulations of Decadal Fire probability, for selected month, GCM, and scenario. You can also use the Play/Pause button to autoplay the animation.</p>`;
 
@@ -22,7 +22,7 @@ export const MISSING_DATA_MSG = `This area may contain locations outside the com
 Locations outside the combined fire state and federal protection responsibility areas were excluded from these wildfire simulations and have no climate projections.`;
 export const NO_DATA_MSG = `No data is available for this area. Locations outside the combined fire state and federal protection responsibility areas were excluded from these wildfire simulations and have no climate projections.`;
 
-export const TIME_PERIODS = [
+export const SIMULATIONS = [
   { id: "year", label: "Annually" },
   { id: "month", label: "Monthly" },
 ];

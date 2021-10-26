@@ -10,35 +10,35 @@ export const getMapOverlayImgURL = ({
   model = "CanESM2",
   scenario = "rcp45",
   palette = "YlOrRd",
-  period = "year",
+  simulation = "year",
   month = 8,
 }) =>
   `${apiEndpoint}/series/${climvar}_${getIndicatorStr(
     climvar,
-    period
+    simulation
   )}_${getModelScenarioStr(
     model,
     scenario,
     climvar,
-    period,
+    simulation,
     month
   )}/${year}-${getYearEndStr(year, duration)}/${getFileNameStr(
     climvar,
-    period,
+    simulation,
     month
   )}?scale=10&style=${palette}&limits=${getLimitsStr(climvar)}&srid=3857`;
 
-const getModelScenarioStr = (model, scenario, climvar, period, month) =>
+const getModelScenarioStr = (model, scenario, climvar, simulation, month) =>
   `${model}_${scenario}_${climvar === "fire" ? "bau_mu" : "bau"}${
-    climvar === "fireprob" ? getFireProbStr(period, month) : ""
+    climvar === "fireprob" ? getFireProbStr(simulation, month) : ""
   }`;
 
-const getFireProbStr = (period, month) =>
-  period === "month" ? `_${leftPad(`${month}`, 2, "0")}` : "";
+const getFireProbStr = (simulation, month) =>
+  simulation === "month" ? `_${leftPad(`${month}`, 2, "0")}` : "";
 
-const getIndicatorStr = (climvar, period) => {
+const getIndicatorStr = (climvar, simulation) => {
   if (climvar === "fire") {
-    return period;
+    return simulation;
   } else {
     return "10y";
   }
@@ -54,9 +54,9 @@ const getLimitsStr = (climvar) => {
 
 const getYearEndStr = (year, duration) => `${year + duration - 1}`;
 
-const getFileNameStr = (climvar, period, month) => {
+const getFileNameStr = (climvar, simulation, month) => {
   if (climvar === "fire") {
-    return `${period === "year" ? "image" : month}.png`;
+    return `${simulation === "year" ? "image" : month}.png`;
   } else {
     return "image.png";
   }

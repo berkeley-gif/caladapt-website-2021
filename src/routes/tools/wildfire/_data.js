@@ -35,13 +35,13 @@ export const getImgOverlayPath = ({
   return `${apiEndpoint}/series/${slug}/${yearStart}-${yearEnd}/${monthNumber}.png`;
 };
 
-const getClimvarStr = (climvarId, period) =>
-  climvarId === "fire" ? `${climvarId}_${period}` : `${climvarId}_10y`;
+const getClimvarStr = (climvarId, simulation) =>
+  climvarId === "fire" ? `${climvarId}_${simulation}` : `${climvarId}_10y`;
 
-const getBauStr = (climvarId, period, monthNumber) =>
+const getBauStr = (climvarId, simulation, monthNumber) =>
   climvarId === "fire"
     ? "bau_mu"
-    : period === "month"
+    : simulation === "month"
     ? `bau_${getPaddedMonth(monthNumber)}`
     : "bau";
 
@@ -51,16 +51,14 @@ const getModelSeries = ({
   climvarId,
   scenarioId,
   modelIds,
-  period,
+  simulation,
   monthNumber,
 }) => {
   return PRIORITY_4_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
     const slugs = [
-      `${getClimvarStr(climvarId, period)}_${d.id}_${scenarioId}_${getBauStr(
-        climvarId,
-        period,
-        monthNumber
-      )}`,
+      `${getClimvarStr(climvarId, simulation)}_${
+        d.id
+      }_${scenarioId}_${getBauStr(climvarId, simulation, monthNumber)}`,
     ];
     return { ...d, slugs, mark: "line", visible: true };
   });
@@ -145,13 +143,13 @@ export async function getModels(config, params, method = "GET") {
 export function getQueryParams({
   location,
   boundary,
-  period,
+  simulation,
   monthNumber,
   imperial = false,
 }) {
   const params = {
     imperial,
-    ...(period === "month" && { months: monthNumber }),
+    ...(simulation === "month" && { months: monthNumber }),
   };
   let method;
   switch (boundary.id) {

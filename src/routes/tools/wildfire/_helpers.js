@@ -6,7 +6,7 @@ export const getMapImages = ({
   climvarId,
   modelId,
   years,
-  period,
+  simulation,
   scenarioId,
   monthNumber,
   palette,
@@ -17,7 +17,7 @@ export const getMapImages = ({
       climvar: climvarId,
       model: modelId,
       scenario: scenarioId,
-      period,
+      simulation,
       month: monthNumber,
       palette,
     })

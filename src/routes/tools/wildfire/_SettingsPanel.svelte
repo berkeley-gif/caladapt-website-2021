@@ -8,8 +8,8 @@
   } from "../_common/constants";
   import {
     LEARN_MORE_SELECT_MONTH,
-    LEARN_MORE_YEARLY_PERIOD,
-    TIME_PERIODS,
+    LEARN_MORE_SIMULATION,
+    SIMULATIONS,
     MONTHS_LIST_ONE_INDEXED,
     CLIMATE_VARIABLES,
   } from "./_constants";
@@ -27,7 +27,7 @@
   import { scenarioStore, locationStore, modelsStore } from "../_common/stores";
   import {
     climvarStore,
-    periodStore,
+    simulationStore,
     monthStore,
     modelSingleStore,
   } from "./_store";
@@ -62,8 +62,8 @@
     monthStore.set(e.detail.id);
   }
 
-  function changePeriod(e) {
-    periodStore.set(e.detail);
+  function changeSimulation(e) {
+    simulationStore.set(e.detail);
   }
 
   function changeClimvar(e) {
@@ -116,17 +116,17 @@
 
 <div class="block">
   <RadioBtnGroup
-    items="{TIME_PERIODS}"
-    selected="{$periodStore}"
-    title="{'Select Period'}"
-    on:change="{changePeriod}"
+    items="{SIMULATIONS}"
+    selected="{$simulationStore}"
+    title="{'Select Simulation'}"
+    on:change="{changeSimulation}"
   />
   <LearnMoreButton
-    on:click="{() => showLearnMore({ content: LEARN_MORE_YEARLY_PERIOD })}"
+    on:click="{() => showLearnMore({ content: LEARN_MORE_SIMULATION })}"
   />
 </div>
 
-{#if $periodStore === "month"}
+{#if $simulationStore === "month"}
   <div class="block">
     <SelectMonth
       items="{MONTHS_LIST_ONE_INDEXED}"

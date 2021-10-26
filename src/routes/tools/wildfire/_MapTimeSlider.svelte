@@ -17,7 +17,7 @@
   export let modelId;
   export let scenarioId;
   export let monthNumber;
-  export let period;
+  export let simulation;
   export let palette;
 
   const intervalMs = 750;
@@ -34,7 +34,7 @@
     climvarId,
     modelId,
     scenarioId,
-    period,
+    simulation,
     years,
     monthNumber,
     palette,

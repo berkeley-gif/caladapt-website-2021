@@ -32,7 +32,7 @@
   } from "../_common/stores";
   import {
     climvarStore,
-    periodStore,
+    simulationStore,
     monthStore,
     modelSingleStore,
     yearStore,
@@ -91,7 +91,7 @@
     model: $modelSingleStore,
     scenario: $scenarioStore,
     year: $yearStore,
-    period: $periodStore,
+    simulation: $simulationStore,
     month: $monthStore,
     palette,
   });
@@ -137,7 +137,7 @@
         modelSingle: $modelSingleStore,
         year: $yearStore,
         month: $monthStore,
-        period: $periodStore,
+        simulation: $simulationStore,
         lng,
         lat,
         boundary: $boundary.id,
@@ -205,7 +205,7 @@
   <!-- Map components -->
   <div slot="tab_content_map_title" class="block title">
     <Title
-      period="{$periodStore}"
+      simulation="{$simulationStore}"
       scenario="{$scenario.labelLong}"
       climvar="{$climvarStore}"
       year="{$yearStore}"
@@ -242,7 +242,7 @@
         modelId="{$modelSingleStore}"
         scenarioId="{$scenarioStore}"
         monthNumber="{$monthStore}"
-        period="{$periodStore}"
+        simulation="{$simulationStore}"
         palette="{palette}"
       />
     {/if}
@@ -252,7 +252,7 @@
   <div slot="tab_content_title" class="block title">
     {#if activeTab}
       <Title
-        period="{$periodStore}"
+        simulation="{$simulationStore}"
         scenario="{$scenario.labelLong}"
         climvar="{$climvarStore}"
         month="{$monthStore}"
@@ -287,7 +287,7 @@
         month="{$month.label}"
         climvarId="{$climvarStore}"
         dataSource="{$titles.join(', ')}"
-        period="{$periodStore}"
+        simulation="{$simulationStore}"
         on:showDownload="{loadDownload}"
         on:showShare="{loadShare}"
         on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"

@@ -2,7 +2,7 @@
   import {
     DEFAULT_CENTER,
     DEFAULT_CLIMVAR,
-    DEFAULT_SELECTED_PERIOD,
+    DEFAULT_SELECTED_SIMULATION,
     DEFAULT_SELECTED_MONTH,
     DEFAULT_SELECTED_YEAR,
     DEFAULT_SELECTED_MODEL_SINGLE,
@@ -73,7 +73,7 @@
         ...INITIAL_CONFIG,
         month: DEFAULT_SELECTED_MONTH,
         year: DEFAULT_SELECTED_YEAR,
-        duration: DEFAULT_SELECTED_PERIOD,
+        duration: DEFAULT_SELECTED_SIMULATION,
         modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
         climvarId: DEFAULT_CLIMVAR,
         lng: DEFAULT_CENTER[0],
@@ -120,7 +120,7 @@
   } from "../_common/stores";
   import {
     climvarStore,
-    periodStore,
+    simulationStore,
     modelSingleStore,
     monthStore,
     stateBoundaryStore,
@@ -157,14 +157,14 @@
     $modelsStore,
     $locationStore,
     $monthStore,
-    $periodStore,
+    $simulationStore,
     update();
 
   $: if (process.env.NODE_ENV !== "production") {
     console.groupCollapsed("STORE UPDATES");
     console.table($climvar);
     console.table($monthStore);
-    console.table($periodStore);
+    console.table($simulationStore);
     console.table($locationStore);
     console.table($modelsStore);
     console.table($dataStore);
@@ -180,14 +180,14 @@
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
-        period: $periodStore,
+        simulation: $simulationStore,
         monthNumber: $monthStore,
       };
 
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
-        period: $periodStore,
+        simulation: $simulationStore,
         monthNumber: $monthStore,
         imperial: true,
       });
@@ -223,7 +223,7 @@
     monthStore.set(month);
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
-    periodStore.set(duration);
+    simulationStore.set(duration);
 
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];

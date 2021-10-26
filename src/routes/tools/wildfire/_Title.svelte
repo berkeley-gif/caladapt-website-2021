@@ -7,7 +7,7 @@
   export let climvar;
   export let year;
   export let model;
-  export let period;
+  export let simulation;
   export let month;
   export let location;
   export let loadLocation;
@@ -17,13 +17,13 @@
   let indicatorPeriod;
 
   $: {
-    if (climvar === "fire" && period === "year") {
+    if (climvar === "fire" && simulation === "year") {
       indicatorPeriod = "Modeled Annual Area Burned";
-    } else if (climvar === "fire" && period === "month") {
+    } else if (climvar === "fire" && simulation === "month") {
       indicatorPeriod = `Modeled ${month} Area Burned`;
-    } else if (climvar === "fireprob" && period === "year") {
+    } else if (climvar === "fireprob" && simulation === "year") {
       indicatorPeriod = "Estimated Decadal Fire Probability";
-    } else if (climvar === "fireprob" && period === "month") {
+    } else if (climvar === "fireprob" && simulation === "month") {
       indicatorPeriod = `Estimated ${month} Fire Probability`;
     } else {
       throw new Error("Unknown indicatorPeriod");

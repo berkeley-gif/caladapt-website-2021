@@ -11,13 +11,13 @@
   export let formatFn;
   export let units;
   export let dataSource;
-  export let period;
+  export let simulation;
   export let month;
   export let climvarId;
 
   const dispatch = createEventDispatcher();
 
-  $: label = `${period === "year" ? "Annual" : month} ${
+  $: label = `${simulation === "year" ? "Annual" : month} ${
     climvarId === "fire" ? "acres burned" : "wildfire probability"
   }`;
 
