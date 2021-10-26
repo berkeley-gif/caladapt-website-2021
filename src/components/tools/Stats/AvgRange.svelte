@@ -24,10 +24,10 @@
   export let periodList;
 
   /** Id of default group to initialize StatPanel. This prop is optional. Defaults to first item in groupList */
-  export let groupId = "modeled-historical";
+  export let groupId;
 
   /** Id of default period to initialize StatPanel. This prop is optional. Defaults to first item in periodList */
-  export let periodId = "baseline";
+  export let periodId;
 
   /** List of selected models */
   export let models;
@@ -51,7 +51,7 @@
       return format(mean(values, (d) => d.value));
     }
     // Empty state
-    return "—";
+    return "–";
   }
 
   function calculateRange(values) {
@@ -60,7 +60,7 @@
       return `${format(minmax[0])}–${format(minmax[1])}`;
     }
     // Empty state
-    return "—";
+    return "–";
   }
 
   function calculateMetrics({ group, period }) {
