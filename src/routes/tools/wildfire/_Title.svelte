@@ -68,7 +68,6 @@
   <InlineNotification
     lowContrast
     hideCloseButton
-    title="Warning"
     subtitle="{missingDataMsg ? MISSING_DATA_MSG : NO_DATA_MSG}"
     kind="warning"
   />
