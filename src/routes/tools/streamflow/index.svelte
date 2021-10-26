@@ -26,4 +26,6 @@
   <title>{tool.title}</title>
 </svelte:head>
 
-<Embed path="{`tools/${tool.slug}`}" title="{tool.title}" />
+<div>
+  <Embed path="{`tools/${tool.slug}`}" title="{tool.title}" />
+</div>

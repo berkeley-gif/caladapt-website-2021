@@ -10,10 +10,14 @@
   onMount(() => {
     window.addEventListener("message", (e) => {
       // use message data that was passed from iframe page to set height
-      if (e.data.height && typeof e.data.height === "number") {
+      if (
+        e.data &&
+        typeof e.data.height === "number" &&
+        !isNaN(e.data.height)
+      ) {
         v2_frame.style.height = `${e.data.height}px`;
       } else {
-        console.warn("postMessage from iframe not received!");
+        console.warn("Embed did not receive postMessage width value");
       }
     });
   });
@@ -21,9 +25,11 @@
 
 <style>
   iframe {
-    width: 100vw;
-    height: 100vw;
-    overflow-y: hidden;
+    width: 100%;
+    height: 100vh;
+    display: block;
+    margin: 0 auto;
+    overflow: hidden;
   }
 </style>
 
