@@ -267,7 +267,12 @@
   <div slot="tab_content_stats">
     {#if activeTab}
       <StatsPanel
-        {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
+        {...{
+          units: $climvar.units.imperial,
+          dataByDate,
+          formatFn,
+          models: $modelsStore,
+        }}
       />
     {/if}
   </div>
