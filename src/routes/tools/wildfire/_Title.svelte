@@ -1,6 +1,7 @@
 <script>
-  import { Button } from "carbon-components-svelte";
+  import { Button, InlineNotification } from "carbon-components-svelte";
   import { Location16 } from "carbon-icons-svelte";
+  import { NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
 
   export let scenario;
   export let climvar;
@@ -10,6 +11,8 @@
   export let month;
   export let location;
   export let loadLocation;
+  export let missingDataMsg = false;
+  export let noDataMsg = false;
 
   let indicatorPeriod;
 
@@ -28,22 +31,32 @@
   }
 </script>
 
-{#if loadLocation}
-  <Button
-    class="btn-change-location"
-    size="small"
-    icon="{Location16}"
-    kind="ghost"
-    on:click="{loadLocation}"
-  >
-    Change Location
-  </Button>
-{/if}
+<div>
+  {#if loadLocation}
+    <Button
+      class="btn-change-location"
+      size="small"
+      icon="{Location16}"
+      kind="ghost"
+      on:click="{loadLocation}"
+    >
+      Change Location
+    </Button>
+  {/if}
 
-{#if location}
-  <div class="h3">
-    {location}
-  </div>
+  {#if location}
+    <div class="h3">
+      {location}
+    </div>
+  {/if}
+</div>
+
+{#if missingDataMsg || noDataMsg}
+  <InlineNotification
+    title="Warning"
+    subtitle="{missingDataMsg ? MISSING_DATA_MSG : NO_DATA_MSG}"
+    kind="warning"
+  />
 {/if}
 
 <div class="h4">
