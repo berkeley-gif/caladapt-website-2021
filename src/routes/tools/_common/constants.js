@@ -120,3 +120,45 @@ a grid cell or aggregate data over a boundary e.g. county boundary.
 You can also upload your own boundary for 
 spatial aggregation (see <a href="/help/faqs/can-i-get-data-for-my-aoi/"
 target="_blank">FAQs</a>)</p>`;
+
+export const DEFAULT_STAT_GROUPS = [
+  {
+    id: "modeled-historical",
+    label: "Modeled Historical",
+    historical: true,
+  },
+  {
+    id: "observed",
+    label: "Observed Historical",
+    historical: true,
+  },
+  {
+    id: "modeled-projections",
+    label: "Future Projections",
+    historical: false,
+  },
+];
+
+export const DEFAULT_STAT_PERIODS = [
+  {
+    id: "baseline",
+    label: "Baseline (1961-1990)",
+    start: 1961,
+    end: 1990,
+    historical: true,
+  },
+  {
+    id: "mid-century",
+    label: "Mid-Century (2035-2064)",
+    start: 2035,
+    end: 2064,
+    historical: false,
+  },
+  {
+    id: "end-century",
+    label: "End-Century (2070-2099)",
+    start: 2070,
+    end: 2099,
+    historical: false,
+  },
+];

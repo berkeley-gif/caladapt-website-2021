@@ -8,13 +8,11 @@
   import Circles from "./Circles.svelte";
 
   export let data;
-  export let title;
-  export let height = 240;
-  export let padding = { top: 16, right: 16, bottom: 32, left: 32 };
-  export let y1 = 80;
+  export let height;
+  export let padding = { top: 16, right: 16, bottom: 16, left: 16 };
+  export let y1 = 100;
   export let xDomain;
-  export let units;
-  export let tooltipFn = (d) => `${d.value} ${units}`;
+  export let tooltipFn = (d) => `${d.valueLabel}`;
   export let yAxis = {
     key: "label",
     tickFormat: (d) => d,
@@ -40,13 +38,6 @@
   }
 </script>
 
-<style>
-  .title {
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-</style>
-
 {#if data}
   <div style="{style}">
     <LayerCake
@@ -60,15 +51,16 @@
       yDomain="{yDomain}"
     >
       <Svg>
-        <text x="{-padding.top}" y="{-padding.top}" class="title">
-          {title}
-        </text>
         <AxisY gridlines="{true}" />
         <Circles
           y1="{-y1}"
-          units="{units}"
-          on:mousemove="{(event) => (evt = hideTooltip = event)}"
-          on:mouseout="{() => (hideTooltip = true)}"
+          on:mousemove="{(event) => {
+            evt = event;
+            hideTooltip = false;
+          }}"
+          on:mouseout="{() => {
+            hideTooltip = true;
+          }}"
         />
       </Svg>
       <Html pointerEvents="{false}">

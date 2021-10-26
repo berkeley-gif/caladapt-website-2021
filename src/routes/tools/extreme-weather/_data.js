@@ -1,6 +1,5 @@
 // Node modules
 import { timeParse, timeFormat } from "d3-time-format";
-import { format } from "d3-format";
 import { timeDay } from "d3-time";
 
 // Helpers
@@ -10,13 +9,13 @@ import {
   fetchData,
   transformResponse,
   pipe,
-  closest,
 } from "../../../helpers/utilities";
 
 const { apiEndpoint } = config.env.production;
 const dateParse = timeParse("%Y-%m-%d");
 const startTimeParse = timeParse("%Y-%m-%dT%H:%M:%S%Z");
 const startTimeFormat = timeFormat("%m/%d");
+const numberFormat = timeFormat("%j");
 
 const fetchTimeseries = async ({ slug, params }) => {
   const url = `${apiEndpoint}/series/${slug}/events/`;
@@ -100,67 +99,6 @@ export async function getObservedReturnLevels(config, params) {
   }
 }
 
-export function filterPercentiles(percentiles, extremes) {
-  if (extremes === "high") {
-    return percentiles.filter((d) => d.percentile > 45);
-  }
-  return percentiles.filter((d) => d.percentile < 55);
-}
-
-export function filterThreshold(percentiles, extremes) {
-  if (extremes === "high") {
-    const percentile = percentiles.find((d) => d.percentile === 90);
-    return percentile.value;
-  }
-  const percentile = percentiles.find((d) => d.percentile === 10);
-  return percentile.value;
-}
-
-export function getThresholdText(_data, extremes) {
-  if (extremes === "high") {
-    return "Number must be >= 90th percentile value";
-  }
-  return "Number must be <= 10th percentile value";
-}
-
-export function calcThresholdProbability({ gevisf, threshold }) {
-  const { probabilities, values } = gevisf;
-  const valuesArr = values.map((d) => +d);
-  const closestValue = closest(+threshold, valuesArr);
-  const probability = +probabilities[closestValue.index];
-  const rp = +format(".0f")(1 / probability);
-  let label;
-  if (probability <= 0.01) {
-    label = "Extreme";
-  } else if (probability > 0.01 && probability < 0.25) {
-    label = "Rare";
-  } else {
-    label = "Common";
-  }
-  const value = +format(".2f")(probability * 100);
-  let append;
-  if (value === 50) {
-    append = "at least";
-  } else if (value === 0.1) {
-    append = "less than";
-  } else {
-    append = "";
-  }
-  return {
-    append,
-    value,
-    label,
-    rp,
-  };
-}
-
-export function calcThresholdExceedances({ values, threshold, extremes }) {
-  if (extremes === "high") {
-    return values.filter((d) => d > threshold).length;
-  }
-  return values.filter((d) => d < threshold).length;
-}
-
 export async function getForecastData({ lng, lat }) {
   const url = `https://api.weather.gov/points/${lat},${lng}`;
   const [response, error] = await handleXHR(fetchData(url, {}));
@@ -173,27 +111,27 @@ export async function getForecastData({ lng, lat }) {
     throw new Error(dataError);
   }
   const periods = data.properties.periods.map((d) => {
-    const startTime = startTimeParse(d.startTime);
-    const label = startTimeFormat(startTime);
-    return { ...d, date: startTime, label, value: d.temperature };
+    const { startTime, isDaytime, windSpeed } = d;
+    const windSpeedArr = windSpeed.match(/\d+/g).map((d) => +d);
+    const date = startTimeParse(startTime);
+    const dateLabel = startTimeFormat(date);
+    return {
+      ...d,
+      date,
+      label: isDaytime ? `${dateLabel} am` : `${dateLabel} pm`,
+      windSpeedMax: windSpeedArr[windSpeedArr.length - 1],
+    };
   });
   return periods.sort((a, b) => b.date - a.date);
 }
 
-export function filterForecast(climvarId, forecast) {
-  if (climvarId === "tasmin") {
-    return forecast.filter((d) => d.isDaytime === false);
-  }
-  return forecast.filter((d) => d.isDaytime === true);
-}
-
-export async function getMeasuredData({ stationId, startDate, endDate }) {
+export async function getRecentObsData({ stationId, startDate, endDate }) {
   const params = {
     dataset: "daily-summaries",
     stations: stationId,
     startDate,
     endDate,
-    dataTypes: "TMAX,TMIN",
+    dataTypes: "TMAX,TMIN,AWND",
     units: "standard",
     format: "json",
   };
@@ -214,8 +152,9 @@ export async function getMeasuredData({ stationId, startDate, endDate }) {
       return {
         date: d,
         label: startTimeFormat(d),
-        TMAX: null,
-        TMIN: null,
+        TMAX: undefined,
+        TMIN: undefined,
+        AWND: undefined,
       };
     }
     return match;
@@ -223,9 +162,20 @@ export async function getMeasuredData({ stationId, startDate, endDate }) {
   return records.sort((a, b) => b.date - a.date);
 }
 
-export function filterMeasured(climvarId, measured) {
-  if (climvarId === "tasmin") {
-    return measured.map((d) => ({ label: d.label, value: +d.TMIN }));
-  }
-  return measured.map((d) => ({ label: d.label, value: +d.TMAX }));
+/**
+ * Creates the param object used to fetch data from API
+ * @param {object} location
+ * @param {object} boundary - obj representing a mapbox layer
+ * @param {boolean} imperial - represents units
+ * @return {object} params
+ * @return {string} method
+ */
+export function getQueryParams({ location, doy, extype }) {
+  const params = {
+    g: `POINT(${location.geometry.coordinates[0]} ${location.geometry.coordinates[1]})`,
+    doy: numberFormat(doy),
+    imperial: true,
+    extype,
+  };
+  return { params, method: "GET" };
 }

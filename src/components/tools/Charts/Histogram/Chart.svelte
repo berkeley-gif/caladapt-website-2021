@@ -11,7 +11,7 @@
 
   export let data;
   export let labels;
-  export let height = 400;
+  export let height = 325;
   export let threshold;
   export let xDomain;
 
@@ -61,7 +61,7 @@
 {#if data}
   <div style="{style}">
     <LayerCake
-      padding="{{ top: 80, right: 16, bottom: 64, left: 16 }}"
+      padding="{{ top: 16, right: 16, bottom: 16, left: 16 }}"
       x="{xKey}"
       y="{yKey}"
       data="{bins}"
@@ -85,8 +85,13 @@
         <Column
           strokeWidth="{1}"
           total="{data.length}"
-          on:mousemove="{(event) => (evt = hideTooltip = event)}"
-          on:mouseout="{() => (hideTooltip = true)}"
+          on:mousemove="{(event) => {
+            evt = event;
+            hideTooltip = false;
+          }}"
+          on:mouseout="{() => {
+            hideTooltip = true;
+          }}"
         />
         <Annotation
           units="{xAxis.units}"

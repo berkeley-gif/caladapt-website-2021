@@ -2,11 +2,10 @@
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
 
-  const { data, xGet, yGet, xScale, yScale } = getContext("LayerCake");
+  const { data, xGet, yGet, yScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
 
   export let y1;
-  export let units;
 
   $: midHeight = $yScale.bandwidth() / 2;
 
@@ -49,7 +48,7 @@
 
 <g class="data">
   {#each $data as d}
-    {#if d.value}
+    {#if !isNaN(d.value)}
       <g>
         <line
           x1="{$xGet(d)}"
@@ -70,13 +69,12 @@
         >
         </circle>
         <text y="{$yGet(d) + midHeight + 4}" x="{$xGet(d) + 10}" class="label">
-          {d.value}
-          {units}
+          {d.valueLabel}
         </text>
       </g>
     {:else}
       <g>
-        <text y="{$yGet(d) + midHeight + 4}" x="{40}" class="label-na">
+        <text y="{$yGet(d) + midHeight - 5}" x="{45}" class="label-na">
           Data Not Available
         </text>
       </g>

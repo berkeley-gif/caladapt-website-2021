@@ -58,10 +58,18 @@
   }
 
   function getPointImgSrc({ geometry, center }) {
+    // Add marker color for point geometry
+    const geojson = {
+      type: "Feature",
+      properties: {
+        "marker-color": "#ff005e",
+      },
+      geometry,
+    };
     // Set bounds to use zoom instead of auto
     // This prevents static image from being zoomed in too much
     const bounds = `${center[0]},${center[1]},${zoom}`;
-    const overlay = createOverlay(geometry);
+    const overlay = createOverlay(geojson);
     // Padding cannot be used if bounds has zoom.
     const params = { access_token: accessToken };
     return createSrcUrl({ overlay, bounds, params });
