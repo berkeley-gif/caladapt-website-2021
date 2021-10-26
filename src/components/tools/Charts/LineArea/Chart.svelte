@@ -46,7 +46,19 @@
 
   let noData = false;
 
-  $: if (Array.isArray(data) && data.length) {
+  $: if (Array.isArray(data) && isEmptyData(data)) {
+    noData = true;
+    xmin = new Date(Date.UTC(1950, 0, 1));
+    xmax = new Date(Date.UTC(2099, 0, 1));
+    ymin = 10;
+    ymax = 50;
+    lineData = [];
+    areaData = [];
+    legendItems.set([]);
+    setContext("Legend", legendItems);
+  }
+
+  $: if (Array.isArray(data) && !isEmptyData(data)) {
     noData = false;
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
@@ -85,16 +97,10 @@
     areaData = data.filter((d) => d.mark === "area");
   }
 
-  $: if (Array.isArray(data) && !data.length) {
-    noData = true;
-    xmin = new Date(Date.UTC(1950, 0, 1));
-    xmax = new Date(Date.UTC(2099, 0, 1));
-    ymin = 10;
-    ymax = 50;
-    lineData = [];
-    areaData = [];
-    legendItems.set([]);
-    setContext("Legend", legendItems);
+  function isEmptyData(_data) {
+    return (
+      !_data.length || Math.max(..._data.map((d) => d.values.length)) === 0
+    );
   }
 
   function getTooltipLabel(d) {
