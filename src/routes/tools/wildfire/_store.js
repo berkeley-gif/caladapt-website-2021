@@ -22,6 +22,9 @@ export const climvarStore = (() => {
         return selected;
       });
     },
+    get name() {
+      return "climvarStore";
+    },
   };
 })();
 
@@ -36,6 +39,9 @@ export const monthStore = (() => {
         const selected = MONTHS_LIST_ONE_INDEXED.find((d) => d.id === $store);
         return selected;
       });
+    },
+    get name() {
+      return "monthStore";
     },
   };
 })();
@@ -52,6 +58,9 @@ export const simulationStore = (() => {
       return derived(store, ($store) => {
         return SIMULATIONS.find((d) => d.id === $store);
       });
+    },
+    get name() {
+      return "simulationStore";
     },
   };
 })();

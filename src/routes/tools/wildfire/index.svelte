@@ -146,7 +146,7 @@
 
   $: if (process.env.NODE_ENV !== "production") {
     logStores(
-      climvar,
+      climvarStore,
       monthStore,
       simulationStore,
       locationStore,
