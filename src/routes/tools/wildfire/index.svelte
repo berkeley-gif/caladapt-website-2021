@@ -256,8 +256,8 @@
 <Header iconPaths="{tool.icons}" title="{tool.title}">
   <div slot="description">
     <p class="lead">
-      Explore projected changes in monthly Snow Water Equivalent, a common
-      measurement of snowpack for California.
+      Explore wildfire scenario projections for area burned and estimated
+      decadal wildfire probabilities for California.
     </p>
   </div>
 </Header>
