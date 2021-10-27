@@ -10,18 +10,17 @@
     getDataByDate,
     formatDataForExport,
   } from "../_common/helpers";
+  import { getMapOverlayImgURL } from "./_helpers";
 
   import { serialize } from "~/helpers/utilities";
-  import { getImgOverlayPath } from "./_data";
 
   import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
-  import SnowpackChart from "./_SnowpackChart.svelte";
-  import SnowpackMap from "./_SnowpackMap.svelte";
+  import WildfireChart from "./_WildfireChart.svelte";
+  import WildfireMap from "./_WildfireMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
-  import ChartTitle from "./_ChartTitle.svelte";
-  import MapTitle from "./_MapTitle.svelte";
+  import Title from "./_Title.svelte";
 
   import {
     scenarioStore,
@@ -33,10 +32,11 @@
   } from "../_common/stores";
   import {
     climvarStore,
-    durationStore,
+    simulationStore,
     monthStore,
     modelSingleStore,
     yearStore,
+    stateBoundaryStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -47,6 +47,11 @@
 
   let dataByDate;
   let statsData;
+
+  let noData = false;
+  let showMissingDataMsg = false;
+  let showNoDataMsg = false;
+
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -73,47 +78,36 @@
   let printContainer;
   let printSkipElements;
 
-  let chartTitle = "";
-  $: mapTitle = `${$month.label} Snow Water Equivalent under a ${
-    $scenario.labelLong
-  } 
-    for ${$modelSingleStore} averaged over ${$yearStore} – ${
-    $yearStore + $durationStore - 1
-  }*`;
-  let mapCaveat =
-    "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled projections.";
-
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
-  $: chartSubtitle = `Projected changes in Snow Water Equivalent for the month of ${$month.label} under a`;
-
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: imgOverlayPath = getImgOverlayPath({
-    climvarId: $climvarStore,
-    modelId: $modelSingleStore,
-    scenarioId: $scenarioStore,
-    yearStart: $yearStore,
-    yearEnd: $yearStore + $durationStore - 1,
-    monthNumber: $monthStore,
+  $: palette = $climvarStore === "fire" ? "YlOrRd" : "PuRd";
+
+  $: imgOverlayPath = getMapOverlayImgURL({
+    climvar: $climvarStore,
+    model: $modelSingleStore,
+    scenario: $scenarioStore,
+    year: $yearStore,
+    simulation: $simulationStore,
+    month: $monthStore,
+    palette,
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
     statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
+    noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
   } else {
     statsData = null;
     dataByDate = null;
   }
 
   afterUpdate(() => {
-    // Note: for some reason the chartTitle variable will only update
-    // when setting it here.
-    if ($location && $location.title) {
-      chartTitle = $location.title;
-    }
+    showMissingDataMsg = $locationStore.boundaryId !== "locagrid";
+    showNoDataMsg = $locationStore.boundaryId === "locagrid" && noData;
   });
 
   async function loadLearnMore({
@@ -143,7 +137,7 @@
         modelSingle: $modelSingleStore,
         year: $yearStore,
         month: $monthStore,
-        duration: $durationStore,
+        simulation: $simulationStore,
         lng,
         lat,
         boundary: $boundary.id,
@@ -209,14 +203,14 @@
   on:tabChange="{handleTabChange}"
 >
   <!-- Map components -->
-  <div slot="tab_content_map_title" class="block">
-    <MapTitle
-      month="{$month.label}"
-      scenarioLabel="{$scenario.labelLong}"
-      model="{$modelSingleStore}"
+  <div slot="tab_content_map_title" class="block title">
+    <Title
+      simulation="{$simulationStore}"
+      scenario="{$scenario.labelLong}"
+      climvar="{$climvarStore}"
       year="{$yearStore}"
-      duration="{$durationStore}"
-      caveat="{mapCaveat}"
+      model="{$modelSingleStore}"
+      month="{$monthStore}"
     />
   </div>
 
@@ -225,7 +219,12 @@
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
     {#if !activeTab}
-      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
+      <WildfireMap
+        bind:mapboxMap
+        imgOverlayPath="{imgOverlayPath}"
+        climvarId="{$climvarStore}"
+        stateBoundary="{$stateBoundaryStore}"
+      />
     {/if}
   </div>
 
@@ -243,7 +242,8 @@
         modelId="{$modelSingleStore}"
         scenarioId="{$scenarioStore}"
         monthNumber="{$monthStore}"
-        duration="{$durationStore}"
+        simulation="{$simulationStore}"
+        palette="{palette}"
       />
     {/if}
   </div>
@@ -251,12 +251,15 @@
   <!-- Chart components -->
   <div slot="tab_content_title" class="block title">
     {#if activeTab}
-      <ChartTitle
-        title="{chartTitle}"
-        subtitle="{chartSubtitle}"
-        monthLabel="{$month.label}"
-        scenarioLabel="{$scenario.labelLong}"
+      <Title
+        simulation="{$simulationStore}"
+        scenario="{$scenario.labelLong}"
+        climvar="{$climvarStore}"
+        month="{$monthStore}"
+        location="{$location.title}"
         loadLocation="{loadLocation}"
+        missingDataMsg="{showMissingDataMsg}"
+        noDataMsg="{showNoDataMsg}"
       />
     {/if}
   </div>
@@ -264,20 +267,27 @@
   <div slot="tab_content_stats">
     {#if activeTab}
       <StatsPanel
-        {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
+        {...{
+          units: $climvar.units.metric,
+          dataByDate,
+          formatFn,
+          models: $modelsStore,
+        }}
       />
     {/if}
   </div>
 
   <div slot="tab_content_graphic" class="graphic block">
     {#if activeTab}
-      <SnowpackChart
+      <WildfireChart
         data="{$dataStore}"
         dataByDate="{dataByDate}"
         formatFn="{formatFn}"
-        units="{$climvar.units.imperial}"
-        label="{$month.label} {$climvar.label}"
+        units="{$climvar.units.metric}"
+        month="{$month.label}"
+        climvarId="{$climvarStore}"
         dataSource="{$titles.join(', ')}"
+        simulation="{$simulationStore}"
         on:showDownload="{loadDownload}"
         on:showShare="{loadShare}"
         on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"

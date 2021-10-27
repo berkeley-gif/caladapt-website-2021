@@ -1,6 +1,6 @@
 <script>
-  import { getContext, onDestroy, onMount } from "svelte";
-  import { contextKey } from "./../../../helpers/mapbox";
+  import { getContext, onMount } from "svelte";
+  import { contextKey } from "~/helpers/mapbox";
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
@@ -40,13 +40,4 @@
     if (debug) console.log("on mount mapImageOverlay", overlay);
     map.addLayer(layer);
   });
-
-  // onDestroy(() => {
-  //   if (map.getLayer(layer.id)) {
-  //     map.removeLayer(layer.id);
-  //   }
-  //   if (map.getSource(layer.id)) {
-  //     map.removeSource(layer.id);
-  //   }
-  // })
 </script>
