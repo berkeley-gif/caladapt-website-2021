@@ -16,16 +16,18 @@
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
+  $: sourceName = `${layerName}-source`;
+
   $: if (data && typeof data === "object") {
-    map.addSource(layerName, {
+    map.addSource(sourceName, {
       type: "geojson",
       data,
     });
 
     map.addLayer({
-      id: `${layerName}-layer`,
+      id: layerName,
       type: styleType,
-      source: layerName,
+      source: sourceName,
       layout,
       paint: styleProps,
     });
@@ -34,7 +36,7 @@
   onDestroy(() => {
     if (map.getStyle() && map.getLayer(layerName)) {
       map.removeLayer(layerName);
-      map.removeSource(layerName);
+      map.removeSource(sourceName);
     }
   });
 </script>
