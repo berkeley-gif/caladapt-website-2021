@@ -3,7 +3,7 @@
   import { Location16 } from "carbon-icons-svelte";
 
   export let title;
-  export let subtitle;
+  export let monthLabel;
   export let scenarioLabel;
   export let loadLocation;
 </script>
@@ -21,6 +21,9 @@
   {title}
 </div>
 <div class="h4">
-  {subtitle}
+  Projected changes in Snow Water Equivalent for the month of <span
+    class="annotate">{monthLabel}</span
+  >
+  under a
   <span class="annotate">{scenarioLabel}</span>.
 </div>

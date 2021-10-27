@@ -55,7 +55,7 @@
   <span class="annotate">{indicatorPeriod}</span>
 
   {#if year}
-    over <span class="annotate">{year} – {year + 9}</span>
+    over <span class="annotate">{year}–{year + 9}</span>
   {/if}
 
   under a <span class="annotate">{scenario}</span> and Central Population Growth

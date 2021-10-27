@@ -254,6 +254,7 @@
       <ChartTitle
         title="{chartTitle}"
         subtitle="{chartSubtitle}"
+        monthLabel="{$month.label}"
         scenarioLabel="{$scenario.labelLong}"
         loadLocation="{loadLocation}"
       />

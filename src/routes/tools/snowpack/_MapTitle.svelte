@@ -25,10 +25,10 @@
 </style>
 
 <div class="h4">
-  <span>{month}</span> Snow Water Equivalent under a
-  <span>{scenarioLabel}</span>
-  for <span>{model}</span> averaged over
-  <span>{year} – {year + duration - 1}</span>*
+  <span class="annotate">{month}</span> Snow Water Equivalent under a
+  <span class="annotate">{scenarioLabel}</span>
+  for <span class="annotate">{model}</span> averaged over
+  <span class="annotate">{year}–{year + duration - 1}</span>*
 </div>
 {#if caveat}
   <p>*{caveat}</p>
