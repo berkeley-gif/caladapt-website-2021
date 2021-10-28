@@ -7,7 +7,6 @@
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
   import {
-    LEARN_MORE_INDICATOR,
     LEARN_MORE_SELECT_MONTH,
     LEARN_MORE_SIMULATION,
     SIMULATIONS,
@@ -103,7 +102,10 @@
     on:change="{changeClimvar}"
   />
   <LearnMoreButton
-    on:click="{() => showLearnMore({ content: LEARN_MORE_INDICATOR })}"
+    on:click="{() =>
+      showLearnMore({
+        slugs: ['area-burned', 'decadal-wildfire-probability'],
+      })}"
   />
 </div>
 <div class="block">

@@ -23,9 +23,6 @@ export const DEFAULT_INITIAL_CONFIG = {
 
 export const TOOL_SLUG = "wildfire";
 
-export const LEARN_MORE_INDICATOR = `<p>Choose between Modeled Annual Area 
-Burned and Estimated Decadal Fire Probability.</p>`;
-
 export const LEARN_MORE_SELECT_MONTH = `<p>Select a month to explore the monthly 
 simulation of Area Burned or Decadal Wildfire Probability for that month.</p>`;
 
