@@ -79,7 +79,7 @@
 
   let locationTitle = $location.title;
 
-  let activeTab = 1;
+  let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
@@ -220,6 +220,7 @@
       model="{$modelSingleStore}"
       month="{$monthStore}"
       dataMsg="{dataMsg}"
+      activeTab="{activeTab}"
     />
   </div>
 

@@ -11,6 +11,7 @@
   export let location;
   export let loadLocation;
   export let dataMsg;
+  export let activeTab;
 
   let indicatorPeriod = "";
 
@@ -50,6 +51,10 @@
 </div>
 
 <div class="h4">
+  {#if activeTab === 0}
+    Decadal Averages Map showing
+  {/if}
+
   <span class="annotate">{indicatorPeriod}</span>
 
   {#if year}
