@@ -13,6 +13,7 @@ import {
   DEFAULT_THRESHOLD,
 } from "./_constants";
 import { closest } from "~/helpers/utilities";
+import { getCompassQuadrant } from "../_common/helpers";
 
 const textFormat = timeFormat("%B %e");
 const dateFormat = timeFormat("%B %-e, %Y");
@@ -404,10 +405,10 @@ export const climvarRecentObs = derived(
           valueLabel: `${TMAX} °F`,
         }));
       default:
-        return $recentObsStore.map(({ label, AWND }) => ({
+        return $recentObsStore.map(({ label, WSF2, WDF2 }) => ({
           label,
-          value: +AWND,
-          valueLabel: `${AWND} mph`,
+          value: +WSF2,
+          valueLabel: `${WSF2} ${getCompassQuadrant(+WDF2)} mph`,
         }));
     }
   }
