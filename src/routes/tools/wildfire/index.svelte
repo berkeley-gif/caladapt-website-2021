@@ -174,7 +174,7 @@
         boundary: $boundary,
         simulation: $simulationStore,
         monthNumber: $monthStore,
-        imperial: true,
+        imperial: $unitsStore.imperial,
       });
 
       isFetchingStore.set(true);
