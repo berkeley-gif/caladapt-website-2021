@@ -18,6 +18,8 @@
   export let climvarId;
   export let stateBoundary;
 
+  const beforeId = "settlement-subdivision-label";
+
   let legendProps = {
     height: 34,
     width: 280,
@@ -52,10 +54,15 @@
 
 <Map>
   <NavigationControl />
-  <GeoJsonLayer data="{stateBoundary}" layerName="no-data" />
+  <GeoJsonLayer
+    data="{stateBoundary}"
+    layerName="no-data"
+    beforeId="{beforeId}"
+  />
   <ImageOverlay
     overlay="{imgOverlayPath}"
     coordinates="{DEFAULT_OVERLAY_BOUNDS}"
+    beforeId="{beforeId}"
   />
   <Legend {...legendProps} />
 </Map>
