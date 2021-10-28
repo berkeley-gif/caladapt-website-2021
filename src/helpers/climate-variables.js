@@ -178,8 +178,8 @@ const variables = [
   },
   {
     id: "wspeed",
-    label: "Wind Speed",
-    text: "Wind Speed",
+    label: "Maximum Wind Speed",
+    text: "Maximum Wind Speed",
     icon: "",
     units: {
       imperial: "mph",
