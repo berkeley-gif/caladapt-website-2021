@@ -46,7 +46,6 @@
   const { month } = monthStore;
 
   let dataByDate;
-  let statsData;
 
   let noData = false;
   let showMissingDataMsg = false;
@@ -97,11 +96,9 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
     noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
   } else {
-    statsData = null;
     dataByDate = null;
   }
 
