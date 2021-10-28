@@ -7,6 +7,7 @@
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
   import {
+    LEARN_MORE_INDICATOR,
     LEARN_MORE_SELECT_MONTH,
     LEARN_MORE_SIMULATION,
     SIMULATIONS,
@@ -101,7 +102,9 @@
     title="{'Select Indicator'}"
     on:change="{changeClimvar}"
   />
-  <LearnMoreButton on:click="{() => showLearnMore({ content: 'TODO' })}" />
+  <LearnMoreButton
+    on:click="{() => showLearnMore({ content: LEARN_MORE_INDICATOR })}"
+  />
 </div>
 <div class="block">
   <SelectScenario
