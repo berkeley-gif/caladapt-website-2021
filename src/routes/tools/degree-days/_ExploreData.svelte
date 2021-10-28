@@ -10,6 +10,8 @@
     SMALL_SCALE_BOUNDARIES,
     MONTHS_LIST,
     SELECT_LOCATION_DESCRIPTION,
+    DEFAULT_STAT_GROUPS,
+    DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
     MAX_THRESHOLD_DEGREES_F,
@@ -263,31 +265,42 @@
       <li class="block">
         <RangeAvg
           units="{$indicator.units}"
-          data="{statsData}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
+            : null}"
           isHistorical="{true}"
-          series="{'historical'}"
-          period="{'baseline'}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
         <RangeAvg
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'mid-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="mid-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
         <RangeAvg
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'end-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="end-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
     </ul>
