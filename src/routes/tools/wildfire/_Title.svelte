@@ -1,7 +1,6 @@
 <script>
   import { Button, InlineNotification } from "carbon-components-svelte";
   import { Location16 } from "carbon-icons-svelte";
-  import { NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
 
   export let scenario;
   export let climvar;
@@ -11,8 +10,7 @@
   export let month;
   export let location;
   export let loadLocation;
-  export let missingDataMsg;
-  export let noDataMsg;
+  export let dataMsg;
 
   let indicatorPeriod = "";
 
@@ -65,11 +63,11 @@
   {/if}
 </div>
 
-{#if missingDataMsg || noDataMsg}
+{#if dataMsg}
   <InlineNotification
     lowContrast
     hideCloseButton
-    subtitle="{missingDataMsg ? MISSING_DATA_MSG : NO_DATA_MSG}"
+    subtitle="{dataMsg}"
     kind="warning"
   />
 {/if}

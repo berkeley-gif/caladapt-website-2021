@@ -23,17 +23,36 @@ export const DEFAULT_INITIAL_CONFIG = {
 
 export const TOOL_SLUG = "wildfire";
 
-export const LEARN_MORE_SELECT_MONTH = `<p>Select a month to explore the monthly simulation of Area Burned or Decadal Wildfire Probability for that month.</p>`;
+export const LEARN_MORE_SELECT_MONTH = `<p>Select a month to explore the monthly 
+simulation of Area Burned or Decadal Wildfire Probability for that month.</p>`;
 
-export const LEARN_MORE_SIMULATION = `<p>View data averaged over a year or individual month.</p>`;
+export const LEARN_MORE_SIMULATION = `<p>View data averaged over a year or 
+individual month.</p>`;
 
-export const LEARN_MORE_TIME_SLIDER = `<p>Drag the slider to view maps showing projected changes in annual/monthly simulations of average Area Burned averaged over 10 years or annual/monthly simulations of Decadal Fire probability, for selected month, GCM, and scenario. You can also use the Play/Pause button to autoplay the animation.</p>`;
+export const LEARN_MORE_TIME_SLIDER = `<p>Drag the slider to view maps showing 
+projected changes in annual/monthly simulations of average Area Burned averaged 
+over 10 years or annual/monthly simulations of Decadal Fire probability, for 
+selected month, GCM, and scenario. You can also use the Play/Pause button to 
+autoplay the animation.</p>`;
 
-export const EXPLAIN_CHART = `<p>The colored lines on this visualization represent a time series of annual/monthly simulations of average Area Burned/Decadal Wildfire Probability from individual downscaled GCMs.</p><p>Click on any of the legend keys to highlight corresponding time series.</p>`;
+export const EXPLAIN_CHART = `<p>The colored lines on this visualization 
+represent a time series of annual/monthly simulations of average Area 
+Burned/Decadal Wildfire Probability from individual downscaled GCMs.</p>
+<p>Click on any of the legend keys to highlight corresponding time series.</p>`;
 
-export const MISSING_DATA_MSG = `This area may contain locations outside the combined fire state and federal protection responsibility areas. 
-Locations outside the combined fire state and federal protection responsibility areas were excluded from these wildfire simulations and have no climate projections.`;
-export const NO_DATA_MSG = `No data is available for this area. Locations outside the combined fire state and federal protection responsibility areas were excluded from these wildfire simulations and have no climate projections.`;
+export const MISSING_DATA_MSG = `This area may contain locations outside the 
+combined fire state and federal protection responsibility areas. 
+Locations outside the combined fire state and federal protection responsibility 
+areas were excluded from these wildfire simulations and have no climate 
+projections.`;
+
+export const NO_DATA_MSG = `No data is available for this area. Locations 
+outside the combined fire state and federal protection responsibility areas were
+ excluded from these wildfire simulations and have no climate projections.`;
+
+export const NO_DATA_MAP_MSG = `Locations outside the combined fire state and 
+federal protection responsibility areas were excluded from these wildfire 
+simulations and have no climate projections. These areas are shaded in gray.`;
 
 export const SIMULATIONS = [
   { id: "year", label: "Annually" },

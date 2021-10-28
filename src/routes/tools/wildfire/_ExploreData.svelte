@@ -4,6 +4,7 @@
   import { format } from "d3-format";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
+  import { NO_DATA_MAP_MSG, NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
 
   import {
     flattenData,
@@ -48,8 +49,7 @@
   let dataByDate;
 
   let noData = false;
-  let showMissingDataMsg = false;
-  let showNoDataMsg = false;
+  let dataMsg = "";
 
   let showDownload = false;
   let showShare = false;
@@ -105,8 +105,16 @@
   }
 
   afterUpdate(() => {
-    showMissingDataMsg = $locationStore.boundaryId !== "locagrid";
-    showNoDataMsg = $locationStore.boundaryId === "locagrid" && noData;
+    if (!activeTab) {
+      dataMsg = NO_DATA_MAP_MSG;
+    } else if ($locationStore.boundaryId !== "locagrid") {
+      dataMsg = MISSING_DATA_MSG;
+    } else if ($locationStore.boundaryId === "locagrid" && noData) {
+      dataMsg = NO_DATA_MSG;
+    } else {
+      dataMsg = "";
+    }
+
     locationTitle = $location.title;
   });
 
@@ -211,6 +219,7 @@
       year="{$yearStore}"
       model="{$modelSingleStore}"
       month="{$monthStore}"
+      dataMsg="{dataMsg}"
     />
   </div>
 
@@ -258,8 +267,7 @@
         month="{$monthStore}"
         location="{locationTitle}"
         loadLocation="{loadLocation}"
-        missingDataMsg="{showMissingDataMsg}"
-        noDataMsg="{showNoDataMsg}"
+        dataMsg="{dataMsg}"
       />
     {/if}
   </div>
