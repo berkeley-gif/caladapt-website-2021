@@ -36,7 +36,7 @@
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
-  import { RangeAvg } from "~/components/tools/Stats";
+  import { AvgRange } from "~/components/tools/Stats";
 
   // Store
   import {
@@ -260,20 +260,20 @@
   <div slot="stats">
     <ul class="stats">
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$indicator.units}"
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
             : null}"
           isHistorical="{true}"
-          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.id === 'observed')}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$indicator.units}"
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
@@ -287,7 +287,7 @@
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$indicator.units}"
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
