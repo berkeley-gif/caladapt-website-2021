@@ -64,7 +64,6 @@
   const { indicator } = indicatorsStore;
 
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -106,11 +105,9 @@
     $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
     isFetchingStore.set(false);
   } else {
-    statsData = null;
     dataByDate = null;
   }
 
