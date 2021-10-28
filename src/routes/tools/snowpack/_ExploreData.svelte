@@ -46,7 +46,6 @@
   const { month } = monthStore;
 
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -95,10 +94,8 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
   } else {
-    statsData = null;
     dataByDate = null;
   }
 
