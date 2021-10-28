@@ -77,7 +77,9 @@
   let printContainer;
   let printSkipElements;
 
-  let activeTab = 0;
+  let locationTitle = $location.title;
+
+  let activeTab = 1;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
@@ -105,6 +107,7 @@
   afterUpdate(() => {
     showMissingDataMsg = $locationStore.boundaryId !== "locagrid";
     showNoDataMsg = $locationStore.boundaryId === "locagrid" && noData;
+    locationTitle = $location.title;
   });
 
   async function loadLearnMore({
@@ -253,7 +256,7 @@
         scenario="{$scenario.labelLong}"
         climvar="{$climvarStore}"
         month="{$monthStore}"
-        location="{$location.title}"
+        location="{locationTitle}"
         loadLocation="{loadLocation}"
         missingDataMsg="{showMissingDataMsg}"
         noDataMsg="{showNoDataMsg}"
