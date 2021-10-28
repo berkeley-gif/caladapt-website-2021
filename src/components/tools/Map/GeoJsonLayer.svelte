@@ -12,6 +12,7 @@
   export let layout = {
     visibility: "visible",
   };
+  export let beforeId = undefined;
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
@@ -24,13 +25,16 @@
       data,
     });
 
-    map.addLayer({
-      id: layerName,
-      type: styleType,
-      source: sourceName,
-      layout,
-      paint: styleProps,
-    });
+    map.addLayer(
+      {
+        id: layerName,
+        type: styleType,
+        source: sourceName,
+        layout,
+        paint: styleProps,
+      },
+      beforeId
+    );
   }
 
   onDestroy(() => {

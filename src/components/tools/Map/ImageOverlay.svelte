@@ -1,5 +1,5 @@
 <script>
-  import { getContext, onMount } from "svelte";
+  import { getContext, onMount, onDestroy } from "svelte";
   import { contextKey } from "~/helpers/mapbox";
 
   const { getMap } = getContext(contextKey);
@@ -13,6 +13,7 @@
     [-124.60693359374999, 31.034108344903512],
   ];
   export let debug = false;
+  export let beforeId = undefined;
 
   $: overlay, updatePath();
 
@@ -38,6 +39,12 @@
 
   onMount(() => {
     if (debug) console.log("on mount mapImageOverlay", overlay);
-    map.addLayer(layer);
+    map.addLayer(layer, beforeId);
+  });
+
+  onDestroy(() => {
+    if (map.getStyle() && map.getLayer(layer.id)) {
+      map.removeLayer(layer);
+    }
   });
 </script>
