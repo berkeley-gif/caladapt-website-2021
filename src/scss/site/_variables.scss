@@ -34,18 +34,29 @@ $card-bg-color-01: saturate($teal-60, 5);
 $card-bg-color-02: adjust-hue($card-bg-color-01, -15deg);
 $card-bg-color-03: adjust-hue($card-bg-color-01, 15deg);
 
-$card-gradient-01: linear-gradient(180deg, #017a4c 0%, #015946 100%);
+$card-gradient-01: linear-gradient(
+  180deg,
+  #017a4c,
+  #00724c,
+  #00694a,
+  #006149,
+  #015946
+);
 $card-gradient-02: linear-gradient(
   180deg,
-  #017c7f 0%,
-  #017c7f 0.01%,
-  #014b66 100%
+  #017c7f,
+  #00707b,
+  #006376,
+  #00576f,
+  #014b66
 );
 $card-gradient-03: linear-gradient(
   180deg,
-  #016f99 0%,
-  #012866 100%,
-  #014980 100%
+  #016f99,
+  #005d8f,
+  #004c83,
+  #003a75,
+  #012866
 );
 
 $caladapt-colors: (
