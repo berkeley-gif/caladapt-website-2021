@@ -13,7 +13,7 @@
     [-124.60693359374999, 31.034108344903512],
   ];
   export let debug = false;
-  export let beforeId = undefined;
+  export let beforeId;
 
   $: overlay, updatePath();
 
@@ -44,7 +44,7 @@
 
   onDestroy(() => {
     if (map.getStyle() && map.getLayer(layer.id)) {
-      map.removeLayer(layer);
+      map.removeLayer(layer.id);
     }
   });
 </script>

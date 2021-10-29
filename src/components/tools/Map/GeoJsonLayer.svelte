@@ -8,12 +8,11 @@
   export let styleProps = {
     "fill-color": "#333",
     "fill-opacity": 0.8,
-    "fill-pattern": "pattern",
   };
   export let layout = {
     visibility: "visible",
   };
-  export let beforeId = undefined;
+  export let beforeId;
   export let patternFillURL;
 
   const { getMap } = getContext(contextKey);
