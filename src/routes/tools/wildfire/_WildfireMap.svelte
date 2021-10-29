@@ -19,6 +19,9 @@
   export let stateBoundary;
 
   const beforeId = "settlement-subdivision-label";
+  const geojsonStyleProps = {
+    "fill-pattern": "pattern",
+  };
 
   let legendProps = {
     height: 34,
@@ -58,6 +61,8 @@
     data="{stateBoundary}"
     layerName="no-data"
     beforeId="{beforeId}"
+    patternFillURL="/img/patterns/diagonal-lines.png"
+    styleProps="{geojsonStyleProps}"
   />
   <ImageOverlay
     overlay="{imgOverlayPath}"
