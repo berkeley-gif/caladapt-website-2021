@@ -136,7 +136,7 @@
             </ul>
           </div>
           <div class="back">
-            <p><a href="/blog/">Back to Cal-Adapt Blog</a></p>
+            <p><a sapper:prefetch href="/blog/">Back to Cal-Adapt Blog</a></p>
           </div>
         </div>
       </div>
