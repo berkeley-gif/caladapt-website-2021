@@ -44,6 +44,7 @@
     rel="prefetch"
     href="blog/{event.slug}/"
     title="Read more"
+    sapper:prefetch
   >
     <div class="card-img">
       <img src="/img/blog/{event.metadata.image}" alt="..." />
