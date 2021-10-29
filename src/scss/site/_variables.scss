@@ -34,6 +34,20 @@ $card-bg-color-01: saturate($teal-60, 5);
 $card-bg-color-02: adjust-hue($card-bg-color-01, -15deg);
 $card-bg-color-03: adjust-hue($card-bg-color-01, 15deg);
 
+$card-gradient-01: linear-gradient(180deg, #017a4c 0%, #015946 100%);
+$card-gradient-02: linear-gradient(
+  180deg,
+  #017c7f 0%,
+  #017c7f 0.01%,
+  #014b66 100%
+);
+$card-gradient-03: linear-gradient(
+  180deg,
+  #016f99 0%,
+  #012866 100%,
+  #014980 100%
+);
+
 $caladapt-colors: (
   "gray-10": $gray-10,
   "gray-20": $gray-20,
@@ -258,6 +272,10 @@ $gcm-MIROC5: rgba(148, 103, 189, 1);
   --card-bg-color-01: #{$card-bg-color-01};
   --card-bg-color-02: #{$card-bg-color-02};
   --card-bg-color-03: #{$card-bg-color-03};
+
+  --card-gradient-01: #{$card-gradient-01};
+  --card-gradient-02: #{$card-gradient-02};
+  --card-gradient-03: #{$card-gradient-03};
 
   --interactive-01: #{$interactive-01};
   --interactive-02: #{$interactive-02};

@@ -157,9 +157,7 @@
               height: cardHeight,
               ctaText: "Learn more",
               textColor: "white",
-              bgColor: cardBgColors[index],
               useRule: true,
-              useGradient: true,
             }}
           />
         {/each}
