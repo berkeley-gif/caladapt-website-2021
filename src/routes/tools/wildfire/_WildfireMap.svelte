@@ -27,7 +27,7 @@
     height: 34,
     width: 280,
     scaleType: "continuous",
-    noDataColor: "rgba(51,51,51,0.8)",
+    noData: true,
     rectWidth: "1.25rem",
     rectHeight: "0.75rem",
     title: "",
