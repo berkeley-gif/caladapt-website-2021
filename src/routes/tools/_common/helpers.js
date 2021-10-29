@@ -162,5 +162,5 @@ export function formatDataForExport(_arr) {
  */
 export function getCompassQuadrant(deg) {
   const i = Math.round((deg % 360) / DEFAULT_COMPASS_QUADRANT_ANGLE);
-  return DEFAULT_COMPASS_QUADRANTS.get(i);
+  return DEFAULT_COMPASS_QUADRANTS[i];
 }

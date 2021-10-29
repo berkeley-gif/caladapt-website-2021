@@ -163,7 +163,7 @@ export const DEFAULT_STAT_PERIODS = [
   },
 ];
 
-const COMPASS_DIRECTIONS = [
+export const DEFAULT_COMPASS_QUADRANTS = [
   "N",
   "NNE",
   "NE",
@@ -181,7 +181,4 @@ const COMPASS_DIRECTIONS = [
   "NW",
   "NNW",
 ];
-export const DEFAULT_COMPASS_QUADRANTS = new Map(
-  COMPASS_DIRECTIONS.map((quadrant, idx) => [idx, quadrant])
-);
 export const DEFAULT_COMPASS_QUADRANT_ANGLE = 22.5;
