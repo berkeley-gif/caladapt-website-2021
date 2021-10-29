@@ -1,6 +1,7 @@
 import { writable, derived } from "svelte/store";
 import climvars from "~/helpers/climate-variables";
 import scenarios from "~/helpers/climate-scenarios";
+import { timeDay } from "d3-time";
 import {
   CLIMATE_VARIABLES,
   DEFAULT_SELECTED_CLIMVAR,
@@ -8,7 +9,10 @@ import {
   DEFAULT_SELECTED_SCENARIO,
   TIME_PERIODS,
   DEFAULT_SELECTED_PERIOD,
+  DEFAULT_YEARS_BEFORE,
+  DEFAULT_YEARS_AFTER,
 } from "./_constants";
+import { dataStore } from "../_common/stores";
 
 // List of climvars used in Extended Drought Tool
 export const climvarList = climvars
@@ -25,7 +29,7 @@ export const climvarStore = (() => {
     subscribe,
     get climvar() {
       return derived(store, ($store) => {
-        const selected = climvars.find((d) => d.id === $store);
+        const selected = climvarList.find((d) => d.id === $store);
         return selected;
       });
     },
@@ -36,7 +40,8 @@ export const climvarStore = (() => {
 export const scenarioList = scenarios
   .filter((d) => CLIMATE_SCENARIOS.includes(d.id))
   .map((d) => {
-    return { ...d, label: d.labelLong };
+    const [start, end] = d.labelLong.match(/\d{4}/g);
+    return { ...d, label: d.labelLong, start, end };
   });
 
 export const scenarioStore = (() => {
@@ -47,7 +52,7 @@ export const scenarioStore = (() => {
     subscribe,
     get scenario() {
       return derived(store, ($store) => {
-        const selected = scenarios.find((d) => d.id === $store);
+        const selected = scenarioList.find((d) => d.id === $store);
         return selected;
       });
     },
@@ -68,3 +73,31 @@ export const periodStore = (() => {
     },
   };
 })();
+
+// DERIVED STORES
+// Baseline store
+export const droughtDataStore = derived(
+  [dataStore, scenarioStore],
+  ([$dataStore, $scenarioStore]) => {
+    if (!$dataStore || !$scenarioStore) return null;
+    const scenario = scenarioList.find((d) => d.id === $scenarioStore);
+    const drySpellStart = new Date(Date.UTC(scenario.start, 0, 1));
+    const drySpellEnd = new Date(Date.UTC(scenario.end, 11, 31));
+    const start = timeDay.offset(drySpellStart, -DEFAULT_YEARS_BEFORE);
+    const end = timeDay.offset(drySpellEnd, DEFAULT_YEARS_AFTER);
+    console.log(drySpellStart, start, drySpellEnd, end);
+
+    // Filter data selected dates
+    const filteredData = $dataStore.map((series) => {
+      const values = series.values.filter((d) => {
+        const { date } = d;
+        if (date >= start && date <= end) {
+          return true;
+        }
+        return false;
+      });
+      return { ...series, values };
+    });
+    console.log("filteredData", filteredData);
+  }
+);

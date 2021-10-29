@@ -9,10 +9,35 @@ import {
   OBSERVED_FILTER_YEAR,
   PRIORITY_10_MODELS,
 } from "../_common/constants";
-import { ENSEMBLES } from "./_constants";
+import {
+  ENSEMBLES,
+  DEFAULT_EMISSION_SCENARIO,
+  CLIMATE_VARIABLES_VIC,
+} from "./_constants";
 import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
+
+const getEnsembleStr = ({ climvarId, periodId }) => {
+  const datasetId = CLIMATE_VARIABLES_VIC.includes(climvarId) ? "vic" : "loca";
+  if (
+    periodId === "wateryear" ||
+    (periodId === "year" && datasetId === "vic")
+  ) {
+    return `${periodId}_${datasetId}`;
+  } else {
+    return periodId;
+  }
+};
+
+const getObservedStr = ({ climvarId, seriesId }) => {
+  const datasetId = CLIMATE_VARIABLES_VIC.includes(climvarId) ? "vic" : "loca";
+  if (datasetId === "vic" && seriesId === "livneh") {
+    return `${seriesId}_${datasetId}`;
+  } else {
+    return seriesId;
+  }
+};
 
 /**
  * The following 3 functions take the list of observed, models and ensemble
@@ -31,7 +56,8 @@ const { apiEndpoint } = config.env.production;
 // The observed data is usually a single raster series, so only 1 slug
 const getObservedSeries = ({ climvarId }) => {
   return OBSERVED.map((d) => {
-    const slugs = [`${climvarId}_day_${d.id}`];
+    const slugpart = getObservedStr({ climvarId, seriesId: d.id });
+    const slugs = [`${climvarId}_day_${slugpart}`];
     return { ...d, slugs, mark: "line", visible: true };
   });
 };
@@ -40,20 +66,23 @@ const getObservedSeries = ({ climvarId }) => {
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
 const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
   return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
-    const slugs = [`${climvarId}_day_drought_${d.id}_rcp85_${scenarioId}`];
+    const slugs = [
+      `${climvarId}_day_drought_${d.id}_${DEFAULT_EMISSION_SCENARIO}_${scenarioId}`,
+    ];
     return { ...d, slugs, mark: "line", visible: true };
   });
 };
 
 // The ensemble has to be assembled from the max and min of 10/all models
 // Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = ({ climvarId, scenarioId, periodId }) => {
-  return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
+const getEnsembleSeries = ({ climvarId, periodId }) => {
+  return ENSEMBLES.filter(
+    (d) => d.id === `${DEFAULT_EMISSION_SCENARIO}_range`
+  ).map((d) => {
+    const slugpart = getEnsembleStr({ climvarId, periodId });
     const slugs = [
-      `${climvarId}_month_ens32min_historical`,
-      `${climvarId}_month_ens32min_${scenarioId}`,
-      `${climvarId}_month_ens32max_historical`,
-      `${climvarId}_month_ens32max_${scenarioId}`,
+      `${climvarId}_${slugpart}_models-min_${DEFAULT_EMISSION_SCENARIO}`,
+      `${climvarId}_${slugpart}_models-max_${DEFAULT_EMISSION_SCENARIO}`,
     ];
     return { ...d, slugs, mark: "area", visible: true };
   });
@@ -153,9 +182,11 @@ export async function getModels(config, params, method = "GET") {
 
 export async function getEnsemble(config, params, method = "GET") {
   try {
+    console.log("config", config);
     const seriesList = getEnsembleSeries(config);
+    const { freq, ...ensembleParams } = params;
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params: ensembleParams, method })
     );
     const data = await Promise.all(promises);
     return data.map((d) => {

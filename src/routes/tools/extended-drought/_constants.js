@@ -2,12 +2,20 @@ export const CLIMATE_VARIABLES = [
   "tasmax",
   "tasmin",
   "pr",
+  "tair",
   "et",
   "swe",
   "baseflow",
   "runoff",
 ];
 export const DEFAULT_SELECTED_CLIMVAR = "tasmax";
+export const CLIMATE_VARIABLES_VIC = [
+  "tair",
+  "et",
+  "swe",
+  "baseflow",
+  "runoff",
+];
 
 export const CLIMATE_SCENARIOS = ["early_century", "late_century"];
 export const DEFAULT_SELECTED_SCENARIO = "late_century";
@@ -27,10 +35,10 @@ historical observed data is represented by a gray line from 1950-2006.</p><p>
 Click on any of the legend keys to highlight corresponding time series.</p>`;
 
 export const TIME_PERIODS = [
-  { id: "wateryear_loca", label: "Water Year", freq: "A-SEP" },
+  { id: "wateryear", label: "Water Year", freq: "A-SEP" },
   { id: "year", label: "Calendar Year", freq: "A" },
 ];
-export const DEFAULT_SELECTED_PERIOD = "wateryear_loca";
+export const DEFAULT_SELECTED_PERIOD = "wateryear";
 
 export const ENSEMBLES = [
   {
@@ -40,3 +48,8 @@ export const ENSEMBLES = [
     org: "Geospatial Innovation Facility",
   },
 ];
+
+export const DEFAULT_EMISSION_SCENARIO = "rcp85";
+
+export const DEFAULT_YEARS_BEFORE = 5;
+export const DEFAULT_YEARS_AFTER = 4;

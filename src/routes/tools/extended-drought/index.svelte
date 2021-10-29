@@ -53,7 +53,7 @@
       initialConfig = {
         ...INITIAL_CONFIG,
         scenarioId: DEFAULT_SELECTED_SCENARIO,
-        duration: DEFAULT_SELECTED_PERIOD,
+        period: DEFAULT_SELECTED_PERIOD,
       };
     }
 
@@ -88,14 +88,14 @@
   import {
     unitsStore,
     locationStore,
-    dataStore,
     datasetStore,
     isFetchingStore,
+    dataStore,
   } from "../_common/stores";
   import { climvarStore, periodStore, scenarioStore } from "./_store";
 
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
-  import { TIME_PERIODS, DEFAULT_MODEL } from "./_constants";
+  import { DEFAULT_MODEL } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -151,15 +151,13 @@
       params.freq = $period.freq;
 
       isFetchingStore.set(true);
-      const models = await getModels(config, params, method);
-      console.log("models", models);
-
-      /*      const envelope = await getEnsemble(config, params, method);
+      const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(config, params, method);
       const models = await getModels(config, params, method);
-
-      dataStore.set([...envelope, ...observed, ...models]);*/
-      dataStore.set([]);
+      console.log("envelope", envelope);
+      console.log("models", models);
+      console.log("observed", observed);
+      dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);
       dataStore.set([]);

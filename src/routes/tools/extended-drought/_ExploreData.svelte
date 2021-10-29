@@ -21,11 +21,15 @@
 
   import {
     locationStore,
-    dataStore,
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, periodStore, scenarioStore } from "./_store";
+  import {
+    climvarStore,
+    periodStore,
+    scenarioStore,
+    droughtDataStore,
+  } from "./_store";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
@@ -60,10 +64,12 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = getDataByDate(flattenData($dataStore));
+  $: console.log($droughtDataStore);
+
+  $: if (Array.isArray($droughtDataStore) && $droughtDataStore.length) {
+    //dataByDate = getDataByDate(flattenData($dataStore));
   } else {
-    dataByDate = null;
+    //dataByDate = null;
   }
 
   afterUpdate(() => {
@@ -170,7 +176,7 @@
 
   <div slot="tab_content_graphic" class="graphic block">
     /*<ExtendedDroughtChart
-      data="{$dataStore}"
+      data="{$droughtDataStore}"
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
       units="{$climvar.units.imperial}"
