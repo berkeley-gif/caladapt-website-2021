@@ -26,8 +26,17 @@ represents the range of projections from all 32 downscaled GCMs. The
 historical observed data is represented by a gray line from 1950-2006.</p><p>
 Click on any of the legend keys to highlight corresponding time series.</p>`;
 
-export const TIME_DURATIONS = [
-  { id: "A-SEP", label: "Water Year" },
-  { id: "A", label: "Calendar Year" },
+export const TIME_PERIODS = [
+  { id: "wateryear_loca", label: "Water Year", freq: "A-SEP" },
+  { id: "year", label: "Calendar Year", freq: "A" },
 ];
-export const DEFAULT_SELECTED_DURATION = "A-SEP";
+export const DEFAULT_SELECTED_PERIOD = "wateryear_loca";
+
+export const ENSEMBLES = [
+  {
+    id: "rcp85_range",
+    label: "Modeled RCP 8.5 Range",
+    color: "rgba(218, 222, 225, 1)",
+    org: "Geospatial Innovation Facility",
+  },
+];

@@ -5,11 +5,11 @@ import { merge } from "d3-array";
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import {
-  ENSEMBLES,
   OBSERVED,
   OBSERVED_FILTER_YEAR,
   PRIORITY_10_MODELS,
 } from "../_common/constants";
+import { ENSEMBLES } from "./_constants";
 import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
@@ -31,7 +31,7 @@ const { apiEndpoint } = config.env.production;
 // The observed data is usually a single raster series, so only 1 slug
 const getObservedSeries = ({ climvarId }) => {
   return OBSERVED.map((d) => {
-    const slugs = [`${climvarId}_month_${d.id}`];
+    const slugs = [`${climvarId}_day_${d.id}`];
     return { ...d, slugs, mark: "line", visible: true };
   });
 };
@@ -47,7 +47,7 @@ const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
 
 // The ensemble has to be assembled from the max and min of 10/all models
 // Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = ({ climvarId, scenarioId }) => {
+const getEnsembleSeries = ({ climvarId, scenarioId, periodId }) => {
   return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
     const slugs = [
       `${climvarId}_month_ens32min_historical`,

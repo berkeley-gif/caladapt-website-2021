@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
 
   import { SELECT_LOCATION_DESCRIPTION } from "../_common/constants";
-  import { TIME_DURATIONS } from "./_constants";
+  import { TIME_PERIODS } from "./_constants";
 
   import {
     SelectClimvar,
@@ -18,7 +18,7 @@
     scenarioStore,
     climvarList,
     climvarStore,
-    durationStore,
+    periodStore,
   } from "./_store";
 
   const dispatch = createEventDispatcher();
@@ -40,8 +40,8 @@
     climvarStore.set(e.detail.id);
   }
 
-  function changeDuration(e) {
-    durationStore.set(e.detail);
+  function changePeriod(e) {
+    periodStore.set(e.detail);
   }
 </script>
 
@@ -96,15 +96,15 @@
 
 <div class="block">
   <RadioBtnGroup
-    selected="{$durationStore}"
-    items="{TIME_DURATIONS}"
-    title="Select Duration"
-    on:change="{changeDuration}"
+    selected="{$periodStore}"
+    items="{TIME_PERIODS}"
+    title="Select Period"
+    on:change="{changePeriod}"
   />
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        slugs: ['extreme-heat-day', 'warm-night'],
+        slugs: ['water-year', 'calendar-year'],
       })}"
   />
 </div>

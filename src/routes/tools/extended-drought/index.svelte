@@ -1,7 +1,7 @@
 <script context="module">
   import {
     DEFAULT_SELECTED_SCENARIO,
-    DEFAULT_SELECTED_DURATION,
+    DEFAULT_SELECTED_PERIOD,
     TOOL_SLUG,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
@@ -40,20 +40,20 @@
 
     if (Object.keys(query).length) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, lat, lng, duration } = query;
+      const { boundary, climvar, scenario, lat, lng, period } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
         lat: +lat,
         lng: +lng,
-        duration: duration,
+        period,
       };
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
         scenarioId: DEFAULT_SELECTED_SCENARIO,
-        duration: DEFAULT_SELECTED_DURATION,
+        duration: DEFAULT_SELECTED_PERIOD,
       };
     }
 
@@ -92,10 +92,10 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, durationStore, scenarioStore } from "./_store";
+  import { climvarStore, periodStore, scenarioStore } from "./_store";
 
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
-  import { DEFAULT_MODEL } from "./_constants";
+  import { TIME_PERIODS, DEFAULT_MODEL } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -106,7 +106,7 @@
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
-  $: console.log($climvarStore, $scenarioStore);
+  const { period } = periodStore;
 
   let appReady = false;
   let debug = process.env.NODE_ENV !== "production";
@@ -122,7 +122,7 @@
 
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $locationStore, update();
+  $: $climvar, $scenario, $locationStore, $periodStore, update();
 
   $: if (debug) {
     console.groupCollapsed("STORE UPDATES");
@@ -139,6 +139,7 @@
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
+        periodId: $periodStore,
         modelIds: [DEFAULT_MODEL],
       };
 
@@ -146,8 +147,8 @@
         location: $location,
         boundary: $boundary,
         imperial: true,
-        freq: $durationStore,
       });
+      params.freq = $period.freq;
 
       isFetchingStore.set(true);
       const models = await getModels(config, params, method);
@@ -174,13 +175,13 @@
     boundaryId,
     scenarioId,
     climvarId,
-    duration,
+    period,
     imperial,
   }) {
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     unitsStore.set({ imperial });
-    durationStore.set(duration);
+    periodStore.set(period);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);

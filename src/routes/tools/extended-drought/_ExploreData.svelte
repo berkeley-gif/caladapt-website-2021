@@ -25,7 +25,7 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, durationStore, scenarioStore } from "./_store";
+  import { climvarStore, periodStore, scenarioStore } from "./_store";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;

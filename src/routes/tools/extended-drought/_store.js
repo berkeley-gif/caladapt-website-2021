@@ -6,8 +6,8 @@ import {
   DEFAULT_SELECTED_CLIMVAR,
   CLIMATE_SCENARIOS,
   DEFAULT_SELECTED_SCENARIO,
-  TIME_DURATIONS,
-  DEFAULT_SELECTED_DURATION,
+  TIME_PERIODS,
+  DEFAULT_SELECTED_PERIOD,
 } from "./_constants";
 
 // List of climvars used in Extended Drought Tool
@@ -54,15 +54,15 @@ export const scenarioStore = (() => {
   };
 })();
 
-export const durationStore = (() => {
-  const store = writable(DEFAULT_SELECTED_DURATION);
+export const periodStore = (() => {
+  const store = writable(DEFAULT_SELECTED_PERIOD);
   const { set, subscribe } = store;
   return {
     set,
     subscribe,
-    get duration() {
+    get period() {
       return derived(store, ($store) => {
-        const selected = TIME_DURATIONS.find((d) => d.id === $store);
+        const selected = TIME_PERIODS.find((d) => d.id === $store);
         return selected;
       });
     },
