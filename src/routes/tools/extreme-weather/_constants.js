@@ -109,10 +109,10 @@ export const EXTREMES_DESCRIPTION = `<h5>High Extremes</h5>
 	<p>For Maximum Temperature, selecting High Extremes (the default) focuses on days with 
 	the highest values (right tail) of maximum daily temperature, while selecting Low 
 	Extremes focuses on days with the lowest values of maximum daily temperature.</p>
+  <p>For Maximum Wind Speed, selecting High Extremes (the default) focuses on days with 
+  the highest values (right tail) of maximum daily wind speed, while selecting Low 
+  Extremes focuses on days with the lowest values of maximum daily wind speeds.</p>
   <h5>Low Extremes</h5>
   <p>For Minimum Temperature, selecting High Extremes focuses on days with the warmest 
   minimum daily temperatures, while selecting Low Extremes (the default) focuses on 
-  days with the coolest minimum daily temperatures. </p>
-  <p>For Maximum Wind Speed, selecting High Extremes (the default) focuses on days with 
-  the highest values (right tail) of maximum daily wind speed, while selecting Low 
-  Extremes focuses on days with the lowest values of maximum daily wind speeds. </p>`;
+  days with the coolest minimum daily temperatures. </p>`;
