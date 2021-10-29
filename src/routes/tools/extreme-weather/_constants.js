@@ -60,9 +60,9 @@ export const CHART_DESCRIPTION = `<h5>Histogram</>
   Centers for Environmental Information (NCEI) for the selected station. Following 
   data types are used for the corresponding climate variables:</p>
   <ul>
-    <li><strong>TMAX</strong>: Maximum temperature</li>
-    <li><strong>TMIN</strong>: Minimum temperature</li>
-    <li><strong>WSF2, WDF2</strong>: Fastest 2-minute wind speed, Direction of fastest 2-minute wind</li>
+    <li>TMAX: Maximum temperature</li>
+    <li>TMIN<: Minimum temperature</li>
+    <li>WSF2, WDF2: Fastest 2-minute wind speed, Direction of fastest 2-minute wind</li>
   </ul>
   <p>There is usually a time lag of 2-3 days in the data provided by 
   NCEI, so you may not see data for the last 2-3 days.</p>
