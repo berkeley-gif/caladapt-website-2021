@@ -155,7 +155,7 @@
             </ul>
           </div>
           <div class="back">
-            <p><a href="/events/">Back to All Events</a></p>
+            <p><a sapper:prefetch href="/events/">Back to All Events</a></p>
           </div>
         </div>
       </div>

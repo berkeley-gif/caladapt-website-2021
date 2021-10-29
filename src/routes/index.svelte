@@ -137,7 +137,7 @@
         </p>
 
         <div class="btn-container">
-          <Button icon="{ArrowRight16}" href="/about"
+          <Button icon="{ArrowRight16}" href="/about" sapper:prefetch
             >More about Cal-Adapt</Button
           >
         </div>

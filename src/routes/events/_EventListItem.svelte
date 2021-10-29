@@ -92,6 +92,7 @@
     <div class="button-container">
       {#if isFutureEvent}
         <Button
+          sapper:prefetch
           href="/events/{slug}"
           kind="tertiary"
           size="field"
@@ -100,6 +101,7 @@
         >
       {:else}
         <Button
+          sapper:prefetch
           href="/events/{slug}"
           kind="tertiary"
           size="small"

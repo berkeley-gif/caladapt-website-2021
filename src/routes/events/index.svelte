@@ -121,8 +121,8 @@
           <div class="bx--col">
             <p class="description">
               No events are currently scheduled. Please check back later or
-              <a href="/signup/">subscribe to our newsletter</a> to be notified when
-              future events are announced.
+              <a sapper:prefetch href="/signup/">subscribe to our newsletter</a>
+              to be notified when future events are announced.
             </p>
           </div>
         </div>

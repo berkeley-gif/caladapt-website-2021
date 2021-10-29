@@ -265,18 +265,21 @@
           </li>
           <li>
             Designing tools and content to help users better understand climate
-            data (via tooltips, <a href="/help/glossary">Glossary</a> and
-            <a href="/blog">Cal-Adapt Blog</a>) and learn best practices for
-            working with climate projections (see our
-            <a href="/help/get-started">Get Started</a> guide). We make it easy to
-            share charts and tables of climate data with stakeholders and provide
-            options for customizing data visualizations to meet sector specific requirements
-            in some of our more technical tools.
+            data (via tooltips, <a sapper:prefetch href="/help/glossary"
+              >Glossary</a
+            >
+            and
+            <a sapper:prefetch href="/blog">Cal-Adapt Blog</a>) and learn best
+            practices for working with climate projections (see our
+            <a sapper:prefetch href="/help/get-started">Get Started</a> guide). We
+            make it easy to share charts and tables of climate data with stakeholders
+            and provide options for customizing data visualizations to meet sector
+            specific requirements in some of our more technical tools.
           </li>
           <li>
-            Building a public <a href="/data">Cal-Adapt API</a> to empower researchers
-            and developers to integrate climate data on Cal-Adapt into existing workflows
-            and develop domain specific applications.
+            Building a public <a sapper:prefetch href="/data">Cal-Adapt API</a> to
+            empower researchers and developers to integrate climate data on Cal-Adapt
+            into existing workflows and develop domain specific applications.
           </li>
           <li>
             Engaging with and learning from our users through workshops,
