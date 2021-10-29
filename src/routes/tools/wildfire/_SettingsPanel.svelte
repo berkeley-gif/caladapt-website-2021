@@ -101,7 +101,12 @@
     title="{'Select Indicator'}"
     on:change="{changeClimvar}"
   />
-  <LearnMoreButton on:click="{() => showLearnMore({ content: 'TODO' })}" />
+  <LearnMoreButton
+    on:click="{() =>
+      showLearnMore({
+        slugs: ['area-burned', 'decadal-wildfire-probability'],
+      })}"
+  />
 </div>
 <div class="block">
   <SelectScenario

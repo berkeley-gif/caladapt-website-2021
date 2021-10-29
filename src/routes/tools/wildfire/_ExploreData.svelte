@@ -4,6 +4,7 @@
   import { format } from "d3-format";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
+  import { NO_DATA_MAP_MSG, NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
 
   import {
     flattenData,
@@ -46,11 +47,9 @@
   const { month } = monthStore;
 
   let dataByDate;
-  let statsData;
 
   let noData = false;
-  let showMissingDataMsg = false;
-  let showNoDataMsg = false;
+  let dataMsg = "";
 
   let showDownload = false;
   let showShare = false;
@@ -78,6 +77,8 @@
   let printContainer;
   let printSkipElements;
 
+  let locationTitle = $location.title;
+
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
@@ -97,17 +98,24 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
     noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
   } else {
-    statsData = null;
     dataByDate = null;
   }
 
   afterUpdate(() => {
-    showMissingDataMsg = $locationStore.boundaryId !== "locagrid";
-    showNoDataMsg = $locationStore.boundaryId === "locagrid" && noData;
+    if (!activeTab) {
+      dataMsg = NO_DATA_MAP_MSG;
+    } else if ($locationStore.boundaryId !== "locagrid") {
+      dataMsg = MISSING_DATA_MSG;
+    } else if ($locationStore.boundaryId === "locagrid" && noData) {
+      dataMsg = NO_DATA_MSG;
+    } else {
+      dataMsg = "";
+    }
+
+    locationTitle = $location.title;
   });
 
   async function loadLearnMore({
@@ -211,6 +219,8 @@
       year="{$yearStore}"
       model="{$modelSingleStore}"
       month="{$monthStore}"
+      dataMsg="{dataMsg}"
+      activeTab="{activeTab}"
     />
   </div>
 
@@ -256,10 +266,9 @@
         scenario="{$scenario.labelLong}"
         climvar="{$climvarStore}"
         month="{$monthStore}"
-        location="{$location.title}"
+        location="{locationTitle}"
         loadLocation="{loadLocation}"
-        missingDataMsg="{showMissingDataMsg}"
-        noDataMsg="{showNoDataMsg}"
+        dataMsg="{dataMsg}"
       />
     {/if}
   </div>
