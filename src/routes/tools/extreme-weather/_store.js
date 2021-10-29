@@ -13,6 +13,7 @@ import {
   DEFAULT_THRESHOLD,
 } from "./_constants";
 import { closest } from "~/helpers/utilities";
+import { getCompassQuadrant } from "../_common/helpers";
 
 const textFormat = timeFormat("%B %e");
 const dateFormat = timeFormat("%B %-e, %Y");
@@ -194,13 +195,14 @@ export const baseline = derived(
       const center = new Date(year, $doyStore.getMonth(), $doyStore.getDate());
       const left = timeDay.offset(center, -10);
       const right = timeDay.offset(center, 10);
-      if (date >= left && date <= right) {
+      if (date >= left && date <= right && !String(d.value).includes("e")) {
         return true;
       }
       return false;
     });
     // Calculate min max from entire historical record
     // for the 20 day period in each year
+    // Ignore exponential wind speed values that have escaped the HadISD qa/qc process
     const sorted = sort(filterBy20DayPeriod, (d) => +d.value);
     const recordLow = formatRecord(sorted[0]);
     const recordHigh = formatRecord(sorted[sorted.length - 1]);
@@ -404,10 +406,10 @@ export const climvarRecentObs = derived(
           valueLabel: `${TMAX} °F`,
         }));
       default:
-        return $recentObsStore.map(({ label, AWND }) => ({
+        return $recentObsStore.map(({ label, WSF2, WDF2 }) => ({
           label,
-          value: +AWND,
-          valueLabel: `${AWND} mph`,
+          value: +WSF2,
+          valueLabel: `${WSF2} ${getCompassQuadrant(+WDF2)} mph`,
         }));
     }
   }

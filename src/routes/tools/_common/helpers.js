@@ -1,4 +1,8 @@
 import { rollups, sort, group } from "d3-array";
+import {
+  DEFAULT_COMPASS_QUADRANTS,
+  DEFAULT_COMPASS_QUADRANT_ANGLE,
+} from "./constants";
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -148,4 +152,15 @@ export function formatDataForExport(_arr) {
     });
     return row;
   });
+}
+
+/**
+ * Converts degrees into the corresponding quadrant
+ * on a 16 point compass
+ * @param {number}
+ * @return {string}
+ */
+export function getCompassQuadrant(deg) {
+  const i = Math.round((deg % 360) / DEFAULT_COMPASS_QUADRANT_ANGLE);
+  return DEFAULT_COMPASS_QUADRANTS[i];
 }
