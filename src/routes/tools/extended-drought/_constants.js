@@ -16,6 +16,13 @@ export const CLIMATE_VARIABLES_VIC = [
   "baseflow",
   "runoff",
 ];
+export const CLIMATE_VARIABLES_HYDRO = [
+  "pr",
+  "et",
+  "swe",
+  "baseflow",
+  "runoff",
+];
 
 export const CLIMATE_SCENARIOS = ["early_century", "late_century"];
 export const DEFAULT_SELECTED_SCENARIO = "late_century";
@@ -51,5 +58,6 @@ export const ENSEMBLES = [
 
 export const DEFAULT_EMISSION_SCENARIO = "rcp85";
 
-export const DEFAULT_YEARS_BEFORE = 5;
-export const DEFAULT_YEARS_AFTER = 4;
+export const DEFAULT_YEARS_BEFORE = 7;
+export const DEFAULT_YEARS_AFTER = 6;
+export const DEFAULT_BASELINE = [1961, 1990];

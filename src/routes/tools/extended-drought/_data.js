@@ -3,7 +3,12 @@ import { merge } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
-import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
+import {
+  handleXHR,
+  fetchData,
+  transformResponse,
+  isLeapYear,
+} from "~/helpers/utilities";
 import {
   OBSERVED,
   OBSERVED_FILTER_YEAR,
@@ -13,10 +18,22 @@ import {
   ENSEMBLES,
   DEFAULT_EMISSION_SCENARIO,
   CLIMATE_VARIABLES_VIC,
+  CLIMATE_VARIABLES_HYDRO,
 } from "./_constants";
 import { buildEnvelope } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
+
+// Helper function to convert precipitation values from a rate (inches/day)
+// to total accumulation in a year
+const convertToAnnual = (values) => {
+  return values.map((d) => {
+    if (isLeapYear(+d.date.getFullYear())) {
+      return { ...d, value: d.value * 366 };
+    }
+    return { ...d, value: d.value * 365 };
+  });
+};
 
 const getEnsembleStr = ({ climvarId, periodId }) => {
   const datasetId = CLIMATE_VARIABLES_VIC.includes(climvarId) ? "vic" : "loca";
@@ -114,21 +131,14 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-const fetchSeries = async ({
-  series,
-  params,
-  method = "GET",
-  indicatorId,
-  monthIds,
-  isEnsemble,
-}) => {
+const fetchSeries = async ({ series, params, method = "GET", isHydro }) => {
   try {
     const { slugs } = series;
-    const promises = slugs.map((slug) =>
-      fetchEvents({ slug, params, method, indicatorId, monthIds, isEnsemble })
-    );
+    const promises = slugs.map((slug) => fetchEvents({ slug, params }));
     const responses = await Promise.all(promises);
-    const values = merge(responses);
+    const values = isHydro
+      ? convertToAnnual(merge(responses))
+      : merge(responses);
     if (series.id === "livneh") {
       return {
         ...series,
@@ -155,10 +165,11 @@ const fetchSeries = async ({
 
 export async function getObserved(config, params, method = "GET") {
   try {
-    const { indicatorId, monthIds } = config;
+    const { climvarId } = config;
+    const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === climvarId);
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, indicatorId, monthIds })
+      fetchSeries({ series, params, method, isHydro })
     );
     const data = await Promise.all(promises);
     return data;
@@ -169,9 +180,11 @@ export async function getObserved(config, params, method = "GET") {
 
 export async function getModels(config, params, method = "GET") {
   try {
+    const { climvarId } = config;
+    const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === climvarId);
     const seriesList = getModelSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params, method, isHydro })
     );
     const data = await Promise.all(promises);
     return data;
@@ -182,11 +195,12 @@ export async function getModels(config, params, method = "GET") {
 
 export async function getEnsemble(config, params, method = "GET") {
   try {
-    console.log("config", config);
+    const { climvarId } = config;
+    const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === climvarId);
     const seriesList = getEnsembleSeries(config);
     const { freq, ...ensembleParams } = params;
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params: ensembleParams, method })
+      fetchSeries({ series, params: ensembleParams, method, isHydro })
     );
     const data = await Promise.all(promises);
     return data.map((d) => {

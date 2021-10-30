@@ -154,9 +154,6 @@
       const envelope = await getEnsemble(config, params, method);
       const observed = await getObserved(config, params, method);
       const models = await getModels(config, params, method);
-      console.log("envelope", envelope);
-      console.log("models", models);
-      console.log("observed", observed);
       dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);

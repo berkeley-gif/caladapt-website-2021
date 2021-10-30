@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { Button } from "carbon-components-svelte";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import { Download16, Share16 } from "carbon-icons-svelte";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { EXPLAIN_CHART } from "./_constants";

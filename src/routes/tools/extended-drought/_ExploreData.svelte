@@ -29,6 +29,7 @@
     periodStore,
     scenarioStore,
     droughtDataStore,
+    observedAvgs,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -64,12 +65,12 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: console.log($droughtDataStore);
+  $: console.log($droughtDataStore, $observedAvgs);
 
   $: if (Array.isArray($droughtDataStore) && $droughtDataStore.length) {
-    //dataByDate = getDataByDate(flattenData($dataStore));
+    dataByDate = getDataByDate(flattenData($droughtDataStore));
   } else {
-    //dataByDate = null;
+    dataByDate = null;
   }
 
   afterUpdate(() => {
@@ -159,13 +160,13 @@
 
 <Dashboard useTabs="{false}">
   <!-- Chart components -->
-  <div slot="tab_content_title" class="block title">
-    /* <ChartTitle
+  <div slot="title" class="block title">
+    <ChartTitle
       title="{chartTitle}"
       subtitle="{chartSubtitle}"
       scenarioLabel="{$scenario.labelLong}"
       loadLocation="{loadLocation}"
-    />*/
+    />
   </div>
 
   <div slot="tab_content_stats">
@@ -174,8 +175,8 @@
     />*/
   </div>
 
-  <div slot="tab_content_graphic" class="graphic block">
-    /*<ExtendedDroughtChart
+  <div slot="graphic" class="graphic block">
+    <ExtendedDroughtChart
       data="{$droughtDataStore}"
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
@@ -185,7 +186,7 @@
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"
       on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
-    />*/
+    />
   </div>
 
   <!-- Settings component shared by both Map & Chart -->

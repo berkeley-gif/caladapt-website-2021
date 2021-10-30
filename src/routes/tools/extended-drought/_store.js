@@ -1,16 +1,20 @@
 import { writable, derived } from "svelte/store";
+import { timeDay } from "d3-time";
+import { mean } from "d3-array";
+
 import climvars from "~/helpers/climate-variables";
 import scenarios from "~/helpers/climate-scenarios";
-import { timeDay } from "d3-time";
 import {
   CLIMATE_VARIABLES,
   DEFAULT_SELECTED_CLIMVAR,
   CLIMATE_SCENARIOS,
   DEFAULT_SELECTED_SCENARIO,
+  DEFAULT_MODEL,
   TIME_PERIODS,
   DEFAULT_SELECTED_PERIOD,
   DEFAULT_YEARS_BEFORE,
   DEFAULT_YEARS_AFTER,
+  DEFAULT_BASELINE,
 } from "./_constants";
 import { dataStore } from "../_common/stores";
 
@@ -81,23 +85,51 @@ export const droughtDataStore = derived(
   ([$dataStore, $scenarioStore]) => {
     if (!$dataStore || !$scenarioStore) return null;
     const scenario = scenarioList.find((d) => d.id === $scenarioStore);
-    const drySpellStart = new Date(Date.UTC(scenario.start, 0, 1));
-    const drySpellEnd = new Date(Date.UTC(scenario.end, 11, 31));
-    const start = timeDay.offset(drySpellStart, -DEFAULT_YEARS_BEFORE);
-    const end = timeDay.offset(drySpellEnd, DEFAULT_YEARS_AFTER);
-    console.log(drySpellStart, start, drySpellEnd, end);
+    const start = new Date(
+      Date.UTC(+scenario.start - DEFAULT_YEARS_BEFORE, 0, 1)
+    );
+    const end = new Date(Date.UTC(+scenario.end + DEFAULT_YEARS_AFTER, 11, 31));
+    console.log(start, end);
 
-    // Filter data selected dates
-    const filteredData = $dataStore.map((series) => {
-      const values = series.values.filter((d) => {
-        const { date } = d;
-        if (date >= start && date <= end) {
-          return true;
-        }
-        return false;
+    const envelope = $dataStore
+      .filter((series) => series.mark === "area")
+      .map((series) => {
+        const values = series.values.filter((d) => {
+          const { date } = d;
+          if (date >= start && date <= end) {
+            return true;
+          }
+          return false;
+        });
+        return { ...series, values };
       });
-      return { ...series, values };
-    });
-    console.log("filteredData", filteredData);
+
+    const models = $dataStore
+      .filter((series) => series.id === DEFAULT_MODEL)
+      .map((series) => {
+        const values = series.values.map(({ date, mean }) => ({
+          date,
+          value: mean,
+        }));
+        //return { ...series, values: values.slice(1, -1)};
+        return { ...series, values };
+      });
+
+    return [...envelope, ...models];
   }
 );
+
+export const observedAvgs = derived(dataStore, ($dataStore) => {
+  if (!$dataStore) return null;
+  const averages = $dataStore
+    .filter((series) => series.label.includes("Observed"))
+    .map((series) => {
+      const baseline = series.values.filter(
+        (d) =>
+          d.date.getUTCFullYear() >= DEFAULT_BASELINE[0] &&
+          d.date.getUTCFullYear() <= DEFAULT_BASELINE[1]
+      );
+      return mean(baseline, (d) => d.mean);
+    });
+  return averages;
+});
