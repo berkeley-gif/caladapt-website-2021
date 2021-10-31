@@ -6,6 +6,7 @@
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { timeYear } from "d3-time";
 
   import Line from "./Line.svelte";
   import Area from "./Area.svelte";
@@ -34,6 +35,7 @@
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  export let setDatetoYearStart = true;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -144,6 +146,7 @@
       xScale="{scaleTime()}"
       xDomain="{[xmin, xmax]}"
       yDomain="{[ymin, ymax]}"
+      xPadding="{[10, 10]}"
       data="{data}"
     >
       <Svg>
@@ -161,14 +164,14 @@
         <g class="area-group">
           {#if areaData}
             {#each areaData as area}
-              <Area series="{area}" />
+              <Area series="{area}" setDatetoYearStart="{setDatetoYearStart}" />
             {/each}
           {/if}
         </g>
         <g class="line-group">
           {#if lineData}
             {#each lineData as line}
-              <Line series="{line}" />
+              <Line series="{line}" setDatetoYearStart="{setDatetoYearStart}" />
             {/each}
           {/if}
         </g>
