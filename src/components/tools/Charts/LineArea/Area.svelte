@@ -5,6 +5,7 @@
   const { xScale, yScale } = getContext("LayerCake");
 
   export let series;
+  export let setDatetoYearStart = true;
 
   let show = true;
   const legendItems = getContext("Legend");
@@ -16,7 +17,13 @@
   });
 
   $: path = area()
-    .x((d) => $xScale(d.date))
+    .x((d) => {
+      if (setDatetoYearStart) {
+        return $xScale(new Date(Date.UTC(d.date.getUTCFullYear(), 0, 1)));
+      } else {
+        return $xScale(d.date);
+      }
+    })
     .y0((d) => $yScale(d.min))
     .y1((d) => $yScale(d.max));
 

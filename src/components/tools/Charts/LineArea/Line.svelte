@@ -1,9 +1,11 @@
 <script>
   import { getContext } from "svelte";
+  import { line } from "d3-shape";
 
-  const { xGet, yGet } = getContext("LayerCake");
+  const { yGet, xScale } = getContext("LayerCake");
 
   export let series;
+  export let setDatetoYearStart;
 
   let show = true;
   const legendItems = getContext("Legend");
@@ -14,16 +16,15 @@
     }
   });
 
-  $: path = (values) => {
-    return (
-      "M" +
-      values
-        .map((d) => {
-          return $xGet(d) + "," + $yGet(d);
-        })
-        .join("L")
-    );
-  };
+  $: path = line()
+    .x((d) => {
+      if (setDatetoYearStart) {
+        return $xScale(new Date(Date.UTC(d.date.getUTCFullYear(), 0, 1)));
+      } else {
+        return $xScale(d.date);
+      }
+    })
+    .y((d) => $yGet(d));
 </script>
 
 {#if show}
