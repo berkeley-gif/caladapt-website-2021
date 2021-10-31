@@ -29,7 +29,6 @@
     periodStore,
     scenarioStore,
     droughtDataStore,
-    observedAvgs,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -65,7 +64,7 @@
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: console.log($droughtDataStore, $observedAvgs);
+  $: console.log($droughtDataStore);
 
   $: if (Array.isArray($droughtDataStore) && $droughtDataStore.length) {
     dataByDate = getDataByDate(flattenData($droughtDataStore));

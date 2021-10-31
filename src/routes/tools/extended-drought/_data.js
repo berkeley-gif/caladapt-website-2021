@@ -18,7 +18,6 @@ import {
   ENSEMBLES,
   DEFAULT_EMISSION_SCENARIO,
   CLIMATE_VARIABLES_VIC,
-  CLIMATE_VARIABLES_HYDRO,
 } from "./_constants";
 import { buildEnvelope } from "../_common/helpers";
 
@@ -26,7 +25,7 @@ const { apiEndpoint } = config.env.production;
 
 // Helper function to convert precipitation values from a rate (inches/day)
 // to total accumulation in a year
-const convertToAnnual = (values) => {
+const convertRateToSum = (values) => {
   return values.map((d) => {
     if (isLeapYear(+d.date.getFullYear())) {
       return { ...d, value: d.value * 366 };
@@ -131,19 +130,30 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-const fetchSeries = async ({ series, params, method = "GET", isHydro }) => {
+const fetchSeries = async ({ series, params, method = "GET" }) => {
   try {
     const { slugs } = series;
     const promises = slugs.map((slug) => fetchEvents({ slug, params }));
     const responses = await Promise.all(promises);
-    const values = isHydro
-      ? convertToAnnual(merge(responses))
-      : merge(responses);
+    const mergedResponses = merge(responses);
+    const values = mergedResponses.map((d) => {
+      if ("mean" in d) {
+        return {
+          date: new Date(d.date.getUTCFullYear(), 11, 31),
+          value: d.mean,
+        };
+      } else {
+        return {
+          date: d.date,
+          value: d.value,
+        };
+      }
+    });
     if (series.id === "livneh") {
       return {
         ...series,
         values: values.filter(
-          (d) => d.date.getFullYear() < OBSERVED_FILTER_YEAR
+          (d) => d.date.getUTCFullYear() < OBSERVED_FILTER_YEAR
         ),
       };
     }
@@ -163,48 +173,73 @@ const fetchSeries = async ({ series, params, method = "GET", isHydro }) => {
  * @return {array}
  */
 
-export async function getObserved(config, params, method = "GET") {
+export async function getObserved(
+  config,
+  params,
+  method = "GET",
+  isHydro = false
+) {
   try {
-    const { climvarId } = config;
-    const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === climvarId);
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, isHydro })
+      fetchSeries({ series, params, method })
     );
     const data = await Promise.all(promises);
-    return data;
+    return data.map((series) => {
+      if (isHydro) {
+        return { ...series, values: convertRateToSum(series.values) };
+      }
+      return series;
+    });
   } catch (error) {
     throw new Error(error.message);
   }
 }
 
-export async function getModels(config, params, method = "GET") {
+export async function getModels(
+  config,
+  params,
+  method = "GET",
+  isHydro = false
+) {
   try {
-    const { climvarId } = config;
-    const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === climvarId);
     const seriesList = getModelSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, isHydro })
+      fetchSeries({ series, params, method })
     );
     const data = await Promise.all(promises);
-    return data;
+    return data.map((series) => {
+      if (isHydro) {
+        return { ...series, values: convertRateToSum(series.values) };
+      }
+      return series;
+    });
   } catch (error) {
     throw new Error(error.message);
   }
 }
 
-export async function getEnsemble(config, params, method = "GET") {
+export async function getEnsemble(
+  config,
+  params,
+  method = "GET",
+  isHydro = false
+) {
   try {
-    const { climvarId } = config;
-    const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === climvarId);
     const seriesList = getEnsembleSeries(config);
     const { freq, ...ensembleParams } = params;
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params: ensembleParams, method, isHydro })
+      fetchSeries({ series, params: ensembleParams, method })
     );
     const data = await Promise.all(promises);
-    return data.map((d) => {
-      return { ...d, values: buildEnvelope(d.values) };
+    return data.map((series) => {
+      if (isHydro) {
+        return {
+          ...series,
+          values: buildEnvelope(convertRateToSum(series.values)),
+        };
+      }
+      return { ...series, values: buildEnvelope(series.values) };
     });
   } catch (error) {
     throw new Error(error.message);

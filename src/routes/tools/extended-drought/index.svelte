@@ -95,7 +95,7 @@
   import { climvarStore, periodStore, scenarioStore } from "./_store";
 
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
-  import { DEFAULT_MODEL } from "./_constants";
+  import { DEFAULT_MODEL, CLIMATE_VARIABLES_HYDRO } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -142,6 +142,7 @@
         periodId: $periodStore,
         modelIds: [DEFAULT_MODEL],
       };
+      const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === $climvarStore);
 
       const { params, method } = getQueryParams({
         location: $location,
@@ -151,9 +152,9 @@
       params.freq = $period.freq;
 
       isFetchingStore.set(true);
-      const envelope = await getEnsemble(config, params, method);
-      const observed = await getObserved(config, params, method);
-      const models = await getModels(config, params, method);
+      const envelope = await getEnsemble(config, params, method, isHydro);
+      const observed = await getObserved(config, params, method, isHydro);
+      const models = await getModels(config, params, method, isHydro);
       dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);
