@@ -65,8 +65,9 @@
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
     xmax = max(data, (arr) => max(arr.values, (d) => d.date));
-    if (xAxis.baseValue === 0) {
-      xmin = xAxis.baseValue;
+    if (setDatetoYearStart) {
+      xmin = timeYear.floor(xmin);
+      xmax = timeYear.floor(xmax);
     }
 
     // Set Y Domain
