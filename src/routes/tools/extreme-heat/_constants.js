@@ -3,7 +3,7 @@ import {
   ScatterChart,
   HeatmapChart,
 } from "~/components/tools/Charts";
-import { RangeAvg, MonthsCount } from "~/components/tools/Stats";
+import { AvgRange, MonthTiming } from "~/components/tools/Stats";
 
 export const TOOL_SLUG = "extreme-heat";
 
@@ -16,7 +16,7 @@ export const CLIMATE_INDICATORS = [
     units: "days/yr",
     decimals: 0,
     chartComponent: LineAreaChart,
-    statsComponent: RangeAvg,
+    statsComponent: AvgRange,
     description: `<p>The colored lines on this visualization represent 
     a timeseries of number of extreme heat days from individual downscaled GCMs. 
     The historical observed data is represented by 
@@ -30,7 +30,7 @@ export const CLIMATE_INDICATORS = [
     units: "",
     decimals: 0,
     chartComponent: HeatmapChart,
-    statsComponent: MonthsCount,
+    statsComponent: MonthTiming,
     description: `<p>This chart shows a heatmap of extreme heat days for an 
     individual GCM or for the historical observed data.</p><p>Click on any of 
     the legend keys to highlight corresponding timeseries.</p>`,
@@ -42,7 +42,7 @@ export const CLIMATE_INDICATORS = [
     units: "days/yr",
     decimals: 1,
     chartComponent: ScatterChart,
-    statsComponent: RangeAvg,
+    statsComponent: AvgRange,
     description: `<p>The colored dots on this visualization represent 
     the longest stretch of consecutive extreme heat days from individual downscaled GCMs. 
     The historical observed data is represented by 
@@ -56,7 +56,7 @@ export const CLIMATE_INDICATORS = [
     units: "events/yr",
     decimals: 1,
     chartComponent: ScatterChart,
-    statsComponent: RangeAvg,
+    statsComponent: AvgRange,
     description: `<p>The colored dots on this visualization represent 
     the number of heat wave events from individual downscaled GCMs. 
     The historical observed data is represented by 
