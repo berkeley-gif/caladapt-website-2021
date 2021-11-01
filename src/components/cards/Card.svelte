@@ -18,7 +18,6 @@
   export let iconPaths = [];
   export let textColor = null;
   export let bgColor = null;
-  export let useGradient = false;
   export let useRule = false;
 
   $: isVariant = Boolean(
@@ -28,10 +27,6 @@
   );
   $: varCardHeight =
     height && typeof height === "number" ? `${height}rem` : CARD_DEFAULT_HEIGHT;
-
-  $: background = useGradient
-    ? "linear-gradient(180deg, var(--card-bg-color) 50%, var(--gray-70) 100%)"
-    : "var(--card-bg-color, var(--white))";
 </script>
 
 <style lang="scss">
@@ -42,6 +37,7 @@
     box-sizing: border-box;
     position: relative;
     border: 1px solid var(--gray-20);
+    background: var(--card-bg-color, var(--white));
 
     // a11y fix for Safari
     // see: https://developer.mozilla.org/en-US/docs/Web/CSS/list-style#accessibility_concerns
@@ -59,7 +55,7 @@
 
 <li
   class="shadow lift"
-  style="--card-height:{varCardHeight};--text-color:{textColor}; --card-bg-color:{bgColor}; background:{background};"
+  style="--card-height:{varCardHeight};--text-color:{textColor}; --card-bg-color:{bgColor};"
 >
   {#if imgSrc}
     <CardImage imgSrc="{imgSrc}" />
