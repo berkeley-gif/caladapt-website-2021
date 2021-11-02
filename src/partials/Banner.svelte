@@ -8,6 +8,7 @@
 
 <style>
   .banner {
+    min-height: 22rem;
     color: var(--white);
     background-image: var(--banner-img);
     background-size: cover;
@@ -18,6 +19,7 @@
 
   @media (max-width: 672px) {
     .banner {
+      min-height: 14rem;
       background-image: var(--banner-img-mobile, var(--banner-img));
     }
   }
