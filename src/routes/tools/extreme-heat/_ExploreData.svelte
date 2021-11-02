@@ -17,6 +17,7 @@
   import {
     flattenData,
     getDataByDate,
+    getDataByDay,
     formatDataForExport,
   } from "../_common/helpers";
 
@@ -141,10 +142,11 @@
       : $indicator.title;
 
   $: if ($data) {
-    console.log("data", $data);
-    console.log("flatten data", flattenData($data));
-    dataByDate = getDataByDate(flattenData($data));
-    console.log("getDataByDate", dataByDate);
+    if ($indicator.id === "timing") {
+      dataByDate = getDataByDay(flattenData($data));
+    } else {
+      dataByDate = getDataByDate(flattenData($data));
+    }
     isLoading = false;
   } else {
     dataByDate = null;
