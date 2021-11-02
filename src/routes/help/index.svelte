@@ -14,6 +14,7 @@
   import User32 from "carbon-icons-svelte/lib/User32";
   import Video32 from "carbon-icons-svelte/lib/Video32";
   import { Card, CardsContainer } from "~/components/cards";
+  import { Banner } from "~/partials";
 
   export let categories;
 
@@ -63,16 +64,14 @@
   <title>Help | Cal-Adapt</title>
 </svelte:head>
 
-<!-- Banner -->
-<section class="banner overlay overlay-black overlay-40 bg-img">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <h1>How can we help?</h1>
-      </div>
-    </div>
-  </div>
-</section>
+<Banner
+  titleText="How can we help?"
+  subtitleText="If you're brand new to Cal-Adapt we recommend visiting our 
+    Getting Started articles. We also have tutorials and webinars that demonstrate 
+    how to use our tools."
+  bannerImg="/img/banners/help_1500x400.jpg"
+  bannerImgMobile="/img/banners/help_500x500.jpg"
+/>
 
 <section>
   <div class="bx--grid">
