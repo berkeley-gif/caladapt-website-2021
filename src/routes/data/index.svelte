@@ -2,7 +2,7 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { inview } from "svelte-inview/dist/";
-  import PageNav from "~/partials/PageNav.svelte";
+  import { Banner, PageNav } from "~/partials";
 
   let selectedItem;
   let pageNavItems = [
@@ -24,14 +24,6 @@
 </script>
 
 <style>
-  .banner {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-      url(/img/banners/data.svg);
-    background-position: center;
-    background-size: cover;
-    padding: var(--spacing-48) var(--spacing-16);
-  }
-
   p:not(.lead) {
     font-size: 1.125rem;
   }
@@ -51,23 +43,13 @@
   <title>Data | Cal-Adapt</title>
 </svelte:head>
 
-<!-- Banner -->
-<div class="bleed banner overlay bg-img">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-        <h1>Download Data</h1>
-        <p class="lead">
-          Discover and access climate data for California from the state's
-          scientific and research community hosted on Cal-Adapt in the following
-          ways.
-        </p>
-      </div>
-      <div class="bx--col-lg-5"></div>
-    </div>
-  </div>
-</div>
+<Banner
+  titleText="Download Data"
+  subtitleText="Discover and access climate data for California from the state's
+    scientific and research community hosted on Cal-Adapt in the following ways."
+  bannerImg="/img/banners/data.svg"
+  overlayColor=""
+/>
 
 <div class="bx--grid is-sticky">
   <div class="bx--row">
