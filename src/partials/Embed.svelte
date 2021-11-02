@@ -15,9 +15,9 @@
         typeof e.data.height === "number" &&
         !isNaN(e.data.height)
       ) {
-        v2_frame.style.height = `${e.data.height}px`;
+        v2_frame.style.height = `${e.data.height + 25}px`;
       } else {
-        console.warn("Embed did not receive postMessage width value");
+        console.warn("Embed did not receive postMessage height value");
       }
     });
   });
