@@ -13,6 +13,7 @@
     min-height: 20rem;
     color: var(--white);
     background-image: var(--banner-img);
+    background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-color: var(--banner-bg-color, var(--gray-80));
@@ -78,10 +79,10 @@
         <h1>{titleText}</h1>
         {#if Array.isArray(subtitleText) && subtitleText.length}
           {#each subtitleText as textItem}
-            <p class="lead">{textItem}</p>
+            <p class="lead">{@html textItem}</p>
           {/each}
         {:else}
-          <p class="lead">{subtitleText}</p>
+          <p class="lead">{@html subtitleText}</p>
         {/if}
       </div>
     </div>
