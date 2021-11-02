@@ -1,14 +1,16 @@
 <script>
   export let titleText = "Page Title";
-  export let subtitleText = "Lorem ipsum...";
+  export let subtitleText = "";
   export let bgColor;
   export let bannerImg;
   export let bannerImgMobile;
+  export let overlayColor;
+  export let overlayOpacity = 0.6;
 </script>
 
 <style>
   .banner {
-    min-height: 22rem;
+    min-height: 20rem;
     color: var(--white);
     background-image: var(--banner-img);
     background-size: cover;
@@ -22,6 +24,11 @@
       min-height: 14rem;
       background-image: var(--banner-img-mobile, var(--banner-img));
     }
+  }
+
+  .overlay::before {
+    opacity: var(--overlay-opacity);
+    background-color: var(--gray-100);
   }
 
   .banner > div {
@@ -54,16 +61,20 @@
 </style>
 
 <div
-  class="banner overlay overlay-black overlay-60"
+  class="banner"
   class:bleed="{bannerImg}"
   class:bg-img="{bannerImg}"
-  style="--banner-img:url({bannerImg}); 
-    --banner-img-mobile:url({bannerImgMobile}); 
-    --banner-bg-color:{bgColor}"
+  class:overlay="{overlayColor}"
+  style="--banner-img:url({bannerImg});
+    --banner-img-mobile:url({bannerImgMobile});
+    --banner-bg-color:{bgColor};
+    --overlay-color:{overlayColor};
+    --overlay-opacity:{overlayOpacity};"
 >
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--offset-lg-2 bx--col-lg-9">
+        <slot name="icons" />
         <h1>{titleText}</h1>
         {#if Array.isArray(subtitleText) && subtitleText.length}
           {#each subtitleText as textItem}
