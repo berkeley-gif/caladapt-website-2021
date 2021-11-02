@@ -1,6 +1,7 @@
 <script>
   export let titleText = "Page Title";
   export let subtitleText = "Lorem ipsum...";
+  export let bgColor;
   export let bannerImg;
   export let bannerImgMobile;
 </script>
@@ -8,11 +9,10 @@
 <style>
   .banner {
     color: var(--white);
-
     background-image: var(--banner-img);
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: var(--gray-80);
+    background-color: var(--banner-bg-color, var(--gray-80));
     padding: var(--spacing-48) 0;
   }
 
@@ -55,7 +55,9 @@
   class="banner overlay overlay-black overlay-60"
   class:bleed="{bannerImg}"
   class:bg-img="{bannerImg}"
-  style="--banner-img:url({bannerImg}); --banner-img-mobile:url({bannerImgMobile})"
+  style="--banner-img:url({bannerImg}); 
+    --banner-img-mobile:url({bannerImgMobile}); 
+    --banner-bg-color:{bgColor}"
 >
   <div class="bx--grid">
     <div class="bx--row">
