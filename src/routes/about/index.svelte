@@ -9,11 +9,21 @@
 <script>
   import { Tabs, Tab, TabContent } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
-  import PageNav from "../../partials/PageNav.svelte";
+  import { Banner, PageNav } from "~/partials";
 
   export let data;
 
   const { advisors, staff, managers } = data;
+
+  const subtitleText = [
+    `Cal-Adapt provides a way to explore peer-reviewed data that portrays
+      how climate change might affect California at the state and local
+      level. We make this data available through downloads, visualizations,
+      and the Cal-Adapt API for your research, outreach, and adaptation
+      planning needs.`,
+    `Cal-Adapt is a collaboration between state agency funding programs, 
+    university and private sector researchers.`,
+  ];
 
   let items = [
     {
@@ -91,18 +101,6 @@
   li {
     margin-left: 2rem;
     margin-bottom: 1.5rem;
-  }
-
-  .banner {
-    background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash_1600x400.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-color: var(--gray-80);
-    padding: var(--spacing-48) 0;
-
-    @media (max-width: 672px) {
-      background-image: url(/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash_700x800.jpg);
-    }
   }
 
   .sidebar-figure-container {
@@ -211,26 +209,12 @@
   <title>About | Cal-Adapt</title>
 </svelte:head>
 
-<div class="banner bleed overlay overlay-black overlay-60 bg-img">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--offset-lg-2 bx--col-lg-9">
-        <h1>About Cal-Adapt</h1>
-        <p class="lead">
-          Cal-Adapt provides a way to explore peer-reviewed data that portrays
-          how climate change might affect California at the state and local
-          level. We make this data available through downloads, visualizations,
-          and the Cal-Adapt API for your research, outreach, and adaptation
-          planning needs.
-        </p>
-        <p class="lead">
-          Cal-Adapt is a collaboration between state agency funding programs,
-          university and private sector researchers.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+<Banner
+  titleText="About Cal-Adapt"
+  subtitleText="{subtitleText}"
+  bannerImg="/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash_1600x400.jpg"
+  bannerImgMobile="/img/banners/brian-wangenheim-p7j_nddDMdo-unsplash_700x800.jpg"
+/>
 
 <!-- page anchor navigation -->
 <div class="bx--grid is-sticky">
