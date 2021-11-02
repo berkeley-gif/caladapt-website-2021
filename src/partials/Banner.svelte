@@ -28,7 +28,7 @@
 
   .overlay::before {
     opacity: var(--overlay-opacity);
-    background-color: var(--gray-100);
+    background-color: var(--overlay-color);
   }
 
   .banner > div {
