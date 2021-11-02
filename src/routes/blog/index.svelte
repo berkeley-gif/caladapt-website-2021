@@ -71,6 +71,7 @@
   titleText="Cal-Adapt Blog"
   subtitleText="Read the latest Cal-Adapt news, updates &amp; events."
   bgColor="var(--blue-70)"
+  overlayColor="var(--gray-50)"
 />
 
 <div class="page-grid page-grid--blog">
