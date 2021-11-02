@@ -33,7 +33,6 @@
   /** List of selected models */
   export let models;
 
-  export let format = (d) => d;
   export let units;
 
   let metrics = [];
@@ -49,20 +48,15 @@
     };
   }
 
-  function getMonths(values) {
-    if (Array.isArray(values) && values.length) {
-      console.log("values", values);
-      const groupByMonth = rollups(
-        values,
-        (v) => v.length,
-        (d) => d.date.getMonth()
-      );
-      console.log("groupByMonth", groupByMonth);
-      const months = groupByMonth.map((d) => d[0]).sort((a, b) => a - b);
-      console.log("months", months);
+  function getMonths(data) {
+    if (Array.isArray(data) && data.length) {
+      const months = new Set(data.map(({ date }) => date.getMonth()));
+      const sortedMonths = [...months].sort((a, b) => a - b);
       return {
-        earliest: dateFormat(new Date(2020, months[0], 1)),
-        latest: dateFormat(new Date(2020, months[months.length - 1], 1)),
+        earliest: dateFormat(new Date(2020, sortedMonths[0], 1)),
+        latest: dateFormat(
+          new Date(2020, sortedMonths[sortedMonths.length - 1], 1)
+        ),
       };
     }
     // Empty state
@@ -75,21 +69,22 @@
     // Filter data for selected period
     // e.g. baseline, mid-century, end-century or a custom period
     const dataByPeriod = data.filter(subsetByYears(start, end));
-    const values = merge(dataByPeriod.map(({ values }) => values));
     // Filter values for selected group
     // e.g. modeled historical, modeled projections, observed historical
-    let dataByGroup;
-    // For modeled historical/projections, check if the value id is a model
-    if (group.id.includes("model")) {
-      dataByGroup = values.filter(({ id }) => models.includes(id));
-    } else {
-      // For observed  historical, check if value id is not a model name
-      // and value id is not for the envelope. For now this would be
-      // the same as checking for id = "livneh"
-      dataByGroup = values.filter(
-        ({ id }) => !models.includes(id) && !id.includes("range")
-      );
-    }
+    const dataByGroup = dataByPeriod.map(({ date, values }) => {
+      let valuesByGroup;
+      if (group.id.includes("model")) {
+        valuesByGroup = values.filter(({ id }) => models.includes(id));
+      } else {
+        // For observed  historical, check if value id is not a model name
+        // and value id is not for the envelope. For now this would be
+        // the same as checking for id = "livneh"
+        valuesByGroup = values.filter(
+          ({ id }) => !models.includes(id) && !id.includes("range")
+        );
+      }
+      return { date, values: valuesByGroup };
+    });
     const { earliest, latest } = getMonths(dataByGroup);
     return [
       {
