@@ -4,7 +4,7 @@
   export let bgColor;
   export let bannerImg;
   export let bannerImgMobile;
-  export let overlayColor;
+  export let overlayColor = "var(--gray-100)";
   export let overlayOpacity = 0.6;
 </script>
 

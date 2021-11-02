@@ -58,7 +58,6 @@
     how to use our tools."
   bannerImg="/img/banners/help_1500x400.jpg"
   bannerImgMobile="/img/banners/help_500x500.jpg"
-  overlayColor="black"
 />
 
 <section>
