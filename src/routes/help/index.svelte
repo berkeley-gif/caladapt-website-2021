@@ -31,19 +31,6 @@
 </script>
 
 <style lang="scss">
-  .banner {
-    background-image: url(/img/banners/help_1500x400.jpg);
-    background-size: cover;
-    min-height: 350px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    @media (max-width: 672px) {
-      background-image: url(/img/banners/help_500x500.jpg);
-    }
-  }
-
   .help-footer {
     h4 {
       margin-bottom: 0.5rem;
@@ -71,6 +58,7 @@
     how to use our tools."
   bannerImg="/img/banners/help_1500x400.jpg"
   bannerImgMobile="/img/banners/help_500x500.jpg"
+  overlayColor="black"
 />
 
 <section>
