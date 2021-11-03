@@ -12,7 +12,7 @@
 
 <style>
   .banner {
-    min-height: 20rem;
+    min-height: 16rem;
     color: var(--white);
     background-image: var(--banner-img);
     background-position: center;
