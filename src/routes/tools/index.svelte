@@ -45,6 +45,7 @@
     Local Climate Change Snapshot Tool</a
     >`}"
   bannerImg="/img/banners/classSubSample.jpg"
+  overlayOpacity="{0.7}"
 />
 
 <section>

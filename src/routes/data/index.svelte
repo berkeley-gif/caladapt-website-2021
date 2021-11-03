@@ -48,7 +48,7 @@
   subtitleText="Discover and access climate data for California from the state's
     scientific and research community hosted on Cal-Adapt in the following ways."
   bannerImg="/img/banners/data.svg"
-  overlayColor=""
+  overlayOpacity="{0.4}"
 />
 
 <div class="bx--grid is-sticky">
