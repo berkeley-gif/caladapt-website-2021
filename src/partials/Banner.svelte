@@ -1,11 +1,13 @@
 <script>
   export let titleText = "Page Title";
   export let subtitleText = "";
-  export let bgColor;
-  export let bannerImg;
-  export let bannerImgMobile;
+  export let bgColor = "";
+  export let bannerImg = "";
+  export let bannerImgMobile = "";
   export let overlayColor = "var(--gray-100)";
   export let overlayOpacity = 0.6;
+  export let titleFontSize = "";
+  export let titleFontWeight = "";
 </script>
 
 <style>
@@ -31,18 +33,14 @@
     margin-top: var(--banner-child-v-spacing, 2.5rem);
   }
 
-  /* .banner h1 {
-    font-size: 2rem;
-  } */
-
-  .overlay::before {
-    opacity: var(--overlay-opacity);
-    background-color: var(--overlay-color);
-  }
-
   .banner > div {
     position: relative;
     z-index: 1;
+  }
+
+  .banner h1 {
+    font-size: var(--title-font-size, 2.625rem);
+    font-weight: var(--title-font-weight, 600);
   }
 
   .banner.bg-img p,
@@ -50,21 +48,30 @@
     filter: drop-shadow(0px 1px 2px var(--gray-100));
   }
 
-  :global(.banner .lead a) {
+  .banner .lead {
+    font-weight: 400;
+  }
+
+  .overlay::before {
+    opacity: var(--overlay-opacity);
+    background-color: var(--overlay-color);
+  }
+
+  .banner :global(.lead a) {
     color: var(--white);
     text-decoration: solid underline var(--accent) 2px;
   }
 
-  :global(.banner-breadcrumbs) {
+  .banner :global(.banner-breadcrumbs) {
     padding: 1rem;
     width: 100%;
     background: var(--gray-100);
     color: var(--white);
   }
 
-  :global(.bx--breadcrumb-item .bx--link),
-  :global(.bx--breadcrumb-item .bx--link:visited),
-  :global(.bx--breadcrumb-item::after) {
+  .banner :global(.bx--breadcrumb-item .bx--link),
+  .banner :global(.bx--breadcrumb-item .bx--link:visited),
+  .banner :global(.bx--breadcrumb-item::after) {
     color: var(--teal-10);
   }
 </style>
@@ -78,12 +85,14 @@
     --banner-img-mobile:url({bannerImgMobile});
     --banner-bg-color:{bgColor};
     --overlay-color:{overlayColor};
-    --overlay-opacity:{overlayOpacity};"
+    --overlay-opacity:{overlayOpacity};
+    --title-font-size:{titleFontSize};
+    --title-font-weight:{titleFontWeight};"
 >
   <div class="bx--grid">
+    <slot name="icons" />
     <div class="bx--row">
       <div class="bx--offset-lg-2 bx--col-lg-9 banner-content">
-        <slot name="icons" />
         <h1>{titleText}</h1>
         {#if Array.isArray(subtitleText) && subtitleText.length}
           {#each subtitleText as textItem}
