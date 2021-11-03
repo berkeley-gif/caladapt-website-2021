@@ -5,21 +5,18 @@
 
   $: src = `https://v2.cal-adapt.org/${path}_iframe`;
 
-  let v2_frame;
+  let frameHeight;
 
   onMount(() => {
-    let frameHeight;
-
     window.addEventListener("message", (e) => {
       // use message data that was passed from iframe page to set height
       if (
         e.data &&
         typeof e.data.height === "number" &&
-        !isNaN(e.data.height) &&
-        frameHeight !== e.data.height
+        !isNaN(e.data.height)
       ) {
-        v2_frame.style.height = `${e.data.height + 100}px`;
-        frameHeight = e.data.height;
+        frameHeight =
+          frameHeight !== e.data.height ? e.data.height + 100 : frameHeight;
       } else {
         console.warn("Embed did not receive postMessage height value");
       }
@@ -30,16 +27,14 @@
 <style>
   iframe {
     width: 100%;
-    height: 100vh;
+    height: var(--iframe-height, 100vh);
     display: block;
     margin: 0 auto;
     overflow: hidden;
   }
 </style>
 
-<iframe
-  src="{src}"
-  title="{title}"
-  frameborder="0"
-  allow="fullscreen"
-  bind:this="{v2_frame}"></iframe>
+<div style="--iframe-height:{frameHeight}px">
+  <iframe src="{src}" title="{title}" frameborder="0" allow="fullscreen"
+  ></iframe>
+</div>
