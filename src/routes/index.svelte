@@ -36,6 +36,11 @@
 </script>
 
 <style lang="scss">
+  .banner--icons {
+    gap: 0.25rem;
+    position: relative;
+  }
+
   .btn-container {
     margin-top: 2.5rem;
     text-transform: uppercase;
