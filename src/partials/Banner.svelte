@@ -27,6 +27,14 @@
     }
   }
 
+  .banner-content > * + * {
+    margin-top: var(--banner-child-v-spacing, 2.5rem);
+  }
+
+  /* .banner h1 {
+    font-size: 2rem;
+  } */
+
   .overlay::before {
     opacity: var(--overlay-opacity);
     background-color: var(--overlay-color);
@@ -74,7 +82,7 @@
 >
   <div class="bx--grid">
     <div class="bx--row">
-      <div class="bx--offset-lg-2 bx--col-lg-9">
+      <div class="bx--offset-lg-2 bx--col-lg-9 banner-content">
         <slot name="icons" />
         <h1>{titleText}</h1>
         {#if Array.isArray(subtitleText) && subtitleText.length}
@@ -84,6 +92,7 @@
         {:else}
           <p class="lead">{@html subtitleText}</p>
         {/if}
+        <slot name="button" />
       </div>
     </div>
   </div>
