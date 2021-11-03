@@ -73,14 +73,20 @@
   <meta name="Description" content="{post.metadata.snippet}" />
 </svelte:head>
 
-<div class="banner-breadcrumbs">
-  <NavBreadcrumb items="{items}" />
-</div>
-
 <Banner
   titleText="{post.metadata.title}"
   bannerImg="{`/img/blog/${post.metadata.image}`}"
 />
+
+<div class="banner-breadcrumbs">
+  <div class="bx--grid">
+    <div class="bx--row">
+      <div class="bx--offset-lg-2 bx--col-lg-10 bx--col-padding">
+        <NavBreadcrumb items="{items}" />
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="post">
   <div class="bx--grid">
