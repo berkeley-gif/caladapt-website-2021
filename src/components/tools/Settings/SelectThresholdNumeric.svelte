@@ -8,8 +8,9 @@
   export let minValue = -Infinity;
   export let maxValue = Infinity;
   export let hideSteppers = false;
+  export let delay = 350; // milliseconds
 
-  const dispatch = debounce(createEventDispatcher(), 300);
+  const dispatch = debounce(createEventDispatcher(), delay);
 
   let ready = false;
 
