@@ -15,7 +15,7 @@
 </script>
 
 <script>
-  import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
+  import { Banner, NavBreadcrumb } from "~/partials";
   import { TweetButton } from "~/components/social-media";
 
   export let event;
@@ -47,12 +47,6 @@
 </script>
 
 <style lang="scss">
-  .banner {
-    background-position: center;
-    background-size: cover;
-    padding: 3rem 0;
-  }
-
   .content {
     margin-top: 2rem;
 
@@ -100,19 +94,7 @@
   <NavBreadcrumb items="{items}" />
 </div>
 
-<!-- Banner -->
-<div class="banner overlay overlay-gradient-gray-blue overlay-80 bleed">
-  <div class="bx--grid">
-    <!-- Row -->
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-9">
-        <h1>{event.metadata.title}</h1>
-      </div>
-      <div class="bx--col-lg-5"></div>
-    </div>
-  </div>
-</div>
+<Banner titleText="{event.metadata.title}" />
 
 <div class="event">
   <div class="bx--grid">
