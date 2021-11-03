@@ -8,14 +8,18 @@
   let v2_frame;
 
   onMount(() => {
+    let frameHeight;
+
     window.addEventListener("message", (e) => {
       // use message data that was passed from iframe page to set height
       if (
         e.data &&
         typeof e.data.height === "number" &&
-        !isNaN(e.data.height)
+        !isNaN(e.data.height) &&
+        frameHeight !== e.data.height
       ) {
-        v2_frame.style.height = `${e.data.height + 25}px`;
+        v2_frame.style.height = `${e.data.height + 100}px`;
+        frameHeight = e.data.height;
       } else {
         console.warn("Embed did not receive postMessage height value");
       }
