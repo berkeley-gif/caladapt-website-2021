@@ -35,12 +35,7 @@
   }
 
   .banner-content > * + * {
-    margin-top: var(--banner-child-v-spacing, 2.5rem);
-  }
-
-  .banner > div {
-    position: relative;
-    z-index: 1;
+    margin-top: 2.5rem;
   }
 
   .banner h1 {
