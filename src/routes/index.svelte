@@ -14,7 +14,6 @@
 </script>
 
 <script>
-  import { onMount } from "svelte";
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
 
@@ -34,19 +33,6 @@
   const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
   const cardHeight = 18;
   const cardWidth = 18;
-  $: cardBgColors = [];
-
-  onMount(() => {
-    const styles = getComputedStyle(document.documentElement);
-    cardBgColors = [
-      styles.getPropertyValue("--card-bg-color-02"),
-      styles.getPropertyValue("--card-bg-color-01"),
-      styles.getPropertyValue("--card-bg-color-03"),
-      styles.getPropertyValue("--card-bg-color-03"),
-      styles.getPropertyValue("--card-bg-color-01"),
-      styles.getPropertyValue("--card-bg-color-02"),
-    ];
-  });
 </script>
 
 <style lang="scss">
@@ -173,21 +159,19 @@
 
 <section class="page-grid page-grid--home">
   <div class="content">
-    {#if cardBgColors.length}
-      <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each cardsData as cardDatum, index}
-          <Card
-            {...{
-              ...cardDatum,
-              height: cardHeight,
-              ctaText: "Learn more",
-              textColor: "white",
-              useRule: true,
-            }}
-          />
-        {/each}
-      </CardsContainer>
-    {/if}
+    <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+      {#each cardsData as cardDatum, index}
+        <Card
+          {...{
+            ...cardDatum,
+            height: cardHeight,
+            ctaText: "Learn more",
+            textColor: "white",
+            useRule: true,
+          }}
+        />
+      {/each}
+    </CardsContainer>
   </div>
 
   <div class="sidebar-right">
