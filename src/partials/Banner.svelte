@@ -8,13 +8,18 @@
   export let overlayOpacity = 0.6;
   export let titleFontSize = "";
   export let titleFontWeight = "";
+
+  const getBackgroundImageValue = (str) =>
+    /\//.test(str) ? `url(${str})` : str;
+  $: bgImgLgValue = getBackgroundImageValue(bannerImg);
+  $: bgImgSmValue = getBackgroundImageValue(bannerImgMobile);
 </script>
 
 <style>
   .banner {
     min-height: 16rem;
     color: var(--white);
-    background-image: var(--banner-img);
+    background-image: var(--banner-img, none);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -25,7 +30,7 @@
   @media (max-width: 672px) {
     .banner {
       min-height: 14rem;
-      background-image: var(--banner-img-mobile, var(--banner-img));
+      background-image: var(--banner-img-mobile, var(--banner-img), none);
     }
   }
 
@@ -68,8 +73,8 @@
   class:bleed="{bannerImg}"
   class:bg-img="{bannerImg}"
   class:overlay="{overlayColor}"
-  style="--banner-img:url({bannerImg});
-    --banner-img-mobile:url({bannerImgMobile});
+  style="--banner-img:{bgImgLgValue};
+    --banner-img-mobile:{bgImgSmValue};
     --banner-bg-color:{bgColor};
     --overlay-color:{overlayColor};
     --overlay-opacity:{overlayOpacity};
