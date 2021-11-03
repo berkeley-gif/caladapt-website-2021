@@ -54,8 +54,8 @@
   titleText="Events at Cal-Adapt"
   subtitleText="View information on and register for upcoming webinars and 
     workshops hosted by Cal-Adapt and its partners."
-  bgColor="var(--teal-80)"
-  overlayColor="var(--gray-90)"
+  bannerImg="var(--gradient-gray-blue)"
+  overlayColor="transparent"
 />
 
 <div class="spacing--v-32"></div>

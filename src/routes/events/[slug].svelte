@@ -90,7 +90,11 @@
   <title>{event.metadata.title}</title>
 </svelte:head>
 
-<Banner titleText="{event.metadata.title}" />
+<Banner
+  titleText="{event.metadata.title}"
+  bannerImg="var(--gradient-gray-blue)"
+  overlayColor="transparent"
+/>
 
 <div class="banner-breadcrumbs">
   <div class="bx--grid">

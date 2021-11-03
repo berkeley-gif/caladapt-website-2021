@@ -70,8 +70,8 @@
 <Banner
   titleText="Cal-Adapt Blog"
   subtitleText="Read the latest Cal-Adapt news, updates &amp; events."
-  bgColor="var(--blue-70)"
-  overlayColor="var(--gray-50)"
+  bannerImg="linear-gradient(to bottom, var(--gray-90), var(--teal-70))"
+  overlayColor="transparent"
 />
 
 <div class="page-grid page-grid--blog">
