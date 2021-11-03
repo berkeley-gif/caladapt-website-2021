@@ -410,6 +410,7 @@
         value="{$thresholdStore}"
         minValue="{MIN_THRESHOLD_DEGREES_F}"
         maxValue="{MAX_THRESHOLD_DEGREES_F}"
+        delay="{1200}"
         on:change="{changeThreshold}"
       />
       <LearnMoreButton
