@@ -62,16 +62,16 @@
     text-decoration: solid underline var(--accent) 2px;
   }
 
-  .banner :global(.banner-breadcrumbs) {
+  :global(.banner-breadcrumbs) {
     padding: 1rem;
     width: 100%;
     background: var(--gray-100);
     color: var(--white);
   }
 
-  .banner :global(.bx--breadcrumb-item .bx--link),
-  .banner :global(.bx--breadcrumb-item .bx--link:visited),
-  .banner :global(.bx--breadcrumb-item::after) {
+  :global(.banner-breadcrumbs .bx--breadcrumb-item .bx--link),
+  :global(.banner-breadcrumbs .bx--breadcrumb-item .bx--link:visited),
+  :global(.banner-breadcrumbs .bx--breadcrumb-item::after) {
     color: var(--teal-10);
   }
 </style>
