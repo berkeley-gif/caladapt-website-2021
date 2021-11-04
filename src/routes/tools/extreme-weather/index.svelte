@@ -112,7 +112,7 @@
         href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
         target="_blank">Doherty 2020</a
       >). Present day weather conditions are from NOAA.`,
-    `<em>Note: This tool is still under development. We are soliciting feedback
+    `<em style="font-size:1rem;">Note: This tool is still under development. We are soliciting feedback
       from our users. Please email us at support@cal-adapt.org with your
       comments and questions.</em>`,
   ];
