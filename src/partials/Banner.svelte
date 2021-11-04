@@ -11,8 +11,6 @@
 
   const getBackgroundImageValue = (str) =>
     /\//.test(str) ? `url(${str})` : str;
-  $: bgImgLgValue = getBackgroundImageValue(bannerImg);
-  $: bgImgSmValue = getBackgroundImageValue(bannerImgMobile);
 </script>
 
 <style>
@@ -68,8 +66,8 @@
   class:bleed="{bannerImg}"
   class:bg-img="{bannerImg}"
   class:overlay="{overlayColor}"
-  style="--banner-img:{bgImgLgValue};
-    --banner-img-mobile:{bgImgSmValue};
+  style="--banner-img:{getBackgroundImageValue(bannerImg)};
+    --banner-img-mobile:{getBackgroundImageValue(bannerImgMobile)};
     --banner-bg-color:{bgColor};
     --overlay-color:{overlayColor};
     --overlay-opacity:{overlayOpacity};
