@@ -35,8 +35,11 @@
     }
   }
 
-  .banner-content > * + * {
+  .banner--content {
     position: relative;
+  }
+
+  .banner--content > * + * {
     margin-top: 1.5rem;
   }
 
@@ -107,7 +110,7 @@
 
     <!-- main content row -->
     <div class="bx--row" class:bx--offset-lg-2="{useOffset}">
-      <div class="banner-content bx--col-lg-10">
+      <div class="banner--content bx--col-lg-10">
         <h1>{titleText}</h1>
 
         <!-- subtitle text can be a single or multiple paragraphs -->
