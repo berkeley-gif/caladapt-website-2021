@@ -9,6 +9,8 @@
   export let overlayOpacity = 0.6;
   export let titleFontSize = "";
   export let titleFontWeight = "";
+  export let useOffset = true;
+  export let iconPaths = [];
 
   const getBackgroundImageValue = (str) =>
     /\//.test(str) ? `url(${str})` : str;
@@ -34,7 +36,7 @@
   }
 
   .banner-content > * + * {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .banner h1,
@@ -53,17 +55,25 @@
   }
 
   .banner .lead {
+    max-width: 56ch;
     font-weight: 400;
-  }
-
-  .overlay::before {
-    opacity: var(--overlay-opacity);
-    background-color: var(--overlay-color);
   }
 
   .banner :global(.lead a) {
     color: var(--white);
     text-decoration: solid underline var(--accent) 2px;
+  }
+
+  .banner--icons {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .overlay::before {
+    opacity: var(--overlay-opacity);
+    background-color: var(--overlay-color);
   }
 </style>
 
@@ -78,13 +88,27 @@
     --overlay-color:{overlayColor};
     --overlay-opacity:{overlayOpacity};
     --title-font-size:{titleFontSize};
-    --title-font-weight:{titleFontWeight};"
+    --title-font-weight:{titleFontWeight};
+    --text-color:{textColor}"
 >
   <div class="bx--grid">
-    <slot name="icons" />
-    <div class="bx--row">
-      <div class="bx--offset-lg-2 bx--col-lg-9 banner-content">
+    <!-- optional icons row -->
+    {#if Array.isArray(iconPaths) && iconPaths.length}
+      <div class:bx--offset-lg-2="{useOffset}" class="bx--row">
+        <div class="bx--col banner--icons" aria-hidden="true">
+          {#each iconPaths as path}
+            <img src="{path}" alt="" class="icon" />
+          {/each}
+        </div>
+      </div>
+    {/if}
+
+    <!-- main content row -->
+    <div class="bx--row" class:bx--offset-lg-2="{useOffset}">
+      <div class="banner-content bx--col-lg-10">
         <h1>{titleText}</h1>
+
+        <!-- subtitle text can be a single or multiple paragraphs -->
         {#if Array.isArray(subtitleText) && subtitleText.length}
           {#each subtitleText as textItem}
             <p class="lead">{@html textItem}</p>
@@ -92,6 +116,8 @@
         {:else}
           <p class="lead">{@html subtitleText}</p>
         {/if}
+
+        <!-- optional slot for a CTA button -->
         <slot name="button" />
       </div>
     </div>
