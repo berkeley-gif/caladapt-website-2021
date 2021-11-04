@@ -101,6 +101,7 @@
     Help,
     ToolNavigation,
   } from "~/components/tools/Partials";
+  import { Banner } from "~/partials";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Store
@@ -252,15 +253,17 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      Explore projected changes in Heating Degree Days and Cooling Degree Days,
-      which are a common proxy for energy needed to heat and cool buildings,
-      respectively.
-    </p>
-  </div>
-</Header>
+<Banner
+  titleText="{tool.title}"
+  subtitleText="Explore projected changes in Heating Degree Days and Cooling 
+    Degree Days which are a common proxy for energy needed to heat and cool 
+    buildings, respectively."
+  bgColor="var(--gray-10)"
+  textColor="var(--text-01)"
+  overlayColor="transparent"
+  useOffset="{false}"
+  iconPaths="{tool.icons}"
+/>
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
