@@ -16,31 +16,26 @@
 <script>
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
-
   import { Card, CardsContainer } from "~/components/cards";
   import { Banner, SidebarRight } from "~/partials";
-  import Sun from "static/img/icons/sun.svg";
-  import Rainfall from "static/img/icons/rainfall.svg";
-  import Wildfire from "static/img/icons/wildfire.svg";
-  import Snowflake from "static/img/icons/snowflake.svg";
-  import Sea from "static/img/icons/sea.svg";
-  import Streamflow from "static/img/icons/streamflow.svg";
 
   export let events;
   export let posts;
   export let cardsData;
 
-  const icons = [Sun, Rainfall, Wildfire, Snowflake, Sea, Streamflow];
+  const icons = [
+    "sun",
+    "rainfall",
+    "wildfire",
+    "snowflake",
+    "sea",
+    "streamflow",
+  ].map((name) => `img/icons/${name}.svg`);
   const cardHeight = 18;
   const cardWidth = 18;
 </script>
 
 <style lang="scss">
-  .banner--icons {
-    gap: 0.25rem;
-    position: relative;
-  }
-
   .btn-container {
     margin-top: 2.5rem;
     text-transform: uppercase;
@@ -69,22 +64,12 @@
     needs."
   bannerImg="/img/banners/yosemite_1600x540.jpg"
   bannerImgMobile="/img/banners/yosemite_700x800.jpg"
-  overlayOpacity="{0.6}"
+  overlayOpacity="{0.4}"
   titleFontSize="2rem"
-  titleFontWeight="400"
+  titleFontWeight="600"
+  iconPaths="{icons}"
+  useOffset="{false}"
 >
-  <div
-    class="bx--row bx--offset-lg-2 banner--icons"
-    aria-hidden="true"
-    slot="icons"
-  >
-    {#each icons as icon}
-      <div class="bx--col-1">
-        <div class="icon">{@html icon}</div>
-      </div>
-    {/each}
-  </div>
-
   <div class="btn-container" slot="button">
     <Button icon="{ArrowRight16}" href="/about" sapper:prefetch
       >More about Cal-Adapt</Button
