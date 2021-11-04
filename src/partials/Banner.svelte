@@ -36,6 +36,7 @@
   }
 
   .banner-content > * + * {
+    position: relative;
     margin-top: 1.5rem;
   }
 
@@ -60,7 +61,7 @@
   }
 
   .banner :global(.lead a) {
-    color: var(--white);
+    color: var(--text-color, var(--white));
     text-decoration: solid underline var(--accent) 2px;
   }
 
