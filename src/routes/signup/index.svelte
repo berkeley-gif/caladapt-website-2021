@@ -10,6 +10,7 @@
     TextInput,
   } from "carbon-components-svelte";
   import { serialize } from "~/helpers/utilities";
+  import { Banner } from "~/partials";
 
   const selectItems = [
     "Municipal Government",
@@ -87,12 +88,9 @@
 </script>
 
 <style>
-  .banner {
-    padding: var(--spacing-48) var(--spacing-16);
-    background-color: var(--gray-80);
-  }
-
-  :global(.bx--label) {
+  .bx--grid :global(.bx--label),
+  .bx--grid :global(.bx--text-input),
+  .bx--grid :global(.bx--select-input) {
     font-size: 1rem;
   }
 </style>
@@ -101,23 +99,12 @@
   <title>Newsletter Signup | Cal-Adapt</title>
 </svelte:head>
 
-<!-- Banner -->
-<div class="bleed banner overlay">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-        <h1 id="cal-adapt-newsletter">Cal-Adapt Newsletter</h1>
-        <p class="lead">
-          Signup for quarterly updates on climate tools, data and resources on
-          Cal-Adapt. Occasionally, we might send you announcements of events or
-          workshops related to Cal-Adapt.
-        </p>
-      </div>
-      <div class="bx--col-lg-5"></div>
-    </div>
-  </div>
-</div>
+<Banner
+  titleText="Cal-Adapt Newsletter"
+  subtitleText="Signup for quarterly updates on climate tools, data and 
+    resources on Cal-Adapt. Occasionally, we might send you announcements of 
+    events or workshops related to Cal-Adapt."
+/>
 
 <div class="spacing--v-32"></div>
 

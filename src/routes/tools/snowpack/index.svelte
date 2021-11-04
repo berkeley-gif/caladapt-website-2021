@@ -251,14 +251,12 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      Explore projected changes in monthly Snow Water Equivalent, a common
-      measurement of snowpack for California.
-    </p>
-  </div>
-</Header>
+<Header
+  iconPaths="{tool.icons}"
+  title="{tool.title}"
+  description="Explore projected changes in monthly Snow Water Equivalent, 
+  a common measurement of snowpack for California."
+/>
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 

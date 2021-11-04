@@ -15,7 +15,7 @@
   import { ArrowRight16 } from "carbon-icons-svelte";
 
   import { Card, CardsContainer } from "~/components/cards";
-  import SidebarRight from "../../partials/SidebarRight.svelte";
+  import { Banner, SidebarRight } from "~/partials";
 
   export let posts;
   export let events;
@@ -67,16 +67,12 @@
   <title>Blog | Cal-Adapt</title>
 </svelte:head>
 
-<section class="banner bg-gray-100">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <h1>Cal-Adapt Blog</h1>
-        <p class="lead">Read the latest Cal-Adapt news, updates &amp; events</p>
-      </div>
-    </div>
-  </div>
-</section>
+<Banner
+  titleText="Cal-Adapt Blog"
+  subtitleText="Read the latest Cal-Adapt news, updates &amp; events."
+  bannerImg="linear-gradient(to bottom, var(--gray-90), var(--teal-70))"
+  overlayColor="transparent"
+/>
 
 <div class="page-grid page-grid--blog">
   <div class="content">

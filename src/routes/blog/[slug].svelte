@@ -14,7 +14,7 @@
 </script>
 
 <script>
-  import NavBreadcrumb from "../../partials/NavBreadcrumb.svelte";
+  import { Banner, NavBreadcrumb } from "~/partials";
   import { TweetButton } from "~/components/social-media";
 
   export let post;
@@ -30,21 +30,17 @@
 </script>
 
 <style lang="scss">
-  .banner {
-    background-position: center;
-    background-size: cover;
-    min-height: 350px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
   .post {
     padding: 2rem 0;
   }
 
   .content {
     padding: 1rem;
+
+    :global(p),
+    :global(li) {
+      font-size: 1.125rem;
+    }
   }
 
   .social {
@@ -77,30 +73,26 @@
   <meta name="Description" content="{post.metadata.snippet}" />
 </svelte:head>
 
-<div class="banner-breadcrumbs">
-  <NavBreadcrumb items="{items}" />
-</div>
+<Banner
+  titleText="{post.metadata.title}"
+  bannerImg="{`/img/blog/${post.metadata.image}`}"
+/>
 
-<!-- Banner -->
-<section
-  class="banner overlay overlay-gradient-gray-blue overlay-60"
-  style="background-image: url(/img/blog/{post.metadata.image});"
->
+<div class="banner-breadcrumbs">
   <div class="bx--grid">
-    <!-- Row -->
     <div class="bx--row">
-      <div class="bx--col">
-        <h1>{post.metadata.title}</h1>
+      <div class="bx--offset-lg-2 bx--col-lg-10 bx--col-padding">
+        <NavBreadcrumb items="{items}" />
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <div class="post">
   <div class="bx--grid">
     <!-- Row -->
     <div class="bx--row">
-      <div class="bx--offset-lg-3 bx--col-lg-10 metadata">
+      <div class="bx--offset-lg-2 bx--col-lg-10 metadata">
         <p class="author h5">
           {post.metadata.author}
         </p>
@@ -113,13 +105,13 @@
     </div>
     <!-- Row -->
     <div class="bx--row">
-      <div class="bx--offset-lg-3 bx--col-lg-10 content">
+      <div class="bx--offset-lg-2 bx--col-lg-10 content">
         {@html post.html}
       </div>
     </div>
     <!-- Row -->
     <div class="bx--row">
-      <div class="bx--offset-lg-3 bx--col-lg-10">
+      <div class="bx--offset-lg-2 bx--col-lg-10">
         <hr />
         <div class="share">
           <div class="social">

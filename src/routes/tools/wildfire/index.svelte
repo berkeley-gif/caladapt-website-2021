@@ -253,14 +253,12 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      Explore wildfire scenario projections for area burned and estimated
-      decadal wildfire probabilities for California.
-    </p>
-  </div>
-</Header>
+<Header
+  iconPaths="{tool.icons}"
+  title="{tool.title}"
+  description="Explore wildfire scenario projections for area burned and 
+    estimated decadal wildfire probabilities for California."
+/>
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
