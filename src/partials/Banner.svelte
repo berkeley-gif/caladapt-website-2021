@@ -43,6 +43,7 @@
   .banner h1,
   .banner p {
     color: var(--text-color, var(--white));
+    line-height: 1.25;
   }
 
   .banner h1 {
