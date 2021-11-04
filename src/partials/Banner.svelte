@@ -1,6 +1,7 @@
 <script>
   export let titleText = "Page Title";
   export let subtitleText = "";
+  export let textColor = "";
   export let bgColor = "";
   export let bannerImg = "";
   export let bannerImgMobile = "";
@@ -33,7 +34,12 @@
   }
 
   .banner-content > * + * {
-    margin-top: 2.5rem;
+    margin-top: 1rem;
+  }
+
+  .banner h1,
+  .banner p {
+    color: var(--text-color, var(--white));
   }
 
   .banner h1 {
