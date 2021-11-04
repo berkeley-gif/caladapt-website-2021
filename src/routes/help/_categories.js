@@ -1,8 +1,8 @@
 const categories = [
   {
     slug: "get-started",
-    title: "Getting Started",
-    text: "Learn how to get started with Cal-Adapt and climate data.",
+    title: "Get Started",
+    text: "An introduction to climate data, models, and projections.",
     dir: "get-started",
   },
   {
