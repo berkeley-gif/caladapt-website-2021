@@ -46,19 +46,20 @@
     >`}"
   bannerImg="/img/banners/classSubSample.jpg"
   overlayOpacity="{0.7}"
+  useOffset="{false}"
 />
 
-<section>
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <FilterCategories
-          categories="{categories}"
-          on:change="{getToolsByCategory}"
-        />
-      </div>
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--col">
+      <FilterCategories
+        categories="{categories}"
+        on:change="{getToolsByCategory}"
+      />
     </div>
-    <div class="bx--row">
+  </div>
+  <div class="bx--row">
+    <div class="bx--col">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
         {#each toolsByCategory as { icons, title, desc, slug, version3 }}
           <Card
@@ -75,4 +76,6 @@
       </CardsContainer>
     </div>
   </div>
-</section>
+</div>
+
+<div class="spacing--v-96"></div>

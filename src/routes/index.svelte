@@ -40,14 +40,6 @@
     margin-top: 2.5rem;
     text-transform: uppercase;
   }
-
-  .footer {
-    margin-top: 2rem;
-
-    @media (max-width: 1000px) {
-      margin-top: 1rem;
-    }
-  }
 </style>
 
 <svelte:head>
@@ -77,40 +69,50 @@
   </div>
 </Banner>
 
-<section class="page-grid page-grid--home">
-  <div class="content">
-    <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-      {#each cardsData as cardDatum, index}
-        <Card
-          {...{
-            ...cardDatum,
-            height: cardHeight,
-            ctaText: "Learn more",
-            textColor: "white",
-            useRule: true,
-          }}
-        />
-      {/each}
-    </CardsContainer>
-  </div>
+<div class="spacing--v-32"></div>
 
-  <div class="sidebar-right">
-    <SidebarRight
-      display="{['events', 'posts']}"
-      events="{events}"
-      posts="{[posts[0]]}"
-    />
-  </div>
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
+      <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
+        {#each cardsData as cardDatum, index}
+          <Card
+            {...{
+              ...cardDatum,
+              height: cardHeight,
+              ctaText: "Learn more",
+              textColor: "white",
+              useRule: true,
+            }}
+          />
+        {/each}
+      </CardsContainer>
+    </div>
 
-  <div class="footer">
-    <p class="lead">
-      Get the latest Cal-Adapt news, updates &amp; events delivered to your
-      inbox. Subscribe to the Cal-Adapt Newsletter.
-    </p>
-    <div class="btn-container">
-      <Button icon="{ArrowRight16}" href="/signup/#cal-adapt-newsletter"
-        >Subscribe</Button
-      >
+    <!-- Sidebar on desktop only -->
+    <div class="bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+      <SidebarRight
+        display="{['events', 'posts']}"
+        events="{events}"
+        posts="{[posts[0]]}"
+      />
     </div>
   </div>
-</section>
+
+  <div class="bx--row">
+    <div class="bx--col">
+      <div class="spacing--v-48"></div>
+      <p class="lead">
+        Get the latest Cal-Adapt news, updates &amp; events delivered to your
+        inbox. Subscribe to the Cal-Adapt Newsletter.
+      </p>
+      <div class="btn-container">
+        <Button icon="{ArrowRight16}" href="/signup/#cal-adapt-newsletter"
+          >Subscribe</Button
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="spacing--v-96"></div>
