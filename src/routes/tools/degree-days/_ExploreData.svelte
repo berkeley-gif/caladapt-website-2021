@@ -90,6 +90,9 @@
 
   let baseTemperature = `<p>Heating or Cooling Degree Days are calculated with reference to a Base Temperature, e.g. 65 °F. You can set the Base Temperature to a different value that meets your analysis requirements.</p>`;
 
+  let invalidThresholdText = `Value must be between ${MIN_THRESHOLD_DEGREES_F} 
+    and ${MAX_THRESHOLD_DEGREES_F}.`;
+
   let metadata;
   let csvData;
   let printContainer;
@@ -410,6 +413,8 @@
         value="{$thresholdStore}"
         minValue="{MIN_THRESHOLD_DEGREES_F}"
         maxValue="{MAX_THRESHOLD_DEGREES_F}"
+        invalidText="{invalidThresholdText}"
+        delay="{1200}"
         on:change="{changeThreshold}"
       />
       <LearnMoreButton
