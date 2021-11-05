@@ -99,8 +99,12 @@
   <div class="bx--grid">
     <!-- optional icons row -->
     {#if Array.isArray(iconPaths) && iconPaths.length}
-      <div class:bx--offset-lg-2="{useOffset}" class="bx--row">
-        <div class="bx--col banner--icons" aria-hidden="true">
+      <div class="bx--row">
+        <div
+          class="bx--col banner--icons"
+          class:bx--offset-lg-2="{useOffset}"
+          aria-hidden="true"
+        >
           {#each iconPaths as path}
             <img src="{path}" alt="" class="icon" />
           {/each}
@@ -109,8 +113,11 @@
     {/if}
 
     <!-- main content row -->
-    <div class="bx--row" class:bx--offset-lg-2="{useOffset}">
-      <div class="banner--content bx--col-lg-10">
+    <div class="bx--row">
+      <div
+        class="banner--content bx--col-lg-10"
+        class:bx--offset-lg-2="{useOffset}"
+      >
         <h1>{titleText}</h1>
 
         <!-- subtitle text can be a single or multiple paragraphs -->
