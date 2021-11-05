@@ -9,12 +9,20 @@
   export let maxValue = Infinity;
   export let hideSteppers = false;
   export let delay = 350; // milliseconds
+  export let invalidText = "Invalid value";
 
   const dispatch = debounce(createEventDispatcher(), delay);
 
   let ready = false;
+  let invalid = false;
 
-  $: value, dispatch("change", value);
+  $: value, !invalid && dispatch("change", value);
+
+  $: if (value < minValue || value > maxValue) {
+    invalid = true;
+  } else {
+    invalid = false;
+  }
 
   onMount(() => {
     ready = true;
@@ -31,6 +39,8 @@
     mix="{minValue}"
     max="{maxValue}"
     hideSteppers="{hideSteppers}"
+    invalid="{invalid}"
+    invalidText="{invalidText}"
   />
 {:else}
   <NumberInputSkeleton />
