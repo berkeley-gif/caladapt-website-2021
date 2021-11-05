@@ -89,7 +89,7 @@ export function flattenData(_data) {
  * @param {array} _data - array of series objects
  * @return {array}
  */
-export function getDataByDate(_arr) {
+export function groupDataByYear(_arr) {
   return Array.from(
     group(_arr, (d) => d.year),
     ([year, values]) => {
@@ -190,7 +190,7 @@ export function getCompassQuadrant(deg) {
  * @param {array} _data - array of series objects
  * @return {array}
  */
-export function getDataByDay(_arr) {
+export function groupDataByDay(_arr) {
   return Array.from(
     group(_arr, (d) => d.date),
     ([date, values]) => {
