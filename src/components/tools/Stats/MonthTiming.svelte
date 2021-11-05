@@ -60,7 +60,10 @@
       };
     }
     // Empty state
-    return "–";
+    return {
+      earliest: "–",
+      latest: "–",
+    };
   }
 
   function calculateMetrics({ group, period }) {
