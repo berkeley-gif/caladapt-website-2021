@@ -9,6 +9,7 @@
  * --location: (required) determines env variables and where compiled
  *    assets should be rsync'd to.
  * --transfer: (optional) disables rsync when set to false.
+ * --build: (optional) disables sapper export when set to false
  *
  * Examples (assumes script is being run from root of repository):
  *
@@ -26,13 +27,14 @@ const DEPLOY_URI = `api.${BASE_URI}`;
 const DIR = "/var/www/";
 
 let allowTransfer = true;
+let allowBuild = true;
 
 main();
 
 async function main() {
   // zx shorthand for parsing script arguments in the form of `--foo=bar`
   // eslint-disable-next-line no-undef
-  const { location, help, transfer } = argv;
+  const { location, help, transfer, build } = argv;
 
   if (help) {
     return await usage();
@@ -44,6 +46,10 @@ async function main() {
 
   if (transfer === "false") {
     allowTransfer = false;
+  }
+
+  if (build === "false") {
+    allowBuild = false;
   }
 
   await handleLocation(location);
@@ -63,7 +69,12 @@ async function handleError(error) {
 }
 
 async function sapperExport() {
-  await $`npm run export`;
+  if (allowBuild) {
+    await $`npm run export`;
+  } else {
+    console.log("not running sapper export via --build option");
+    return Promise.resolve();
+  }
 }
 
 async function transfer(subdomain) {
