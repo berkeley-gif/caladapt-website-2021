@@ -109,7 +109,7 @@
           on:search="{updateSearch}"
           on:filter="{updateFilter}"
         />
-        <div class="spacing--v-32"></div>
+        <div class="spacing--v-64"></div>
         <p>
           Get the latest Cal-Adapt news, updates &amp; events delivered to your
           inbox. Subscribe to the Cal-Adapt Newsletter.
