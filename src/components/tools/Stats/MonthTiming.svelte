@@ -1,7 +1,6 @@
 <script>
   import { SkeletonText } from "carbon-components-svelte";
-  import { timeFormat } from "d3-time-format";
-  import { rollups, merge } from "d3-array";
+  import { MONTHS_LIST } from "~/routes/tools/_common/constants";
   import StatBlock from "./StatBlock.svelte";
 
   /** Array of data values grouped by date, e.g.
@@ -37,8 +36,6 @@
 
   let metrics = [];
 
-  const dateFormat = timeFormat("%B");
-
   function subsetByYears(start, end) {
     return function (d) {
       return (
@@ -50,13 +47,13 @@
 
   function getMonths(data) {
     if (Array.isArray(data) && data.length) {
-      const months = new Set(data.map(({ date }) => date.getMonth()));
+      const months = new Set(data.map(({ date }) => date.getUTCMonth()));
       const sortedMonths = [...months].sort((a, b) => a - b);
       return {
-        earliest: dateFormat(new Date(2020, sortedMonths[0], 1)),
-        latest: dateFormat(
-          new Date(2020, sortedMonths[sortedMonths.length - 1], 1)
-        ),
+        earliest: MONTHS_LIST.find(({ id }) => id === sortedMonths[0]).text,
+        latest: MONTHS_LIST.find(
+          ({ id }) => id === sortedMonths[sortedMonths.length - 1]
+        ).text,
       };
     }
     // Empty state
@@ -92,12 +89,12 @@
     return [
       {
         id: "earliest",
-        label: `Earliest in ${periodLength} YEAR`,
+        label: `Earliest in ${periodLength} YEARS`,
         value: earliest,
       },
       {
         id: "latest",
-        label: `Latest in ${periodLength} YEAR`,
+        label: `Latest in ${periodLength} YEARS`,
         value: latest,
       },
     ];
