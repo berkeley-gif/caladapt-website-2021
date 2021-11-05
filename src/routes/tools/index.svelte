@@ -46,6 +46,7 @@
     >`}"
   bannerImg="/img/banners/classSubSample.jpg"
   overlayOpacity="{0.7}"
+  useOffset="{false}"
 />
 
 <section>

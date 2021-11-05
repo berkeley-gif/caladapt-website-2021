@@ -69,9 +69,10 @@
 
 <Banner
   titleText="Cal-Adapt Blog"
-  subtitleText="Read the latest Cal-Adapt news, updates &amp; events."
+  subtitleText="Read about the latest Cal-Adapt news, updates, and events."
   bannerImg="linear-gradient(to bottom, var(--gray-90), var(--teal-70))"
   overlayColor="transparent"
+  useOffset="{false}"
 />
 
 <div class="page-grid page-grid--blog">
