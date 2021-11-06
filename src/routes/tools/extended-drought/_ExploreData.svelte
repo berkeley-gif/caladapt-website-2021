@@ -29,15 +29,17 @@
     periodStore,
     scenarioStore,
     droughtDataStore,
+    observedDataStore,
   } from "./_store";
+  import { DEFAULT_MODEL } from "./_constants";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
+  const { period } = periodStore;
 
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -60,14 +62,12 @@
 
   let chartTitle = "";
 
-  $: chartSubtitle = `Projected changes in Snow Water Equivalent for the month of under a`;
-
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: console.log($droughtDataStore);
-
   $: if (Array.isArray($droughtDataStore) && $droughtDataStore.length) {
-    dataByDate = getDataByDate(flattenData($droughtDataStore));
+    dataByDate = getDataByDate(
+      flattenData([...$droughtDataStore, ...$observedDataStore])
+    );
   } else {
     dataByDate = null;
   }
@@ -162,16 +162,22 @@
   <div slot="title" class="block title">
     <ChartTitle
       title="{chartTitle}"
-      subtitle="{chartSubtitle}"
+      subtitle="{$scenario.desc}"
+      periodLabel="{$period.label}"
+      climvarLabel="{$climvar.label}"
       scenarioLabel="{$scenario.labelLong}"
       loadLocation="{loadLocation}"
     />
   </div>
 
-  <div slot="tab_content_stats">
-    /* <StatsPanel
-      {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
-    />*/
+  <div slot="stats">
+    <StatsPanel
+      units="{$climvar.units.imperial}"
+      data="{dataByDate}"
+      formatFn="{formatFn}"
+      models="{[DEFAULT_MODEL]}"
+      scenario="{$scenario.id}"
+    />
   </div>
 
   <div slot="graphic" class="graphic block">

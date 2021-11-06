@@ -3,10 +3,22 @@
   import { Location16 } from "carbon-icons-svelte";
 
   export let title;
-  export let monthLabel;
+  export let subtitle;
+  export let climvarLabel;
   export let scenarioLabel;
+  export let periodLabel;
   export let loadLocation;
 </script>
+
+<style>
+  div {
+    max-width: 70ch;
+  }
+
+  p {
+    color: var(--gray-80);
+  }
+</style>
 
 <Button
   class="btn-change-location"
@@ -21,9 +33,9 @@
   {title}
 </div>
 <div class="h4">
-  Projected changes in Snow Water Equivalent for the month of <span
-    class="annotate">{monthLabel}</span
-  >
+  Projected changes in <span class="annotate">{climvarLabel}</span> by
+  <span class="annotate">{periodLabel}</span>
   under a
-  <span class="annotate">{scenarioLabel}</span>.
+  <span class="annotate">{scenarioLabel}</span>*
 </div>
+<p>*{subtitle}</p>
