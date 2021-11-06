@@ -216,17 +216,18 @@ const tools = [
   },
   {
     title: 'Extended Drought',
-    desc: `Projections of temperature, precipitation and a set of VIC variables from two 30 year 
-    drought periods.`,
+    desc: `Explore projections of temperature, precipitation and a set of hydrological variables 
+      from two 30 year drought periods.`,
     categories: ['Temperature', 'Precipitation'],
     slug: 'extended-drought',
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
+      'img/icons/snowflake.svg',
     ],
     datasets: [
       {
-        slug: 'cb0c5f49-59d2-4f8e-8d9c-a047833f6081',
+        slug: '932188b3-2e32-4eb1-882d-c00e79197192',
         logo: 'scripps_100x100.png',
       },
       {
@@ -235,6 +236,10 @@ const tools = [
       },
       {
         slug: 'b8bee9f9-31c1-40d9-89a3-2dad814ba7da',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'e3463df5-5ecc-42fb-a947-07868a8eee8c',
         logo: 'gif_80x80.png'
       }
     ],
