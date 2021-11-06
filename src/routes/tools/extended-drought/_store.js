@@ -81,16 +81,17 @@ export const periodStore = (() => {
 // DERIVED STORES
 // Baseline store
 export const droughtDataStore = derived(
-  [dataStore, scenarioStore],
-  ([$dataStore, $scenarioStore]) => {
+  [dataStore, scenarioStore, periodStore],
+  ([$dataStore, $scenarioStore, $periodStore]) => {
     if (!$dataStore || !$scenarioStore) return null;
     const scenario = scenarioList.find((d) => d.id === $scenarioStore);
-    const start = new Date(Date.UTC(+scenario.start, 0, 1));
-    const end = new Date(Date.UTC(+scenario.end, 11, 31));
-    console.log(start, end);
+    const start = new Date(
+      Date.UTC(+scenario.start - DEFAULT_YEARS_BEFORE, 0, 1)
+    );
+    const end = new Date(Date.UTC(+scenario.end + DEFAULT_YEARS_AFTER, 11, 31));
 
     const envelope = $dataStore
-      .filter((series) => series.mark === "area")
+      .filter(({ id }) => id.includes("range"))
       .map((series) => {
         const values = series.values.filter((d) => {
           const { date } = d;
@@ -101,17 +102,30 @@ export const droughtDataStore = derived(
         });
         return { ...series, values };
       });
-    // const firstDate = envelope[0].values[0].date;
-    // envelope[0].values[0].date = new Date(firstDate.getUTCFullYear(), 0, 1);
-    // const lastDate = envelope[0].values[19].date;
-    // envelope[0].values[19].date = new Date(lastDate.getUTCFullYear(), 0, 1);
-    // const models = $dataStore
-    //   .filter((series) => series.id === DEFAULT_MODEL);
-    //.map((series) => ({ ...series, values: series.values.splice[1, -1] }))
-    const models = [];
 
-    console.log(envelope[0].values[0]);
+    const models = $dataStore
+      .filter(({ id }) => id === DEFAULT_MODEL)
+      .map((series) => {
+        if ($periodStore === "wateryear") {
+          return { ...series, values: series.values.slice(1, -1) };
+        } else {
+          return series;
+        }
+      });
 
     return [...envelope, ...models];
+  }
+);
+
+export const observedDataStore = derived(
+  [dataStore, scenarioStore, periodStore],
+  ([$dataStore, $scenarioStore, $periodStore]) => {
+    if (!$dataStore || !$scenarioStore) return null;
+
+    const observed = $dataStore.filter(
+      ({ id }) => id !== DEFAULT_MODEL && !id.includes("range")
+    );
+
+    return [...observed];
   }
 );
