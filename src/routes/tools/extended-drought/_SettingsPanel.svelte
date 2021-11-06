@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
 
   import { SELECT_LOCATION_DESCRIPTION } from "../_common/constants";
-  import { TIME_PERIODS } from "./_constants";
+  import { TIME_PERIODS, LEARN_MORE_PERIODS } from "./_constants";
 
   import {
     SelectClimvar,
@@ -75,9 +75,14 @@
     on:click="{() =>
       showLearnMore({
         slugs: [
-          'annual-average-tasmax',
-          'annual-average-tasmin',
-          'annual-average-pr',
+          'daily-maximum-temp',
+          'daily-minimum-temp',
+          'daily-pr',
+          'tair',
+          'evapotranspiration',
+          'snow-water-equivalent',
+          'baseflow',
+          'runoff',
         ],
       })}"
   />
@@ -90,7 +95,7 @@
     on:change="{changeScenario}"
   />
   <LearnMoreButton
-    on:click="{() => showLearnMore({ slugs: ['emissions-scenario'] })}"
+    on:click="{() => showLearnMore({ slugs: ['drought-scenario'] })}"
   />
 </div>
 
@@ -104,7 +109,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        slugs: ['water-year', 'calendar-year'],
+        content: LEARN_MORE_PERIODS,
       })}"
   />
 </div>
