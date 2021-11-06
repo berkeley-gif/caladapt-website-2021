@@ -137,14 +137,15 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
     const responses = await Promise.all(promises);
     const mergedResponses = merge(responses);
     const values = mergedResponses.map((d) => {
+      // Reset date to start of year so x axis year ticks & values align in charts
       if ("mean" in d) {
         return {
-          date: new Date(d.date.getUTCFullYear(), 11, 31),
+          date: new Date(Date.UTC(d.date.getUTCFullYear(), 0, 1)),
           value: d.mean,
         };
       } else {
         return {
-          date: d.date,
+          date: new Date(Date.UTC(d.date.getUTCFullYear(), 0, 1)),
           value: d.value,
         };
       }
