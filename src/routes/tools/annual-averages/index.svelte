@@ -190,14 +190,13 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      Explore projected changes in annual average Maximum Temperature, Minimum
-      Temperature and Precipitation through end of this century for California.
-    </p>
-  </div>
-</Header>
+<Header
+  iconPaths="{tool.icons}"
+  title="{tool.title}"
+  description="Explore projected changes in annual average Maximum Temperature, 
+    Minimum Temperature and Precipitation through end of this century for 
+    California."
+/>
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 

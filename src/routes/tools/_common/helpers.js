@@ -1,4 +1,8 @@
 import { rollups, sort, group } from "d3-array";
+import {
+  DEFAULT_COMPASS_QUADRANTS,
+  DEFAULT_COMPASS_QUADRANT_ANGLE,
+} from "./constants";
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -148,4 +152,64 @@ export function formatDataForExport(_arr) {
     });
     return row;
   });
+}
+
+/**
+ * Converts degrees into the corresponding quadrant
+ * on a 16 point compass
+ * @param {number}
+ * @return {string}
+ */
+export function getCompassQuadrant(deg) {
+  const i = Math.round((deg % 360) / DEFAULT_COMPASS_QUADRANT_ANGLE);
+  return DEFAULT_COMPASS_QUADRANTS[i];
+}
+
+/**
+ * Groups a flattened array of objects by year. From:
+ *  [
+ *   { date: Date Sun Dec 31 1950, value: 90, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1951, value: 95, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1952, value: 97, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   ...
+ * ]
+ * to:
+ * [
+ *  {
+ *    date: Date Sun Dec 31 1950,
+ *    values: [
+ *      { id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry), value: 90 },
+ *      { id: MIROC5, label: MIROC5 (Complement), value: 87 },
+ *      { id: livneh, label: Observed, value: 92 },
+ *      ...
+ *    ]
+ *  },
+ *  ...
+ * ]
+ * Used for chart tooltips
+ * @param {array} _data - array of series objects
+ * @return {array}
+ */
+export function getDataByDay(_arr) {
+  return Array.from(
+    group(_arr, (d) => d.date),
+    ([date, values]) => {
+      const rows = values.map((d) => {
+        if ("min" in d && "max" in d) {
+          return {
+            id: d.id,
+            label: d.label,
+            value: [d["min"], d["max"]],
+          };
+        } else {
+          return {
+            id: d.id,
+            label: d.label,
+            value: d.value,
+          };
+        }
+      });
+      return { date, values: rows };
+    }
+  );
 }

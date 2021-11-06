@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { getSiblings } from "../../helpers/utilities.js";
+  import { getSiblings } from "~/helpers/utilities";
 
   export let tags;
 

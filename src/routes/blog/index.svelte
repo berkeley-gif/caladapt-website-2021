@@ -15,7 +15,7 @@
   import { ArrowRight16 } from "carbon-icons-svelte";
 
   import { Card, CardsContainer } from "~/components/cards";
-  import SidebarRight from "../../partials/SidebarRight.svelte";
+  import { Banner, SidebarRight } from "~/partials";
 
   export let posts;
   export let events;
@@ -67,65 +67,68 @@
   <title>Blog | Cal-Adapt</title>
 </svelte:head>
 
-<section class="banner bg-gray-100">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <h1>Cal-Adapt Blog</h1>
-        <p class="lead">Read the latest Cal-Adapt news, updates &amp; events</p>
+<Banner
+  titleText="Cal-Adapt Blog"
+  subtitleText="Read about the latest Cal-Adapt news, updates, and events."
+  bannerImg="linear-gradient(to bottom, var(--gray-90), var(--teal-70))"
+  overlayColor="transparent"
+  useOffset="{false}"
+/>
+
+<div class="spacing--v-32"></div>
+
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
+      <CardsContainer gridGap="{cardGap}" cardWidth="{cardWidth}">
+        {#each filteredPosts as { slug, metadata: { image, tags, title, pubdate, datestring, author, snippet } }}
+          <Card
+            {...{
+              titleText: title,
+              linkPath: `/blog/${slug}`,
+              imgSrc: `img/blog/${image}`,
+              description: snippet,
+              ctaText: "View article",
+              tags,
+              pubDate: pubdate,
+              pubDateStr: datestring,
+              author,
+            }}
+          />
+        {/each}
+      </CardsContainer>
+    </div>
+
+    <!-- Sidebar desktop only -->
+    <div class="bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+      <div class="is-sticky">
+        <SidebarRight
+          display="{['events', 'search', 'filters']}"
+          filters="{['data', 'tools', 'other']}"
+          events="{events}"
+          on:search="{updateSearch}"
+          on:filter="{updateFilter}"
+        />
+        <div class="spacing--v-64"></div>
+        <p>
+          Get the latest Cal-Adapt news, updates &amp; events delivered to your
+          inbox. Subscribe to the Cal-Adapt Newsletter.
+        </p>
+        <Button icon="{ArrowRight16}" href="/signup">SUBSCRIBE</Button>
       </div>
     </div>
   </div>
-</section>
 
-<div class="page-grid page-grid--blog">
-  <div class="content">
-    <div class="bx--grid">
-      <div class="bx--row">
-        <CardsContainer gridGap="{cardGap}" cardWidth="{cardWidth}">
-          {#each filteredPosts as { slug, metadata: { image, tags, title, pubdate, datestring, author, snippet } }}
-            <Card
-              {...{
-                titleText: title,
-                linkPath: `/blog/${slug}`,
-                imgSrc: `img/blog/${image}`,
-                description: snippet,
-                ctaText: "View article",
-                tags,
-                pubDate: pubdate,
-                pubDateStr: datestring,
-                author,
-              }}
-            />
-          {/each}
-        </CardsContainer>
-      </div>
-    </div>
-  </div>
-
-  <div class="sidebar-right">
-    <div class="is-sticky">
-      <SidebarRight
-        display="{['events', 'search', 'filters']}"
-        filters="{['data', 'tools', 'other']}"
-        events="{events}"
-        on:search="{updateSearch}"
-        on:filter="{updateFilter}"
-      />
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="bx--grid">
-      <div class="bx--row">
-        <div class="bx--col">
-          <p class="lead">
-            Get the latest Cal-Adapt news, updates &amp; events delivered to
-            your inbox. Subscribe to the Cal-Adapt Newsletter.
-          </p>
-          <Button icon="{ArrowRight16}" href="/signup">SUBSCRIBE</Button>
-        </div>
-      </div>
+  <div class="bx--row">
+    <div class="bx--col-lg-0">
+      <div class="spacing--v-48"></div>
+      <p class="lead">
+        Get the latest Cal-Adapt news, updates &amp; events delivered to your
+        inbox. Subscribe to the Cal-Adapt Newsletter.
+      </p>
+      <Button icon="{ArrowRight16}" href="/signup">SUBSCRIBE</Button>
     </div>
   </div>
 </div>
+
+<div class="spacing--v-96"></div>

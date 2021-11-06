@@ -6,6 +6,7 @@
 
 <header aria-label="Cal-Adapt Home" class="main-nav bx--header" role="banner">
   <a
+    sapper:prefetch
     class="bx--header__name"
     aria-current="{segment === undefined ? 'page' : undefined}"
     href="/"
@@ -42,6 +43,7 @@
     <ul aria-label="Cal-Adapt" class="bx--header__menu-bar" role="menubar">
       <li>
         <a
+          sapper:prefetch
           href="/tools/"
           class="bx--header__menu-item"
           role="menuitem"
@@ -53,6 +55,7 @@
       </li>
       <li>
         <a
+          sapper:prefetch
           href="/data/"
           class="bx--header__menu-item"
           role="menuitem"
@@ -64,6 +67,7 @@
       </li>
       <li>
         <a
+          sapper:prefetch
           href="/help/"
           class="bx--header__menu-item"
           role="menuitem"
@@ -75,6 +79,7 @@
       </li>
       <li>
         <a
+          sapper:prefetch
           href="/blog/"
           class="bx--header__menu-item"
           role="menuitem"
@@ -86,6 +91,7 @@
       </li>
       <li>
         <a
+          sapper:prefetch
           href="/events/"
           class="bx--header__menu-item"
           role="menuitem"
@@ -98,6 +104,7 @@
 
       <li>
         <a
+          sapper:prefetch
           href="/about/"
           class="bx--header__menu-item"
           role="menuitem"

@@ -40,10 +40,10 @@
         <!-- Breadcrumb -->
         <ol class="breadcrumb breadcrumb-scroll">
           <li class="breadcrumb-item">
-            <a href="/" class="text-gray-700"> Home </a>
+            <a sapper:prefetch href="/" class="text-gray-700"> Home </a>
           </li>
           <li class="breadcrumb-item">
-            <a href="/blog" class="text-gray-700"> Blog </a>
+            <a sapper:prefetch href="/blog" class="text-gray-700"> Blog </a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">Search</li>
         </ol>
@@ -69,7 +69,7 @@
         <ul class="list p-2">
           {#each articles as post}
             <li class="list-item d-flex">
-              <a href="blog/{post.slug}/" class="flex-grow-1">
+              <a sapper:prefetch href="blog/{post.slug}/" class="flex-grow-1">
                 {post.metadata.title}
               </a>
               <time datetime="{post.metadata.pubdate}"
@@ -82,7 +82,7 @@
         <ul class="list p-2">
           {#each webinars as post}
             <li class="list-item d-flex">
-              <a href="blog/{post.slug}/" class="flex-grow-1">
+              <a sapper:prefetch href="blog/{post.slug}/" class="flex-grow-1">
                 {post.metadata.title}
               </a>
               <time datetime="{post.metadata.pubdate}"
@@ -95,7 +95,7 @@
         <ul class="list p-2">
           {#each tutorials as post}
             <li class="list-item d-flex">
-              <a href="blog/{post.slug}/" class="flex-grow-1">
+              <a sapper:prefetch href="blog/{post.slug}/" class="flex-grow-1">
                 {post.metadata.title}
               </a>
               <time datetime="{post.metadata.pubdate}"
@@ -137,7 +137,7 @@
               Help
             </h6>
             <p class="font-size-sm">
-              Explore our collection of <a href="/help"
+              Explore our collection of <a sapper:prefetch href="/help"
                 >frequently asked questions</a
               > to learn more about using Cal-Adapt.
             </p>
@@ -160,7 +160,9 @@
               Keep up to date with new climate tools, data and resources on
               Cal-Adapt. Subscribe to the Cal-Adapt Newsletter.
             </p>
-            <a href="/signup/" class="btn btn-primary">Subscribe</a>
+            <a sapper:prefetch href="/signup/" class="btn btn-primary"
+              >Subscribe</a
+            >
           </div>
         </div>
         <!-- end Newsletter Card -->

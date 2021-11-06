@@ -14,6 +14,7 @@
   import User32 from "carbon-icons-svelte/lib/User32";
   import Video32 from "carbon-icons-svelte/lib/Video32";
   import { Card, CardsContainer } from "~/components/cards";
+  import { Banner } from "~/partials";
 
   export let categories;
 
@@ -30,21 +31,8 @@
 </script>
 
 <style lang="scss">
-  .banner {
-    background-image: url(/img/banners/help_1500x400.jpg);
-    background-size: cover;
-    min-height: 350px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    @media (max-width: 672px) {
-      background-image: url(/img/banners/help_500x500.jpg);
-    }
-  }
-
   .help-footer {
-    h4 {
+    .h4 {
       margin-bottom: 0.5rem;
     }
     > div:nth-child(2) {
@@ -63,20 +51,21 @@
   <title>Help | Cal-Adapt</title>
 </svelte:head>
 
-<!-- Banner -->
-<section class="banner overlay overlay-black overlay-40 bg-img">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <h1>How can we help?</h1>
-      </div>
-    </div>
-  </div>
-</section>
+<Banner
+  titleText="How can we help?"
+  subtitleText="If you're brand new to Cal-Adapt we recommend visiting our 
+    Getting Started articles. We also have tutorials and webinars that demonstrate 
+    how to use our tools."
+  bannerImg="/img/banners/help_1500x400.jpg"
+  bannerImgMobile="/img/banners/help_500x500.jpg"
+  overlayOpacity="{0.7}"
+/>
 
-<section>
-  <div class="bx--grid">
-    <div class="bx--row" style="max-width: 72rem; margin: 0 auto">
+<div class="spacing--v-48"></div>
+
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--col-lg-12 bx--offset-lg-2">
       <CardsContainer cardWidth="{cardWidth}" gridGap="{cardGap}">
         {#each categories as { slug, title, text }}
           <Card
@@ -95,22 +84,28 @@
       </CardsContainer>
     </div>
   </div>
+
+  <div class="spacing--v-32"></div>
+
   <div class="bx--row">
-    <div class="bx--col">
+    <div class="bx--col-lg-12 bx--offset-lg-2">
       <hr />
     </div>
   </div>
+
+  <div class="spacing--v-16"></div>
+
   <div class="bx--row help-footer">
-    <div class="bx--col-lg-8 bx--col-md-4">
-      <h4>Didn't find what you were looking for?</h4>
+    <div class="bx--offset-lg-2 bx--col-lg-6 bx--col-md-4">
+      <p class="h4">Didn't find what you were looking for?</p>
       <p>
         Email us at <a href="mailto:support@cal-adapt.org"
           >support@cal-adapt.org</a
         >.
       </p>
     </div>
-    <div class="bx--col-lg-8 bx--col-md-4">
-      <h4>Looking for developer documentation?</h4>
+    <div class="bx--col-lg-6 bx--col-md-4">
+      <p class="h4">Looking for developer documentation?</p>
       <p>
         Read <a
           href="https://berkeley-gif.github.io/caladapt-docs/"
@@ -119,4 +114,6 @@
       </p>
     </div>
   </div>
-</section>
+</div>
+
+<div class="spacing--v-96"></div>

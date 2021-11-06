@@ -46,7 +46,6 @@
   const { month } = monthStore;
 
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -74,12 +73,6 @@
   let printSkipElements;
 
   let chartTitle = "";
-  $: mapTitle = `${$month.label} Snow Water Equivalent under a ${
-    $scenario.labelLong
-  } 
-    for ${$modelSingleStore} averaged over ${$yearStore} – ${
-    $yearStore + $durationStore - 1
-  }*`;
   let mapCaveat =
     "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled projections.";
 
@@ -101,10 +94,8 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.mark !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
   } else {
-    statsData = null;
     dataByDate = null;
   }
 
@@ -264,7 +255,12 @@
   <div slot="tab_content_stats">
     {#if activeTab}
       <StatsPanel
-        {...{ units: $climvar.units.imperial, data: statsData, formatFn }}
+        {...{
+          units: $climvar.units.imperial,
+          dataByDate,
+          formatFn,
+          models: $modelsStore,
+        }}
       />
     {/if}
   </div>

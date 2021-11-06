@@ -10,11 +10,14 @@
     DEFAULT_SCENARIOS,
     SMALL_SCALE_BOUNDARIES,
     SELECT_LOCATION_DESCRIPTION,
+    DEFAULT_STAT_GROUPS,
+    DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import { HEATMAP_COLOR_SCALE, INDICATOR_DESCRIPTION } from "./_constants";
   import {
     flattenData,
     getDataByDate,
+    getDataByDay,
     formatDataForExport,
   } from "../_common/helpers";
 
@@ -57,7 +60,6 @@
 
   let isLoading = true;
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -140,11 +142,13 @@
       : $indicator.title;
 
   $: if ($data) {
-    statsData = $data.filter((d) => d.type !== "area");
-    dataByDate = getDataByDate(flattenData($data));
+    if ($indicator.id === "timing") {
+      dataByDate = getDataByDay(flattenData($data));
+    } else {
+      dataByDate = getDataByDate(flattenData($data));
+    }
     isLoading = false;
   } else {
-    statsData = null;
     dataByDate = null;
     isLoading = true;
   }
@@ -234,33 +238,39 @@
         <svelte:component
           this="{$indicator.statsComponent}"
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{true}"
-          series="{'historical'}"
-          period="{'baseline'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
+            : null}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
         <svelte:component
           this="{$indicator.statsComponent}"
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'mid-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
         <svelte:component
           this="{$indicator.statsComponent}"
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'end-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
     </ul>

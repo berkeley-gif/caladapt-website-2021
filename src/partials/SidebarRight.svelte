@@ -74,7 +74,9 @@
       {#each upcomingEvents as event}
         <li class="item">
           <p class="item-title">
-            <a href="{`events/${event.slug}`}">{event.metadata.title}</a>
+            <a sapper:prefetch href="{`events/${event.slug}`}"
+              >{event.metadata.title}</a
+            >
           </p>
           <p class="item-text">{event.metadata.eventdatestring}</p>
           <p class="item-text">
@@ -84,7 +86,7 @@
       {/each}
     </ul>
     <span class="sidebar-block-link">
-      <a href="/events">See All Events</a>
+      <a sapper:prefetch href="/events">See All Events</a>
     </span>
   </div>
 {/if}
@@ -97,14 +99,16 @@
       {#each posts as post}
         <li class="item">
           <p class="item-title">
-            <a href="{`blog/${post.slug}`}">{post.metadata.title}</a>
+            <a sapper:prefetch href="{`blog/${post.slug}`}"
+              >{post.metadata.title}</a
+            >
           </p>
           <p class="item-text">{post.metadata.snippet}</p>
         </li>
       {/each}
     </ul>
     <span class="sidebar-block-link">
-      <a href="/blog">See All Posts</a>
+      <a sapper:prefetch href="/blog">See All Posts</a>
     </span>
   </div>
 {/if}
@@ -159,7 +163,9 @@
   <div class="sidebar-block">
     <ul class="page-anchor-links-list">
       {#each anchors as anchor}
-        <li><a href="{$page.path}#{anchor.href}">{anchor.text}</a></li>
+        <li>
+          <a sapper:prefetch href="{$page.path}#{anchor.href}">{anchor.text}</a>
+        </li>
       {/each}
     </ul>
   </div>

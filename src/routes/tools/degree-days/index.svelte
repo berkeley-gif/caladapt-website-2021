@@ -252,15 +252,13 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      Explore projected changes in Heating Degree Days and Cooling Degree Days,
-      which are a common proxy for energy needed to heat and cool buildings,
-      respectively.
-    </p>
-  </div>
-</Header>
+<Header
+  title="{tool.title}"
+  description="Explore projected changes in Heating Degree Days and Cooling 
+    Degree Days which are a common proxy for energy needed to heat and cool 
+    buildings, respectively."
+  iconPaths="{tool.icons}"
+/>
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 

@@ -131,7 +131,7 @@ export async function getRecentObsData({ stationId, startDate, endDate }) {
     stations: stationId,
     startDate,
     endDate,
-    dataTypes: "TMAX,TMIN,AWND",
+    dataTypes: "TMAX,TMIN,WSF2,WDF2",
     units: "standard",
     format: "json",
   };
@@ -154,7 +154,8 @@ export async function getRecentObsData({ stationId, startDate, endDate }) {
         label: startTimeFormat(d),
         TMAX: undefined,
         TMIN: undefined,
-        AWND: undefined,
+        WSF2: undefined,
+        WDF2: undefined,
       };
     }
     return match;

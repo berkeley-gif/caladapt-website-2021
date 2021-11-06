@@ -10,6 +10,8 @@
     SMALL_SCALE_BOUNDARIES,
     MONTHS_LIST,
     SELECT_LOCATION_DESCRIPTION,
+    DEFAULT_STAT_GROUPS,
+    DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
     MAX_THRESHOLD_DEGREES_F,
@@ -34,7 +36,7 @@
   } from "~/components/tools/Settings";
   import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
-  import { RangeAvg } from "~/components/tools/Stats";
+  import { AvgRange } from "~/components/tools/Stats";
 
   // Store
   import {
@@ -62,7 +64,6 @@
   const { indicator } = indicatorsStore;
 
   let dataByDate;
-  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -89,6 +90,9 @@
 
   let baseTemperature = `<p>Heating or Cooling Degree Days are calculated with reference to a Base Temperature, e.g. 65 °F. You can set the Base Temperature to a different value that meets your analysis requirements.</p>`;
 
+  let invalidThresholdText = `Value must be between ${MIN_THRESHOLD_DEGREES_F} 
+    and ${MAX_THRESHOLD_DEGREES_F}.`;
+
   let metadata;
   let csvData;
   let printContainer;
@@ -104,11 +108,9 @@
     $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    statsData = $dataStore.filter((d) => d.type !== "area");
     dataByDate = getDataByDate(flattenData($dataStore));
     isFetchingStore.set(false);
   } else {
-    statsData = null;
     dataByDate = null;
   }
 
@@ -261,33 +263,44 @@
   <div slot="stats">
     <ul class="stats">
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$indicator.units}"
-          data="{statsData}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
+            : null}"
           isHistorical="{true}"
-          series="{'historical'}"
-          period="{'baseline'}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.id === 'observed')}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'mid-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="mid-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
       <li class="block">
-        <RangeAvg
+        <AvgRange
           units="{$indicator.units}"
-          data="{statsData}"
-          isHistorical="{false}"
-          series="{'future'}"
-          period="{'end-century'}"
+          data="{dataByDate
+            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
+            : null}"
+          isHistorical="{true}"
+          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
+          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="end-century"
           format="{formatFn}"
+          models="{$modelsStore}"
         />
       </li>
     </ul>
@@ -400,6 +413,8 @@
         value="{$thresholdStore}"
         minValue="{MIN_THRESHOLD_DEGREES_F}"
         maxValue="{MAX_THRESHOLD_DEGREES_F}"
+        invalidText="{invalidThresholdText}"
+        delay="{1200}"
         on:change="{changeThreshold}"
       />
       <LearnMoreButton

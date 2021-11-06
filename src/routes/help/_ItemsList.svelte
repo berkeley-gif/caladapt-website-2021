@@ -58,6 +58,7 @@
             <StructuredListRow>
               <StructuredListCell>
                 <a
+                  sapper:prefetch
                   style="font-size:1rem;"
                   href="{`/help/${slug}/${item.slug}/`}"
                   rel="prefetch"

@@ -18,11 +18,16 @@
   export let climvarId;
   export let stateBoundary;
 
+  const beforeId = "settlement-subdivision-label";
+  const geojsonStyleProps = {
+    "fill-pattern": "pattern",
+  };
+
   let legendProps = {
     height: 34,
     width: 280,
     scaleType: "continuous",
-    noDataColor: "rgba(51,51,51,0.8)",
+    noData: true,
     rectWidth: "1.25rem",
     rectHeight: "0.75rem",
     title: "",
@@ -52,10 +57,17 @@
 
 <Map>
   <NavigationControl />
-  <GeoJsonLayer data="{stateBoundary}" layerName="no-data" />
+  <GeoJsonLayer
+    data="{stateBoundary}"
+    layerName="no-data"
+    beforeId="{beforeId}"
+    patternFillURL="/img/patterns/diagonal-lines.png"
+    styleProps="{geojsonStyleProps}"
+  />
   <ImageOverlay
     overlay="{imgOverlayPath}"
     coordinates="{DEFAULT_OVERLAY_BOUNDS}"
+    beforeId="{beforeId}"
   />
   <Legend {...legendProps} />
 </Map>

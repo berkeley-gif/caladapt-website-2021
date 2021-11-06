@@ -4,6 +4,7 @@
   import { select } from "d3-selection";
   import { scaleOrdinal, scaleLinear } from "d3-scale";
   import { interpolate, interpolateHcl, quantize } from "d3-interpolate";
+  import diagonalPattern from "static/img/patterns/diagonal-lines.svg";
 
   export let scaleType = "discrete"; // or "continuous"
   export let title = "Legend";
@@ -19,7 +20,7 @@
   export let tickSize = 6; // continuous only
   export let ticks = width / 64; // continuous only
   export let tickValues; // continuous only
-  export let noDataColor = "";
+  export let noData = false;
 
   // TODO: consider splitting this all into separate components that render each type of legend
   // continuous only
@@ -126,6 +127,16 @@
     border: 0.0625rem solid var(--gray-40);
   }
 
+  .no-data span {
+    margin: 0;
+    border: none;
+    overflow: hidden;
+  }
+
+  .no-data p {
+    font-size: 0.75rem;
+  }
+
   .legend--title-text {
     font-weight: 600;
   }
@@ -183,9 +194,11 @@
     </svg>
   {/if}
 
-  {#if noDataColor}
+  {#if noData}
     <div class="no-data">
-      <span style="background-color:{noDataColor}"></span>
+      <span class="no-data">
+        {@html diagonalPattern}
+      </span>
       <p>= No Data</p>
     </div>
   {/if}

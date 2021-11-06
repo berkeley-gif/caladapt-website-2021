@@ -2,19 +2,19 @@ const categories = [
   {
     slug: "get-started",
     title: "Get Started",
-    text: "Learn how to get started with Cal-Adapt",
+    text: "An introduction to climate data, models, and projections.",
     dir: "get-started",
   },
   {
     slug: "tutorials",
     title: "Tutorials & Webinars",
-    text: "Tutorials and webinars on how to use Cal-Adapt",
+    text: "View previously recorded tutorials and webinars on how to use Cal-Adapt.",
     dir: "tutorials",
   },
   {
     slug: "faqs",
     title: "FAQs",
-    text: "Frequently asked questions about tools and data on Cal-Adapt",
+    text: "Frequently asked questions about Cal-Adapt's tools and data.",
     dir: "faqs",
   },
   {

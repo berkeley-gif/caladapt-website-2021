@@ -15,7 +15,7 @@
 </script>
 
 <script>
-  import NavBreadcrumb from "~/partials/NavBreadcrumb.svelte";
+  import { Banner, NavBreadcrumb } from "~/partials";
   import { TweetButton } from "~/components/social-media";
 
   export let event;
@@ -47,12 +47,6 @@
 </script>
 
 <style lang="scss">
-  .banner {
-    background-position: center;
-    background-size: cover;
-    padding: 3rem 0;
-  }
-
   .content {
     margin-top: 2rem;
 
@@ -96,20 +90,18 @@
   <title>{event.metadata.title}</title>
 </svelte:head>
 
-<div class="banner-breadcrumbs">
-  <NavBreadcrumb items="{items}" />
-</div>
+<Banner
+  titleText="{event.metadata.title}"
+  bannerImg="var(--gradient-gray-blue)"
+  overlayColor="transparent"
+/>
 
-<!-- Banner -->
-<div class="banner overlay overlay-gradient-gray-blue overlay-80 bleed">
+<div class="banner-breadcrumbs">
   <div class="bx--grid">
-    <!-- Row -->
     <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-9">
-        <h1>{event.metadata.title}</h1>
+      <div class="bx--offset-lg-2 bx--col-lg-10 bx--col-padding">
+        <NavBreadcrumb items="{items}" />
       </div>
-      <div class="bx--col-lg-5"></div>
     </div>
   </div>
 </div>
@@ -155,7 +147,7 @@
             </ul>
           </div>
           <div class="back">
-            <p><a href="/events/">Back to All Events</a></p>
+            <p><a sapper:prefetch href="/events/">Back to All Events</a></p>
           </div>
         </div>
       </div>

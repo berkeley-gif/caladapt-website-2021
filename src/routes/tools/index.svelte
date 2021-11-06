@@ -10,7 +10,7 @@
 
 <script>
   import { Card, CardsContainer } from "~/components/cards";
-  import FilterCategories from "../../partials/FilterCategories.svelte";
+  import { Banner, FilterCategories } from "~/partials";
 
   export let data;
 
@@ -34,48 +34,32 @@
   }
 </script>
 
-<style>
-  .banner {
-    background-image: url(/img/banners/classSubSample.jpg);
-    background-position: center;
-    background-size: cover;
-    min-height: 250px;
-  }
-</style>
-
 <svelte:head>
   <title>Tools | Cal-Adapt</title>
 </svelte:head>
 
-<!-- Banner -->
-<section class="banner overlay overlay-black overlay-40 bg-img">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <h1>Climate Tools</h1>
-        <p class="lead">
-          New to climate data? Start with the <a
-            href="/tools/local-climate-change-snapshot/"
-          >
-            Local Climate Change Snapshot Tool</a
-          >
-        </p>
-      </div>
+<Banner
+  titleText="Climate Tools"
+  subtitleText="{`New to climate data? Start with the <a
+    href="/tools/local-climate-change-snapshot/">
+    Local Climate Change Snapshot Tool</a
+    >`}"
+  bannerImg="/img/banners/classSubSample.jpg"
+  overlayOpacity="{0.7}"
+  useOffset="{false}"
+/>
+
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--col">
+      <FilterCategories
+        categories="{categories}"
+        on:change="{getToolsByCategory}"
+      />
     </div>
   </div>
-</section>
-
-<section>
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col">
-        <FilterCategories
-          categories="{categories}"
-          on:change="{getToolsByCategory}"
-        />
-      </div>
-    </div>
-    <div class="bx--row">
+  <div class="bx--row">
+    <div class="bx--col">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
         {#each toolsByCategory as { icons, title, desc, slug, version3 }}
           <Card
@@ -92,4 +76,6 @@
       </CardsContainer>
     </div>
   </div>
-</section>
+</div>
+
+<div class="spacing--v-96"></div>

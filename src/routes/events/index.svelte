@@ -13,6 +13,7 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
   import EventListItem from "./_EventListItem.svelte";
+  import { Banner } from "~/partials";
 
   export let events;
 
@@ -25,13 +26,6 @@
 </script>
 
 <style>
-  .banner {
-    background-color: var(--gray-80);
-    padding: var(--spacing-48) var(--spacing-16);
-    padding-left: 0;
-    padding-right: 0;
-  }
-
   .rule {
     height: 1px;
     background-color: var(--gray-30);
@@ -56,22 +50,13 @@
   <title>Events | Cal-Adapt</title>
 </svelte:head>
 
-<!-- Banner -->
-<div class="bleed banner overlay bg-img">
-  <div class="bx--grid">
-    <div class="bx--row">
-      <div class="bx--col-lg-2"></div>
-      <div class="bx--col-lg-9 bx--col-md-8 bx--col-sm-4">
-        <h1>Events at Cal-Adapt</h1>
-        <p class="lead">
-          View information on and register for upcoming webinars and workshops
-          hosted by Cal-Adapt and its partners.
-        </p>
-      </div>
-      <div class="bx--col-lg-5"></div>
-    </div>
-  </div>
-</div>
+<Banner
+  titleText="Events at Cal-Adapt"
+  subtitleText="View information on and register for upcoming webinars and 
+    workshops hosted by Cal-Adapt and its partners."
+  bannerImg="var(--gradient-gray-blue)"
+  overlayColor="transparent"
+/>
 
 <div class="spacing--v-32"></div>
 
@@ -121,8 +106,8 @@
           <div class="bx--col">
             <p class="description">
               No events are currently scheduled. Please check back later or
-              <a href="/signup/">subscribe to our newsletter</a> to be notified when
-              future events are announced.
+              <a sapper:prefetch href="/signup/">subscribe to our newsletter</a>
+              to be notified when future events are announced.
             </p>
           </div>
         </div>
