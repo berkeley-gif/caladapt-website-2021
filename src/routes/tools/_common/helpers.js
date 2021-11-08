@@ -21,7 +21,7 @@ export function buildEnvelope(_data) {
   return dataArr.map(([key, value]) => {
     const sortedArr = sort(value);
     return {
-      date: new Date(Date.UTC(key, 11, 31)),
+      date: new Date(Date.UTC(key, 0, 1)),
       min: sortedArr[0],
       max: sortedArr[1],
     };
