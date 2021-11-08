@@ -121,7 +121,7 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
     if (series.id === "livneh") {
       return {
         ...series,
-        values: values.filter((d) => d.date.getFullYear() <= 2006),
+        values: values.filter((d) => d.date.getUTCFullYear() <= 2006),
       };
     }
     return { ...series, values };
