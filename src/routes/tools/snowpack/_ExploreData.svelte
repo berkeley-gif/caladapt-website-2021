@@ -7,7 +7,7 @@
 
   import {
     flattenData,
-    getDataByDate,
+    groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
 
@@ -94,7 +94,7 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = getDataByDate(flattenData($dataStore));
+    dataByDate = groupDataByYear(flattenData($dataStore));
   } else {
     dataByDate = null;
   }

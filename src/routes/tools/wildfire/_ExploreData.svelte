@@ -8,7 +8,7 @@
 
   import {
     flattenData,
-    getDataByDate,
+    groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
   import { getMapOverlayImgURL } from "./_helpers";
@@ -98,7 +98,7 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = getDataByDate(flattenData($dataStore));
+    dataByDate = groupDataByYear(flattenData($dataStore));
     noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
   } else {
     dataByDate = null;

@@ -19,7 +19,7 @@
   } from "./_constants";
   import {
     flattenData,
-    getDataByDate,
+    groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
   import { getSelectedMonthStrings } from "./_helpers";
@@ -108,7 +108,7 @@
     $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = getDataByDate(flattenData($dataStore));
+    dataByDate = groupDataByYear(flattenData($dataStore));
     isFetchingStore.set(false);
   } else {
     dataByDate = null;
