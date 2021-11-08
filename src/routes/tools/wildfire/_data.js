@@ -5,7 +5,7 @@ import { leftPad } from "~/helpers/utilities";
 // Helpers
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
-import { OBSERVED_FILTER_YEAR, PRIORITY_4_MODELS } from "../_common/constants";
+import { PRIORITY_4_MODELS } from "../_common/constants";
 
 const { apiEndpoint } = config.env.production;
 
@@ -104,15 +104,11 @@ const fetchSeries = async ({
       fetchEvents({ slug, params, method, indicatorId, monthIds, isEnsemble })
     );
     const responses = await Promise.all(promises);
-    const values = merge(responses);
-    if (series.id === "livneh") {
-      return {
-        ...series,
-        values: values.filter(
-          (d) => d.date.getFullYear() < OBSERVED_FILTER_YEAR
-        ),
-      };
-    }
+    const mergedResponses = merge(responses);
+    const values = mergedResponses.map(({ date, value }) => ({
+      date: new Date(Date.UTC(date.getUTCFullYear(), 0, 1)),
+      value,
+    }));
     return { ...series, values };
   } catch (error) {
     throw new Error(`${series.id}: ${error.message}`);

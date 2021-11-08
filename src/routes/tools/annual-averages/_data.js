@@ -108,7 +108,11 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
     const { slugs } = series;
     const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
     const responses = await Promise.all(promises);
-    const values = merge(responses);
+    const mergedResponses = merge(responses);
+    const values = mergedResponses.map(({ date, mean }) => ({
+      date,
+      value: mean,
+    }));
     if (!values.length) {
       throw new Error(`${series.id}: No Data`);
     }
@@ -117,7 +121,7 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
     if (series.id === "livneh") {
       return {
         ...series,
-        values: values.filter((d) => d.date.getFullYear() <= 2006),
+        values: values.filter((d) => d.date.getUTCFullYear() <= 2006),
       };
     }
     return { ...series, values };
@@ -185,8 +189,13 @@ export async function getEnsemble(config, params, method = "GET") {
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({ location, boundary, imperial = true }) {
-  const params = { imperial };
+export function getQueryParams({
+  location,
+  boundary,
+  imperial = true,
+  freq = "AS",
+}) {
+  const params = { imperial, freq };
   let method;
   switch (boundary.id) {
     case "locagrid":

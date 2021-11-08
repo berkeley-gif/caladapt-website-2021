@@ -101,6 +101,7 @@
       xScale="{scaleTime()}"
       xDomain="{[xmin, xmax]}"
       yDomain="{[ymin, ymax]}"
+      xPadding="{[10, 10]}"
       data="{data}"
     >
       <Svg>
