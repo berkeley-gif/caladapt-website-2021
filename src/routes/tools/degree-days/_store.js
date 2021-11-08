@@ -58,7 +58,7 @@ export const thresholdStore = writable(DEFAULT_THRESHOLD_DEGREES);
 export const frequencyStore = writable(DEFAULT_FREQUENCY_CODE);
 
 export const frequencyList = [
-  { id: "A", label: "Annually" },
+  { id: "AS", label: "Annually" },
   { id: "M", label: "Monthly" },
 ];
 
