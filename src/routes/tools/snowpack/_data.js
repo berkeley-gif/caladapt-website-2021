@@ -117,12 +117,16 @@ const fetchSeries = async ({
       fetchEvents({ slug, params, method, indicatorId, monthIds, isEnsemble })
     );
     const responses = await Promise.all(promises);
-    const values = merge(responses);
+    const mergedResponses = merge(responses);
+    const values = mergedResponses.map(({ date, value }) => ({
+      date: new Date(Date.UTC(date.getUTCFullYear(), 0, 1)),
+      value,
+    }));
     if (series.id === "livneh") {
       return {
         ...series,
         values: values.filter(
-          (d) => d.date.getFullYear() < OBSERVED_FILTER_YEAR
+          (d) => d.date.getUTCFullYear() < OBSERVED_FILTER_YEAR
         ),
       };
     }
