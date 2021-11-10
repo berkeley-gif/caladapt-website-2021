@@ -142,9 +142,11 @@ export function getQueryParams({
   simulation,
   monthNumber,
   imperial = false,
+  climvar,
 }) {
   const params = {
     imperial,
+    // countnd: true,
     ...(simulation === "month" && { months: monthNumber }),
   };
   let method;
@@ -155,12 +157,12 @@ export function getQueryParams({
       return { params, method };
     case "custom":
       params.g = JSON.stringify(location.geometry);
-      params.stat = "sum";
+      params.stat = climvar === "fire" ? "sum" : "mean";
       method = "POST";
       return { params, method };
     default:
       params.ref = `/api/${boundary.id}/${location.id}/`;
-      params.stat = "sum";
+      params.stat = climvar === "fire" ? "sum" : "mean";
       method = "GET";
       return { params, method };
   }
