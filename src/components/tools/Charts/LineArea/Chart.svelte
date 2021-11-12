@@ -6,6 +6,7 @@
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { almostEqual } from "~/helpers/utilities";
 
   import Line from "./Line.svelte";
   import Area from "./Area.svelte";
@@ -77,6 +78,12 @@
       ymin = min(data, (arr) =>
         min(arr.values, (d) => ("min" in d ? d.min : d.value))
       );
+    }
+
+    // Check if ymin & ymax are almost equal
+    const tolerance = yAxis.tickFormat ? yAxis.tickFormat(1) : 1;
+    if (almostEqual(ymin, ymax, tolerance)) {
+      ymax = Math.max(ymax, tolerance);
     }
 
     // Set Legend
