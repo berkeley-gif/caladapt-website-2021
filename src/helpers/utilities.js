@@ -590,3 +590,13 @@ export const logSingleStore = (store, prev) => {
     }
   });
 };
+
+/**
+ * Check is two numbers are within the given tolerance of one another
+ * @param {a} number
+ * @param {b} number
+ * @param {tolerance} tolerance value
+ */
+export function almostEqual(a, b, tolerance = Number.epsilon) {
+  return Math.abs(a - b) < tolerance;
+}
