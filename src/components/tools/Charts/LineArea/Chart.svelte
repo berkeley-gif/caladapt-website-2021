@@ -82,10 +82,14 @@
       );
     }
 
-    // Check if ymin & ymax are almost equal
+    // Derive a tolerance value using precision specified by user, defaults to 1
+    // Precision represents the number of digits past the decimal point
     const tolerance = yAxis.precision
       ? format(`.${yAxis.precision}f`)(1)
       : format(`.1f`)(1);
+    // Check if ymin & ymax are almost equal (i.e. most y axis values are close together)
+    // If almost equal, reset the ymax so there are some minimum number of ticks
+    // instead of just 1 tick
     if (almostEqual(ymin, ymax, tolerance)) {
       ymax = Math.max(ymax, tolerance);
     }
