@@ -3,6 +3,7 @@
   import { LayerCake, Svg, Html } from "layercake";
   import { scaleTime } from "d3-scale";
   import { timeFormat } from "d3-time-format";
+  import { format } from "d3-format";
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
@@ -26,6 +27,7 @@
     label: "YAxis Label",
     baseValue: null,
     tickFormat: (d) => d,
+    precision: 1,
     units: "",
   };
   export let xAxis = {
@@ -81,7 +83,9 @@
     }
 
     // Check if ymin & ymax are almost equal
-    const tolerance = yAxis.tickFormat ? yAxis.tickFormat(1) : 1;
+    const tolerance = yAxis.precision
+      ? format(`.${yAxis.precision}f`)(1)
+      : format(`.1f`)(1);
     if (almostEqual(ymin, ymax, tolerance)) {
       ymax = Math.max(ymax, tolerance);
     }
