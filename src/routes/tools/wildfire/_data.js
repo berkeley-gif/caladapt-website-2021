@@ -147,23 +147,21 @@ export function getQueryParams({
   const params = {
     imperial,
     stat: climvar === "fire" ? "sum" : "mean",
-    // countnd: true,
     ...(simulation === "month" && { months: monthNumber }),
+    // countnd: true,
   };
-  let method;
+  let method = "GET";
   switch (boundary.id) {
     case "locagrid":
       params.g = `Point(${location.center[0]} ${location.center[1]})`;
-      params.stat = "mean";
-      method = "GET";
-      return { params, method };
+      delete params.stat;
+      break;
     case "custom":
       params.g = JSON.stringify(location.geometry);
       method = "POST";
-      return { params, method };
+      break;
     default:
       params.ref = `/api/${boundary.id}/${location.id}/`;
-      method = "GET";
-      return { params, method };
   }
+  return { params, method };
 }
