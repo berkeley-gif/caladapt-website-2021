@@ -42,7 +42,6 @@
     label,
     tickFormat: formatFn,
     units,
-    baseValue: 0,
   }}"
 />
 
