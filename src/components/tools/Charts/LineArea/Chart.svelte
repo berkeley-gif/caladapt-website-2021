@@ -13,6 +13,8 @@
   import AxisY from "./AxisY.svelte";
   import Tooltip from "../Shared/Tooltip.svelte";
   import Legend from "../Shared/Legend.svelte";
+  import Annotations from "../Shared/Annotation/Annotations.svelte";
+  import { getSampleAnnotations } from "../Shared/Annotation/annotationUtils";
 
   export let data;
   export let height = "350px";
@@ -34,6 +36,8 @@
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  //export let annotations;
+  let annotations = getSampleAnnotations();
 
   let chartContainer;
   const legendItems = writable(null);
@@ -174,6 +178,9 @@
           {/if}
         </g>
       </Svg>
+      {#if Array.isArray(annotations) && annotations.length}
+        <Annotations annotations="{annotations}" />
+      {/if}
       <Html>
         <Tooltip
           dataset="{dataByDate}"
