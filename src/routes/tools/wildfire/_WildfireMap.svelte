@@ -24,7 +24,7 @@
   };
 
   let legendProps = {
-    height: 34,
+    height: 42,
     width: 280,
     scaleType: "continuous",
     noData: true,

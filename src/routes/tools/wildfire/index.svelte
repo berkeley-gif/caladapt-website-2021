@@ -175,6 +175,7 @@
         simulation: $simulationStore,
         monthNumber: $monthStore,
         imperial: $unitsStore.imperial,
+        climvar: $climvarStore,
       });
 
       isFetchingStore.set(true);
