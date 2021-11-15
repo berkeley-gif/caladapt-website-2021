@@ -74,7 +74,7 @@
     ymax = max(data, (arr) =>
       max(arr.values, (d) => ("max" in d ? d.max : d.value))
     );
-    if (!isNaN(yAxis.baseValue)) {
+    if (typeof yAxis.baseValue === "number" && !isNaN(yAxis.baseValue)) {
       ymin = yAxis.baseValue;
     } else {
       ymin = min(data, (arr) =>
