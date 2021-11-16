@@ -64,14 +64,14 @@ const getModelSeries = ({
   });
 };
 
-const transformResponse = (response) => {
+const transformResponse = (response, slug) => {
   const { columns, index, data } = response;
   if (!data) return [];
   if (columns) {
     return data.map((row, i) => ({
       date: parseDateIso(index[i]),
-      value: row[0],
-      pctnd: row[1],
+      value: row[columns.indexOf(slug)],
+      pctnd: row[columns.indexOf("pctnd")],
     }));
   }
   return data.map((row, i) => ({
@@ -95,7 +95,7 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
   if (error) {
     throw new Error(error.message);
   }
-  return transformResponse(response);
+  return transformResponse(response, slug);
 };
 
 /**
