@@ -19,17 +19,26 @@
 
     // Set label position
     if (position) {
-      // position described by pixel values expressed in numbers or percentages
-      // pair of top/bottom, right/left
+      // a pair of top/bottom, right/left
+      // in pixel values or percentages
       vals.forEach((val) => {
         if (position[val]) {
           inlineStyle += `${val}: ${position[val]};`;
         }
       });
     } else if (data) {
-      // x,y values correspond to a data object
-      // use the accessor functions to derive pixel values
-      inlineStyle = `top: ${yGet(data)}px;left: ${xGet(data)}px;`;
+      // a data object with x & y values
+      // use the accessor functions to derive position
+      let xPos = xGet(data) ? xGet(data) : 0;
+      let yPos = yGet(data) ? yGet(data) : 0;
+      const { dx, dy } = data;
+      if (dx) {
+        xPos += dx;
+      }
+      if (dy) {
+        yPos += dy;
+      }
+      inlineStyle = `top:${yPos}px;left:${xPos}px;`;
     } else {
       // default position
       inlineStyle = `top:0;left:0`;
