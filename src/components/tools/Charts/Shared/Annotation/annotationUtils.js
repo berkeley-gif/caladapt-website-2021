@@ -225,7 +225,7 @@ export function threshold() {
 
 /* --------------------------------------------
  * create some sample annotations
- *
+ * use to test with the annual averages tool
  *
  */
 export function getSampleAnnotations() {
@@ -233,28 +233,36 @@ export function getSampleAnnotations() {
     {
       label: {
         text: "1980",
-        position: {
-          top: "10%",
-          left: "20%",
-        },
+        data: { date: new Date(Date.UTC(1980, 0, 1)) },
       },
       connectors: [
         {
           type: "threshold",
           orientation: "v",
-          source: {
-            anchor: "left-middle",
-            dx: 0,
-            dy: 10,
-          },
           style: { "stroke-dasharray": "6,4" },
         },
       ],
     },
     {
       label: {
+        text: "82",
+        data: { value: 82, dx: 50, dy: -20 },
+      },
+      connectors: [
+        {
+          type: "threshold",
+          orientation: "h",
+          style: { "stroke-dasharray": "6,4", stroke: "blue" },
+        },
+      ],
+    },
+    {
+      label: {
         text: "Text with swoopy arrows",
-        data: { date: new Date(Date.UTC(2020, 0, 1)), value: 78 },
+        position: {
+          top: "100px",
+          right: "400px",
+        },
       },
       connectors: [
         {
@@ -289,7 +297,7 @@ export function getSampleAnnotations() {
         text: "Different emission scenarios start showing significant differences",
         position: {
           top: "70%",
-          left: "50%",
+          left: "40%",
         },
         style: {
           color: "red",
