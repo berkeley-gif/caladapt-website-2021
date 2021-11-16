@@ -2,6 +2,7 @@
   import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
+  import { sum } from "d3-array";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
   import { NO_DATA_MAP_MSG, NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
@@ -98,11 +99,15 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = groupDataByYear(flattenData($dataStore));
-    noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
+    noData = sum($dataStore.map((d) => sum(d.values, (v) => v.value))) === 0;
+    dataByDate = noData ? [] : groupDataByYear(flattenData($dataStore));
   } else {
     dataByDate = null;
   }
+
+  $: console.log(noData);
+  $: console.log($dataStore);
+  $: console.log(dataByDate);
 
   afterUpdate(() => {
     if (!activeTab) {
