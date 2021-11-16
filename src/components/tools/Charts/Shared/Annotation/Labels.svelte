@@ -19,7 +19,8 @@
 
     // Set label position
     if (position) {
-      // x,y values correspond to pixel values expressed in numbers or percentages
+      // position described by pixel values expressed in numbers or percentages
+      // pair of top/bottom, right/left
       vals.forEach((val) => {
         if (position[val]) {
           inlineStyle += `${val}: ${position[val]};`;
@@ -37,7 +38,7 @@
     // Add any custom styles for label e.g. { color: "red" }
     // This will override default css properties
     if (style) {
-      inlineStyle = Object.entries(style)
+      inlineStyle += Object.entries(style)
         .map(([key, value]) => `--${key}:${value}`)
         .join(";");
     }
@@ -54,6 +55,7 @@
     font-size: var(--font-size, 1rem);
     background: var(--background, rgba(255, 255, 255, 0.7));
     padding: var(--padding, 2px);
+    text-align: var(--text-align, "left");
   }
 </style>
 
