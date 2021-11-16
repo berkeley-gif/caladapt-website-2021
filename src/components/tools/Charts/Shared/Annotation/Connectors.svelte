@@ -1,4 +1,7 @@
 <script>
+  // Connectors are arrows or thresholds placed within a new svg element
+  // Based on annotated column example from LayerCake
+  // https://layercake.graphics/example/Column
   import {
     swoopyArrow,
     straightArrow,
@@ -10,18 +13,20 @@
   export let annotations;
   export let height;
   export let width;
+  export let xGet;
+  export let yGet;
 
   let container;
   let labelEls;
-  /* --------------------------------------------
-   * Some lookups to convert between x, y / width, height terminology
-   * and CSS names
-   */
+
+  // Some lookups to convert between x, y / width, height terminology
+  // and CSS names
   const lookups = [
     { dimension: "width", css: "left", position: "x" },
     { dimension: "height", css: "top", position: "y" },
   ];
 
+  // list of absolutely positioned label divs
   $: labelEls = container
     ? Array.from(
         container
@@ -30,23 +35,24 @@
       )
     : [];
 
+  // creates a path for each connector using:
+  // source & target coordiantes for arrows
+  // target coordinates only for thresholds
   $: setPath = (anno, i, connector) => {
     if (!Array.isArray(labelEls) || !labelEls.length) return;
     const el = labelEls[i];
 
-    /* --------------------------------------------
-     * Parse our attachment directives to know where to start the arrowhead
-     * measuring a bounding box based on our annotation el
-     */
+    // Get bounding box for element
     const elSource = getElPosition(el);
 
+    // Parse attachment directives to know where to start the arrowhead or threshold
     const { anchor } = connector.source;
     const sourceCoords = anchor.split("-").map((q, j) => {
       const point =
         q === "middle"
           ? elSource[lookups[j].css] + elSource[lookups[j].dimension] / 2
           : elSource[q];
-      // use source dx and dy to adjust coordinates
+      // Use source dx and dy to adjust coordinates
       return (
         point +
         parseCssValue(
@@ -58,39 +64,47 @@
       );
     });
 
-    /* --------------------------------------------
-     * Default to clockwise for swoopy arrows
-     */
+    // For arrows, parse where to draw to, i.e. target coordinates
+    let targetCoords;
+    if (connector.target) {
+      const { x, y, data } = connector.target;
+      if (x && y) {
+        // if target position is in pixel values (in number or %)
+        targetCoords = [
+          parseCssValue(x, 0, width, height),
+          parseCssValue(y, 1, width, height),
+        ];
+      } else if (data) {
+        // if target position is specified as a data value
+        targetCoords = [
+          parseCssValue(xGet(data), 0, width, height),
+          parseCssValue(yGet(data), 1, width, height),
+        ];
+      } else {
+        // default target coordinates
+        targetCoords = [100, 100];
+      }
+    }
+
+    // Set some defaults for arrows & thresholds
+
+    // Default to clockwise for swoopy arrows
     const clockwise =
       typeof connector.clockwise === "undefined" ? true : connector.clockwise;
 
-    /* --------------------------------------------
-     * Parse where we're drawing to
-     */
-    const { x, y } = connector.target;
-    const targetCoords = [
-      parseCssValue(x, 0, width, height),
-      parseCssValue(y, 1, width, height),
-    ];
-
-    /* --------------------------------------------
-     * Default to straight line without arrowhead
-     */
+    // Default conenctor type to threshold
     const connectorType =
       typeof connector.type === "undefined" ? "threshold" : connector.type;
 
-    /* --------------------------------------------
-     * Default to vertical line orientation
-     */
+    // Default to vertical orientation for threshold
     const orientation =
       typeof connector.orientation === "undefined"
         ? "v"
         : connector.orientation;
+    // Default to full height of the chart for threshold
     const extent = orientation === "v" ? height : width;
 
-    /* --------------------------------------------
-     * Create path
-     */
+    // Create the path
     if (connectorType === "swoopy-arrow") {
       return swoopyArrow()
         .angle(Math.PI / 2)
@@ -102,11 +116,15 @@
         .x((q) => q[0])
         .y((q) => q[1])([sourceCoords, targetCoords]);
     } else {
-      return threshold()
-        .orientation(orientation)
-        .extent(extent)
-        .x((q) => q[0])
-        .y((q) => q[1])([sourceCoords]);
+      return (
+        threshold()
+          .orientation(orientation)
+          .extent(extent)
+          .x((q) => q[0])
+          // thresholds are horizontal & vertical lines that are positioned at
+          // source coordinates. so target coordinates are not required
+          .y((q) => q[1])([sourceCoords])
+      );
     }
   };
 
