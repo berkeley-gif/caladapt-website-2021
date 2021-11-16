@@ -1,5 +1,5 @@
 <script>
-  // Annotation compoentn based on annotated column example from LayerCake
+  // Annotation component based on annotated column example from LayerCake
   // https://layercake.graphics/example/Column
   import { getContext, afterUpdate, onMount } from "svelte";
   import { Svg, Html } from "layercake";
@@ -14,5 +14,11 @@
   <Labels xGet="{$xGet}" yGet="{$yGet}" annotations="{annotations}" />
 </Html>
 <Svg>
-  <Connectors width="{$width}" height="{$height}" annotations="{annotations}" />
+  <Connectors
+    xGet="{$xGet}"
+    yGet="{$yGet}"
+    width="{$width}"
+    height="{$height}"
+    annotations="{annotations}"
+  />
 </Svg>
