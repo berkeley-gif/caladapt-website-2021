@@ -1,4 +1,7 @@
 <script>
+  // Labels are divs with text nodes placed in an Absolutely positioned parent div
+  // Based on annotated column example from LayerCake
+  // https://layercake.graphics/example/Column
   import { onMount } from "svelte";
   import { parseCssValue } from "./annotationUtils.js";
 
