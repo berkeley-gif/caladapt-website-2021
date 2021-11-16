@@ -121,9 +121,10 @@ const fetchSeries = async ({
     );
     const responses = await Promise.all(promises);
     const mergedResponses = merge(responses);
-    const values = mergedResponses.map(({ date, value }) => ({
+    const values = mergedResponses.map(({ date, value, pctnd }) => ({
       date: new Date(Date.UTC(date.getUTCFullYear(), 0, 1)),
       value,
+      pctnd,
     }));
     return { ...series, values };
   } catch (error) {
