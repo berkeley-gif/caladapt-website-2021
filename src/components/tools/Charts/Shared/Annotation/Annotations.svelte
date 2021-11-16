@@ -1,4 +1,6 @@
 <script>
+  // Annotation compoentn based on annotated column example from LayerCake
+  // https://layercake.graphics/example/Column
   import { getContext, afterUpdate, onMount } from "svelte";
   import { Svg, Html } from "layercake";
   import Labels from "./Labels.svelte";
