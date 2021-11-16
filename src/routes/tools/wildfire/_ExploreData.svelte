@@ -2,7 +2,7 @@
   import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { sum } from "d3-array";
+  import { mean } from "d3-array";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
   import { NO_DATA_MAP_MSG, NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
@@ -49,6 +49,7 @@
 
   let dataByDate;
 
+  let pctnd = 0;
   let noData = false;
   let dataMsg = "";
 
@@ -99,21 +100,25 @@
   });
 
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    noData = sum($dataStore.map((d) => sum(d.values, (v) => v.value))) === 0;
+    pctnd = mean($dataStore.map((d) => mean(d.values, (v) => v.pctnd)));
+    // noData = sum($dataStore.map((d) => sum(d.values, (v) => v.value))) === 0;
+    noData = pctnd === 1;
     dataByDate = noData ? [] : groupDataByYear(flattenData($dataStore));
   } else {
     dataByDate = null;
   }
 
-  $: console.log(noData);
-  $: console.log($dataStore);
-  $: console.log(dataByDate);
+  $: console.log(pctnd);
 
   afterUpdate(() => {
     if (!activeTab) {
       dataMsg = NO_DATA_MAP_MSG;
     } else if ($locationStore.boundaryId !== "locagrid") {
-      dataMsg = MISSING_DATA_MSG;
+      dataMsg =
+        MISSING_DATA_MSG +
+        `: ${format(".0%")(
+          pctnd
+        )} of grid cells in this area are missing data.`;
     } else if ($locationStore.boundaryId === "locagrid" && noData) {
       dataMsg = NO_DATA_MSG;
     } else {
