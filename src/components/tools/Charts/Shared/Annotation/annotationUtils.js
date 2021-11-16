@@ -1,3 +1,5 @@
+// Annotation component based on annotated column example from LayerCake
+// https://layercake.graphics/example/Column
 // Helper functions for creating swoopy arrows
 
 /* --------------------------------------------
@@ -23,7 +25,7 @@ export function parseCssValue(d, i, width, height) {
 /* --------------------------------------------
  * getElPosition
  *
- * Constract a bounding box relative in our coordinate space
+ * Construct a bounding box relative in our coordinate space
  * that we can attach arrow starting points to
  *
  */
@@ -170,7 +172,7 @@ export function straightArrow() {
 }
 
 /* --------------------------------------------
- * straightLine
+ * threshold
  *
  *
  */
@@ -245,7 +247,6 @@ export function getSampleAnnotations() {
             dx: 0,
             dy: 10,
           },
-          target: {},
           style: { "stroke-dasharray": "6,4" },
         },
       ],
@@ -287,22 +288,24 @@ export function getSampleAnnotations() {
       label: {
         text: "Different emission scenarios start showing significant differences",
         position: {
-          top: "60%",
-          left: "10%",
+          top: "70%",
+          left: "50%",
         },
-        style: { color: "red" },
+        style: {
+          color: "red",
+          "text-align": "right",
+        },
       },
       connectors: [
         {
           type: "straight-arrow",
           clockwise: false,
           source: {
-            anchor: "left-bottom",
+            anchor: "right-middle",
             dx: "10",
           },
           target: {
-            x: "10%",
-            y: "85%",
+            data: { date: new Date(Date.UTC(2060, 0, 1)), value: 74 },
           },
           style: {},
         },
