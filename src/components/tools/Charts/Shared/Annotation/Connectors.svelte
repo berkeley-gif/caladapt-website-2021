@@ -40,91 +40,92 @@
   // target coordinates only for thresholds
   $: setPath = (anno, i, connector) => {
     if (!Array.isArray(labelEls) || !labelEls.length) return;
-    const el = labelEls[i];
 
-    // Get bounding box for element
-    const elSource = getElPosition(el);
+    const { type } = connector;
 
-    // Parse attachment directives to know where to start the arrowhead or threshold
-    const { anchor } = connector.source;
-    const sourceCoords = anchor.split("-").map((q, j) => {
-      const point =
-        q === "middle"
-          ? elSource[lookups[j].css] + elSource[lookups[j].dimension] / 2
-          : elSource[q];
-      // Use source dx and dy to adjust coordinates
-      return (
-        point +
-        parseCssValue(
-          connector.source[`d${lookups[j].position}`],
-          i,
-          elSource.width,
-          elSource.height
-        )
-      );
-    });
-
-    // For arrows, parse where to draw to, i.e. target coordinates
-    let targetCoords;
-    if (connector.target) {
-      const { x, y, data } = connector.target;
-      if (x && y) {
-        // if target position is in pixel values (in number or %)
-        targetCoords = [
-          parseCssValue(x, 0, width, height),
-          parseCssValue(y, 1, width, height),
-        ];
-      } else if (data) {
-        // if target position is specified as a data value
-        targetCoords = [
-          parseCssValue(xGet(data), 0, width, height),
-          parseCssValue(yGet(data), 1, width, height),
-        ];
-      } else {
-        // default target coordinates
-        targetCoords = [100, 100];
-      }
-    }
-
-    // Set some defaults for arrows & thresholds
-
-    // Default to clockwise for swoopy arrows
-    const clockwise =
-      typeof connector.clockwise === "undefined" ? true : connector.clockwise;
-
-    // Default conenctor type to threshold
-    const connectorType =
-      typeof connector.type === "undefined" ? "threshold" : connector.type;
-
-    // Default to vertical orientation for threshold
-    const orientation =
-      typeof connector.orientation === "undefined"
-        ? "v"
-        : connector.orientation;
-    // Default to full height of the chart for threshold
-    const extent = orientation === "v" ? height : width;
-
-    // Create the path
-    if (connectorType === "swoopy-arrow") {
-      return swoopyArrow()
-        .angle(Math.PI / 2)
-        .clockwise(clockwise)
+    if (type === "threshold") {
+      // Default to vertical orientation for threshold
+      const orientation =
+        typeof connector.orientation === "undefined"
+          ? "v"
+          : connector.orientation;
+      // Default to full height of the chart for threshold
+      const extent = orientation === "v" ? height : width;
+      // Source coordinates are derived from data object in corresponding label
+      const { data } = anno.label;
+      if (!data) return;
+      const sourceCoords = [
+        parseCssValue(xGet(data), 0, width, height),
+        parseCssValue(yGet(data), 1, width, height),
+      ];
+      return threshold()
+        .orientation(orientation)
+        .extent(extent)
         .x((q) => q[0])
-        .y((q) => q[1])([sourceCoords, targetCoords]);
-    } else if (connectorType === "straight-arrow") {
-      return straightArrow()
-        .x((q) => q[0])
-        .y((q) => q[1])([sourceCoords, targetCoords]);
+        .y((q) => q[1])([sourceCoords]);
     } else {
-      return (
-        threshold()
-          .orientation(orientation)
-          .extent(extent)
+      // Use position of label div to draw arrows
+      const el = labelEls[i];
+
+      // Get bounding box for element
+      const elSource = getElPosition(el);
+
+      // Parse attachment directives to know where to start the arrowhead
+      const { anchor } = connector.source;
+      const sourceCoords = anchor.split("-").map((q, j) => {
+        const point =
+          q === "middle"
+            ? elSource[lookups[j].css] + elSource[lookups[j].dimension] / 2
+            : elSource[q];
+        // Use source dx and dy to adjust coordinates
+        return (
+          point +
+          parseCssValue(
+            connector.source[`d${lookups[j].position}`],
+            i,
+            elSource.width,
+            elSource.height
+          )
+        );
+      });
+
+      // Parse where to draw to, i.e. target coordinates
+      let targetCoords;
+      if (connector.target) {
+        const { x, y, data } = connector.target;
+        if (x && y) {
+          // if target position is in pixel values (in number or %)
+          targetCoords = [
+            parseCssValue(x, 0, width, height),
+            parseCssValue(y, 1, width, height),
+          ];
+        } else if (data) {
+          // if target position is specified as a data value
+          targetCoords = [
+            parseCssValue(xGet(data), 0, width, height),
+            parseCssValue(yGet(data), 1, width, height),
+          ];
+        } else {
+          // default target coordinates
+          targetCoords = [100, 100];
+        }
+      }
+
+      // Default to clockwise for swoopy arrows
+      const clockwise =
+        typeof connector.clockwise === "undefined" ? true : connector.clockwise;
+
+      if (connector.type === "swoopy-arrow") {
+        return swoopyArrow()
+          .angle(Math.PI / 2)
+          .clockwise(clockwise)
           .x((q) => q[0])
-          // thresholds are horizontal & vertical lines that are positioned at
-          // source coordinates. so target coordinates are not required
-          .y((q) => q[1])([sourceCoords])
-      );
+          .y((q) => q[1])([sourceCoords, targetCoords]);
+      } else if (connector.type === "straight-arrow") {
+        return straightArrow()
+          .x((q) => q[0])
+          .y((q) => q[1])([sourceCoords, targetCoords]);
+      }
     }
   };
 
