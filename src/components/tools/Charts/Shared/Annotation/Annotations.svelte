@@ -7,7 +7,9 @@
   import Connectors from "./Connectors.svelte";
 
   export let annotations;
-  const { width, height, xGet, yGet } = getContext("LayerCake");
+  const { width, height, xGet, yGet, padding } = getContext("LayerCake");
+
+  $: axisLength = $width - $padding.right;
 </script>
 
 <Html>
@@ -17,7 +19,7 @@
   <Connectors
     xGet="{$xGet}"
     yGet="{$yGet}"
-    width="{$width}"
+    width="{axisLength}"
     height="{$height}"
     annotations="{annotations}"
   />
