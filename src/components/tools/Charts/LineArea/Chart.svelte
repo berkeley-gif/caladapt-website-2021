@@ -25,15 +25,16 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    baseValue: null,
+    minDefault: null,
+    maxDefault: null,
     tickFormat: (d) => d,
-    precision: 1,
     units: "",
   };
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
-    baseValue: null,
+    minDefault: null,
+    maxDefault: null,
     tickFormat: timeFormat("%Y"),
     units: "",
   };
@@ -66,32 +67,29 @@
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
     xmax = max(data, (arr) => max(arr.values, (d) => d.date));
-    if (xAxis.baseValue === 0) {
-      xmin = xAxis.baseValue;
+    if (typeof xAxis.minDefault === "number" && !isNaN(xAxis.minDefault)) {
+      xmin = xAxis.minDefault;
     }
 
     // Set Y Domain
-    ymax = max(data, (arr) =>
-      max(arr.values, (d) => ("max" in d ? d.max : d.value))
-    );
-    if (typeof yAxis.baseValue === "number" && !isNaN(yAxis.baseValue)) {
-      ymin = yAxis.baseValue;
+    if (typeof yAxis.minDefault === "number" && !isNaN(yAxis.minDefault)) {
+      ymin = yAxis.minDefault;
     } else {
       ymin = min(data, (arr) =>
         min(arr.values, (d) => ("min" in d ? d.min : d.value))
       );
     }
 
-    // Derive a tolerance value using precision specified by user, defaults to 1
-    // Precision represents the number of digits past the decimal point
-    const tolerance = yAxis.precision
-      ? format(`.${yAxis.precision}f`)(1)
-      : format(`.1f`)(1);
+    ymax = max(data, (arr) =>
+      max(arr.values, (d) => ("max" in d ? d.max : d.value))
+    );
+    // Set tolerance value equal to maxDefault value if specified by user or 1
+    const tolerance = yAxis.maxDefault ? yAxis.maxDefault : 1;
     // Check if ymin & ymax are almost equal (i.e. most y axis values are close together)
     // If almost equal, reset the ymax so there are some minimum number of ticks
     // instead of just 1 tick
     if (almostEqual(ymin, ymax, tolerance)) {
-      ymax = Math.max(ymax, tolerance);
+      ymax = tolerance;
     }
 
     // Set Legend
