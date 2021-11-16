@@ -4,7 +4,7 @@ import { leftPad } from "~/helpers/utilities";
 
 // Helpers
 import config from "~/helpers/api-config";
-import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
+import { handleXHR, fetchData, parseDateIso } from "~/helpers/utilities";
 import { PRIORITY_4_MODELS } from "../_common/constants";
 
 const { apiEndpoint } = config.env.production;
@@ -64,6 +64,22 @@ const getModelSeries = ({
   });
 };
 
+const transformResponse = (response) => {
+  const { columns, index, data } = response;
+  if (!data) return [];
+  if (columns) {
+    return data.map((row, i) => ({
+      date: parseDateIso(index[i]),
+      value: row[0],
+      pctnd: row[1],
+    }));
+  }
+  return data.map((row, i) => ({
+    date: parseDateIso(index[i]),
+    value: row,
+  }));
+};
+
 /**
  * Fetches data from the events endpoint in Cal-Adapt API
  * Input parameters:
@@ -79,7 +95,7 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
   if (error) {
     throw new Error(error.message);
   }
-  return transformResponse(response, false);
+  return transformResponse(response);
 };
 
 /**
@@ -148,7 +164,7 @@ export function getQueryParams({
     imperial,
     stat: climvar === "fire" ? "sum" : "mean",
     ...(simulation === "month" && { months: monthNumber }),
-    // countnd: true,
+    countnd: true,
   };
   let method = "GET";
   switch (boundary.id) {
