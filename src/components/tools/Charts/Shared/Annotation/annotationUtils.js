@@ -290,6 +290,7 @@ export function getSampleAnnotations() {
           top: "60%",
           left: "10%",
         },
+        style: { color: "red" },
       },
       connectors: [
         {
