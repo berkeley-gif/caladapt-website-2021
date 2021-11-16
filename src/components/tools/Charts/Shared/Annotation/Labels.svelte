@@ -10,22 +10,29 @@
 
   $: labels = annotations.map((d) => d.label);
 
-  $: setStyle = (label) => {
+  $: setPositionAndStyle = (label) => {
     const { position, data, style } = label;
     let inlineStyle = "";
 
+    // Set label position
     if (position) {
+      // x,y values correspond to pixel values expressed in numbers or percentages
       vals.forEach((val) => {
         if (position[val]) {
           inlineStyle += `${val}: ${position[val]};`;
         }
       });
-    }
-
-    if (data) {
+    } else if (data) {
+      // x,y values correspond to a data object
+      // use the accessor functions to derive pixel values
       inlineStyle = `top: ${yGet(data)}px;left: ${xGet(data)}px;`;
+    } else {
+      // default position
+      inlineStyle = `top:0;left:0`;
     }
 
+    // Add any custom styles for label e.g. { color: "red" }
+    // This will override default css properties
     if (style) {
       inlineStyle = Object.entries(style)
         .map(([key, value]) => `--${key}:${value}`)
@@ -50,7 +57,11 @@
 <div class="layercake-annotations">
   {#if Array.isArray(labels) && labels.length}
     {#each labels as d, i}
-      <div class="annotation-label" data-id="{i}" style="{setStyle(d)}">
+      <div
+        class="annotation-label"
+        data-id="{i}"
+        style="{setPositionAndStyle(d)}"
+      >
         {d.text}
       </div>
     {/each}
