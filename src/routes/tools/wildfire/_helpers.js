@@ -1,3 +1,4 @@
+import { sum, mean } from "d3-array";
 import { getMapOverlayImgURL } from "./_getOverlayUrl";
 
 export { getMapOverlayImgURL };
@@ -22,3 +23,9 @@ export const getMapImages = ({
       palette,
     })
   );
+
+export const getAvgPctNoData = (dataStore) =>
+  mean(dataStore.map((d) => mean(d.values, (v) => v.pctnd)));
+
+export const isEmptyData = (dataStore) =>
+  sum(dataStore.map((d) => d.values.length)) === 0;

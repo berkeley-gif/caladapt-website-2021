@@ -2,10 +2,9 @@
   import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { mean } from "d3-array";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
-  import { NO_DATA_MAP_MSG, NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
+  import { NO_DATA_MAP_MSG, NO_DATA_MSG, DATA_DISCLAIMER } from "./_constants";
 
   import {
     flattenData,
@@ -24,6 +23,8 @@
   import MapTimeSlider from "./_MapTimeSlider.svelte";
   import Title from "./_Title.svelte";
 
+  import { isEmptyData } from "./_helpers";
+
   import {
     scenarioStore,
     locationStore,
@@ -39,6 +40,7 @@
     modelSingleStore,
     yearStore,
     stateBoundaryStore,
+    pctndStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -49,7 +51,6 @@
 
   let dataByDate;
 
-  let pctnd = 0;
   let noData = false;
   let dataMsg = "";
 
@@ -99,32 +100,26 @@
     palette,
   });
 
+  $: pctnd = $pctndStore;
+
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    pctnd = mean($dataStore.map((d) => mean(d.values, (v) => v.pctnd)));
-    // noData = sum($dataStore.map((d) => sum(d.values, (v) => v.value))) === 0;
-    noData = pctnd === 1;
+    noData = pctnd === 1 || isEmptyData($dataStore);
     dataByDate = noData ? [] : groupDataByYear(flattenData($dataStore));
   } else {
     dataByDate = null;
   }
 
-  $: console.log(pctnd);
-
   afterUpdate(() => {
     if (!activeTab) {
       dataMsg = NO_DATA_MAP_MSG;
-    } else if ($locationStore.boundaryId !== "locagrid") {
-      dataMsg =
-        MISSING_DATA_MSG +
-        `: ${format(".0%")(
-          pctnd
-        )} of grid cells in this area are missing data.`;
-    } else if ($locationStore.boundaryId === "locagrid" && noData) {
+    } else if (noData) {
       dataMsg = NO_DATA_MSG;
+    } else if (typeof pctnd === "number" && !isNaN(pctnd) && pctnd > 0) {
+      dataMsg = `${format(".0%")(pctnd)} of grid cells in this area contain no 
+        data. ${DATA_DISCLAIMER}`;
     } else {
       dataMsg = "";
     }
-
     locationTitle = $location.title;
   });
 

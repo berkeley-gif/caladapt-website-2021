@@ -40,19 +40,19 @@ represent a time series of annual/monthly simulations of average Area
 Burned/Decadal Wildfire Probability from individual downscaled GCMs.</p>
 <p>Click on any of the legend keys to highlight corresponding time series.</p>`;
 
+export const DATA_DISCLAIMER = `Locations outside the combined fire state and 
+federal protection responsibility areas were excluded from these wildfire 
+simulations and have no climate projections.`;
+
 export const MISSING_DATA_MSG = `This area may contain locations outside the 
 combined fire state and federal protection responsibility areas. 
-Locations outside the combined fire state and federal protection responsibility 
-areas were excluded from these wildfire simulations and have no climate 
-projections.`;
+${DATA_DISCLAIMER}`;
 
-export const NO_DATA_MSG = `No data is available for this area. Locations 
-outside the combined fire state and federal protection responsibility areas were
- excluded from these wildfire simulations and have no climate projections.`;
+export const NO_DATA_MSG = `No data is available for this area. 
+${DATA_DISCLAIMER}`;
 
-export const NO_DATA_MAP_MSG = `Locations outside the combined fire state and 
-federal protection responsibility areas were excluded from these wildfire 
-simulations and have no climate projections. These areas are shaded in gray.`;
+export const NO_DATA_MAP_MSG = `${DATA_DISCLAIMER}. These areas are shaded in 
+gray.`;
 
 export const SIMULATIONS = [
   { id: "year", label: "Annually" },
