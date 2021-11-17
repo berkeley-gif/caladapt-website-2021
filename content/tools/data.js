@@ -44,6 +44,23 @@ const tools = [
     ],
   },
   {
+    title: "Comparative Sea Level Rise",
+    desc: "",
+    categories: ['Sea Level Rise', 'Flooding'],
+    slug: "comparative-slr",
+    icons: [
+      'img/icons/sea.svg',
+    ],
+    datasets: [],
+    related: [
+      "slr-calflod-3d"
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
+  },
+  {
     title: 'Extreme Weather',
     desc: `Extreme weather events for baseline and future climates.`,
     categories: ['Temperature'],
