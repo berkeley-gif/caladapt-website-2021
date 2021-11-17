@@ -22,14 +22,14 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    baseValue: null,
+    minDefault: null,
     tickFormat: (d) => d,
     units: "",
   };
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
-    baseValue: null,
+    minDefault: null,
     tickFormat: timeFormat("%Y"),
     units: "",
   };
@@ -45,15 +45,15 @@
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
     xmax = max(data, (arr) => max(arr.values, (d) => d.date));
-    if (xAxis.baseValue === 0) {
-      xmin = xAxis.baseValue;
+    if (xAxis.minDefault === 0) {
+      xmin = xAxis.minDefault;
     }
 
     // Set Y Domain
     ymin = min(data, (arr) => min(arr.values, (d) => d.value || d.min));
     ymax = max(data, (arr) => max(arr.values, (d) => d.value || d.max));
-    if (yAxis.baseValue === 0) {
-      ymin = yAxis.baseValue;
+    if (yAxis.minDefault === 0) {
+      ymin = yAxis.minDefault;
     }
 
     // Set Legend
