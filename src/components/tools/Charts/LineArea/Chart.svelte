@@ -29,11 +29,13 @@
     tickFormat: (d) => d,
     units: "",
   };
+  // Currently minDefault & maxDefault props are not used for xAxis
+  // To use these props, an additional check should be added to
+  // filter data so the timeseries is within the xmin & xmax derived from
+  // the defaults
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
-    minDefault: null,
-    maxDefault: null,
     tickFormat: timeFormat("%Y"),
     units: "",
   };
@@ -63,12 +65,10 @@
 
   $: if (Array.isArray(data) && !isEmptyData(data)) {
     noData = false;
+
     // Set X Domain
     xmin = min(data, (arr) => min(arr.values, (d) => d.date));
     xmax = max(data, (arr) => max(arr.values, (d) => d.date));
-    if (typeof xAxis.minDefault === "number" && !isNaN(xAxis.minDefault)) {
-      xmin = xAxis.minDefault;
-    }
 
     // Set Y Domain
     if (typeof yAxis.minDefault === "number" && !isNaN(yAxis.minDefault)) {
