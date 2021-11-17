@@ -29,8 +29,8 @@
     tickFormat: (d) => d,
     units: "",
   };
-  // Currently minDefault & maxDefault props are not used for xAxis
-  // To use these props, an additional check should be added to
+  // Currently minDefault & maxDefault props are not supported for xAxis
+  // To use these props for xAxis, an additional check should be added to
   // filter data so the timeseries is within the xmin & xmax derived from
   // the defaults
   export let xAxis = {
