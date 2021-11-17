@@ -3,7 +3,6 @@
   import { LayerCake, Svg, Html } from "layercake";
   import { scaleTime } from "d3-scale";
   import { timeFormat } from "d3-time-format";
-  import { format } from "d3-format";
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
@@ -83,11 +82,16 @@
     ymax = max(data, (arr) =>
       max(arr.values, (d) => ("max" in d ? d.max : d.value))
     );
-    // Set tolerance value equal to maxDefault value if specified by user or 1
-    const tolerance = yAxis.maxDefault ? yAxis.maxDefault : 1;
-    // Check if ymin & ymax are almost equal (i.e. most y axis values are close together)
-    // If almost equal, reset the ymax so there are some minimum number of ticks
-    // instead of just 1 tick
+
+    // Check if ymin & ymax are almost equal
+    const tolerance =
+      typeof yAxis.maxDefault === "number" && !isNaN(yAxis.maxDefault)
+        ? yAxis.maxDefault
+        : 1;
+    // If almost equal, it indicates all the values for the timeseries
+    // are close together, probably close to 0
+    // In that case reset the ymax value
+    // to generate more than 1 tick on the y axis
     if (almostEqual(ymin, ymax, tolerance)) {
       ymax = tolerance;
     }
