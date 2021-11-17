@@ -4,53 +4,57 @@ import boundaries from "../../../helpers/mapbox-layers";
 
 /**
  *
- * @param {*} defaultValue The value to initialize the store with
- * @param {object} options name (string), getters (array), setters (array)
- * @returns A custom writable Svelte store object
+ * @param {*} defaultValue The value to initialize the writable store with
+ * @param {Object} options - Optional properties to add to the store
+ * @param {string} options.name – The name of writable store, useful for logging
+ * @param {array} options.getters – Array of one or more objects describing a getter
+ * @param {array} options.updaters – Array of one or more objects describing an update method
+ * @returns A writable store compatible with svelte/store.writable
  */
-export const makeCustomWritableStore = (defaultValue, options) =>
-  (() => {
-    const store = writable(defaultValue);
-    const { set, subscribe } = store;
-    const { name, getters, updaters } = options;
+export const makeCustomWritableStore = (defaultValue, options) => {
+  const store = writable(defaultValue);
+  const { set, subscribe } = store;
+  const { name, getters, updaters } = options || {};
 
-    const newStore = {
-      set,
-      subscribe,
-      // the name getter is useful for store logging
-      ...(name && {
-        get name() {
-          return name;
+  const newStore = {
+    set,
+    subscribe,
+    ...(name && {
+      get name() {
+        return name;
+      },
+    }),
+  };
+
+  // Set any custom getters on the store object.
+  // Each getter must have two properties:
+  // 1. the name of the getter, a string
+  // 2. the getter function that receives the store's current value as a param
+  if (Array.isArray(getters) && getters.length) {
+    getters.forEach(({ name, getter }) => {
+      Object.defineProperty(newStore, name, {
+        get: function () {
+          return derived(store, getter);
         },
-      }),
-    };
-
-    // Set any custom getters on the store object.
-    // Each getter must have two properties:
-    // 1. the name of the getter, a string
-    // 2. a curried function that returns the getter function
-    if (Array.isArray(getters) && getters.length) {
-      getters.forEach((getter) => {
-        Object.defineProperty(newStore, getter.name, {
-          get: getter.getter(store),
-        });
       });
-    }
+    });
+  }
 
-    // Set any custom updater methods on the store object.
-    // Each updater must have two properties:
-    // 1. the name of the updater method
-    // 2. a curried function that updates the desired value and returns the store
-    if (Array.isArray(updaters) && updaters.length) {
-      updaters.forEach((updater) => {
-        Object.defineProperty(newStore, updater.name, {
-          value: updater.value(store),
-        });
+  // Set any custom updater methods on the store object.
+  // Each updater must have two properties:
+  // 1. the name of the updater method
+  // 2. a curried function that updates the desired value and returns the store
+  // e.g. (store) => (value) => store.update((s) => { s.foo = value; return s; })
+  if (Array.isArray(updaters) && updaters.length) {
+    updaters.forEach(({ name, value }) => {
+      Object.defineProperty(newStore, name, {
+        value: value(store),
       });
-    }
+    });
+  }
 
-    return newStore;
-  })();
+  return newStore;
+};
 
 export const scenarioStore = (() => {
   const store = writable("rcp45");

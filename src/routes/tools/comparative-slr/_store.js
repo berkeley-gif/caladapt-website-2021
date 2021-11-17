@@ -1,43 +1,22 @@
-import { writable, derived } from "svelte/store";
+import { makeCustomWritableStore } from "../_common/stores";
 
-export const floodScenarioStore = (() => {
-  const store = writable("Max");
-  const { set, subscribe } = store;
+export const floodScenarioStore = makeCustomWritableStore("max", {
+  name: "floodScenarioStore",
+});
 
-  return {
-    set,
-    subscribe,
-    get name() {
-      return "scenarioStore";
+export const timeFrameStore = makeCustomWritableStore([2020, 2040], {
+  name: "timeFrameStore",
+  getters: [
+    {
+      name: "label",
+      getter: ($s) => (Array.isArray($s) ? $s.join("–") : ""),
     },
-  };
-})();
+  ],
+});
 
-export const timeFrameStore = (() => {
-  const store = writable([2020, 2040]);
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get label() {
-      return derived(store, ($store) => {
-        return $store.join("–");
-      });
-    },
-    get name() {
-      return "timeFrameStore";
-    },
-  };
-})();
-
-export const dataLayersStore = (() => {
-  const store = writable(["CosMoS", "CalFlod3D"]);
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get name() {
-      return "dataLayerStore";
-    },
-  };
-})();
+export const dataLayersStore = makeCustomWritableStore(
+  ["CosMoS", "CalFlod3D"],
+  {
+    name: "dataLayersStore",
+  }
+);
