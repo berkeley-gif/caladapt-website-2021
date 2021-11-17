@@ -2,6 +2,56 @@ import { writable, derived } from "svelte/store";
 import scenarios from "../../../helpers/climate-scenarios";
 import boundaries from "../../../helpers/mapbox-layers";
 
+/**
+ *
+ * @param {*} defaultValue The value to initialize the store with
+ * @param {object} options name (string), getters (array), setters (array)
+ * @returns A custom writable Svelte store object
+ */
+export const makeCustomWritableStore = (defaultValue, options) =>
+  (() => {
+    const store = writable(defaultValue);
+    const { set, subscribe } = store;
+    const { name, getters, updaters } = options;
+
+    const newStore = {
+      set,
+      subscribe,
+      // the name getter is useful for store logging
+      ...(name && {
+        get name() {
+          return name;
+        },
+      }),
+    };
+
+    // Set any custom getters on the store object.
+    // Each getter must have two properties:
+    // 1. the name of the getter, a string
+    // 2. a curried function that returns the getter function
+    if (Array.isArray(getters) && getters.length) {
+      getters.forEach((getter) => {
+        Object.defineProperty(newStore, getter.name, {
+          get: getter.getter(store),
+        });
+      });
+    }
+
+    // Set any custom updater methods on the store object.
+    // Each updater must have two properties:
+    // 1. the name of the updater method
+    // 2. a curried function that updates the desired value and returns the store
+    if (Array.isArray(updaters) && updaters.length) {
+      updaters.forEach((updater) => {
+        Object.defineProperty(newStore, updater.name, {
+          value: updater.value(store),
+        });
+      });
+    }
+
+    return newStore;
+  })();
+
 export const scenarioStore = (() => {
   const store = writable("rcp45");
   const { set, subscribe } = store;
