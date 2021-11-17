@@ -265,7 +265,7 @@
         simulation="{$simulationStore}"
         scenario="{$scenario.labelLong}"
         climvar="{$climvarStore}"
-        month="{$monthStore}"
+        month="{$month.label}"
         location="{locationTitle}"
         loadLocation="{loadLocation}"
         dataMsg="{dataMsg}"
