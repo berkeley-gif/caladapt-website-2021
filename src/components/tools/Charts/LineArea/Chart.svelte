@@ -90,7 +90,7 @@
         : 1;
     // If almost equal, it indicates all the values for the timeseries
     // are close together, probably close to 0
-    // In that case reset the ymax value
+    // In that case set the ymax value to maxDefault/tolerance
     // to generate more than 1 tick on the y axis
     if (almostEqual(ymin, ymax, tolerance)) {
       ymax = tolerance;
