@@ -22,6 +22,6 @@
     <div class="rule"></div>
   {/if}
   <p class="feedback">
-    Email <a href="mailto:{address}">{address}</a> with your feedback on this topic.
+    Email questions or feedback to <a href="mailto:{address}">{address}</a>.
   </p>
 </div>
