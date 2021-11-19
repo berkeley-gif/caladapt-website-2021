@@ -231,9 +231,10 @@
         <p>
           Annual Maximum values from a 21 day window around the day of interest
           are extracted from a 30 year daily timeseries for the Baseline Period
-          (1991–2020). A GEV distribution is applied to this time series. Shape
-          and scale parameters for the distribution are estimated using the
-          Maximum Likelihood method. Exceedance Probabilities for different
+          (1991–2020). A GEV distribution for Temperature and an inverted
+          Weibull distribution for Wind Speed is applied to this time series.
+          Shape and scale parameters for the distribution are estimated using
+          the Maximum Likelihood method. Exceedance Probabilities for different
           threshold values (return levels) are estimated from the fitted model
           with 95% confidence intervals.
         </p>
