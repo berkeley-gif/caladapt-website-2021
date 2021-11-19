@@ -30,9 +30,9 @@
     units: "",
   };
   // Currently minDefault & maxDefault props are not supported for xAxis
-  // To use these props for xAxis, an additional check should be added to
-  // filter data so the timeseries is within the xmin & xmax derived from
-  // the defaults
+  // To support these props for xAxis in the future, an additional check
+  // should be added to filter data so the timeseries values are
+  // within the minDefault & maxDefault
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
