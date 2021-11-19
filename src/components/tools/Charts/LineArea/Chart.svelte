@@ -71,13 +71,16 @@
     ymax = max(data, (arr) =>
       max(arr.values, (d) => ("max" in d ? d.max : d.value))
     );
-    if (!isNaN(yAxis.baseValue)) {
+    if (typeof yAxis.baseValue === "number" && !isNaN(yAxis.baseValue)) {
       ymin = yAxis.baseValue;
     } else {
       ymin = min(data, (arr) =>
         min(arr.values, (d) => ("min" in d ? d.min : d.value))
       );
     }
+
+    ymin = +yAxis.tickFormat(ymin);
+    ymax = +yAxis.tickFormat(ymax);
 
     // Set Legend
     legendItems.set(

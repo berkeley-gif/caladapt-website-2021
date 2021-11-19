@@ -174,7 +174,7 @@ const variables = [
       imperial: "",
       metric: "",
     },
-    decimals: 2,
+    decimals: 1,
   },
   {
     id: "wspeed",

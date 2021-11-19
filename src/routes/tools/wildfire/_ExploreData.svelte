@@ -218,7 +218,7 @@
       climvar="{$climvarStore}"
       year="{$yearStore}"
       model="{$modelSingleStore}"
-      month="{$monthStore}"
+      month="{$month.label}"
       dataMsg="{dataMsg}"
       activeTab="{activeTab}"
     />
@@ -265,7 +265,7 @@
         simulation="{$simulationStore}"
         scenario="{$scenario.labelLong}"
         climvar="{$climvarStore}"
-        month="{$monthStore}"
+        month="{$month.label}"
         location="{locationTitle}"
         loadLocation="{loadLocation}"
         dataMsg="{dataMsg}"

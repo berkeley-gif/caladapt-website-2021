@@ -18,7 +18,7 @@
   const dispatch = createEventDispatcher();
 
   $: label = `${simulation === "year" ? "Annual" : month} ${
-    climvarId === "fire" ? "acres burned" : "wildfire probability"
+    climvarId === "fire" ? `${units} burned` : "wildfire probability"
   }`;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
