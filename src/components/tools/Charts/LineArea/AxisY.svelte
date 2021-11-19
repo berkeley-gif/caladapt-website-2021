@@ -9,11 +9,18 @@
   export let label = "Axis Label";
 
   let tickVals;
+  let yAxisEl;
+
+  function getLabelXPadding(val) {
+    if (!yAxisEl) return $padding.left;
+    const tickEl = yAxisEl.querySelector(`.tick.tick-${val} .tick-label`);
+    return tickEl.getBoundingClientRect().width + 10;
+  }
 
   $: if (ticks) {
     tickVals = Array.isArray(ticks) ? ticks : $yScale.ticks(ticks);
   } else {
-    tickVals = $yScale.ticks().map(formatTick);
+    tickVals = $yScale.ticks();
   }
   $: d = `M 0 0 L ${$width + $padding.left} 0`;
 </script>
@@ -24,7 +31,11 @@
   }
 </style>
 
-<g class="axis y-axis" transform="translate(-{$padding.left}, 0)">
+<g
+  bind:this="{yAxisEl}"
+  class="axis y-axis"
+  transform="translate(-{$padding.left}, 0)"
+>
   {#each tickVals as tick, i}
     <g class="tick tick-{tick}" transform="translate(0, {$yScale(tick)})">
       {#if gridlines}
@@ -32,12 +43,12 @@
         ></path>
       {/if}
       <text class="tick-label" y="-4" style="font-size:12px;fill:#666"
-        >{tick}</text
+        >{formatTick(tick)}</text
       >
       {#if i === +tickVals.length - 1}
         <text
           y="-4"
-          x="{$padding.left + 10}"
+          x="{getLabelXPadding(tick)}"
           class="label"
           style="font-size:14px;fill:#666">{label}</text
         >
