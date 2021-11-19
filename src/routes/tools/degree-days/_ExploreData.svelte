@@ -98,7 +98,7 @@
   let printContainer;
   let printSkipElements;
 
-  $: formatFn = format(`.${$indicator.decimals}f`);
+  $: formatFn = format(`,.${$indicator.decimals}f`);
 
   $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
   $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;

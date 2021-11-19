@@ -83,7 +83,7 @@
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
 
-  $: formatFn = format(`.${$climvar.decimals}f`);
+  $: formatFn = format(`,.${$climvar.decimals}f`);
 
   $: palette = $climvarStore === "fire" ? "YlOrRd" : "PuRd";
 
