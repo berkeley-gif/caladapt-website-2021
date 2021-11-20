@@ -132,14 +132,15 @@
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
       };
+      const isRate = $climvarStore === "pr" ? true : false;
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
       });
-      const envelope = await getEnsemble(config, params, method);
-      const observed = await getObserved(config, params, method);
-      const modelsData = await getModels(config, params, method);
+      const envelope = await getEnsemble(config, params, method, isRate);
+      const observed = await getObserved(config, params, method, isRate);
+      const modelsData = await getModels(config, params, method, isRate);
       dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (err) {
       console.log("updateData", err);
