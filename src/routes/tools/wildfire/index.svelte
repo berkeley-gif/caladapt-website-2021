@@ -80,7 +80,7 @@
   import { inview } from "svelte-inview/dist/";
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
-  import { logStores, logSingleStore } from "~/helpers/utilities";
+  import { logStores } from "~/helpers/utilities";
 
   import {
     About,
