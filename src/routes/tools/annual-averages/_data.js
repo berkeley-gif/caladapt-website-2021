@@ -3,27 +3,11 @@ import { merge } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
-import {
-  handleXHR,
-  fetchData,
-  transformResponse,
-  isLeapYear,
-} from "~/helpers/utilities";
+import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
-import { buildEnvelope } from "../_common/helpers";
+import { buildEnvelope, convertAnnualRateToSum } from "../_common/helpers";
 
 const { apiEndpoint } = config.env.production;
-
-// Helper function to convert precipitation values from a rate (inches/day)
-// to total accumulation in a year
-const convertToAnnual = (values) => {
-  return values.map((d) => {
-    if (isLeapYear(+d.date.getFullYear())) {
-      return { ...d, value: d.value * 366 };
-    }
-    return { ...d, value: d.value * 365 };
-  });
-};
 
 /**
  * The following 3 functions take the list of observed, models and ensemble
@@ -88,10 +72,6 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
   if (error) {
     throw new Error(error.message);
   }
-  // Additional transformation for precipitation values
-  if (slug.includes("pr")) {
-    return convertToAnnual(transformResponse(response));
-  }
   return transformResponse(response);
 };
 
@@ -103,7 +83,7 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-const fetchSeries = async ({ series, params, method = "GET" }) => {
+const fetchSeries = async ({ series, params, method = "GET", isRate }) => {
   try {
     const { slugs } = series;
     const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
@@ -111,7 +91,7 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
     const mergedResponses = merge(responses);
     const values = mergedResponses.map(({ date, mean }) => ({
       date,
-      value: mean,
+      value: isRate ? convertAnnualRateToSum({ date, value: mean }) : mean,
     }));
     if (!values.length) {
       throw new Error(`${series.id}: No Data`);
@@ -140,11 +120,16 @@ const fetchSeries = async ({ series, params, method = "GET" }) => {
  * @return {array}
  */
 
-export async function getObserved(config, params, method = "GET") {
+export async function getObserved(
+  config,
+  params,
+  method = "GET",
+  isRate = false
+) {
   try {
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params, method, isRate })
     );
     const data = await Promise.all(promises);
     return data;
@@ -153,11 +138,16 @@ export async function getObserved(config, params, method = "GET") {
   }
 }
 
-export async function getModels(config, params, method = "GET") {
+export async function getModels(
+  config,
+  params,
+  method = "GET",
+  isRate = false
+) {
   try {
     const seriesList = getModelSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params, method, isRate })
     );
     const data = await Promise.all(promises);
     return data;
@@ -166,11 +156,16 @@ export async function getModels(config, params, method = "GET") {
   }
 }
 
-export async function getEnsemble(config, params, method = "GET") {
+export async function getEnsemble(
+  config,
+  params,
+  method = "GET",
+  isRate = false
+) {
   try {
     const seriesList = getEnsembleSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method })
+      fetchSeries({ series, params, method, isRate })
     );
     const data = await Promise.all(promises);
     return data.map((d) => {
