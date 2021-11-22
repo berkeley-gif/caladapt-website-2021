@@ -1,6 +1,37 @@
 <script>
   export let segment;
 
+  const navItems = [
+    {
+      label: "Home",
+      path: "/",
+    },
+    {
+      label: "Tools",
+      path: "/tools/",
+    },
+    {
+      label: "Data",
+      path: "/data/",
+    },
+    {
+      label: "Help",
+      path: "/help/",
+    },
+    {
+      label: "Blog",
+      path: "/blog/",
+    },
+    {
+      label: "Events",
+      path: "/events/",
+    },
+    {
+      label: "About",
+      path: "/about/",
+    },
+  ];
+
   let open = false;
 </script>
 
@@ -92,91 +123,27 @@
     class:expanded="{open}"
     on:click="{() => (open = !open)}"
   >
-    <ul class="bx--header__menu-bar">
-      <li>
-        <a
-          sapper:prefetch
-          class="bx--header__name"
-          aria-current="{segment === undefined ? 'page' : undefined}"
-          href="/"
-          aria-label="home"
-        >
-          <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="" />
-        </a>
-      </li>
-      <li>
-        <a
-          sapper:prefetch
-          href="/tools/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'tools' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">Tools</span>
-        </a>
-      </li>
-      <li>
-        <a
-          sapper:prefetch
-          href="/data/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'data' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">Data</span>
-        </a>
-      </li>
-      <li>
-        <a
-          sapper:prefetch
-          href="/help/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'help' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">Help</span>
-        </a>
-      </li>
-      <li>
-        <a
-          sapper:prefetch
-          href="/blog/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'blog' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">Blog</span>
-        </a>
-      </li>
-      <li>
-        <a
-          sapper:prefetch
-          href="/events/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'events' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">Events</span>
-        </a>
-      </li>
-
-      <li>
-        <a
-          sapper:prefetch
-          href="/about/"
-          class="bx--header__menu-item"
-          role="menuitem"
-          tabindex="0"
-          aria-current="{segment === 'about' ? 'page' : undefined}"
-        >
-          <span class="bx--text-truncate--end">About</span>
-        </a>
-      </li>
+    <ul class="bx--header__menu-bar desktop">
+      {#each navItems as item, i}
+        <li>
+          <a
+            sapper:prefetch
+            href="{item.path}"
+            class="{!i ? 'bx--header__name' : 'bx--header__menu-item'}"
+            aria-label="{!i ? item.label : ''}"
+            aria-current="{(!i && segment === undefined) ||
+            segment === item.label.toLowerCase()
+              ? 'page'
+              : undefined}"
+          >
+            {#if !i}
+              <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="" />
+            {:else}
+              <span class="bx--text-truncate--end">{item.label}</span>
+            {/if}
+          </a>
+        </li>
+      {/each}
     </ul>
   </nav>
 </header>
