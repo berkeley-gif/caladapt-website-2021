@@ -4,7 +4,7 @@
   let open = false;
 </script>
 
-<header aria-label="Cal-Adapt Home" class="main-nav bx--header" role="banner">
+<header class="main-nav bx--header">
   <a
     sapper:prefetch
     class="bx--header__name"
@@ -35,12 +35,12 @@
     >
   </button>
   <nav
-    aria-label="Cal-Adapt"
+    aria-label="Main menu"
     class="bx--header__nav"
     class:expanded="{open}"
     on:click="{() => (open = !open)}"
   >
-    <ul aria-label="Cal-Adapt" class="bx--header__menu-bar" role="menubar">
+    <ul class="bx--header__menu-bar">
       <li>
         <a
           sapper:prefetch
