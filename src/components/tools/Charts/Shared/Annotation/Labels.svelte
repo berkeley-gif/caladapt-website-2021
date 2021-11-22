@@ -2,8 +2,6 @@
   // Labels are divs with text nodes placed in an Absolutely positioned parent div
   // Based on annotated column example from LayerCake
   // https://layercake.graphics/example/Column
-  import { onMount } from "svelte";
-  import { parseCssValue } from "./annotationUtils.js";
 
   export let annotations;
   export let xGet;
@@ -17,20 +15,21 @@
     const { position, data, style } = label;
     let inlineStyle = "";
 
-    // Set label position
+    // Place an aboslutely positioned div using a position or data object
     if (position) {
-      // a pair of top/bottom, right/left
-      // in pixel values or percentages
+      // position object has a pair of top/bottom, right/left props
+      // values are in pixel values or percentages
       vals.forEach((val) => {
         if (position[val]) {
           inlineStyle += `${val}: ${position[val]};`;
         }
       });
     } else if (data) {
-      // a data object with x & y values
+      // data object is a row from the data displayed in chart
       // use the accessor functions to derive position
       let xPos = xGet(data) ? xGet(data) : 0;
       let yPos = yGet(data) ? yGet(data) : 0;
+      // offset x & y position if data object has optional props
       const { dx, dy } = data;
       if (dx) {
         xPos += dx;
@@ -40,12 +39,14 @@
       }
       inlineStyle = `top:${yPos}px;left:${xPos}px;`;
     } else {
-      // default position
+      // default if both position & data objects are missing
+      console.warn(
+        "label does not have data or position props, it will be placed at 0,0"
+      );
       inlineStyle = `top:0;left:0`;
     }
 
-    // Add any custom styles for label e.g. { color: "red" }
-    // This will override default css properties
+    // Apply custom styles for div
     if (style) {
       inlineStyle += Object.entries(style)
         .map(([key, value]) => `--${key}:${value}`)
