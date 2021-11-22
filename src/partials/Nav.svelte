@@ -4,6 +4,66 @@
   let open = false;
 </script>
 
+<style lang="scss">
+  .main-nav {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    height: 70px;
+    background-color: var(--gray-90);
+    border-bottom: 1px solid var(--gray-60);
+
+    .bx--header__nav {
+      display: block;
+    }
+
+    .bx--header__menu-toggle {
+      display: none;
+      position: absolute;
+      right: 0.5rem;
+    }
+
+    .bx--header__nav:before {
+      background: transparent;
+    }
+
+    .bx--header__menu-item {
+      color: var(--white);
+      font-size: 1rem;
+
+      &:hover {
+        background-color: var(--blue-50);
+      }
+    }
+
+    .bx--header__menu-item[aria-current="page"]::after {
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .logo {
+      width: 100px;
+    }
+
+    @media (max-width: 1000px) {
+      .bx--header__nav {
+        display: none;
+
+        &.expanded {
+          display: block;
+          margin-top: 140px;
+          width: 100%;
+          position: absolute;
+          background: rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      .bx--header__menu-toggle {
+        display: flex;
+      }
+    }
+  }
+</style>
+
 <header class="main-nav bx--header">
   <a
     sapper:prefetch
