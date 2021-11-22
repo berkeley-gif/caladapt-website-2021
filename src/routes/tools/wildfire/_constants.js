@@ -44,10 +44,6 @@ export const DATA_DISCLAIMER = `Locations outside the combined state and federal
 fire protection responsibility areas were excluded from these wildfire 
 simulations and have no wildfire projections.`;
 
-export const MISSING_DATA_MSG = `This area may contain locations outside the 
-combined fire state and federal protection responsibility areas. 
-${DATA_DISCLAIMER}`;
-
 export const NO_DATA_MSG = `No data is available for this area. 
 ${DATA_DISCLAIMER}`;
 
