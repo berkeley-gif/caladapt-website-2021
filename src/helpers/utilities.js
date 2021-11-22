@@ -11,6 +11,8 @@ const { apiEndpoint } = config.env.production;
 
 export { throttle, leftPad };
 
+export const parseDateIso = utcParse("%Y-%m-%dT%H:%M:%S%Z");
+
 /**
  * Split and parse location hash string into an object
  *
@@ -179,7 +181,6 @@ export function fetchData(url, params = {}, method = "GET") {
  * @return {array} values
  */
 export function transformResponse(response, throwNoData = true) {
-  const parseDate = utcParse("%Y-%m-%dT%H:%M:%S%Z");
   const { columns, index, data } = response;
 
   if (!data) {
@@ -192,7 +193,7 @@ export function transformResponse(response, throwNoData = true) {
 
   const values = data.map((row, i) => {
     const result = {};
-    result.date = parseDate(index[i]);
+    result.date = parseDateIso(index[i]);
     if (columns) {
       columns.forEach((colName, j) => {
         result[colName] = row[j];
@@ -212,7 +213,6 @@ export function transformResponse(response, throwNoData = true) {
  * @return {array} values
  */
 export function transformCounts(response) {
-  const parseDate = utcParse("%Y-%m-%dT%H:%M:%S%Z");
   const { counts, ...threshold } = response;
 
   if (!counts) {
@@ -222,7 +222,7 @@ export function transformCounts(response) {
   const entries = Object.entries(counts);
   const values = entries.map((row) => {
     const result = {};
-    result.date = parseDate(row[0]);
+    result.date = parseDateIso(row[0]);
     result.value = row[1];
     return result;
   });
