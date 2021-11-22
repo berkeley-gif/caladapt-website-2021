@@ -9,7 +9,7 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    height: 70px;
+    height: 4.375rem;
     background-color: var(--gray-90);
     border-bottom: 1px solid var(--gray-60);
 
@@ -65,17 +65,8 @@
 </style>
 
 <header class="main-nav bx--header">
-  <a
-    sapper:prefetch
-    class="bx--header__name"
-    aria-current="{segment === undefined ? 'page' : undefined}"
-    href="/"
-  >
-    <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="Cal-Adapt logo" />
-  </a>
   <button
-    type="button"
-    title="Open menu"
+    aria-label="Open menu"
     on:click="{() => (open = !open)}"
     class="bx--header__action bx--header__menu-trigger bx--header__menu-toggle"
   >
@@ -89,9 +80,10 @@
       preserveAspectRatio="xMidYMid meet"
       role="img"
       focusable="false"
+      alt=""
       ><path
         d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"
-      ></path><title>Open Menu</title></svg
+      ></path></svg
     >
   </button>
   <nav
@@ -101,6 +93,17 @@
     on:click="{() => (open = !open)}"
   >
     <ul class="bx--header__menu-bar">
+      <li>
+        <a
+          sapper:prefetch
+          class="bx--header__name"
+          aria-current="{segment === undefined ? 'page' : undefined}"
+          href="/"
+          aria-label="home"
+        >
+          <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="" />
+        </a>
+      </li>
       <li>
         <a
           sapper:prefetch
