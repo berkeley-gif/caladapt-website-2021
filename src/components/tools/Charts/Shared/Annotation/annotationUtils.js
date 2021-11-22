@@ -223,10 +223,69 @@ export function threshold() {
   return render;
 }
 
-/* --------------------------------------------
- * create some sample annotations
- * use to test with the annual averages tool
- *
+// Some sample annotations for testing
+/**
+ * The Annotation object, containing the properties label and one or more connector.
+ * @typedef {Object} Annotation
+ * @property {Object} label - Describes the annotation's label properties
+ * @property {Array} connectors – An array of one or more Connector objects
+ */
+
+/**
+ * The Label object, used by an Annotation object
+ * The Label is an absolutely positioned div. The position is calculated
+ * from the position property or data property. If neither property
+ * is present it will default to "top:0;left:0"
+ * @typedef {Object} Label
+ * @property {String} text – The text displayed in the label
+ * @property {Object} [data] – A row from data used in chart, used by layercake accessor functions to get x & y value
+ * @property {Object} [position] – Position of label using css props
+ * @property {Object} [style] - An object with list of css properties to overrise default label style
+ */
+
+/**
+ * The Connector object, used by the Annotation object
+ * The Connector is a svg path.
+ * @typedef {Object} Connector
+ * @property {String} type – enum, a type of annotation
+ * @property {String} [orientation = "v"] - indicates if threshold line is vertical or horizontal
+ * @property {Boolean} [clockwise = true] - indicates if swoopy arrow is clockwise or anticlockwise
+ * @property {Object} [source] - Position of connector end nearest to label
+ * @property {Object} [target] - Position of connector end farthest away from label
+ * @property {Object} [style] - An object with list of css properties to overrise default connector style
+ */
+
+/**
+ * The Data object, used by the Label & Connector objects
+ * @typedef {Object} Data
+ * @property {Date} [data.date = 0] - example for LineArea chart
+ * @property {Number} [data.value = 0] - example for LineArea chart
+ * @property {Number} [data.dx] - number of pixels to offset x position
+ * @property {Number} [data.dy] - number of pixels to offset y position
+ */
+
+/**
+ * The Position object, used by the Label object
+ * @typedef {Object} Position
+ * @property {Object} [position.top] - set top edge of an abosulte positioned div
+ * @property {Object} [position.bottom] - set bottom edge of an abosulte positioned div
+ * @property {Object} [position.left] - set left edge of an abosulte positioned div
+ * @property {Object} [position.right] - set right edge of an abosulte positioned div
+ */
+
+/**
+ * The Source object, used by the Connector object
+ * @typedef {Object} Source
+ * @property {String} anchor - attachment directives separated by a "-" (left/right-top/bottom/middle)
+ * @property {Number} [dx] - number of pixels to offset x position
+ * @property {Number} [dy] - number of pixels to offset y position
+ */
+
+/**
+ * The Target object, used by the Connector object
+ * @typedef {Object} Target
+ * @property {Number} x - a percentage or pixel value
+ * @property {Number} y - a percentage or pixel value
  */
 export function getSampleAnnotations() {
   return [
@@ -246,7 +305,11 @@ export function getSampleAnnotations() {
     {
       label: {
         text: "82",
-        data: { value: 82, dx: 50, dy: -20 },
+        data: {
+          value: 82,
+          dx: 50,
+          dy: -20,
+        },
       },
       connectors: [
         {
@@ -275,20 +338,18 @@ export function getSampleAnnotations() {
             x: "10%",
             y: "55%",
           },
-          style: {},
         },
         {
           type: "swoopy-arrow",
           source: {
             anchor: "right-bottom",
-            dy: -7,
             dx: 5,
+            dy: -7,
           },
           target: {
             x: "68%",
             y: "48%",
           },
-          style: {},
         },
       ],
     },
@@ -315,7 +376,6 @@ export function getSampleAnnotations() {
           target: {
             data: { date: new Date(Date.UTC(2060, 0, 1)), value: 74 },
           },
-          style: {},
         },
       ],
     },
