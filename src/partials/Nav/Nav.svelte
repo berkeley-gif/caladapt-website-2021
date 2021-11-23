@@ -33,6 +33,14 @@
     },
   ];
 
+  // TODO:
+  // -x fix width of nav item on mobile
+  // -x toggle hamburger icon to x when open
+  // -x use bx--grid for better alignment with pages
+  // - adjust grid cols based on page
+  // - rename this file to PageHeader or similar
+  // - rm _nav.scss?
+
   let open = false;
   let isMobile = false;
 
