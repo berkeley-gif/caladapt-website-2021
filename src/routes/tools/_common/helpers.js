@@ -162,6 +162,10 @@ export function formatDataForExport(_arr) {
  */
 export function getCompassQuadrant(deg) {
   const i = Math.round((deg % 360) / DEFAULT_COMPASS_QUADRANT_ANGLE);
+  // For values between 348 & 359, i is rounded to 16
+  if (i === DEFAULT_COMPASS_QUADRANTS.length) {
+    return DEFAULT_COMPASS_QUADRANTS[DEFAULT_COMPASS_QUADRANTS.length - 1];
+  }
   return DEFAULT_COMPASS_QUADRANTS[i];
 }
 
