@@ -6,7 +6,7 @@
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
-  import { almostEqual } from "~/helpers/utilities";
+  import { isEmptyData } from "~/helpers/utilities";
 
   import Scatter from "./Scatter.svelte";
   import AxisX from "./AxisX.svelte";
@@ -23,18 +23,18 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    minDefault: null,
-    maxDefault: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: (d) => d,
     units: "",
   };
-  // Currently minDefault & maxDefault props are not supported for xAxis
-  // To use these props for xAxis, an additional check should be added to
-  // filter data so the timeseries is within the xmin & xmax derived from
-  // the defaults
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: timeFormat("%Y"),
     units: "",
   };
@@ -52,44 +52,60 @@
     noData = true;
     xmin = new Date(Date.UTC(1950, 0, 1));
     xmax = new Date(Date.UTC(2099, 0, 1));
-    ymin = 10;
-    ymax = 50;
+    ymin = 0;
+    ymax = 10;
     data = [];
     legendItems.set([]);
     setContext("Legend", legendItems);
   }
 
-  $: if (data) {
+  $: if (Array.isArray(data) && !isEmptyData(data)) {
     noData = false;
 
     // Set X Domain
-    xmin = min(data, (arr) => min(arr.values, (d) => d.date));
-    xmax = max(data, (arr) => max(arr.values, (d) => d.date));
+    if (xAxis.domainMin instanceof Date && !isNaN(xAxis.domainMin)) {
+      xmin = xAxis.domainMin;
+    } else {
+      xmin = min(data, (arr) => min(arr.values, (d) => d.date));
+    }
+
+    if (xAxis.domainMax instanceof Date && !isNaN(xAxis.domainMax)) {
+      xmax = xAxis.domainMax;
+    } else {
+      xmax = max(data, (arr) => max(arr.values, (d) => d.date));
+    }
+
+    if (
+      xAxis.niceMax instanceof Date &&
+      !isNaN(xAxis.niceMax) &&
+      xAxis.niceMax > xmax
+    ) {
+      xmax = xAxis.niceMax;
+    }
 
     // Set Y Domain
-    if (typeof yAxis.minDefault === "number" && !isNaN(yAxis.minDefault)) {
-      ymin = yAxis.minDefault;
+    if (typeof yAxis.domainMin === "number" && !isNaN(yAxis.domainMin)) {
+      ymin = yAxis.domainMin;
     } else {
       ymin = min(data, (arr) =>
         min(arr.values, (d) => ("min" in d ? d.min : d.value))
       );
     }
 
-    ymax = max(data, (arr) =>
-      max(arr.values, (d) => ("max" in d ? d.max : d.value))
-    );
+    if (typeof yAxis.domainMax === "number" && !isNaN(yAxis.domainMax)) {
+      ymax = yAxis.domainMax;
+    } else {
+      ymax = max(data, (arr) =>
+        max(arr.values, (d) => ("max" in d ? d.max : d.value))
+      );
+    }
 
-    // Check if ymin & ymax are almost equal
-    const tolerance =
-      typeof yAxis.maxDefault === "number" && !isNaN(yAxis.maxDefault)
-        ? yAxis.maxDefault
-        : 1;
-    // If almost equal, it indicates all the values for the timeseries
-    // are close together, probably close to 0
-    // In that case set the ymax value to maxDefault/tolerance
-    // to generate more than 1 tick on the y axis
-    if (almostEqual(ymin, ymax, tolerance)) {
-      ymax = tolerance;
+    if (
+      typeof yAxis.niceMax === "number" &&
+      !isNaN(yAxis.niceMax) &&
+      yAxis.niceMax > ymax
+    ) {
+      ymax = yAxis.niceMax;
     }
 
     // Set Legend
@@ -99,12 +115,6 @@
       })
     );
     setContext("Legend", legendItems);
-  }
-
-  function isEmptyData(_data) {
-    return (
-      !_data.length || Math.max(..._data.map((d) => d.values.length)) === 0
-    );
   }
 
   function getTooltipLabel(d) {
