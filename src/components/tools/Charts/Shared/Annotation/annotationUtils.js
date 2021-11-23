@@ -44,6 +44,29 @@ export function getElPosition(el) {
 }
 
 /* --------------------------------------------
+ * getPositionFromData
+ *
+ * Use layercake accessor functions to calculate
+ * position from row in data
+ *
+ */
+export function getPositionFromData({
+  data,
+  xGet,
+  yGet,
+  width,
+  height,
+  dx = 0,
+  dy = 0,
+}) {
+  const x = xGet(data);
+  const y = yGet(data);
+  let xPos = x ? parseCssValue(x, 0, width, height) + dx : 0;
+  let yPos = y ? parseCssValue(y, 1, width, height) + dy : 0;
+  return [xPos, yPos];
+}
+
+/* --------------------------------------------
  * swoopyArrow
  *
  * Adapted from bizweekgraphics/swoopyarrows
@@ -247,12 +270,27 @@ export function threshold() {
  * The Connector object, used by the Annotation object
  * The Connector is a svg path.
  * @typedef {Object} Connector
- * @property {String} type – enum, a type of annotation
- * @property {String} [orientation = "v"] - indicates if threshold line is vertical or horizontal
+ * @property {("threshold"|"straight-arrow"|"swoopy-arrow")} type – allowed type of connector
+ * @property {("v"|"h")} [orientation = "v"] - indicates if threshold line is vertical or horizontal
  * @property {Boolean} [clockwise = true] - indicates if swoopy arrow is clockwise or anticlockwise
  * @property {Object} [source] - Position of connector end nearest to label
  * @property {Object} [target] - Position of connector end farthest away from label
  * @property {Object} [style] - An object with list of css properties to overrise default connector style
+ */
+
+/**
+ * The Source object, used by the Connector object
+ * @typedef {Object} Source
+ * @property {String} [anchor]  - attachment directives separated by a "-" (left/right-top/bottom/middle)
+ * @property {Object} [data] – A row from data used in chart, used by layercake accessor functions to get x & y value
+ * @property {Number} [dx] - number of pixels to offset x position
+ * @property {Number} [dy] - number of pixels to offset y position
+ */
+
+/**
+ * The Target object, used by the Connector object
+ * @typedef {Object} Target
+ * @property {Object} [data] – A row from data used in chart, used by layercake accessor functions to get x & y value
  */
 
 /**
@@ -272,21 +310,6 @@ export function threshold() {
  * @property {Object} [position.left] - set left edge of an abosulte positioned div
  * @property {Object} [position.right] - set right edge of an abosulte positioned div
  */
-
-/**
- * The Source object, used by the Connector object
- * @typedef {Object} Source
- * @property {String} anchor - attachment directives separated by a "-" (left/right-top/bottom/middle)
- * @property {Number} [dx] - number of pixels to offset x position
- * @property {Number} [dy] - number of pixels to offset y position
- */
-
-/**
- * The Target object, used by the Connector object
- * @typedef {Object} Target
- * @property {Number} x - a percentage or pixel value
- * @property {Number} y - a percentage or pixel value
- */
 export function getSampleAnnotations() {
   return [
     {
@@ -298,6 +321,9 @@ export function getSampleAnnotations() {
         {
           type: "threshold",
           orientation: "v",
+          source: {
+            data: { date: new Date(Date.UTC(1980, 0, 1)) },
+          },
           style: { "stroke-dasharray": "6,4" },
         },
       ],
@@ -305,16 +331,17 @@ export function getSampleAnnotations() {
     {
       label: {
         text: "82",
-        data: {
-          value: 82,
-          dx: 50,
-          dy: -20,
-        },
+        data: { value: 82 },
+        dx: 20,
+        dy: -20,
       },
       connectors: [
         {
           type: "threshold",
           orientation: "h",
+          source: {
+            data: { value: 82 },
+          },
           style: { "stroke-dasharray": "6,4", stroke: "blue" },
         },
       ],
@@ -335,8 +362,7 @@ export function getSampleAnnotations() {
             anchor: "left-middle",
           },
           target: {
-            x: "10%",
-            y: "55%",
+            data: { date: new Date(Date.UTC(1960, 0, 1)), value: 76 },
           },
         },
         {
@@ -347,8 +373,7 @@ export function getSampleAnnotations() {
             dy: -7,
           },
           target: {
-            x: "68%",
-            y: "48%",
+            data: { date: new Date(Date.UTC(2050, 0, 1)), value: 78 },
           },
         },
       ],
@@ -371,7 +396,7 @@ export function getSampleAnnotations() {
           clockwise: false,
           source: {
             anchor: "right-middle",
-            dx: "10",
+            dx: 10,
           },
           target: {
             data: { date: new Date(Date.UTC(2060, 0, 1)), value: 74 },

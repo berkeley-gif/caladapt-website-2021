@@ -12,7 +12,7 @@
   $: labels = annotations.map((d) => d.label);
 
   $: setPositionAndStyle = (label) => {
-    const { position, data, style } = label;
+    const { position, data, style, dx, dy } = label;
     let inlineStyle = "";
 
     // Place an aboslutely positioned div using a position or data object
@@ -29,20 +29,19 @@
       // use the accessor functions to derive position
       let xPos = xGet(data) ? xGet(data) : 0;
       let yPos = yGet(data) ? yGet(data) : 0;
+
       // offset x & y position if data object has optional props
-      const { dx, dy } = data;
       if (dx) {
         xPos += dx;
       }
       if (dy) {
         yPos += dy;
       }
+
       inlineStyle = `top:${yPos}px;left:${xPos}px;`;
     } else {
       // default if both position & data objects are missing
-      console.warn(
-        "label does not have data or position props, it will be placed at 0,0"
-      );
+      console.warn("label does not have data or position props");
       inlineStyle = `top:0;left:0`;
     }
 

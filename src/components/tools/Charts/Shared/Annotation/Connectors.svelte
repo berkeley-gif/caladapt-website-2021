@@ -8,6 +8,7 @@
     threshold,
     getElPosition,
     parseCssValue,
+    getPositionFromData,
   } from "./annotationUtils.js";
 
   export let annotations;
@@ -26,7 +27,7 @@
     { dimension: "height", css: "top", position: "y" },
   ];
 
-  // list of absolutely positioned label divs
+  // List of absolutely positioned label divs
   $: labelEls = container
     ? Array.from(
         container
@@ -35,13 +36,19 @@
       )
     : [];
 
-  // creates a path for each connector using:
-  // source & target coordiantes for arrows
-  // target coordinates only for thresholds
+  // Creates a svg path for each connector
   $: setPath = (anno, i, connector) => {
     if (!Array.isArray(labelEls) || !labelEls.length) return;
 
     const { type } = connector;
+
+    if (!type) {
+      console.warn("cannot create connector, missing type prop");
+      return;
+    }
+
+    let sourceCoords = [0, 0];
+    let targetCoords = [0, 0];
 
     if (type === "threshold") {
       // Default to vertical orientation for threshold
@@ -49,76 +56,107 @@
         typeof connector.orientation === "undefined"
           ? "v"
           : connector.orientation;
+
       // Default to full height of the chart for threshold
       const extent = orientation === "v" ? height : width;
-      // Source coordinates are derived from data object in corresponding label
-      const { data } = anno.label;
-      if (!data) return;
-      const sourceCoords = [
-        parseCssValue(xGet(data), 0, width, height),
-        parseCssValue(yGet(data), 1, width, height),
-      ];
+
+      // Parse where to place the threshold line
+      const { data, dx, dy } = connector.source;
+      if (data) {
+        sourceCoords = getPositionFromData({
+          data,
+          xGet,
+          yGet,
+          width,
+          height,
+          dx,
+          dy,
+        });
+      } else {
+        // default target coordinates
+        console.warn("unable to calculate source coordinates for connector");
+      }
+
+      // Create svg path for threshold
       return threshold()
         .orientation(orientation)
         .extent(extent)
         .x((q) => q[0])
         .y((q) => q[1])([sourceCoords]);
     } else {
-      // Use position of label div to draw arrows
+      // Use label div
       const el = labelEls[i];
 
-      // Get bounding box for element
+      // Get bounding box for label div element to draw arrows
       const elSource = getElPosition(el);
 
-      // Parse attachment directives to know where to start the arrowhead
-      const { anchor } = connector.source;
-      const sourceCoords = anchor.split("-").map((q, j) => {
-        const point =
-          q === "middle"
-            ? elSource[lookups[j].css] + elSource[lookups[j].dimension] / 2
-            : elSource[q];
-        // Use source dx and dy to adjust coordinates
-        return (
-          point +
-          parseCssValue(
-            connector.source[`d${lookups[j].position}`],
-            i,
-            elSource.width,
-            elSource.height
-          )
-        );
-      });
+      // Parse where to start the arrowhead
+      const {
+        anchor,
+        data: sourceData,
+        dx: sourceDx,
+        dy: sourceDy,
+      } = connector.source;
+      if (anchor) {
+        sourceCoords = anchor.split("-").map((q, j) => {
+          const point =
+            q === "middle"
+              ? elSource[lookups[j].css] + elSource[lookups[j].dimension] / 2
+              : elSource[q];
+          // Use source dx and dy to adjust coordinates
+          return (
+            point +
+            parseCssValue(
+              connector.source[`d${lookups[j].position}`],
+              i,
+              elSource.width,
+              elSource.height
+            )
+          );
+        });
+      } else if (sourceData) {
+        sourceCoords = getPositionFromData({
+          data: sourceData,
+          xGet,
+          yGet,
+          width,
+          height,
+          dx: sourceDx,
+          dy: sourceDy,
+        });
+      } else {
+        console.warn("unable to calculate source coordinates for connector");
+      }
 
-      // Parse where to draw to, i.e. target coordinates
-      let targetCoords;
+      // Parse where to end arrowhead
       if (connector.target) {
-        const { x, y, data } = connector.target;
-        if (x && y) {
-          // if target position is in pixel values (in number or %)
-          targetCoords = [
-            parseCssValue(x, 0, width, height),
-            parseCssValue(y, 1, width, height),
-          ];
-        } else if (data) {
-          // if target position is specified as a data value
-          targetCoords = [
-            parseCssValue(xGet(data), 0, width, height),
-            parseCssValue(yGet(data), 1, width, height),
-          ];
+        const {
+          data: targetData,
+          dx: targetDx,
+          dy: targetDy,
+        } = connector.target;
+        if (targetData) {
+          targetCoords = getPositionFromData({
+            data: targetData,
+            xGet,
+            yGet,
+            width,
+            height,
+            dx: targetDx,
+            dy: targetDy,
+          });
         } else {
-          // default target coordinates
-          targetCoords = [100, 100];
+          console.warn("unable to calculate target coordinates for connector");
         }
       }
 
-      // Default to clockwise for swoopy arrows
-      const clockwise =
-        typeof connector.clockwise === "undefined" ? true : connector.clockwise;
-
-      if (connector.type === "swoopy-arrow") {
+      // Create svg path for arrow
+      if (type === "swoopy-arrow") {
         return swoopyArrow()
           .angle(Math.PI / 2)
-          .clockwise(clockwise)
+          .clockwise(
+            connector.clockwise === "undefined" ? true : connector.clockwise
+          )
           .x((q) => q[0])
           .y((q) => q[1])([sourceCoords, targetCoords]);
       } else if (connector.type === "straight-arrow") {
@@ -129,6 +167,7 @@
     }
   };
 
+  // Override defult connector style
   $: setStyle = (styles) => {
     return Object.entries(styles)
       .map(([key, value]) => `--${key}:${value}`)
@@ -168,7 +207,7 @@
         <g class="annotation-connector">
           {#each anno.connectors as connector}
             <path
-              style="{setStyle(connector.style)}"
+              style="{connector.style ? setStyle(connector.style) : ''}"
               marker-end="{connector.type === 'threshold'
                 ? ''
                 : 'url(#arrowhead)'}"
