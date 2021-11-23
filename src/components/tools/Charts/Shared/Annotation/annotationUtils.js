@@ -329,6 +329,8 @@ export function threshold() {
  * The Target object, used by the Connector object
  * @typedef {Object} Target
  * @property {Object} [data] – A row from data used in chart, used by layercake accessor functions to get x & y value
+ * @property {String} [x] - x position as number, pixel value or percentage
+ * @property {String} [y] - y position as number, pixel value or percentage
  */
 
 /**
@@ -341,12 +343,12 @@ export function threshold() {
  */
 
 /**
- * The Position object, used by the Label object
+ * The Position object, used by the Label object for absolute positioning
  * @typedef {Object} Position
- * @property {Object} [position.top] - set top edge of an abosulte positioned div
- * @property {Object} [position.bottom] - set bottom edge of an abosulte positioned div
- * @property {Object} [position.left] - set left edge of an abosulte positioned div
- * @property {Object} [position.right] - set right edge of an abosulte positioned div
+ * @property {String} [position.top] - top edge as number, pixel value or percentage
+ * @property {String} [position.bottom] - bottom edge as number, pixel value or percentage
+ * @property {String} [position.left] - left edge as number, pixel value or percentage
+ * @property {String} [position.right] - right edge as number, pixel value or percentage
  */
 export function getSampleAnnotations() {
   return [
