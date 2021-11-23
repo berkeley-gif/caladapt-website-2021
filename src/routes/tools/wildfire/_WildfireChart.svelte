@@ -42,6 +42,8 @@
     label,
     tickFormat: formatFn,
     units,
+    domainMin: 0,
+    niceMax: 1,
   }}"
 />
 

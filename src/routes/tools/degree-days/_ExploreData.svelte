@@ -315,7 +315,8 @@
         label: `Number of ${$indicator.label} (Base temperature ${$thresholdStore}˚F)`,
         tickFormat: formatFn,
         units: `${$indicator.units}`,
-        minDefault: 0,
+        domainMin: 0,
+        niceMax: 10,
       }}"
     />
     <div class="chart-notes margin--v-32">

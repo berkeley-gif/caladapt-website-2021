@@ -286,8 +286,8 @@
       yAxis="{{
         key: 'value',
         label: `${$indicator.title}`,
-        minDefault: 0,
-        maxDefault: 10,
+        domainMin: 0,
+        niceMax: 10,
         tickFormat: formatFn,
         units: `${$indicator.units}`,
       }}"
