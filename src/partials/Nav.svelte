@@ -1,5 +1,7 @@
 <script>
   import { onMount } from "svelte";
+  import { Menu24, Close24 } from "carbon-icons-svelte";
+  import { Button } from "carbon-components-svelte";
 
   export let segment;
 
@@ -56,7 +58,8 @@
     display: block;
   }
 
-  .bx--header__menu-toggle {
+  :global(.bx--header
+      .bx--header__action.bx--header__menu-trigger.bx--header__menu-toggle) {
     display: none;
     margin-right: 0.5rem;
   }
@@ -114,44 +117,25 @@
       padding: 0.5rem 0;
     }
 
-    .bx--header__menu-toggle {
+    :global(.bx--header
+        .bx--header__action.bx--header__menu-trigger.bx--header__menu-toggle) {
       display: flex;
     }
   }
 </style>
 
 <header class="bx--header">
-  <a
-    sapper:prefetch
-    href="/"
-    class="bx--header__name"
-    aria-label="Home page"
-    aria-current="{segment === undefined ? 'page' : undefined}"
-  >
+  <a sapper:prefetch href="/" class="bx--header__name" aria-label="Home page">
     <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="" />
   </a>
-  <button
-    aria-label="Open menu"
+  <Button
+    size="small"
+    icon="{open ? Close24 : Menu24}"
+    iconDescription="{open ? 'Close menu' : 'Open menu'}"
+    tooltipPosition="left"
     on:click="{() => (open = !open)}"
     class="bx--header__action bx--header__menu-trigger bx--header__menu-toggle"
-  >
-    <svg
-      data-carbon-icon="Menu20"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      width="20"
-      height="20"
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-      focusable="false"
-      alt=""
-      ><path
-        d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"
-      ></path></svg
-    >
-  </button>
-
+  />
   <nav aria-label="Main menu" class="bx--header__nav" class:expanded="{open}">
     <ul class="bx--header__menu-bar">
       {#each navItems as item, i}
