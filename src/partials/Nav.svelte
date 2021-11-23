@@ -1,11 +1,9 @@
 <script>
+  import { onMount } from "svelte";
+
   export let segment;
 
   const navItems = [
-    {
-      label: "Home",
-      path: "/",
-    },
     {
       label: "Tools",
       path: "/tools/",
@@ -33,14 +31,26 @@
   ];
 
   let open = false;
+  let isMobile = false;
+
+  function mqHandler({ matches }) {
+    isMobile = matches;
+  }
+
+  onMount(() => {
+    const mq = window.matchMedia(`(max-width:1000px)`);
+    mq.addEventListener("change", mqHandler);
+    mqHandler(mq);
+  });
 </script>
 
 <style lang="scss">
   .main-nav {
+    --height: 4.375rem;
     position: relative;
     display: flex;
     justify-content: space-between;
-    height: 4.375rem;
+    height: var(--height);
     background-color: var(--gray-90);
     border-bottom: 1px solid var(--gray-60);
 
@@ -78,14 +88,27 @@
     @media (max-width: 1000px) {
       .bx--header__nav {
         display: none;
+        height: auto;
+        top: var(--height);
 
         &.expanded {
           display: block;
-          margin-top: 140px;
           width: 100%;
           position: absolute;
           background: rgba(0, 0, 0, 0.8);
         }
+      }
+
+      .main-nav {
+        height: auto;
+      }
+
+      .bx--header__menu-bar {
+        flex-direction: column;
+      }
+
+      .bx--header__menu-item {
+        padding: 0.5rem 0;
       }
 
       .bx--header__menu-toggle {
@@ -96,6 +119,15 @@
 </style>
 
 <header class="main-nav bx--header">
+  <a
+    sapper:prefetch
+    href="/"
+    class="bx--header__name"
+    aria-label="Home page"
+    aria-current="{segment === undefined ? 'page' : undefined}"
+  >
+    <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="" />
+  </a>
   <button
     aria-label="Open menu"
     on:click="{() => (open = !open)}"
@@ -117,30 +149,22 @@
       ></path></svg
     >
   </button>
-  <nav
-    aria-label="Main menu"
-    class="bx--header__nav"
-    class:expanded="{open}"
-    on:click="{() => (open = !open)}"
-  >
-    <ul class="bx--header__menu-bar desktop">
+
+  <nav aria-label="Main menu" class="bx--header__nav" class:expanded="{open}">
+    <ul class="bx--header__menu-bar">
       {#each navItems as item, i}
         <li>
           <a
             sapper:prefetch
             href="{item.path}"
-            class="{!i ? 'bx--header__name' : 'bx--header__menu-item'}"
-            aria-label="{!i ? item.label : ''}"
-            aria-current="{(!i && segment === undefined) ||
-            segment === item.label.toLowerCase()
+            class="bx--header__menu-item"
+            aria-label="{item.label}"
+            aria-current="{segment === item.label.toLowerCase()
               ? 'page'
               : undefined}"
+            on:click="{() => isMobile && (open = !open)}"
           >
-            {#if !i}
-              <img src="img/logos/cal-adapt_logo.svg" class="logo" alt="" />
-            {:else}
-              <span class="bx--text-truncate--end">{item.label}</span>
-            {/if}
+            <span class="bx--text-truncate--end">{item.label}</span>
           </a>
         </li>
       {/each}
