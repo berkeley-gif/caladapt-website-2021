@@ -38,87 +38,89 @@
   }
 
   onMount(() => {
-    const mq = window.matchMedia(`(max-width:1000px)`);
+    const mq = window.matchMedia(`(max-width:66rem)`);
     mq.addEventListener("change", mqHandler);
     mqHandler(mq);
   });
 </script>
 
 <style lang="scss">
-  .main-nav {
-    --height: 4.375rem;
+  .bx--header {
+    height: 4.375rem;
     position: relative;
-    display: flex;
     justify-content: space-between;
-    height: var(--height);
     background-color: var(--gray-90);
-    border-bottom: 1px solid var(--gray-60);
+  }
+
+  .bx--header__nav {
+    display: block;
+  }
+
+  .bx--header__menu-toggle {
+    display: none;
+    margin-right: 0.5rem;
+  }
+
+  .bx--header__nav:before {
+    background: transparent;
+  }
+
+  .bx--header__menu-item {
+    color: var(--white);
+    font-size: 1rem;
+
+    &:hover {
+      background-color: var(--blue-50);
+    }
+  }
+
+  .bx--header__menu-item[aria-current="page"]::after {
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .logo {
+    width: 100px;
+  }
+
+  @media (max-width: 66rem) {
+    .bx--header {
+      height: auto;
+    }
 
     .bx--header__nav {
-      display: block;
-    }
-
-    .bx--header__menu-toggle {
       display: none;
+      height: auto;
+      width: auto;
       position: absolute;
-      right: 0.5rem;
+      top: 3rem;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+
+      &.expanded {
+        display: block;
+      }
     }
 
-    .bx--header__nav:before {
-      background: transparent;
+    .bx--header__menu-bar {
+      flex-direction: column;
+      width: 6rem;
+
+      li {
+        max-width: 12ch;
+      }
     }
 
     .bx--header__menu-item {
-      color: var(--white);
-      font-size: 1rem;
-
-      &:hover {
-        background-color: var(--blue-50);
-      }
+      padding: 0.5rem 0;
     }
 
-    .bx--header__menu-item[aria-current="page"]::after {
-      border-bottom: 3px solid var(--accent);
-    }
-
-    .logo {
-      width: 100px;
-    }
-
-    @media (max-width: 1000px) {
-      .bx--header__nav {
-        display: none;
-        height: auto;
-        top: var(--height);
-
-        &.expanded {
-          display: block;
-          width: 100%;
-          position: absolute;
-          background: rgba(0, 0, 0, 0.8);
-        }
-      }
-
-      .main-nav {
-        height: auto;
-      }
-
-      .bx--header__menu-bar {
-        flex-direction: column;
-      }
-
-      .bx--header__menu-item {
-        padding: 0.5rem 0;
-      }
-
-      .bx--header__menu-toggle {
-        display: flex;
-      }
+    .bx--header__menu-toggle {
+      display: flex;
     }
   }
 </style>
 
-<header class="main-nav bx--header">
+<header class="bx--header">
   <a
     sapper:prefetch
     href="/"
