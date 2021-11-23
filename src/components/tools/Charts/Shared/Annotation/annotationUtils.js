@@ -1,6 +1,12 @@
 // Annotation component based on annotated column example from LayerCake
 // https://layercake.graphics/example/Column
-// Helper functions for creating swoopy arrows
+
+// Some lookups to convert between x, y / width, height terminology
+// and CSS names
+const lookups = [
+  { dimension: "width", css: "left", position: "x" },
+  { dimension: "height", css: "top", position: "y" },
+];
 
 /* --------------------------------------------
  * parseCssValue
@@ -47,7 +53,7 @@ export function getElPosition(el) {
  * getPositionFromData
  *
  * Use layercake accessor functions to calculate
- * position from row in data
+ * source/target coordinates from row in data
  *
  */
 export function getPositionFromData({
@@ -63,6 +69,38 @@ export function getPositionFromData({
   const y = yGet(data);
   let xPos = x ? parseCssValue(x, 0, width, height) + dx : 0;
   let yPos = y ? parseCssValue(y, 1, width, height) + dy : 0;
+  return [xPos, yPos];
+}
+
+/* --------------------------------------------
+ * getPositionFromAnchor
+ *
+ * Use label position & anchor to calculate
+ * source coordinates
+ *
+ */
+export function getPositionFromAnchor({ anchor, label, dx = 0, dy = 0 }) {
+  const elPos = getElPosition(label);
+  const [x, y] = anchor.split("-").map((q, j) => {
+    const point =
+      q === "middle"
+        ? elPos[lookups[j].css] + elPos[lookups[j].dimension] / 2
+        : elPos[q];
+    return point;
+  });
+  return [x + dx, y + dy];
+}
+
+/* --------------------------------------------
+ * getPositionFromXY
+ *
+ * Use label position, x & y to calculate
+ * target coordinates
+ *
+ */
+export function getPositionFromXY({ x, y, width, height, dx = 0, dy = 0 }) {
+  const xPos = parseCssValue(x, 0, width, height) + dx;
+  const yPos = parseCssValue(y, 1, width, height) + dy;
   return [xPos, yPos];
 }
 
@@ -316,6 +354,7 @@ export function getSampleAnnotations() {
       label: {
         text: "1980",
         data: { date: new Date(Date.UTC(1980, 0, 1)) },
+        dx: -20,
       },
       connectors: [
         {
@@ -403,6 +442,15 @@ export function getSampleAnnotations() {
           },
         },
       ],
+    },
+    {
+      label: {
+        text: "⟵ Extended Drought Period (20 years) ⟶",
+        position: {
+          top: "5%",
+          left: "50%",
+        },
+      },
     },
   ];
 }
