@@ -10,39 +10,45 @@
     {
       label: "Tools",
       path: "/tools/",
+      useOffset: false,
     },
     {
       label: "Data",
       path: "/data/",
+      useOffset: true,
     },
     {
       label: "Help",
       path: "/help/",
+      useOffset: true,
     },
     {
       label: "Blog",
       path: "/blog/",
+      useOffset: false,
     },
     {
       label: "Events",
       path: "/events/",
+      useOffset: true,
     },
     {
       label: "About",
       path: "/about/",
+      useOffset: true,
     },
   ];
-
-  // TODO:
-  // -x fix width of nav item on mobile
-  // -x toggle hamburger icon to x when open
-  // -x use bx--grid for better alignment with pages
-  // - adjust grid cols based on page
-  // - rename this file to PageHeader or similar
-  // - rm _nav.scss?
+  const home = {
+    label: "Home",
+    path: "/",
+    useOffset: false,
+  };
 
   let open = false;
   let isMobile = false;
+
+  $: curNavItem =
+    navItems.find((item) => item.label.toLowerCase() === segment) || home;
 
   function mqHandler({ matches }) {
     isMobile = matches;
@@ -76,7 +82,10 @@
   <div class="bx--grid">
     <div class="bx--row">
       <!-- logo -->
-      <div class="bx--col-lg-2 bx--col-md-7 bx--col-sm-1">
+      <div
+        class="bx--col-lg-2 bx--col-md-7 bx--col-sm-1"
+        class:bx--offset-lg-2="{curNavItem.useOffset}"
+      >
         <a
           sapper:prefetch
           href="/"
@@ -93,11 +102,15 @@
       </div>
 
       <!-- nav -->
-      <div class="bx--col-lg-14 bx--col-md-0 bx--col-sm-0">
+      <div
+        class="bx--col-md-0 bx--col-sm-0"
+        class:bx--col-lg-12="{curNavItem.useOffset}"
+        class:bx--col-lg-14="{!curNavItem.useOffset}"
+      >
         <NavItems navItems="{navItems}" segment="{segment}" />
       </div>
 
-      <!-- menu btn -->
+      <!-- md to sm viewport menu btn -->
       <div
         class="bx--col-lg-0 bx--col-md-1 bx--col-sm-3"
         style="padding-left:0;padding-right:0;"
