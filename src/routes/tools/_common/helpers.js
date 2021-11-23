@@ -3,6 +3,7 @@ import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
 } from "./constants";
+import { isLeapYear } from "~/helpers/utilities";
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -86,7 +87,7 @@ export function flattenData(_data) {
  *  ...
  * ]
  * Used for chart tooltips
- * @param {array} _data - array of series objects
+ * @param {array} _arr - array of series objects
  * @return {array}
  */
 export function groupDataByYear(_arr) {
@@ -135,7 +136,7 @@ export function groupDataByYear(_arr) {
  *  },
  *  ...
  * ]
- * @param {array} _data - array of series objects
+ * @param {array} _arr - array of series objects
  * @return {array}
  */
 export function formatDataForExport(_arr) {
@@ -162,6 +163,10 @@ export function formatDataForExport(_arr) {
  */
 export function getCompassQuadrant(deg) {
   const i = Math.round((deg % 360) / DEFAULT_COMPASS_QUADRANT_ANGLE);
+  // For values between 348 & 359, i is rounded to 16
+  if (i === DEFAULT_COMPASS_QUADRANTS.length) {
+    return DEFAULT_COMPASS_QUADRANTS[DEFAULT_COMPASS_QUADRANTS.length - 1];
+  }
   return DEFAULT_COMPASS_QUADRANTS[i];
 }
 
@@ -187,7 +192,7 @@ export function getCompassQuadrant(deg) {
  *  ...
  * ]
  * Used for chart tooltips
- * @param {array} _data - array of series objects
+ * @param {array} _arr - array of series objects
  * @return {array}
  */
 export function groupDataByDay(_arr) {
@@ -213,3 +218,19 @@ export function groupDataByDay(_arr) {
     }
   );
 }
+
+/**
+ * Converts annual rate to annual sum
+ * @param {date}
+ * @param {number} value
+ * @return {number}
+ */
+// Helper function to convert precipitation values from a rate (inches/day)
+// to total accumulation in a year
+export const convertAnnualRateToSum = ({ date, value }) => {
+  if (isLeapYear(+date.getUTCFullYear())) {
+    return value * 366;
+  } else {
+    return value * 365;
+  }
+};
