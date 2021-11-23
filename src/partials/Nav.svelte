@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { Menu24, Close24 } from "carbon-icons-svelte";
+  import { Menu32, Close32 } from "carbon-icons-svelte";
   import { Button } from "carbon-components-svelte";
 
   export let segment;
@@ -62,12 +62,6 @@
     display: block;
   }
 
-  :global(.bx--header
-      .bx--header__action.bx--header__menu-trigger.bx--header__menu-toggle) {
-    display: none;
-    margin-right: 0.5rem;
-  }
-
   .bx--header__nav {
     float: right;
 
@@ -91,23 +85,22 @@
     border-bottom: 3px solid var(--accent);
   }
 
+  .menu-toggle {
+    background-color: var(--gray-90);
+  }
+
   @media (max-width: 66rem) {
     .bx--header {
       height: auto;
     }
 
     .bx--header__nav {
-      display: none;
       height: auto;
       width: auto;
       position: absolute;
       top: 3rem;
       right: 0;
       background: rgba(0, 0, 0, 0.8);
-
-      &.expanded {
-        display: block;
-      }
     }
 
     .bx--header__menu-bar {
@@ -121,11 +114,6 @@
 
     .bx--header__menu-item {
       padding: 0.5rem 0;
-    }
-
-    :global(.bx--header
-        .bx--header__action.bx--header__menu-trigger.bx--header__menu-toggle) {
-      display: flex;
     }
   }
 </style>
@@ -152,11 +140,7 @@
 
       <!-- nav -->
       <div class="bx--col-lg-14 bx--col-md-0 bx--col-sm-0">
-        <nav
-          aria-label="Main menu"
-          class="bx--header__nav"
-          class:expanded="{open}"
-        >
+        <nav aria-label="Main menu" class="bx--header__nav">
           <ul class="bx--header__menu-bar">
             {#each navItems as item, i}
               <li>
@@ -168,7 +152,6 @@
                   aria-current="{segment === item.label.toLowerCase()
                     ? 'page'
                     : undefined}"
-                  on:click="{() => isMobile && (open = !open)}"
                 >
                   <span class="bx--text-truncate--end">{item.label}</span>
                 </a>
@@ -179,15 +162,42 @@
       </div>
 
       <!-- menu btn -->
-      <div class="bx--col-lg-0 bx--col-md-1 bx--col-sm-1">
+      <div
+        class="bx--col-lg-0 bx--col-md-1 bx--col-sm-1"
+        style="padding-left:0;padding-right:0;"
+      >
         <Button
-          size="small"
-          icon="{open ? Close24 : Menu24}"
+          kind="secondary"
+          icon="{open ? Close32 : Menu32}"
           iconDescription="{open ? 'Close menu' : 'Open menu'}"
           tooltipPosition="left"
           on:click="{() => (open = !open)}"
-          class="bx--header__action bx--header__menu-trigger bx--header__menu-toggle"
+          class="menu-toggle"
+          style="background-color: var(--gray-90); float:right;"
         />
+
+        {#if isMobile && open}
+          <nav aria-label="Main menu" class="bx--header__nav">
+            <ul class="bx--header__menu-bar">
+              {#each navItems as item, i}
+                <li>
+                  <a
+                    sapper:prefetch
+                    href="{item.path}"
+                    class="bx--header__menu-item"
+                    aria-label="{item.label}"
+                    aria-current="{segment === item.label.toLowerCase()
+                      ? 'page'
+                      : undefined}"
+                    on:click="{() => isMobile && (open = !open)}"
+                  >
+                    <span class="bx--text-truncate--end">{item.label}</span>
+                  </a>
+                </li>
+              {/each}
+            </ul>
+          </nav>
+        {/if}
       </div>
     </div>
   </div>
