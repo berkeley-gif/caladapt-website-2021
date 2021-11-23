@@ -1,8 +1,5 @@
 <script>
-  import Nav from "../partials/Nav.svelte";
-  import Footer from "../partials/Footer.svelte";
-  import BackToTop from "../partials/BackToTop.svelte";
-  import SiteAlert from "../partials/SiteAlert.svelte";
+  import { Nav, Footer, BackToTop, SiteAlert } from "~/partials";
   export let segment;
 </script>
 
