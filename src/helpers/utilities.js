@@ -592,11 +592,10 @@ export const logSingleStore = (store, prev) => {
 };
 
 /**
- * Check is two numbers are within the given tolerance of one another
- * @param {a} number
- * @param {b} number
- * @param {tolerance} tolerance value
+ * Returns true if data array is empty or all series values array are empty
+ * @param {array} _data
+ * @returns {boolean}
  */
-export function almostEqual(a, b, tolerance = Number.epsilon) {
-  return Math.abs(a - b) < tolerance;
+export function isEmptyData(_data) {
+  return !_data.length || Math.max(..._data.map((d) => d.values.length)) === 0;
 }
