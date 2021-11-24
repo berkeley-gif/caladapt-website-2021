@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { Menu32, Close32 } from "carbon-icons-svelte";
   import { Button } from "carbon-components-svelte";
   import NavItems from "./NavItems.svelte";
@@ -45,24 +44,13 @@
   };
 
   let open = false;
-  let isMediumSmall = false;
 
   $: curNavItem =
     navItems.find((item) => item.label.toLowerCase() === segment) || home;
 
-  function mqHandler({ matches }) {
-    isMediumSmall = matches;
-  }
-
   function handleNavItemClick() {
     open = !open;
   }
-
-  onMount(() => {
-    const mq = window.matchMedia(`(max-width:66rem)`);
-    mq.addEventListener("change", mqHandler);
-    mqHandler(mq);
-  });
 </script>
 
 <style lang="scss">
@@ -125,7 +113,7 @@
           style="background-color: var(--gray-90); float:right;"
         />
 
-        {#if isMediumSmall && open}
+        {#if open}
           <NavItems
             navItems="{navItems}"
             segment="{segment}"
