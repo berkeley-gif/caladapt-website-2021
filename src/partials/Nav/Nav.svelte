@@ -45,13 +45,13 @@
   };
 
   let open = false;
-  let isMobile = false;
+  let isMediumSmall = false;
 
   $: curNavItem =
     navItems.find((item) => item.label.toLowerCase() === segment) || home;
 
   function mqHandler({ matches }) {
-    isMobile = matches;
+    isMediumSmall = matches;
   }
 
   function handleNavItemClick() {
@@ -81,9 +81,9 @@
 <header class="bx--header">
   <div class="bx--grid">
     <div class="bx--row">
-      <!-- logo -->
+      <!-- logo & homepage link -->
       <div
-        class="bx--col-lg-2 bx--col-md-7 bx--col-sm-1"
+        class="bx--col-lg-3 bx--col-md-2 bx--col-sm-1"
         class:bx--offset-lg-2="{curNavItem.useOffset}"
       >
         <a
@@ -101,18 +101,18 @@
         </a>
       </div>
 
-      <!-- nav -->
+      <!-- desktop nav -->
       <div
         class="bx--col-md-0 bx--col-sm-0"
-        class:bx--col-lg-12="{curNavItem.useOffset}"
-        class:bx--col-lg-14="{!curNavItem.useOffset}"
+        class:bx--col-lg-11="{curNavItem.useOffset}"
+        class:bx--col-lg-13="{!curNavItem.useOffset}"
       >
         <NavItems navItems="{navItems}" segment="{segment}" />
       </div>
 
-      <!-- md to sm viewport menu btn -->
+      <!-- md to sm viewport menu btn & nav -->
       <div
-        class="bx--col-lg-0 bx--col-md-1 bx--col-sm-3"
+        class="bx--col-lg-0 bx--col-md-6 bx--col-sm-3"
         style="padding-left:0;padding-right:0;"
       >
         <Button
@@ -125,7 +125,7 @@
           style="background-color: var(--gray-90); float:right;"
         />
 
-        {#if isMobile && open}
+        {#if isMediumSmall && open}
           <NavItems
             navItems="{navItems}"
             segment="{segment}"
