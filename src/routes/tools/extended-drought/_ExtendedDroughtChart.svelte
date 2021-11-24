@@ -12,6 +12,7 @@
   export let units;
   export let label;
   export let dataSource;
+  export let annotations;
 
   const dispatch = createEventDispatcher();
 
@@ -29,6 +30,7 @@
 </script>
 
 <LineAreaChart
+  annotations="{annotations}"
   data="{data}"
   dataByDate="{dataByDate}"
   yAxis="{{

@@ -7,7 +7,7 @@
 
   import {
     flattenData,
-    getDataByDate,
+    groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
 
@@ -30,6 +30,7 @@
     scenarioStore,
     droughtDataStore,
     observedDataStore,
+    annotationsStore,
   } from "./_store";
   import { DEFAULT_MODEL } from "./_constants";
 
@@ -65,7 +66,7 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if (Array.isArray($droughtDataStore) && $droughtDataStore.length) {
-    dataByDate = getDataByDate(
+    dataByDate = groupDataByYear(
       flattenData([...$droughtDataStore, ...$observedDataStore])
     );
   } else {
@@ -182,11 +183,12 @@
 
   <div slot="graphic" class="graphic block">
     <ExtendedDroughtChart
+      annotations="{$annotationsStore}"
       data="{$droughtDataStore}"
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
       units="{$climvar.units.imperial}"
-      label="{$climvar.label}"
+      label="{$climvar.label} ({$climvar.units.imperial})"
       dataSource="{$titles.join(', ')}"
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"
