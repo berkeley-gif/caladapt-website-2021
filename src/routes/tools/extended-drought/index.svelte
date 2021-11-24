@@ -95,7 +95,7 @@
   import { climvarStore, periodStore, scenarioStore } from "./_store";
 
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
-  import { DEFAULT_MODEL, CLIMATE_VARIABLES_HYDRO } from "./_constants";
+  import { DEFAULT_MODEL, CLIMATE_VARIABLES_WITH_RATES } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -142,7 +142,9 @@
         periodId: $periodStore,
         modelIds: [DEFAULT_MODEL],
       };
-      const isRate = CLIMATE_VARIABLES_HYDRO.find((d) => d === $climvarStore);
+      const isRate = CLIMATE_VARIABLES_WITH_RATES.find(
+        (d) => d === $climvarStore
+      );
 
       const { params, method } = getQueryParams({
         location: $location,
