@@ -17,13 +17,13 @@ const lookups = [
  * A pixel value, which will parse as a number
  *
  */
-export function parseCssValue(d, i, width, height) {
+export function parseCssValue(d, orientVertical, width, height) {
   if (!d) return 0;
   if (typeof d === "number") {
     return d;
   }
   if (d.indexOf("%") > -1) {
-    return (+d.replace("%", "") / 100) * (i ? height : width);
+    return (+d.replace("%", "") / 100) * (orientVertical ? height : width);
   }
   return +d.replace("px", "");
 }
@@ -65,11 +65,12 @@ export function getPositionFromData({
   dx = 0,
   dy = 0,
 }) {
-  const x = xGet(data);
-  const y = yGet(data);
-  let xPos = x ? parseCssValue(x, 0, width, height) + dx : 0;
-  let yPos = y ? parseCssValue(y, 1, width, height) + dy : 0;
-  return [xPos, yPos];
+  const x = xGet(data) || 0;
+  const y = yGet(data) || 0;
+  return [
+    parseCssValue(x, 0, width, height) + dx,
+    parseCssValue(y, 1, width, height) + dy,
+  ];
 }
 
 /* --------------------------------------------
