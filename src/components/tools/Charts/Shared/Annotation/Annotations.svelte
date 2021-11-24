@@ -1,7 +1,7 @@
 <script>
   // Annotation component based on annotated column example from LayerCake
   // https://layercake.graphics/example/Column
-  import { getContext, afterUpdate, onMount } from "svelte";
+  import { getContext } from "svelte";
   import { Svg, Html } from "layercake";
   import Labels from "./Labels.svelte";
   import Connectors from "./Connectors.svelte";
@@ -12,9 +12,6 @@
   $: axisLength = $width - $padding.right;
 </script>
 
-<Html>
-  <Labels xGet="{$xGet}" yGet="{$yGet}" annotations="{annotations}" />
-</Html>
 <Svg>
   <Connectors
     xGet="{$xGet}"
@@ -24,3 +21,6 @@
     annotations="{annotations}"
   />
 </Svg>
+<Html>
+  <Labels xGet="{$xGet}" yGet="{$yGet}" annotations="{annotations}" />
+</Html>
