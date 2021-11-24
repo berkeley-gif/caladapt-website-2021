@@ -20,6 +20,33 @@
   let container;
   let labelEls;
 
+  function calcSourceCoords({ source, label }) {
+    const { anchor, data, dx, dy } = source;
+    if (anchor && label) {
+      return getPositionFromAnchor({
+        anchor,
+        label,
+        dx,
+        dy,
+      });
+    } else if (data) {
+      return getPositionFromData({
+        data,
+        xGet,
+        yGet,
+        width,
+        height,
+        dx,
+        dy,
+      });
+    } else {
+      console.warn(
+        "cannot create connector: missing anchor or data props for source"
+      );
+      return;
+    }
+  }
+
   // List of absolutely positioned label divs
   $: labelEls = container
     ? Array.from(
@@ -46,38 +73,12 @@
       return;
     }
 
-    let sourceCoords;
-    let targetCoords;
-
     // Get source coordinates (start of connector)
-    const { anchor, data: sourceData, dx: sourceDx, dy: sourceDy } = source;
+    const sourceCoords = calcSourceCoords({ source, label });
 
-    if (anchor) {
-      sourceCoords = getPositionFromAnchor({
-        anchor,
-        label,
-        dx: sourceDx,
-        dy: sourceDy,
-      });
-    } else if (sourceData) {
-      sourceCoords = getPositionFromData({
-        data: sourceData,
-        xGet,
-        yGet,
-        width,
-        height,
-        dx: sourceDx,
-        dy: sourceDy,
-      });
-    } else {
-      console.warn(
-        "cannot create connector: missing anchor or data props for source"
-      );
-      return;
-    }
-
-    // Get target coordinates (end of connector)
-    const { x, y, data: targetData, dx: targetDx, dy: targetDy } = target;
+    //Get target coordinates (end of connector)
+    let targetCoords;
+    const { x, y, data: targetData, dx, dy } = target;
 
     if (x && y) {
       targetCoords = getPositionFromXY({
@@ -85,8 +86,8 @@
         y,
         width,
         height,
-        dx: targetDx,
-        dy: targetDy,
+        dx,
+        dy,
       });
     } else if (targetData) {
       targetCoords = getPositionFromData({
@@ -95,8 +96,8 @@
         yGet,
         width,
         height,
-        dx: targetDx,
-        dy: targetDy,
+        dx,
+        dy,
       });
     } else {
       console.warn("cannot create connector: missing data prop for target");
@@ -105,7 +106,7 @@
 
     // Default to clockwise direction for swoop
     const clockwise =
-      connector.clockwise === "undefined" ? true : connector.clockwise;
+      typeof connector.clockwise === "undefined" ? true : connector.clockwise;
 
     if (type === "swoopy-arrow") {
       return swoopyArrow()
@@ -134,26 +135,7 @@
       return;
     }
 
-    let sourceCoords;
-
-    // Get source coordinates (start of connector)
-    const { data, dx, dy } = source;
-    if (data) {
-      sourceCoords = getPositionFromData({
-        data,
-        xGet,
-        yGet,
-        width,
-        height,
-        dx,
-        dy,
-      });
-    } else {
-      console.warn(
-        "cannot create threshold connector: missing data prop for source"
-      );
-      return;
-    }
+    const sourceCoords = calcSourceCoords({ source });
 
     // Default to vertical orientation for threshold
     const orientation =
