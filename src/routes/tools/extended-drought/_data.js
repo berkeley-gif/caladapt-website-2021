@@ -127,12 +127,14 @@ const fetchSeries = async ({ series, params, method = "GET", isRate }) => {
       if ("mean" in d) {
         return {
           date: new Date(Date.UTC(d.date.getUTCFullYear(), 0, 1)),
-          value: d.mean,
+          value: isRate
+            ? convertAnnualRateToSum({ date: d.date, value: d.mean })
+            : d.mean,
         };
       } else {
         return {
           date: new Date(Date.UTC(d.date.getUTCFullYear(), 0, 1)),
-          value: d.value,
+          value: isRate ? convertAnnualRateToSum(d) : d.value,
         };
       }
     });
@@ -145,18 +147,7 @@ const fetchSeries = async ({ series, params, method = "GET", isRate }) => {
         ),
       };
     }
-    // Convert values for climate variables with annual rate to annual sum
-    if (isRate) {
-      return {
-        ...series,
-        values: values.map(({ date, value }) => ({
-          date,
-          value: convertAnnualRateToSum({ date, value }),
-        })),
-      };
-    } else {
-      return { ...series, values };
-    }
+    return { ...series, values };
   } catch (error) {
     throw new Error(`${series.id}: ${error.message}`);
   }
@@ -185,12 +176,6 @@ export async function getObserved(
     );
     const data = await Promise.all(promises);
     return data;
-    // return data.map((series) => {
-    //   if (isRate) {
-    //     return { ...series, values: convertRateToSum(series.values) };
-    //   }
-    //   return series;
-    // });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -209,12 +194,6 @@ export async function getModels(
     );
     const data = await Promise.all(promises);
     return data;
-    // return data.map((series) => {
-    //   if (isRate) {
-    //     return { ...series, values: convertRateToSum(series.values) };
-    //   }
-    //   return series;
-    // });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -234,12 +213,6 @@ export async function getEnsemble(
     );
     const data = await Promise.all(promises);
     return data.map((series) => {
-      // if (isRate) {
-      //   return {
-      //     ...series,
-      //     values: buildEnvelope(convertRateToSum(series.values)),
-      //   };
-      // }
       return { ...series, values: buildEnvelope(series.values) };
     });
   } catch (error) {
