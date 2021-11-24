@@ -79,15 +79,14 @@ export const DEFAULT_STAT_PERIODS = [
   },
 ];
 
-export const EXPLAIN_CHART = `<p>The colored lines on this visualization 
-represent a time series of monthly average values of Snow Water Equivalent from 
-individual downscaled GCMs. The gray shaded region in the background 
-represents the range of projections from all 32 downscaled GCMs. The 
-historical observed data is represented by a gray line from 1950-2006.</p><p>
+export const EXPLAIN_CHART = `<p>The colored line on this visualization 
+represent a time series of average values by water year or year for the selected 
+climate variable derived from the HadGEM2-ES simulation. The gray shaded region in the background 
+represents the range of projections from all 32 downscaled GCMs.</p><p>
 Click on any of the legend keys to highlight corresponding time series.</p>`;
 
-export const LEARN_MORE_PERIODS = `<p>Select a period to view charts showing projected changes in selected 
+export const LEARN_MORE_PERIODS = `<p>Select a period to view charts showing projected changes for different 
 climate variables.</p>
 <p><strong>Water Year</strong> is the period between October 1st of one year and September 30th of 
-the next. The water year is designated by the calendar year in which it ends</p>
+the next. The water year is designated by the calendar year in which it ends.</p>
 <p><strong>Year</strong> is the calendar year between January 1st and December 31st.</p>`;

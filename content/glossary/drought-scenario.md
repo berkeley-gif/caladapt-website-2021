@@ -2,8 +2,7 @@
 title: Drought Scenarios
 ---
 
-
-California’s Fourth Climate Change Assessment uses two RCPs from the Fifth Intergovernmental Panel on Climate Change (IPCC) Assessment Report on Climate Change:
+Two drought scenarios were constructed for California’s Fourth Climate Change Assessment to investigate implications of an extended dry spell:
 
 - Late 21st Century Drought: This scenario represents a late century dry spell from 2051–2070 identified from 
     the HadGEM2-ES RCP 8.5 simulation. The extended drought scenario is based on the average 
@@ -18,5 +17,5 @@ California’s Fourth Climate Change Assessment uses two RCPs from the Fifth Int
 For more details see:
 
 <p class="reference">
-Bedsworth, Louise, Dan Cayan, Guido Franco, Leah Fisher, Sonya Ziaja. (California Governor’s Office of Planning and Research, Scripps Institution of Oceanography, California Energy Commission, California Public Utilities Commission). 2018. <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Statewide_Reports-SUM-CCCA4-2018-013_Statewide_Summary_Report_ADA.pdf" target="_blank">Statewide Summary Report</a>. California’s Fourth Climate Change Assessment. Publication number: SUM-CCCA4-2018-013.
+Pierce, D. W., J. F. Kalansky, and D. R. Cayan (Scripps Institution of Oceanography). 2018. <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf" target="_blank">Climate, Drought, and Sea Level Rise Scenarios for the Fourth California Climate Assessment</a>. California’s Fourth Climate Change Assessment, California Energy Commission. Publication Number: CNRA-CEC-2018-006.
 </p>
