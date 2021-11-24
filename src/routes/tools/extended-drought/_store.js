@@ -5,7 +5,8 @@ import { mean } from "d3-array";
 import climvars from "~/helpers/climate-variables";
 import scenarios from "~/helpers/climate-scenarios";
 import {
-  CLIMATE_VARIABLES,
+  CLIMATE_VARIABLES_LOCA,
+  CLIMATE_VARIABLES_VIC,
   DEFAULT_SELECTED_CLIMVAR,
   CLIMATE_SCENARIOS,
   DEFAULT_SELECTED_SCENARIO,
@@ -14,13 +15,17 @@ import {
   DEFAULT_SELECTED_PERIOD,
   DEFAULT_YEARS_BEFORE,
   DEFAULT_YEARS_AFTER,
-  DEFAULT_BASELINE,
+  CHART_ANNO_LABEL,
+  CHART_ANNO_CONNECTOR_STYLE,
+  CHART_ANNO_CONNECTOR_LABEL_STYLE,
 } from "./_constants";
 import { dataStore } from "../_common/stores";
 
 // List of climvars used in Extended Drought Tool
 export const climvarList = climvars
-  .filter((d) => CLIMATE_VARIABLES.includes(d.id))
+  .filter((d) =>
+    [...CLIMATE_VARIABLES_LOCA, ...CLIMATE_VARIABLES_VIC].includes(d.id)
+  )
   .map((d) => {
     return { ...d, title: d.label };
   });
@@ -129,3 +134,49 @@ export const observedDataStore = derived(
     return [...observed];
   }
 );
+
+export const annotationsStore = derived([scenarioStore], ([$scenarioStore]) => {
+  if (!$scenarioStore) return [];
+  const scenario = scenarioList.find((d) => d.id === $scenarioStore);
+  const { start, end } = scenario;
+  const mid = (+start + +end) / 2;
+  return [
+    ...CHART_ANNO_LABEL,
+    {
+      label: {
+        text: start,
+        data: { date: new Date(Date.UTC(+start, 0, 1)) },
+        dx: -20,
+        style: CHART_ANNO_CONNECTOR_LABEL_STYLE,
+      },
+      connectors: [
+        {
+          type: "threshold",
+          orientation: "v",
+          source: {
+            data: { date: new Date(Date.UTC(+start, 0, 1)) },
+          },
+          style: CHART_ANNO_CONNECTOR_STYLE,
+        },
+      ],
+    },
+    {
+      label: {
+        text: end,
+        data: { date: new Date(Date.UTC(+end, 0, 1)) },
+        dx: -20,
+        style: CHART_ANNO_CONNECTOR_LABEL_STYLE,
+      },
+      connectors: [
+        {
+          type: "threshold",
+          orientation: "v",
+          source: {
+            data: { date: new Date(Date.UTC(+end, 0, 1)) },
+          },
+          style: CHART_ANNO_CONNECTOR_STYLE,
+        },
+      ],
+    },
+  ];
+});
