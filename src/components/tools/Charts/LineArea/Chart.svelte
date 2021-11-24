@@ -7,6 +7,12 @@
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { isEmptyData } from "~/helpers/utilities";
+  import {
+    DEFAULT_X_MIN,
+    DEFAULT_X_MAX,
+    DEFAULT_Y_MIN,
+    DEFAULT_Y_MAX,
+  } from "~/routes/tools/_common/constants";
 
   import Line from "./Line.svelte";
   import Area from "./Area.svelte";
@@ -53,10 +59,10 @@
 
   $: if (Array.isArray(data) && isEmptyData(data)) {
     noData = true;
-    xmin = new Date(Date.UTC(1950, 0, 1));
-    xmax = new Date(Date.UTC(2099, 0, 1));
-    ymin = 0;
-    ymax = 10;
+    xmin = DEFAULT_X_MIN;
+    xmax = DEFAULT_X_MAX;
+    ymin = DEFAULT_Y_MIN;
+    ymax = DEFAULT_Y_MAX;
     lineData = [];
     areaData = [];
     legendItems.set([]);
