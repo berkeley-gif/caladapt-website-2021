@@ -4,7 +4,6 @@
   export let handleClick = () => {};
 </script>
 
-<!-- TODO: rename file to MainNav.svelte -->
 <style lang="scss">
   .bx--header__nav {
     float: right;

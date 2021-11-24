@@ -55,7 +55,7 @@
   }
 
   function handleNavItemClick() {
-    open != open;
+    open = !open;
   }
 
   onMount(() => {
