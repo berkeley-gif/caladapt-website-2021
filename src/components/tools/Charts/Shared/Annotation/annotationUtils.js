@@ -81,11 +81,11 @@ export function getPositionFromData({
  */
 export function getPositionFromAnchor({ anchor, label, dx = 0, dy = 0 }) {
   const elPos = getElPosition(label);
-  const [x, y] = anchor.split("-").map((q, j) => {
+  const [x, y] = anchor.split("-").map((d, i) => {
     const point =
-      q === "middle"
-        ? elPos[lookups[j].css] + elPos[lookups[j].dimension] / 2
-        : elPos[q];
+      d === "middle"
+        ? elPos[lookups[i].css] + elPos[lookups[i].dimension] / 2
+        : elPos[d];
     return point;
   });
   return [x + dx, y + dy];

@@ -63,7 +63,7 @@
     // Get corresponding label div & bounding box
     const label = labelEls[i];
 
-    const { type, source, target } = connector;
+    const { type, source, target } = connector || {};
 
     // If no type or source is specified do not create connector
     if (!type || !source || !target) {
