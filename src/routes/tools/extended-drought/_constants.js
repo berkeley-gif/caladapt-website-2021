@@ -1,14 +1,4 @@
-export const CLIMATE_VARIABLES = [
-  "tasmax",
-  "tasmin",
-  "pr",
-  "tair",
-  "et",
-  "swe",
-  "baseflow",
-  "runoff",
-];
-export const DEFAULT_SELECTED_CLIMVAR = "tasmax";
+export const CLIMATE_VARIABLES_LOCA = ["tasmax", "tasmin", "pr"];
 export const CLIMATE_VARIABLES_VIC = [
   "tair",
   "et",
@@ -16,6 +6,7 @@ export const CLIMATE_VARIABLES_VIC = [
   "baseflow",
   "runoff",
 ];
+export const DEFAULT_SELECTED_CLIMVAR = "tasmax";
 export const CLIMATE_VARIABLES_HYDRO = [
   "pr",
   "et",
@@ -40,20 +31,19 @@ export const TIME_PERIODS = [
 ];
 export const DEFAULT_SELECTED_PERIOD = "wateryear";
 
-export const ENSEMBLES = [
-  {
-    id: "rcp85_range",
-    label: "Modeled RCP 8.5 Range",
-    color: "rgba(218, 222, 225, 1)",
-    org: "Geospatial Innovation Facility",
-  },
-];
+// export const ENSEMBLES = [
+//   {
+//     id: "rcp85_range",
+//     label: "Modeled RCP 8.5 Range",
+//     color: "rgba(218, 222, 225, 1)",
+//     org: "Geospatial Innovation Facility",
+//   },
+// ];
 
 export const DEFAULT_EMISSION_SCENARIO = "rcp85";
 
 export const DEFAULT_YEARS_BEFORE = 7;
 export const DEFAULT_YEARS_AFTER = 6;
-export const DEFAULT_BASELINE = [1961, 1990];
 
 export const DEFAULT_STAT_PERIODS = [
   {
@@ -90,3 +80,20 @@ climate variables.</p>
 <p><strong>Water Year</strong> is the period between October 1st of one year and September 30th of 
 the next. The water year is designated by the calendar year in which it ends.</p>
 <p><strong>Year</strong> is the calendar year between January 1st and December 31st.</p>`;
+
+export const CHART_ANNO_LABEL = [
+  {
+    label: {
+      text: "← Extended Drought Period (20 years) →",
+      position: {
+        top: "1",
+        left: "40%",
+      },
+      style: { "max-width": "auto", "text-align": "center" },
+    },
+  },
+];
+export const CHART_ANNO_CONNECTOR_STYLE = { "stroke-dasharray": "6,4" };
+export const CHART_ANNO_CONNECTOR_LABEL_STYLE = {
+  background: "rgba(255, 255, 255, 1)",
+};
