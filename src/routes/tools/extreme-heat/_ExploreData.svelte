@@ -16,8 +16,8 @@
   import { HEATMAP_COLOR_SCALE, INDICATOR_DESCRIPTION } from "./_constants";
   import {
     flattenData,
-    getDataByDate,
-    getDataByDay,
+    groupDataByYear,
+    groupDataByDay,
     formatDataForExport,
   } from "../_common/helpers";
 
@@ -143,9 +143,9 @@
 
   $: if ($data) {
     if ($indicator.id === "timing") {
-      dataByDate = getDataByDay(flattenData($data));
+      dataByDate = groupDataByDay(flattenData($data));
     } else {
-      dataByDate = getDataByDate(flattenData($data));
+      dataByDate = groupDataByYear(flattenData($data));
     }
     isLoading = false;
   } else {
@@ -269,6 +269,7 @@
             : null}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
+          periodId="end-century"
           format="{formatFn}"
           models="{$modelsStore}"
         />

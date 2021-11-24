@@ -4,11 +4,11 @@
   import { format } from "d3-format";
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
-  import { NO_DATA_MAP_MSG, NO_DATA_MSG, MISSING_DATA_MSG } from "./_constants";
+  import { NO_DATA_MAP_MSG, NO_DATA_MSG, DATA_DISCLAIMER } from "./_constants";
 
   import {
     flattenData,
-    getDataByDate,
+    groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
   import { getMapOverlayImgURL } from "./_helpers";
@@ -22,6 +22,8 @@
   import WildfireMap from "./_WildfireMap.svelte";
   import MapTimeSlider from "./_MapTimeSlider.svelte";
   import Title from "./_Title.svelte";
+
+  import { isEmptyData } from "./_helpers";
 
   import {
     scenarioStore,
@@ -38,6 +40,7 @@
     modelSingleStore,
     yearStore,
     stateBoundaryStore,
+    pctndStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -97,9 +100,11 @@
     palette,
   });
 
+  $: pctnd = $pctndStore;
+
   $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = getDataByDate(flattenData($dataStore));
-    noData = Math.max(...$dataStore.map((d) => d.values.length)) === 0;
+    noData = pctnd === 1 || isEmptyData($dataStore);
+    dataByDate = noData ? [] : groupDataByYear(flattenData($dataStore));
   } else {
     dataByDate = null;
   }
@@ -107,14 +112,14 @@
   afterUpdate(() => {
     if (!activeTab) {
       dataMsg = NO_DATA_MAP_MSG;
-    } else if ($locationStore.boundaryId !== "locagrid") {
-      dataMsg = MISSING_DATA_MSG;
-    } else if ($locationStore.boundaryId === "locagrid" && noData) {
+    } else if (noData) {
       dataMsg = NO_DATA_MSG;
+    } else if (typeof pctnd === "number" && !isNaN(pctnd) && pctnd > 0) {
+      dataMsg = `${format(".0%")(pctnd)} of grid cells in this area contain no 
+        data. ${DATA_DISCLAIMER}`;
     } else {
       dataMsg = "";
     }
-
     locationTitle = $location.title;
   });
 
@@ -218,7 +223,7 @@
       climvar="{$climvarStore}"
       year="{$yearStore}"
       model="{$modelSingleStore}"
-      month="{$monthStore}"
+      month="{$month.label}"
       dataMsg="{dataMsg}"
       activeTab="{activeTab}"
     />
@@ -265,7 +270,7 @@
         simulation="{$simulationStore}"
         scenario="{$scenario.labelLong}"
         climvar="{$climvarStore}"
-        month="{$monthStore}"
+        month="{$month.label}"
         location="{locationTitle}"
         loadLocation="{loadLocation}"
         dataMsg="{dataMsg}"

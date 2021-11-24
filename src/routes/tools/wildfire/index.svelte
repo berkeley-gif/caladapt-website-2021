@@ -80,7 +80,7 @@
   import { inview } from "svelte-inview/dist/";
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
-  import { logStores, logSingleStore } from "~/helpers/utilities";
+  import { logStores } from "~/helpers/utilities";
 
   import {
     About,
@@ -107,11 +107,13 @@
     simulationStore,
     modelSingleStore,
     monthStore,
+    pctndStore,
     stateBoundaryStore,
     yearStore,
   } from "./_store";
 
   import { getStateBoundary, getModels, getQueryParams } from "./_data";
+  import { getAvgPctNoData } from "./_helpers";
 
   export let initialConfig;
   export let tool;
@@ -148,6 +150,7 @@
     logStores(
       climvarStore,
       monthStore,
+      pctndStore,
       simulationStore,
       locationStore,
       modelsStore,
@@ -175,11 +178,13 @@
         simulation: $simulationStore,
         monthNumber: $monthStore,
         imperial: $unitsStore.imperial,
+        climvar: $climvarStore,
       });
 
       isFetchingStore.set(true);
       const models = await getModels(config, params, method);
       dataStore.set(models);
+      pctndStore.set(getAvgPctNoData($dataStore));
     } catch (error) {
       console.error("updateData", error);
       notifier.error("Error", error, 2000);

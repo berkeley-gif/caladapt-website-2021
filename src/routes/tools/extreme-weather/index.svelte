@@ -105,7 +105,7 @@
   };
 
   const description = [
-    `Explore extreme temperatures for past weather and present day. This tool
+    `Explore extreme temperatures and wind speed for past weather and present day. This tool
       provides data from 38 weather stations across California, utilizing a
       quality-controlled dataset for hourly weather observations curated for use
       by the energy sector (<a
@@ -229,13 +229,15 @@
           California using a Block Maxima approach.
         </p>
         <p>
-          Annual Maximum values from a 21 day window around the day of interest
-          are extracted from a 30 year daily timeseries for the Baseline Period
-          (1991–2020). A GEV distribution is applied to this time series. Shape
-          and scale parameters for the distribution are estimated using the
-          Maximum Likelihood method. Exceedance Probabilities for different
-          threshold values (return levels) are estimated from the fitted model
-          with 95% confidence intervals.
+          Annual Maximum values of the climate variable from a 21 day window
+          around the day of interest are extracted from a 30 year daily
+          timeseries for the Baseline Period (1991–2020). A GEV distribution for
+          Temperature and an inverted Weibull distribution for Wind Speed is
+          applied to this time series. Shape and scale parameters for the
+          distribution are estimated using the Maximum Likelihood method.
+          Exceedance Probabilities for different threshold values (return
+          levels) are estimated from the fitted model with 95% confidence
+          intervals.
         </p>
         <p>
           <strong>User Advisory</strong>: The Extreme Weather Tool is designed

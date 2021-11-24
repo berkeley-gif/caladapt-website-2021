@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { Button } from "carbon-components-svelte";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import { Download16, Share16 } from "carbon-icons-svelte";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { EXPLAIN_CHART } from "./_constants";
@@ -18,7 +18,7 @@
   const dispatch = createEventDispatcher();
 
   $: label = `${simulation === "year" ? "Annual" : month} ${
-    climvarId === "fire" ? "acres burned" : "wildfire probability"
+    climvarId === "fire" ? `${units} burned` : "wildfire probability"
   }`;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {

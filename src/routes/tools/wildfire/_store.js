@@ -68,3 +68,5 @@ export const simulationStore = (() => {
 export const yearStore = writable(DEFAULT_SELECTED_YEAR);
 
 export const stateBoundaryStore = writable(null);
+
+export const pctndStore = writable(0);

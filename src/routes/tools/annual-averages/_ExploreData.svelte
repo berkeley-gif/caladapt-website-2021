@@ -14,7 +14,7 @@
   } from "../_common/constants";
   import {
     flattenData,
-    getDataByDate,
+    groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
 
@@ -126,7 +126,7 @@
   $: formatFn = format(`.${$climvar.decimals}f`);
 
   $: if ($dataStore) {
-    dataByDate = getDataByDate(flattenData($dataStore));
+    dataByDate = groupDataByYear(flattenData($dataStore));
     isLoading = false;
   } else {
     dataByDate = null;

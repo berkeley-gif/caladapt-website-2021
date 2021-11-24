@@ -13,6 +13,7 @@
   import AxisY from "./AxisY.svelte";
   import Tooltip from "../Shared/Tooltip.svelte";
   import Legend from "../Shared/Legend.svelte";
+  import Annotations from "../Shared/Annotation/Annotations.svelte";
 
   export let data;
   export let height = "350px";
@@ -34,6 +35,7 @@
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  export let annotations;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -71,13 +73,16 @@
     ymax = max(data, (arr) =>
       max(arr.values, (d) => ("max" in d ? d.max : d.value))
     );
-    if (!isNaN(yAxis.baseValue)) {
+    if (typeof yAxis.baseValue === "number" && !isNaN(yAxis.baseValue)) {
       ymin = yAxis.baseValue;
     } else {
       ymin = min(data, (arr) =>
         min(arr.values, (d) => ("min" in d ? d.min : d.value))
       );
     }
+
+    ymin = +yAxis.tickFormat(ymin);
+    ymax = +yAxis.tickFormat(ymax);
 
     // Set Legend
     legendItems.set(
@@ -144,6 +149,7 @@
       xScale="{scaleTime()}"
       xDomain="{[xmin, xmax]}"
       yDomain="{[ymin, ymax]}"
+      xPadding="{[10, 10]}"
       data="{data}"
     >
       <Svg>
@@ -173,6 +179,9 @@
           {/if}
         </g>
       </Svg>
+      {#if Array.isArray(annotations) && annotations.length}
+        <Annotations annotations="{annotations}" />
+      {/if}
       <Html>
         <Tooltip
           dataset="{dataByDate}"

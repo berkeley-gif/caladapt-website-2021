@@ -24,7 +24,7 @@
 
   // TODO: consider splitting this all into separate components that render each type of legend
   // continuous only
-  const margin = { top: 8, right: 8, bottom: 16, left: 8 };
+  const margin = { top: 8, right: 8, bottom: 24, left: 8 };
 
   let n;
   let x;
