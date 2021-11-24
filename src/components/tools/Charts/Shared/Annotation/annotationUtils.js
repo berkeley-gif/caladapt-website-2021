@@ -325,8 +325,8 @@ export function threshold() {
 /**
  * The Data object, used by the Label & Connector objects
  * @typedef {Object} Data
- * @property {Date} [data.date = 0] - example for LineArea chart
- * @property {Number} [data.value = 0] - example for LineArea chart
+ * @property {Date} [data.date] - example for LineArea chart
+ * @property {Number} [data.value] - example for LineArea chart
  * @property {Number} [data.dx] - number of pixels to offset x position
  * @property {Number} [data.dy] - number of pixels to offset y position
  */
