@@ -182,3 +182,8 @@ export const DEFAULT_COMPASS_QUADRANTS = [
   "NNW",
 ];
 export const DEFAULT_COMPASS_QUADRANT_ANGLE = 22.5;
+
+export const DEFAULT_X_MIN = new Date(Date.UTC(1950, 0, 1));
+export const DEFAULT_X_MAX = new Date(Date.UTC(2099, 0, 1));
+export const DEFAULT_Y_MIN = 0;
+export const DEFAULT_Y_MAX = 10;
