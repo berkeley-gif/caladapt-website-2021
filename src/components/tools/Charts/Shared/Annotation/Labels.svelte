@@ -61,7 +61,7 @@
     position: absolute;
     max-width: var(--max-width, 200px);
     color: var(--color, var(--gray-80));
-    font-size: var(--font-size, 1rem);
+    font-size: var(--font-size, 14px);
     background: var(--background, rgba(255, 255, 255, 0.7));
     padding: var(--padding, 2px);
     text-align: var(--text-align, "left");
@@ -76,7 +76,7 @@
         data-id="{i}"
         style="{setPositionAndStyle(d)}"
       >
-        {d.text}
+        {@html d.text}
       </div>
     {/each}
   {/if}
