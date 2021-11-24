@@ -142,7 +142,7 @@
         periodId: $periodStore,
         modelIds: [DEFAULT_MODEL],
       };
-      const isHydro = CLIMATE_VARIABLES_HYDRO.find((d) => d === $climvarStore);
+      const isRate = CLIMATE_VARIABLES_HYDRO.find((d) => d === $climvarStore);
 
       const { params, method } = getQueryParams({
         location: $location,
@@ -152,9 +152,9 @@
       params.freq = $period.freq;
 
       isFetchingStore.set(true);
-      const envelope = await getEnsemble(config, params, method, isHydro);
-      const observed = await getObserved(config, params, method, isHydro);
-      const models = await getModels(config, params, method, isHydro);
+      const envelope = await getEnsemble(config, params, method, isRate);
+      const observed = await getObserved(config, params, method, isRate);
+      const models = await getModels(config, params, method, isRate);
       dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);
