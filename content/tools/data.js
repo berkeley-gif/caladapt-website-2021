@@ -215,10 +215,10 @@ const tools = [
     ],
   },
   {
-    title: 'Extended Drought',
+    title: 'Extended Drought Scenarios',
     desc: `Explore projections of temperature, precipitation and a set of hydrological variables 
       from two 20 year drought periods.`,
-    categories: ['Temperature', 'Precipitation'],
+    categories: ['Temperature', 'Precipitation', 'Snowpack'],
     slug: 'extended-drought',
     icons: [
       'img/icons/sun.svg',
