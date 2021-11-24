@@ -7,7 +7,7 @@ export const CLIMATE_VARIABLES_VIC = [
   "runoff",
 ];
 export const DEFAULT_SELECTED_CLIMVAR = "tasmax";
-export const CLIMATE_VARIABLES_HYDRO = [
+export const CLIMATE_VARIABLES_WITH_RATES = [
   "pr",
   "et",
   "swe",
@@ -30,15 +30,6 @@ export const TIME_PERIODS = [
   { id: "year", label: "Year", freq: "AS" },
 ];
 export const DEFAULT_SELECTED_PERIOD = "wateryear";
-
-// export const ENSEMBLES = [
-//   {
-//     id: "rcp85_range",
-//     label: "Modeled RCP 8.5 Range",
-//     color: "rgba(218, 222, 225, 1)",
-//     org: "Geospatial Innovation Facility",
-//   },
-// ];
 
 export const DEFAULT_EMISSION_SCENARIO = "rcp85";
 
@@ -87,7 +78,7 @@ export const CHART_ANNO_LABEL = [
       text: "← Extended Drought Period (20 years) →",
       position: {
         top: "1",
-        left: "40%",
+        left: "38%",
       },
       style: { "max-width": "auto", "text-align": "center" },
     },
