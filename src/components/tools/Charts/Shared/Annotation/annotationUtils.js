@@ -134,18 +134,7 @@ export function swoopyArrow() {
     // get the radius {r} of the circumscribed circle
     const r = hypotenuse(d, h / 2);
 
-    /*
-    SECOND, compose the corresponding SVG arc.
-      read up: http://www.w3.org/TR/SVG/paths.html#PathDataEllipticalArcCommands
-      example: <path d = "M 200,50 a 50,50 0 0,1 100,0"/>
-                          M 200,50                          Moves pen to (200,50);
-                                   a                        draws elliptical arc;
-                                     50,50                  following a degenerate ellipse, r1 == r2 == 50;
-                                                            i.e. a circle of radius 50;
-                                           0                with no x-axis-rotation (irrelevant for circles);
-                                             0,1            with large-axis-flag=0 and sweep-flag=1 (clockwise);
-                                                 100,0      to a point +100 in x and +0 in y, i.e. (300,50).
-    */
+    // compose the corresponding SVG arc
     const path =
       "M " +
       data[0][0] +
