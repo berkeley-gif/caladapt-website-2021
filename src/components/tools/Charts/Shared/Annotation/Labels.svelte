@@ -12,7 +12,7 @@
   $: labels = annotations.map((d) => d.label);
 
   $: setPositionAndStyle = (label) => {
-    const { position, data, style, dx, dy } = label;
+    const { position, data, style, dx, dy } = label || {};
     let inlineStyle = "";
 
     // Place an aboslutely positioned div using a position or data object

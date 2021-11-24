@@ -339,6 +339,7 @@ export function threshold() {
  * @property {String} [position.left] - left edge as number, pixel value or percentage
  * @property {String} [position.right] - right edge as number, pixel value or percentage
  */
+
 export function getSampleAnnotations() {
   return [
     {
@@ -346,6 +347,7 @@ export function getSampleAnnotations() {
         text: "1980",
         data: { date: new Date(Date.UTC(1980, 0, 1)) },
         dx: -20,
+        style: { background: "rgba(255, 255, 255, 1" },
       },
       connectors: [
         {
