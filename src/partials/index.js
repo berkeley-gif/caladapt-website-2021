@@ -6,7 +6,7 @@ export { default as FilterCategories } from "./FilterCategories.svelte";
 export { default as FilterTags } from "./FilterTags.svelte";
 export { default as Footer } from "./Footer.svelte";
 export { default as FooterTool } from "./FooterTool.svelte";
-export { default as Nav } from "./Nav.svelte";
+export { Nav } from "./Nav/";
 export { default as NavBreadcrumb } from "./NavBreadcrumb.svelte";
 export { default as PageNav } from "./PageNav.svelte";
 export { default as SidebarRight } from "./SidebarRight.svelte";
