@@ -57,7 +57,7 @@
 
   let noData = false;
 
-  $: if (Array.isArray(data) && isEmptyData(data)) {
+  $: if (isEmptyData(data)) {
     noData = true;
     xmin = DEFAULT_X_MIN;
     xmax = DEFAULT_X_MAX;
@@ -69,7 +69,7 @@
     setContext("Legend", legendItems);
   }
 
-  $: if (Array.isArray(data) && !isEmptyData(data)) {
+  $: if (!isEmptyData(data)) {
     noData = false;
 
     // Set X Domain
