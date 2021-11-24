@@ -1,10 +1,9 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, afterUpdate } from "svelte";
   import { Accordion, AccordionItem } from "carbon-components-svelte";
   export let items;
 
-  let hash = "";
-
+  $: hash = "";
   $: isOpen = (title) => makeId(title) === hash;
 
   function makeId(string) {
@@ -19,6 +18,19 @@
 
   onMount(() => {
     hash = getLocationHashText();
+    window.addEventListener(
+      "hashchange",
+      () => {
+        hash = getLocationHashText();
+      },
+      false
+    );
+  });
+
+  afterUpdate(() => {
+    if (document.getElementById(`${hash}`)) {
+      document.getElementById(`${hash}`).scrollIntoView();
+    }
   });
 </script>
 
@@ -36,10 +48,7 @@
   {#each items as { metadata, html }}
     <AccordionItem open="{isOpen(metadata.title)}">
       <div slot="title">
-        <h2
-          id="{metadata.title ? makeId(metadata.title) : ''}"
-          class="bx--accordion__title"
-        >
+        <h2 id="{makeId(metadata.title)}" class="bx--accordion__title">
           {metadata.title}
         </h2>
       </div>
