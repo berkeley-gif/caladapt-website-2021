@@ -590,3 +590,19 @@ export const logSingleStore = (store, prev) => {
     }
   });
 };
+
+/**
+ * Returns true if:
+ *  - data is not an array
+ *  - data array is empty
+ *  - all series values array are empty
+ * @param {array} _data
+ * @returns {boolean}
+ */
+export function isEmptyData(_data) {
+  return (
+    !Array.isArray(_data) ||
+    !_data.length ||
+    Math.max(..._data.map((d) => d.values.length)) === 0
+  );
+}

@@ -19,6 +19,12 @@
   $: d = `M 0 0 L ${$width + $padding.left} 0`;
 </script>
 
+<style>
+  :global(.no-data .tick-label) {
+    display: none;
+  }
+</style>
+
 <g class="axis y-axis" transform="translate(-{$padding.left}, 0)">
   {#each tickVals as tick, i}
     <g class="tick tick-{tick}" transform="translate(0, {$yScale(tick)})">
