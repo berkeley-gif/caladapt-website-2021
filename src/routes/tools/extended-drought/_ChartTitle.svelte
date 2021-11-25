@@ -29,9 +29,9 @@
 >
   Change Location
 </Button>
-<div class="h3">
+<h2 class="h3">
   {title}
-</div>
+</h2>
 <div class="h4">
   Projected changes in <span class="annotate">{climvarLabel}</span> by
   <span class="annotate">{periodLabel}</span>
