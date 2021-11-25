@@ -215,14 +215,40 @@ const tools = [
     ],
   },
   {
-    title: 'Extended Drought',
-    desc: `Projections of temperature, precipitation and a set of VIC variables from two 30 year 
-    drought periods.`,
-    categories: ['Temperature', 'Precipitation'],
+    title: 'Extended Drought Scenarios',
+    desc: `Explore projections of temperature, precipitation and a set of hydrological variables 
+      from two 20 year drought periods.`,
+    categories: ['Temperature', 'Precipitation', 'Snowpack'],
     slug: 'extended-drought',
     icons: [
       'img/icons/sun.svg',
       'img/icons/rainfall.svg',
+      'img/icons/snowflake.svg',
+    ],
+    datasets: [
+      {
+        slug: '932188b3-2e32-4eb1-882d-c00e79197192',
+        logo: 'scripps_100x100.png',
+      },
+      {
+        slug: '0887cba6-695c-403a-a757-674075799ea5',
+        logo: 'u_colorado.png',
+      },
+      {
+        slug: 'b8bee9f9-31c1-40d9-89a3-2dad814ba7da',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'e3463df5-5ecc-42fb-a947-07868a8eee8c',
+        logo: 'gif_80x80.png'
+      }
+    ],
+    related: [
+      'extreme-heat','extreme-precipitation',
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
     ],
   },
   {
