@@ -75,12 +75,32 @@ the next. The water year is designated by the calendar year in which it ends.</p
 export const CHART_ANNO_LABEL = [
   {
     label: {
-      text: "← Extended Drought Period (20 years) →",
+      text: "←",
       position: {
-        top: "1",
+        top: "0",
         left: "38%",
       },
-      style: { "max-width": "auto", "text-align": "center" },
+      style: { "font-size": "16px" },
+    },
+  },
+  {
+    label: {
+      text: "Extended Drought Period (20 years)",
+      position: {
+        top: "2px",
+        left: "40%",
+      },
+      style: { "max-width": "auto" },
+    },
+  },
+  {
+    label: {
+      text: "→",
+      position: {
+        top: "0",
+        left: "66%",
+      },
+      style: { "font-size": "16px" },
     },
   },
 ];
