@@ -5,29 +5,20 @@
   import { Information16, Calendar16 } from "carbon-icons-svelte";
 
   export let metrics;
-  export let data;
+  export let dateRange;
   export let groupList;
   export let periodList;
-  export let groupId;
-  export let periodId;
+  export let group;
+  export let period;
   export let models;
   export let units;
 
   const dispatch = createEventDispatcher();
 
-  let dateRange; // extent of data, used for selecting custom period
-  let group; // current group
-  let period; // current period
-
   let showOptions = false;
   let showAbout = false;
   let AboutModal;
   let OptionsModal;
-
-  // Set options to display current group & period
-  $: if (Array.isArray(data)) {
-    setOptions();
-  }
 
   // Update options when user changes group/period
   function updateOptions({ detail }) {
@@ -35,18 +26,6 @@
     group = detail.group;
     period = detail.period;
     dispatch("update", detail);
-  }
-
-  function setOptions() {
-    if (data.length) {
-      dateRange = extent(data, (d) => d.date.getUTCFullYear());
-    } else {
-      dateRange = [];
-    }
-    group = groupId ? groupList.find(({ id }) => id === groupId) : groupList[0];
-    period = periodId
-      ? periodList.find(({ id }) => id === periodId)
-      : periodList[0];
   }
 
   async function loadAbout() {
@@ -58,10 +37,6 @@
     showOptions = true;
     OptionsModal = (await import("./StatOptions.svelte")).default;
   }
-
-  onMount(() => {
-    dispatch("update", { group, period });
-  });
 </script>
 
 <style lang="scss">
