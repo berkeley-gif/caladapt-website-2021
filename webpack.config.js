@@ -90,6 +90,7 @@ module.exports = {
       }),
       new BundleAnalyzerPlugin({
         openAnalyzer: false,
+        analyzerMode: mode !== "development" ? "disabled" : "server",
       }),
     ].filter(Boolean),
     devtool: dev && "inline-cheap-module-source-map",
