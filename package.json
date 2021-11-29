@@ -1,6 +1,6 @@
 {
   "name": "cal-adapt-website-2021",
-  "description": "Website / web application for cal-adapt.org",
+  "description": "Website and climate model web applications for cal-adapt.org",
   "private": true,
   "version": "0.0.1",
   "scripts": {
@@ -55,8 +55,8 @@
     "sirv": "^1.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.1.0",
     "@beyonk/svelte-carousel": "^2.8.0",
+    "autoprefixer": "^10.1.0",
     "babel-eslint": "^10.1.0",
     "carbon-components": "^10.30.0",
     "carbon-components-svelte": "^0.42.2",
@@ -70,6 +70,7 @@
     "layercake": "^4.0.3",
     "lint-staged": "^11.1.2",
     "marked": "^1.2.7",
+    "node-sass": "^6.0.1",
     "prettier": "^2.0.0",
     "prettier-plugin-svelte": "^2.1.6",
     "raw-loader": "^4.0.2",
@@ -78,8 +79,8 @@
     "svelte-inview": "^2.0.1",
     "svelte-loader": "^2.9.0",
     "svelte-preprocess": "^4.6.1",
-    "node-sass": "^6.0.1",
     "webpack": "^4.7.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-modules": "^1.0.0",
     "zx": "^4.2.0"
   },

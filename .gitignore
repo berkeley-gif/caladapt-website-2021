@@ -4,5 +4,9 @@
 /__sapper__/
 /static/g/
 .eslintcache
+
 # Local Netlify folder
 .netlify
+
+# output from webpack-bundle-analyzer
+stats.json
