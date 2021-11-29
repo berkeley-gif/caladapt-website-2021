@@ -1,6 +1,7 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "cal-adapt-website-2021",
+  "description": "Website / web application for cal-adapt.org",
+  "private": true,
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev --no-hot",
