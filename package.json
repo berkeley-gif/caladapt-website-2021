@@ -55,7 +55,6 @@
     "sirv": "^1.0.0"
   },
   "devDependencies": {
-    "@beyonk/svelte-carousel": "^2.8.0",
     "autoprefixer": "^10.1.0",
     "babel-eslint": "^10.1.0",
     "carbon-components": "^10.30.0",
