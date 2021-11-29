@@ -1,6 +1,8 @@
 <script>
   import { SkeletonText } from "carbon-components-svelte";
+  import { extent } from "d3-array";
   import { MONTHS_LIST } from "~/routes/tools/_common/constants";
+  import { isEmptyData } from "~/helpers/utilities";
   import StatBlock from "./StatBlock.svelte";
 
   /** Array of data values grouped by date, e.g.
@@ -24,17 +26,23 @@
   export let periodList;
 
   /** Id of default group to initialize StatPanel. This prop is optional. Defaults to first item in groupList */
-  export let groupId;
+  export let groupId = groupList[0].id;
 
   /** Id of default period to initialize StatPanel. This prop is optional. Defaults to first item in periodList */
-  export let periodId;
+  export let periodId = periodList[0].id;
 
   /** List of selected models */
   export let models;
 
   export let units;
 
-  let metrics = [];
+  let selectedGroup = groupList.find((d) => d.id === groupId);
+  let selectedPeriod = periodList.find((d) => d.id === periodId);
+
+  $: statsData = isEmptyData(data) ? [] : data;
+  $: dateRange = extent(statsData, (d) => d.date.getUTCFullYear());
+  $: ({ start, end } = selectedPeriod);
+  $: metrics = calculateMetrics(statsData);
 
   function subsetByYears(start, end) {
     return function (d) {
@@ -63,17 +71,17 @@
     };
   }
 
-  function calculateMetrics({ group, period }) {
-    const { start, end } = period;
+  function calculateMetrics(_data) {
+    const { start, end } = selectedPeriod;
     const periodLength = end - start + 1;
     // Filter data for selected period
     // e.g. baseline, mid-century, end-century or a custom period
-    const dataByPeriod = data.filter(subsetByYears(start, end));
+    const dataByPeriod = _data.filter(subsetByYears(start, end));
     // Filter values for selected group
     // e.g. modeled historical, modeled projections, observed historical
     const dataByGroup = dataByPeriod.map(({ date, values }) => {
       let valuesByGroup;
-      if (group.id.includes("model")) {
+      if (selectedGroup.id.includes("model")) {
         valuesByGroup = values.filter(({ id }) => models.includes(id));
       } else {
         // For observed  historical, check if value id is not a model name
@@ -102,23 +110,26 @@
 
   function update({ detail }) {
     const { group, period } = detail;
+    selectedGroup = group;
+    selectedPeriod = period;
     // Recalculate metrics any time group or period selection changes
-    metrics = calculateMetrics({ group, period });
+    metrics = calculateMetrics(statsData);
   }
 </script>
 
 <!-- Show stat panel for array with values and empty array -->
-{#if Array.isArray(data)}
+{#if statsData}
   <StatBlock
     on:update="{update}"
     units="{units}"
     data="{data}"
     groupList="{groupList}"
     periodList="{periodList}"
-    groupId="{groupId}"
-    periodId="{periodId}"
+    group="{selectedGroup}"
+    period="{selectedPeriod}"
     models="{models}"
     metrics="{metrics}"
+    dateRange="{dateRange}"
   />
 {:else}
   <div>
