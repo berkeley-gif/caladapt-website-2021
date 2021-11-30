@@ -196,7 +196,8 @@
       <h2>3rd Party Integrations</h2>
       <p>
         The following packages enable working with the Cal-Adapt API using the R
-        programming language and the ArcGIS Pro desktop software.
+        programming language and Python programming language with the ArcGIS Pro
+        desktop software.
       </p>
       <p class="btn-container">
         <Button
@@ -207,8 +208,10 @@
         >
       </p>
       <p class="btn-container">
-        <Button kind="tertiary" icon="{ArrowRight16}" href="/data/#"
-          >ArcGIS Pro Extension</Button
+        <Button
+          kind="tertiary"
+          icon="{ArrowRight16}"
+          href="https://ucanr-igis.github.io/caladapt-py/">caladapt-py</Button
         >
       </p>
     </div>
