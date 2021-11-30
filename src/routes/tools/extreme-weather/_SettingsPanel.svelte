@@ -120,7 +120,7 @@
   <RadioBtnGroup
     items="{extremesList}"
     selected="{$extremesStore}"
-    title="{'Choose Type of Extremes'}"
+    title="{'Select Extremes Type'}"
     on:change="{changeExtremes}"
   />
   <LearnMoreButton
