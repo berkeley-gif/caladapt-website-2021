@@ -32,7 +32,7 @@
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
 
-  let extremesList;
+  let extremesList = EXTREMES;
   extremesSideEffect($climvarStore);
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
