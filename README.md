@@ -1,6 +1,12 @@
-### Running the project
+# Cal-Adapt Website 2021
 
-Once you have created the project, install dependencies and run the project in development mode:
+Source code for the 2021 redesign of [cal-adapt.org](https://cal-adapt.org).
+
+This project was bootstrapped with the [Sapper framework](https://sapper.svelte.dev/) for [SvelteJS](https://svelte.dev).
+
+## Running the project
+
+Once you have cloned the project, install dependencies and run the project in development mode:
 
 ```bash
 cd cal-adapt-website-2021
@@ -25,6 +31,16 @@ npm run deploy-dev
 ```
 
 This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
+
+## Bundle Analyzer
+
+To inspect the bundled JavaScript code first run the `dev` script:
+
+```bash
+npm run dev
+```
+
+Then open your browser to `http://127.0.0.1:8888` or whatever address is outputted by Webpack Bundle Analyzer in the terminal.
 
 ## Directory structure
 
