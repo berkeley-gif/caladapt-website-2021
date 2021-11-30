@@ -43,18 +43,18 @@ export const DEFAULT_CLIMVAR_EXTREMES = [
   { climvar: "wspeed", defaultValue: "high", extremes: ["high"] },
 ];
 
-export const CHART_DESCRIPTION = `<h5>Histogram</>
+export const CHART_DESCRIPTION = `<p><strong>Histogram</strong></p>
 	<p>The histogram shows the distribution 
 	of selected climate variable around a 21 day window for the Baseline Period (1991-2020). 
 	The data values for a climate variable are grouped into buckets and represented 
 	by columns along the X axis. The Y axis represents the percentage of occurences 
 	in the data for each column.</p>
-  <h5>Forecast</>
+  <p><strong>Forecast</strong></p>
   <p>This section of the chart can be displayed or hidden by using the checkbox 
   at top of the chart. It shows the Near-Term forecast from the National 
   Weather Service (NWS) for selected climate variable and location 
   (latitide, longitude).</p>
-  <h5>Recent Observations</>
+  <p><strong>Recent Observations</strong></p>
   <p>This section of the chart can be displayed or hidden by using the checkbox 
   at top of the chart. It shows archived daily observations from the National 
   Centers for Environmental Information (NCEI) for the selected station. Following 
@@ -105,14 +105,14 @@ export const DOY_DESCRIPTION = `<p>This can be any day of the year you wish to s
 	Recent Observations are for today's date only and do not change if you select a 
 	different day of year.</p>`;
 
-export const EXTREMES_DESCRIPTION = `<h5>High Extremes</h5>
+export const EXTREMES_DESCRIPTION = `<p><strong>High Extremes</strong></p>
 	<p>For Maximum Temperature, selecting High Extremes (the default) focuses on days with 
 	the highest values (right tail) of maximum daily temperature.</p>
   <p>For Minimum Temperature, selecting High Extremes focuses on days with the warmest 
   minimum daily temperatures.</p>
   <p>For Maximum Wind Speed, selecting High Extremes focuses on days with 
   the highest values of maximum daily wind speed.</p>
-  <h5>Low Extremes</h5>
+  <p><strong>Low Extremes</strong></p>
   <p>For Maximum Temperature, selecting Low Extremes focuses on days with 
   the lowest values (left tail) of maximum daily temperature.</p>
   <p>For Minimum Temperature, selecting Low Extremes (the default) focuses on 
