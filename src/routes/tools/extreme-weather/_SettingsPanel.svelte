@@ -32,6 +32,9 @@
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
 
+  let extremesList = EXTREMES;
+  extremesSideEffect($climvarStore);
+
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
   }
@@ -52,10 +55,15 @@
   }
 
   function extremesSideEffect(id) {
-    const { extremes } = DEFAULT_CLIMVAR_EXTREMES.find(
+    const { defaultValue, extremes } = DEFAULT_CLIMVAR_EXTREMES.find(
       ({ climvar }) => id === climvar
     );
-    extremesStore.set(extremes);
+    extremesStore.set(defaultValue);
+    extremesList = getExtremeItems(extremes);
+  }
+
+  function getExtremeItems(ids) {
+    return ids.map((d) => EXTREMES.find(({ id }) => d === id));
   }
 
   function changeExtremes(e) {
@@ -110,9 +118,9 @@
 </div>
 <div class="block">
   <RadioBtnGroup
-    items="{EXTREMES}"
+    items="{extremesList}"
     selected="{$extremesStore}"
-    title="{'Choose Type of Extremes'}"
+    title="{'Select Extremes Type'}"
     on:change="{changeExtremes}"
   />
   <LearnMoreButton
