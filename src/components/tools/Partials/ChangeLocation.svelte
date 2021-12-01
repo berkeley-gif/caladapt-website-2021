@@ -228,7 +228,8 @@
       <div class="search-control">
         <Search
           size="sm"
-          id="search"
+          id="location-search"
+          labelText="{searchPlaceholder}"
           placeholder="{searchPlaceholder}"
           on:keydown="{search}"
           on:clear="{clearSearch}"
