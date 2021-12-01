@@ -35,6 +35,7 @@
 
   export let format = (d) => d;
   export let units;
+  export let isFetching;
 
   let selectedGroup = groupList.find((d) => d.id === groupId);
   let selectedPeriod = periodList.find((d) => d.id === periodId);
@@ -122,11 +123,16 @@
   }
 </script>
 
-<!-- Show stat panel for array with values and empty array -->
-{#if statsData}
+{#if isFetching}
+  <div>
+    <SkeletonText heading />
+    <SkeletonText paragraph lines="{4}" />
+  </div>
+{:else}
   <StatBlock
     on:update="{update}"
     units="{units}"
+    data="{data}"
     groupList="{groupList}"
     periodList="{periodList}"
     group="{selectedGroup}"
@@ -135,9 +141,4 @@
     metrics="{metrics}"
     dateRange="{dateRange}"
   />
-{:else}
-  <div>
-    <SkeletonText heading />
-    <SkeletonText paragraph lines="{4}" />
-  </div>
 {/if}
