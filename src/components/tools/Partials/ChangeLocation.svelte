@@ -70,7 +70,7 @@
 
   async function updateBoundary(e) {
     if (!e.detail) return;
-    const { lng, lat } = currentLoc.center;
+    const [lng, lat] = currentLoc.center || [];
     currentBoundary = e.detail;
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
     const intersectingFeature = await getFeature(
