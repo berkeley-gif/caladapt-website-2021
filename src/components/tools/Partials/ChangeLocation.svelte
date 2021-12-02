@@ -8,6 +8,7 @@
     searchFeature,
     reverseGeocode,
     getNearestPlace,
+    getTitle,
   } from "~/helpers/geocode";
 
   import { SelectBoundary, UploadBoundary } from "~/components/tools/Settings";
@@ -35,21 +36,10 @@
   async function mapClick({ detail: center }) {
     const { id } = currentBoundary;
     let newLocation;
-    if (id === "locagrid") {
-      try {
-        const { place_name } = (
-          await reverseGeocode(`${center[0]}, ${center[1]}`)
-        ).features[0];
-        newLocation = await getFeature({ center, place_name }, id);
-      } catch (e) {
-        console.error(e.message);
-      }
-    } else {
-      try {
-        newLocation = await getFeature({ center }, id);
-      } catch (e) {
-        console.error(e.message);
-      }
+    try {
+      newLocation = await getFeature({ center }, id);
+    } catch (e) {
+      console.error(e.message);
     }
     if (newLocation) {
       currentLoc = newLocation;
@@ -97,25 +87,11 @@
 
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
 
-    // Handle updating the value currentLoc
-    // locagrid locations do not have a title property, so add one
-    if (id === "locagrid") {
-      try {
-        const { center } = currentLoc;
-        const { place_name } = (
-          await reverseGeocode(`${center[0]}, ${center[1]}`)
-        ).features[0];
-        intersectingFeature = await getFeature({ center, place_name }, id);
-      } catch (e) {
-        console.error(e.message);
-      }
-    } else {
-      // otherwise just do a normal intersection spatial query
-      try {
-        intersectingFeature = await getFeature(currentLoc, id);
-      } catch (error) {
-        console.error(error.message);
-      }
+    // do a normal intersection spatial query
+    try {
+      intersectingFeature = await getFeature(currentLoc, id);
+    } catch (error) {
+      console.error(error.message);
     }
     if (intersectingFeature) {
       currentLoc = intersectingFeature;
@@ -158,6 +134,18 @@
     clearSearch();
   }
 
+  async function assignLocationTitle(location, boundaryId) {
+    try {
+      const { center } = location;
+      const { place_name } = (
+        await reverseGeocode(`${center[0]}, ${center[1]}`)
+      ).features[0];
+      return getTitle(location, boundaryId, place_name);
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+
   function uploadBoundary(e) {
     currentBoundary = { id: "custom" };
     currentLoc = e.detail.location;
@@ -168,7 +156,15 @@
     currentBoundary = boundary;
   }
 
-  function change() {
+  async function change() {
+    // get name for locagrid cell here via reverseGeocode
+    if (currentBoundary.id === "locagrid" && !currentLoc.title) {
+      currentLoc.title = await assignLocationTitle(
+        currentLoc,
+        currentBoundary.id
+      );
+    }
+
     open = false;
     dispatch("change", {
       boundaryId: currentBoundary.id,
