@@ -8,13 +8,11 @@
     searchFeature,
     reverseGeocode,
     getNearestPlace,
-  } from "../../../helpers/geocode";
+  } from "~/helpers/geocode";
 
-  import {
-    SelectBoundary,
-    UploadBoundary,
-  } from "../../../components/tools/Settings";
-  import { Location } from "../../../components/tools/Location";
+  import { SelectBoundary, UploadBoundary } from "~/components/tools/Settings";
+  import { Location } from "~/components/tools/Location";
+  import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
   // Props
   export let location;
@@ -86,20 +84,66 @@
     showSuggestions = true;
   }
 
-  async function updateBoundary(e) {
-    if (!e.detail) return;
-    const [lng, lat] = currentLoc.center || [];
-    currentBoundary = e.detail;
+  // NOTE: a side effect of the boundary type being updated is that it changes
+  // the value of the currentLoc reactive variable
+  async function updateBoundary(event) {
+    if (!event.detail) return;
+
+    const { detail: currentBoundary } = event;
+    const { id } = currentBoundary;
+    let intersectingFeature;
+    let nearest;
+    let defaultLocation;
+
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
-    const intersectingFeature = await getFeature(
-      currentLoc,
-      currentBoundary.id
-    );
+
+    // Handle updating the value currentLoc
+    // locagrid locations do not have a title property, so add one
+    if (id === "locagrid") {
+      try {
+        const { center } = currentLoc;
+        const { place_name } = (
+          await reverseGeocode(`${center[0]}, ${center[1]}`)
+        ).features[0];
+        intersectingFeature = await getFeature({ center, place_name }, id);
+      } catch (e) {
+        console.error(e.message);
+      }
+    } else {
+      // otherwise just do a normal intersection spatial query
+      try {
+        intersectingFeature = await getFeature(currentLoc, id);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
     if (intersectingFeature) {
       currentLoc = intersectingFeature;
-    } else {
-      const nearest = await getNearestPlace(currentLoc);
-      if (nearest) currentLoc = nearest;
+      return;
+    }
+    // most likely this is a place boundary type if no intersection was found
+    if (!intersectingFeature && id === "place") {
+      try {
+        nearest = await getNearestPlace(currentLoc);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+    if (nearest) {
+      currentLoc = nearest;
+      return;
+    }
+    // as a last resort use the default location's center to set the current location
+    try {
+      defaultLocation = await getFeature(
+        { center: DEFAULT_LOCATION.center },
+        id
+      );
+    } catch (error) {
+      console.error(error.message);
+    }
+    if (defaultLocation) {
+      currentLoc = defaultLocation;
     }
   }
 
