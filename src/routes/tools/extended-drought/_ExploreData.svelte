@@ -178,6 +178,7 @@
       formatFn="{formatFn}"
       models="{[DEFAULT_MODEL]}"
       scenario="{$scenario.id}"
+      isFetching="{$isFetchingStore}"
     />
   </div>
 
@@ -193,6 +194,7 @@
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"
       on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+      isFetching="{$isFetchingStore}"
     />
   </div>
 

@@ -134,8 +134,6 @@
   async function update() {
     if (!appReady) return;
     try {
-      dataStore.set(null);
-
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -160,7 +158,6 @@
       dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);
-      dataStore.set([]);
       notifier.error("Error", error, 2000);
     } finally {
       isFetchingStore.set(false);
@@ -218,7 +215,7 @@
 <Header
   iconPaths="{tool.icons}"
   title="{tool.title}"
-  description="{tool.desc}"
+  description="California has a highly variable climate and is susceptible to dry spells. Recent research suggests that extended drought occurrence (“mega-drought”) could become more pervasive in future decades. This tool explores data for two 20-year drought scenarios derived from LOCA downscaled meteorological and hydrological simulations."
 />
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
