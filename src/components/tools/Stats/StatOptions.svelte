@@ -39,7 +39,7 @@
     }
   }
 
-  $: yearsList = range(dateRange[0], dateRange[1], 1);
+  $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
   $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
   $: startYear_selectedIndex, updateLinkedList();
 
