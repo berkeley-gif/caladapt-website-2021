@@ -268,7 +268,6 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.id === 'observed')}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
@@ -282,7 +281,6 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           periodId="mid-century"
@@ -297,7 +295,6 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           periodId="end-century"
