@@ -35,7 +35,7 @@
   export let models;
 
   export let units;
-  export let isFetching;
+  export let isFetching = false;
 
   let selectedGroup = groupList.find((d) => d.id === groupId);
   let selectedPeriod = periodList.find((d) => d.id === periodId);
