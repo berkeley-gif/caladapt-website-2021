@@ -162,7 +162,6 @@
   async function update() {
     if (!appReady || !$modelsStore.length) return;
     try {
-      dataStore.set(null);
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -192,9 +191,10 @@
 
       dataStore.set([...observed, ...modelsData]);
     } catch (error) {
-      isFetchingStore.set(false);
       console.error("updateData", error);
       notifier.error("Error", error, 2000);
+    } finally {
+      isFetchingStore.set(false);
     }
   }
 
