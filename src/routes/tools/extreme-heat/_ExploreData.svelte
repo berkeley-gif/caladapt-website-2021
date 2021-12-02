@@ -38,6 +38,7 @@
     locationStore,
     modelsStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import {
     climvarList,
@@ -58,7 +59,6 @@
   const { titles } = datasetStore;
   const { data } = dataStore;
 
-  let isLoading = true;
   let dataByDate;
   let showDownload = false;
   let showShare = false;
@@ -147,10 +147,8 @@
     } else {
       dataByDate = groupDataByYear(flattenData($data));
     }
-    isLoading = false;
   } else {
     dataByDate = null;
-    isLoading = true;
   }
 
   function changeScenario(e) {
@@ -193,7 +191,7 @@
   }
 </script>
 
-{#if isLoading}
+{#if $isFetchingStore}
   <Loading />
 {/if}
 
@@ -245,6 +243,7 @@
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -258,6 +257,7 @@
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -272,6 +272,7 @@
           periodId="end-century"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
     </ul>
@@ -292,6 +293,8 @@
         units: `${$indicator.units}`,
       }}"
       colors="{HEATMAP_COLOR_SCALE}"
+      ,
+      isFetching="{$isFetchingStore}"
     />
     <div class="chart-notes margin--v-32">
       <p>

@@ -162,8 +162,6 @@
   async function update() {
     if (!appReady || !$modelsStore.length) return;
     try {
-      dataStore.set(null);
-
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
