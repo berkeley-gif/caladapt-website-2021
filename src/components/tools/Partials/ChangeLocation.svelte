@@ -35,15 +35,9 @@
   let showSuggestions = false;
 
   async function mapClick(e) {
-    let newLocation;
-    try {
-      newLocation = await getFeature({ center: e.detail }, currentBoundary.id);
-    } catch (e) {
-      console.warn(e.message);
-    }
-    if (newLocation) {
-      currentLoc = newLocation;
-    }
+    const addresses = await reverseGeocode(`${e.detail[0]}, ${e.detail[1]}`);
+    const feature = addresses.features[0];
+    currentLoc = await getFeature(feature, currentBoundary.id);
   }
 
   function clearSearch() {
