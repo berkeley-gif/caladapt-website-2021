@@ -40,7 +40,7 @@ export const CLIMATE_INDICATORS = [
     label: "Maximum Duration",
     title: "Longest Stretch of Consecutive Extreme Heat Days per Year",
     units: "days/yr",
-    decimals: 1,
+    decimals: 0,
     chartComponent: ScatterChart,
     statsComponent: AvgRange,
     description: `<p>The colored dots on this visualization represent 
@@ -54,7 +54,7 @@ export const CLIMATE_INDICATORS = [
     label: "Heat Waves",
     title: "Number of Heat Wave Events per Year",
     units: "events/yr",
-    decimals: 1,
+    decimals: 0,
     chartComponent: ScatterChart,
     statsComponent: AvgRange,
     description: `<p>The colored dots on this visualization represent 

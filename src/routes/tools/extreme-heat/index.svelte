@@ -91,6 +91,7 @@
     unitsStore,
     locationStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import {
     climvarStore,
@@ -155,6 +156,7 @@
   async function updateDefaultThreshold() {
     const { location, boundary, climvar } = threshParams;
     if (!location || !boundary) return;
+    isFetchingStore.set(true);
     const thresh98p = await getDefaultThreshold({
       location,
       boundary,
@@ -162,13 +164,13 @@
     });
     thresholdListStore.reset(thresh98p, "98th Percentile");
     thresholdStore.set(thresh98p);
+    isFetchingStore.set(false);
   }
 
   async function update() {
     if (!initReady || !appReady) return;
     if ($modelsStore.length === 0) return;
     try {
-      dataStore.reset();
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -178,6 +180,7 @@
         location: $location,
         boundary: $boundary,
       });
+      isFetchingStore.set(true);
       const observed = await getObserved(
         config,
         { ...params, ...extraParams },
@@ -193,6 +196,8 @@
       // TODO: notify user of error
       console.log("update error", err);
       notifier.error("Error", err, 2000);
+    } finally {
+      isFetchingStore.set(false);
     }
   }
 
