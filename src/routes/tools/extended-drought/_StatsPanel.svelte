@@ -11,6 +11,7 @@
   export let formatFn;
   export let models;
   export let scenario;
+  export let isFetching;
 </script>
 
 <ul class="stats">
@@ -24,6 +25,7 @@
       periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
       format="{formatFn}"
       models="{models}"
+      isFetching="{isFetching}"
     />
   </li>
   <li class="block">
@@ -36,6 +38,7 @@
       periodList="{DEFAULT_STAT_PERIODS.filter(({ id }) => id === scenario)}"
       format="{formatFn}"
       models="{models}"
+      isFetching="{isFetching}"
     />
   </li>
 </ul>

@@ -13,6 +13,7 @@
   export let label;
   export let dataSource;
   export let annotations;
+  export let isFetching;
 
   const dispatch = createEventDispatcher();
 
@@ -39,6 +40,7 @@
     tickFormat: formatFn,
     units,
   }}"
+  isFetching="{isFetching}"
 />
 
 <div class="chart-notes margin--v-32">
