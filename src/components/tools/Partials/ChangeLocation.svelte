@@ -34,10 +34,28 @@
   let isSearching = false;
   let showSuggestions = false;
 
-  async function mapClick(e) {
-    const addresses = await reverseGeocode(`${e.detail[0]}, ${e.detail[1]}`);
-    const feature = addresses.features[0];
-    currentLoc = await getFeature(feature, currentBoundary.id);
+  async function mapClick({ detail: center }) {
+    const { id } = currentBoundary;
+    let newLocation;
+    if (id === "locagrid") {
+      try {
+        const { place_name } = (
+          await reverseGeocode(`${center[0]}, ${center[1]}`)
+        ).features[0];
+        newLocation = await getFeature({ center, place_name }, id);
+      } catch (e) {
+        console.error(e.message);
+      }
+    } else {
+      try {
+        newLocation = await getFeature({ center }, id);
+      } catch (e) {
+        console.error(e.message);
+      }
+    }
+    if (newLocation) {
+      currentLoc = newLocation;
+    }
   }
 
   function clearSearch() {
