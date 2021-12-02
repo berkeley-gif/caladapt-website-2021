@@ -7,9 +7,7 @@
     getFeature,
     searchFeature,
     reverseGeocode,
-    getNearestFeature,
-    searchBoundaryLayer,
-    formatFeature,
+    getNearestPlace,
   } from "../../../helpers/geocode";
 
   import {
@@ -100,27 +98,8 @@
     if (intersectingFeature) {
       currentLoc = intersectingFeature;
     } else {
-      const { center } = currentLoc;
-      const results = await reverseGeocode(`${center[0]}, ${center[1]}`);
-      if (!results || !results.features.length) return;
-
-      const place = results.features.find((f) =>
-        f.place_type.includes("place")
-      );
-      if (!place) return;
-
-      const boundaries = await searchBoundaryLayer(
-        place.text,
-        currentBoundary.id
-      );
-
-      if (!boundaries || !boundaries.features.length) return;
-      const formatted = formatFeature(
-        boundaries.features[0],
-        currentBoundary.id,
-        place.text
-      );
-      currentLoc = formatted;
+      const nearest = await getNearestPlace(currentLoc);
+      if (nearest) currentLoc = nearest;
     }
   }
 

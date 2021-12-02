@@ -305,3 +305,17 @@ export const getNearestFeature = async (lng, lat, layerId) => {
   }
   return formatFeature(response.features[0], layerId);
 };
+
+export async function getNearestPlace(location) {
+  const { center } = location;
+  const results = await reverseGeocode(`${center[0]}, ${center[1]}`);
+  if (!results || !results.features.length) return;
+
+  const place = results.features.find((f) => f.place_type.includes("place"));
+  if (!place) return;
+
+  const boundaries = await searchBoundaryLayer(place.text, "place");
+  if (!boundaries || !boundaries.features.length) return;
+
+  return formatFeature(boundaries.features[0], "place", place.text);
+}
