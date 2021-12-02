@@ -1,8 +1,13 @@
 <script>
   import { SkeletonText } from "carbon-components-svelte";
   import { extent } from "d3-array";
-  import { MONTHS_LIST } from "~/routes/tools/_common/constants";
+  import {
+    MONTHS_LIST,
+    DEFAULT_STAT_GROUPS,
+    DEFAULT_STAT_PERIODS,
+  } from "~/routes/tools/_common/constants";
   import { isEmptyData } from "~/helpers/utilities";
+
   import StatBlock from "./StatBlock.svelte";
 
   /** Array of data values grouped by date, e.g.
@@ -19,11 +24,11 @@
 
   /** List of 1 or more groups
    * e.g. modeled historical, modeled projections, observed historical */
-  export let groupList;
+  export let groupList = DEFAULT_STAT_GROUPS;
 
   /** List of 1 or more periods
   e.g. baseline, mid-century, end-century */
-  export let periodList;
+  export let periodList = DEFAULT_STAT_PERIODS;
 
   /** Id of default group to initialize StatPanel. This prop is optional. Defaults to first item in groupList */
   export let groupId = groupList[0].id;
