@@ -14,6 +14,7 @@
   export let simulation;
   export let month;
   export let climvarId;
+  export let isFetching;
 
   const dispatch = createEventDispatcher();
 
@@ -45,6 +46,7 @@
     domainMin: 0,
     niceMax: 1,
   }}"
+  isFetching="{isFetching}"
 />
 
 <div class="chart-notes margin--v-8">
