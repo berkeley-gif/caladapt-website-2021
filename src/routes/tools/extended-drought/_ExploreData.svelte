@@ -100,19 +100,14 @@
       bookmark = "Cannot create a bookmark for an uploaded boundary";
     } else {
       const [lng, lat] = $location.center;
-      /*      const modelsStr = $modelsStore.join(",");
       bookmark = serialize({
         climvar: $climvarStore,
         scenario: $scenarioStore,
-        models: modelsStr,
-        modelSingle: $modelSingleStore,
-        year: $yearStore,
-        month: $monthStore,
-        duration: $durationStore,
+        period: $periodStore,
         lng,
         lat,
         boundary: $boundary.id,
-      });*/
+      });
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
