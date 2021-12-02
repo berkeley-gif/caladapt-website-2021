@@ -18,8 +18,8 @@
   const dispatch = createEventDispatcher();
 
   // Props for binding to RadioButtonGroup
-  let selectedGroup = group.id;
-  let selectedPeriod = period.id;
+  let selectedGroupId = group.id;
+  let selectedPeriodId = period.id;
 
   // Props and functions for defining a custom period
   let startYear_selectedIndex = -1;
@@ -46,8 +46,8 @@
   // If user confirms changes, dispatch change event with selected groupd and period
   // If user has selected a custom period, create a new period object
   function update() {
-    group = groupList.find(({ id }) => id === selectedGroup);
-    if (selectedPeriod === "custom") {
+    group = groupList.find(({ id }) => id === selectedGroupId);
+    if (selectedPeriodId === "custom") {
       const start = getItem(startYear_selectedIndex);
       const end = getFilteredItem(endYear_selectedIndex);
       period = {
@@ -57,7 +57,7 @@
         end,
       };
     } else {
-      period = periodList.find(({ id }) => id === selectedPeriod);
+      period = periodList.find(({ id }) => id === selectedPeriodId);
     }
     dispatch("change", { group, period });
   }
@@ -81,21 +81,21 @@
   on:close="{() => dispatch('cancel')}"
 >
   <div class="h5">Select Group</div>
-  <RadioButtonGroup bind:selected="{selectedGroup}">
+  <RadioButtonGroup bind:selected="{selectedGroupId}">
     {#each groupList as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
     {/each}
   </RadioButtonGroup>
 
   <div class="h5">Select Time Period</div>
-  <RadioButtonGroup bind:selected="{selectedPeriod}">
+  <RadioButtonGroup bind:selected="{selectedPeriodId}">
     {#each periodList as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
     {/each}
     <RadioButton labelText="Enter custom year range" value="custom" />
   </RadioButtonGroup>
 
-  {#if selectedPeriod === "custom"}
+  {#if selectedPeriodId === "custom"}
     <div class="years-select">
       <ComboBox
         bind:selectedIndex="{startYear_selectedIndex}"
