@@ -260,6 +260,7 @@
           dataByDate,
           formatFn,
           models: $modelsStore,
+          isFetching: $isFetchingStore,
         }}
       />
     {/if}
@@ -277,6 +278,7 @@
         on:showDownload="{loadDownload}"
         on:showShare="{loadShare}"
         on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+        isFetching="{$isFetchingStore}"
       />
     {/if}
   </div>
