@@ -78,7 +78,7 @@ export const CHART_ANNO_LABEL = [
       text: "←",
       position: {
         top: "0",
-        left: "38%",
+        left: "37%",
       },
       style: { "font-size": "16px" },
     },
@@ -98,7 +98,7 @@ export const CHART_ANNO_LABEL = [
       text: "→",
       position: {
         top: "0",
-        left: "66%",
+        left: "67%",
       },
       style: { "font-size": "16px" },
     },
