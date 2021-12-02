@@ -78,8 +78,7 @@
   // the value of the currentLoc reactive variable
   async function updateBoundary(event) {
     if (!event.detail) return;
-
-    const { detail: currentBoundary } = event;
+    currentBoundary = event.detail;
     const { id } = currentBoundary;
     let intersectingFeature;
     let nearest;
