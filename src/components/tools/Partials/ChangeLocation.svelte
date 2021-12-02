@@ -134,15 +134,10 @@
   }
 
   async function assignLocationTitle(location, boundaryId) {
-    try {
-      const { center } = location;
-      const { place_name } = (
-        await reverseGeocode(`${center[0]}, ${center[1]}`)
-      ).features[0];
-      return getTitle(location, boundaryId, place_name);
-    } catch (e) {
-      console.error(e.message);
-    }
+    const { center } = location;
+    const { place_name } = (await reverseGeocode(`${center[0]}, ${center[1]}`))
+      .features[0];
+    location.title = getTitle(location, boundaryId, place_name);
   }
 
   function uploadBoundary(e) {
@@ -158,10 +153,11 @@
   async function change() {
     // get name for locagrid cell here via reverseGeocode
     if (currentBoundary.id === "locagrid" && !currentLoc.title) {
-      currentLoc.title = await assignLocationTitle(
-        currentLoc,
-        currentBoundary.id
-      );
+      try {
+        await assignLocationTitle(currentLoc, currentBoundary.id);
+      } catch (error) {
+        console.error(error.message);
+      }
     }
 
     open = false;
