@@ -85,6 +85,7 @@ module.exports = {
         "process.browser": true,
         "process.env": {
           NODE_ENV: JSON.stringify(mode),
+          DEPLOY: JSON.stringify(deploy),
           ...featureFlags[deploy],
         },
       }),
