@@ -47,6 +47,7 @@
     units: "",
   };
   export let annotations;
+  export let isFetching = false;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -165,7 +166,7 @@
   }
 </script>
 
-{#if data}
+{#if data && !isFetching}
   <div
     class:no-data="{noData}"
     style="{`height:${height}`}"
@@ -231,7 +232,6 @@
     <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
   <div class="chart-legend margin--v-16">
-    <SkeletonText />
     <SkeletonText />
   </div>
 {/if}

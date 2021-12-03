@@ -12,6 +12,7 @@
   import { csvFormat, csvFormatRows } from "d3-dsv";
   import { exportPNG, exportCSV } from "../../../helpers/export";
   import { notifier } from "../../../components/notifications";
+  import { logException } from "~/helpers/logging";
 
   export let open = false;
   export let formats = ["png", "csv"];
@@ -73,6 +74,7 @@
         2000
       );
     } catch (error) {
+      logException(error);
       notifier.error(
         "Download",
         `Error creating ${selected} file`,

@@ -70,6 +70,7 @@
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { logException } from "~/helpers/logging";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -90,6 +91,7 @@
     locationStore,
     dataStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import { climvarStore } from "./_store";
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
@@ -126,7 +128,6 @@
     if (!appReady) return;
     if ($modelsStore.length === 0) return;
     try {
-      dataStore.set(null);
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -138,14 +139,17 @@
         boundary: $boundary,
         imperial: true,
       });
+      isFetchingStore.set(true);
       const envelope = await getEnsemble(config, params, method, isRate);
       const observed = await getObserved(config, params, method, isRate);
       const modelsData = await getModels(config, params, method, isRate);
       dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (err) {
       console.log("updateData", err);
-      dataStore.set([]);
+      logException(err);
       notifier.error("Error", err, 2000);
+    } finally {
+      isFetchingStore.set(false);
     }
   }
 
@@ -172,6 +176,7 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        logException(error);
         dataStore.set([]);
         notifier.error(
           "Unable to Load Tool",

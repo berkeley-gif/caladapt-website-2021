@@ -38,6 +38,7 @@
     locationStore,
     modelsStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import {
     climvarList,
@@ -58,7 +59,6 @@
   const { titles } = datasetStore;
   const { data } = dataStore;
 
-  let isLoading = true;
   let dataByDate;
   let showDownload = false;
   let showShare = false;
@@ -74,7 +74,10 @@
   let bookmark;
 
   let learnMoreProps = {};
-  $: chartDescription = $indicator.description;
+  $: chartDescription =
+    $climvarStore === "tasmax"
+      ? $indicator.description
+      : $indicator.description.replace("extreme heat days", "warm nights");
 
   let metadata;
   let csvData;
@@ -147,10 +150,8 @@
     } else {
       dataByDate = groupDataByYear(flattenData($data));
     }
-    isLoading = false;
   } else {
     dataByDate = null;
-    isLoading = true;
   }
 
   function changeScenario(e) {
@@ -193,7 +194,7 @@
   }
 </script>
 
-{#if isLoading}
+{#if $isFetchingStore}
   <Loading />
 {/if}
 
@@ -245,6 +246,7 @@
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -258,6 +260,7 @@
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -272,6 +275,7 @@
           periodId="end-century"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
     </ul>
@@ -285,13 +289,15 @@
       dataByDate="{dataByDate}"
       yAxis="{{
         key: 'value',
-        label: `${$indicator.title}`,
+        label: `${indicatorTitle}`,
         domainMin: 0,
         niceMax: 10,
         tickFormat: formatFn,
         units: `${$indicator.units}`,
       }}"
       colors="{HEATMAP_COLOR_SCALE}"
+      ,
+      isFetching="{$isFetchingStore}"
     />
     <div class="chart-notes margin--v-32">
       <p>

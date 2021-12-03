@@ -81,6 +81,7 @@
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logStores } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
 
   import {
     About,
@@ -162,8 +163,6 @@
   async function update() {
     if (!appReady || !$modelsStore.length) return;
     try {
-      dataStore.set(null);
-
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -187,6 +186,7 @@
       pctndStore.set(getAvgPctNoData($dataStore));
     } catch (error) {
       console.error("updateData", error);
+      logException(error);
       notifier.error("Error", error, 2000);
     } finally {
       isFetchingStore.set(false);
@@ -239,6 +239,7 @@
       await update();
     } catch (error) {
       console.error("init error", error);
+      logException(error);
       notifier.error(
         "Unable to Load Tool",
         "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",

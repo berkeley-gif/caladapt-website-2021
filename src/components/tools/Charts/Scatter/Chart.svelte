@@ -44,6 +44,7 @@
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  export let isFetching = false;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -150,7 +151,7 @@
   }
 </script>
 
-{#if data}
+{#if data && !isFetching}
   <div
     class:no-data="{noData}"
     style="{`height:${height}`}"

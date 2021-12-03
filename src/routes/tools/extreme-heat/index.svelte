@@ -72,6 +72,7 @@
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { logException } from "~/helpers/logging";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -91,6 +92,7 @@
     unitsStore,
     locationStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import {
     climvarStore,
@@ -155,6 +157,7 @@
   async function updateDefaultThreshold() {
     const { location, boundary, climvar } = threshParams;
     if (!location || !boundary) return;
+    isFetchingStore.set(true);
     const thresh98p = await getDefaultThreshold({
       location,
       boundary,
@@ -162,13 +165,13 @@
     });
     thresholdListStore.reset(thresh98p, "98th Percentile");
     thresholdStore.set(thresh98p);
+    isFetchingStore.set(false);
   }
 
   async function update() {
     if (!initReady || !appReady) return;
     if ($modelsStore.length === 0) return;
     try {
-      dataStore.reset();
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -178,6 +181,7 @@
         location: $location,
         boundary: $boundary,
       });
+      isFetchingStore.set(true);
       const observed = await getObserved(
         config,
         { ...params, ...extraParams },
@@ -190,9 +194,11 @@
       );
       dataStore.updateData([...observed, ...modelsData]);
     } catch (err) {
-      // TODO: notify user of error
       console.log("update error", err);
+      logException(err);
       notifier.error("Error", err, 2000);
+    } finally {
+      isFetchingStore.set(false);
     }
   }
 
@@ -234,6 +240,7 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        logException(error);
         notifier.error(
           "Unable to Load Tool",
           "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
