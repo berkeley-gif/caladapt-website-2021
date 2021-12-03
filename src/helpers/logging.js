@@ -1,8 +1,8 @@
-export const logException = (error, exFatal = false) => {
+export const logException = (error, fatal = false) => {
   if (process.env.NODE_ENV === "production") {
-    ga("send", "exception", {
-      exDescription: typeof error === "object" ? error.message : error,
-      exFatal,
+    gtag("event", "exception", {
+      description: typeof error === "object" ? error.message : error,
+      fatal,
     });
   }
 };
