@@ -25,6 +25,6 @@ module.exports = {
     "svelte3/ignore-styles": () => true,
   },
   globals: {
-    ga: "readonly",
+    gtag: "readonly",
   },
 };
