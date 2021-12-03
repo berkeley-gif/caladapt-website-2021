@@ -7,7 +7,7 @@
 
   onMount(() => {
     // only add Google Analytics in production settings
-    if (process.env.NODE_ENV === "production" && !scriptAdded) {
+    if (process.env.DEPLOY === "prod" && !scriptAdded) {
       const script = document.createElement("script");
       script.innerHTML = `
         window.dataLayer = window.dataLayer || [];
