@@ -302,7 +302,8 @@
         stations="{stationsLayer}"
         location="{currentLoc}"
         imageOverlayShow="{false}"
-        zoomToLocationOnLoad="{isStationSelector ? false : true}"
+        zoomToLocationOnLoad="{!isStationSelector}"
+        on:overlayclick="{isStationSelector ? overlayClick : null}"
         on:mapclick="{isStationSelector ? null : mapClick}"
         on:ready="{() => dispatch('ready')}"
       />
