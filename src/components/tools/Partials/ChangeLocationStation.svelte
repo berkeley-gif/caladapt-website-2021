@@ -24,14 +24,15 @@
 
   const dispatch = createEventDispatcher();
 
-  $: isStationSelector = Boolean(stationsLayer);
-
+  let isStationSelector = Boolean(stationsLayer);
   let helpText = isStationSelector
     ? `Select a station on the map or enter an address in the search box to 
         select the nearest station.`
     : `Click on the map or enter an address in the search box. To explore data
         for a larger extent (e.g. county), select a boundary first.`;
-
+  let headingTitleText = isStationSelector
+    ? "Change Station"
+    : "Change Location";
   let currentLoc = location;
   let currentBoundary = boundary;
   let geocodeResults = [];
@@ -218,7 +219,7 @@
   secondaryButtonText="Cancel"
   on:click:button--secondary="{cancel}"
   bind:open
-  modalHeading="Change Station"
+  modalHeading="{headingTitleText}"
   shouldSubmitOnEnter="{false}"
   on:submit="{change}"
   on:open
