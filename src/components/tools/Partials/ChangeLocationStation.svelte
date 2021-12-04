@@ -143,6 +143,8 @@
     currentLoc = location;
     open = false;
   }
+
+  function noop() {}
 </script>
 
 <style lang="scss">
@@ -304,8 +306,8 @@
         location="{currentLoc}"
         imageOverlayShow="{false}"
         zoomToLocationOnLoad="{!isStationSelector}"
-        on:overlayclick="{isStationSelector ? overlayClick : null}"
-        on:mapclick="{isStationSelector ? null : mapClick}"
+        on:overlayclick="{isStationSelector ? overlayClick : noop}"
+        on:mapclick="{isStationSelector ? noop : mapClick}"
         on:ready="{() => dispatch('ready')}"
       />
     </div>
