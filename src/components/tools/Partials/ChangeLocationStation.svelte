@@ -12,6 +12,7 @@
     getNearestPlace,
     getTitle,
   } from "~/helpers/geocode";
+  import { logException, logGetFeatureErr } from "~/helpers/logging";
 
   import { SelectBoundary, UploadBoundary } from "~/components/tools/Settings";
   import { Location } from "~/components/tools/Location";
@@ -53,20 +54,27 @@
     let newLocation;
     try {
       newLocation = await getFeature({ center }, id);
-    } catch (e) {
-      console.error(e.message);
+    } catch (error) {
+      console.error(error.message);
+      logGetFeatureErr(center, id);
     }
     if (newLocation) {
       currentLoc = newLocation;
     }
   }
 
-  async function overlayClick(e) {
+  async function overlayClick({ detail: stationId }) {
     try {
-      currentLoc = await getStationById(e.detail, stationsLayer.id);
+      currentLoc = await getStationById(stationId, stationsLayer.id);
+    } catch (error) {
+      console.error(error.message);
+      logException(`getStationById failed: ${stationId}; ${stationsLayer.id}`);
+    }
+    try {
       currentLoc.bbox = getBbox(currentLoc.geometry);
     } catch (error) {
       console.error(error.message);
+      logException(`getBbox failed for station ${stationId}`);
     }
   }
 
@@ -92,6 +100,9 @@
       });
     } catch (error) {
       console.error(error.message);
+      logException(
+        `searchFeature failed: ${searchValue}, ${layer && layer.id}`
+      );
     } finally {
       isSearching = false;
       showSuggestions = true;
@@ -119,6 +130,7 @@
     try {
       intersectingFeature = await getFeature(currentLoc, id);
     } catch (error) {
+      logGetFeatureErr(currentLoc && currentLoc.center, id);
       console.error(error.message);
     }
     if (intersectingFeature) {
@@ -130,6 +142,11 @@
       try {
         nearest = await getNearestPlace(currentLoc);
       } catch (error) {
+        logException(
+          `getNearestPlace failed: ${
+            currentLoc && currentLoc.center && currentLoc.center.join(",")
+          }`
+        );
         console.error(error.message);
       }
     }
@@ -144,6 +161,7 @@
         id
       );
     } catch (error) {
+      logGetFeatureErr(DEFAULT_LOCATION.center, id);
       console.error(error.message);
     }
     if (defaultLocation) {
@@ -162,6 +180,7 @@
             )
           : await getFeature(opt, currentBoundary.id);
       } catch (error) {
+        logGetFeatureErr(opt.center, currentBoundary && currentBoundary.id);
         console.error(error.message);
       }
     } else {
@@ -197,6 +216,11 @@
       try {
         await assignLocationTitle(currentLoc, currentBoundary.id);
       } catch (error) {
+        logException(
+          `AssignLocationTitle failed: ${
+            currentLoc && currentLoc.center && currentLoc.center.join(",")
+          }, ${currentBoundary && currentBoundary.id}`
+        );
         console.error(error.message);
       }
     }
