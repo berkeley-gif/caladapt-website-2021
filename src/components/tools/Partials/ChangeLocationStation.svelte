@@ -176,7 +176,11 @@
 
   async function change() {
     // get name for locagrid cell here via reverseGeocode
-    if (currentBoundary.id === "locagrid" && !currentLoc.title) {
+    if (
+      currentBoundary &&
+      currentBoundary.id === "locagrid" &&
+      !currentLoc.title
+    ) {
       try {
         await assignLocationTitle(currentLoc, currentBoundary.id);
       } catch (error) {
