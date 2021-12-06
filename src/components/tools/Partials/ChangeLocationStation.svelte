@@ -141,6 +141,7 @@
 
   function cancel() {
     currentLoc = location;
+    currentBoundary = boundary;
     open = false;
   }
 
