@@ -97,6 +97,7 @@
   import { inview } from "svelte-inview/dist/";
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { logException } from "~/helpers/logging";
 
   import {
     About,
@@ -187,6 +188,7 @@
       dataStore.set([...envelope, ...observed, ...models]);
     } catch (error) {
       console.error("updateData", error);
+      logException(error);
       notifier.error("Error", error, 2000);
     } finally {
       isFetchingStore.set(false);
@@ -230,6 +232,7 @@
       await update();
     } catch (error) {
       console.error("init error", error);
+      logException(error);
       notifier.error(
         "Unable to Load Tool",
         "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",

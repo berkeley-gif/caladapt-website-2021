@@ -70,6 +70,7 @@
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { logException } from "~/helpers/logging";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -145,6 +146,7 @@
       dataStore.set([...envelope, ...observed, ...modelsData]);
     } catch (err) {
       console.log("updateData", err);
+      logException(err);
       notifier.error("Error", err, 2000);
     } finally {
       isFetchingStore.set(false);
@@ -174,6 +176,7 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        logException(error);
         dataStore.set([]);
         notifier.error(
           "Unable to Load Tool",
