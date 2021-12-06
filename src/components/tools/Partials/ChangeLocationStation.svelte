@@ -62,8 +62,12 @@
   }
 
   async function overlayClick(e) {
-    currentLoc = await getStationById(e.detail, stationsLayer.id);
-    currentLoc.bbox = getBbox(currentLoc.geometry);
+    try {
+      currentLoc = await getStationById(e.detail, stationsLayer.id);
+      currentLoc.bbox = getBbox(currentLoc.geometry);
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 
   async function search({ key }) {
@@ -76,17 +80,22 @@
     isSearching = true;
     showSuggestions = false;
     geocodeResults.length = 0;
-    geocodeResults = await searchFeature(searchValue, layer.id);
-    // Add groupname for results from all geocoders
-    geocodeResults.forEach((item) => {
-      if (item.geocoder === "caladapt") {
-        item.category = layer.metadata.title;
-      } else {
-        item.category = "Places & Addresses";
-      }
-    });
-    isSearching = false;
-    showSuggestions = true;
+    try {
+      geocodeResults = await searchFeature(searchValue, layer.id);
+      // Add groupname for results from all geocoders
+      geocodeResults.forEach((item) => {
+        if (item.geocoder === "caladapt") {
+          item.category = layer.metadata.title;
+        } else {
+          item.category = "Places & Addresses";
+        }
+      });
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      isSearching = false;
+      showSuggestions = true;
+    }
   }
 
   function clearSearch() {
@@ -144,13 +153,17 @@
 
   async function selectSuggestion(opt) {
     if (opt.geocoder === "mapbox") {
-      currentLoc = isStationSelector
-        ? await getNearestFeature(
-            opt.center[0],
-            opt.center[1],
-            stationsLayer.id
-          )
-        : await getFeature(opt, currentBoundary.id);
+      try {
+        currentLoc = isStationSelector
+          ? await getNearestFeature(
+              opt.center[0],
+              opt.center[1],
+              stationsLayer.id
+            )
+          : await getFeature(opt, currentBoundary.id);
+      } catch (error) {
+        console.error(error.message);
+      }
     } else {
       currentLoc = opt;
     }
