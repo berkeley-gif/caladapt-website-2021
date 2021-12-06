@@ -10,17 +10,12 @@
   export let dataByDate;
   export let formatFn;
   export let units;
+  export let label;
   export let dataSource;
-  export let simulation;
-  export let month;
-  export let climvarId;
+  export let annotations;
   export let isFetching;
 
   const dispatch = createEventDispatcher();
-
-  $: label = `${simulation === "year" ? "Annual" : month} ${
-    climvarId === "fire" ? `${units} burned` : "wildfire probability"
-  }`;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -36,6 +31,7 @@
 </script>
 
 <LineAreaChart
+  annotations="{annotations}"
   data="{data}"
   dataByDate="{dataByDate}"
   yAxis="{{
@@ -43,18 +39,16 @@
     label,
     tickFormat: formatFn,
     units,
-    domainMin: 0,
-    niceMax: 1,
   }}"
   isFetching="{isFetching}"
 />
 
-<div class="chart-notes margin--v-8">
+<div class="chart-notes margin--v-32">
   <p>
     Source: Cal-Adapt. Data: {dataSource}.
   </p>
 </div>
-<div class="chart-download margin--v-8">
+<div class="chart-download margin--v-16">
   <LearnMoreButton
     cta="{'Explain Chart'}"
     on:click="{() =>

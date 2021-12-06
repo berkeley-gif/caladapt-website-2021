@@ -68,7 +68,7 @@ const variables = [
   },
   {
     id: "tair",
-    label: "Tair",
+    label: "Average Temperature",
     icon: Sun,
     text: "Average Temperature",
     units: {

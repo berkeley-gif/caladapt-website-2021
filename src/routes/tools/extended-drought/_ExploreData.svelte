@@ -12,38 +12,33 @@
   } from "../_common/helpers";
 
   import { serialize } from "~/helpers/utilities";
-  import { getImgOverlayPath } from "./_data";
 
   import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import StatsPanel from "./_StatsPanel.svelte";
-  import SnowpackChart from "./_SnowpackChart.svelte";
-  import SnowpackMap from "./_SnowpackMap.svelte";
-  import MapTimeSlider from "./_MapTimeSlider.svelte";
+  import ExtendedDroughtChart from "./_ExtendedDroughtChart.svelte";
   import ChartTitle from "./_ChartTitle.svelte";
-  import MapTitle from "./_MapTitle.svelte";
 
   import {
-    scenarioStore,
     locationStore,
-    dataStore,
-    modelsStore,
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
   import {
     climvarStore,
-    durationStore,
-    monthStore,
-    modelSingleStore,
-    yearStore,
+    periodStore,
+    scenarioStore,
+    droughtDataStore,
+    observedDataStore,
+    annotationsStore,
   } from "./_store";
+  import { DEFAULT_MODEL } from "./_constants";
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
-  const { month } = monthStore;
+  const { period } = periodStore;
 
   let dataByDate;
   let showDownload = false;
@@ -57,12 +52,6 @@
   let ShareLink;
   let LearnMoreModal;
 
-  // reference to mapbox slippy map
-  let mapboxMap;
-
-  // reference to time slider component
-  let timeSlider;
-
   let bookmark;
 
   let learnMoreProps = {};
@@ -73,28 +62,13 @@
   let printSkipElements;
 
   let chartTitle = "";
-  let mapCaveat =
-    "The maps for the period between 1960-2010 display the observed historical Snow Water Equivalent for the selected month, while those for 2010–2099 show the modeled projections.";
-
-  let activeTab = 0;
-  $: activeTab, mapboxMap && mapboxMap.resize();
-  $: activeTab, timeSlider && timeSlider.cancelAnimation();
-
-  $: chartSubtitle = `Projected changes in Snow Water Equivalent for the month of ${$month.label} under a`;
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
-  $: imgOverlayPath = getImgOverlayPath({
-    climvarId: $climvarStore,
-    modelId: $modelSingleStore,
-    scenarioId: $scenarioStore,
-    yearStart: $yearStore,
-    yearEnd: $yearStore + $durationStore - 1,
-    monthNumber: $monthStore,
-  });
-
-  $: if (Array.isArray($dataStore) && $dataStore.length) {
-    dataByDate = groupDataByYear(flattenData($dataStore));
+  $: if (Array.isArray($droughtDataStore) && $droughtDataStore.length) {
+    dataByDate = groupDataByYear(
+      flattenData([...$droughtDataStore, ...$observedDataStore])
+    );
   } else {
     dataByDate = null;
   }
@@ -126,15 +100,10 @@
       bookmark = "Cannot create a bookmark for an uploaded boundary";
     } else {
       const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
       bookmark = serialize({
         climvar: $climvarStore,
         scenario: $scenarioStore,
-        models: modelsStr,
-        modelSingle: $modelSingleStore,
-        year: $yearStore,
-        month: $monthStore,
-        duration: $durationStore,
+        period: $periodStore,
         lng,
         lat,
         boundary: $boundary.id,
@@ -169,10 +138,6 @@
     ).default;
   }
 
-  function handleTabChange(event) {
-    activeTab = event.detail;
-  }
-
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
       locationStore.updateBoundary("locagrid");
@@ -182,111 +147,55 @@
       locationStore.updateLocation(e.detail.location);
     }
   }
-
-  function handleSliderChange(e) {
-    if (e && e.detail && typeof e.detail === "number") {
-      yearStore.set(e.detail);
-    }
-  }
 </script>
 
 {#if $isFetchingStore}
   <Loading />
 {/if}
 
-<Dashboard
-  useTabs="{true}"
-  activeTab="{activeTab}"
-  on:tabChange="{handleTabChange}"
->
-  <!-- Map components -->
-  <div slot="tab_content_map_title" class="block">
-    <MapTitle
-      month="{$month.label}"
+<Dashboard useTabs="{false}">
+  <!-- Chart components -->
+  <div slot="title" class="block title">
+    <ChartTitle
+      title="{chartTitle}"
+      subtitle="{$scenario.desc}"
+      periodLabel="{$period.label}"
+      climvarLabel="{$climvar.label}"
       scenarioLabel="{$scenario.labelLong}"
-      model="{$modelSingleStore}"
-      year="{$yearStore}"
-      duration="{$durationStore}"
-      caveat="{mapCaveat}"
+      loadLocation="{loadLocation}"
     />
   </div>
 
-  <div
-    slot="tab_content_slippy_map"
-    class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
-  >
-    {#if !activeTab}
-      <SnowpackMap bind:mapboxMap imgOverlayPath="{imgOverlayPath}" />
-    {/if}
+  <div slot="stats">
+    <StatsPanel
+      units="{$climvar.units.imperial}"
+      data="{dataByDate}"
+      formatFn="{formatFn}"
+      models="{[DEFAULT_MODEL]}"
+      scenario="{$scenario.id}"
+      isFetching="{$isFetchingStore}"
+    />
   </div>
 
-  <div
-    slot="tab_content_slippy_map_controls"
-    class="graphic block"
-    style="background-color: var(--gray-20);"
-  >
-    {#if !activeTab}
-      <MapTimeSlider
-        bind:this="{timeSlider}"
-        on:change="{handleSliderChange}"
-        on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
-        climvarId="{$climvarStore}"
-        modelId="{$modelSingleStore}"
-        scenarioId="{$scenarioStore}"
-        monthNumber="{$monthStore}"
-        duration="{$durationStore}"
-      />
-    {/if}
-  </div>
-
-  <!-- Chart components -->
-  <div slot="tab_content_title" class="block title">
-    {#if activeTab}
-      <ChartTitle
-        title="{chartTitle}"
-        subtitle="{chartSubtitle}"
-        monthLabel="{$month.label}"
-        scenarioLabel="{$scenario.labelLong}"
-        loadLocation="{loadLocation}"
-      />
-    {/if}
-  </div>
-
-  <div slot="tab_content_stats">
-    {#if activeTab}
-      <StatsPanel
-        {...{
-          units: $climvar.units.imperial,
-          dataByDate,
-          formatFn,
-          models: $modelsStore,
-          isFetching: $isFetchingStore,
-        }}
-      />
-    {/if}
-  </div>
-
-  <div slot="tab_content_graphic" class="graphic block">
-    {#if activeTab}
-      <SnowpackChart
-        data="{$dataStore}"
-        dataByDate="{dataByDate}"
-        formatFn="{formatFn}"
-        units="{$climvar.units.imperial}"
-        label="{$month.label} {$climvar.label}"
-        dataSource="{$titles.join(', ')}"
-        on:showDownload="{loadDownload}"
-        on:showShare="{loadShare}"
-        on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
-        isFetching="{$isFetchingStore}"
-      />
-    {/if}
+  <div slot="graphic" class="graphic block">
+    <ExtendedDroughtChart
+      annotations="{$annotationsStore}"
+      data="{$droughtDataStore}"
+      dataByDate="{dataByDate}"
+      formatFn="{formatFn}"
+      units="{$climvar.units.imperial}"
+      label="{$climvar.label} ({$climvar.units.imperial})"
+      dataSource="{$titles.join(', ')}"
+      on:showDownload="{loadDownload}"
+      on:showShare="{loadShare}"
+      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+      isFetching="{$isFetchingStore}"
+    />
   </div>
 
   <!-- Settings component shared by both Map & Chart -->
   <div slot="settings" class="settings">
     <SettingsPanel
-      activeTab="{activeTab}"
       on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
       on:showLoadLocation="{() => loadLocation()}"
     />

@@ -1,6 +1,26 @@
 <script>
+  import { onMount } from "svelte";
   import { Nav, Footer, BackToTop, SiteAlert } from "~/partials";
   export let segment;
+
+  let scriptAdded = false;
+
+  onMount(() => {
+    // only add Google Analytics in production settings
+    if (process.env.DEPLOY === "prod" && !scriptAdded) {
+      const script = document.createElement("script");
+      script.innerHTML = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-LPTXXNV75J");
+      `;
+      document.body.append(script);
+      scriptAdded = true;
+    }
+  });
 </script>
 
 <svelte:head>

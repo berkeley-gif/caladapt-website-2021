@@ -1,10 +1,12 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
+  import getBbox from "@turf/bbox";
 
-  // Helpers
   import {
     getFeature,
+    getNearestFeature,
+    getStationById,
     searchFeature,
     reverseGeocode,
     getNearestPlace,
@@ -15,21 +17,34 @@
   import { Location } from "~/components/tools/Location";
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
-  // Props
   export let location;
   export let enableUpload = false;
   export let addStateBoundary = false;
   export let boundary;
   export let boundaryList;
+  export let stationsLayer;
   export let open = false;
 
   const dispatch = createEventDispatcher();
 
+  let isStationSelector = Boolean(stationsLayer);
+  let helpText = isStationSelector
+    ? `Select a station on the map or enter an address in the search box to 
+        select the nearest station.`
+    : `Click on the map or enter an address in the search box. To explore data
+        for a larger extent (e.g. county), select a boundary first.`;
+  let headingTitleText = isStationSelector
+    ? "Change Station"
+    : "Change Location";
   let currentLoc = location;
   let currentBoundary = boundary;
   let geocodeResults = [];
   let searchValue = "";
-  let searchPlaceholder = boundary.metadata.placeholder;
+  let searchPlaceholder = isStationSelector
+    ? "Enter place name or address"
+    : boundary
+    ? boundary.metadata.placeholder
+    : null;
   let isSearching = false;
   let showSuggestions = false;
 
@@ -46,10 +61,9 @@
     }
   }
 
-  function clearSearch() {
-    geocodeResults.length = 0;
-    searchValue = "";
-    showSuggestions = false;
+  async function overlayClick(e) {
+    currentLoc = await getStationById(e.detail, stationsLayer.id);
+    currentLoc.bbox = getBbox(currentLoc.geometry);
   }
 
   async function search({ key }) {
@@ -58,20 +72,27 @@
       return;
     }
     if (key !== "Enter") return;
+    const layer = isStationSelector ? stationsLayer : currentBoundary;
     isSearching = true;
     showSuggestions = false;
     geocodeResults.length = 0;
-    geocodeResults = await searchFeature(searchValue, currentBoundary.id);
+    geocodeResults = await searchFeature(searchValue, layer.id);
     // Add groupname for results from all geocoders
     geocodeResults.forEach((item) => {
       if (item.geocoder === "caladapt") {
-        item.category = currentBoundary.metadata.title;
+        item.category = layer.metadata.title;
       } else {
         item.category = "Places & Addresses";
       }
     });
     isSearching = false;
     showSuggestions = true;
+  }
+
+  function clearSearch() {
+    geocodeResults.length = 0;
+    searchValue = "";
+    showSuggestions = false;
   }
 
   // NOTE: a side effect of the boundary type being updated is that it changes
@@ -83,10 +104,9 @@
     let intersectingFeature;
     let nearest;
     let defaultLocation;
-
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
 
-    // do a normal intersection spatial query
+    // first attempt an intersection spatial query
     try {
       intersectingFeature = await getFeature(currentLoc, id);
     } catch (error) {
@@ -123,12 +143,16 @@
   }
 
   async function selectSuggestion(opt) {
-    if (opt) {
-      if (opt.geocoder === "mapbox") {
-        currentLoc = await getFeature(opt, currentBoundary.id);
-      } else {
-        currentLoc = opt;
-      }
+    if (opt.geocoder === "mapbox") {
+      currentLoc = isStationSelector
+        ? await getNearestFeature(
+            opt.center[0],
+            opt.center[1],
+            stationsLayer.id
+          )
+        : await getFeature(opt, currentBoundary.id);
+    } else {
+      currentLoc = opt;
     }
     clearSearch();
   }
@@ -162,7 +186,7 @@
 
     open = false;
     dispatch("change", {
-      boundaryId: currentBoundary.id,
+      ...(currentBoundary && { boundaryId: currentBoundary.id }),
       location: currentLoc,
     });
   }
@@ -172,6 +196,8 @@
     currentBoundary = boundary;
     open = false;
   }
+
+  function noop() {}
 </script>
 
 <style lang="scss">
@@ -248,30 +274,31 @@
   secondaryButtonText="Cancel"
   on:click:button--secondary="{cancel}"
   bind:open
-  modalHeading="Change Location"
+  modalHeading="{headingTitleText}"
   shouldSubmitOnEnter="{false}"
   on:submit="{change}"
   on:open
   on:close
 >
   <div>
-    <p>
-      Click on the map or enter an address in the search box. To explore data
-      for a larger extent (e.g. county), select a boundary first.
-    </p>
-    <div class="change-boundary">
-      <!-- Boundary Selection -->
-      <SelectBoundary
-        selectedId="{currentBoundary.id}"
-        items="{boundaryList}"
-        addStateBoundary="{addStateBoundary}"
-        on:change="{updateBoundary}"
-      />
-      {#if enableUpload}
-        <!-- Upload Boundary -->
-        <UploadBoundary on:upload="{uploadBoundary}" on:clear="{clearUpload}" />
-      {/if}
-    </div>
+    <p>{helpText}</p>
+    {#if !isStationSelector}
+      <div class="change-boundary">
+        <!-- Boundary Selection -->
+        <SelectBoundary
+          selectedId="{currentBoundary.id}"
+          items="{boundaryList}"
+          addStateBoundary="{addStateBoundary}"
+          on:change="{updateBoundary}"
+        />
+        {#if enableUpload}
+          <UploadBoundary
+            on:upload="{uploadBoundary}"
+            on:clear="{clearUpload}"
+          />
+        {/if}
+      </div>
+    {/if}
     <div class="change-location">
       <!-- Search -->
       <div class="search-control">
@@ -329,9 +356,12 @@
         lng="{currentLoc.center[0]}"
         lat="{currentLoc.center[1]}"
         boundary="{currentBoundary}"
+        stations="{stationsLayer}"
         location="{currentLoc}"
         imageOverlayShow="{false}"
-        on:mapclick="{mapClick}"
+        zoomToLocationOnLoad="{!isStationSelector}"
+        on:overlayclick="{isStationSelector ? overlayClick : noop}"
+        on:mapclick="{isStationSelector ? noop : mapClick}"
         on:ready="{() => dispatch('ready')}"
       />
     </div>

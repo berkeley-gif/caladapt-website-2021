@@ -155,7 +155,7 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocation.svelte")
+      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
     ).default;
   }
 
@@ -268,11 +268,11 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.id === 'observed')}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -281,12 +281,12 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           periodId="mid-century"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -295,12 +295,12 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           periodId="end-century"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
     </ul>
@@ -318,6 +318,7 @@
         domainMin: 0,
         niceMax: 10,
       }}"
+      isFetching="{$isFetchingStore}"
     />
     <div class="chart-notes margin--v-32">
       <p>

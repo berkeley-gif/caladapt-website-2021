@@ -1,10 +1,12 @@
 <script context="module">
-  // The preload function takes a
-  // `{ path, params, query }` object and turns it into
-  // the data we need to render the page. It only runs once
-  // during export.
-  import resourcesList from "../../../../content/resources/data";
+  import {
+    DEFAULT_SELECTED_SCENARIO,
+    DEFAULT_SELECTED_PERIOD,
+    TOOL_SLUG,
+  } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
+  import resourcesList from "content/resources/data";
+
   export async function preload({ query }) {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
@@ -15,7 +17,7 @@
       });
 
     // Filter metadata for current tool
-    const tool = toolsList.find((d) => d.slug === "annual-averages");
+    const tool = toolsList.find((d) => d.slug === TOOL_SLUG);
     const relatedTools = toolsList
       .filter((d) => tool.related.includes(d.slug))
       .map((d) => ({ ...d, category: "caladapt" }));
@@ -36,20 +38,22 @@
     // Set intitial config for tool
     let initialConfig;
 
-    if (Object.keys(query).length > 0) {
+    if (Object.keys(query).length) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng } = query;
+      const { boundary, climvar, scenario, lat, lng, period } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
         climvarId: climvar,
-        modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
+        period,
       };
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
+        scenarioId: DEFAULT_SELECTED_SCENARIO,
+        period: DEFAULT_SELECTED_PERIOD,
       };
     }
 
@@ -68,33 +72,31 @@
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
-  // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
 
-  // Components
-  import ExploreData from "./_ExploreData.svelte";
   import {
-    Header,
     About,
-    Resources,
+    Header,
     Help,
+    Resources,
     ToolNavigation,
   } from "~/components/tools/Partials";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
-  // Store
+  import ExploreData from "./_ExploreData.svelte";
+
   import {
-    scenarioStore,
-    modelsStore,
     unitsStore,
     locationStore,
-    dataStore,
     datasetStore,
     isFetchingStore,
+    dataStore,
   } from "../_common/stores";
-  import { climvarStore } from "./_store";
+  import { climvarStore, periodStore, scenarioStore } from "./_store";
+
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
+  import { DEFAULT_MODEL, CLIMATE_VARIABLES_WITH_RATES } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -102,13 +104,13 @@
   export let externalResources;
   export let helpItems;
 
-  // Derived stores
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
+  const { period } = periodStore;
 
-  // Local props
   let appReady = false;
+  let debug = process.env.NODE_ENV !== "production";
 
   // Monitor sections as they enter & leave viewport
   let currentView;
@@ -119,47 +121,64 @@
     }
   };
 
-  // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $modelsStore, $location, update();
+  $: $climvar, $scenario, $locationStore, $periodStore, update();
+
+  $: if (debug) {
+    console.groupCollapsed("STORE UPDATES");
+    console.table($dataStore);
+    console.table($locationStore);
+    console.groupEnd();
+  }
 
   async function update() {
     if (!appReady) return;
-    if ($modelsStore.length === 0) return;
     try {
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
-        modelIds: $modelsStore,
+        periodId: $periodStore,
+        modelIds: [DEFAULT_MODEL],
       };
-      const isRate = $climvarStore === "pr" ? true : false;
+      const isRate = CLIMATE_VARIABLES_WITH_RATES.find(
+        (d) => d === $climvarStore
+      );
+
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
       });
+      params.freq = $period.freq;
+
       isFetchingStore.set(true);
       const envelope = await getEnsemble(config, params, method, isRate);
       const observed = await getObserved(config, params, method, isRate);
-      const modelsData = await getModels(config, params, method, isRate);
-      dataStore.set([...envelope, ...observed, ...modelsData]);
-    } catch (err) {
-      console.log("updateData", err);
-      logException(err);
-      notifier.error("Error", err, 2000);
+      const models = await getModels(config, params, method, isRate);
+      dataStore.set([...envelope, ...observed, ...models]);
+    } catch (error) {
+      console.error("updateData", error);
+      logException(error);
+      notifier.error("Error", error, 2000);
     } finally {
       isFetchingStore.set(false);
     }
   }
 
-  async function initApp(config) {
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } =
-      config;
+  async function initApp({
+    lat,
+    lng,
+    boundaryId,
+    scenarioId,
+    climvarId,
+    period,
+    imperial,
+  }) {
     climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
     unitsStore.set({ imperial });
+    periodStore.set(period);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
@@ -168,30 +187,30 @@
     return;
   }
 
-  onMount(() => {
-    initApp(initialConfig)
-      .then(() => {
-        appReady = true;
-        console.log("app ready");
-      })
-      .catch((error) => {
-        console.log("init error", error);
-        logException(error);
-        dataStore.set([]);
-        notifier.error(
-          "Unable to Load Tool",
-          "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
-          2000
-        );
-      });
-    window.scrollTo(0, 0);
+  onMount(async () => {
+    try {
+      await initApp(initialConfig);
+      appReady = true;
+      if (debug) console.log("app ready");
+      await update();
+    } catch (error) {
+      console.error("init error", error);
+      logException(error);
+      notifier.error(
+        "Unable to Load Tool",
+        "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
+        2000
+      );
+    } finally {
+      window.scrollTo(0, 0);
+    }
   });
 </script>
 
 <svelte:head>
   <title>{tool.title}</title>
   <link
-    href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
+    href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css"
     rel="stylesheet"
   />
 </svelte:head>
@@ -199,9 +218,7 @@
 <Header
   iconPaths="{tool.icons}"
   title="{tool.title}"
-  description="Explore projected changes in annual average Maximum Temperature, 
-    Minimum Temperature and Precipitation through end of this century for 
-    California."
+  description="California has a highly variable climate and is susceptible to dry spells. Recent research suggests that extended drought occurrence (“mega-drought”) could become more pervasive in future decades. This tool explores data for two 20-year drought scenarios derived from LOCA downscaled meteorological and hydrological simulations."
 />
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
@@ -222,34 +239,35 @@
     >
       <div slot="description">
         <p>
-          Overall temperatures are projected to rise substantially throughout
-          this century. These projections differ depending on the time of year
-          and the type of measurement (highs vs. lows), all of which have
-          different potential effects to the state's ecosystem health,
-          agricultural production, water use and availability, and energy
-          demand. On average, the projections show little change in total annual
-          precipitation in California. Furthermore, among several models,
-          precipitation projections do not show a consistent trend during the
-          next century. The Mediterranean seasonal precipitation pattern is
-          expected to continue, with most precipitation falling during winter
-          from North Pacific storms. However, even modest changes would have a
-          significant impact because California ecosystems are conditioned to
-          historical precipitation levels and water resources are nearly fully
-          utilized.
+          Climate simulations and scenarios produced for <a
+            href="http://www.climateassessment.ca.gov/"
+            target="_blank">California's Fourth Climate Change Assessment</a
+          >
+          enable investigation of extreme, highly damaging climate changes that are
+          possible but unlikely. One of these
+          <em>low probability, high consequence events</em> is extreme drought.
         </p>
         <p>
-          With this tool you can explore projections of annually averaged
-          maximum temperature, minimum temperature and precipitation. These
-          climate projections have been downscaled from global climate models
-          from the <a href="https://pcmdi.llnl.gov/mips/cmip5/" target="_blank"
-            >CMIP5</a
-          >
-          archive, using the
-          <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
-            >Localized Constructed Analogs</a
-          > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
-          LOCA is a statistical downscaling technique that uses past history to add
-          improved fine-scale detail to global climate models.
+          To explore extreme drought in a warmer future, two 20-year drought
+          scenarios were produced from the LOCA downscaled meteorological and
+          hydrological simulations (<a
+            href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf"
+            target="_blank">Pierce et al, 2018</a
+          >). The first scenario covers the later part of this century from
+          2051-2070 and was derived from LOCA downscaled HadGEM2-ES RCP 8.5
+          simulation. The second scenario covers the earlier part of this
+          century from 2023-2042. The precipitation during this scenario is
+          daily LOCA downscaled precipitation in the sequence that it occurred
+          from 2051-2070. However, the maximum and minimum temperatures are an
+          adjusted version of 2051-2070 scenario that takes into account climate
+          warming over the century.
+        </p>
+        <p>
+          A more detailed description about the drought scenarios is available
+          in the technical Report on <a
+            href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-006_ADA.pdf"
+            target="_blank">Climate, Drought, and Sea Level Rise Scenarios</a
+          > prepared for California's Fourth Climate Change Assessment.
         </p>
       </div>
     </About>

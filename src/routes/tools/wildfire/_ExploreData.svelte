@@ -164,7 +164,7 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocation.svelte")
+      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
     ).default;
   }
 
@@ -286,6 +286,7 @@
           dataByDate,
           formatFn,
           models: $modelsStore,
+          isFetching: $isFetchingStore,
         }}
       />
     {/if}
@@ -305,6 +306,7 @@
         on:showDownload="{loadDownload}"
         on:showShare="{loadShare}"
         on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+        isFetching="{$isFetchingStore}"
       />
     {/if}
   </div>

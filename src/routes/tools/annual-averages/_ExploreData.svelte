@@ -36,6 +36,7 @@
     dataStore,
     modelsStore,
     datasetStore,
+    isFetchingStore,
   } from "../_common/stores";
   import { climvarList, climvarStore } from "./_store";
 
@@ -44,7 +45,6 @@
   const { scenario } = scenarioStore;
   const { titles } = datasetStore;
 
-  let isLoading = true;
   let dataByDate;
   let showDownload = false;
   let showShare = false;
@@ -101,7 +101,7 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocation.svelte")
+      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
     ).default;
   }
 
@@ -127,10 +127,8 @@
 
   $: if ($dataStore) {
     dataByDate = groupDataByYear(flattenData($dataStore));
-    isLoading = false;
   } else {
     dataByDate = null;
-    isLoading = true;
   }
 
   function changeScenario(e) {
@@ -160,7 +158,7 @@
   }
 </script>
 
-{#if isLoading}
+{#if $isFetchingStore}
   <Loading />
 {/if}
 
@@ -192,11 +190,11 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -205,12 +203,12 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           periodId="mid-century"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
       <li class="block">
@@ -219,12 +217,12 @@
           data="{dataByDate
             ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
             : null}"
-          isHistorical="{true}"
           groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
           periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
           periodId="end-century"
           format="{formatFn}"
           models="{$modelsStore}"
+          isFetching="{$isFetchingStore}"
         />
       </li>
     </ul>
@@ -240,6 +238,7 @@
         tickFormat: formatFn,
         units: `${$climvar.units.imperial}`,
       }}"
+      isFetching="{$isFetchingStore}"
     />
 
     <div class="chart-notes margin--v-32">
