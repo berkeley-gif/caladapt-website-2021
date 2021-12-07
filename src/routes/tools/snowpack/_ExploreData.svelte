@@ -148,7 +148,7 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocation.svelte")
+      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
     ).default;
   }
 

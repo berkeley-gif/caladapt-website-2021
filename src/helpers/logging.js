@@ -10,3 +10,10 @@ export const logException = (error, fatal = false) => {
     }
   }
 };
+
+export const logGetFeatureErr = (coords, id) => {
+  if (Array.isArray(coords) && coords.length) {
+    coords = coords.join(",");
+  }
+  logException(`getFeature failed: ${coords}; ${id}`);
+};
