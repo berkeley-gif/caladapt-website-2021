@@ -93,3 +93,11 @@ Because of that, it's essential that the bundler doesn't treat the package as an
 ```bash
 npm install -D @sveltejs/svelte-virtual-list
 ```
+
+## Code Credits
+
+This project began as a [Svelte Sapper template](https://github.com/sveltejs/sapper-template) and borrows code from both the [Svelte](https://svelte.dev/docs) and [Sapper](https://sapper.svelte.dev/docs) documentation, both of which are copyright 2016 – present, [Svelte](<(https://github.com/sveltejs/svelte/graphs/contributors)>) and [Sapper](<(https://github.com/sveltejs/sapper/graphs/contributors)>) contributors.
+
+Some code relating to [Charting components](./src/components/tools/Charts/) for the dashboards has been borrowed from the [Svelte Layer Cake library](https://layercake.graphics), copyright 2021 Michael Keller under the MIT License.
+
+Some code relating to the [Map Legend component](./src/components/tools/Map/Legend.svelte) was borrowed from the ObservableHQ [Color-Legend](https://observablehq.com/@d3/color-legend) developed by Mike Bostock, copyright 2019–2020 Observable, Inc.
