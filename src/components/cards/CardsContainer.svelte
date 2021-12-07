@@ -23,6 +23,9 @@
   }
 </style>
 
-<ul style="--gap:{gridGap}rem; --card-width:{cardWidth}rem">
+<ul
+  class="card--list--container"
+  style="--gap:{gridGap}rem; --card-width:{cardWidth}rem"
+>
   <slot />
 </ul>
