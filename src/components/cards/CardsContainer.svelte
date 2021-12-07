@@ -24,7 +24,7 @@
 </style>
 
 <ul
-  class="card--list--container"
+  class="cards-container-list"
   style="--gap:{gridGap}rem; --card-width:{cardWidth}rem"
 >
   <slot />
