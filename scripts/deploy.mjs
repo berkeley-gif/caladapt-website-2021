@@ -16,6 +16,7 @@
  * npm run deploy -- --help
  * npm run deploy -- --location=dev
  * npm run deploy -- --location=beta --transfer=false
+ * npm run deploy -- --location=prod --build=false
  */
 
 import { $ } from "zx";
@@ -59,7 +60,8 @@ async function usage(message) {
   if (message) {
     console.log(message);
   }
-  console.log("Usage: zx deploy.mjs --location=<string> --transfer=<boolean>");
+  console.log("Usage: zx deploy.mjs --location=<string> --transfer=<boolean> --build=<boolean>");
+  console.log("--location is required; --transfer & --build are optional, both default to true");
   await $`exit 0`;
 }
 
@@ -82,6 +84,7 @@ async function transfer(subdomain) {
     const domain = subdomain ? `${subdomain}.${BASE_URI}` : BASE_URI;
     await $`rsync \
       -avz ${SAPPER_EXPORT_DIR} \
+      --delete \
       ${USER}@${DEPLOY_URI}:${DIR}${domain}/`;
   } else {
     console.log("transfer disabled via --transfer option, exiting");
