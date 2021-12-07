@@ -75,6 +75,7 @@
   img.workshop {
     max-width: 100%;
     margin: 1rem 0;
+    height: auto;
   }
 
   img.report {
