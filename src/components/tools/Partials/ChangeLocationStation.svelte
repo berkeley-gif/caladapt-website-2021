@@ -9,7 +9,6 @@
     getStationById,
     searchFeature,
     reverseGeocode,
-    getNearestPlace,
     getTitle,
   } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
@@ -125,7 +124,7 @@
     let nearest;
     let defaultLocation;
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
-
+    // Set current location after current boundary has changed
     // first attempt an intersection spatial query
     try {
       intersectingFeature = await getFeature(currentLoc, id);
@@ -137,22 +136,26 @@
       currentLoc = intersectingFeature;
       return;
     }
-    // most likely this is a place boundary type if no intersection was found
-    if (!intersectingFeature && id === "place") {
+    // if intersection fails, try a nearest neighbor spatial query
+    // most likey this is for when id === "place"
+    if (id === "place") {
       try {
-        nearest = await getNearestPlace(currentLoc);
+        const {
+          center: [lng, lat],
+        } = currentLoc;
+        nearest = await getNearestFeature(lng, lat, id);
       } catch (error) {
         logException(
-          `getNearestPlace failed: ${
+          `getNearestFeature failed: ${
             currentLoc && currentLoc.center && currentLoc.center.join(",")
           }`
         );
         console.error(error.message);
       }
-    }
-    if (nearest) {
-      currentLoc = nearest;
-      return;
+      if (nearest) {
+        currentLoc = nearest;
+        return;
+      }
     }
     // as a last resort use the default location's center to set the current location
     try {
