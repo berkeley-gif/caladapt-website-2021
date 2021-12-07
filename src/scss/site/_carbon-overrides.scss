@@ -46,7 +46,7 @@
 }
 
 .content {
-  ul:not(.bx--tabs__nav):not(.card--list--container),
+  ul:not(.bx--tabs__nav):not(.card--list--container):not(.prev-next--container),
   ol:not(.bx--tabs__nav) {
     padding-left: 2rem;
     margin-bottom: 1rem;
