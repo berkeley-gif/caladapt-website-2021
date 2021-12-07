@@ -1,7 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
-  import getBbox from "@turf/bbox";
 
   import {
     getFeature,
@@ -9,10 +8,13 @@
     getStationById,
     searchFeature,
     reverseGeocode,
+    getTitle,
   } from "~/helpers/geocode";
+  import { logException, logGetFeatureErr } from "~/helpers/logging";
 
   import { SelectBoundary, UploadBoundary } from "~/components/tools/Settings";
   import { Location } from "~/components/tools/Location";
+  import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
   export let location;
   export let enableUpload = false;
@@ -45,15 +47,27 @@
   let isSearching = false;
   let showSuggestions = false;
 
-  async function overlayClick(e) {
-    currentLoc = await getStationById(e.detail, stationsLayer.id);
-    currentLoc.bbox = getBbox(currentLoc.geometry);
+  async function mapClick({ detail: center }) {
+    const { id } = currentBoundary;
+    let newLocation;
+    try {
+      newLocation = await getFeature({ center }, id);
+    } catch (error) {
+      console.error(error.message);
+      logGetFeatureErr(center, id);
+    }
+    if (newLocation) {
+      currentLoc = newLocation;
+    }
   }
 
-  async function mapClick(e) {
-    const addresses = await reverseGeocode(`${e.detail[0]}, ${e.detail[1]}`);
-    const feature = addresses.features[0];
-    currentLoc = await getFeature(feature, currentBoundary.id);
+  async function overlayClick({ detail: stationId }) {
+    try {
+      currentLoc = await getStationById(stationId, stationsLayer.id);
+    } catch (error) {
+      console.error(error.message);
+      logException(`getStationById failed: ${stationId}; ${stationsLayer.id}`);
+    }
   }
 
   async function search({ key }) {
@@ -66,17 +80,26 @@
     isSearching = true;
     showSuggestions = false;
     geocodeResults.length = 0;
-    geocodeResults = await searchFeature(searchValue, layer.id);
-    // Add groupname for results from all geocoders
-    geocodeResults.forEach((item) => {
-      if (item.geocoder === "caladapt") {
-        item.category = layer.metadata.title;
-      } else {
-        item.category = "Places & Addresses";
-      }
-    });
-    isSearching = false;
-    showSuggestions = true;
+    try {
+      geocodeResults = await searchFeature(searchValue, layer.id);
+      // Add groupname for results from all geocoders
+      geocodeResults &&
+        geocodeResults.forEach((item) => {
+          if (item.geocoder === "caladapt") {
+            item.category = layer.metadata.title;
+          } else {
+            item.category = "Places & Addresses";
+          }
+        });
+    } catch (error) {
+      console.error(error.message);
+      logException(
+        `searchFeature failed: ${searchValue}, ${layer && layer.id}`
+      );
+    } finally {
+      isSearching = false;
+      showSuggestions = true;
+    }
   }
 
   function clearSearch() {
@@ -85,40 +108,114 @@
     showSuggestions = false;
   }
 
-  async function updateBoundary(e) {
-    if (!e.detail) return;
-    const { lng, lat } = currentLoc.center;
-    currentBoundary = e.detail;
+  // NOTE: a side effect of the boundary type being updated is that it changes
+  // the value of the currentLoc reactive variable
+  async function updateBoundary(event) {
+    if (!event.detail) return;
+    currentBoundary = event.detail;
+    const { id } = currentBoundary;
+    let intersectingFeature;
+    let nearest;
+    let defaultLocation;
     searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
-    const intersectingFeature = await getFeature(
-      currentLoc,
-      currentBoundary.id
-    );
+    // Set current location after current boundary has changed
+    // first attempt an intersection spatial query
+    try {
+      intersectingFeature = await getFeature(currentLoc, id);
+    } catch (error) {
+      logGetFeatureErr(currentLoc && currentLoc.center, id);
+      console.error(error.message);
+    }
     if (intersectingFeature) {
       currentLoc = intersectingFeature;
-    } else {
-      const nearestFeature = await getNearestFeature(
-        lng,
-        lat,
-        currentBoundary.id
+      return;
+    }
+    // if intersection fails, try a nearest neighbor spatial query
+    // most likey this is for when id === "place"
+    if (id === "place") {
+      try {
+        const {
+          center: [lng, lat],
+        } = currentLoc;
+        nearest = await getNearestFeature(lng, lat, id);
+      } catch (error) {
+        logException(
+          `getNearestFeature failed: ${
+            currentLoc && currentLoc.center && currentLoc.center.join(",")
+          }`
+        );
+        console.error(error.message);
+      }
+      if (nearest) {
+        currentLoc = nearest;
+        return;
+      }
+    }
+    // as a last resort use the default location's center to set the current location
+    try {
+      defaultLocation = await getFeature(
+        { center: DEFAULT_LOCATION.center },
+        id
       );
-      currentLoc = nearestFeature;
+    } catch (error) {
+      logGetFeatureErr(DEFAULT_LOCATION.center, id);
+      console.error(error.message);
+    }
+    if (defaultLocation) {
+      currentLoc = defaultLocation;
     }
   }
 
   async function selectSuggestion(opt) {
-    if (opt.geocoder === "mapbox") {
-      currentLoc = isStationSelector
-        ? await getNearestFeature(
-            opt.center[0],
-            opt.center[1],
-            stationsLayer.id
-          )
-        : await getFeature(opt, currentBoundary.id);
+    if (opt && opt.geocoder === "mapbox") {
+      try {
+        currentLoc = isStationSelector
+          ? await getNearestFeature(
+              opt.center[0],
+              opt.center[1],
+              stationsLayer.id
+            )
+          : await getFeature(opt, currentBoundary.id);
+      } catch (error) {
+        logGetFeatureErr(opt.center, currentBoundary && currentBoundary.id);
+        console.error(error.message);
+      }
     } else {
       currentLoc = opt;
     }
     clearSearch();
+  }
+
+  async function assignLocationTitle(location, boundaryId) {
+    const { center } = location;
+    const { place_name } = (await reverseGeocode(`${center[0]}, ${center[1]}`))
+      .features[0];
+    location.title = getTitle(location, boundaryId, place_name);
+  }
+
+  async function change() {
+    // get name for locagrid cell here via reverseGeocode
+    if (
+      currentBoundary &&
+      currentBoundary.id === "locagrid" &&
+      !currentLoc.title
+    ) {
+      try {
+        await assignLocationTitle(currentLoc, currentBoundary.id);
+      } catch (error) {
+        logException(
+          `AssignLocationTitle failed: ${
+            currentLoc && currentLoc.center && currentLoc.center.join(",")
+          }, ${currentBoundary && currentBoundary.id}`
+        );
+        console.error(error.message);
+      }
+    }
+    open = false;
+    dispatch("change", {
+      ...(currentBoundary && { boundaryId: currentBoundary.id }),
+      location: currentLoc,
+    });
   }
 
   function uploadBoundary(e) {
@@ -129,14 +226,6 @@
   function clearUpload() {
     currentLoc = location;
     currentBoundary = boundary;
-  }
-
-  function change() {
-    open = false;
-    dispatch("change", {
-      ...(currentBoundary && { boundaryId: currentBoundary.id }),
-      location: currentLoc,
-    });
   }
 
   function cancel() {
@@ -252,7 +341,8 @@
       <div class="search-control">
         <Search
           size="sm"
-          id="search"
+          id="location-search"
+          labelText="{searchPlaceholder}"
           placeholder="{searchPlaceholder}"
           on:keydown="{search}"
           on:clear="{clearSearch}"
@@ -280,10 +370,7 @@
                   {/each}
                 {:else}
                   <li>
-                    <div
-                      class="suggestion"
-                      on:click="{() => selectSuggestion()}"
-                    >
+                    <div class="suggestion" on:click="{() => clearSearch()}">
                       <div class="suggestion-nodata">No Results Found</div>
                     </div>
                   </li>
