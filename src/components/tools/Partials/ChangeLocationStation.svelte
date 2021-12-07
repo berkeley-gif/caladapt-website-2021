@@ -167,7 +167,7 @@
   }
 
   async function selectSuggestion(opt) {
-    if (opt.geocoder === "mapbox") {
+    if (opt && opt.geocoder === "mapbox") {
       try {
         currentLoc = isStationSelector
           ? await getNearestFeature(
@@ -193,16 +193,6 @@
     location.title = getTitle(location, boundaryId, place_name);
   }
 
-  function uploadBoundary(e) {
-    currentBoundary = { id: "custom" };
-    currentLoc = e.detail.location;
-  }
-
-  function clearUpload() {
-    currentLoc = location;
-    currentBoundary = boundary;
-  }
-
   async function change() {
     // get name for locagrid cell here via reverseGeocode
     if (
@@ -221,12 +211,21 @@
         console.error(error.message);
       }
     }
-
     open = false;
     dispatch("change", {
       ...(currentBoundary && { boundaryId: currentBoundary.id }),
       location: currentLoc,
     });
+  }
+
+  function uploadBoundary(e) {
+    currentBoundary = { id: "custom" };
+    currentLoc = e.detail.location;
+  }
+
+  function clearUpload() {
+    currentLoc = location;
+    currentBoundary = boundary;
   }
 
   function cancel() {
