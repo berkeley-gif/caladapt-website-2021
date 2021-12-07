@@ -64,6 +64,7 @@
     flex-direction: column;
     text-align: center;
     padding: 1rem;
+    line-height: 1.5;
   }
 </style>
 
