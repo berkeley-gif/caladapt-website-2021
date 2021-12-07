@@ -83,13 +83,14 @@
     try {
       geocodeResults = await searchFeature(searchValue, layer.id);
       // Add groupname for results from all geocoders
-      geocodeResults.forEach((item) => {
-        if (item.geocoder === "caladapt") {
-          item.category = layer.metadata.title;
-        } else {
-          item.category = "Places & Addresses";
-        }
-      });
+      geocodeResults &&
+        geocodeResults.forEach((item) => {
+          if (item.geocoder === "caladapt") {
+            item.category = layer.metadata.title;
+          } else {
+            item.category = "Places & Addresses";
+          }
+        });
     } catch (error) {
       console.error(error.message);
       logException(
