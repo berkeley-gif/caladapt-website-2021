@@ -125,7 +125,7 @@ async function deployNetlify() {
 async function deployProd() {
   try {
     await sapperExport();
-    await transfer("prod");
+    await transfer();
     await $`exit 0`;
   } catch (error) {
     handleError(error);
