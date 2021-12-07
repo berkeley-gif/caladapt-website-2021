@@ -371,10 +371,7 @@
                   {/each}
                 {:else}
                   <li>
-                    <div
-                      class="suggestion"
-                      on:click="{() => selectSuggestion()}"
-                    >
+                    <div class="suggestion" on:click="{() => clearSearch()}">
                       <div class="suggestion-nodata">No Results Found</div>
                     </div>
                   </li>
