@@ -1,7 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
-  import getBbox from "@turf/bbox";
 
   import {
     getFeature,
@@ -68,12 +67,6 @@
     } catch (error) {
       console.error(error.message);
       logException(`getStationById failed: ${stationId}; ${stationsLayer.id}`);
-    }
-    try {
-      currentLoc.bbox = getBbox(currentLoc.geometry);
-    } catch (error) {
-      console.error(error.message);
-      logException(`getBbox failed for station ${stationId}`);
     }
   }
 
