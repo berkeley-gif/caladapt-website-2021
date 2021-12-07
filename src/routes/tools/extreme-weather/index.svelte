@@ -57,6 +57,7 @@
 
   // Helpers
   import { getStationById } from "~/helpers/geocode";
+  import { logException } from "~/helpers/logging";
 
   // Components
   import { Header, About, ToolNavigation } from "~/components/tools/Partials";
@@ -148,6 +149,7 @@
     } catch (err) {
       // TODO: notify user of error
       console.log("updateData", err);
+      logException(err);
       notifier.error("Error", err, 2000);
     } finally {
       isFetchingStore.set(false);
@@ -179,6 +181,7 @@
       })
       .catch((error) => {
         console.log("init error", error);
+        logException(error);
         notifier.error(
           "Unable to Load Tool",
           "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
@@ -231,7 +234,8 @@
         <p>
           Annual Maximum values of the climate variable from a 21 day window
           around the day of interest are extracted from a 30 year daily
-          timeseries for the Baseline Period (1991–2020). A GEV distribution is
+          timeseries for the Baseline Period (1991–2020). A GEV distribution for
+          Temperature and an inverted Weibull distribution for Wind Speed is
           applied to this time series. Shape and scale parameters for the
           distribution are estimated using the Maximum Likelihood method.
           Exceedance Probabilities for different threshold values (return

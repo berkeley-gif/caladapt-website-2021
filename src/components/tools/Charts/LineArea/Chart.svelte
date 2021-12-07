@@ -6,6 +6,13 @@
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { isEmptyData } from "~/helpers/utilities";
+  import {
+    DEFAULT_X_MIN,
+    DEFAULT_X_MAX,
+    DEFAULT_Y_MIN,
+    DEFAULT_Y_MAX,
+  } from "~/routes/tools/_common/constants";
 
   import Line from "./Line.svelte";
   import Area from "./Area.svelte";
@@ -13,6 +20,7 @@
   import AxisY from "./AxisY.svelte";
   import Tooltip from "../Shared/Tooltip.svelte";
   import Legend from "../Shared/Legend.svelte";
+  import Annotations from "../Shared/Annotation/Annotations.svelte";
 
   export let data;
   export let height = "350px";
@@ -23,17 +31,23 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: (d) => d,
     units: "",
   };
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  export let annotations;
+  export let isFetching = false;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -46,41 +60,66 @@
 
   let noData = false;
 
-  $: if (Array.isArray(data) && isEmptyData(data)) {
+  $: if (isEmptyData(data)) {
     noData = true;
-    xmin = new Date(Date.UTC(1950, 0, 1));
-    xmax = new Date(Date.UTC(2099, 0, 1));
-    ymin = 10;
-    ymax = 50;
+    xmin = DEFAULT_X_MIN;
+    xmax = DEFAULT_X_MAX;
+    ymin = DEFAULT_Y_MIN;
+    ymax = DEFAULT_Y_MAX;
     lineData = [];
     areaData = [];
     legendItems.set([]);
     setContext("Legend", legendItems);
   }
 
-  $: if (Array.isArray(data) && !isEmptyData(data)) {
+  $: if (!isEmptyData(data)) {
     noData = false;
+
     // Set X Domain
-    xmin = min(data, (arr) => min(arr.values, (d) => d.date));
-    xmax = max(data, (arr) => max(arr.values, (d) => d.date));
-    if (xAxis.baseValue === 0) {
-      xmin = xAxis.baseValue;
+    if (xAxis.domainMin instanceof Date && !isNaN(xAxis.domainMin)) {
+      xmin = xAxis.domainMin;
+    } else {
+      xmin = min(data, (arr) => min(arr.values, (d) => d.date));
+    }
+
+    if (xAxis.domainMax instanceof Date && !isNaN(xAxis.domainMax)) {
+      xmax = xAxis.domainMax;
+    } else {
+      xmax = max(data, (arr) => max(arr.values, (d) => d.date));
+    }
+
+    if (
+      xAxis.niceMax instanceof Date &&
+      !isNaN(xAxis.niceMax) &&
+      xAxis.niceMax > xmax
+    ) {
+      xmax = xAxis.niceMax;
     }
 
     // Set Y Domain
-    ymax = max(data, (arr) =>
-      max(arr.values, (d) => ("max" in d ? d.max : d.value))
-    );
-    if (typeof yAxis.baseValue === "number" && !isNaN(yAxis.baseValue)) {
-      ymin = yAxis.baseValue;
+    if (typeof yAxis.domainMin === "number" && !isNaN(yAxis.domainMin)) {
+      ymin = yAxis.domainMin;
     } else {
       ymin = min(data, (arr) =>
         min(arr.values, (d) => ("min" in d ? d.min : d.value))
       );
     }
 
-    ymin = +yAxis.tickFormat(ymin);
-    ymax = +yAxis.tickFormat(ymax);
+    if (typeof yAxis.domainMax === "number" && !isNaN(yAxis.domainMax)) {
+      ymax = yAxis.domainMax;
+    } else {
+      ymax = max(data, (arr) =>
+        max(arr.values, (d) => ("max" in d ? d.max : d.value))
+      );
+    }
+
+    if (
+      typeof yAxis.niceMax === "number" &&
+      !isNaN(yAxis.niceMax) &&
+      yAxis.niceMax > ymax
+    ) {
+      ymax = yAxis.niceMax;
+    }
 
     // Set Legend
     legendItems.set(
@@ -98,12 +137,6 @@
 
     lineData = data.filter((d) => d.mark === "line");
     areaData = data.filter((d) => d.mark === "area");
-  }
-
-  function isEmptyData(_data) {
-    return (
-      !_data.length || Math.max(..._data.map((d) => d.values.length)) === 0
-    );
   }
 
   function getTooltipLabel(d) {
@@ -133,7 +166,7 @@
   }
 </script>
 
-{#if data}
+{#if data && !isFetching}
   <div
     class:no-data="{noData}"
     style="{`height:${height}`}"
@@ -177,6 +210,9 @@
           {/if}
         </g>
       </Svg>
+      {#if Array.isArray(annotations) && annotations.length}
+        <Annotations annotations="{annotations}" />
+      {/if}
       <Html>
         <Tooltip
           dataset="{dataByDate}"
@@ -196,7 +232,6 @@
     <SkeletonPlaceholder style="height:100%;width:100%;" />
   </div>
   <div class="chart-legend margin--v-16">
-    <SkeletonText />
     <SkeletonText />
   </div>
 {/if}

@@ -4,6 +4,7 @@
 
   // Helpers
   import { mapboxgl, contextKey } from "./../../../helpers/mapbox";
+  import { logException } from "~/helpers/logging";
 
   setContext(contextKey, {
     getMap: () => map,
@@ -88,10 +89,18 @@
   }
 
   onMount(() => {
-    if (!mapboxgl.supported()) {
-      throw new Error("Your browser does not support Mapbox GL");
+    if (!mapboxgl.supported() && window.alert) {
+      alert(`Your browser does not support our Web Maps. 
+        Please try using another browser.`);
     } else {
       const el = new mapboxgl.Map({ ...options, container, style });
+
+      el.on("error", (error) => {
+        logException(
+          `mapboxgl error: ${error.error.message} sourceId: ${error.sourceId}`
+        );
+        console.warn("mapboxgl error: ", error);
+      });
 
       el.on("load", () => {
         map = el;
@@ -138,7 +147,7 @@
     }
 
     return () => {
-      map.remove();
+      map && map.remove();
     };
   });
 </script>

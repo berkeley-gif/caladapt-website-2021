@@ -80,7 +80,8 @@
   import { inview } from "svelte-inview/dist/";
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
-  import { logStores, logSingleStore } from "~/helpers/utilities";
+  import { logStores } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
 
   import {
     About,
@@ -107,11 +108,13 @@
     simulationStore,
     modelSingleStore,
     monthStore,
+    pctndStore,
     stateBoundaryStore,
     yearStore,
   } from "./_store";
 
   import { getStateBoundary, getModels, getQueryParams } from "./_data";
+  import { getAvgPctNoData } from "./_helpers";
 
   export let initialConfig;
   export let tool;
@@ -148,6 +151,7 @@
     logStores(
       climvarStore,
       monthStore,
+      pctndStore,
       simulationStore,
       locationStore,
       modelsStore,
@@ -159,8 +163,6 @@
   async function update() {
     if (!appReady || !$modelsStore.length) return;
     try {
-      dataStore.set(null);
-
       const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
@@ -181,8 +183,10 @@
       isFetchingStore.set(true);
       const models = await getModels(config, params, method);
       dataStore.set(models);
+      pctndStore.set(getAvgPctNoData($dataStore));
     } catch (error) {
       console.error("updateData", error);
+      logException(error);
       notifier.error("Error", error, 2000);
     } finally {
       isFetchingStore.set(false);
@@ -235,6 +239,7 @@
       await update();
     } catch (error) {
       console.error("init error", error);
+      logException(error);
       notifier.error(
         "Unable to Load Tool",
         "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",

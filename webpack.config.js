@@ -4,6 +4,8 @@ const path = require("path");
 const config = require("sapper/config/webpack.js");
 const pkg = require("./package.json");
 const sveltePreprocess = require("svelte-preprocess");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const featureFlags = require("./featureFlags.json");
 
@@ -83,8 +85,13 @@ module.exports = {
         "process.browser": true,
         "process.env": {
           NODE_ENV: JSON.stringify(mode),
+          DEPLOY: JSON.stringify(deploy),
           ...featureFlags[deploy],
         },
+      }),
+      new BundleAnalyzerPlugin({
+        openAnalyzer: false,
+        analyzerMode: mode !== "development" ? "disabled" : "server",
       }),
     ].filter(Boolean),
     devtool: dev && "inline-cheap-module-source-map",

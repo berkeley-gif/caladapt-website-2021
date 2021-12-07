@@ -1,6 +1,12 @@
-### Running the project
+# Cal-Adapt Website 2021
 
-Once you have created the project, install dependencies and run the project in development mode:
+Source code for the 2021 redesign of [cal-adapt.org](https://cal-adapt.org).
+
+This project was bootstrapped with the [Sapper framework](https://sapper.svelte.dev/) for [SvelteJS](https://svelte.dev).
+
+## Running the project
+
+Once you have cloned the project, install dependencies and run the project in development mode:
 
 ```bash
 cd cal-adapt-website-2021
@@ -25,6 +31,16 @@ npm run deploy-dev
 ```
 
 This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
+
+## Bundle Analyzer
+
+To inspect the bundled JavaScript code first run the `dev` script:
+
+```bash
+npm run dev
+```
+
+Then open your browser to `http://127.0.0.1:8888` or whatever address is outputted by Webpack Bundle Analyzer in the terminal.
 
 ## Directory structure
 
@@ -77,3 +93,11 @@ Because of that, it's essential that the bundler doesn't treat the package as an
 ```bash
 npm install -D @sveltejs/svelte-virtual-list
 ```
+
+## Code Credits
+
+This project began as a [Svelte Sapper template](https://github.com/sveltejs/sapper-template) and borrows some code from both the [Svelte](https://svelte.dev/docs) and [Sapper](https://sapper.svelte.dev/docs) documentation, both of which are copyright 2016 – present, [Svelte](https://github.com/sveltejs/svelte/graphs/contributors) and [Sapper](https://github.com/sveltejs/sapper/graphs/contributors) contributors under the MIT License.
+
+Some code relating to [Charting components](./src/components/tools/Charts/) for the dashboards has been borrowed from the [Svelte Layer Cake library](https://layercake.graphics), copyright 2021 Michael Keller under the MIT License.
+
+Some code relating to the [Map Legend component](./src/components/tools/Map/Legend.svelte) was borrowed from the ObservableHQ [Color-Legend](https://observablehq.com/@d3/color-legend) developed by Mike Bostock, copyright 2019–2020 Observable, Inc. under the ISC License.

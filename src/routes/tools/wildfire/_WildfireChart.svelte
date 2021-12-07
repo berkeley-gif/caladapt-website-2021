@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { Button } from "carbon-components-svelte";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import { Download16, Share16 } from "carbon-icons-svelte";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { EXPLAIN_CHART } from "./_constants";
@@ -14,6 +14,7 @@
   export let simulation;
   export let month;
   export let climvarId;
+  export let isFetching;
 
   const dispatch = createEventDispatcher();
 
@@ -42,7 +43,10 @@
     label,
     tickFormat: formatFn,
     units,
+    domainMin: 0,
+    niceMax: 1,
   }}"
+  isFetching="{isFetching}"
 />
 
 <div class="chart-notes margin--v-8">

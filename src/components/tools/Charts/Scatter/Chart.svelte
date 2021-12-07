@@ -6,6 +6,13 @@
   import { min, max } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { isEmptyData } from "~/helpers/utilities";
+  import {
+    DEFAULT_X_MIN,
+    DEFAULT_X_MAX,
+    DEFAULT_Y_MIN,
+    DEFAULT_Y_MAX,
+  } from "~/routes/tools/_common/constants";
 
   import Scatter from "./Scatter.svelte";
   import AxisX from "./AxisX.svelte";
@@ -22,17 +29,22 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: (d) => d,
     units: "",
   };
   export let xAxis = {
     key: "date",
     label: "XAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: timeFormat("%Y"),
     units: "",
   };
+  export let isFetching = false;
 
   let chartContainer;
   const legendItems = writable(null);
@@ -41,19 +53,66 @@
   let ymin;
   let ymax;
 
-  $: if (data) {
+  let noData = false;
+
+  $: if (isEmptyData(data)) {
+    noData = true;
+    xmin = DEFAULT_X_MIN;
+    xmax = DEFAULT_X_MAX;
+    ymin = DEFAULT_Y_MIN;
+    ymax = DEFAULT_Y_MAX;
+    data = [];
+    legendItems.set([]);
+    setContext("Legend", legendItems);
+  }
+
+  $: if (!isEmptyData(data)) {
+    noData = false;
+
     // Set X Domain
-    xmin = min(data, (arr) => min(arr.values, (d) => d.date));
-    xmax = max(data, (arr) => max(arr.values, (d) => d.date));
-    if (xAxis.baseValue === 0) {
-      xmin = xAxis.baseValue;
+    if (xAxis.domainMin instanceof Date && !isNaN(xAxis.domainMin)) {
+      xmin = xAxis.domainMin;
+    } else {
+      xmin = min(data, (arr) => min(arr.values, (d) => d.date));
+    }
+
+    if (xAxis.domainMax instanceof Date && !isNaN(xAxis.domainMax)) {
+      xmax = xAxis.domainMax;
+    } else {
+      xmax = max(data, (arr) => max(arr.values, (d) => d.date));
+    }
+
+    if (
+      xAxis.niceMax instanceof Date &&
+      !isNaN(xAxis.niceMax) &&
+      xAxis.niceMax > xmax
+    ) {
+      xmax = xAxis.niceMax;
     }
 
     // Set Y Domain
-    ymin = min(data, (arr) => min(arr.values, (d) => d.value || d.min));
-    ymax = max(data, (arr) => max(arr.values, (d) => d.value || d.max));
-    if (yAxis.baseValue === 0) {
-      ymin = yAxis.baseValue;
+    if (typeof yAxis.domainMin === "number" && !isNaN(yAxis.domainMin)) {
+      ymin = yAxis.domainMin;
+    } else {
+      ymin = min(data, (arr) =>
+        min(arr.values, (d) => ("min" in d ? d.min : d.value))
+      );
+    }
+
+    if (typeof yAxis.domainMax === "number" && !isNaN(yAxis.domainMax)) {
+      ymax = yAxis.domainMax;
+    } else {
+      ymax = max(data, (arr) =>
+        max(arr.values, (d) => ("max" in d ? d.max : d.value))
+      );
+    }
+
+    if (
+      typeof yAxis.niceMax === "number" &&
+      !isNaN(yAxis.niceMax) &&
+      yAxis.niceMax > ymax
+    ) {
+      ymax = yAxis.niceMax;
     }
 
     // Set Legend
@@ -92,8 +151,12 @@
   }
 </script>
 
-{#if data}
-  <div style="{`height:${height}`}" bind:this="{chartContainer}">
+{#if data && !isFetching}
+  <div
+    class:no-data="{noData}"
+    style="{`height:${height}`}"
+    bind:this="{chartContainer}"
+  >
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
       x="{xAxis.key}"

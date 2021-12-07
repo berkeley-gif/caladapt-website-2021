@@ -9,6 +9,7 @@
   export let formatFn;
   export let models;
   export let dataByDate;
+  export let isFetching;
 </script>
 
 <ul class="stats">
@@ -20,9 +21,9 @@
         : null}"
       groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
       periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
-      isHistorical="{true}"
       format="{formatFn}"
       models="{models}"
+      isFetching="{isFetching}"
     />
   </li>
   <li class="block">
@@ -37,6 +38,7 @@
       periodId="mid-century"
       format="{formatFn}"
       models="{models}"
+      isFetching="{isFetching}"
     />
   </li>
   <li class="block">
@@ -51,6 +53,7 @@
       periodId="end-century"
       format="{formatFn}"
       models="{models}"
+      isFetching="{isFetching}"
     />
   </li>
 </ul>
