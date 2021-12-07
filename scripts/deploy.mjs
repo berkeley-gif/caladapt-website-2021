@@ -82,6 +82,7 @@ async function transfer(subdomain) {
     const domain = subdomain ? `${subdomain}.${BASE_URI}` : BASE_URI;
     await $`rsync \
       -avz ${SAPPER_EXPORT_DIR} \
+      --delete \
       ${USER}@${DEPLOY_URI}:${DIR}${domain}/`;
   } else {
     console.log("transfer disabled via --transfer option, exiting");
