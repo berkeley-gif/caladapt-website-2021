@@ -28,11 +28,8 @@
     error = true;
   };
 
-  // Set to `true` when `loaded` is `true` and `error` is false
-  let loading = false;
-  // Set to `true` when the image is loaded
+  let loading = true;
   let loaded = false;
-  // Set to `true` if an error occurs when loading the image
   let error = false;
 
   $: src = location && location.geometry ? handleLocation(location) : "";
@@ -105,28 +102,34 @@
 </script>
 
 <style>
-  .static-map {
+  button {
     all: unset;
     cursor: pointer;
     border: 1px solid var(--gray-80);
+    min-height: 250px;
+    height: auto;
+    width: 100%;
   }
 
-  .static-map:hover {
+  button:hover {
     box-shadow: var(--box-shadow);
   }
 
-  .static-map:focus {
-    outline: 1px solid var(--gray-100);
+  button:focus {
+    outline: 2px solid var(--gray-100);
   }
 
+  .loading-msg,
   .error-text {
     padding: var(--spacing-32);
   }
 </style>
 
-<button class="static-map" on:click>
+<button on:click>
   {#if loading}
-    <InlineLoading description="Loading location map..." />
+    <div class="loading-msg">
+      <InlineLoading description="Loading location map..." />
+    </div>
   {:else if loaded}
     <img
       {...$$restProps}
@@ -139,7 +142,5 @@
     />
   {:else if error}
     <div class="error-text">An error occurred. Unable to load map.</div>
-  {:else}
-    <p>Something went wrong.</p>
   {/if}
 </button>
