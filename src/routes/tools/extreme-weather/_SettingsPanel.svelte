@@ -86,8 +86,7 @@
   <span class="bx--label">Select Station</span>
   <StaticMap
     location="{$location}"
-    width="{350}"
-    height="{350}"
+    height="{250}"
     on:click="{() => showChangeLocation()}"
   />
   <LearnMoreButton
