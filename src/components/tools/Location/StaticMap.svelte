@@ -109,7 +109,6 @@
 
   const handleLocation = debounce(
     function (feature) {
-      console.log("handleLocation", feature);
       if (feature.geometry.type === "Point") {
         getPointImgSrc(location);
       } else {
