@@ -108,6 +108,7 @@
   .static-map {
     all: unset;
     cursor: pointer;
+    border: 1px solid var(--gray-80);
   }
 
   .static-map:hover {
@@ -115,7 +116,7 @@
   }
 
   .static-map:focus {
-    outline: 1px solid var(--gray-80);
+    outline: 1px solid var(--gray-100);
   }
 
   .error-text {
@@ -129,7 +130,9 @@
   {:else if loaded}
     <img
       {...$$restProps}
-      style="width: 100%;{$$restProps.style}"
+      style="{$$restProps.style}"
+      width="{width}"
+      height="{height}"
       src="{src}"
       alt="{alt}"
       transition:fade
