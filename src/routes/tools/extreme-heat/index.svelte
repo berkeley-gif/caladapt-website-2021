@@ -120,8 +120,8 @@
   const { scenario } = scenarioStore;
 
   // Local props
-  let initReady = false;
   let appReady = false;
+  let debug = process.env.NODE_ENV !== "production";
 
   // Monitor sections as they enter & leave viewport
   let currentView;
@@ -169,8 +169,7 @@
   }
 
   async function update() {
-    if (!initReady || !appReady) return;
-    if ($modelsStore.length === 0) return;
+    if (!appReady || !$modelsStore.length) return;
     try {
       const config = {
         climvarId: $climvarStore,
@@ -233,21 +232,23 @@
     });
   }
 
-  onMount(() => {
-    initApp(initialConfig)
-      .then(() => {
-        initReady = true;
-      })
-      .catch((error) => {
-        console.log("init error", error);
-        logException(error);
-        notifier.error(
-          "Unable to Load Tool",
-          "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
-          2000
-        );
-      });
-    window.scrollTo(0, 0);
+  onMount(async () => {
+    try {
+      await initApp(initialConfig);
+      appReady = true;
+      if (debug) console.log("app ready");
+      await update();
+    } catch (error) {
+      console.error("init error", error);
+      logException(error);
+      notifier.error(
+        "Unable to Load Tool",
+        "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
+        2000
+      );
+    } finally {
+      window.scrollTo(0, 0);
+    }
   });
 </script>
 
@@ -272,13 +273,8 @@
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
-  {#if initReady}
-    <ExploreData
-      on:ready="{() => {
-        appReady = true;
-        update();
-      }}"
-    />
+  {#if appReady}
+    <ExploreData />
   {:else}
     <Loading />
   {/if}
