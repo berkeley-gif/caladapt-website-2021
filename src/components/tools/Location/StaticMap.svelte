@@ -51,8 +51,6 @@
 
   $: if (src) image.src = src;
 
-  $: console.log(src);
-
   function isValidNumber(value) {
     return typeof value === "number" && !isNaN(value);
   }
