@@ -7,6 +7,7 @@
   // Helpers
   import { mapboxgl } from "~/helpers/mapbox";
   import { serialize, debounce } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
 
   // Props
   export let height = 150;
@@ -26,6 +27,11 @@
   image.onerror = () => {
     loading = false;
     error = true;
+    logException(
+      `StaticMap image failed for ${location && location.title} at ${
+        location && location.center && location.center.join(",")
+      }`
+    );
   };
 
   let loading = true;
