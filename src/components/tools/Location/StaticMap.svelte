@@ -6,7 +6,7 @@
 
   // Helpers
   import { mapboxgl } from "~/helpers/mapbox";
-  import { serialize } from "~/helpers/utilities";
+  import { serialize, debounce } from "~/helpers/utilities";
 
   // Props
   export let height = 150;
@@ -32,21 +32,27 @@
   let loaded = false;
   let error = false;
   let width;
+  let src;
 
   height = Math.min(height, MAX_IMG_HEIGHT);
 
   $: valid = isValidNumber(width) && isValidNumber(height);
-  $: src =
-    valid && location && location.geometry ? handleLocation(location) : "";
   $: alt = location ? `map of ${location.title}` : "";
+
+  $: if (valid && width && location && location.geometry) {
+    handleLocation(location);
+  }
+
   $: if (src) image.src = src;
+
+  $: console.log(src);
 
   function isValidNumber(value) {
     return typeof value === "number" && !isNaN(value);
   }
 
   function createSrcUrl({ overlay, bounds, params }) {
-    return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
+    src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
       params
     )}`;
   }
@@ -78,7 +84,7 @@
     const overlay = createOverlay(geojson);
     // Padding cannot be used if bounds has zoom.
     const params = { access_token: accessToken };
-    return createSrcUrl({ overlay, bounds, params });
+    createSrcUrl({ overlay, bounds, params });
   }
 
   function getPolygonImgSrc({ geometry }) {
@@ -98,16 +104,21 @@
     const truncatedGeojson = truncate(geojson, { precision: 4 });
     // Simplify geometry
     const overlay = createOverlay(truncatedGeojson);
-    return createSrcUrl({ overlay, bounds, params });
+    createSrcUrl({ overlay, bounds, params });
   }
 
-  function handleLocation(feature) {
-    if (feature.geometry.type === "Point") {
-      return getPointImgSrc(location);
-    } else {
-      return getPolygonImgSrc(location);
-    }
-  }
+  const handleLocation = debounce(
+    function (feature) {
+      console.log("handleLocation", feature);
+      if (feature.geometry.type === "Point") {
+        getPointImgSrc(location);
+      } else {
+        getPolygonImgSrc(location);
+      }
+    },
+    200,
+    false
+  );
 </script>
 
 <style>
