@@ -124,7 +124,7 @@
   button {
     all: unset;
     cursor: pointer;
-    border: 1px solid var(--gray-80);
+    border: 1px solid var(--gray-40);
     min-height: 250px;
     height: auto;
     width: 100%;
