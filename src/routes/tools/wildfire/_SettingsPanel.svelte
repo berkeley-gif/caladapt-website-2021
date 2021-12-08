@@ -38,6 +38,8 @@
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
 
+  let staticMapWidth;
+
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
   }
@@ -74,21 +76,25 @@
 {#if activeTab}
   <!-- Chart only settings -->
   <div class="block">
-    <span class="bx--label">Select Location</span>
-    <StaticMap
-      location="{$location}"
-      width="{350}"
-      height="{350}"
-      on:click="{() => showChangeLocation()}"
-    />
-    <div class="center-row">
-      <LearnMoreButton
-        on:click="{() =>
-          showLearnMore({
-            content: SELECT_LOCATION_DESCRIPTION,
-            header: 'Select Location',
-          })}"
-      />
+    <div bind:clientWidth="{staticMapWidth}">
+      <span class="bx--label">Select Location</span>
+      {#if typeof staticMapWidth === "number" && !isNaN(staticMapWidth)}
+        <StaticMap
+          location="{$location}"
+          width="{Math.floor(staticMapWidth)}"
+          height="{250}"
+          on:click="{() => showChangeLocation()}"
+        />
+      {/if}
+      <div class="center-row">
+        <LearnMoreButton
+          on:click="{() =>
+            showLearnMore({
+              content: SELECT_LOCATION_DESCRIPTION,
+              header: 'Select Location',
+            })}"
+        />
+      </div>
     </div>
   </div>
 {/if}
