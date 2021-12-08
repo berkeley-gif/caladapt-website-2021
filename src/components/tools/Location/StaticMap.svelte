@@ -9,7 +9,6 @@
   import { serialize } from "~/helpers/utilities";
 
   // Props
-  export let width = 150;
   export let height = 150;
   export let location = null;
   export let style = "mapbox/streets-v11";
@@ -17,6 +16,7 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
+  const MAX_IMG_HEIGHT = 250;
 
   const image = new Image();
   image.onload = () => {
@@ -31,10 +31,19 @@
   let loading = true;
   let loaded = false;
   let error = false;
+  let width;
 
-  $: src = location && location.geometry ? handleLocation(location) : "";
+  height = Math.min(height, MAX_IMG_HEIGHT);
+
+  $: valid = isValidNumber(width) && isValidNumber(height);
+  $: src =
+    valid && location && location.geometry ? handleLocation(location) : "";
   $: alt = location ? `map of ${location.title}` : "";
   $: if (src) image.src = src;
+
+  function isValidNumber(value) {
+    return typeof value === "number" && !isNaN(value);
+  }
 
   function createSrcUrl({ overlay, bounds, params }) {
     return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -125,22 +134,24 @@
   }
 </style>
 
-<button on:click>
-  {#if loading}
-    <div class="loading-msg">
-      <InlineLoading description="Loading location map..." />
-    </div>
-  {:else if loaded}
-    <img
-      {...$$restProps}
-      style="{$$restProps.style}"
-      width="{width}"
-      height="{height}"
-      src="{src}"
-      alt="{alt}"
-      transition:fade
-    />
-  {:else if error}
-    <div class="error-text">An error occurred. Unable to load map.</div>
-  {/if}
-</button>
+<div bind:clientWidth="{width}">
+  <button on:click>
+    {#if loading}
+      <div class="loading-msg">
+        <InlineLoading description="Loading location map..." />
+      </div>
+    {:else if loaded}
+      <img
+        {...$$restProps}
+        style="{$$restProps.style}"
+        width="{width}"
+        height="{height}"
+        src="{src}"
+        alt="{alt}"
+        transition:fade
+      />
+    {:else if error}
+      <div class="error-text">An error occurred. Unable to load map.</div>
+    {/if}
+  </button>
+</div>
