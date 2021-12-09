@@ -46,9 +46,9 @@ export const makeCustomWritableStore = (defaultValue, options) => {
   // 2. a curried function that updates the desired value and returns the store
   // e.g. (store) => (value) => store.update((s) => { s.foo = value; return s; })
   if (Array.isArray(updaters) && updaters.length) {
-    updaters.forEach(({ name, value }) => {
+    updaters.forEach(({ name, update }) => {
       Object.defineProperty(newStore, name, {
-        value: value(store),
+        value: update(store),
       });
     });
   }
