@@ -6,8 +6,16 @@
   export let scenario;
   export let timeFrame;
   export let dataLayers;
+  export let center;
+  export let zoom = 10;
 
   let tileLayerUrls;
+  let lng = -122.2813;
+  let lat = 37.7813;
+
+  $: if (Array.isArray(center) && center.length) {
+    [lng, lat] = center;
+  }
 
   $: if (scenario && timeFrame)
     tileLayerUrls = dataLayers
@@ -19,7 +27,7 @@
   $: console.log(tileLayerUrls);
 </script>
 
-<Map>
+<Map lng="{lng}" lat="{lat}" zoom="{zoom}">
   <NavigationControl />
   {#if tileLayerUrls && tileLayerUrls.length}
     {#each tileLayerUrls as { url, id } (id)}
