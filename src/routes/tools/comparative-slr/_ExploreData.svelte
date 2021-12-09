@@ -6,6 +6,7 @@
   import { isFetchingStore, locationStore } from "../_common/stores";
 
   import SettingsPanel from "./_SettingsPanel.svelte";
+  import Title from "./_Title.svelte";
 
   const { location, boundary } = locationStore;
 
@@ -56,7 +57,7 @@
 
 <Dashboard useTabs="{true}" activeTab="{0}">
   <div slot="tab_content_map_title" class="block title">
-    <h2>Title here</h2>
+    <Title location="{$location.title}" loadLocation="{loadLocation}" />
   </div>
 
   <div
