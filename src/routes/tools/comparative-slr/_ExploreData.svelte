@@ -4,11 +4,18 @@
 
   import { DEFAULT_BOUNDARIES } from "../_common/constants";
   import { isFetchingStore, locationStore } from "../_common/stores";
+  import {
+    timeFrameStore,
+    floodScenarioStore,
+    dataLayersStore,
+  } from "./_store";
 
   import SettingsPanel from "./_SettingsPanel.svelte";
   import Title from "./_Title.svelte";
+  import Map from "./_ComparativeSLRMap.svelte";
 
   const { location, boundary } = locationStore;
+  const { tfTileLabel } = timeFrameStore;
 
   // async component imports
   let ChangeLocation;
@@ -63,7 +70,13 @@
   <div
     slot="tab_content_slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
-  ></div>
+  >
+    <Map
+      timeFrame="{$tfTileLabel}"
+      scenario="{$floodScenarioStore}"
+      dataLayers="{$dataLayersStore}"
+    />
+  </div>
 
   <div slot="tab_content_slippy_map_controls" class="graphic block"></div>
 
