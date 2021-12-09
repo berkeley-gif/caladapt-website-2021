@@ -111,17 +111,17 @@
     );
   }
 
-  async function update() {
-    if (!appReady) return;
-    try {
-      isFetchingStore.set(true);
-    } catch (error) {
-      console.error("updateData", error);
-      notifier.error("Error", error, 2000);
-    } finally {
-      isFetchingStore.set(false);
-    }
-  }
+  // async function update() {
+  //   if (!appReady) return;
+  //   try {
+  //     isFetchingStore.set(true);
+  //   } catch (error) {
+  //     console.error("updateData", error);
+  //     notifier.error("Error", error, 2000);
+  //   } finally {
+  //     isFetchingStore.set(false);
+  //   }
+  // }
 
   async function initApp({
     lat,
@@ -147,7 +147,7 @@
       await initApp(initialConfig);
       appReady = true;
       console.log("app ready");
-      await update();
+      // await update();
     } catch (error) {
       console.error("init error", error);
       notifier.error(
