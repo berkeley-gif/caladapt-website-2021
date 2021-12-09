@@ -2,12 +2,15 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { Checkbox } from "carbon-components-svelte";
 
+  export let title = "Select Layers";
   export let items;
+  export let name = "selected-layers";
+  export let disableAll = false;
 
   const dispatch = createEventDispatcher();
   let ready = false;
 
-  function change(event, id) {
+  function handleChange(event, id) {
     dispatch("change", { checked: event.target.checked, id });
   }
 
@@ -17,16 +20,24 @@
   });
 </script>
 
-<fieldset>
+<fieldset disabled="{disableAll}">
+  <legend class="bx--label">{title}</legend>
   {#if ready}
-    {#each items as { id, label, checked, disabled }}
-      <Checkbox
-        id="{id}"
-        labelText="{label}"
-        checked="{checked}"
-        disabled="{disabled}"
-        on:change="{(event) => change(event, id)}"
-      />
+    {#each items as { id, label, checked, disabled } (id)}
+      <div class="bx--form-item bx--checkbox-wrapper">
+        <input
+          id="{id}"
+          class="bx--checkbox"
+          type="checkbox"
+          name="{name}"
+          disabled="{disabled}"
+          checked="{checked}"
+          on:change="{(event) => handleChange(event, id)}"
+        />
+        <label for="{id}" class="bx--checkbox-label">
+          <span class="bx--checkbox-label-text">{label}</span>
+        </label>
+      </div>
     {/each}
   {:else}
     <Checkbox skeleton />

@@ -8,7 +8,7 @@
     dataLayersStore,
   } from "./_store";
 
-  import { TIME_PERIODS, FLOOD_SCENARIOS, DATA_LAYERS } from "./_constants";
+  import { TIME_PERIODS, FLOOD_SCENARIOS } from "./_constants";
 
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
@@ -58,6 +58,21 @@
 </div>
 
 <div class="block">
+  <SelectLayers
+    title="Select Map Data Layers"
+    items="{[...$dataLayersStore]}"
+    on:change="{changeDataLayers}"
+  />
+  <LearnMoreButton
+    on:click="{() =>
+      showLearnMore({
+        content: 'To do...',
+        header: 'Select Data Layers',
+      })}"
+  />
+</div>
+
+<div class="block">
   <RadioBtnGroup
     title="Select Time Period"
     items="{TIME_PERIODS}"
@@ -85,21 +100,6 @@
       showLearnMore({
         content: 'To do...',
         header: 'Select Flood Scenario',
-      })}"
-  />
-</div>
-
-<div class="block">
-  <span class="bx--label">Select Data Layers</span>
-  <SelectLayers
-    items="{[...$dataLayersStore]}"
-    on:change="{changeDataLayers}"
-  />
-  <LearnMoreButton
-    on:click="{() =>
-      showLearnMore({
-        content: 'To do...',
-        header: 'Select Data Layers',
       })}"
   />
 </div>
