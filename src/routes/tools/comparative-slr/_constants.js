@@ -1,7 +1,6 @@
 export const DEFAULT_CENTER = [-122.2813, 37.7813];
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
-export const DEFAULT_DATA_LAYERS = undefined;
 
 export const DEFAULT_INITIAL_CONFIG = {
   boundaryId: "locagrid",
@@ -42,13 +41,19 @@ export const DATA_LAYERS = [
   {
     id: "calflod3dtfs_5m",
     label: "CalFloD3D-TFS (5m)",
+    enabled: false,
+    disabled: false,
   },
   {
     id: "calflod3dtfs_50m",
     label: "CalFloD3D-TFS (50m)",
+    enabled: false,
+    disabled: false,
   },
   {
     id: "cosmos",
     label: "CoSMoS",
+    enabled: false,
+    disabled: false,
   },
 ];

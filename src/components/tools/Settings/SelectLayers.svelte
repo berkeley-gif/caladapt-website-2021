@@ -7,8 +7,8 @@
   const dispatch = createEventDispatcher();
   let ready = false;
 
-  function change(event) {
-    dispatch(event);
+  function change(event, id) {
+    dispatch("change", { checked: event.target.checked, id });
   }
 
   onMount(() => {
@@ -25,7 +25,7 @@
         labelText="{label}"
         checked="{checked}"
         disabled="{disabled}"
-        on:change="{change}"
+        on:change="{(event) => change(event, id)}"
       />
     {/each}
   {:else}

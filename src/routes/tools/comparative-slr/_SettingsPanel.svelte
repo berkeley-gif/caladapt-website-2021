@@ -17,12 +17,6 @@
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
 
-  const layerOptions = DATA_LAYERS.map((d) => ({
-    ...d,
-    disabled: false,
-    checked: false,
-  }));
-
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
   }
@@ -31,7 +25,7 @@
     dispatch("showLoadLocation");
   }
 
-  function changeScenario({ detail }) {
+  function changeFloodScenario({ detail }) {
     floodScenarioStore.set(detail);
   }
 
@@ -39,8 +33,12 @@
     timeFrameStore.set(detail);
   }
 
-  function changeDataLayers({ detail }) {
-    dataLayersStore.set(detail);
+  function changeDataLayers({ detail: { checked, id } }) {
+    dataLayersStore.set(
+      $dataLayersStore.map((d) =>
+        d.id === id ? { ...d, enabled: checked } : d
+      )
+    );
   }
 </script>
 
@@ -68,6 +66,7 @@
     title="Select Time Period"
     items="{TIME_PERIODS}"
     selected="{$timeFrameStore}"
+    on:change="{changeTimeFrame}"
   />
   <LearnMoreButton
     on:click="{() =>
@@ -83,6 +82,7 @@
     title="Select Flood Scenario"
     items="{FLOOD_SCENARIOS}"
     selected="{$floodScenarioStore}"
+    on:change="{changeFloodScenario}"
   />
   <LearnMoreButton
     on:click="{() =>
@@ -95,7 +95,7 @@
 
 <div class="block">
   <span class="bx--label">Select Data Layers</span>
-  <SelectLayers items="{layerOptions}" />
+  <SelectLayers items="{$dataLayersStore}" on:change="{changeDataLayers}" />
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({

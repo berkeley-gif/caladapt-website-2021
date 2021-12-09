@@ -35,7 +35,17 @@ export const timeFrameStore = makeCustomWritableStore(DEFAULT_TIME_FRAME, {
   ],
 });
 
-export const dataLayersStore = makeCustomWritableStore(DEFAULT_DATA_LAYERS, {
-  name: "layers",
-  getter: ($s) => DATA_LAYERS.find((d) => d.id === $s) || [],
+export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
+  name: "dataLayersStore",
+  updaters: [
+    {
+      name: "update",
+      update:
+        ($s) =>
+        ({ id, checked }) =>
+          $s.update((s) =>
+            s.map((d) => (d.id === id ? { ...d, enabled: checked } : d))
+          ),
+    },
+  ],
 });
