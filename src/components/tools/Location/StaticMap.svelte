@@ -6,10 +6,10 @@
 
   // Helpers
   import { mapboxgl } from "~/helpers/mapbox";
-  import { serialize } from "~/helpers/utilities";
+  import { serialize, debounce } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
 
   // Props
-  export let width = 150;
   export let height = 150;
   export let location = null;
   export let style = "mapbox/streets-v11";
@@ -17,6 +17,7 @@
   export let zoom = 8;
 
   const { accessToken } = mapboxgl;
+  const MAX_IMG_HEIGHT = 250;
 
   const image = new Image();
   image.onload = () => {
@@ -26,21 +27,36 @@
   image.onerror = () => {
     loading = false;
     error = true;
+    logException(
+      `StaticMap image failed for ${location && location.title} at ${
+        location && location.center && location.center.join(",")
+      }`
+    );
   };
 
-  // Set to `true` when `loaded` is `true` and `error` is false
-  let loading = false;
-  // Set to `true` when the image is loaded
+  let loading = true;
   let loaded = false;
-  // Set to `true` if an error occurs when loading the image
   let error = false;
+  let width;
+  let src;
 
-  $: src = location && location.geometry ? handleLocation(location) : "";
+  height = Math.min(height, MAX_IMG_HEIGHT);
+
+  $: valid = isValidNumber(width) && isValidNumber(height);
   $: alt = location ? `map of ${location.title}` : "";
+
+  $: if (valid && width && location && location.geometry) {
+    handleLocation(location);
+  }
+
   $: if (src) image.src = src;
 
+  function isValidNumber(value) {
+    return typeof value === "number" && !isNaN(value);
+  }
+
   function createSrcUrl({ overlay, bounds, params }) {
-    return `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
+    src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
       params
     )}`;
   }
@@ -72,7 +88,7 @@
     const overlay = createOverlay(geojson);
     // Padding cannot be used if bounds has zoom.
     const params = { access_token: accessToken };
-    return createSrcUrl({ overlay, bounds, params });
+    createSrcUrl({ overlay, bounds, params });
   }
 
   function getPolygonImgSrc({ geometry }) {
@@ -92,51 +108,64 @@
     const truncatedGeojson = truncate(geojson, { precision: 4 });
     // Simplify geometry
     const overlay = createOverlay(truncatedGeojson);
-    return createSrcUrl({ overlay, bounds, params });
+    createSrcUrl({ overlay, bounds, params });
   }
 
-  function handleLocation(feature) {
-    if (feature.geometry.type === "Point") {
-      return getPointImgSrc(location);
-    } else {
-      return getPolygonImgSrc(location);
-    }
-  }
+  const handleLocation = debounce(
+    function (feature) {
+      if (feature.geometry.type === "Point") {
+        getPointImgSrc(location);
+      } else {
+        getPolygonImgSrc(location);
+      }
+    },
+    200,
+    false
+  );
 </script>
 
 <style>
-  .static-map {
+  button {
     all: unset;
     cursor: pointer;
+    border: 1px solid var(--gray-40);
+    min-height: 250px;
+    height: auto;
+    width: 100%;
   }
 
-  .static-map:hover {
+  button:hover {
     box-shadow: var(--box-shadow);
   }
 
-  .static-map:focus {
-    outline: 1px solid var(--gray-80);
+  button:focus {
+    outline: 2px solid var(--gray-100);
   }
 
+  .loading-msg,
   .error-text {
     padding: var(--spacing-32);
   }
 </style>
 
-<button class="static-map" on:click>
-  {#if loading}
-    <InlineLoading description="Loading location map..." />
-  {:else if loaded}
-    <img
-      {...$$restProps}
-      style="width: 100%;{$$restProps.style}"
-      src="{src}"
-      alt="{alt}"
-      transition:fade
-    />
-  {:else if error}
-    <div class="error-text">An error occurred. Unable to load map.</div>
-  {:else}
-    <p>Something went wrong.</p>
-  {/if}
-</button>
+<div bind:clientWidth="{width}">
+  <button on:click>
+    {#if loading}
+      <div class="loading-msg">
+        <InlineLoading description="Loading location map..." />
+      </div>
+    {:else if loaded}
+      <img
+        {...$$restProps}
+        style="{$$restProps.style}"
+        width="{width}"
+        height="{height}"
+        src="{src}"
+        alt="{alt}"
+        transition:fade
+      />
+    {:else if error}
+      <div class="error-text">An error occurred. Unable to load map.</div>
+    {/if}
+  </button>
+</div>
