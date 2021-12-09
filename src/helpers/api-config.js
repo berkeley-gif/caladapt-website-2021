@@ -5,14 +5,14 @@
 
 const development = {
   apiEndpoint: "https://a1.cal-adapt.org/api",
-  tileURL: "https://a1.cal-adapt.org/api/tiles",
+  tileURL: "https://a1.cal-adapt.org/tiles",
   vtileURL: "https://a1.cal-adapt.org/api/vtiles",
 };
 
 const production = {
   endpoint: "https://api.cal-adapt.org",
   apiEndpoint: "https://api.cal-adapt.org/api",
-  tileURL: "https://api.cal-adapt.org/api/tiles",
+  tileURL: "https://api.cal-adapt.org/tiles",
   vtileURL: "https://api.cal-adapt.org/api/vtiles",
 };
 
