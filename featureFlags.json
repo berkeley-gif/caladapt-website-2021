@@ -1,14 +1,22 @@
 {
   "beta": {
-    "showBetaBanner": "true"
+    "showBetaBanner": "true",
+    "loggingEnabled": "false",
+    "noRobots": "true"
   },
   "dev": {
-    "showBetaBanner": "false"
+    "showBetaBanner": "false",
+    "loggingEnabled": "false",
+    "noRobots": "true"
   },
   "netlify": {
-    "showBetaBanner": "false"
+    "showBetaBanner": "false",
+    "loggingEnabled": "false",
+    "noRobots": "true"
   },
   "prod": {
-    "showBetaBanner": "false"
+    "showBetaBanner": "false",
+    "loggingEnabled": "true",
+    "noRobots": "false"
   }
 }

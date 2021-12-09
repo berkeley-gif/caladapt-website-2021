@@ -1,5 +1,5 @@
 export const logException = (error, fatal = false) => {
-  if (process.env.DEPLOY === "prod") {
+  if (process.env.loggingEnabled) {
     try {
       gtag("event", "exception", {
         description: typeof error === "object" ? error.message : `${error}`,
