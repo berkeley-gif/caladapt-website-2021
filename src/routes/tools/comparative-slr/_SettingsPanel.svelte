@@ -34,11 +34,7 @@
   }
 
   function changeDataLayers({ detail: { checked, id } }) {
-    dataLayersStore.set(
-      $dataLayersStore.map((d) =>
-        d.id === id ? { ...d, enabled: checked } : d
-      )
-    );
+    dataLayersStore.setChecked({ checked, id });
   }
 </script>
 
@@ -95,7 +91,10 @@
 
 <div class="block">
   <span class="bx--label">Select Data Layers</span>
-  <SelectLayers items="{$dataLayersStore}" on:change="{changeDataLayers}" />
+  <SelectLayers
+    items="{[...$dataLayersStore]}"
+    on:change="{changeDataLayers}"
+  />
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({

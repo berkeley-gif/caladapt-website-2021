@@ -41,19 +41,19 @@ export const DATA_LAYERS = [
   {
     id: "calflod3dtfs_5m",
     label: "CalFloD3D-TFS (5m)",
-    enabled: false,
+    checked: false,
     disabled: false,
   },
   {
     id: "calflod3dtfs_50m",
     label: "CalFloD3D-TFS (50m)",
-    enabled: false,
+    checked: false,
     disabled: false,
   },
   {
     id: "cosmos",
     label: "CoSMoS",
-    enabled: false,
+    checked: false,
     disabled: false,
   },
 ];

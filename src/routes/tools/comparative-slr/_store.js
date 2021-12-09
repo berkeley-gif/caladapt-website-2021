@@ -39,12 +39,12 @@ export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
   name: "dataLayersStore",
   updaters: [
     {
-      name: "update",
+      name: "setChecked",
       update:
-        ($s) =>
+        (store) =>
         ({ id, checked }) =>
-          $s.update((s) =>
-            s.map((d) => (d.id === id ? { ...d, enabled: checked } : d))
+          store.update((s) =>
+            s.map((d) => (d.id === id ? { ...d, checked } : d))
           ),
     },
   ],
