@@ -24,6 +24,10 @@
   <legend class="bx--label">{title}</legend>
   {#if ready}
     {#each items as { id, label, checked, disabled } (id)}
+      <!--
+        NOTE: this mirrors the markup for the checkbox in carbon-components-svlete.
+        That component does not properly update when its attributes/properties change.
+      -->
       <div class="bx--form-item bx--checkbox-wrapper">
         <input
           id="{id}"
