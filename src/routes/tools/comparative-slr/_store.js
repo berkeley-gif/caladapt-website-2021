@@ -29,8 +29,12 @@ export const timeFrameStore = makeCustomWritableStore(DEFAULT_TIME_FRAME, {
       getter: ($s) => TIME_PERIODS.find((d) => d.id === $s),
     },
     {
-      name: "parsed",
+      name: "tfParsed",
       getter: ($s) => JSON.parse($s),
+    },
+    {
+      name: "tfTileLabel",
+      getter: ($s) => JSON.parse($s).join("-"),
     },
   ],
 });
