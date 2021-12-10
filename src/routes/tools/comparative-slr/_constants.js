@@ -39,6 +39,13 @@ export const FLOOD_SCENARIOS = [
 
 export const DATA_LAYERS = [
   {
+    id: "cosmos",
+    label: "CoSMoS",
+    checked: true,
+    disabled: false,
+    color: "rsgreen",
+  },
+  {
     id: "calflod3dtfs",
     label: "CalFloD3D-TFS (5m)",
     checked: true,
@@ -51,12 +58,5 @@ export const DATA_LAYERS = [
     checked: false,
     disabled: false,
     color: "rsblue",
-  },
-  {
-    id: "cosmos",
-    label: "CoSMoS",
-    checked: false,
-    disabled: false,
-    color: "rsgreen",
   },
 ];
