@@ -100,8 +100,8 @@
   }
 
   ul {
-    margin: 0.5rem 0 0;
-    padding: 0;
+    margin: 0.5rem 0 0 !important;
+    padding: 0 !important;
     list-style: none;
   }
 
