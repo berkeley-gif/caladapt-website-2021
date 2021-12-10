@@ -121,7 +121,6 @@
 
   // Local props
   let appReady = false;
-  let debug = process.env.NODE_ENV !== "production";
 
   // Monitor sections as they enter & leave viewport
   let currentView;
