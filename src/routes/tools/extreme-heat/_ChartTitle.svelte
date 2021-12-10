@@ -8,6 +8,15 @@
   export let scenarioLabel;
   export let thresholdLabel;
   export let loadLocation;
+  export let durationLabel;
+
+  let label;
+
+  $: if (indicatorLabel.includes("Heat Wave")) {
+    label = indicatorLabel.replace("Number of", `Number of ${durationLabel}`);
+  } else {
+    label = indicatorLabel;
+  }
 </script>
 
 <style>
@@ -29,7 +38,7 @@
   {title}
 </h2>
 <div class="h4">
-  Projected changes in <span class="annotate">{indicatorLabel}</span> when
+  Projected changes in <span class="annotate">{label}</span> when
   <span class="annotate">{climvarLabel}</span>
   is above <span class="annotate">{thresholdLabel}</span> under a
   <span class="annotate">{scenarioLabel}</span>.
