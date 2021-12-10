@@ -4,37 +4,46 @@
 
   export let id = "";
   export let tileURL = "";
+  export let paintProps = {};
   export let beforeId = "settlement-subdivision-label";
+
+  // TODO: handle source & layer update
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
-  const getLayer = (id, url) => ({
-    id,
+  const getSource = (url) => ({
     type: "raster",
-    paint: {},
-    source: {
-      type: "raster",
-      tiles: [url],
-      tileSize: 256,
-    },
+    tiles: [url],
+    tileSize: 256,
+  });
+
+  const getLayer = (id, source, paint) => ({
+    id,
+    source,
+    type: "raster",
+    paint,
   });
 
   let layer;
+  let source;
+  let sourceId;
 
   $: if (tileURL && tileURL.length) {
-    layer = getLayer(id, tileURL);
+    sourceId = `${id}-source`;
+    source = getSource(tileURL);
+    layer = getLayer(id, sourceId, paintProps);
   }
 
   onMount(() => {
-    // add source & layer
+    map.addSource(sourceId, source);
     map.addLayer(layer, beforeId);
   });
 
   onDestroy(() => {
-    // remove source & layer
     if (map.getStyle() && map.getLayer(id)) {
       map.removeLayer(id);
+      map.removeSource(sourceId);
     }
   });
 </script>
