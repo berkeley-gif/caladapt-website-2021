@@ -48,7 +48,7 @@
   }
 
   function changeClimvar(e) {
-    climvarStore.set(e.detail.id);
+    climvarStore.set(e.detail);
   }
 
   function changeIndicator(e) {
