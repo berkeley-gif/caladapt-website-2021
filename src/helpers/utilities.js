@@ -606,3 +606,6 @@ export function isEmptyData(_data) {
     Math.max(..._data.map((d) => d.values.length)) === 0
   );
 }
+
+export const getCSSProp = (element, propName) =>
+  window.getComputedStyle(element).getPropertyValue(propName);
