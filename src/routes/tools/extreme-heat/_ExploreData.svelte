@@ -64,13 +64,23 @@
     $climvarStore === "tasmax"
       ? $indicator.description
       : $indicator.description.replace("extreme heat days", "warm nights");
+
   $: chartTitle = $location.title;
+
   $: formatFn = format(`.${$indicator.decimals}f`);
+
   $: thresholdLabel = `${$thresholdStore} °F`;
+
   $: indicatorLabel =
-    $climvar.id === "tasmin"
-      ? $indicator.title.replace("Extreme Heat Days", "Warm Nights")
-      : $indicator.title;
+    $climvarStore === "tasmax"
+      ? $indicator.title
+      : $indicator.title.replace("Extreme Heat Days", "Warm Nights");
+
+  $: durationLabel =
+    $climvarStore === "tasmax"
+      ? `${$durationStore} Day`
+      : `${$durationStore} Night`;
+
   $: if ($data) {
     if ($indicator.id === "timing") {
       dataByDate = groupDataByDay(flattenData($data));
@@ -153,10 +163,11 @@
     <ChartTitle
       title="{chartTitle}"
       indicatorLabel="{indicatorLabel}"
-      climvarLabel="{$climvar.label}"
+      climvarLabel="{$climvar.title}"
       scenarioLabel="{$scenario.labelLong}"
       thresholdLabel="{thresholdLabel}"
       loadLocation="{loadLocation}"
+      durationLabel="{durationLabel}"
     />
   </div>
 
@@ -164,7 +175,7 @@
     <StatsPanel
       {...{
         statsComponent: $indicator.statsComponent,
-        units: $climvar.units.imperial,
+        units: $indicator.units,
         dataByDate,
         formatFn,
         models: $modelsStore,
@@ -176,11 +187,11 @@
   <div slot="graphic" class="graphic block">
     <ExtremeHeatChart
       chartComponent="{$indicator.chartComponent}"
-      data="{$dataStore}"
+      data="{$data}"
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
-      units="{$climvar.units.imperial}"
-      label="{$climvar.label} ({$climvar.units.imperial})"
+      units="{$indicator.units}"
+      label="{indicatorLabel}"
       dataSource="{$titles.join(', ')}"
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"
