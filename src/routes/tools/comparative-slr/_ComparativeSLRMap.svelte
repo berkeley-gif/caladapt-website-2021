@@ -1,5 +1,10 @@
 <script>
-  import { Map, NavigationControl, RasterLayer } from "~/components/tools/Map";
+  import {
+    Map,
+    NavigationControl,
+    RasterLayer,
+    Legend,
+  } from "~/components/tools/Map";
 
   import { getTileUrl } from "./_data";
 
@@ -33,6 +38,13 @@
 
 <Map lng="{lng}" lat="{lat}" zoom="{zoom}">
   <NavigationControl />
+  <Legend
+    title="Data Layers"
+    values="{['CoSMoS', 'CalFlod3D-TFS']}"
+    ramp="{['#5DFA25', '#25C7FA']}"
+    columns="{1}"
+    width="{'136px'}"
+  />
   {#if tileLayerUrls && tileLayerUrls.length}
     {#each tileLayerUrls as { url, id } (id)}
       <RasterLayer tileURL="{url}" id="{id}" paintProps="{paint}" />
