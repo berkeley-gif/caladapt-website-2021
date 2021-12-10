@@ -1,4 +1,5 @@
 import config from "~/helpers/api-config";
+import { cosmosLookup } from "./_cosmos-look-up";
 
 const {
   env: {
@@ -15,10 +16,17 @@ export const getTileUrlCalflod3d = (
 ) =>
   `${tileURL}/${source}_${scenario}_${timeFrame}_mosaic_${region}/{z}/{x}/{y}.png?style=${color}`;
 
-export const getTileUrlCosmos = (cm = 200, color = "rsgreen") =>
-  `https://api.cal-adapt.org/tiles/cosmosflooding_${cm}cm_100yrstorm_mosaic_sfbay/{z}/{x}/{y}.png?style=${color}`;
+export const getTileUrlCosmos = (timeFrame, scenario, color = "rsgreen") => {
+  const id = `${timeFrame}|${scenario}`;
+  const slug = cosmosLookup.get(id);
+  if (slug) {
+    return `https://api.cal-adapt.org/tiles/${slug}/{z}/{x}/{y}.png?style=${color}`;
+  } else {
+    console.error(`cosmos tile slug not found for ${id}`);
+  }
+};
 
-export const getTileUrl = (source, ...rest) =>
+export const getTileUrl = (source, scenario, timeFrame, ...rest) =>
   source === "cosmos"
-    ? getTileUrlCosmos()
-    : getTileUrlCalflod3d(source, ...rest);
+    ? getTileUrlCosmos(timeFrame, scenario)
+    : getTileUrlCalflod3d(source, scenario, timeFrame, ...rest);
