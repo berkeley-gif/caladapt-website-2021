@@ -44,7 +44,6 @@
     units: `${units}`,
   }}"
   colors="{HEATMAP_COLOR_SCALE}"
-  ,
   isFetching="{isFetching}"
 />
 
