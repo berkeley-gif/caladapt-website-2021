@@ -5,6 +5,7 @@
     RasterLayer,
     Legend,
   } from "~/components/tools/Map";
+  import { getCSSProp } from "~/helpers/utilities";
 
   import { getTileUrl } from "./_data";
 
@@ -21,6 +22,14 @@
   let tileLayerUrls;
   let lng = -122.2813;
   let lat = 37.7813;
+  let ramp;
+
+  if (typeof window !== "undefined" && !ramp) {
+    ramp = [
+      getCSSProp(document.documentElement, "--rs-green"),
+      getCSSProp(document.documentElement, "--rs-blue"),
+    ];
+  }
 
   $: if (Array.isArray(center) && center.length) {
     [lng, lat] = center;
@@ -33,7 +42,6 @@
         id: d.id,
         url: getTileUrl(d.id, scenario, timeFrame, "sfbay", d.color),
       }));
-  $: console.log(tileLayerUrls);
 </script>
 
 <Map lng="{lng}" lat="{lat}" zoom="{zoom}">
@@ -41,7 +49,7 @@
   <Legend
     title="Data Layers"
     values="{['CoSMoS', 'CalFlod3D-TFS']}"
-    ramp="{['#5DFA25', '#25C7FA']}"
+    ramp="{ramp}"
     columns="{1}"
     width="{'136px'}"
   />

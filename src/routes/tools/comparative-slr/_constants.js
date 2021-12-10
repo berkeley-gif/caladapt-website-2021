@@ -43,20 +43,20 @@ export const DATA_LAYERS = [
     label: "CoSMoS",
     checked: true,
     disabled: false,
-    color: "rsgreen",
+    color: "rsgreen", // #5DFA25
   },
   {
     id: "calflod3dtfs",
     label: "CalFloD3D-TFS (5m)",
     checked: true,
     disabled: false,
-    color: "rsblue",
+    color: "rsblue", // #25C7FA
   },
   {
     id: "calflod3dtfs_50m",
     label: "CalFloD3D-TFS (50m)",
     checked: false,
     disabled: false,
-    color: "rsblue",
+    color: "rsblue", // #25C7FA
   },
 ];
