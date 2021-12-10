@@ -232,23 +232,21 @@
     });
   }
 
-  onMount(async () => {
-    try {
-      await initApp(initialConfig);
-      appReady = true;
-      if (debug) console.log("app ready");
-      await update();
-    } catch (error) {
-      console.error("init error", error);
-      logException(error);
-      notifier.error(
-        "Unable to Load Tool",
-        "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
-        2000
-      );
-    } finally {
-      window.scrollTo(0, 0);
-    }
+  onMount(() => {
+    initApp(initialConfig)
+      .then(() => {
+        appReady = true;
+      })
+      .catch((error) => {
+        console.error("init error", error);
+        logException(error);
+        notifier.error(
+          "Unable to Load Tool",
+          "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
+          2000
+        );
+      });
+    window.scrollTo(0, 0);
   });
 </script>
 
