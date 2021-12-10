@@ -7,43 +7,58 @@
   export let paintProps = {};
   export let beforeId = "settlement-subdivision-label";
 
-  // TODO: handle source & layer update
+  let layer;
+  let source;
+  let sourceId;
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
-  const getSource = (url) => ({
+  const getSourceDef = (url) => ({
     type: "raster",
     tiles: [url],
     tileSize: 256,
   });
 
-  const getLayer = (id, source, paint) => ({
+  const getLayerDef = (id, source, paint) => ({
     id,
     source,
     type: "raster",
     paint,
   });
 
-  let layer;
-  let source;
-  let sourceId;
+  const addRasterLayer = () => {
+    map.addSource(sourceId, source);
+    map.addLayer(layer, beforeId);
+  };
+
+  const removeRasterLayer = () => {
+    map.removeLayer(id);
+    map.removeSource(sourceId);
+  };
+
+  const hasSource = () =>
+    Boolean(map.getSource(sourceId)) && map.isSourceLoaded(sourceId);
+  const hasLayer = () => Boolean(map.getStyle()) && Boolean(map.getLayer(id));
 
   $: if (tileURL && tileURL.length) {
     sourceId = `${id}-source`;
-    source = getSource(tileURL);
-    layer = getLayer(id, sourceId, paintProps);
+    source = getSourceDef(tileURL);
+    layer = getLayerDef(id, sourceId, paintProps);
+  }
+
+  $: if (hasSource() && tileURL) {
+    removeRasterLayer();
+    addRasterLayer();
   }
 
   onMount(() => {
-    map.addSource(sourceId, source);
-    map.addLayer(layer, beforeId);
+    addRasterLayer();
   });
 
   onDestroy(() => {
-    if (map.getStyle() && map.getLayer(id)) {
-      map.removeLayer(id);
-      map.removeSource(sourceId);
+    if (hasLayer() || hasSource()) {
+      removeRasterLayer();
     }
   });
 </script>
