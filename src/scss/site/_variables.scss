@@ -30,6 +30,10 @@ $teal-80: #02484a;
 $teal-90: #013031;
 $teal-100: #001818;
 
+// slr raster colors
+$rs-green: #5dfa25;
+$rs-blue: #25c7fa;
+
 $card-gradient-01: linear-gradient(
   180deg,
   #187a45 0%,
@@ -98,6 +102,8 @@ $caladapt-colors: (
   "blue-50": $blue-50,
   "blue-60": $blue-60,
   "blue-70": $blue-70,
+  "rs-green": $rs-green,
+  "rs-blue": $rs-blue,
 );
 
 // Carbon theme colors for Cal-Adapt
@@ -287,6 +293,9 @@ $gcm-MIROC5: rgba(148, 103, 189, 1);
   --teal-80: #{$teal-80};
   --teal-90: #{$teal-90};
   --teal-100: #{$teal-100};
+
+  --rs-green: #{$rs-green};
+  --rs-blue: #{$rs-blue};
 
   --card-gradient-01: #{$card-gradient-01};
   --card-gradient-02: #{$card-gradient-02};
