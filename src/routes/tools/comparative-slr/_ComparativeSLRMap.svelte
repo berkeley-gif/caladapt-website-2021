@@ -9,6 +9,10 @@
   export let center;
   export let zoom = 10;
 
+  const paint = {
+    "raster-opacity": 0.5,
+  };
+
   let tileLayerUrls;
   let lng = -122.2813;
   let lat = 37.7813;
@@ -31,7 +35,7 @@
   <NavigationControl />
   {#if tileLayerUrls && tileLayerUrls.length}
     {#each tileLayerUrls as { url, id } (id)}
-      <RasterLayer tileURL="{url}" id="{id}" />
+      <RasterLayer tileURL="{url}" id="{id}" paintProps="{paint}" />
     {/each}
   {/if}
 </Map>
