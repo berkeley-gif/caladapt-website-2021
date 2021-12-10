@@ -94,7 +94,7 @@ module.exports = {
         analyzerMode: mode !== "development" ? "disabled" : "server",
       }),
     ].filter(Boolean),
-    devtool: dev && "inline-cheap-module-source-map",
+    devtool: dev ? "inline-cheap-module-source-map" : "source-map",
   },
 
   server: {
