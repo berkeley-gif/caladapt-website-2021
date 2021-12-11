@@ -33,6 +33,7 @@ $teal-100: #001818;
 // slr raster colors
 $rs-green: #5dfa25;
 $rs-blue: #25c7fa;
+$rs-teal: #88dcc4;
 
 $card-gradient-01: linear-gradient(
   180deg,
@@ -296,6 +297,7 @@ $gcm-MIROC5: rgba(148, 103, 189, 1);
 
   --rs-green: #{$rs-green};
   --rs-blue: #{$rs-blue};
+  --rs-teal: #{$rs-teal};
 
   --card-gradient-01: #{$card-gradient-01};
   --card-gradient-02: #{$card-gradient-02};
