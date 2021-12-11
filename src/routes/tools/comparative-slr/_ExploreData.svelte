@@ -82,8 +82,6 @@
     />
   </div>
 
-  <div slot="tab_content_slippy_map_controls" class="graphic block"></div>
-
   <div slot="settings" class="settings">
     <SettingsPanel
       on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
