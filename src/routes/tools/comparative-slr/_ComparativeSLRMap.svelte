@@ -55,7 +55,9 @@
   />
   {#if tileLayerUrls && tileLayerUrls.length}
     {#each tileLayerUrls as { url, id } (id)}
-      <RasterLayer tileURL="{url}" id="{id}" paintProps="{paint}" />
+      {#if url}
+        <RasterLayer tileURL="{url}" id="{id}" paintProps="{paint}" />
+      {/if}
     {/each}
   {/if}
 </Map>
