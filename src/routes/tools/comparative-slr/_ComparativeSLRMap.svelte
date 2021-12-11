@@ -28,6 +28,7 @@
     ramp = [
       getCSSProp(document.documentElement, "--rs-green"),
       getCSSProp(document.documentElement, "--rs-blue"),
+      getCSSProp(document.documentElement, "--rs-teal"),
     ];
   }
 
@@ -48,10 +49,11 @@
   <NavigationControl />
   <Legend
     title="Data Layers"
-    values="{['CoSMoS', 'CalFlod3D-TFS']}"
+    values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
     ramp="{ramp}"
-    columns="{1}"
-    width="{'136px'}"
+    columns="{3}"
+    columnWidth="{150}"
+    width="{'400px'}"
   />
   {#if tileLayerUrls && tileLayerUrls.length}
     {#each tileLayerUrls as { url, id } (id)}
