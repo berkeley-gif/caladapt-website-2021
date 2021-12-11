@@ -3,7 +3,7 @@ export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
 
 export const DEFAULT_INITIAL_CONFIG = {
-  boundaryId: "locagrid",
+  boundaryId: "place",
   floodScenario: DEFAULT_FLOOD_SCENARIO,
   timeFrame: DEFAULT_TIME_FRAME,
   lng: DEFAULT_CENTER[0],
