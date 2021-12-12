@@ -20,7 +20,7 @@
 </script>
 
 <style>
-  div {
+  p {
     max-width: 70ch;
   }
 </style>
@@ -37,9 +37,9 @@
 <h2 class="h3">
   {title}
 </h2>
-<div class="h4">
+<p class="h4">
   Projected changes in <span class="annotate">{label}</span> when
   <span class="annotate">{climvarLabel}</span>
   is above <span class="annotate">{thresholdLabel}</span> under a
   <span class="annotate">{scenarioLabel}</span>.
-</div>
+</p>
