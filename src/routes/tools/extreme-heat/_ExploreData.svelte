@@ -125,9 +125,29 @@
     ).default;
   }
 
+  function formatDailyDataForExport(_arr) {
+    return _arr.map((item) => {
+      const row = {};
+      row.date = item.date;
+      item.values.forEach((d) => {
+        if (Array.isArray(d.value)) {
+          row[`${d.label} Min`] = d.value[0];
+          row[`${d.label} Max`] = d.value[1];
+        } else {
+          row[d.label] = d.value;
+        }
+      });
+      return row;
+    });
+  }
+
   async function loadDownload() {
     showDownload = true;
-    csvData = formatDataForExport(dataByDate);
+    if ($indicator.id === "timing") {
+      csvData = formatDailyDataForExport(dataByDate);
+    } else {
+      csvData = formatDataForExport(dataByDate);
+    }
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
