@@ -1,5 +1,4 @@
 <script>
-  import { createEventDispatcher } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
