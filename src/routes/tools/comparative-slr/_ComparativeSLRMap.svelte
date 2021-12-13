@@ -5,23 +5,25 @@
     RasterLayer,
     Legend,
   } from "~/components/tools/Map";
-  import { getCSSProp } from "~/helpers/utilities";
+  import { getCSSProp, isValidNumber } from "~/helpers/utilities";
 
   import { getTileUrl } from "./_data";
 
   export let scenario;
   export let timeFrame;
   export let dataLayers;
-  export let center;
+  export let lng;
+  export let lat;
   export let zoom = 10;
 
   const paintProps = {
     "raster-opacity": 0.5,
   };
+  const lngDefault = -122.2813;
+  const latDefault = 37.7813;
 
+  let mapInstance;
   let rasterLayersProps;
-  let lng = -122.2813;
-  let lat = 37.7813;
   let legendRamp;
 
   if (typeof window !== "undefined" && !legendRamp) {
@@ -32,8 +34,11 @@
     ];
   }
 
-  $: if (Array.isArray(center) && center.length) {
-    [lng, lat] = center;
+  $: lng = isValidNumber(lng) ? lng : lngDefault;
+  $: lat = isValidNumber(lat) ? lat : latDefault;
+
+  $: if (mapInstance && lng && lat) {
+    mapInstance.setCenter([lng, lat]);
   }
 
   $: if (scenario && timeFrame && dataLayers)
@@ -45,7 +50,7 @@
       }));
 </script>
 
-<Map lng="{lng}" lat="{lat}" zoom="{zoom}">
+<Map bind:this="{mapInstance}" lng="{lng}" lat="{lat}" zoom="{zoom}">
   <NavigationControl />
   <Legend
     title=""

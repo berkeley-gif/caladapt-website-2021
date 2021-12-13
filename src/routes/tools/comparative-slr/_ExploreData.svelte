@@ -50,13 +50,8 @@
   }
 
   function changeLocation(e) {
-    if (e.detail.boundaryId === "custom") {
-      locationStore.updateBoundary("locagrid");
-      locationStore.updateLocation(e.detail.location, true);
-    } else {
-      locationStore.updateBoundary(e.detail.boundaryId);
-      locationStore.updateLocation(e.detail.location);
-    }
+    locationStore.updateBoundary(e.detail.boundaryId);
+    locationStore.updateLocation(e.detail.location);
   }
 </script>
 
