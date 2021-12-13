@@ -43,23 +43,27 @@ export const FLOOD_SCENARIOS = [
   },
 ];
 
+export const DL_Cosmos = "cosmos";
+export const DL_Calflod5m = "calflod3dtfs";
+export const DL_Calflod50m = "calflod3dtfs_50m";
+
 export const DATA_LAYERS = [
   {
-    id: "cosmos",
+    id: DL_Cosmos,
     label: "CoSMoS",
     checked: true,
     disabled: false,
     color: "rsgreen", // #5DFA25
   },
   {
-    id: "calflod3dtfs",
+    id: DL_Calflod5m,
     label: "CalFloD3D-TFS (5m)",
     checked: true,
     disabled: false,
     color: "rsblue", // #25C7FA
   },
   {
-    id: "calflod3dtfs_50m",
+    id: DL_Calflod50m,
     label: "CalFloD3D-TFS (50m)",
     checked: false,
     disabled: false,

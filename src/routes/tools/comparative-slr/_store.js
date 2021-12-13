@@ -5,6 +5,9 @@ import {
   FLOOD_SCENARIOS,
   TIME_PERIODS,
   DATA_LAYERS,
+  DL_Cosmos,
+  DL_Calflod5m,
+  DL_Calflod50m,
 } from "./_constants";
 
 export const floodScenarioStore = makeCustomWritableStore(
@@ -40,6 +43,20 @@ export const timeFrameStore = makeCustomWritableStore(DEFAULT_TIME_FRAME, {
 
 export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
   name: "dataLayersStore",
+  getters: [
+    {
+      name: "dlCosmos",
+      getter: ($s) => $s.find((d) => d.id === DL_Cosmos),
+    },
+    {
+      name: "dlCalflod5m",
+      getter: ($s) => $s.find((d) => d.id === DL_Calflod5m),
+    },
+    {
+      name: "dlCalflod50m",
+      getter: ($s) => $s.find((d) => d.id === DL_Calflod50m),
+    },
+  ],
   updaters: [
     {
       name: "setChecked",
@@ -48,6 +65,24 @@ export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
         ({ id, checked }) =>
           store.update((s) =>
             s.map((d) => (d.id === id ? { ...d, checked } : d))
+          ),
+    },
+    {
+      name: "setDisabled",
+      update:
+        (store) =>
+        ({ id, disabled }) =>
+          store.update((s) =>
+            s.map((d) => (d.id === id ? { ...d, disabled } : d))
+          ),
+    },
+    {
+      name: "update",
+      update:
+        (store) =>
+        ({ id, ...rest }) =>
+          store.update((s) =>
+            s.map((d) => (d.id === id ? { ...d, ...rest } : d))
           ),
     },
   ],
