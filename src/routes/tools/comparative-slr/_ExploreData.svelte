@@ -15,7 +15,8 @@
   import Map from "./_ComparativeSLRMap.svelte";
 
   const { location, boundary } = locationStore;
-  const { tfTileLabel } = timeFrameStore;
+  const { tfTileLabel, timeFrame } = timeFrameStore;
+  const { floodScenario } = floodScenarioStore;
 
   // async component imports
   let ChangeLocation;
@@ -59,7 +60,13 @@
 
 <Dashboard useTabs="{true}" activeTab="{0}">
   <div slot="tab_content_map_title" class="block title">
-    <Title location="{$location.title}" loadLocation="{loadLocation}" />
+    <Title
+      location="{$location.title}"
+      loadLocation="{loadLocation}"
+      timeFrame="{$timeFrame.label}"
+      floodScenario="{$floodScenario.label}"
+      dataLayers="{$dataLayersStore}"
+    />
   </div>
 
   <div

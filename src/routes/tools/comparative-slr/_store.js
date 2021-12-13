@@ -2,7 +2,6 @@ import { makeCustomWritableStore } from "../_common/stores";
 import {
   DEFAULT_FLOOD_SCENARIO,
   DEFAULT_TIME_FRAME,
-  DEFAULT_DATA_LAYERS,
   FLOOD_SCENARIOS,
   TIME_PERIODS,
   DATA_LAYERS,
@@ -14,7 +13,7 @@ export const floodScenarioStore = makeCustomWritableStore(
     name: "floodScenarioStore",
     getters: [
       {
-        name: "scenario",
+        name: "floodScenario",
         getter: ($s) => FLOOD_SCENARIOS.find((d) => d.id === $s),
       },
     ],

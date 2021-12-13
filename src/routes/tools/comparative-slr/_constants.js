@@ -31,15 +31,15 @@ export const TIME_PERIODS = [
 export const FLOOD_SCENARIOS = [
   {
     id: "min",
-    label: "Minimum",
+    label: "minimum",
   },
   {
     id: "med",
-    label: "Median",
+    label: "median",
   },
   {
     id: "max",
-    label: "Maximum",
+    label: "maximum",
   },
 ];
 
