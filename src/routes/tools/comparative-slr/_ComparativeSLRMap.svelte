@@ -15,17 +15,17 @@
   export let center;
   export let zoom = 10;
 
-  const paint = {
+  const paintProps = {
     "raster-opacity": 0.5,
   };
 
-  let tileLayerUrls;
+  let rasterLayersProps;
   let lng = -122.2813;
   let lat = 37.7813;
-  let ramp;
+  let legendRamp;
 
-  if (typeof window !== "undefined" && !ramp) {
-    ramp = [
+  if (typeof window !== "undefined" && !legendRamp) {
+    legendRamp = [
       getCSSProp(document.documentElement, "--rs-green"),
       getCSSProp(document.documentElement, "--rs-blue"),
       getCSSProp(document.documentElement, "--rs-teal"),
@@ -36,29 +36,29 @@
     [lng, lat] = center;
   }
 
-  $: if (scenario && timeFrame)
-    tileLayerUrls = dataLayers
+  $: if (scenario && timeFrame && dataLayers)
+    rasterLayersProps = dataLayers
       .filter((d) => d.checked)
       .map((d) => ({
         id: d.id,
-        url: getTileUrl(d.id, scenario, timeFrame, "sfbay", d.color),
+        tileUrl: getTileUrl(d.id, scenario, timeFrame, "sfbay", d.color),
       }));
 </script>
 
 <Map lng="{lng}" lat="{lat}" zoom="{zoom}">
   <NavigationControl />
   <Legend
-    title="Data Layers"
+    title=""
     values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
-    ramp="{ramp}"
+    ramp="{legendRamp}"
     columns="{3}"
     columnWidth="{150}"
     width="{'400px'}"
   />
-  {#if tileLayerUrls && tileLayerUrls.length}
-    {#each tileLayerUrls as { url, id } (id)}
-      {#if url}
-        <RasterLayer tileURL="{url}" id="{id}" paintProps="{paint}" />
+  {#if rasterLayersProps && rasterLayersProps.length}
+    {#each rasterLayersProps as { tileUrl, id } (id)}
+      {#if tileUrl}
+        <RasterLayer tileURL="{tileUrl}" id="{id}" paintProps="{paintProps}" />
       {/if}
     {/each}
   {/if}
