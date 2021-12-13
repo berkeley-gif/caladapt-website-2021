@@ -609,3 +609,6 @@ export function isEmptyData(_data) {
 
 export const getCSSProp = (element, propName) =>
   window.getComputedStyle(element).getPropertyValue(propName);
+
+export const isValidNumber = (value) =>
+  typeof value === "number" && !isNaN(value);
