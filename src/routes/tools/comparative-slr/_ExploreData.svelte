@@ -26,8 +26,6 @@
 
   let learnMoreProps = {};
 
-  let mapZoomLevel = 12;
-
   async function loadLearnMore({
     slugs = [],
     content = "",
@@ -72,9 +70,7 @@
       timeFrame="{$tfTileLabel}"
       scenario="{$floodScenarioStore}"
       dataLayers="{$dataLayersStore}"
-      lng="{$location.center && $location.center[0]}"
-      lat="{$location.center && $location.center[1]}"
-      zoom="{mapZoomLevel}"
+      bbox="{$location.bbox && $location.bbox}"
     />
   </div>
 

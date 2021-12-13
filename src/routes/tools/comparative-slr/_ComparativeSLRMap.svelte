@@ -5,24 +5,26 @@
     RasterLayer,
     Legend,
   } from "~/components/tools/Map";
-  import { getCSSProp, isValidNumber } from "~/helpers/utilities";
+  import { getCSSProp } from "~/helpers/utilities";
 
   import { getTileUrl } from "./_data";
 
   export let scenario;
   export let timeFrame;
   export let dataLayers;
-  export let lng;
-  export let lat;
-  export let zoom = 10;
+  export let bbox;
 
   const paintProps = {
     "raster-opacity": 0.5,
   };
-  const lngDefault = -122.2813;
-  const latDefault = 37.7813;
+
+  // initial map view
+  const lng = -122.2813;
+  const lat = 37.7813;
+  const zoom = 9;
 
   let mapInstance;
+  let mbGlMap;
   let rasterLayersProps;
   let legendRamp;
 
@@ -34,11 +36,10 @@
     ];
   }
 
-  $: lng = isValidNumber(lng) ? lng : lngDefault;
-  $: lat = isValidNumber(lat) ? lat : latDefault;
+  $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
-  $: if (mapInstance && lng && lat) {
-    mapInstance.setCenter([lng, lat]);
+  $: if (mapReady && Array.isArray(bbox) && bbox.length) {
+    mapInstance.zoomToExtent(bbox, 12);
   }
 
   $: if (scenario && timeFrame && dataLayers)
@@ -48,9 +49,19 @@
         id: d.id,
         tileUrl: getTileUrl(d.id, scenario, timeFrame, "sfbay", d.color),
       }));
+
+  function handleMapReady({ detail }) {
+    mbGlMap = detail;
+  }
 </script>
 
-<Map bind:this="{mapInstance}" lng="{lng}" lat="{lat}" zoom="{zoom}">
+<Map
+  bind:this="{mapInstance}"
+  lng="{lng}"
+  lat="{lat}"
+  zoom="{zoom}"
+  on:ready="{handleMapReady}"
+>
   <NavigationControl />
   <Legend
     title=""
