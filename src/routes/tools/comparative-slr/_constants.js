@@ -1,3 +1,5 @@
+import { DEFAULT_BOUNDARIES } from "../_common/constants";
+
 export const DEFAULT_CENTER = [-122.2813, 37.7813];
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
@@ -10,6 +12,10 @@ export const DEFAULT_INITIAL_CONFIG = {
   lat: DEFAULT_CENTER[1],
   imperial: false,
 };
+
+export const BOUNDARIES = DEFAULT_BOUNDARIES.filter((d) =>
+  ["counties", "censustracts", "hydrounits", "place"].includes(d.id)
+);
 
 export const TIME_PERIODS = [
   {

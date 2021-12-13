@@ -2,7 +2,7 @@
   import { Dashboard } from "~/components/tools/Partials";
   import { Loading } from "carbon-components-svelte";
 
-  import { DEFAULT_BOUNDARIES } from "../_common/constants";
+  import { BOUNDARIES } from "./_constants";
   import { isFetchingStore, locationStore } from "../_common/stores";
   import {
     timeFrameStore,
@@ -77,7 +77,8 @@
       timeFrame="{$tfTileLabel}"
       scenario="{$floodScenarioStore}"
       dataLayers="{$dataLayersStore}"
-      center="{$location.center}"
+      lng="{$location.center && $location.center[0]}"
+      lat="{$location.center && $location.center[1]}"
       zoom="{mapZoomLevel}"
     />
   </div>
@@ -95,7 +96,7 @@
   bind:open="{showChangeLocation}"
   location="{$location}"
   boundary="{$boundary}"
-  boundaryList="{DEFAULT_BOUNDARIES}"
+  boundaryList="{BOUNDARIES}"
   addStateBoundary="{false}"
   enableUpload="{false}"
   on:change="{changeLocation}"
