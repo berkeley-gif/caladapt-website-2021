@@ -10,6 +10,7 @@ const BundleAnalyzerPlugin =
 const featureFlags = require("./featureFlags.json");
 
 const deploy = process.env.DEPLOY || "dev";
+const sourceMap = process.env.SOURCE_MAPS;
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
@@ -94,7 +95,7 @@ module.exports = {
         analyzerMode: mode !== "development" ? "disabled" : "server",
       }),
     ].filter(Boolean),
-    devtool: dev ? "inline-cheap-module-source-map" : "source-map",
+    devtool: sourceMap ? "inline-cheap-module-source-map" : "source-map",
   },
 
   server: {
