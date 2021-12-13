@@ -72,8 +72,8 @@
     }
   }
 
-  export function zoomToExtent(bbox) {
-    map.fitBounds(bbox, { maxZoom: 9 });
+  export function zoomToExtent(bbox, maxZoom = 9) {
+    map.fitBounds(bbox, { maxZoom });
   }
 
   export function updatePopup(event, description) {
@@ -114,7 +114,7 @@
         popupElem = popup.getElement();
         popupElem.style.display = "none";
         canvas = map.getCanvas();
-        dispatch("ready");
+        dispatch("ready", map);
       });
 
       // Forward mouse events
