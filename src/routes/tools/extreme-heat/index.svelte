@@ -120,7 +120,6 @@
   const { scenario } = scenarioStore;
 
   // Local props
-  let initReady = false;
   let appReady = false;
 
   // Monitor sections as they enter & leave viewport
@@ -169,8 +168,7 @@
   }
 
   async function update() {
-    if (!initReady || !appReady) return;
-    if ($modelsStore.length === 0) return;
+    if (!appReady || !$modelsStore.length) return;
     try {
       const config = {
         climvarId: $climvarStore,
@@ -236,10 +234,10 @@
   onMount(() => {
     initApp(initialConfig)
       .then(() => {
-        initReady = true;
+        appReady = true;
       })
       .catch((error) => {
-        console.log("init error", error);
+        console.error("init error", error);
         logException(error);
         notifier.error(
           "Unable to Load Tool",
@@ -272,13 +270,8 @@
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
-  {#if initReady}
-    <ExploreData
-      on:ready="{() => {
-        appReady = true;
-        update();
-      }}"
-    />
+  {#if appReady}
+    <ExploreData />
   {:else}
     <Loading />
   {/if}
