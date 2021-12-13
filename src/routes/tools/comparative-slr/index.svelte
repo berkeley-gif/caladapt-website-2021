@@ -69,6 +69,8 @@
 
   import ExploreData from "./_ExploreData.svelte";
 
+  import { DL_Cosmos, DL_Calflod50m, DL_Calflod5m } from "./_constants";
+
   import {
     locationStore,
     isFetchingStore,
@@ -98,12 +100,32 @@
     }
   };
 
+  const { location, boundary } = locationStore;
+  const { dlCalflod50m } = dataLayersStore;
+
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
+
+  // temporary handle enabling & disabling data layers
+  $: if ($floodScenarioStore === "med") {
+    dataLayersStore.update({
+      id: DL_Calflod50m,
+      checked: false,
+      disabled: true,
+    });
+  }
+  $: if ($floodScenarioStore !== "med" && $dlCalflod50m.disabled) {
+    dataLayersStore.update({
+      id: DL_Calflod50m,
+      disabled: false,
+    });
+  }
 
   if (process.env.NODE_ENV !== "production") {
     logStores(
       floodScenarioStore,
+      location,
+      boundary,
       timeFrameStore,
       dataLayersStore,
       isFetchingStore,
