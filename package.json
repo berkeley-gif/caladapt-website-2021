@@ -4,10 +4,10 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development sapper dev --no-hot",
+    "dev": "cross-env NODE_ENV=development SOURCE_MAPS=true sapper dev --no-hot",
     "build": "cross-env NODE_ENV=production SOURCE_MAPS=true sapper build",
     "build:github": "cross-env NODE_ENV=production SOURCE_MAPS=false sapper build",
-    "export": "sapper export --timeout=10000",
+    "export": "cross-env NODE_ENV=production SOURCE_MAPS=true sapper export --timeout=10000",
     "start": "node __sapper__/build",
     "deploy": "zx ./scripts/deploy.mjs",
     "deploy-prod": "npm run deploy -- --location=prod",
