@@ -13,6 +13,7 @@ const deploy = process.env.DEPLOY || "dev";
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
+const sourceMap = dev ? "inline-cheap-module-source-map" : "source-map";
 
 const alias = {
   "~": path.resolve(__dirname, "src/"),
@@ -94,7 +95,7 @@ module.exports = {
         analyzerMode: mode !== "development" ? "disabled" : "server",
       }),
     ].filter(Boolean),
-    devtool: dev && "inline-cheap-module-source-map",
+    devtool: process.env.SOURCE_MAPS && sourceMap,
   },
 
   server: {
