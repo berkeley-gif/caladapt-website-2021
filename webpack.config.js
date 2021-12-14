@@ -14,7 +14,6 @@ const deploy = process.env.DEPLOY || "dev";
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 const sourceMap = dev ? "inline-cheap-module-source-map" : "source-map";
-console.log("XXXXXX", process.env.SOURCE_MAPS);
 
 const alias = {
   "~": path.resolve(__dirname, "src/"),
