@@ -27,6 +27,22 @@
 
   let learnMoreProps = {};
 
+  $: dataUnavailableMsg = getUnavailableMsgText(
+    $dataLayersStore.filter((d) => d.disabled)
+  );
+
+  function getUnavailableMsgText(layers) {
+    if (layers.length) {
+      return `${layers
+        .map((d) => d.label)
+        .join(" and ")} data unavailable for the
+        ${
+          $floodScenario.label
+        } flood scenario in the San Francisco Bay region.`;
+    }
+    return "";
+  }
+
   async function loadLearnMore({
     slugs = [],
     content = "",
@@ -66,6 +82,7 @@
       timeFrame="{$timeFrame.label}"
       floodScenario="{$floodScenario.label}"
       dataLayers="{$dataLayersStore}"
+      dataUnavailableMsg="{dataUnavailableMsg}"
     />
   </div>
 
