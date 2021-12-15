@@ -53,6 +53,14 @@
     map.addLayer(layer);
   }
 
+  export function getLayer(layerId) {
+    return map.getLayer(layerId);
+  }
+
+  export function moveLayer(layerId, beforeId) {
+    map.moveLayer(layerId, beforeId);
+  }
+
   export function hideLayer(layer) {
     map.setLayoutProperty(layer, "visibility", "none");
   }
@@ -61,15 +69,15 @@
     map.setLayoutProperty(layer, "visibility", "visible");
   }
 
-  export function setLineOpacity(layerId, opacity = 0.75) {
-    map.setPaintProperty(layerId, "line-opacity", opacity);
-  }
-
   export function removeLayer(layer) {
     map.removeLayer(layer.id);
     if (map.getSource(layer.id)) {
       map.removeSource(layer.id);
     }
+  }
+
+  export function setLineOpacity(layerId, opacity = 0.75) {
+    map.setPaintProperty(layerId, "line-opacity", opacity);
   }
 
   export function zoomToExtent(bbox, maxZoom = 9) {
