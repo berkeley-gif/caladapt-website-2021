@@ -93,7 +93,7 @@
     <Map
       timeFrame="{$tfTileLabel}"
       scenario="{$floodScenarioStore}"
-      dataLayers="{$dataLayersStore}"
+      dataLayersStore="{dataLayersStore}"
       bbox="{$location.bbox && $location.bbox}"
     />
   </div>

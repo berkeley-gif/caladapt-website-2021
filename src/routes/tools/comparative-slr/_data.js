@@ -17,6 +17,7 @@ const getTileUrlCalflod3d50m = (timeFrame, scenario, color = "rsblue") => {
     return `${tileURL}/${slug}_mosaic_sfbay/{z}/{x}/{y}.png?style=${color}`;
   } else {
     console.error(`calflod3d-tfs-50m tile slug not found for ${id}`);
+    return "";
   }
 };
 
@@ -27,6 +28,7 @@ const getTileUrlCosmos = (timeFrame, scenario, color = "rsgreen") => {
     return `https://api.cal-adapt.org/tiles/${slug}_mosaic_sfbay/{z}/{x}/{y}.png?style=${color}`;
   } else {
     console.error(`cosmos tile slug not found for ${id}`);
+    return "";
   }
 };
 

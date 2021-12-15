@@ -1,15 +1,12 @@
 <script>
-  import { getContext, onMount, onDestroy } from "svelte";
+  import { getContext, onMount, afterUpdate } from "svelte";
   import { contextKey } from "~/helpers/mapbox";
 
   export let id = "";
   export let tileURL = "";
   export let paintProps = {};
   export let beforeId = "settlement-subdivision-label";
-
-  let layer;
-  let source;
-  let sourceId;
+  export let visibility = "visible";
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
@@ -20,11 +17,12 @@
     tileSize: 256,
   });
 
-  const getLayerDef = (id, source, paint) => ({
+  const getLayerDef = (id, source, paint, layout) => ({
     id,
     source,
     type: "raster",
     paint,
+    layout,
   });
 
   const addRasterLayer = () => {
@@ -39,26 +37,56 @@
 
   const hasSource = () =>
     Boolean(map.getSource(sourceId)) && map.isSourceLoaded(sourceId);
+
   const hasLayer = () => Boolean(map.getStyle()) && Boolean(map.getLayer(id));
 
-  $: if (tileURL && tileURL.length) {
-    sourceId = `${id}-source`;
-    source = getSourceDef(tileURL);
-    layer = getLayerDef(id, sourceId, paintProps);
+  const isVisible = () =>
+    map.getLayoutProperty(id, "visibility") === "visibile";
+
+  let sourceId;
+  let source;
+  let layer;
+
+  $: {
+    console.log("---");
+    console.log("sourceId", sourceId);
+    console.log("source", source);
+    console.log("layer", layer);
+    console.log("visibility", visibility);
+    console.log("---");
   }
 
-  $: if (hasSource() && tileURL) {
-    removeRasterLayer();
-    addRasterLayer();
+  $: if (tileURL && id) {
+    sourceId = `${id}-source`;
+    source = getSourceDef(tileURL);
+    layer = getLayerDef(id, sourceId, paintProps || {}, {
+      visibility: visibility || "visible",
+    });
+  }
+
+  $: if (hasLayer() && !isVisible() && visibility === "visible") {
+    map.setLayoutProperty(id, "visibility", "visible");
+    console.log("should now be visible");
+  }
+
+  $: if (hasLayer() && isVisible() && visibility === "none") {
+    map.setLayoutProperty(id, "visibility", "none");
+    console.log("should now NOT be visible");
   }
 
   onMount(() => {
-    addRasterLayer();
-  });
-
-  onDestroy(() => {
-    if (hasLayer() || hasSource()) {
-      removeRasterLayer();
+    if (source && layer) {
+      addRasterLayer();
     }
+
+    return () => {
+      if (hasLayer()) {
+        map.removeLayer(id);
+      }
+
+      if (hasSource()) {
+        map.removeSource(sourceId);
+      }
+    };
   });
 </script>

@@ -11,7 +11,7 @@
 
   export let scenario;
   export let timeFrame;
-  export let dataLayers;
+  export let dataLayersStore;
   export let bbox;
 
   const paintProps = {
@@ -36,6 +36,8 @@
     ];
   }
 
+  $: dataLayers = $dataLayersStore;
+
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
   $: if (mapReady && Array.isArray(bbox) && bbox.length) {
@@ -43,12 +45,13 @@
   }
 
   $: if (scenario && timeFrame && dataLayers)
-    rasterLayersProps = dataLayers
-      .filter((d) => d.checked)
-      .map((d) => ({
-        id: d.id,
-        tileUrl: getTileUrl(d.id, scenario, timeFrame, "sfbay", d.color),
-      }));
+    rasterLayersProps = dataLayers.map(({ id, checked, color }) => ({
+      id,
+      tileUrl: getTileUrl(id, scenario, timeFrame, "sfbay", color),
+      visibility: checked ? "visible" : "none",
+    }));
+
+  $: console.log("rasterLayersProps: ", rasterLayersProps);
 
   function handleMapReady({ detail }) {
     mbGlMap = detail;
@@ -71,11 +74,12 @@
     columnWidth="{150}"
     width="{'400px'}"
   />
-  {#if rasterLayersProps && rasterLayersProps.length}
-    {#each rasterLayersProps as { tileUrl, id } (id)}
-      {#if tileUrl}
-        <RasterLayer tileURL="{tileUrl}" id="{id}" paintProps="{paintProps}" />
-      {/if}
-    {/each}
-  {/if}
+  {#each rasterLayersProps as { tileUrl, id, visibility } (id)}
+    <RasterLayer
+      tileURL="{tileUrl}"
+      id="{id}"
+      paintProps="{paintProps}"
+      visibility="{visibility}"
+    />
+  {/each}
 </Map>
