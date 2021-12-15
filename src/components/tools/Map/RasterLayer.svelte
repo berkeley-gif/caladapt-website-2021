@@ -39,10 +39,18 @@
     map.removeSource(sourceId);
   };
 
-  const hasSource = () =>
-    Boolean(map.getSource(sourceId)) && map.isSourceLoaded(sourceId);
+  const hasSource = () => Boolean(getSource()) && map.isSourceLoaded(sourceId);
 
   const hasLayer = () => Boolean(map.getStyle()) && Boolean(map.getLayer(id));
+
+  const getSource = () => map.getSource(sourceId);
+
+  const getSourceTile = () => {
+    const { tiles } = getSource();
+    if (Array.isArray(tiles) && tiles.length) {
+      return tiles[0];
+    }
+  };
 
   const isVisible = () => map.getLayoutProperty(id, VISIBILITY) === VISIBLE;
 
@@ -57,6 +65,7 @@
     console.log("layer", layer);
     console.log("visibility", visibility);
     hasLayer() && console.log("isVisible", isVisible());
+    hasSource() && console.log("getSource: ", getSource());
     console.log("---");
   }
 
@@ -67,6 +76,16 @@
     layer = getLayerDef(id, sourceId, paintProps || {}, {
       visibility: visibility || VISIBLE,
     });
+  }
+
+  $: if (hasSource() && getSourceTile() !== tileURL && tileURL) {
+    removeRasterLayer();
+    sourceId = `${id}-source`;
+    source = getSourceDef(tileURL);
+    layer = getLayerDef(id, sourceId, paintProps || {}, {
+      visibility: visibility || VISIBLE,
+    });
+    addRasterLayer();
   }
 
   $: if (hasLayer() && !isVisible() && visibility === VISIBLE) {
