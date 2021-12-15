@@ -1,5 +1,5 @@
 <script>
-  import { getContext, onMount, afterUpdate } from "svelte";
+  import { getContext, onDestroy } from "svelte";
   import { contextKey } from "~/helpers/mapbox";
 
   export let id = "";
@@ -54,6 +54,14 @@
 
   const isVisible = () => map.getLayoutProperty(id, VISIBILITY) === VISIBLE;
 
+  const setLocalProps = () => {
+    sourceId = `${id}-source`;
+    source = getSourceDef(tileURL);
+    layer = getLayerDef(id, sourceId, paintProps || {}, {
+      visibility: visibility || VISIBLE,
+    });
+  };
+
   let sourceId;
   let source;
   let layer;
@@ -71,20 +79,14 @@
 
   $: if (!hasLayer() && tileURL && id) {
     console.log("updating source & layer");
-    sourceId = `${id}-source`;
-    source = getSourceDef(tileURL);
-    layer = getLayerDef(id, sourceId, paintProps || {}, {
-      visibility: visibility || VISIBLE,
-    });
+    setLocalProps();
+    addRasterLayer();
   }
 
+  // update existing sources
   $: if (hasSource() && getSourceTile() !== tileURL && tileURL) {
     removeRasterLayer();
-    sourceId = `${id}-source`;
-    source = getSourceDef(tileURL);
-    layer = getLayerDef(id, sourceId, paintProps || {}, {
-      visibility: visibility || VISIBLE,
-    });
+    setLocalProps();
     addRasterLayer();
   }
 
@@ -98,19 +100,12 @@
     console.log("should now NOT be visible");
   }
 
-  onMount(() => {
-    if (source && layer) {
-      addRasterLayer();
+  onDestroy(() => {
+    if (hasLayer()) {
+      map.removeLayer(id);
     }
-
-    return () => {
-      if (hasLayer()) {
-        map.removeLayer(id);
-      }
-
-      if (hasSource()) {
-        map.removeSource(sourceId);
-      }
-    };
+    if (hasSource()) {
+      map.removeSource(sourceId);
+    }
   });
 </script>
