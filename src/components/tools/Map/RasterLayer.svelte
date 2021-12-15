@@ -8,6 +8,10 @@
   export let beforeId = "settlement-subdivision-label";
   export let visibility = "visible";
 
+  const VISIBLE = "visible";
+  const VISIBILITY = "visibility";
+  const NONE = "none";
+
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
@@ -40,8 +44,7 @@
 
   const hasLayer = () => Boolean(map.getStyle()) && Boolean(map.getLayer(id));
 
-  const isVisible = () =>
-    map.getLayoutProperty(id, "visibility") === "visibile";
+  const isVisible = () => map.getLayoutProperty(id, VISIBILITY) === VISIBLE;
 
   let sourceId;
   let source;
@@ -53,24 +56,26 @@
     console.log("source", source);
     console.log("layer", layer);
     console.log("visibility", visibility);
+    hasLayer() && console.log("isVisible", isVisible());
     console.log("---");
   }
 
-  $: if (tileURL && id) {
+  $: if (!hasLayer() && tileURL && id) {
+    console.log("updating source & layer");
     sourceId = `${id}-source`;
     source = getSourceDef(tileURL);
     layer = getLayerDef(id, sourceId, paintProps || {}, {
-      visibility: visibility || "visible",
+      visibility: visibility || VISIBLE,
     });
   }
 
-  $: if (hasLayer() && !isVisible() && visibility === "visible") {
-    map.setLayoutProperty(id, "visibility", "visible");
+  $: if (hasLayer() && !isVisible() && visibility === VISIBLE) {
+    map.setLayoutProperty(id, VISIBILITY, VISIBLE);
     console.log("should now be visible");
   }
 
-  $: if (hasLayer() && isVisible() && visibility === "none") {
-    map.setLayoutProperty(id, "visibility", "none");
+  $: if (hasLayer() && isVisible() && visibility === NONE) {
+    map.setLayoutProperty(id, VISIBILITY, NONE);
     console.log("should now NOT be visible");
   }
 
