@@ -3,6 +3,7 @@
     Map,
     NavigationControl,
     RasterLayer,
+    StyleControl,
     Legend,
   } from "~/components/tools/Map";
   import { getCSSProp } from "~/helpers/utilities";
@@ -74,6 +75,8 @@
     columnWidth="{150}"
     width="{'400px'}"
   />
+  <StyleControl position="{{ bottom: 82, right: 10 }}" />
+  <!-- TODO: rebuild raster layers after style update? -->
   {#each rasterLayersProps as { tileUrl, id, visibility } (id)}
     <RasterLayer
       tileURL="{tileUrl}"
