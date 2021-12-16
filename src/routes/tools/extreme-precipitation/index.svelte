@@ -263,11 +263,7 @@
 <Header
   iconPaths="{tool.icons}"
   title="{tool.title}"
-  description="For most areas around the state, the climate models project a 
-  significant rise in the number of days exceeding what is now considered 
-  extremely hot for the given area. Explore how the frequency and timing of 
-  extreme heat days and warm nights is expected to change under different 
-  emission scenarios for your location."
+  description="An extreme weather event is an occurrence that is significantly different from typical weather at a specific location and time of year. Extreme precipitation events can lead to flooding, mudslides and other damaging events. In a changing climate the intensity and frequency of such events will likely change across California. This tool visualizes how climate models predict extreme precipitation events will change over the 21st century. "
 />
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
@@ -288,70 +284,131 @@
     >
       <div slot="description">
         <p>
-          With this tool you can explore how the frequency and timing of extreme
-          heat days and warm nights is expected to change under different
-          emission scenarios. This data is derived from daily climate
-          projections which have been downscaled from global climate models from
-          the <a
-            href="https://esgf-node.llnl.gov/projects/cmip5/"
-            target="_blank">CMIP5</a
-          >
-          archive, using the
-          <a href="http://loca.ucsd.edu/what-is-loca/" target="_blank"
-            >Localized Constructed Analogs</a
-          > (LOCA) statistical technique developed by Scripps Institution Of Oceanography.
-          LOCA is a statistical downscaling technique that uses past history to add
-          improved fine-scale detail to global climate models.
+          With this tool you can explore what an extreme precipitation event
+          looks like by providing estimates of intensity and frequency of
+          extreme precipitation events. The tools and visualizations allow you
+          to examine how extreme precipitation events are likely to change in a
+          warming climate over locations of interest to you.
         </p>
         <p>
-          As the climate changes in California, one of the more serious threats
-          to the public health of Californians will stem primarily from the
-          higher frequency of extreme conditions, principally more frequent,
-          more intense, and longer heat waves. An increase in heat waves may
-          increase the risk of heat stroke and dehydration. Find out how you can
-          become better prepared and more resilient to increasing temperature
-          and extreme heat events at <a
-            href="https://healthyplacesindex.org/wp-content/uploads/2018/02/2013_cph_preparing_california_for_extreme_eat.pdf"
-            target="_blank">Preparing California for Extreme Heat</a
-          >, a report put together by California Environmental Protection Agency
-          (<a href="http://www.calepa.ca.gov/" target="_blank">CalEPA</a>) and
-          the California Department of Public Health (<a
-            href="http://www.cdph.ca.gov/"
-            target="_blank">CDPH</a
-          >).
+          By default, Cal-Adapt calculates extreme values of precipitation over
+          a 2-day period, and defines an extreme event as the lowest value from
+          Annual Maximum values in the historical period (1961–1990). Users can
+          override these defaults by selecting a new “event duration” (number of
+          days over which precipitation accumulates), or by selecting a
+          different “threshold“ value that corresponds to either the 90th, 95th
+          or 99th percentiles. The tool then displays the extreme events that
+          exceed the threshold in different ways. The Frequency chart shows the
+          estimated intensity of precipitation events (Return Level) for a
+          selected period (Return Period) and how it changes over the historical
+          period (1961–1990), mid-century (2035–2064) and end-century
+          (2071–2099). The other charts display the total number of events, the
+          timing of these events and the longest stretch of consecutive extreme
+          events.
         </p>
-        <p class="h4">What is an extreme heat day?</p>
+        <p class="h4">What is a Threshold value?</p>
         <p>
-          For purposes of this tool, an extreme heat day or warm night is
-          defined as a day in a year when the daily maximum/minimum temperature
-          exceeds the 98th historical percentile of daily maximum/minimum
-          temperatures based on observed historical data from 1961–1990 between
-          April and October. Users have the option of setting a different value
-          for threshold temperature or reset back to the 98th percentile value.
+          The extreme threshold sets the conditions for which a precipitation
+          event is considered “extreme“. By default, the threshold is set to the
+          lowest annual maximum precipitation accumulation in the historical
+          record (1961 to 1990). Other alternative threshold values (90th, 95th
+          and 99th percentiles) are based on commonly used quantiles over the
+          historical record. Selecting too high a threshold (in arid locations)
+          or too low a threshold can decrease the reliability of the estimates.
         </p>
 
-        <p class="h4">What is a warm night?</p>
+        <p class="h4">What is an Event Duration?</p>
         <p>
-          For purposes of this tool, a warm night is defined as a day in April
-          through October when the daily minimum temperature exceeds the 98th
-          historical percentile of daily minimum temperatures based on observed
-          data from 1961–1990. Users have the option of setting a different
-          value for threshold temperature or reset back to the 98th percentile
-          value.
+          Event duration is the number of days over which precipitation falls
+          that contribute to a single event. Changing this value will change the
+          extreme threshold.
         </p>
 
-        <p class="h4">What is a heat wave?</p>
+        <p class="h4">What is a Return Period?</p>
         <p>
-          Heat waves are characterized as durations of sustained, extreme heat,
-          although there is no universal definition of a heat wave. For purposes
-          of this tool, a heat wave is defined as a duration of 4 consecutive
-          extreme heat days or warm nights when the daily maximum/minimum
-          temperature is above the extreme heat threshold. Each 4 day/night
-          duration is counted, so that if extreme temperatures persist for 10
-          consecutive days/nights, it counts as 2 Heat Waves. Users have the
-          option of choosing a different value for number of consecutive
-          days/nights.
+          The return period estimates the average time between extreme events.
+          This is sometimes worded as a “1 in x years” event.
         </p>
+
+        <p class="h4">What is a Return Level?</p>
+        <p>
+          The return level is the estimated amount of precipitation that would
+          be expected to be exceeded once every return period. Effectively it is
+          the inverse of the return period. Instead of wondering how often an
+          extreme precipitation event will occur, we are instead considering
+          once in any given time period what would extreme precipitation event
+          look like? The return level is similar to the accumulated
+          precipitation threshold, but is estimated from the underlying
+          statistical distribution of modeled precipitation data in future
+          climate scenarios. By contrast, accumulated precipitation threshold
+          are calculated from historical observed values.
+        </p>
+
+        <p class="h3">Technical Approach</p>
+        <p>
+          Extreme Value Theory (EVT) is a statistical methodology used for
+          describing rare events. There are several ways to apply EVT to
+          precipitation data inlcuding fitting a Generalized Extreme Value
+          distribution (GEV) over block maxima (annual maximum value) and the
+          Peaks-Over-Threshold (POT) approach where probability distribution of
+          exceedances over a pre-defined threshold are modeled using a
+          generalized Pareto distribution (GPD). This tool explores extreme
+          events in California using a POT approach.
+        </p>
+        <p>
+          Data values that exceed a high predefiend threshold, by default the
+          lowest value from Annual Maximum values in the historical period
+          (1961–1990), are extracted from a 30 year daily time series. If there
+          are any back-to-back events only the largest such event is included. A
+          generalized Pareto distribution is applied to this partial duration
+          time series. Shape and scale parameters for the distribution are
+          estimated using the Maximum Likelihood method. Return levels for
+          selected Return Periods are estimated from the fitted model.
+          Confidence intervals at the 95% level for each return level are
+          estimated using the Profile Likelihood method, where sufficient (n >
+          100) events exist.
+        </p>
+
+        <p class="h3">User Advisory</p>
+        <p>
+          The Extreme Precipitation Tool is designed to broadly inform potential
+          changes in extreme precipitation intensity and frequency across a wide
+          range of environments and climate zones in California. On a local
+          scale different statistical assumptions (i.e. using annual maximal
+          values rather than partial duration time-series, fitting techniques
+          for distribution parameters and choice of extreme value distribution)
+          may be more appropriate. We encourage users to ensure the empirical
+          fit of the applied distribution is acceptable to their end use before
+          using estimates produced from this tool for planning purposes.
+        </p>
+
+        <p class="h3">References</p>
+        <ul style="padding-left: 1rem;">
+          <li>
+            <a
+              target="_blank"
+              href="https://www.elsevier.com/books/statistical-methods-in-the-atmospheric-sciences/wilks/978-0-12-385022-5"
+              >Wilks, D. (2011).</a
+            > Statistical methods in the atmospheric sciences (3rd ed.). Oxford ;
+            Waltham, MA: Academic Press.
+          </li>
+          <li>
+            <a
+              target="_blank"
+              href="https://ral.ucar.edu/staff/ericg/Intro2EVT.pdf"
+              >Gilleland, E. (2015).</a
+            > Introduction to Extreme Value Theorem Analysis. National Center for
+            Atmospheric Research.
+          </li>
+          <li>
+            <a
+              target="_blank"
+              href="https://link.springer.com/book/10.1007%2F978-1-4471-3675-0"
+              >Coles, S. (2001).</a
+            > An introduction to statistical modeling of extreme values. London:
+            Springer-Verlag. ISBN: 1-85233-459-2.
+          </li>
+        </ul>
       </div>
     </About>
   </div>
