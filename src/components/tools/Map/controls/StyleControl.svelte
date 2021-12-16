@@ -1,7 +1,6 @@
 <script>
-  import { getContext, createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { RadioButtonGroup, RadioButton } from "carbon-components-svelte";
-  import { contextKey } from "~/helpers/mapbox.js";
 
   export let titleText = "Select basemap style";
   export let position = {
@@ -18,9 +17,6 @@
 
   const dispatch = createEventDispatcher();
 
-  const { getMap } = getContext(contextKey);
-  const map = getMap();
-
   const styleProps = Object.entries(position)
     .map(([key, value]) => `--${key}:${value}px`)
     .join(";");
@@ -28,7 +24,6 @@
   function change({ target: { checked, value } }) {
     if (checked) {
       const url = `mapbox://styles/mapbox/${value}`;
-      map.setStyle(url);
       dispatch("change", url);
     }
   }
