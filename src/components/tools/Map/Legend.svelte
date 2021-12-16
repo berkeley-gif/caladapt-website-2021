@@ -20,7 +20,7 @@
   export let columnWidth; // discrete only
   export let tickSize = 6; // continuous only
   export let ticks = width / 64; // continuous only
-  export let tickValues; // continuous only
+  export let tickValues = []; // continuous only
   export let noData = false;
 
   // TODO: consider splitting this all into separate components that render each type of legend
@@ -78,14 +78,18 @@
 
 <style>
   .legend--container {
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0.5rem;
+    position: var(--position, absolute);
+    right: var(--right, 0.5rem);
+    bottom: var(--bottom, 0.5rem);
+    left: var(--left, initial);
+    top: var(--top, initial);
     width: var(--width, auto);
     height: var(--height, auto);
     padding: var(--padding, 0.5rem);
     background-color: var(--white, #fff);
-    border: 0.0625rem solid var(--gray-40);
+    border-color: var(--border-color, var(--gray-40));
+    border-style: var(--border-style, solid);
+    border-width: var(--border-width, 0.0625rem);
     box-sizing: content-box;
   }
 
@@ -162,7 +166,9 @@
     --columns:{columns};
     --column-width:{columnWidth}px;"
 >
-  <p class="legend--title-text">{title}</p>
+  {#if title}
+    <p class="legend--title-text">{title}</p>
+  {/if}
   {#if subtitle}
     <p class="legend--subtitle-text">{subtitle}</p>
   {/if}
