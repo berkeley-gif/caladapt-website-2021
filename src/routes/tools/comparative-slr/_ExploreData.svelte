@@ -103,18 +103,24 @@
     />
   </div>
 
-  <div slot="tab_content_slippy_map_controls" class="block">
+  <div
+    slot="tab_content_slippy_map_controls"
+    class="block"
+    style="background: var(--gray-20);"
+  >
     <div style="display:flex;align-items:center;justify-content:space-between;">
       <Legend
         title="Map Data Layers"
         values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
         ramp="{legendRamp}"
-        width="{'12.5rem'}"
+        width="{'auto'}"
+        columns="{3}"
         --position="relative"
         --right="0"
         --bottom="0"
         --padding="0"
         --border-style="none"
+        --background="var(--gray-20)"
       />
       <StyleControl
         selected="{mapStyle && mapStyle.split('/').pop()}"
@@ -123,6 +129,7 @@
         --bottom="0"
         --right="0"
         --border-style="none"
+        --background="var(--gray-20)"
       />
     </div>
   </div>

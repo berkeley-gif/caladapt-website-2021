@@ -86,7 +86,7 @@
     width: var(--width, auto);
     height: var(--height, auto);
     padding: var(--padding, 0.5rem);
-    background-color: var(--white, #fff);
+    background: var(--background, var(--white));
     border-color: var(--border-color, var(--gray-40));
     border-style: var(--border-style, solid);
     border-width: var(--border-width, 0.0625rem);
