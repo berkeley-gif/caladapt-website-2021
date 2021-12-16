@@ -65,7 +65,7 @@
   $: rasterLayersProps = dataLayers.map(({ id, checked, color }) => ({
     id,
     tileUrl: getTileUrl(id, scenario, timeFrame, "sfbay", color),
-    visibility: checked ? "visible" : "none",
+    visibility: checked ? VISIBLE : NONE,
   }));
 
   $: if (scenario !== curScenario) {
