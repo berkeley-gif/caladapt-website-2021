@@ -45,7 +45,8 @@ const tools = [
   },
   {
     title: "Comparative Sea Level Rise",
-    desc: "",
+    desc: `Explore the extent of extreme flooding associated with Sea Level Rise 
+      and a 100-year storm from two different SLR models for California.`,
     categories: ['Sea Level Rise', 'Flooding'],
     slug: "comparative-slr",
     icons: [
