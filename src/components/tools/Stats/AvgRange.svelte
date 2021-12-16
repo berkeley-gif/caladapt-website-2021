@@ -135,7 +135,6 @@
   <StatBlock
     on:update="{update}"
     units="{units}"
-    data="{data}"
     groupList="{groupList}"
     periodList="{periodList}"
     group="{selectedGroup}"

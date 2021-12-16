@@ -1,19 +1,9 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-  import { Button, Loading, NumberInput } from "carbon-components-svelte";
+  import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
-  import { Download16, Share16, Location16 } from "carbon-icons-svelte";
 
   // Helpers
-  import {
-    PRIORITY_10_MODELS,
-    DEFAULT_SCENARIOS,
-    SMALL_SCALE_BOUNDARIES,
-    SELECT_LOCATION_DESCRIPTION,
-    DEFAULT_STAT_GROUPS,
-    DEFAULT_STAT_PERIODS,
-  } from "../_common/constants";
-  import { HEATMAP_COLOR_SCALE, INDICATOR_DESCRIPTION } from "./_constants";
+  import { SMALL_SCALE_BOUNDARIES } from "../_common/constants";
   import {
     flattenData,
     groupDataByYear,
@@ -22,15 +12,11 @@
   } from "../_common/helpers";
 
   // Components
-  import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
-  import {
-    SelectScenario,
-    SelectModels,
-    SelectClimvar,
-    SelectThreshold,
-    RadioBtnGroup,
-  } from "~/components/tools/Settings";
-  import { StaticMap } from "~/components/tools/Location";
+  import { Dashboard } from "~/components/tools/Partials";
+  import SettingsPanel from "./_SettingsPanel.svelte";
+  import StatsPanel from "./_StatsPanel.svelte";
+  import ExtremeHeatChart from "./_ExtremeHeatChart.svelte";
+  import ChartTitle from "./_ChartTitle.svelte";
 
   // Store
   import {
@@ -41,17 +27,13 @@
     isFetchingStore,
   } from "../_common/stores";
   import {
-    climvarList,
     climvarStore,
-    indicatorList,
     indicatorStore,
     thresholdStore,
-    thresholdListStore,
     durationStore,
     dataStore,
   } from "./_store";
 
-  const dispatch = createEventDispatcher();
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -64,7 +46,6 @@
   let showShare = false;
   let showChangeLocation = false;
   let showLearnMore = false;
-  let modelsInit = false;
 
   let ChangeLocation;
   let DownloadChart;
@@ -72,17 +53,42 @@
   let LearnMoreModal;
 
   let bookmark;
-
   let learnMoreProps = {};
+  let metadata;
+  let csvData;
+  let printContainer;
+  let printSkipElements;
+
   $: chartDescription =
     $climvarStore === "tasmax"
       ? $indicator.description
       : $indicator.description.replace("extreme heat days", "warm nights");
 
-  let metadata;
-  let csvData;
-  let printContainer;
-  let printSkipElements;
+  $: chartTitle = $location.title;
+
+  $: formatFn = format(`.${$indicator.decimals}f`);
+
+  $: thresholdLabel = `${$thresholdStore} °F`;
+
+  $: indicatorLabel =
+    $climvarStore === "tasmax"
+      ? $indicator.title
+      : $indicator.title.replace("Extreme Heat Days", "Warm Nights");
+
+  $: durationLabel =
+    $climvarStore === "tasmax"
+      ? `${$durationStore} Day`
+      : `${$durationStore} Night`;
+
+  $: if ($data) {
+    if ($indicator.id === "timing") {
+      dataByDate = groupDataByDay(flattenData($data));
+    } else {
+      dataByDate = groupDataByYear(flattenData($data));
+    }
+  } else {
+    dataByDate = null;
+  }
 
   async function loadLearnMore({
     slugs = [],
@@ -118,69 +124,42 @@
     ).default;
   }
 
+  function formatDailyDataForExport(_arr) {
+    return _arr.map((item) => {
+      const row = {};
+      row.date = item.date;
+      item.values.forEach((d) => {
+        if (Array.isArray(d.value)) {
+          row[`${d.label} Min`] = d.value[0];
+          row[`${d.label} Max`] = d.value[1];
+        } else {
+          row[d.label] = d.value;
+        }
+      });
+      return row;
+    });
+  }
+
   async function loadDownload() {
     showDownload = true;
-    csvData = formatDataForExport(dataByDate);
+    if ($indicator.id === "timing") {
+      csvData = formatDailyDataForExport(dataByDate);
+    } else {
+      csvData = formatDataForExport(dataByDate);
+    }
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate indicator", `${$climvar.label} ${$indicator.label}`],
-      ["threshold", `${thresholdStore} ${$climvar.units.imperial}`],
+      ["threshold", `${$thresholdStore} ${$climvar.units.imperial}`],
     ];
     printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
-  }
-
-  $: if (modelsInit) dispatch("ready");
-
-  $: formatFn = format(`.${$indicator.decimals}f`);
-  $: indicatorTitle =
-    $climvar.id === "tasmin"
-      ? $indicator.title.replace("Extreme Heat Days", "Warm Nights")
-      : $indicator.title;
-
-  $: if ($data) {
-    if ($indicator.id === "timing") {
-      dataByDate = groupDataByDay(flattenData($data));
-    } else {
-      dataByDate = groupDataByYear(flattenData($data));
-    }
-  } else {
-    dataByDate = null;
-  }
-
-  function changeScenario(e) {
-    scenarioStore.set(e.detail.id);
-  }
-
-  function changeModels(e) {
-    modelsStore.set(e.detail.selectedIds);
-    modelsInit = true;
-  }
-
-  function changeClimvar(e) {
-    climvarStore.set(e.detail);
-  }
-
-  function changeIndicator(e) {
-    indicatorStore.set(e.detail.id);
-  }
-
-  function changeDuration(e) {
-    durationStore.set(e.detail);
-  }
-
-  function changeThreshold(e) {
-    thresholdStore.set(e.detail);
-  }
-
-  function addThreshold(e) {
-    thresholdListStore.add(e.detail);
   }
 
   function changeLocation(e) {
@@ -200,221 +179,52 @@
 
 <Dashboard>
   <div slot="title" class="block title">
-    <Button
-      class="btn-change-location"
-      size="small"
-      icon="{Location16}"
-      kind="ghost"
-      on:click="{loadLocation}"
-    >
-      Change Location
-    </Button>
-    <div class="h3">
-      {$location.title}
-    </div>
-    {#if $indicator.id === "waves"}
-      <div class="h4">
-        Projected changes in <span class="annotate"
-          >Number of {$durationStore} Day Heat Wave Events per Year</span
-        >
-        when <span class="annotate">{$climvar.title}</span> is above
-        <span class="annotate">{$thresholdStore} °F</span>
-        under a
-        <span class="annotate">{$scenario.labelLong}</span>.
-      </div>
-    {:else}
-      <div class="h4">
-        Projected changes in <span class="annotate">{indicatorTitle}</span>
-        when <span class="annotate">{$climvar.title}</span> is above
-        <span class="annotate">{$thresholdStore} °F</span>
-        under a
-        <span class="annotate">{$scenario.labelLong}</span>.
-      </div>
-    {/if}
+    <ChartTitle
+      title="{chartTitle}"
+      indicatorLabel="{indicatorLabel}"
+      climvarLabel="{$climvar.title}"
+      scenarioLabel="{$scenario.labelLong}"
+      thresholdLabel="{thresholdLabel}"
+      loadLocation="{loadLocation}"
+      durationLabel="{durationLabel}"
+    />
   </div>
 
   <div slot="stats">
-    <ul class="stats">
-      <li class="block">
-        <svelte:component
-          this="{$indicator.statsComponent}"
-          units="{$indicator.units}"
-          data="{dataByDate
-            ? dataByDate.filter((d) => d.date.getUTCFullYear() < 2006)
-            : null}"
-          groupList="{DEFAULT_STAT_GROUPS.filter((d) => d.historical)}"
-          periodList="{DEFAULT_STAT_PERIODS.filter((d) => d.historical)}"
-          format="{formatFn}"
-          models="{$modelsStore}"
-          isFetching="{$isFetchingStore}"
-        />
-      </li>
-      <li class="block">
-        <svelte:component
-          this="{$indicator.statsComponent}"
-          units="{$indicator.units}"
-          data="{dataByDate
-            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
-            : null}"
-          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
-          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
-          format="{formatFn}"
-          models="{$modelsStore}"
-          isFetching="{$isFetchingStore}"
-        />
-      </li>
-      <li class="block">
-        <svelte:component
-          this="{$indicator.statsComponent}"
-          units="{$indicator.units}"
-          data="{dataByDate
-            ? dataByDate.filter((d) => d.date.getUTCFullYear() >= 2006)
-            : null}"
-          groupList="{DEFAULT_STAT_GROUPS.filter((d) => !d.historical)}"
-          periodList="{DEFAULT_STAT_PERIODS.filter((d) => !d.historical)}"
-          periodId="end-century"
-          format="{formatFn}"
-          models="{$modelsStore}"
-          isFetching="{$isFetchingStore}"
-        />
-      </li>
-    </ul>
+    <StatsPanel
+      {...{
+        statsComponent: $indicator.statsComponent,
+        units: $indicator.units,
+        dataByDate,
+        formatFn,
+        models: $modelsStore,
+        isFetching: $isFetchingStore,
+      }}
+    />
   </div>
 
   <div slot="graphic" class="graphic block">
-    <svelte:component
-      this="{$indicator.chartComponent}"
-      height="400px"
+    <ExtremeHeatChart
+      chartComponent="{$indicator.chartComponent}"
       data="{$data}"
       dataByDate="{dataByDate}"
-      yAxis="{{
-        key: 'value',
-        label: `${indicatorTitle}`,
-        domainMin: 0,
-        niceMax: 10,
-        tickFormat: formatFn,
-        units: `${$indicator.units}`,
-      }}"
-      colors="{HEATMAP_COLOR_SCALE}"
-      ,
+      formatFn="{formatFn}"
+      units="{$indicator.units}"
+      label="{indicatorLabel}"
+      dataSource="{$titles.join(', ')}"
+      on:showDownload="{loadDownload}"
+      on:showShare="{loadShare}"
+      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
       isFetching="{$isFetchingStore}"
+      chartDescription="{chartDescription}"
     />
-    <div class="chart-notes margin--v-32">
-      <p>
-        Source: Cal-Adapt. Data: {$titles.join(", ")}.
-      </p>
-    </div>
-    <div class="chart-download margin--v-16">
-      <LearnMoreButton
-        cta="{'Explain Chart'}"
-        on:click="{() =>
-          loadLearnMore({
-            content: chartDescription,
-            header: 'About this Chart',
-          })}"
-      />
-      <div>
-        <Button size="small" icon="{Download16}" on:click="{loadDownload}">
-          Download Chart
-        </Button>
-        <Button size="small" icon="{Share16}" on:click="{loadShare}">
-          Share
-        </Button>
-      </div>
-    </div>
   </div>
 
   <div slot="settings" class="settings">
-    <div class="block">
-      <span class="bx--label">Select Location</span>
-      <StaticMap
-        location="{$location}"
-        height="{250}"
-        on:click="{loadLocation}"
-      />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            content: SELECT_LOCATION_DESCRIPTION,
-            header: 'Select Location',
-          })}"
-      />
-    </div>
-    <div class="block">
-      <RadioBtnGroup
-        selected="{$climvarStore}"
-        items="{climvarList}"
-        title="Select Climate Variable"
-        on:change="{changeClimvar}"
-      />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            slugs: ['extreme-heat-day', 'warm-night'],
-          })}"
-      />
-    </div>
-    <div class="block">
-      <SelectClimvar
-        title="Select Indicator"
-        selectedId="{$indicatorStore}"
-        items="{indicatorList}"
-        on:change="{changeIndicator}"
-      />
-      <LearnMoreButton
-        on:click="{() =>
-          loadLearnMore({
-            content: INDICATOR_DESCRIPTION,
-          })}"
-      />
-    </div>
-    <div class="block">
-      <SelectScenario
-        selectedId="{$scenarioStore}"
-        items="{DEFAULT_SCENARIOS}"
-        on:change="{changeScenario}"
-      />
-      <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['emissions-scenario'] })}"
-      />
-    </div>
-    {#if $indicator.id === "waves"}
-      <div class="block">
-        <NumberInput
-          label="Change Heat Wave Duration"
-          min="{2}"
-          max="{7}"
-          value="{$durationStore}"
-          on:change="{changeDuration}"
-        />
-        <LearnMoreButton
-          on:click="{() => loadLearnMore({ slugs: ['heat-wave-event'] })}"
-        />
-      </div>
-    {/if}
-    <div class="block">
-      <SelectThreshold
-        items="{$thresholdListStore}"
-        selected="{$thresholdStore}"
-        units="{$climvar.units.imperial}"
-        helperText="Add a new threshold value or select from list"
-        on:change="{changeThreshold}"
-        on:add="{addThreshold}"
-      />
-      <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['extreme-heat-threshold'] })}"
-      />
-    </div>
-    <div class="block">
-      <SelectModels
-        selectedIds="{$modelsStore}"
-        items="{PRIORITY_10_MODELS}"
-        on:change="{changeModels}"
-      />
-      <LearnMoreButton
-        on:click="{() => loadLearnMore({ slugs: ['global-climate-model'] })}"
-      />
-    </div>
+    <SettingsPanel
+      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
+      on:showLoadLocation="{() => loadLocation()}"
+    />
   </div>
 </Dashboard>
 
