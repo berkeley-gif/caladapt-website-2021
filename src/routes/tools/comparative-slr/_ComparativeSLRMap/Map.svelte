@@ -15,12 +15,19 @@
 
   let mapInstance;
   let mbGlMap;
+  let curStyleUrl;
 
+  $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: dataLayers = $dataLayersStore;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
   $: if (mapReady && Array.isArray(bbox) && bbox.length) {
     mapInstance.zoomToExtent(bbox, 12);
+  }
+
+  $: if (mapReady && styleUrl && styleUrl !== curStyleUrl) {
+    curStyleUrl = styleUrl;
+    mbGlMap.setStyle(curStyleUrl);
   }
 
   function handleMapReady({ detail }) {
@@ -32,13 +39,13 @@
   }
 </script>
 
-{#key mapStyle}
+{#if mapStyle}
   <Map
     bind:this="{mapInstance}"
     lng="{lng}"
     lat="{lat}"
     zoom="{zoom}"
-    style="{`mapbox://styles/mapbox/${mapStyle}`}"
+    style="{styleUrl}"
     on:ready="{handleMapReady}"
     on:destroy="{handleMapDestroy}"
   >
@@ -51,4 +58,4 @@
       timeFrame="{timeFrame}"
     />
   </Map>
-{/key}
+{/if}

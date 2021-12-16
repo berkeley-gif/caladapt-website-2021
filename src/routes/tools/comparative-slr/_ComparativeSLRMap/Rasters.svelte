@@ -49,6 +49,10 @@
     }
   };
 
+  if (map && map.getStyle()) {
+    map.on("styledata", handleStyleDataChange);
+  }
+
   $: beforeId =
     mapStyle && mapStyle.includes("satellite")
       ? undefined
@@ -144,7 +148,23 @@
     });
   }
 
+  // keeps the map layers in sync when the map style changes
+  function handleStyleDataChange() {
+    const { name } = map.getStyle();
+    const identifier = mapStyle.split("-")[0];
+    const shouldUpdate = name.toLowerCase().includes(identifier);
+    if (shouldUpdate) {
+      for (let id of dataLayerIds) {
+        if (!map.getLayer(id)) {
+          updateRasterLayers();
+          break;
+        }
+      }
+    }
+  }
+
   onDestroy(() => {
+    map.off("styledata", handleStyleDataChange);
     removeRasterLayers();
   });
 </script>
