@@ -11,7 +11,7 @@
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
 
-  import { Legend } from "~/components/tools/Map";
+  import { Legend, StyleControl } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import Title from "./_Title.svelte";
   import { Map } from "./_ComparativeSLRMap/";
@@ -29,6 +29,7 @@
 
   let learnMoreProps = {};
 
+  let mapStyle;
   let legendRamp;
 
   if (typeof window !== "undefined" && !legendRamp) {
@@ -80,6 +81,10 @@
     locationStore.updateBoundary(e.detail.boundaryId);
     locationStore.updateLocation(e.detail.location);
   }
+
+  function handleStyleChange({ detail }) {
+    mapStyle = detail;
+  }
 </script>
 
 {#if $isFetchingStore}
@@ -99,17 +104,27 @@
   </div>
 
   <div slot="tab_content_slippy_map_controls" class="block">
-    <Legend
-      title="Map Data Layers"
-      values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
-      ramp="{legendRamp}"
-      width="{'12.5rem'}"
-      --position="relative"
-      --right="0"
-      --bottom="0"
-      --padding="0"
-      --border-style="none"
-    />
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <Legend
+        title="Map Data Layers"
+        values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
+        ramp="{legendRamp}"
+        width="{'12.5rem'}"
+        --position="relative"
+        --right="0"
+        --bottom="0"
+        --padding="0"
+        --border-style="none"
+      />
+      <StyleControl
+        selected="{mapStyle && mapStyle.split('/').pop()}"
+        on:change="{handleStyleChange}"
+        --position="relative"
+        --bottom="0"
+        --right="0"
+        --border-style="none"
+      />
+    </div>
   </div>
 
   <div
@@ -121,6 +136,7 @@
       scenario="{$floodScenarioStore}"
       dataLayersStore="{dataLayersStore}"
       bbox="{$location.bbox && $location.bbox}"
+      mapStyle="{mapStyle}"
     />
   </div>
 

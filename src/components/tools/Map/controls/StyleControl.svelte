@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { RadioButtonGroup, RadioButton } from "carbon-components-svelte";
 
   export let titleText = "Select basemap style";
@@ -15,10 +15,13 @@
 
   function change({ target: { checked, value } }) {
     if (checked) {
-      const url = `mapbox://styles/mapbox/${value}`;
-      dispatch("change", url);
+      dispatch("change", value);
     }
   }
+
+  onMount(() => {
+    dispatch("change", selected);
+  });
 </script>
 
 <style>

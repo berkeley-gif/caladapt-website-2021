@@ -6,6 +6,7 @@
   export let timeFrame;
   export let dataLayersStore;
   export let bbox;
+  export let mapStyle;
 
   // initial map view
   const lng = -122.2813;
@@ -13,7 +14,6 @@
   const zoom = 9;
 
   let mapInstance;
-  let mapStyle;
   let mbGlMap;
 
   $: dataLayers = $dataLayersStore;
@@ -30,10 +30,6 @@
   function handleMapDestroy() {
     mbGlMap = null;
   }
-
-  async function handleStyleChange({ detail }) {
-    mapStyle = detail;
-  }
 </script>
 
 {#key mapStyle}
@@ -42,16 +38,11 @@
     lng="{lng}"
     lat="{lat}"
     zoom="{zoom}"
-    style="{mapStyle}"
+    style="{`mapbox://styles/mapbox/${mapStyle}`}"
     on:ready="{handleMapReady}"
     on:destroy="{handleMapDestroy}"
   >
     <NavigationControl />
-    <StyleControl
-      selected="{mapStyle && mapStyle.split('/').pop()}"
-      position="{{ bottom: 10, right: 10 }}"
-      on:change="{handleStyleChange}"
-    />
     <RasterLayers
       map="{mbGlMap}"
       mapStyle="{mapStyle}"
