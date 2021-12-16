@@ -8,9 +8,10 @@
   export let scenario;
   export let timeFrame;
 
+  // these props only used to determine if raster layers should be updated
   let curScenario;
   let curTimeFrame;
-  let curMapStyle;
+  let styleDataChangeListenerAdded = false;
 
   const VISIBLE = "visible";
   const VISIBILITY = "visibility";
@@ -49,8 +50,9 @@
     }
   };
 
-  if (map && map.getStyle()) {
+  if (map && map.getStyle() && !styleDataChangeListenerAdded) {
     map.on("styledata", handleStyleDataChange);
+    styleDataChangeListenerAdded = true;
   }
 
   $: beforeId =
@@ -67,16 +69,13 @@
   }));
 
   $: if (scenario !== curScenario) {
+    updateRasterLayers();
     curScenario = scenario;
-    updateRasterLayers();
   }
+
   $: if (timeFrame !== curTimeFrame) {
-    curTimeFrame = timeFrame;
     updateRasterLayers();
-  }
-  $: if (mapStyle !== curMapStyle) {
-    curMapStyle = mapStyle;
-    removeRasterLayers();
+    curTimeFrame = timeFrame;
   }
 
   $: if (map && rasterLayersProps.length) {
@@ -138,11 +137,11 @@
   }
 
   function removeRasterLayers() {
+    if (!map.getStyle()) {
+      return;
+    }
     rasterLayersProps.forEach(({ id }) => {
       const sourceId = getSourceId(id);
-      if (!map.getStyle()) {
-        return;
-      }
       removeLayer(id);
       removeSource(sourceId);
     });
