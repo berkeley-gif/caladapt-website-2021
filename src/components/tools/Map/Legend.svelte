@@ -17,7 +17,7 @@
   export let ramp = []; // colors for legend items
   export let values = []; // values for legend items
   export let columns = 0; // discrete only
-  export let columnWidth; // discrete only
+  export let columnWidth = "auto"; // discrete only
   export let tickSize = 6; // continuous only
   export let ticks = width / 64; // continuous only
   export let tickValues = []; // continuous only
@@ -164,7 +164,7 @@
     --rectWidth:{rectWidth};
     --rectHeight:{rectHeight};
     --columns:{columns};
-    --column-width:{columnWidth}px;"
+    --column-width:{columnWidth};"
 >
   {#if title}
     <p class="legend--title-text">{title}</p>
