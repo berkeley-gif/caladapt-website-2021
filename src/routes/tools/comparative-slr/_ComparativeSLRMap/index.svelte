@@ -2,7 +2,6 @@
   import {
     Map,
     NavigationControl,
-    // RasterLayer,
     StyleControl,
     Legend,
   } from "~/components/tools/Map";
@@ -43,49 +42,45 @@
     mbGlMap = detail;
   }
 
+  function handleMapDestroy() {
+    mbGlMap = null;
+  }
+
   async function handleStyleChange({ detail }) {
-    console.log("style control change: ", detail);
     mapStyle = detail;
   }
 </script>
 
-<Map
-  bind:this="{mapInstance}"
-  lng="{lng}"
-  lat="{lat}"
-  zoom="{zoom}"
-  on:ready="{handleMapReady}"
->
-  <NavigationControl />
-  <Legend
-    title=""
-    values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
-    ramp="{legendRamp}"
-    columns="{3}"
-    columnWidth="{150}"
-    width="{'400px'}"
-  />
-  <StyleControl
-    position="{{ bottom: 82, right: 10 }}"
-    on:change="{handleStyleChange}"
-  />
-  <RasterLayers
-    map="{mbGlMap}"
-    mapStyle="{mapStyle}"
-    dataLayers="{dataLayers}"
-    scenario="{scenario}"
-    timeFrame="{timeFrame}"
-  />
-  <!-- TODO: rebuild raster layers after style update? -->
-  <!-- {#each rasterLayersProps as { tileUrl, id, visibility, beforeId } (id)}
-    {#key beforeId}
-      <RasterLayer
-        tileURL="{tileUrl}"
-        id="{id}"
-        beforeId="{beforeId}"
-        paintProps="{paintProps}"
-        visibility="{visibility}"
-      />
-    {/key}
-  {/each} -->
-</Map>
+{#key mapStyle}
+  <Map
+    bind:this="{mapInstance}"
+    lng="{lng}"
+    lat="{lat}"
+    zoom="{zoom}"
+    style="{mapStyle}"
+    on:ready="{handleMapReady}"
+    on:destroy="{handleMapDestroy}"
+  >
+    <NavigationControl />
+    <Legend
+      title=""
+      values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
+      ramp="{legendRamp}"
+      columns="{3}"
+      columnWidth="{150}"
+      width="{'400px'}"
+    />
+    <StyleControl
+      selected="{mapStyle && mapStyle.split('/').pop()}"
+      position="{{ bottom: 82, right: 10 }}"
+      on:change="{handleStyleChange}"
+    />
+    <RasterLayers
+      map="{mbGlMap}"
+      mapStyle="{mapStyle}"
+      dataLayers="{dataLayers}"
+      scenario="{scenario}"
+      timeFrame="{timeFrame}"
+    />
+  </Map>
+{/key}

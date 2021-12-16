@@ -112,6 +112,7 @@
 
       el.on("load", () => {
         map = el;
+        if (process.env.NODE_ENV !== "production") window.map = map;
         map.resize();
         popup = new mapboxgl.Popup({
           closeButton: false,
@@ -156,6 +157,7 @@
 
     return () => {
       map && map.remove();
+      dispatch("destroy");
     };
   });
 </script>

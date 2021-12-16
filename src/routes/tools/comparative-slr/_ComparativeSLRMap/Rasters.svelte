@@ -38,17 +38,29 @@
 
   const getSourceId = (id) => `${id}-source`;
 
+  const removeLayer = (id) => {
+    if (map.getLayer(id)) {
+      map.removeLayer(id);
+    }
+  };
+  const removeSource = (sourceId) => {
+    if (map.getSource(sourceId)) {
+      map.removeSource(sourceId);
+    }
+  };
+
   $: beforeId =
     mapStyle && mapStyle.includes("satellite")
       ? undefined
       : "settlement-subdivision-label";
+
   $: dataLayerIds = new Set(dataLayers.map((d) => d.id));
+
   $: rasterLayersProps = dataLayers.map(({ id, checked, color }) => ({
     id,
     tileUrl: getTileUrl(id, scenario, timeFrame, "sfbay", color),
     visibility: checked ? "visible" : "none",
   }));
-  $: console.log("rasterLayersProps: ", rasterLayersProps);
 
   $: if (scenario !== curScenario) {
     curScenario = scenario;
@@ -61,13 +73,11 @@
   $: if (mapStyle !== curMapStyle) {
     curMapStyle = mapStyle;
     removeRasterLayers();
-    addRasterLayers();
   }
 
   $: if (map && rasterLayersProps.length) {
     const { layers } = map.getStyle();
     const rasters = layers.filter((d) => dataLayerIds.has(d.id));
-    console.log(rasters);
 
     if (Array.isArray(rasters) && rasters.length) {
       // update raster layers
@@ -84,14 +94,12 @@
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
       const sourceId = getSourceId(id);
       const source = getSourceDef(tileUrl);
+      const layer = getLayerDef(id, sourceId, paintProps, { visibility });
       if (!map.getSource(sourceId)) {
         map.addSource(sourceId, source);
       }
       if (!map.getLayer(id)) {
-        map.addLayer(
-          getLayerDef(id, sourceId, paintProps, { visibility }),
-          beforeId
-        );
+        map.addLayer(layer, beforeId);
       }
     });
   }
@@ -110,18 +118,12 @@
   }
 
   function updateRasterLayers() {
-    console.log("updateRasterLayers called");
-
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
       const sourceId = getSourceId(id);
       const source = getSourceDef(tileUrl);
       const layer = getLayerDef(id, sourceId, paintProps, { visibility });
-      if (map.getLayer(id)) {
-        map.removeLayer(id);
-      }
-      if (map.getSource(sourceId)) {
-        map.removeSource(sourceId);
-      }
+      removeLayer(id);
+      removeSource(sourceId);
       try {
         map.addSource(sourceId, source);
         map.addLayer(layer, beforeId);
@@ -132,15 +134,13 @@
   }
 
   function removeRasterLayers() {
-    console.log("removeRasterLayers called");
     rasterLayersProps.forEach(({ id }) => {
       const sourceId = getSourceId(id);
-      if (map.getLayer(id)) {
-        map.removeLayer(id);
+      if (!map.getStyle()) {
+        return;
       }
-      if (map.getSource(sourceId)) {
-        map.removeSource(sourceId);
-      }
+      removeLayer(id);
+      removeSource(sourceId);
     });
   }
 
