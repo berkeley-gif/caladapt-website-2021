@@ -2,22 +2,17 @@
   import {
     Map,
     NavigationControl,
-    RasterLayer,
+    // RasterLayer,
     StyleControl,
     Legend,
   } from "~/components/tools/Map";
   import { getCSSProp } from "~/helpers/utilities";
-
-  import { getTileUrl } from "./_data";
+  import RasterLayers from "./Rasters";
 
   export let scenario;
   export let timeFrame;
   export let dataLayersStore;
   export let bbox;
-
-  const paintProps = {
-    "raster-opacity": 0.5,
-  };
 
   // initial map view
   const lng = -122.2813;
@@ -25,8 +20,8 @@
   const zoom = 9;
 
   let mapInstance;
+  let mapStyle;
   let mbGlMap;
-  let rasterLayersProps;
   let legendRamp;
 
   if (typeof window !== "undefined" && !legendRamp) {
@@ -38,24 +33,19 @@
   }
 
   $: dataLayers = $dataLayersStore;
-
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
   $: if (mapReady && Array.isArray(bbox) && bbox.length) {
     mapInstance.zoomToExtent(bbox, 12);
   }
 
-  $: if (scenario && timeFrame && dataLayers)
-    rasterLayersProps = dataLayers.map(({ id, checked, color }) => ({
-      id,
-      tileUrl: getTileUrl(id, scenario, timeFrame, "sfbay", color),
-      visibility: checked ? "visible" : "none",
-    }));
-
-  $: console.log("rasterLayersProps: ", rasterLayersProps);
-
   function handleMapReady({ detail }) {
     mbGlMap = detail;
+  }
+
+  async function handleStyleChange({ detail }) {
+    console.log("style control change: ", detail);
+    mapStyle = detail;
   }
 </script>
 
@@ -75,14 +65,27 @@
     columnWidth="{150}"
     width="{'400px'}"
   />
-  <StyleControl position="{{ bottom: 82, right: 10 }}" />
+  <StyleControl
+    position="{{ bottom: 82, right: 10 }}"
+    on:change="{handleStyleChange}"
+  />
+  <RasterLayers
+    map="{mbGlMap}"
+    mapStyle="{mapStyle}"
+    dataLayers="{dataLayers}"
+    scenario="{scenario}"
+    timeFrame="{timeFrame}"
+  />
   <!-- TODO: rebuild raster layers after style update? -->
-  {#each rasterLayersProps as { tileUrl, id, visibility } (id)}
-    <RasterLayer
-      tileURL="{tileUrl}"
-      id="{id}"
-      paintProps="{paintProps}"
-      visibility="{visibility}"
-    />
-  {/each}
+  <!-- {#each rasterLayersProps as { tileUrl, id, visibility, beforeId } (id)}
+    {#key beforeId}
+      <RasterLayer
+        tileURL="{tileUrl}"
+        id="{id}"
+        beforeId="{beforeId}"
+        paintProps="{paintProps}"
+        visibility="{visibility}"
+      />
+    {/key}
+  {/each} -->
 </Map>

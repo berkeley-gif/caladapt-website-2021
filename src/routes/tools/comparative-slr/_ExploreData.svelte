@@ -12,7 +12,7 @@
 
   import SettingsPanel from "./_SettingsPanel.svelte";
   import Title from "./_Title.svelte";
-  import Map from "./_ComparativeSLRMap.svelte";
+  import Map from "./_ComparativeSLRMap/";
 
   const { location, boundary } = locationStore;
   const { tfTileLabel, timeFrame } = timeFrameStore;
