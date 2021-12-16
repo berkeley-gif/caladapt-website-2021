@@ -3,10 +3,6 @@
   import { RadioButtonGroup, RadioButton } from "carbon-components-svelte";
 
   export let titleText = "Select basemap style";
-  export let position = {
-    bottom: 10,
-    right: 10,
-  };
   export let styles = [
     { label: "Grayscale", id: "light-v10" },
     { label: "Satellite", id: "satellite-v9" },
@@ -16,10 +12,6 @@
     Array.isArray(styles) && styles.length ? styles[0].id : "";
 
   const dispatch = createEventDispatcher();
-
-  const styleProps = Object.entries(position)
-    .map(([key, value]) => `--${key}:${value}px`)
-    .join(";");
 
   function change({ target: { checked, value } }) {
     if (checked) {
@@ -31,18 +23,20 @@
 
 <style>
   div {
-    position: absolute;
+    position: var(--position, absolute);
     top: var(--top, initial);
-    right: var(--right, initial);
+    right: var(--right, 10px);
     left: var(--left, initial);
-    bottom: var(--bottom, initial);
-    padding: 0.5rem;
+    bottom: var(--bottom, 10px);
+    padding: var(--padding, 0.5rem);
     background-color: var(--white, #fff);
-    border: 0.0625rem solid var(--gray-40);
+    border-color: var(--border-color, var(--gray-40));
+    border-style: var(--border-style, solid);
+    border-width: var(--border-width, 0.0625rem);
   }
 </style>
 
-<div class="style-control" style="{styleProps}">
+<div class="style-control">
   <RadioButtonGroup legendText="{titleText}" bind:selected>
     {#each styles as { id, label }}
       <RadioButton labelText="{label}" value="{id}" on:change="{change}" />
