@@ -66,12 +66,13 @@
   let source;
   let layer;
 
-  $: {
+  $: if (process.env.NODE_ENV !== "production") {
     console.log("---");
     console.log("sourceId", sourceId);
     console.log("source", source);
     console.log("layer", layer);
     console.log("visibility", visibility);
+    console.log("beforeId", beforeId);
     hasLayer() && console.log("isVisible", isVisible());
     hasSource() && console.log("getSource: ", getSource());
     console.log("---");
@@ -83,12 +84,18 @@
     addRasterLayer();
   }
 
-  // update existing sources
+  // update existing sources if tileURL has changed
   $: if (hasSource() && getSourceTile() !== tileURL && tileURL) {
     removeRasterLayer();
     setLocalProps();
     addRasterLayer();
   }
+
+  // TODO: re-render if beforeId has changed
+  // $: if (!hasLayer() && beforeId) {
+  //   setLocalProps();
+  //   map.addLayer(layer, beforeId);
+  // }
 
   $: if (hasLayer() && !isVisible() && visibility === VISIBLE) {
     map.setLayoutProperty(id, VISIBILITY, VISIBLE);
