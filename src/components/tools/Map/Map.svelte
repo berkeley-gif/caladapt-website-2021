@@ -167,6 +167,9 @@
     width: var(--map-width, 100%);
     height: var(--map-height, 100%);
     min-height: var(--map-min-height, 300px);
+    border-color: var(--border-color, var(--gray-40));
+    border-style: var(--border-style, solid);
+    border-width: var(--border-width, 0.0625rem);
   }
 </style>
 
