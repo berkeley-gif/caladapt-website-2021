@@ -9,10 +9,12 @@
     floodScenarioStore,
     dataLayersStore,
   } from "./_store";
+  import { getCSSProp } from "~/helpers/utilities";
 
+  import { Legend } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import Title from "./_Title.svelte";
-  import Map from "./_ComparativeSLRMap/";
+  import { Map } from "./_ComparativeSLRMap/";
 
   const { location, boundary } = locationStore;
   const { tfTileLabel, timeFrame } = timeFrameStore;
@@ -26,6 +28,16 @@
   let showChangeLocation = false;
 
   let learnMoreProps = {};
+
+  let legendRamp;
+
+  if (typeof window !== "undefined" && !legendRamp) {
+    legendRamp = [
+      getCSSProp(document.documentElement, "--rs-green"),
+      getCSSProp(document.documentElement, "--rs-blue"),
+      getCSSProp(document.documentElement, "--rs-teal"),
+    ];
+  }
 
   $: dataUnavailableMsg = getUnavailableMsgText(
     $dataLayersStore.filter((d) => d.disabled)
@@ -83,6 +95,20 @@
       floodScenario="{$floodScenario.label}"
       dataLayers="{$dataLayersStore}"
       dataUnavailableMsg="{dataUnavailableMsg}"
+    />
+  </div>
+
+  <div slot="tab_content_slippy_map_controls" class="block">
+    <Legend
+      title="Map Data Layers"
+      values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
+      ramp="{legendRamp}"
+      width="{'12.5rem'}"
+      --position="relative"
+      --right="0"
+      --bottom="0"
+      --padding="0"
+      --border-style="none"
     />
   </div>
 
