@@ -128,7 +128,6 @@
   button {
     all: unset;
     cursor: pointer;
-    border: 1px solid var(--gray-40);
     min-height: 250px;
     height: auto;
     width: 100%;
@@ -140,6 +139,10 @@
 
   button:focus {
     outline: 2px solid var(--gray-100);
+  }
+
+  img {
+    border: 1px solid var(--gray-40);
   }
 
   .loading-msg,

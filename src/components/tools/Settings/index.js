@@ -3,6 +3,7 @@ export { default as Select } from "./Select.svelte";
 export { default as SelectBoundary } from "./SelectBoundary.svelte";
 export { default as UploadBoundary } from "./UploadBoundary.svelte";
 export { default as SelectClimvar } from "./SelectClimvar.svelte";
+export { default as SelectLayers } from "./SelectLayers.svelte";
 export { default as SelectModels } from "./SelectModels.svelte";
 export { default as SelectScenario } from "./SelectScenario.svelte";
 export { default as SelectThreshold } from "./SelectThreshold.svelte";
