@@ -12,8 +12,6 @@
 
   $: activeTab, dispatchActiveTab();
 
-  $: console.log($$slots);
-
   onMount(() => {
     if (useTabs) dispatchActiveTab();
   });
