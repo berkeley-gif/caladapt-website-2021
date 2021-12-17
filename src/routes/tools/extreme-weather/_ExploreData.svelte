@@ -132,7 +132,7 @@
 
 <Dashboard useTabs="{false}">
   <!-- Chart Title component -->
-  <div slot="title" class="block title">
+  <div slot="chart_title" class="block title">
     <ChartTitle
       title="{chartTitle}"
       subtitle="{chartSubtitle}"
