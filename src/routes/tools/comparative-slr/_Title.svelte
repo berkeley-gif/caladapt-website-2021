@@ -52,7 +52,7 @@
   <p class="h4">
     {@html layerHtml}
     <span class="annotate">{floodScenario}</span>
-    flood scenario for the years <span class="annotate">{timeFrame}</span>.
+    flood scenario for the <span class="annotate">{timeFrame}</span> period.
   </p>
 </div>
 
