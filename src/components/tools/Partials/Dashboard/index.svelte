@@ -2,12 +2,18 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { Tabs, Tab, TabContent } from "carbon-components-svelte";
 
+  import MapView from "./MapView.svelte";
+  import ChartView from "./ChartView.svelte";
+
   export let useTabs = false;
+  export let useMap = false;
   export let activeTab = 0;
 
   const activeTabDispatcher = createEventDispatcher();
 
   $: activeTab, dispatchActiveTab();
+
+  $: console.log($$slots);
 
   onMount(() => {
     if (useTabs) dispatchActiveTab();
@@ -100,78 +106,52 @@
                 <div
                   class="bx--grid bx--grid--full-width bx--grid--tab-content"
                 >
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col">
-                      <slot name="tab_content_map_title"
-                        >tab_content_map_title</slot
-                      >
-                    </div>
-                  </div>
-
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col">
-                      <slot name="tab_content_slippy_map"
-                        >tab_content_slippy_map</slot
-                      >
-                    </div>
-                  </div>
-
-                  <div class="bx--row">
-                    <div class="bx--col">
-                      <slot name="tab_content_slippy_map_controls">
-                        tab_content_slippy_map_controls
-                      </slot>
-                    </div>
-                  </div>
+                  <MapView useTabs="{true}">
+                    <slot
+                      slot="tab_content_map_title"
+                      name="tab_content_map_title"
+                    />
+                    <slot
+                      slot="tab_content_slippy_map"
+                      name="tab_content_slippy_map"
+                    />
+                    <slot
+                      slot="tab_content_slippy_map_controls"
+                      name="tab_content_slippy_map_controls"
+                    />
+                  </MapView>
                 </div>
               </TabContent>
-
               <TabContent>
                 <div
                   class="bx--grid bx--grid--full-width bx--grid--tab-content"
                 >
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col">
-                      <slot name="tab_content_title">tab_content_title</slot>
-                    </div>
-                  </div>
-
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                      <slot name="tab_content_stats">tab_content_stats</slot>
-                    </div>
-                  </div>
-
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                      <slot name="tab_content_graphic">tab_content_graphic</slot
-                      >
-                    </div>
-                  </div>
+                  <ChartView useTabs="{true}">
+                    <slot slot="tab_content_title" name="tab_content_title" />
+                    <slot slot="tab_content_stats" name="tab_content_stats" />
+                    <slot
+                      slot="tab_content_graphic"
+                      name="tab_content_graphic"
+                    />
+                  </ChartView>
                 </div>
               </TabContent>
             </div>
           </Tabs>
         </div>
       </div>
+    {:else if useMap}
+      <MapView>
+        <slot slot="title" name="title" />
+        <slot slot="slippy_map" name="slippy_map" />
+        <slot slot="slippy_map_controls" name="slippy_map_controls" />
+      </MapView>
     {:else}
-      <div class="bx--row">
-        <div class="bx--col">
-          <slot name="title">title</slot>
-        </div>
-      </div>
-
-      <div class="bx--row margin--v-16">
-        <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-          <slot name="stats">stats</slot>
-        </div>
-      </div>
-
-      <div class="bx--row margin--v-16">
-        <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-          <slot name="graphic">graphic</slot>
-        </div>
-      </div>
+      <ChartView>
+        <slot slot="title" name="title" />
+        <slot slot="stats" name="stats" />
+        <slot slot="graphic" name="graphic" />
+      </ChartView>
     {/if}
   </div>
 
