@@ -44,11 +44,11 @@ const tools = [
     ],
   },
   {
-    title: "Comparative Sea Level Rise",
-    desc: `Explore the extent of extreme flooding associated with Sea Level Rise 
-      and a 100-year storm from two different SLR models for California.`,
+    title: "Sea Level Rise Coastal Inundation Scenarios",
+    desc: `Explore the extent of coastal inundation associated with Sea Level 
+      Rise and a 100-year storm from two different SLR models.`,
     categories: ['Sea Level Rise', 'Flooding'],
-    slug: "comparative-slr",
+    slug: "slr-coastal-inundation",
     icons: [
       'img/icons/sea.svg',
     ],
