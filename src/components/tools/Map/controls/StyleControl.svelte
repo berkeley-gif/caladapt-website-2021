@@ -4,9 +4,10 @@
 
   export let titleText = "Select basemap style";
   export let styles = [
-    { label: "Grayscale", id: "light-v10" },
+    { label: "Light", id: "light-v10" },
+    { label: "Dark", id: "dark-v10" },
     { label: "Satellite", id: "satellite-v9" },
-    { label: "Satellite Streets", id: "satellite-streets-v11" },
+    { label: "Satellite with Streets", id: "satellite-streets-v11" },
   ];
   export let selected =
     Array.isArray(styles) && styles.length ? styles[0].id : "";
