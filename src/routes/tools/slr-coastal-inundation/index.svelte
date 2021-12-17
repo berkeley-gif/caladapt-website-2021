@@ -181,11 +181,9 @@
 <Header
   iconPaths="{tool.icons}"
   title="{tool.title}"
-  description="This tool enables comparative viewing of multiple datasets (from 
-    CoSMoS and CalFlo3D) related to sea level rise, which includes the 
-    probabilistic SLR projections associated with California’s 4th Climate Change 
-    Assessment. Users can compare water levels associated with the SLR projections 
-    from these two models."
+  description="Explore projected water levels associated with Sea Level Rise and
+   a near 100-year storm scenario along the California coast and San Francisco
+   Bay from two different models."
 />
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
