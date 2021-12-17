@@ -2,8 +2,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { Tabs, Tab, TabContent } from "carbon-components-svelte";
 
-  import MapView from "./MapView.svelte";
-  import ChartView from "./ChartView.svelte";
+  import View from "./View.svelte";
 
   export let useTabs = false;
   export let useMap = false;
@@ -96,6 +95,7 @@
 <div class="dashboard">
   <div class="bx--grid content">
     {#if useTabs}
+      <!-- tabs layout for chart & map view -->
       <div class="bx--row">
         <div class="bx--col">
           <Tabs type="container" bind:selected="{activeTab}">
@@ -106,34 +106,25 @@
                 <div
                   class="bx--grid bx--grid--full-width bx--grid--tab-content"
                 >
-                  <MapView useTabs="{true}">
+                  <View useTabs="{true}">
+                    <slot slot="map_title" name="map_title" />
+                    <slot slot="slippy_map" name="slippy_map" />
                     <slot
-                      slot="tab_content_map_title"
-                      name="tab_content_map_title"
+                      slot="slippy_map_controls"
+                      name="slippy_map_controls"
                     />
-                    <slot
-                      slot="tab_content_slippy_map"
-                      name="tab_content_slippy_map"
-                    />
-                    <slot
-                      slot="tab_content_slippy_map_controls"
-                      name="tab_content_slippy_map_controls"
-                    />
-                  </MapView>
+                  </View>
                 </div>
               </TabContent>
               <TabContent>
                 <div
                   class="bx--grid bx--grid--full-width bx--grid--tab-content"
                 >
-                  <ChartView useTabs="{true}">
-                    <slot slot="tab_content_title" name="tab_content_title" />
-                    <slot slot="tab_content_stats" name="tab_content_stats" />
-                    <slot
-                      slot="tab_content_graphic"
-                      name="tab_content_graphic"
-                    />
-                  </ChartView>
+                  <View useTabs="{true}">
+                    <slot slot="chart_title" name="chart_title" />
+                    <slot slot="stats" name="stats" />
+                    <slot slot="graphic" name="graphic" />
+                  </View>
                 </div>
               </TabContent>
             </div>
@@ -141,17 +132,19 @@
         </div>
       </div>
     {:else if useMap}
-      <MapView>
-        <slot slot="title" name="title" />
+      <!-- layout for map view only -->
+      <View>
+        <slot slot="map_title" name="map_title" />
         <slot slot="slippy_map" name="slippy_map" />
         <slot slot="slippy_map_controls" name="slippy_map_controls" />
-      </MapView>
+      </View>
     {:else}
-      <ChartView>
-        <slot slot="title" name="title" />
+      <!-- default to layout for chart only -->
+      <View>
+        <slot slot="chart_title" name="chart_title" />
         <slot slot="stats" name="stats" />
         <slot slot="graphic" name="graphic" />
-      </ChartView>
+      </View>
     {/if}
   </div>
 
