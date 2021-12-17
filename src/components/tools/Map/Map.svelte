@@ -53,16 +53,20 @@
     map.addLayer(layer);
   }
 
+  export function getLayer(layerId) {
+    return map.getLayer(layerId);
+  }
+
+  export function moveLayer(layerId, beforeId) {
+    map.moveLayer(layerId, beforeId);
+  }
+
   export function hideLayer(layer) {
     map.setLayoutProperty(layer, "visibility", "none");
   }
 
   export function showLayer(layer) {
     map.setLayoutProperty(layer, "visibility", "visible");
-  }
-
-  export function setLineOpacity(layerId, opacity = 0.75) {
-    map.setPaintProperty(layerId, "line-opacity", opacity);
   }
 
   export function removeLayer(layer) {
@@ -72,8 +76,12 @@
     }
   }
 
-  export function zoomToExtent(bbox) {
-    map.fitBounds(bbox, { maxZoom: 9 });
+  export function setLineOpacity(layerId, opacity = 0.75) {
+    map.setPaintProperty(layerId, "line-opacity", opacity);
+  }
+
+  export function zoomToExtent(bbox, maxZoom = 9) {
+    map.fitBounds(bbox, { maxZoom });
   }
 
   export function updatePopup(event, description) {
@@ -104,6 +112,7 @@
 
       el.on("load", () => {
         map = el;
+        if (process.env.NODE_ENV !== "production") window.map = map;
         map.resize();
         popup = new mapboxgl.Popup({
           closeButton: false,
@@ -114,7 +123,7 @@
         popupElem = popup.getElement();
         popupElem.style.display = "none";
         canvas = map.getCanvas();
-        dispatch("ready");
+        dispatch("ready", map);
       });
 
       // Forward mouse events
@@ -148,6 +157,7 @@
 
     return () => {
       map && map.remove();
+      dispatch("destroy");
     };
   });
 </script>
@@ -157,6 +167,9 @@
     width: var(--map-width, 100%);
     height: var(--map-height, 100%);
     min-height: var(--map-min-height, 300px);
+    border-color: var(--border-color, var(--gray-40));
+    border-style: var(--border-style, solid);
+    border-width: var(--border-width, 0.0625rem);
   }
 </style>
 

@@ -44,6 +44,24 @@ const tools = [
     ],
   },
   {
+    title: "Sea Level Rise – Coastal Inundation Scenarios",
+    desc: `Explore the extent of coastal inundation associated with Sea Level 
+      Rise and a 100-year storm from two different SLR models.`,
+    categories: ['Sea Level Rise', 'Flooding'],
+    slug: "slr-coastal-inundation",
+    icons: [
+      'img/icons/sea.svg',
+    ],
+    datasets: [],
+    related: [
+      "slr-calflod-3d"
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
+  },
+  {
     title: 'Extreme Weather',
     desc: `Extreme weather events for baseline and future climates.`,
     categories: ['Temperature'],
@@ -115,7 +133,7 @@ const tools = [
     ],
   },
   {
-    title: 'Sea Level Rise - CalFloD-3D',
+    title: 'Sea Level Rise – CalFloD-3D',
     desc: `Maps of inundation during 100 year storm events with projected 
     Sea Level Rise scenarios.`,
     categories: ['Sea Level Rise', 'Flooding'],
