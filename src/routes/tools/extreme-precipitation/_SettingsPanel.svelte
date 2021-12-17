@@ -111,20 +111,18 @@
   />
 </div>
 
-<!-- {#if $indicator.id === "waves"}
-  <div class="block">
-    <NumberInput
-      label="Change Heat Wave Duration"
-      min="{2}"
-      max="{7}"
-      value="{$durationStore}"
-      on:change="{changeDuration}"
-    />
-    <LearnMoreButton
-      on:click="{() => showLearnMore({ slugs: ['heat-wave-event'] })}"
-    />
-  </div>
-{/if} -->
+<div class="block">
+  <NumberInput
+    label="Change Event Duration"
+    min="{1}"
+    max="{7}"
+    value="{$durationStore}"
+    on:change="{changeDuration}"
+  />
+  <LearnMoreButton
+    on:click="{() => showLearnMore({ slugs: ['heat-wave-event'] })}"
+  />
+</div>
 
 <!-- <div class="block">
   <SelectThreshold
