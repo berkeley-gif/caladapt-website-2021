@@ -1,7 +1,12 @@
 <script context="module">
   import resourcesList from "../../../../content/resources/data";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { TOOL_SLUG } from "./_constants";
+  import {
+    TOOL_SLUG,
+    DEFAULT_RETURN_PERIOD,
+    DEFAULT_DURATION,
+    DEFAULT_THRESHOLD_TYPE,
+  } from "./_constants";
 
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
@@ -40,7 +45,16 @@
 
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng } = query;
+      const {
+        boundary,
+        climvar,
+        scenario,
+        models,
+        lat,
+        lng,
+        duration,
+        threshId,
+      } = query;
       initialConfig = {
         boundaryId: boundary,
         scenarioId: scenario,
@@ -48,11 +62,17 @@
         modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
+        intervals: DEFAULT_RETURN_PERIOD,
+        duration: +duration,
+        thresholdId: threshId,
       };
     } else {
       initialConfig = {
         ...INITIAL_CONFIG,
         climvarId: "pr",
+        intervals: DEFAULT_RETURN_PERIOD,
+        duration: DEFAULT_DURATION,
+        thresholdId: DEFAULT_THRESHOLD_TYPE,
       };
     }
 
@@ -98,15 +118,16 @@
   import {
     climvarStore,
     thresholdStore,
-    //thresholdListStore,
+    thresholdTypeStore,
     durationStore,
+    intervalsStore,
     dataStore,
   } from "./_store";
   import {
     getObserved,
     getModels,
     getQueryParams,
-    get98pThreshold,
+    getThresholdFromPot,
   } from "./_data";
   // import { DEFAULT_THRESHOLDS } from "./_constants";
 
@@ -118,7 +139,6 @@
 
   // Derived stores
   const { location, boundary } = locationStore;
-  const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
   // Local props
@@ -136,39 +156,35 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: threshParams = {
-    location: $location,
-    boundary: $boundary,
-    climvar: $climvar,
+  $: potParams = {
+    intervals: $intervalsStore, // threshold value is same for all intervals
+    duration: $durationStore,
   };
-  $: extraParams = { thresh: $thresholdStore, window: $durationStore };
-  //$: $location, $climvar, updateDefaultThreshold();
+  $: eventParams = {
+    thresh: $thresholdStore,
+    window: $durationStore,
+  };
+  $: $location, updateDefaultThreshold();
   $: $location, $scenario, $modelsStore, $thresholdStore, update();
-  $: console.log($climvarStore);
 
-  // async function getDefaultThreshold({ location, boundary, climvar }) {
-  //   const { params } = getQueryParams({
-  //     location,
-  //     boundary,
-  //     imperial: true,
-  //   });
-  //   const thresh98p = await get98pThreshold(climvar, params);
-  //   return thresh98p;
-  // }
-
-  // async function updateDefaultThreshold() {
-  //   const { location, boundary, climvar } = threshParams;
-  //   if (!location || !boundary) return;
-  //   isFetchingStore.set(true);
-  //   const thresh98p = await getDefaultThreshold({
-  //     location,
-  //     boundary,
-  //     climvar,
-  //   });
-  //   thresholdListStore.reset(thresh98p, "98th Percentile");
-  //   thresholdStore.set(thresh98p);
-  //   isFetchingStore.set(false);
-  // }
+  async function updateDefaultThreshold() {
+    if (!location || !boundary) return;
+    isFetchingStore.set(true);
+    const { params } = getQueryParams({
+      location: $location,
+      boundary: $boundary,
+      imperial: true,
+    });
+    const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
+    const thresh = await getThresholdFromPot({
+      ...params,
+      ...potParams,
+      ...(pct && { pct }),
+    });
+    //thresholdListStore.reset(thresh98p, "98th Percentile");
+    thresholdStore.set(thresh);
+    isFetchingStore.set(false);
+  }
 
   async function update() {
     if (!appReady || !$modelsStore.length) return;
@@ -185,12 +201,12 @@
       isFetchingStore.set(true);
       const observed = await getObserved(
         config,
-        { ...params, ...extraParams },
+        { ...params, ...eventParams },
         method
       );
       const modelsData = await getModels(
         config,
-        { ...params, ...extraParams },
+        { ...params, ...eventParams },
         method
       );
       dataStore.updateData([...observed, ...modelsData]);
@@ -208,30 +224,37 @@
     lng,
     boundaryId,
     scenarioId,
-    climvarId,
     modelIds,
     imperial,
+    duration,
+    intervals,
+    thresholdId,
   }) {
-    climvarStore.set(climvarId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
+    durationStore.set(duration);
+    intervalsStore.set(intervals);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundaryId);
-    // const thresh98p = await getDefaultThreshold({
-    //   location: loc,
-    //   boundary: { id: boundaryId },
-    //   climvar: { id: climvarId },
-    // });
+    const { params } = getQueryParams({
+      location: loc,
+      boundary: { id: boundaryId },
+      imperial: true,
+    });
+    const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
+    const thresh = await getThresholdFromPot({
+      ...params,
+      intervals,
+      duration,
+      ...(pct && { pct }),
+    });
+    console.log("thresh", thresh);
     // thresholdListStore.add(thresh98p, "98th Percentile");
-    // thresholdStore.set(thresh98p);
-    // // Populate list with additional frequently used values
-    // DEFAULT_THRESHOLDS.forEach((val) => {
-    //   thresholdListStore.add(val);
-    // });
+    thresholdStore.set(thresh);
   }
 
   onMount(() => {
@@ -344,7 +367,7 @@
           are calculated from historical observed values.
         </p>
 
-        <p class="h3">Technical Approach</p>
+        <p class="h4">Technical Approach</p>
         <p>
           Extreme Value Theory (EVT) is a statistical methodology used for
           describing rare events. There are several ways to apply EVT to
@@ -369,17 +392,17 @@
           100) events exist.
         </p>
 
-        <p class="h3">User Advisory</p>
         <p>
-          The Extreme Precipitation Tool is designed to broadly inform potential
-          changes in extreme precipitation intensity and frequency across a wide
-          range of environments and climate zones in California. On a local
-          scale different statistical assumptions (i.e. using annual maximal
-          values rather than partial duration time-series, fitting techniques
-          for distribution parameters and choice of extreme value distribution)
-          may be more appropriate. We encourage users to ensure the empirical
-          fit of the applied distribution is acceptable to their end use before
-          using estimates produced from this tool for planning purposes.
+          <strong>User Advisory</strong>: The Extreme Precipitation Tool is
+          designed to broadly inform potential changes in extreme precipitation
+          intensity and frequency across a wide range of environments and
+          climate zones in California. On a local scale different statistical
+          assumptions (i.e. using annual maximal values rather than partial
+          duration time-series, fitting techniques for distribution parameters
+          and choice of extreme value distribution) may be more appropriate. We
+          encourage users to ensure the empirical fit of the applied
+          distribution is acceptable to their end use before using estimates
+          produced from this tool for planning purposes.
         </p>
 
         <p class="h3">References</p>

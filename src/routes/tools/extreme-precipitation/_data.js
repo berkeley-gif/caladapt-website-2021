@@ -12,6 +12,7 @@ import {
   groupConsecutiveDates,
 } from "~/helpers/utilities";
 import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
+import { DEFAULT_CLIMATE_VARIABLE } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 const dayNumberFormat = timeFormat("%j");
@@ -176,21 +177,21 @@ export function getQueryParams({ location, boundary, imperial = true }) {
 }
 
 /**
- * Gets the 98th percentile threshold value from API
+ * Gets the threshold value from API
  * @param {object} climvar
  * @param {object} params - { location, boundary, imperial }
  * @return {number} thresh98p
  */
 
-export async function get98pThreshold(climvar, params) {
+export async function getThresholdFromPot(params) {
   try {
-    const { id } = climvar;
-    const url = `${apiEndpoint}/series/${id}_day_livneh/exheat/?${serialize(
+    const url = `${apiEndpoint}/series/${DEFAULT_CLIMATE_VARIABLE}_day_HadGEM2-ES_rcp85/pot/?${serialize(
       params
     )}`;
     const data = await fetch(url);
     const json = await data.json();
-    return +json["98p"].toFixed(1);
+    console.log("json", json);
+    return +json["returnlevels"][0]["threshold"];
   } catch (error) {
     throw new Error(`Default Threshold: ${error.message}`);
   }

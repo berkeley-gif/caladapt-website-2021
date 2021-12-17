@@ -9,20 +9,20 @@ export const TOOL_SLUG = "extreme-precipitation";
 
 export const CLIMATE_VARIABLES = ["pr"];
 export const CLIMATE_INDICATORS = [
-  // {
-  //   id: "intensity",
-  //   label: "Intensity",
-  //   title: "Changes in Intensity of Extreme Precipitation Events",
-  //   units: "",
-  //   decimals: 0,
-  //   chartComponent: LineAreaChart,
-  //   statsComponent: AvgRange,
-  //   description: `<p>The colored lines on this visualization represent
-  //   a timeseries of number of extreme precipitation events from individual downscaled GCMs.
-  //   The historical observed data is represented by
-  //   a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight
-  //   corresponding timeseries.</p>`,
-  // },
+  {
+    id: "intensity",
+    label: "Intensity",
+    title: "Changes in Intensity of Extreme Precipitation Events",
+    units: "",
+    decimals: 0,
+    chartComponent: LineAreaChart,
+    statsComponent: AvgRange,
+    description: `<p>The colored lines on this visualization represent
+    a timeseries of number of extreme precipitation events from individual downscaled GCMs.
+    The historical observed data is represented by
+    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight
+    corresponding timeseries.</p>`,
+  },
   {
     id: "frequency",
     label: "Frequency",
@@ -66,14 +66,34 @@ export const CLIMATE_INDICATORS = [
   },
 ];
 
+export const THRESHOLD_TYPES = [
+  {
+    id: "max",
+    label: "Lowest Annual Max",
+  },
+  {
+    id: "90",
+    label: "90th Percentile",
+  },
+  {
+    id: "95",
+    label: "95th Percentile",
+  },
+  {
+    id: "99",
+    label: "99th Percentile",
+  },
+];
+
+export const RETURN_PERIODS = [2, 5, 10, 20, 50, 100];
+
 export const DEFAULT_CLIMATE_VARIABLE = "pr";
 export const DEFAULT_CLIMATE_INDICATOR = "frequency";
 export const DEFAULT_DURATION = 2;
-export const DEFAULT_THRESHOLD = 2.21;
+export const DEFAULT_THRESHOLD_TYPE = "max";
+export const DEFAULT_RETURN_PERIOD = 20;
 
 export const HEATMAP_COLOR_SCALE = ["#fed976", "#fd8d3c", "#e31a1c", "#800026"];
-
-export const DEFAULT_THRESHOLDS = [100, 65];
 
 export const INDICATOR_DESCRIPTION = `
 <p>Indicators presented in this tool examine projected trends in four key characteristics of 
