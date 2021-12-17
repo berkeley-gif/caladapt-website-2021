@@ -44,7 +44,7 @@ const tools = [
     ],
   },
   {
-    title: "Sea Level Rise Coastal Inundation Scenarios",
+    title: "Sea Level Rise – Coastal Inundation Scenarios",
     desc: `Explore the extent of coastal inundation associated with Sea Level 
       Rise and a 100-year storm from two different SLR models.`,
     categories: ['Sea Level Rise', 'Flooding'],
@@ -133,7 +133,7 @@ const tools = [
     ],
   },
   {
-    title: 'Sea Level Rise - CalFloD-3D',
+    title: 'Sea Level Rise – CalFloD-3D',
     desc: `Maps of inundation during 100 year storm events with projected 
     Sea Level Rise scenarios.`,
     categories: ['Sea Level Rise', 'Flooding'],
