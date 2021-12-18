@@ -91,8 +91,8 @@
   <Loading />
 {/if}
 
-<Dashboard useTabs="{true}" activeTab="{0}">
-  <div slot="tab_content_map_title" class="block title">
+<Dashboard useMap="{true}">
+  <div slot="map_title" class="block title">
     <Title
       location="{$location.title}"
       loadLocation="{loadLocation}"
@@ -104,7 +104,7 @@
   </div>
 
   <div
-    slot="tab_content_slippy_map_controls"
+    slot="slippy_map_controls"
     class="block"
     style="background: var(--gray-20);"
   >
@@ -135,7 +135,7 @@
   </div>
 
   <div
-    slot="tab_content_slippy_map"
+    slot="slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
     <Map
