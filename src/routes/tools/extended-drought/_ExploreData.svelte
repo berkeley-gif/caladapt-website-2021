@@ -155,7 +155,7 @@
 
 <Dashboard useTabs="{false}">
   <!-- Chart components -->
-  <div slot="title" class="block title">
+  <div slot="chart_title" class="block title">
     <ChartTitle
       title="{chartTitle}"
       subtitle="{$scenario.desc}"
