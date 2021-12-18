@@ -232,7 +232,7 @@
 {/if}
 
 <Dashboard>
-  <div slot="title" class="block title">
+  <div slot="chart_title" class="block title">
     <Button
       class="btn-change-location"
       size="small"

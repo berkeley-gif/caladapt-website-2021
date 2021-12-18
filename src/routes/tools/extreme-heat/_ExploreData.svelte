@@ -178,7 +178,7 @@
 {/if}
 
 <Dashboard>
-  <div slot="title" class="block title">
+  <div slot="chart_title" class="block title">
     <ChartTitle
       title="{chartTitle}"
       indicatorLabel="{indicatorLabel}"
