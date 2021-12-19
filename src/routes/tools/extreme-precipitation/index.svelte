@@ -141,7 +141,6 @@
   // Derived stores
   const { location, boundary } = locationStore;
   const { scenario } = scenarioStore;
-  const { intensity, events } = dataStore;
 
   // Local props
   let appReady = false;
@@ -202,25 +201,23 @@
       });
       const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
       isFetchingStore.set(true);
-      const intensityData = await getIntensityData(
-        config,
-        { ...params, ...potParams, ...(pct && { pct }) },
-        method
-      );
-      dataStore.setIntensity(intensityData);
-      const observed = await getObserved(
-        config,
-        { ...params, ...eventParams },
-        method
-      );
-      const modelsData = await getModels(
-        config,
-        { ...params, ...eventParams },
-        method
-      );
-      dataStore.setEvents([...observed, ...modelsData]);
-      console.log("pot", $intensity);
-      console.log("events", $events);
+      // const intensityData = await getIntensityData(
+      //   config,
+      //   { ...params, ...potParams, ...(pct && { pct }) },
+      //   method
+      // );
+      // dataStore.setIntensity(intensityData);
+      // const observed = await getObserved(
+      //   config,
+      //   { ...params, ...eventParams },
+      //   method
+      // );
+      // const modelsData = await getModels(
+      //   config,
+      //   { ...params, ...eventParams },
+      //   method
+      // );
+      // dataStore.setEvents([...observed, ...modelsData]);
     } catch (err) {
       console.log("update error", err);
       logException(err);
@@ -263,7 +260,6 @@
       duration,
       ...(pct && { pct }),
     });
-    console.log("thresh", thresh);
     // thresholdListStore.add(thresh98p, "98th Percentile");
     thresholdStore.set(thresh);
   }

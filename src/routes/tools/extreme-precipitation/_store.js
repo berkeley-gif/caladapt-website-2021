@@ -87,7 +87,7 @@ export const intervalsStore = writable(DEFAULT_RETURN_PERIOD);
 //   };
 // })();
 
-const DATA = { intensity: null, events: null };
+const DATA = { intensity: null, events: null, eventsByYear: null };
 
 export const dataStore = makeCustomWritableStore(DATA, {
   name: "dataStore",
@@ -100,6 +100,20 @@ export const dataStore = makeCustomWritableStore(DATA, {
       name: "events",
       getter: ($s) => $s.events,
     },
+    {
+      name: "count",
+      getter: ($s) =>
+        $s.eventsByYear
+          ? $s.eventsByYear.map((series) => calcDaysCount(series))
+          : null,
+    },
+    {
+      name: "maxduration",
+      getter: ($s) =>
+        $s.eventsByYear
+          ? $s.eventsByYear.map((series) => calcMaxDuration(series))
+          : null,
+    },
   ],
   updaters: [
     {
@@ -107,6 +121,7 @@ export const dataStore = makeCustomWritableStore(DATA, {
       update: (store) => (_data) =>
         store.update((s) => {
           s.intensity = _data;
+          return s;
         }),
     },
     {
@@ -114,6 +129,8 @@ export const dataStore = makeCustomWritableStore(DATA, {
       update: (store) => (_data) =>
         store.update((s) => {
           s.events = _data;
+          s.eventsByYear = _data.map((series) => groupDataByYear(series));
+          return s;
         }),
     },
   ],
