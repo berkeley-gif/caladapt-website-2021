@@ -2,7 +2,10 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { Tabs, Tab, TabContent } from "carbon-components-svelte";
 
+  import View from "./View.svelte";
+
   export let useTabs = false;
+  export let useMap = false;
   export let activeTab = 0;
 
   const activeTabDispatcher = createEventDispatcher();
@@ -90,6 +93,7 @@
 <div class="dashboard">
   <div class="bx--grid content">
     {#if useTabs}
+      <!-- tabs layout for chart & map view -->
       <div class="bx--row">
         <div class="bx--col">
           <Tabs type="container" bind:selected="{activeTab}">
@@ -100,78 +104,45 @@
                 <div
                   class="bx--grid bx--grid--full-width bx--grid--tab-content"
                 >
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col">
-                      <slot name="tab_content_map_title"
-                        >tab_content_map_title</slot
-                      >
-                    </div>
-                  </div>
-
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col">
-                      <slot name="tab_content_slippy_map"
-                        >tab_content_slippy_map</slot
-                      >
-                    </div>
-                  </div>
-
-                  <div class="bx--row">
-                    <div class="bx--col">
-                      <slot name="tab_content_slippy_map_controls">
-                        tab_content_slippy_map_controls
-                      </slot>
-                    </div>
-                  </div>
+                  <View useTabs="{true}">
+                    <slot slot="map_title" name="map_title" />
+                    <slot slot="slippy_map" name="slippy_map" />
+                    <slot
+                      slot="slippy_map_controls"
+                      name="slippy_map_controls"
+                    />
+                  </View>
                 </div>
               </TabContent>
-
               <TabContent>
                 <div
                   class="bx--grid bx--grid--full-width bx--grid--tab-content"
                 >
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col">
-                      <slot name="tab_content_title">tab_content_title</slot>
-                    </div>
-                  </div>
-
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                      <slot name="tab_content_stats">tab_content_stats</slot>
-                    </div>
-                  </div>
-
-                  <div class="bx--row margin--v-16">
-                    <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-                      <slot name="tab_content_graphic">tab_content_graphic</slot
-                      >
-                    </div>
-                  </div>
+                  <View useTabs="{true}">
+                    <slot slot="chart_title" name="chart_title" />
+                    <slot slot="stats" name="stats" />
+                    <slot slot="graphic" name="graphic" />
+                  </View>
                 </div>
               </TabContent>
             </div>
           </Tabs>
         </div>
       </div>
+    {:else if useMap}
+      <!-- layout for map view only -->
+      <View>
+        <slot slot="map_title" name="map_title" />
+        <slot slot="slippy_map" name="slippy_map" />
+        <slot slot="slippy_map_controls" name="slippy_map_controls" />
+      </View>
     {:else}
-      <div class="bx--row">
-        <div class="bx--col">
-          <slot name="title">title</slot>
-        </div>
-      </div>
-
-      <div class="bx--row margin--v-16">
-        <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-          <slot name="stats">stats</slot>
-        </div>
-      </div>
-
-      <div class="bx--row margin--v-16">
-        <div class="bx--col-lg-16 bx--col-md-8 bx--col-sm-4">
-          <slot name="graphic">graphic</slot>
-        </div>
-      </div>
+      <!-- default to layout for chart only -->
+      <View>
+        <slot slot="chart_title" name="chart_title" />
+        <slot slot="stats" name="stats" />
+        <slot slot="graphic" name="graphic" />
+      </View>
     {/if}
   </div>
 
