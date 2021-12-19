@@ -126,8 +126,9 @@
   import {
     getObserved,
     getModels,
+    getIntensityData,
     getQueryParams,
-    getThresholdFromPot,
+    getThreshold,
   } from "./_data";
   // import { DEFAULT_THRESHOLDS } from "./_constants";
 
@@ -140,6 +141,7 @@
   // Derived stores
   const { location, boundary } = locationStore;
   const { scenario } = scenarioStore;
+  const { intensity, events } = dataStore;
 
   // Local props
   let appReady = false;
@@ -165,10 +167,10 @@
     window: $durationStore,
   };
   $: $location, updateDefaultThreshold();
-  $: $location, $scenario, $modelsStore, $thresholdStore, update();
+  $: $scenario, $modelsStore, $thresholdStore, update();
 
   async function updateDefaultThreshold() {
-    if (!location || !boundary) return;
+    if (!appReady) return;
     isFetchingStore.set(true);
     const { params } = getQueryParams({
       location: $location,
@@ -176,7 +178,7 @@
       imperial: true,
     });
     const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
-    const thresh = await getThresholdFromPot({
+    const thresh = await getThreshold({
       ...params,
       ...potParams,
       ...(pct && { pct }),
@@ -198,7 +200,14 @@
         location: $location,
         boundary: $boundary,
       });
+      const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
       isFetchingStore.set(true);
+      const intensityData = await getIntensityData(
+        config,
+        { ...params, ...potParams, ...(pct && { pct }) },
+        method
+      );
+      dataStore.setIntensity(intensityData);
       const observed = await getObserved(
         config,
         { ...params, ...eventParams },
@@ -209,7 +218,9 @@
         { ...params, ...eventParams },
         method
       );
-      dataStore.updateData([...observed, ...modelsData]);
+      dataStore.setEvents([...observed, ...modelsData]);
+      console.log("pot", $intensity);
+      console.log("events", $events);
     } catch (err) {
       console.log("update error", err);
       logException(err);
@@ -246,7 +257,7 @@
       imperial: true,
     });
     const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
-    const thresh = await getThresholdFromPot({
+    const thresh = await getThreshold({
       ...params,
       intervals,
       duration,

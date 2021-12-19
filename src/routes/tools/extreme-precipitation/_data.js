@@ -1,6 +1,6 @@
 // Node modules
 import { merge, rollup, range, max, sum } from "d3-array";
-import { timeFormat } from "d3-time-format";
+import { timeFormat, timeParse } from "d3-time-format";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -11,11 +11,16 @@ import {
   serialize,
   groupConsecutiveDates,
 } from "~/helpers/utilities";
-import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
+import {
+  OBSERVED,
+  PRIORITY_10_MODELS,
+  OBSERVED_FILTER_YEAR,
+} from "../_common/constants";
 import { DEFAULT_CLIMATE_VARIABLE } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 const dayNumberFormat = timeFormat("%j");
+const dateParse = timeParse("%Y-%m-%d");
 
 // Helper function to calculate day number
 // Day number is used for plotting Timing of Days indicator
@@ -59,6 +64,19 @@ const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
   });
 };
 
+// For each model, there are usually 2 raster series in the API,
+// the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
+const getModelPotSeries = ({ climvarId, scenarioId, modelIds }) => {
+  return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
+    return {
+      ...d,
+      slug: `${climvarId}_day_${d.id}_${scenarioId}`,
+      mark: "line",
+      visible: true,
+    };
+  });
+};
+
 /**
  * Fetches data from the events endpoint in Cal-Adapt API
  * Input parameters:
@@ -75,6 +93,49 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
     throw new Error(error.message);
   }
   return calcDayNumber(transformResponse(response));
+};
+
+/**
+ * Fetches data from the pot endpoint in Cal-Adapt API
+ *
+ * The "pot" endpoint is used to get return levels of a climate variable for a particular combination
+ * of GCM + percentile + event duration using the Peak Over Threshold statistical method.
+ *
+ * If there is no "pct" (percentile) in the params, the default threshold value returned is the Lowest
+ * Annual Maximum value from the observed data.
+ *
+ * Input parameters:
+ * slug - name of raster series in API
+ * params -  { location, boundary, imperial, duration, intervals, pct }
+ * method - default is GET, POST used for user uploaded boundaries
+ * @param {object}
+ * @return {array}
+ */
+const fetchPot = async ({ series, params, method = "GET" }) => {
+  const { slug } = series;
+  const url = `${apiEndpoint}/series/${slug}/pot/`;
+  const model = "";
+  const [response, error] = await handleXHR(fetchData(url, params, method));
+  if (error) {
+    throw new Error(error.message);
+  }
+  const { returnlevels } = response;
+  return returnlevels.map((d) => {
+    const { begin, end, n, levels, threshold } = d;
+    const { period, lowerci, upperci, value } = levels[0];
+    return {
+      ...series,
+      begin: dateParse(begin),
+      end: dateParse(end),
+      isObserved:
+        dateParse(end).getUTCFullYear() < OBSERVED_FILTER_YEAR ? true : false,
+      interval: +period,
+      ci_lower: +lowerci,
+      ci_upper: +upperci,
+      level: +value,
+      n,
+    };
+  });
 };
 
 /**
@@ -141,6 +202,30 @@ export async function getModels(config, params, method = "GET") {
   }
 }
 
+export async function getIntensityData(config, params, method = "GET") {
+  try {
+    const seriesList = getModelPotSeries(config);
+    const promises = seriesList.map((series) =>
+      fetchPot({ series, params, method })
+    );
+    const seriesData = await Promise.all(promises);
+    const data = merge(seriesData);
+
+    // each of the model responses from the API contains historical data
+    // extract one of them to create a new observed series
+    const observedSeries = OBSERVED.find(({ id }) => id === "livneh");
+    const observedData = {
+      ...data.find((d) => d.isObserved),
+      ...observedSeries,
+      mark: "line",
+      visible: true,
+    };
+    return [observedData, ...data.filter((d) => !d.isObserved)];
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 /**
  * Creates the param object used to fetch data from API
  * @param {object} location
@@ -177,13 +262,29 @@ export function getQueryParams({ location, boundary, imperial = true }) {
 }
 
 /**
- * Gets the threshold value from API
+ * Get the threshold value from API
+ *
+ * The "pot" endpoint is used to get return levels of a climate variable for a particular combination
+ * of GCM + percentile + event duration using the Peak Over Threshold statistical method.
+ *
+ * The threshold value used to calculate these return levels is returned as part of the
+ * response from the API. There is no separate endpoint to return just the threshold value.
+ *
+ * The threshold is determined by values from the observed historical data
+ * (for now only the livneh data is used) and does not depend on the GCM or scenario.
+ *
+ * The param "intervals" is passed so the API response contains return levels only for 1 return period and
+ * not multiple which is the default. Threshold value is same for all intervals.
+ *
+ * If there is no "pct" (percentile) in the params, the default threshold value returned is the Lowest
+ * Annual Maximum value from the observed data.
+ *
  * @param {object} climvar
- * @param {object} params - { location, boundary, imperial }
- * @return {number} thresh98p
+ * @param {object} params - { location, boundary, imperial, duration, intervals, pct }
+ * @return {number}
  */
 
-export async function getThresholdFromPot(params) {
+export async function getThreshold(params) {
   try {
     const url = `${apiEndpoint}/series/${DEFAULT_CLIMATE_VARIABLE}_day_HadGEM2-ES_rcp85/pot/?${serialize(
       params
