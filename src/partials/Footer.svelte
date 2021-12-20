@@ -117,7 +117,11 @@
           Council.
         </p>
       </div>
-      <div class="bx--offset-lg-1 bx--col-lg-5 logos">
+      <div
+        class:bx--offset-lg-1="{!useWideLayout}"
+        class:bx--offset-lg-4="{useWideLayout}"
+        class="bx--col-lg-6 logos"
+      >
         <a
           href="http://gif.berkeley.edu/"
           target="_blank"
