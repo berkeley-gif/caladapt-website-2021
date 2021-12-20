@@ -6,6 +6,7 @@
   import { min, max, groups } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { isEmptyData } from "~/helpers/utilities";
 
   import ReturnLevels from "./ReturnLevels.svelte";
   import AxisX from "./AxisX.svelte";
@@ -45,34 +46,14 @@
 
   let dateParse = timeParse("%Y-%m-%d");
   let dateFormat = timeFormat("%Y");
-  function formatGroup(group) {
-    const parts = group.split(":");
-    const years = parts.map((d) => dateFormat(dateParse(d)));
-    return years.join("–");
-  }
 
-  function createTooltip(d) {
-    let tooltip;
-    tooltip = `<span class="title">${formatGroup(d.timestep)}</span>`;
-    tooltip += `<span class="title">
-      <span class="key" style="background:${d.color}"></span>
-      ${d.label}
-    </span>`;
-    const val = Math.round(d.value * 100) / 100;
-    const lower = Math.round(d.lowerci * 100) / 100;
-    const upper = Math.round(d.upperci * 100) / 100;
-    tooltip += `<span>Return level: ${val} ${yAxis.units}</span>`;
-    if (lower === 0 || upper === 0) {
-      tooltip += "<span>Insufficient observations to calculate CI</span>";
-    } else {
-      tooltip += `<span>95% CI: ${lower} – ${upper} ${yAxis.units}</span>`;
-    }
-    return tooltip;
-  }
+  let noData = false;
 
-  $: if (data) {
+  $: if (!isEmptyData(data)) {
+    noData = false;
+
     // Update Data
-    dataByGroup = groups(data, (d) => d.timestep);
+    dataByGroup = groups(data, (d) => d.label);
     console.log("chart data", dataByGroup);
 
     // Update X Axis
@@ -110,6 +91,25 @@
     console.log($legendItems);
     setContext("Legend", legendItems);
   }
+
+  function createTooltip(d) {
+    let tooltip;
+    tooltip = `<span class="title">${d.label}</span>`;
+    tooltip += `<span class="title">
+      <span class="key" style="background:${d.color}"></span>
+      ${d.label}
+    </span>`;
+    const val = Math.round(d.value * 100) / 100;
+    const lower = Math.round(d.lowerci * 100) / 100;
+    const upper = Math.round(d.upperci * 100) / 100;
+    tooltip += `<span>Return level: ${val} ${yAxis.units}</span>`;
+    if (lower === 0 || upper === 0) {
+      tooltip += "<span>Insufficient observations to calculate CI</span>";
+    } else {
+      tooltip += `<span>95% CI: ${lower} – ${upper} ${yAxis.units}</span>`;
+    }
+    return tooltip;
+  }
 </script>
 
 {#if data}
@@ -129,7 +129,7 @@
       data="{dataByGroup}"
     >
       <Svg>
-        <AxisX formatTick="{formatGroup}" />
+        <AxisX />
         <AxisY
           formatTick="{yAxis.tickFormat}"
           label="{yAxis.label}"
