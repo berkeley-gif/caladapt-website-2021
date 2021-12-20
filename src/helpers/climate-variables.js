@@ -39,7 +39,7 @@ const variables = [
     icon: Rainfall,
     text: "Accumulated rainfall and snowfall.",
     units: {
-      imperial: "inches",
+      imperial: "inch",
       metric: "mm",
     },
     decimals: 1,
