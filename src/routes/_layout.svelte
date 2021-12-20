@@ -1,7 +1,12 @@
 <script>
+  import { stores } from "@sapper/app";
   import { Nav, Footer, BackToTop, SiteAlert } from "~/partials";
+  import { hasWideLayout } from "~/helpers/layout";
 
   export let segment;
+
+  const { page } = stores();
+  $: useWideLayout = hasWideLayout(`${$page.path}`);
 </script>
 
 <svelte:head>
@@ -38,4 +43,4 @@
 
 <BackToTop />
 
-<Footer />
+<Footer useWideLayout="{useWideLayout}" />
