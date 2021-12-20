@@ -7,14 +7,20 @@
     DEFAULT_SCENARIOS,
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
-  import { INDICATOR_DESCRIPTION } from "./_constants";
+  import {
+    INDICATOR_DESCRIPTION,
+    THRESHOLD_TYPES,
+    THRESHOLD_TYPE_DESCRIPTION,
+    RETURN_PERIODS,
+    RETURN_PERIOD_DESCRIPTION,
+  } from "./_constants";
 
   import {
     SelectClimvar,
     SelectScenario,
     RadioBtnGroup,
     SelectModels,
-    SelectThreshold,
+    Select,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
@@ -25,13 +31,13 @@
     indicatorStore,
     durationStore,
     thresholdStore,
-    // thresholdListStore,
+    thresholdTypeStore,
+    intervalsStore,
   } from "./_store";
 
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
   const { indicator } = indicatorStore;
-  //const { climvar } = climvarStore;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -50,7 +56,7 @@
   }
 
   function changeDuration(e) {
-    durationStore.set(e.detail);
+    durationStore.set(+e.detail);
   }
 
   function changeModels(e) {
@@ -61,9 +67,13 @@
     thresholdStore.set(e.detail);
   }
 
-  // function addThreshold(e) {
-  //   thresholdListStore.add(e.detail);
-  // }
+  function changeThresholdType(e) {
+    thresholdTypeStore.set(e.detail.id);
+  }
+
+  function changeInterval(e) {
+    intervalsStore.set(e.detail);
+  }
 </script>
 
 <!-- Chart Settings -->
@@ -100,6 +110,23 @@
   />
 </div>
 
+{#if $indicator.id === "intensity"}
+  <div class="block">
+    <Select
+      title="Select Return Interval"
+      selectedId="{$intervalsStore}"
+      items="{RETURN_PERIODS.map((d) => ({ id: d, text: `${d} years` }))}"
+      on:change="{changeInterval}"
+    />
+    <LearnMoreButton
+      on:click="{() =>
+        showLearnMore({
+          content: RETURN_PERIOD_DESCRIPTION,
+        })}"
+    />
+  </div>
+{/if}
+
 <div class="block">
   <SelectScenario
     selectedId="{$scenarioStore}"
@@ -124,19 +151,20 @@
   />
 </div>
 
-<!-- <div class="block">
-  <SelectThreshold
-    items="{$thresholdListStore}"
-    selected="{$thresholdStore}"
-    units="{$climvar.units.imperial}"
-    helperText="Add a new threshold value or select from list"
-    on:change="{changeThreshold}"
-    on:add="{addThreshold}"
+<div class="block">
+  <SelectClimvar
+    title="Select Threshold Type"
+    selectedId="{$thresholdTypeStore}"
+    items="{THRESHOLD_TYPES}"
+    on:change="{changeThresholdType}"
   />
   <LearnMoreButton
-    on:click="{() => showLearnMore({ slugs: ['extreme-heat-threshold'] })}"
+    on:click="{() =>
+      showLearnMore({
+        content: THRESHOLD_TYPE_DESCRIPTION,
+      })}"
   />
-</div> -->
+</div>
 
 <div class="block">
   <SelectModels
