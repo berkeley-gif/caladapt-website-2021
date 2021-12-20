@@ -12,7 +12,7 @@ export const CLIMATE_INDICATORS = [
   {
     id: "intensity",
     label: "Intensity",
-    title: "Changes in Intensity of Extreme Precipitation Events",
+    title: "Estimated Intensity of Extreme Precipitation Events",
     units: "",
     decimals: 0,
     chartComponent: LineAreaChart,
@@ -88,7 +88,7 @@ export const THRESHOLD_TYPES = [
 export const RETURN_PERIODS = [2, 5, 10, 20, 50, 100];
 
 export const DEFAULT_CLIMATE_VARIABLE = "pr";
-export const DEFAULT_CLIMATE_INDICATOR = "frequency";
+export const DEFAULT_CLIMATE_INDICATOR = "intensity";
 export const DEFAULT_DURATION = 2;
 export const DEFAULT_THRESHOLD_TYPE = "max";
 export const DEFAULT_RETURN_PERIOD = 20;
@@ -104,3 +104,7 @@ Extreme Precipitation Events:</p>
   Night and the last.</li>
   <li><strong>Maximum Duration</strong>: The length of the longest heat wave.</li>
 </ul>`;
+
+export const THRESHOLD_TYPE_DESCRIPTION = "Describe types of threshold";
+
+export const RETURN_PERIOD_DESCRIPTION = "Describe return periods";
