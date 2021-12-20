@@ -35,7 +35,7 @@
   <SiteAlert />
 {/if}
 
-<Nav segment="{segment}" />
+<Nav segment="{segment}" useWideLayout="{useWideLayout}" />
 
 <main id="main-content">
   <slot />
