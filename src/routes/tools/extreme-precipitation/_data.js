@@ -15,12 +15,14 @@ import {
   OBSERVED,
   PRIORITY_10_MODELS,
   OBSERVED_FILTER_YEAR,
+  DEFAULT_TIME_PERIODS,
 } from "../_common/constants";
 import { DEFAULT_CLIMATE_VARIABLE } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 const dayNumberFormat = timeFormat("%j");
 const dateParse = timeParse("%Y-%m-%d");
+const dateFormat = timeFormat("%B %Y");
 
 // Helper function to calculate day number
 // Day number is used for plotting Timing of Days indicator
@@ -123,12 +125,19 @@ const fetchPot = async ({ series, params, method = "GET" }) => {
   return returnlevels.map((d) => {
     const { begin, end, n, levels, threshold } = d;
     const { period, lowerci, upperci, value } = levels[0];
+    const beginDate = dateParse(begin);
+    const endDate = dateParse(end);
+    const timestep = `${dateFormat(beginDate)}–${dateFormat(endDate)}`;
+    const timePeriod = DEFAULT_TIME_PERIODS.find(({ begin, end }) => {
+      return (
+        begin >= beginDate.getUTCFullYear() && end <= endDate.getUTCFullYear()
+      );
+    });
     return {
       ...series,
-      begin: dateParse(begin),
-      end: dateParse(end),
-      isObserved:
-        dateParse(end).getUTCFullYear() < OBSERVED_FILTER_YEAR ? true : false,
+      begin: beginDate,
+      end: endDate,
+      label: `${timestep}|${timePeriod.label}`,
       interval: +period,
       ci_lower: +lowerci,
       ci_upper: +upperci,
@@ -215,12 +224,15 @@ export async function getIntensityData(config, params, method = "GET") {
     // extract one of them to create a new observed series
     const observedSeries = OBSERVED.find(({ id }) => id === "livneh");
     const observedData = {
-      ...data.find((d) => d.isObserved),
+      ...data.find((d) => d.label.includes("Historical")),
       ...observedSeries,
       mark: "line",
       visible: true,
     };
-    return [observedData, ...data.filter((d) => !d.isObserved)];
+    return [
+      observedData,
+      ...data.filter((d) => !d.label.includes("Historical")),
+    ];
   } catch (error) {
     throw new Error(error.message);
   }
@@ -291,7 +303,6 @@ export async function getThreshold(params) {
     )}`;
     const data = await fetch(url);
     const json = await data.json();
-    console.log("json", json);
     return +json["returnlevels"][0]["threshold"];
   } catch (error) {
     throw new Error(`Default Threshold: ${error.message}`);
