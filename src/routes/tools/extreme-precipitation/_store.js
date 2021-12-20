@@ -1,4 +1,5 @@
 import { writable, derived } from "svelte/store";
+import climvars from "~/helpers/climate-variables";
 import { makeCustomWritableStore } from "../_common/stores";
 import {
   CLIMATE_INDICATORS,
@@ -16,7 +17,15 @@ import {
   groupDataByYear,
 } from "./_data";
 
-export const climvarStore = writable(DEFAULT_CLIMATE_VARIABLE);
+export const climvarStore = makeCustomWritableStore(DEFAULT_CLIMATE_VARIABLE, {
+  name: "climvarStore",
+  getters: [
+    {
+      name: "climvar",
+      getter: ($s) => climvars.find((d) => d.id === $s),
+    },
+  ],
+});
 
 export const indicatorList = CLIMATE_INDICATORS;
 
@@ -42,51 +51,6 @@ export const durationStore = writable(DEFAULT_DURATION);
 
 export const intervalsStore = writable(DEFAULT_RETURN_PERIOD);
 
-// Data Store
-// export const dataStore = (() => {
-//   const store = writable({
-//     daily: null,
-//     annual: null,
-//   });
-//   const { update, subscribe } = store;
-//   return {
-//     subscribe,
-//     updateData: (data) =>
-//       update((store) => {
-//         if (!data) return;
-//         store.daily = data;
-//         store.annual = data.map((series) => groupDataByYear(series));
-//         return store;
-//       }),
-//     reset: () =>
-//       update((store) => {
-//         store.daily = null;
-//         store.annual = null;
-//         return store;
-//       }),
-//     get data() {
-//       return derived(
-//         [store, indicatorStore, durationStore],
-//         ([$store, $indicatorStore, $durationStore]) => {
-//           if (!store || !$store.daily) return null;
-//           switch ($indicatorStore) {
-//             case "frequency":
-//               return $store.annual.map((series) => calcDaysCount(series));
-//             case "duration":
-//               return $store.annual.map((series) => calcMaxDuration(series));
-//             case "waves":
-//               return $store.annual.map((series) =>
-//                 calcHeatwaveCount(series, $durationStore)
-//               );
-//             default:
-//               return $store.daily;
-//           }
-//         }
-//       );
-//     },
-//   };
-// })();
-
 const DATA = { intensity: null, events: null, eventsByYear: null };
 
 export const dataStore = makeCustomWritableStore(DATA, {
@@ -101,14 +65,14 @@ export const dataStore = makeCustomWritableStore(DATA, {
       getter: ($s) => $s.events,
     },
     {
-      name: "count",
+      name: "frequency",
       getter: ($s) =>
         $s.eventsByYear
           ? $s.eventsByYear.map((series) => calcDaysCount(series))
           : null,
     },
     {
-      name: "maxduration",
+      name: "duration",
       getter: ($s) =>
         $s.eventsByYear
           ? $s.eventsByYear.map((series) => calcMaxDuration(series))
