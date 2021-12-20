@@ -141,6 +141,7 @@
   // Derived stores
   const { location, boundary } = locationStore;
   const { scenario } = scenarioStore;
+  const { intensity, events } = dataStore;
 
   // Local props
   let appReady = false;
@@ -157,37 +158,48 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
+
   $: potParams = {
     intervals: $intervalsStore, // threshold value is same for all intervals
     duration: $durationStore,
   };
+
   $: eventParams = {
     thresh: $thresholdStore,
     window: $durationStore,
   };
-  $: $location, updateDefaultThreshold();
-  $: $scenario, $modelsStore, $thresholdStore, update();
 
-  async function updateDefaultThreshold() {
+  $: $intervalsStore, updateIntensity();
+  $: $thresholdTypeStore, $location, $durationStore, updateThreshold();
+  $: $modelsStore, $scenarioStore, $thresholdStore, update();
+
+  async function updateThreshold() {
     if (!appReady) return;
-    isFetchingStore.set(true);
-    const { params } = getQueryParams({
-      location: $location,
-      boundary: $boundary,
-      imperial: true,
-    });
-    const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
-    const thresh = await getThreshold({
-      ...params,
-      ...potParams,
-      ...(pct && { pct }),
-    });
-    //thresholdListStore.reset(thresh98p, "98th Percentile");
-    thresholdStore.set(thresh);
-    isFetchingStore.set(false);
+    try {
+      isFetchingStore.set(true);
+      const { params } = getQueryParams({
+        location: $location,
+        boundary: $boundary,
+        imperial: true,
+      });
+      const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
+      const thresh = await getThreshold({
+        ...params,
+        ...potParams,
+        ...(pct && { pct }),
+      });
+      console.log("trehosld", thresh);
+      thresholdStore.set(thresh);
+    } catch (err) {
+      console.log("update threshold error", err);
+      logException(err);
+      notifier.error("Error", err, 2000);
+    } finally {
+      isFetchingStore.set(false);
+    }
   }
 
-  async function update() {
+  async function updateIntensity() {
     if (!appReady || !$modelsStore.length) return;
     try {
       const config = {
@@ -201,25 +213,50 @@
       });
       const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
       isFetchingStore.set(true);
-      // const intensityData = await getIntensityData(
-      //   config,
-      //   { ...params, ...potParams, ...(pct && { pct }) },
-      //   method
-      // );
-      // dataStore.setIntensity(intensityData);
-      // const observed = await getObserved(
-      //   config,
-      //   { ...params, ...eventParams },
-      //   method
-      // );
-      // const modelsData = await getModels(
-      //   config,
-      //   { ...params, ...eventParams },
-      //   method
-      // );
-      // dataStore.setEvents([...observed, ...modelsData]);
+      const intensityData = await getIntensityData(
+        config,
+        { ...params, ...potParams, ...(pct && { pct }) },
+        method
+      );
+      console.log("intensity");
+      dataStore.setIntensity(intensityData);
     } catch (err) {
-      console.log("update error", err);
+      console.log("update intensity error", err);
+      logException(err);
+      notifier.error("Error", err, 2000);
+    } finally {
+      isFetchingStore.set(false);
+    }
+  }
+
+  async function update() {
+    if (!appReady || !$modelsStore.length) return;
+    try {
+      await updateIntensity();
+      const config = {
+        climvarId: $climvarStore,
+        scenarioId: $scenarioStore,
+        modelIds: $modelsStore,
+      };
+      const { params, method } = getQueryParams({
+        location: $location,
+        boundary: $boundary,
+      });
+      isFetchingStore.set(true);
+      const observed = await getObserved(
+        config,
+        { ...params, ...eventParams },
+        method
+      );
+      const modelsData = await getModels(
+        config,
+        { ...params, ...eventParams },
+        method
+      );
+      console.log("events");
+      dataStore.setEvents([...observed, ...modelsData]);
+    } catch (err) {
+      console.log("update events error", err);
       logException(err);
       notifier.error("Error", err, 2000);
     } finally {
@@ -243,6 +280,7 @@
     unitsStore.set({ imperial });
     durationStore.set(duration);
     intervalsStore.set(intervals);
+    thresholdTypeStore.set(thresholdId);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
@@ -253,7 +291,7 @@
       boundary: { id: boundaryId },
       imperial: true,
     });
-    const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
+    const pct = thresholdId === "max" ? null : thresholdId;
     const thresh = await getThreshold({
       ...params,
       intervals,
