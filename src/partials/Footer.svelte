@@ -36,7 +36,7 @@
 </script>
 
 <style lang="scss">
-  .footer-logos {
+  footer {
     background-image: linear-gradient(
       to top,
       var(--gray-60),
@@ -92,6 +92,8 @@
   }
 
   .footer-copyright {
+    background: var(--white);
+    color: var(--gray-80);
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -101,11 +103,12 @@
 </style>
 
 <footer>
-  <div class="bx--grid bx--grid--full-width footer-logos">
+  <div class="bx--grid footer-logos">
     <div class="bx--row bx--row-padding">
       <div
         class:bx--offset-lg-2="{!useWideLayout}"
-        class="bx--col-lg-6 bx--offset-md-1 bx--col-md-6 about-text"
+        class:bx--offset-md-1="{!useWideLayout}"
+        class="bx--col-lg-6 bx--col-md-6 about-text"
       >
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
