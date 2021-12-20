@@ -24,8 +24,9 @@
     align-content: center;
     align-items: center;
 
-    @media (max-width: 1000px) {
+    @media (max-width: 66rem) {
       text-align: center;
+      justify-content: center;
     }
 
     p {
@@ -37,14 +38,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    // flex-wrap: wrap;
+    flex-wrap: wrap;
 
     a {
-      // background: var(--white);
       margin: 0.5rem;
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 66rem) {
       justify-content: space-evenly;
     }
   }
@@ -78,7 +78,7 @@
       <div
         class:bx--offset-lg-2="{!useWideLayout}"
         class:bx--offset-md-1="{!useWideLayout}"
-        class="bx--col-lg-6 bx--col-md-6 about-text"
+        class="bx--col-lg-6 about-text"
       >
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
@@ -89,40 +89,31 @@
       </div>
       <div
         class:bx--offset-lg-1="{!useWideLayout}"
-        class:bx--offset-lg-4="{useWideLayout}"
-        class="bx--col-lg-6 logos"
+        class:bx--offset-lg-3="{useWideLayout}"
+        class="logos bx--col-lg-7"
       >
-        <a
-          href="http://gif.berkeley.edu/"
-          target="_blank"
-          aria-label="Geospatial Innovation Facility"
-        >
+        <a href="http://gif.berkeley.edu/" target="_blank">
           <img
             src="img/logos/gif_249x100_gray.png"
-            alt="logo for Geospatial Innovation Facility"
+            alt="Geospatial Innovation Facility"
             style="width:180px;"
           />
         </a>
-        <a
-          href="http://www.energy.ca.gov/"
-          target="_blank"
-          aria-label="California Energy Commission"
-        >
+        <a href="http://www.energy.ca.gov/" target="_blank">
           <img
             src="img/logos/CEC_BW_Logo_gray.png"
-            alt="logo for California Energy Commission"
-            style="width:125px;"
+            alt="California Energy Commission"
+            style="width:125px;margin-left:1rem;"
           />
         </a>
         <a
           href="http://sgc.ca.gov/"
           target="_blank"
-          aria-label="California Strategic Growth Council"
           style="background: transparent;"
         >
           <img
             src="img/logos/SGC-Brand-Logos-White-13.png"
-            alt="logo for Strategic Growth Council"
+            alt="Strategic Growth Council"
             style="width:200px;"
           />
         </a>
