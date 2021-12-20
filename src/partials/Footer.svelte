@@ -1,6 +1,38 @@
 <script>
+  import { stores } from "@sapper/app";
   import LogoTwitter32 from "carbon-icons-svelte/lib/LogoTwitter32";
   import Email24 from "carbon-icons-svelte/lib/Email24";
+
+  // TODO: abstract this so that it can be used in the header as well.
+  const { page } = stores();
+  const TOP_LEVEL_WIDE_LAYOUTS = ["tools", "blog"];
+  const SUB_LEVEL_WIDE_LAYOUTS = ["help", "tools"];
+  const SUB_LEVEL_NARROW_LAYOUTS = ["blog"];
+  const homepage = /^\/$/;
+  const mainPage = /^\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/i;
+  const subPage = /^\/[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*/i;
+
+  let useWideLayout = false;
+
+  $: path = `${$page.path}`;
+
+  $: if (homepage.exec(path)) {
+    useWideLayout = true;
+  } else if (
+    mainPage.exec(path) &&
+    TOP_LEVEL_WIDE_LAYOUTS.includes(path.replace(/\//g, ""))
+  ) {
+    useWideLayout = true;
+  } else if (subPage.exec(path)) {
+    if (SUB_LEVEL_WIDE_LAYOUTS.includes(path.split("/")[1])) {
+      useWideLayout = true;
+    }
+    if (SUB_LEVEL_NARROW_LAYOUTS.includes(path.split("/")[1])) {
+      useWideLayout = false;
+    }
+  } else {
+    useWideLayout = false;
+  }
 </script>
 
 <style lang="scss">
@@ -72,7 +104,8 @@
   <div class="bx--grid bx--grid--full-width footer-logos">
     <div class="bx--row bx--row-padding">
       <div
-        class="bx--offset-lg-2 bx--col-lg-6 bx--offset-md-1 bx--col-md-6 about-text"
+        class:bx--offset-lg-2="{!useWideLayout}"
+        class="bx--col-lg-6 bx--offset-md-1 bx--col-md-6 about-text"
       >
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
