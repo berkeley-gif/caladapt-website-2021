@@ -32,6 +32,7 @@
     thresholdStore,
     durationStore,
     dataStore,
+    intervalsStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -65,14 +66,10 @@
 
   $: formatFn = format(`.${$indicator.decimals}f`);
 
-  //$: thresholdLabel = `${$thresholdStore} °F`;
-
+  $: thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
   $: indicatorLabel = $indicator.title;
-
-  // $: durationLabel =
-  //   $climvarStore === "tasmax"
-  //     ? `${$durationStore} Day`
-  //     : `${$durationStore} Night`;
+  $: eventLabel = `${$durationStore}-day rainfall total`;
+  $: intervalsLabel = `${$intervalsStore} years`;
 
   $: if ($data) {
     console.log("data", $data);
@@ -173,16 +170,16 @@
 {/if}
 
 <Dashboard>
-  <div slot="title" class="block title">
-    <!--     <ChartTitle
+  <div slot="chart_title" class="block title">
+    <ChartTitle
       title="{chartTitle}"
       indicatorLabel="{indicatorLabel}"
-      climvarLabel="{$climvar.title}"
+      eventLabel="{eventLabel}"
       scenarioLabel="{$scenario.labelLong}"
       thresholdLabel="{thresholdLabel}"
+      intervalsLabel="{intervalsLabel}"
       loadLocation="{loadLocation}"
-      durationLabel="{durationLabel}"
-    /> -->
+    />
   </div>
 
   <div slot="stats">
