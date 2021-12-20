@@ -65,12 +65,12 @@
 
   .logos {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
 
     a {
-      background: var(--white);
+      // background: var(--white);
       margin: 0.5rem;
     }
 
@@ -121,7 +121,7 @@
           aria-label="Geospatial Innovation Facility"
         >
           <img
-            src="img/logos/gif_249x100.png"
+            src="img/logos/gif_249x100_gray.png"
             alt="logo for Geospatial Innovation Facility"
             style="width:180px;"
           />
@@ -132,9 +132,9 @@
           aria-label="California Energy Commission"
         >
           <img
-            src="img/logos/cec_900x790.png"
+            src="img/logos/CEC_BW_Logo_gray.png"
             alt="logo for California Energy Commission"
-            style="width:100px;"
+            style="width:125px;"
           />
         </a>
         <a
