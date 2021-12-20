@@ -2,6 +2,7 @@ import {
   LineAreaChart,
   ScatterChart,
   HeatmapChart,
+  DotAndWhiskerChart,
 } from "~/components/tools/Charts";
 import { AvgRange, MonthTiming } from "~/components/tools/Stats";
 
@@ -15,7 +16,7 @@ export const CLIMATE_INDICATORS = [
     title: "Estimated Intensity of Extreme Precipitation Events",
     units: "",
     decimals: 0,
-    chartComponent: LineAreaChart,
+    chartComponent: DotAndWhiskerChart,
     statsComponent: AvgRange,
     description: `<p>The colored lines on this visualization represent
     a timeseries of number of extreme precipitation events from individual downscaled GCMs.
