@@ -61,13 +61,7 @@
   titleFontWeight="600"
   iconPaths="{icons}"
   useOffset="{false}"
->
-  <div class="btn-container" slot="button">
-    <Button icon="{ArrowRight16}" href="/about" sapper:prefetch
-      >More about Cal-Adapt</Button
-    >
-  </div>
-</Banner>
+/>
 
 <div class="spacing--v-32"></div>
 
