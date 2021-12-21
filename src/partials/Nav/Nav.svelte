@@ -4,49 +4,36 @@
   import NavItems from "./NavItems.svelte";
 
   export let segment;
+  export let useWideLayout;
 
   const navItems = [
     {
       label: "Tools",
       path: "/tools/",
-      useOffset: false,
     },
     {
       label: "Data",
       path: "/data/",
-      useOffset: true,
     },
     {
       label: "Help",
       path: "/help/",
-      useOffset: true,
     },
     {
       label: "Blog",
       path: "/blog/",
-      useOffset: false,
     },
     {
       label: "Events",
       path: "/events/",
-      useOffset: true,
     },
     {
       label: "About",
       path: "/about/",
-      useOffset: true,
     },
   ];
-  const home = {
-    label: "Home",
-    path: "/",
-    useOffset: false,
-  };
 
   let open = false;
-
-  $: curNavItem =
-    navItems.find((item) => item.label.toLowerCase() === segment) || home;
 
   function handleNavItemClick() {
     open = !open;
@@ -72,7 +59,7 @@
       <!-- logo & homepage link -->
       <div
         class="bx--col-lg-3 bx--col-md-2 bx--col-sm-1"
-        class:bx--offset-lg-2="{curNavItem.useOffset}"
+        class:bx--offset-lg-2="{!useWideLayout}"
       >
         <a
           sapper:prefetch
@@ -92,8 +79,8 @@
       <!-- desktop nav -->
       <div
         class="bx--col-md-0 bx--col-sm-0"
-        class:bx--col-lg-11="{curNavItem.useOffset}"
-        class:bx--col-lg-13="{!curNavItem.useOffset}"
+        class:bx--col-lg-11="{!useWideLayout}"
+        class:bx--col-lg-13="{useWideLayout}"
       >
         <NavItems navItems="{navItems}" segment="{segment}" />
       </div>
