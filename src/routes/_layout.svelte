@@ -15,7 +15,7 @@
     <meta name="robots" content="none" />
   {/if}
 
-  {#if process.env.DEPLOY === "prod"}
+  {#if process.env.loggingEnabled}
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
