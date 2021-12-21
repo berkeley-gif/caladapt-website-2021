@@ -22,7 +22,7 @@ import { DEFAULT_CLIMATE_VARIABLE } from "./_constants";
 const { apiEndpoint } = config.env.production;
 const dayNumberFormat = timeFormat("%j");
 const dateParse = timeParse("%Y-%m-%d");
-const dateFormat = timeFormat("%B %Y");
+const dateFormat = timeFormat("%b %Y");
 
 // Helper function to calculate day number
 // Day number is used for plotting Timing of Days indicator
@@ -127,7 +127,7 @@ const fetchPot = async ({ series, params, method = "GET" }) => {
     const { period, lowerci, upperci, value } = levels[0];
     const beginDate = dateParse(begin);
     const endDate = dateParse(end);
-    const timestep = `${dateFormat(beginDate)}–${dateFormat(endDate)}`;
+    const timestep = `${dateFormat(beginDate)} – ${dateFormat(endDate)}`;
     const timePeriod = DEFAULT_STAT_PERIODS.find(({ start, end }) => {
       return (
         start >= beginDate.getUTCFullYear() && end <= endDate.getUTCFullYear()
@@ -137,11 +137,11 @@ const fetchPot = async ({ series, params, method = "GET" }) => {
       ...series,
       begin: beginDate,
       end: endDate,
-      label: `${timestep}|${timePeriod.label}`,
+      groupLabel: `${timestep} | ${timePeriod.label.split(" ")[0]}`,
       interval: +period,
       ci_lower: +lowerci,
       ci_upper: +upperci,
-      level: +value,
+      value: +value,
       n,
     };
   });
@@ -224,12 +224,16 @@ export async function getIntensityData(config, params, method = "GET") {
     // extract one of them to create a new observed series
     const observedSeries = OBSERVED.find(({ id }) => id === "livneh");
     const observedData = {
-      ...data.find((d) => d.label.includes("Baseline")),
+      ...data.find((d) => d.groupLabel.includes("Baseline")),
       ...observedSeries,
+      label: "Observed",
       mark: "line",
       visible: true,
     };
-    return [observedData, ...data.filter((d) => !d.label.includes("Baseline"))];
+    return [
+      observedData,
+      ...data.filter((d) => !d.groupLabel.includes("Baseline")),
+    ];
   } catch (error) {
     throw new Error(error.message);
   }
