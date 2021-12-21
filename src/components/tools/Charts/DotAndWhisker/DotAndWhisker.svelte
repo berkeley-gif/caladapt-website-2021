@@ -3,6 +3,7 @@
   import { raise } from "layercake";
 
   export let data;
+  $: console.log("dot whisler", data);
 
   const { x, y, xScale, yScale, rScale, width, padding } =
     getContext("LayerCake");
@@ -31,7 +32,7 @@
     <g class="{group}" transform="translate({$rScale(group)},0)">
       {#each values as d}
         <g
-          class="{d.key}"
+          class="{d.id}"
           on:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
           on:mousemove="{handleMousemove(d)}"
         >
@@ -39,8 +40,8 @@
             class="ci"
             stroke="var(--gray-30)"
             stroke-width="{2}"
-            y1="{$yScale(d.lowerci)}"
-            y2="{$yScale(d.upperci)}"
+            y1="{$yScale(d.ci_lower)}"
+            y2="{$yScale(d.ci_upper)}"
             x1="{$xScale($x(d))}"
             x2="{$xScale($x(d))}"></line>
           <rect
