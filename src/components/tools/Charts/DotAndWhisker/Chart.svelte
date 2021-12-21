@@ -7,8 +7,6 @@
   import { writable } from "svelte/store";
   import { isEmptyData } from "~/helpers/utilities";
   import {
-    DEFAULT_X_MIN,
-    DEFAULT_X_MAX,
     DEFAULT_Y_MIN,
     DEFAULT_Y_MAX,
   } from "~/routes/tools/_common/constants";
@@ -34,9 +32,6 @@
     key: "id",
     groupKey: "groupLabel",
     label: "XAxis Label",
-    domainMin: null,
-    domainMax: null,
-    niceMax: null,
     tickFormat: (d) => d,
     units: "",
   };
@@ -59,8 +54,8 @@
 
   $: if (!Array.isArray(data) || !data.length) {
     noData = true;
-    x0 = DEFAULT_X_MIN;
-    x1 = DEFAULT_X_MAX;
+    x0 = scaleBand();
+    x1 = scaleBand();
     ymin = DEFAULT_Y_MIN;
     ymax = DEFAULT_Y_MAX;
     dataByGroup = [];
