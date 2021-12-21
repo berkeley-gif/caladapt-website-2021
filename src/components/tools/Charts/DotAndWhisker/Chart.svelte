@@ -2,11 +2,16 @@
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
   import { scaleBand } from "d3-scale";
-  import { timeFormat, timeParse } from "d3-time-format";
   import { min, max, groups } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { isEmptyData } from "~/helpers/utilities";
+  import {
+    DEFAULT_X_MIN,
+    DEFAULT_X_MAX,
+    DEFAULT_Y_MIN,
+    DEFAULT_Y_MAX,
+  } from "~/routes/tools/_common/constants";
 
   import DotAndWhisker from "./DotAndWhisker.svelte";
   import AxisX from "./AxisX.svelte";
@@ -19,7 +24,9 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: (d) => d,
     units: "",
   };
@@ -27,41 +34,47 @@
     key: "id",
     groupKey: "groupLabel",
     label: "XAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
+    tickFormat: (d) => d,
     units: "",
   };
+  export let isFetching = false;
 
   let chartContainer;
   const legendItems = writable(null);
   let dataByGroup;
-  let ymin;
-  let ymax;
-
   let xKeys;
   let xGroups;
   let x0;
   let x1;
+  let ymin;
+  let ymax;
 
   let evt;
   let hideTooltip = true;
 
-  let dateParse = timeParse("%Y-%m-%d");
-  let dateFormat = timeFormat("%Y");
-
   let noData = false;
 
-  //$: if (!isEmptyData(data)) {
-  $: if (data) {
+  $: if (!Array.isArray(data) || !data.length) {
+    noData = true;
+    x0 = DEFAULT_X_MIN;
+    x1 = DEFAULT_X_MAX;
+    ymin = DEFAULT_Y_MIN;
+    ymax = DEFAULT_Y_MAX;
+    dataByGroup = [];
+    legendItems.set([]);
+    setContext("Legend", legendItems);
+  } else {
     noData = false;
 
-    // Update Data
+    // Group Data
     dataByGroup = groups(data, (d) => d.groupLabel);
-    console.log("data by group", dataByGroup);
 
-    // Update X Axis
+    // Update X Domain
     xKeys = Array.from(new Set(data.map((d) => d.id)));
     xGroups = dataByGroup.map((series) => series[0]);
-    console.log(xKeys, xGroups);
 
     x0 = scaleBand().domain(xGroups).padding(0.5);
 
@@ -72,12 +85,25 @@
       .align(0);
 
     // Update Y Domain
-    ymin = min(data, (d) => d.ci_lower);
-    ymax = max(data, (d) => d.ci_upper);
-    if (yAxis.baseValue === 0) {
-      ymin = yAxis.baseValue;
+    if (typeof yAxis.domainMin === "number" && !isNaN(yAxis.domainMin)) {
+      ymin = yAxis.domainMin;
+    } else {
+      ymin = min(data, (d) => d.ci_lower);
     }
-    console.log("y domain", ymin, ymax);
+
+    if (typeof yAxis.domainMax === "number" && !isNaN(yAxis.domainMax)) {
+      ymax = yAxis.domainMax;
+    } else {
+      ymax = max(data, (d) => d.ci_upper);
+    }
+
+    if (
+      typeof yAxis.niceMax === "number" &&
+      !isNaN(yAxis.niceMax) &&
+      yAxis.niceMax > ymax
+    ) {
+      ymax = yAxis.niceMax;
+    }
 
     // Update Legend
     legendItems.set(
@@ -114,10 +140,7 @@
   }
 </script>
 
-{#if data}
-  <div class="chart-legend">
-    <Legend />
-  </div>
+{#if data && !isFetching}
   <div style="{`height:${height}`}" bind:this="{chartContainer}">
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
@@ -152,12 +175,14 @@
       </Html>
     </LayerCake>
   </div>
-{:else}
-  <div class="chart-legend">
-    <SkeletonText />
-    <SkeletonText />
+  <div class="chart-legend margin--v-16">
+    <Legend />
   </div>
+{:else}
   <div style="{`height:${height}`}">
     <SkeletonPlaceholder style="height:100%;width:100%;" />
+  </div>
+  <div class="chart-legend margin--v-16">
+    <SkeletonText />
   </div>
 {/if}
