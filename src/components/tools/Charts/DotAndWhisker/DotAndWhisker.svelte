@@ -3,7 +3,6 @@
   import { raise } from "layercake";
 
   export let data;
-  $: console.log("dot whisler", data);
 
   const { x, y, xScale, yScale, rScale, width, padding } =
     getContext("LayerCake");
