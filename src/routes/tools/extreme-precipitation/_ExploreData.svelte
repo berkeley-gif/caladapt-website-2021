@@ -40,8 +40,9 @@
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
-  const { data } = dataStore;
+  const { intensity } = dataStore;
 
+  let data;
   let dataByDate;
   let showDownload = false;
   let showShare = false;
@@ -71,8 +72,9 @@
   $: eventLabel = `${$durationStore}-day rainfall total`;
   $: intervalsLabel = `${$intervalsStore} years`;
 
-  $: if ($data) {
-    console.log("data", $data);
+  $: if ($indicator.id === "intensity") {
+    data = $intensity;
+    dataByDate = null;
     // if ($indicator.id === "timing") {
     //   dataByDate = groupDataByDay(flattenData($data));
     // } else {
@@ -196,9 +198,9 @@
   </div>
 
   <div slot="graphic" class="graphic block">
-    <!--     <ExtremeHeatChart
+    <ExtremeHeatChart
       chartComponent="{$indicator.chartComponent}"
-      data="{$data}"
+      data="{data}"
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
       units="{$indicator.units}"
@@ -209,7 +211,7 @@
       on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
       isFetching="{$isFetchingStore}"
       chartDescription="{chartDescription}"
-    /> -->
+    />
   </div>
 
   <div slot="settings" class="settings">
