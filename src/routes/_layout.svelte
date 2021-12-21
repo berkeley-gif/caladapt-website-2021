@@ -11,6 +11,7 @@
 
 <svelte:head>
   <style src="../scss/main.scss"></style>
+
   {#if process.env.noRobots}
     <meta name="robots" content="none" />
   {/if}
