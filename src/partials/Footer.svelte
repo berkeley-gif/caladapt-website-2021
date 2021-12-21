@@ -82,9 +82,9 @@
       >
         <p>
           Cal-Adapt has been developed by the Geospatial Innovation Facility at
-          University of California, Berkeley with funding and advisory oversight
-          by California Energy Commission and California Strategic Growth
-          Council.
+          the University of California, Berkeley with funding and advisory
+          oversight by the California Energy Commission and the California
+          Strategic Growth Council.
         </p>
       </div>
       <div
