@@ -8,7 +8,7 @@
   import { writable } from "svelte/store";
   import { isEmptyData } from "~/helpers/utilities";
 
-  import ReturnLevels from "./ReturnLevels.svelte";
+  import DotAndWhisker from "./DotAndWhisker.svelte";
   import AxisX from "./AxisX.svelte";
   import AxisY from "./AxisY.svelte";
   import Tooltip from "./Tooltip.svelte";
@@ -24,7 +24,8 @@
     units: "",
   };
   export let xAxis = {
-    key: "key",
+    key: "id",
+    groupKey: "groupLabel",
     label: "XAxis Label",
     baseValue: null,
     units: "",
@@ -49,15 +50,16 @@
 
   let noData = false;
 
-  $: if (!isEmptyData(data)) {
+  //$: if (!isEmptyData(data)) {
+  $: if (data) {
     noData = false;
 
     // Update Data
-    dataByGroup = groups(data, (d) => d.label);
-    console.log("chart data", dataByGroup);
+    dataByGroup = groups(data, (d) => d.groupLabel);
+    console.log("data by group", dataByGroup);
 
     // Update X Axis
-    xKeys = Array.from(new Set(data.map((d) => d.key)));
+    xKeys = Array.from(new Set(data.map((d) => d.id)));
     xGroups = dataByGroup.map((series) => series[0]);
     console.log(xKeys, xGroups);
 
@@ -70,25 +72,25 @@
       .align(0);
 
     // Update Y Domain
-    ymin = min(data, (d) => d.lowerci);
-    ymax = max(data, (d) => d.upperci);
+    ymin = min(data, (d) => d.ci_lower);
+    ymax = max(data, (d) => d.ci_upper);
     if (yAxis.baseValue === 0) {
       ymin = yAxis.baseValue;
     }
+    console.log("y domain", ymin, ymax);
 
     // Update Legend
     legendItems.set(
-      xKeys.map((key) => {
-        const series = data.find((d) => d.key === key);
+      xKeys.map((id) => {
+        const series = data.find((d) => d.id === id);
         return {
-          key: series.key,
+          id: series.id,
           label: series.label,
           color: series.color,
           visible: true,
         };
       })
     );
-    console.log($legendItems);
     setContext("Legend", legendItems);
   }
 
@@ -135,7 +137,7 @@
           label="{yAxis.label}"
           gridlines="{true}"
         />
-        <ReturnLevels
+        <DotAndWhisker
           data="{dataByGroup}"
           on:mousemove="{(event) => (evt = hideTooltip = event)}"
           on:mouseout="{() => (hideTooltip = true)}"
