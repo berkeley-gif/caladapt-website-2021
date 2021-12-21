@@ -1,6 +1,7 @@
 <script>
   import { getContext } from "svelte";
   import { quadtree } from "d3-quadtree";
+  import { mouseout } from "../Shared/events";
 
   const { data, xGet, yGet, width, height } = getContext("LayerCake");
 
@@ -49,7 +50,7 @@
 <div
   class="bg"
   on:mousemove="{findItem}"
-  on:mouseout="{() => (visible = false)}"
+  use:mouseout="{() => (visible = false)}"
 ></div>
 <slot
   x="{xGetter(found) || 0}"
