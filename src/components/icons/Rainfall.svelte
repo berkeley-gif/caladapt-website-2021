@@ -23,6 +23,7 @@
 <svg
   on:click
   on:mouseover
+  on:focus
   on:mouseenter
   on:mouseleave
   on:keyup
