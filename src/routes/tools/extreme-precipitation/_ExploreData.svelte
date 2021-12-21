@@ -40,7 +40,7 @@
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
-  const { intensity } = dataStore;
+  const { intensity, events, frequency, duration } = dataStore;
 
   let data;
   let dataByDate;
@@ -75,13 +75,12 @@
   $: if ($indicator.id === "intensity") {
     data = $intensity;
     dataByDate = null;
-    // if ($indicator.id === "timing") {
-    //   dataByDate = groupDataByDay(flattenData($data));
-    // } else {
-    //   dataByDate = groupDataByYear(flattenData($data));
-    // }
+  } else if ($indicator.id === "timing") {
+    data = $events;
+    dataByDate = groupDataByDay(flattenData(data));
   } else {
-    dataByDate = null;
+    data = $indicator.id === "frequency" ? $frequency : $duration;
+    dataByDate = groupDataByYear(flattenData(data));
   }
 
   async function loadLearnMore({
