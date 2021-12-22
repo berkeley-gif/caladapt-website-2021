@@ -69,7 +69,7 @@
 
   $: thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
   $: indicatorLabel = $indicator.title;
-  $: eventLabel = `${$durationStore}-day rainfall total`;
+  $: durationLabel = `${$durationStore}-day`;
   $: intervalsLabel = `${$intervalsStore} years`;
 
   $: if ($indicator.id === "intensity") {
@@ -175,7 +175,7 @@
     <ChartTitle
       title="{chartTitle}"
       indicatorLabel="{indicatorLabel}"
-      eventLabel="{eventLabel}"
+      durationLabel="{durationLabel}"
       scenarioLabel="{$scenario.labelLong}"
       thresholdLabel="{thresholdLabel}"
       intervalsLabel="{intervalsLabel}"
