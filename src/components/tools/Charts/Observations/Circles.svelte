@@ -1,7 +1,7 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
-  import { mouseout, mouseover } from "../Shared/events";
+  import { mouseoutBlur, mouseoverFocus } from "../Shared/events";
 
   const { data, xGet, yGet, yScale } = getContext("LayerCake");
   const dispatch = createEventDispatcher();
@@ -64,8 +64,8 @@
           cx="{$xGet(d)}"
           class="circle"
           r="{5}"
-          use:mouseout="{() => dispatch('mouseout')}"
-          use:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
+          use:mouseoutBlur="{() => dispatch('mouseout')}"
+          use:mouseoverFocus="{(e) => dispatch('mousemove', { e, props: d })}"
           on:mousemove="{handleMousemove(d)}"
         >
         </circle>

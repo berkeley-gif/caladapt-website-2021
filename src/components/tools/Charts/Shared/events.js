@@ -1,4 +1,4 @@
-export const mouseout = (node, callback) => {
+export const mouseoutBlur = (node, callback) => {
   node.addEventListener("mouseout", callback);
   node.addEventListener("blur", callback);
 
@@ -10,7 +10,7 @@ export const mouseout = (node, callback) => {
   };
 };
 
-export const mouseover = (node, callback) => {
+export const mouseoverFocus = (node, callback) => {
   node.addEventListener("mouseover", callback);
   node.addEventListener("focus", callback);
 
