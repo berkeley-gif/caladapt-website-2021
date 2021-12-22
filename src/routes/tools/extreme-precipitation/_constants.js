@@ -94,7 +94,11 @@ export const DEFAULT_DURATION = 2;
 export const DEFAULT_THRESHOLD_TYPE = "max";
 export const DEFAULT_RETURN_PERIOD = 20;
 
-export const HEATMAP_COLOR_SCALE = ["#fed976", "#fd8d3c", "#e31a1c", "#800026"];
+export const HEATMAP_COLOR_SCALE = [
+  "rgb(25, 205, 187)",
+  "rgb(54, 140, 225)",
+  "rgb(109, 65, 171)",
+];
 
 export const INDICATOR_DESCRIPTION = `
 <p>Indicators presented in this tool examine projected trends in four key characteristics of 
