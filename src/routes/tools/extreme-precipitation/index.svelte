@@ -130,7 +130,7 @@
     getQueryParams,
     getThreshold,
   } from "./_data";
-  // import { DEFAULT_THRESHOLDS } from "./_constants";
+  import { DEFAULT_ROLLING_FUNCTION } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -167,6 +167,7 @@
   $: eventParams = {
     thresh: $thresholdStore,
     window: $durationStore,
+    rolling: DEFAULT_ROLLING_FUNCTION,
   };
 
   $: $intervalsStore, updateIntensity();
