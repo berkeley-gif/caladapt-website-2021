@@ -202,7 +202,7 @@
       data="{data}"
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
-      units="{$indicator.units}"
+      units="{$climvar.units.imperial}"
       label="{indicatorLabel}"
       dataSource="{$titles.join(', ')}"
       on:showDownload="{loadDownload}"
