@@ -4,7 +4,7 @@
 
   export let title;
   export let indicatorLabel;
-  export let eventLabel;
+  export let durationLabel;
   export let scenarioLabel;
   export let thresholdLabel;
   export let loadLocation;
@@ -31,27 +31,21 @@
   {title}
 </h2>
 
-{#if indicatorLabel.includes("Intensity")}
-  <p class="h4">
-    Projected changes in <span class="annotate">{indicatorLabel}</span> which
-    are are exceeded on average once every
+<div class="h4">
+  Projected changes in <span class="annotate">{indicatorLabel}</span>
+
+  {#if indicatorLabel.includes("Intensity")}
+    which are exceeded on average once every
     <span class="annotate">{intervalsLabel}</span>
-    under a
-    <span class="annotate">{scenarioLabel}</span>.
-  </p>
-  <p>
-    Extreme Precipitation events are consecutive days in which the <span
-      class="annotate">{eventLabel}</span
-    >
-    is above an extreme threshold of
-    <span class="annotate">{thresholdLabel}</span>.
-  </p>
-{:else}
-  <p class="h4">
-    Projected changes in <span class="annotate">{indicatorLabel}</span> with
-    <span class="annotate">{eventLabel}</span>
-    above an extreme threshold of <span class="annotate">{thresholdLabel}</span>
-    under a
-    <span class="annotate">{scenarioLabel}</span>.
-  </p>
-{/if}
+  {/if}
+
+  under a <span class="annotate">{scenarioLabel}</span>.
+</div>
+
+<p>
+  Extreme Precipitation events are successive days in which the <span
+    class="annotate">{durationLabel}</span
+  >
+  rainfall total is above an extreme threshold of
+  <span class="annotate">{thresholdLabel}</span>.
+</p>
