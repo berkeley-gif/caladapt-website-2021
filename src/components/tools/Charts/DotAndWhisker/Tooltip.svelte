@@ -15,7 +15,7 @@
     transition: left 250ms ease-out, top 250ms ease-out;
     z-index: 15;
     color: #fff;
-    width: 200px;
+    width: 220px;
   }
 
   :global(.chart-tooltip > span) {
@@ -23,11 +23,16 @@
     line-height: 1.35;
   }
 
-  :global(.chart-tooltip > span.title) {
+  :global(.chart-tooltip > .key) {
+    margin: var(--spacing-8) 0;
+    display: block;
+  }
+
+  :global(.chart-tooltip span.title) {
     font-weight: bold;
   }
 
-  :global(.chart-tooltip span.key) {
+  :global(.chart-tooltip span.swatch) {
     display: inline-block;
     width: 10px;
     height: 10px;

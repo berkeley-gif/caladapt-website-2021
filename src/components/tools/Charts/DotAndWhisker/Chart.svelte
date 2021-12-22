@@ -117,19 +117,20 @@
 
   function createTooltip(d) {
     let tooltip;
-    tooltip = `<span class="title">${d.label}</span>`;
-    tooltip += `<span class="title">
-      <span class="key" style="background:${d.color}"></span>
-      ${d.label}
-    </span>`;
+    tooltip = `<span class="title">${d.groupLabel}</span>`;
+    tooltip += `<div class="key">
+      <span class="swatch" style="background:${d.color}"></span>
+      <span class="title">${d.label}</span>
+    </div>`;
     const val = Math.round(d.value * 100) / 100;
-    const lower = Math.round(d.lowerci * 100) / 100;
-    const upper = Math.round(d.upperci * 100) / 100;
-    tooltip += `<span>Return level: ${val} ${yAxis.units}</span>`;
+    const lower = Math.round(d.ci_lower * 100) / 100;
+    const upper = Math.round(d.ci_upper * 100) / 100;
+    tooltip += `<span>Return Level: ${val} ${yAxis.units}</span>`;
     if (lower === 0 || upper === 0) {
-      tooltip += "<span>Insufficient observations to calculate CI</span>";
+      tooltip +=
+        "<span>Insufficient observations to calculate Confidence Intervals</span>";
     } else {
-      tooltip += `<span>95% CI: ${lower} – ${upper} ${yAxis.units}</span>`;
+      tooltip += `<span>95% Confidence Intervals: ${lower} – ${upper} ${yAxis.units}</span>`;
     }
     return tooltip;
   }
