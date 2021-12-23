@@ -5,6 +5,8 @@ import {
   FLOOD_SCENARIOS,
   TIME_PERIODS,
   DATA_LAYERS,
+  DEFAULT_MAP_BBOX,
+  DEFAULT_RASTER_TILES,
   DL_Cosmos,
   DL_Calflod5m,
   DL_Calflod50m,
@@ -84,6 +86,56 @@ export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
           store.update((s) =>
             s.map((d) => (d.id === id ? { ...d, ...rest } : d))
           ),
+    },
+  ],
+});
+
+export const mapBBoxStore = makeCustomWritableStore(DEFAULT_MAP_BBOX, {
+  name: "mapBBoxStore",
+  getters: [
+    {
+      name: "bbox",
+      getter: ($s) => $s.map((d) => +d.toFixed(4)),
+    },
+  ],
+});
+
+export const rasterTilesStore = makeCustomWritableStore(DEFAULT_RASTER_TILES, {
+  name: "rasterTilesStore",
+  getters: [
+    {
+      name: "cosmosTiles",
+      getter: ($s) => $s[DL_Cosmos],
+    },
+    {
+      name: "calflod5mTiles",
+      getter: ($s) => $s[DL_Calflod5m],
+    },
+    {
+      name: "calflod50mTiles",
+      getter: ($s) => $s[DL_Calflod50m],
+    },
+  ],
+  updaters: [
+    {
+      name: "setCosmos",
+      update: (store) => (tiles) =>
+        store.update((s) => ({ ...s, cosmos: tiles })),
+    },
+    {
+      name: "setCalflod5m",
+      update: (store) => (tiles) =>
+        store.update((s) => ({ ...s, calflod5m: tiles })),
+    },
+    {
+      name: "setCalflod50m",
+      update: (store) => (tiles) =>
+        store.update((s) => ({ ...s, calflod50m: tiles })),
+    },
+    {
+      name: "update",
+      update: (store) => (key, values) =>
+        store.update((s) => ({ ...s, [key]: values })),
     },
   ],
 });
