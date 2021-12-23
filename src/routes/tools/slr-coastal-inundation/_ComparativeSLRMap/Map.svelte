@@ -1,5 +1,6 @@
 <script>
-  import { Map, NavigationControl, StyleControl } from "~/components/tools/Map";
+  import { createEventDispatcher } from "svelte";
+  import { Map, NavigationControl } from "~/components/tools/Map";
   import RasterLayers from "./Rasters";
 
   export let scenario;
@@ -12,6 +13,8 @@
   const lng = -122.2813;
   const lat = 37.7813;
   const zoom = 9;
+
+  const dispatch = createEventDispatcher();
 
   let mapInstance;
   let mbGlMap;
@@ -28,6 +31,16 @@
   $: if (mapReady && styleUrl && styleUrl !== curStyleUrl) {
     curStyleUrl = styleUrl;
     mbGlMap.setStyle(curStyleUrl);
+  }
+
+  function handleMoveend() {
+    if (mapReady) {
+      const {
+        _sw: { lng: xMax, lat: yMax },
+        _ne: { lng: xMin, lat: yMin },
+      } = mbGlMap.getBounds();
+      dispatch("moveend", [xMin, yMin, xMax, yMax]);
+    }
   }
 
   function handleMapReady({ detail }) {
@@ -48,6 +61,7 @@
     style="{styleUrl}"
     on:ready="{handleMapReady}"
     on:destroy="{handleMapDestroy}"
+    on:moveend="{handleMoveend}"
   >
     <NavigationControl />
     <RasterLayers

@@ -153,6 +153,12 @@
       el.on("zoomend", () => {
         dispatch("zoom", el.getZoom());
       });
+
+      el.on("moveend", (event) => {
+        dispatch("moveend", {
+          event,
+        });
+      });
     }
 
     return () => {
