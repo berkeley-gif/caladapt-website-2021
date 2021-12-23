@@ -1,9 +1,10 @@
+import bboxPolygon from "@turf/bbox-polygon";
 import config from "~/helpers/api-config";
 import { calflod50mLookup } from "./_data-layers-lookup";
 
 const {
   env: {
-    production: { tileURL },
+    production: { tileURL, apiEndpoint },
   },
 } = config;
 
@@ -35,5 +36,24 @@ export const getTileUrl = (source, scenario, timeFrame, ...rest) => {
       return getTileUrlCalflod3d50m(timeFrame, scenario);
     default:
       throw new Error("unrecognized slr data source");
+  }
+};
+
+export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
+  fetch(
+    `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
+      geom
+    )}`
+  )
+    .then((res) => res.json())
+    .catch((error) => console.error(error));
+
+export const toBBoxPolygon = (coords) => {
+  if (Array.isArray(coords) || coords.length) {
+    try {
+      return bboxPolygon(coords);
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
