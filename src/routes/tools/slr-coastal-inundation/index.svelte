@@ -69,7 +69,8 @@
 
   import ExploreData from "./_ExploreData.svelte";
 
-  import { DL_Cosmos, DL_Calflod50m, DL_Calflod5m } from "./_constants";
+  import { DL_Cosmos, DL_Calflod5m, DL_Calflod50m } from "./_constants";
+  import { getRasterMetaData, toBBoxPolygon } from "./_data";
 
   import {
     locationStore,
@@ -81,6 +82,8 @@
     floodScenarioStore,
     timeFrameStore,
     dataLayersStore,
+    mapBBoxStore,
+    rasterTilesStore,
   } from "./_store";
 
   export let initialConfig;
@@ -102,6 +105,8 @@
 
   const { location, boundary } = locationStore;
   const { dlCalflod50m } = dataLayersStore;
+  const { bbox } = mapBBoxStore;
+  const { tfTileLabel } = timeFrameStore;
 
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
@@ -121,6 +126,9 @@
     });
   }
 
+  $: console.log($rasterTilesStore);
+  $: bbox, update();
+
   if (process.env.NODE_ENV !== "production") {
     logStores(
       floodScenarioStore,
@@ -131,6 +139,33 @@
       isFetchingStore,
       datasetStore
     );
+  }
+
+  async function update() {
+    if (!appReady || !$bbox) return;
+    const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
+    const bboxGeojson = toBBoxPolygon($bbox);
+    const bboxGeom = JSON.stringify(bboxGeojson.geometry);
+    try {
+      (
+        await Promise.all(
+          sources.map((source) =>
+            getRasterMetaData(
+              $floodScenarioStore,
+              source,
+              $tfTileLabel,
+              bboxGeom
+            )
+          )
+        )
+      ).forEach(({ results }, index) => {
+        if (Array.isArray(results) && results.length) {
+          rasterTilesStore.update(sources[index], results);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function initApp({
@@ -144,7 +179,6 @@
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
     unitsStore.set({ imperial });
-
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
@@ -156,6 +190,7 @@
     try {
       await initApp(initialConfig);
       appReady = true;
+      await update();
       console.log("app ready");
     } catch (error) {
       console.error("init error", error);
