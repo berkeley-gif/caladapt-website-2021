@@ -127,7 +127,7 @@
   }
 
   $: console.log($rasterTilesStore);
-  $: bbox, update();
+  $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
   if (process.env.NODE_ENV !== "production") {
     logStores(
@@ -137,30 +137,30 @@
       timeFrameStore,
       dataLayersStore,
       isFetchingStore,
-      datasetStore
+      datasetStore,
+      mapBBoxStore,
+      rasterTilesStore
     );
   }
 
-  async function update() {
-    if (!appReady || !$bbox) return;
+  async function update(bbox, scenario, timeFrame) {
+    if (!appReady || !bbox) return;
     const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
-    const bboxGeojson = toBBoxPolygon($bbox);
+    const bboxGeojson = toBBoxPolygon(bbox);
     const bboxGeom = JSON.stringify(bboxGeojson.geometry);
     try {
       (
         await Promise.all(
           sources.map((source) =>
-            getRasterMetaData(
-              $floodScenarioStore,
-              source,
-              $tfTileLabel,
-              bboxGeom
-            )
+            getRasterMetaData(scenario, source, timeFrame, bboxGeom)
           )
         )
       ).forEach(({ results }, index) => {
         if (Array.isArray(results) && results.length) {
+          // NOTE: calflod3d 50m won't update until slug names are changed
           rasterTilesStore.update(sources[index], results);
+        } else {
+          rasterTilesStore.update(sources[index], []);
         }
       });
     } catch (error) {

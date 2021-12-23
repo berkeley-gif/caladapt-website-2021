@@ -8,6 +8,7 @@
     timeFrameStore,
     floodScenarioStore,
     dataLayersStore,
+    mapBBoxStore,
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
 
@@ -85,6 +86,10 @@
   function handleStyleChange({ detail }) {
     mapStyle = detail;
   }
+
+  function handleMapMoveend({ detail }) {
+    mapBBoxStore.set(detail);
+  }
 </script>
 
 {#if $isFetchingStore}
@@ -144,6 +149,7 @@
       dataLayersStore="{dataLayersStore}"
       bbox="{$location.bbox && $location.bbox}"
       mapStyle="{mapStyle}"
+      on:moveend="{handleMapMoveend}"
     />
   </div>
 
