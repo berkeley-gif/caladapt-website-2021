@@ -14,6 +14,7 @@
   export let dataSource;
   export let isFetching;
   export let chartDescription;
+  export let height;
 
   const dispatch = createEventDispatcher();
 
@@ -32,7 +33,7 @@
 
 <svelte:component
   this="{chartComponent}"
-  height="400px"
+  height="{`${height}px`}"
   data="{data}"
   dataByDate="{dataByDate}"
   yAxis="{{

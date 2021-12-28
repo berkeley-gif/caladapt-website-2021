@@ -184,16 +184,18 @@
   </div>
 
   <div slot="stats">
-    <!--     <StatsPanel
-      {...{
-        statsComponent: $indicator.statsComponent,
-        units: $indicator.units,
-        dataByDate,
-        formatFn,
-        models: $modelsStore,
-        isFetching: $isFetchingStore,
-      }}
-    /> -->
+    {#if $indicator.id !== "intensity"}
+      <StatsPanel
+        {...{
+          statsComponent: $indicator.statsComponent,
+          units: $indicator.units,
+          dataByDate,
+          formatFn,
+          models: $modelsStore,
+          isFetching: $isFetchingStore,
+        }}
+      />
+    {/if}
   </div>
 
   <div slot="graphic" class="graphic block">
@@ -205,6 +207,7 @@
       units="{$climvar.units.imperial}"
       label="{indicatorLabel}"
       dataSource="{$titles.join(', ')}"
+      height="{['timing', 'intensity'].includes($indicator.id) ? 550 : 400}"
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"
       on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
