@@ -13,8 +13,8 @@ import {
 import {
   calcHeatwaveCount,
   calcMaxDuration,
-  calcDaysCount,
-  groupDataByYear,
+  calcEventsCount,
+  groupEventsByWaterYear,
 } from "./_data";
 
 export const climvarStore = makeCustomWritableStore(DEFAULT_CLIMATE_VARIABLE, {
@@ -67,7 +67,7 @@ export const dataStore = makeCustomWritableStore(DATA, {
       name: "frequency",
       getter: ($s) =>
         $s.eventsByYear
-          ? $s.eventsByYear.map((series) => calcDaysCount(series))
+          ? $s.eventsByYear.map((series) => calcEventsCount(series))
           : null,
     },
     {
@@ -92,7 +92,9 @@ export const dataStore = makeCustomWritableStore(DATA, {
       update: (store) => (_data) =>
         store.update((s) => {
           s.events = _data;
-          s.eventsByYear = _data.map((series) => groupDataByYear(series));
+          s.eventsByYear = _data.map((series) =>
+            groupEventsByWaterYear(series)
+          );
           return s;
         }),
     },

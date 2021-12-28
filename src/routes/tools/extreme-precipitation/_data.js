@@ -17,7 +17,10 @@ import {
   OBSERVED_FILTER_YEAR,
   DEFAULT_STAT_PERIODS,
 } from "../_common/constants";
-import { DEFAULT_CLIMATE_VARIABLE } from "./_constants";
+import {
+  DEFAULT_CLIMATE_VARIABLE,
+  DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+} from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 const dayNumberFormat = timeFormat("%j");
@@ -260,17 +263,17 @@ export function getQueryParams({ location, boundary, imperial = true }) {
       return { params, method };
     case "ca":
       params.ref = "/media/ca.json";
-      params.stat = "mean";
+      params.stat = DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       method = "GET";
       return { params, method };
     case "custom":
       params.g = JSON.stringify(location.geometry);
-      params.stat = "mean";
+      params.stat = DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       method = "POST";
       return { params, method };
     default:
       params.ref = `/api/${boundary.id}/${location.id}/`;
-      params.stat = "mean";
+      params.stat = DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       method = "GET";
       return { params, method };
   }
@@ -320,17 +323,28 @@ export async function getThreshold(params) {
 
 // Group daily data by year
 // Backfill data for missing years with empty array
-export const groupDataByYear = (series) => {
+export const groupEventsByWaterYear = (series) => {
   let yearRange;
   if (series.id === "livneh") {
     yearRange = range(1950, 2006);
   } else {
     yearRange = range(1950, 2100);
   }
+  const data = series.values.map((d) => {
+    const month = parseInt(d.date.getMonth());
+    const year = parseInt(d.date.getFullYear());
+    let wateryear;
+    if (month >= 9) {
+      wateryear = year + 1;
+    } else {
+      wateryear = year;
+    }
+    return { ...d, wateryear };
+  });
   const daysPerYear = rollup(
-    series.values,
+    data,
     (v) => v,
-    (d) => d.date.getUTCFullYear()
+    (d) => d.wateryear
   );
   const values = [];
   yearRange.forEach((year) => {
@@ -354,8 +368,8 @@ export const groupDataByYear = (series) => {
   };
 };
 
-// Calculate number of extreme heat days for each year
-export const calcDaysCount = (series) => {
+// Calculate number of extreme precipitation events for each water year
+export const calcEventsCount = (series) => {
   return {
     ...series,
     values: series.values.map(({ date, days }) => ({
@@ -376,8 +390,8 @@ export const calcMaxDuration = (series) => {
   };
 };
 
-// From arrays of consecutive dates, calculate number of heat waves for each year
-// Length of heat wave = duration
+// From arrays of consecutive dates, calculate number of extreme precipitation events for each year
+// Length of extreme precipitation event = duration
 export const calcHeatwaveCount = (series, duration) => {
   return {
     ...series,
