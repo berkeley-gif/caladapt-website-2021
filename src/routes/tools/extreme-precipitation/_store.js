@@ -29,19 +29,18 @@ export const climvarStore = makeCustomWritableStore(DEFAULT_CLIMATE_VARIABLE, {
 
 export const indicatorList = CLIMATE_INDICATORS;
 
-export const indicatorStore = (() => {
-  const store = writable(DEFAULT_CLIMATE_INDICATOR);
-  const { set, subscribe } = store;
-  return {
-    set,
-    subscribe,
-    get indicator() {
-      return derived(store, ($store) => {
-        return indicatorList.find((d) => d.id === $store);
-      });
-    },
-  };
-})();
+export const indicatorStore = makeCustomWritableStore(
+  DEFAULT_CLIMATE_INDICATOR,
+  {
+    name: "indicatorStore",
+    getters: [
+      {
+        name: "indicator",
+        getter: ($s) => indicatorList.find((d) => d.id === $s),
+      },
+    ],
+  }
+);
 
 export const thresholdStore = writable(null);
 
