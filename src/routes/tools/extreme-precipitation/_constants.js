@@ -13,7 +13,7 @@ export const CLIMATE_INDICATORS = [
   {
     id: "intensity",
     label: "Intensity",
-    title: "Estimated Intensity of Extreme Precipitation Events",
+    title: "Return Levels (Precipitation in inches)",
     units: "",
     decimals: 0,
     chartComponent: DotAndWhiskerChart,
@@ -94,6 +94,7 @@ export const DEFAULT_DURATION = 2;
 export const DEFAULT_THRESHOLD_TYPE = "max";
 export const DEFAULT_RETURN_PERIOD = 20;
 export const DEFAULT_ROLLING_FUNCTION = "sum";
+export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "max";
 
 export const HEATMAP_COLOR_SCALE = ["#19cdbb", "#368ce1", "#6d41ab"];
 
