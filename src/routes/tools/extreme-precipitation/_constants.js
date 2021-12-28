@@ -13,7 +13,7 @@ export const CLIMATE_INDICATORS = [
   {
     id: "intensity",
     label: "Intensity",
-    title: "Return Levels (Precipitation in inches)",
+    title: "Estimated Intensity of Extreme Precipitation Events",
     units: "",
     decimals: 0,
     chartComponent: DotAndWhiskerChart,
