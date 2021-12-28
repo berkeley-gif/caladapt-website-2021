@@ -114,26 +114,6 @@
     );
     setContext("Legend", legendItems);
   }
-
-  function createTooltip(d) {
-    let tooltip;
-    tooltip = `<span class="title">${d.groupLabel}</span>`;
-    tooltip += `<div class="key">
-      <span class="swatch" style="background:${d.color}"></span>
-      <span class="title">${d.label}</span>
-    </div>`;
-    const val = Math.round(d.value * 100) / 100;
-    const lower = Math.round(d.ci_lower * 100) / 100;
-    const upper = Math.round(d.ci_upper * 100) / 100;
-    tooltip += `<span>Return Level: ${val} ${yAxis.units}</span>`;
-    if (lower === 0 || upper === 0) {
-      tooltip +=
-        "<span>Insufficient observations to calculate Confidence Intervals</span>";
-    } else {
-      tooltip += `<span>95% Confidence Intervals: ${lower} – ${upper} ${yAxis.units}</span>`;
-    }
-    return tooltip;
-  }
 </script>
 
 {#if data && !isFetching}
@@ -164,9 +144,7 @@
       </Svg>
       <Html pointerEvents="{false}">
         {#if hideTooltip !== true}
-          <Tooltip evt="{evt}" let:detail>
-            {@html createTooltip(detail.props)}
-          </Tooltip>
+          <Tooltip evt="{evt}" units="{yAxis.units}" let:detail />
         {/if}
       </Html>
     </LayerCake>

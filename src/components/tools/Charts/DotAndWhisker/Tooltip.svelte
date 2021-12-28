@@ -1,6 +1,20 @@
 <script>
   export let evt = {};
   export let offset = 35;
+  export let units;
+
+  function formatValue(d) {
+    return +Math.round(d * 100) / 100;
+  }
+
+  $: ({ e, props } = evt.detail);
+  $: ({ groupLabel, color, label, value, ci_lower, ci_upper } = props);
+  $: lower = formatValue(ci_lower);
+  $: upper = formatValue(ci_upper);
+  $: ciLabel =
+    lower === 0 || upper === 0
+      ? "Insufficient observations to calculate Confidence Intervals"
+      : `95% Confidence Intervals: ${lower} – ${upper} ${units}`;
 </script>
 
 <style>
@@ -43,10 +57,16 @@
   <div
     class="chart-tooltip"
     style="
-      top:{evt.detail.e.layerY - offset}px;
-      left:{evt.detail.e.layerX}px;
+      top:{e.layerY - offset}px;
+      left:{e.layerX}px;
     "
   >
-    <slot detail="{evt.detail}" />
+    <span class="title">{props.groupLabel}</span>
+    <div class="key">
+      <span class="swatch" style="background:{props.color}"></span>
+      <span class="title">{props.label}</span>
+    </div>
+    <span>Return Level: {formatValue(value)} {units}</span>
+    <span>{ciLabel}</span>
   </div>
 {/if}
