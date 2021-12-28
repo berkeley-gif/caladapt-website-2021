@@ -116,7 +116,7 @@ const tools = [
       }
     ],
     related: [
-      'extreme-weather','extreme-precipitation',
+      'extreme-weather','extreme-heat',
     ],
     resources: [
       'California Adaptation Clearinghouse', 
