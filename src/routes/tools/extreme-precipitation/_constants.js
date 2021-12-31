@@ -4,7 +4,7 @@ import {
   HeatmapChart,
   DotAndWhiskerChart,
 } from "~/components/tools/Charts";
-import { AvgRange, MonthTiming } from "~/components/tools/Stats";
+import { AvgRange, MonthTiming, Month } from "~/components/tools/Stats";
 
 export const TOOL_SLUG = "extreme-precipitation";
 
@@ -45,7 +45,7 @@ export const CLIMATE_INDICATORS = [
     units: "",
     decimals: 0,
     chartComponent: HeatmapChart,
-    statsComponent: MonthTiming,
+    statsComponent: Month,
     description: `<p>This chart shows a heatmap of extreme precipitation events for an 
     individual GCM or for the historical observed data.</p><p>Click on any of 
     the legend keys to highlight corresponding timeseries.</p>`,
@@ -69,7 +69,7 @@ export const CLIMATE_INDICATORS = [
 
 export const THRESHOLD_TYPES = [
   {
-    id: "max",
+    id: "ams_low",
     label: "Lowest Annual Max",
   },
   {
@@ -91,7 +91,7 @@ export const RETURN_PERIODS = [2, 5, 10, 20, 50, 100];
 export const DEFAULT_CLIMATE_VARIABLE = "pr";
 export const DEFAULT_CLIMATE_INDICATOR = "intensity";
 export const DEFAULT_DURATION = 2;
-export const DEFAULT_THRESHOLD_TYPE = "max";
+export const DEFAULT_THRESHOLD_TYPE = "ams_low";
 export const DEFAULT_RETURN_PERIOD = 20;
 export const DEFAULT_ROLLING_FUNCTION = "sum";
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "max";
