@@ -183,7 +183,10 @@
         boundary: $boundary,
         imperial: true,
       });
-      const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
+      const pct =
+        $thresholdTypeStore === DEFAULT_THRESHOLD_TYPE
+          ? null
+          : $thresholdTypeStore;
       const thresh = await getThreshold({
         ...params,
         ...potParams,
@@ -212,7 +215,10 @@
         location: $location,
         boundary: $boundary,
       });
-      const pct = $thresholdTypeStore === "max" ? null : $thresholdTypeStore;
+      const pct =
+        $thresholdTypeStore === DEFAULT_THRESHOLD_TYPE
+          ? null
+          : $thresholdTypeStore;
       isFetchingStore.set(true);
       const intensityData = await getIntensityData(
         config,
@@ -292,7 +298,7 @@
       boundary: { id: boundaryId },
       imperial: true,
     });
-    const pct = thresholdId === "max" ? null : thresholdId;
+    const pct = thresholdId === DEFAULT_THRESHOLD_TYPE ? null : thresholdId;
     const thresh = await getThreshold({
       ...params,
       intervals,
