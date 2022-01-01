@@ -133,10 +133,20 @@
     });
   }
 
+  function formatIntensityDataForExport(_arr) {
+    return _arr.map(
+      ({ label, begin, end, interval, ci_lower, value, ci_upper }) => {
+        return { label, begin, end, interval, ci_lower, value, ci_upper };
+      }
+    );
+  }
+
   async function loadDownload() {
     showDownload = true;
     if ($indicator.id === "timing") {
       csvData = formatDailyDataForExport(dataByDate);
+    } else if ($indicator.id === "intensity") {
+      csvData = formatIntensityDataForExport(data);
     } else {
       csvData = formatDataForExport(dataByDate);
     }
