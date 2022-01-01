@@ -48,7 +48,7 @@ export const thresholdTypeStore = writable(DEFAULT_THRESHOLD_TYPE);
 
 export const durationStore = writable(DEFAULT_DURATION);
 
-export const intervalsStore = writable(DEFAULT_RETURN_PERIOD);
+export const returnPeriodStore = writable(DEFAULT_RETURN_PERIOD);
 
 const DATA = { intensity: null, events: null, eventsByYear: null };
 

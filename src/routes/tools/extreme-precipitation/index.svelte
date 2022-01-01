@@ -120,7 +120,7 @@
     thresholdStore,
     thresholdTypeStore,
     durationStore,
-    intervalsStore,
+    returnPeriodStore,
     dataStore,
   } from "./_store";
   import {
@@ -160,7 +160,7 @@
   $: resources = [...externalResources, ...relatedTools];
 
   $: potParams = {
-    intervals: $intervalsStore, // threshold value is same for all intervals
+    intervals: $returnPeriodStore, // threshold value is same for all intervals
     duration: $durationStore,
   };
 
@@ -170,7 +170,7 @@
     rolling: DEFAULT_ROLLING_FUNCTION,
   };
 
-  $: $intervalsStore, updateIntensity();
+  $: $returnPeriodStore, updateIntensity();
   $: $thresholdTypeStore, $location, $durationStore, updateThreshold();
   $: $modelsStore, $scenarioStore, $thresholdStore, update();
 
@@ -192,7 +192,6 @@
         ...potParams,
         ...(pct && { pct }),
       });
-      console.log("trehosld", thresh);
       thresholdStore.set(thresh);
     } catch (err) {
       console.log("update threshold error", err);
@@ -225,7 +224,6 @@
         { ...params, ...potParams, ...(pct && { pct }) },
         method
       );
-      console.log("intensity");
       dataStore.setIntensity(intensityData);
     } catch (err) {
       console.log("update intensity error", err);
@@ -260,7 +258,6 @@
         { ...params, ...eventParams },
         method
       );
-      console.log("events");
       dataStore.setEvents([...observed, ...modelsData]);
     } catch (err) {
       console.log("update events error", err);
@@ -286,7 +283,7 @@
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     durationStore.set(duration);
-    intervalsStore.set(intervals);
+    returnPeriodStore.set(intervals);
     thresholdTypeStore.set(thresholdId);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
@@ -405,7 +402,7 @@
           This is sometimes worded as a “1 in x years” event.
         </p>
 
-        <p class="h4">What is a Return Level?</p>
+        <p class="h4">What is a Return Level (Estimated Intensity)?</p>
         <p>
           The return level is the estimated amount of precipitation that would
           be expected to be exceeded once every return period. Effectively it is

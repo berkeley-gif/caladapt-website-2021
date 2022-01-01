@@ -13,6 +13,7 @@
     THRESHOLD_TYPE_DESCRIPTION,
     RETURN_PERIODS,
     RETURN_PERIOD_DESCRIPTION,
+    DURATION_DESCRIPTION,
   } from "./_constants";
 
   import {
@@ -32,7 +33,7 @@
     durationStore,
     thresholdStore,
     thresholdTypeStore,
-    intervalsStore,
+    returnPeriodStore,
   } from "./_store";
 
   const dispatch = createEventDispatcher();
@@ -71,8 +72,8 @@
     thresholdTypeStore.set(e.detail.id);
   }
 
-  function changeInterval(e) {
-    intervalsStore.set(e.detail);
+  function changeReturnPeriod(e) {
+    returnPeriodStore.set(e.detail);
   }
 </script>
 
@@ -113,10 +114,10 @@
 {#if $indicator.id === "intensity"}
   <div class="block">
     <Select
-      title="Select Return Interval"
-      selectedId="{$intervalsStore}"
+      title="Select Return Period"
+      selectedId="{$returnPeriodStore}"
       items="{RETURN_PERIODS.map((d) => ({ id: d, text: `${d} years` }))}"
-      on:change="{changeInterval}"
+      on:change="{changeReturnPeriod}"
     />
     <LearnMoreButton
       on:click="{() =>
@@ -147,7 +148,10 @@
     on:change="{changeDuration}"
   />
   <LearnMoreButton
-    on:click="{() => showLearnMore({ slugs: ['heat-wave-event'] })}"
+    on:click="{() =>
+      showLearnMore({
+        content: DURATION_DESCRIPTION,
+      })}"
   />
 </div>
 

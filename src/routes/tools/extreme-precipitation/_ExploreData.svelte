@@ -32,7 +32,7 @@
     thresholdStore,
     durationStore,
     dataStore,
-    intervalsStore,
+    returnPeriodStore,
   } from "./_store";
 
   const { location, boundary } = locationStore;
@@ -70,7 +70,7 @@
   $: thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
   $: indicatorLabel = $indicator.title;
   $: durationLabel = `${$durationStore}-day`;
-  $: intervalsLabel = `${$intervalsStore} years`;
+  $: intervalsLabel = `${$returnPeriodStore} years`;
 
   $: if ($indicator.id === "intensity") {
     data = $intensity;
