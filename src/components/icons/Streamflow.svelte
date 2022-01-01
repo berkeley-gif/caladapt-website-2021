@@ -3,13 +3,13 @@
   export let style = undefined;
   export let dimension = 60;
 
-  let id = "icon-title-streamflow";
+  let name = "streamflow";
   $: attributes = {
-    id,
+    id: `icon-${name}`,
     width: dimension,
     height: dimension,
     role: "img",
-    "aria-labelledby": id,
+    "aria-labelledby": `icon-title-${name}`,
     ...(style && { style }),
   };
 </script>
@@ -20,7 +20,7 @@
   viewBox="0 0 62 62"
   {...attributes}
 >
-  <title id="{id}">{title ? title : "Icon"}</title>
+  <title id="{`icon-title-${name}`}">{title ? title : `${name} icon`}</title>
   <defs id="defs4">
     <linearGradient
       gradientTransform="matrix(1.2,0,0,1.2,-6.2,-6.2)"
