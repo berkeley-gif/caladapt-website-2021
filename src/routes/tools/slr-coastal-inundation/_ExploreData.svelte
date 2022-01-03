@@ -9,6 +9,7 @@
     floodScenarioStore,
     dataLayersStore,
     mapBBoxStore,
+    dataLayersAugmentedStore,
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
 
@@ -78,9 +79,9 @@
     ).default;
   }
 
-  function changeLocation(e) {
-    locationStore.updateBoundary(e.detail.boundaryId);
-    locationStore.updateLocation(e.detail.location);
+  function changeLocation({ detail: { boundaryId, location } }) {
+    locationStore.updateBoundary(boundaryId);
+    locationStore.updateLocation(location);
   }
 
   function handleStyleChange({ detail }) {

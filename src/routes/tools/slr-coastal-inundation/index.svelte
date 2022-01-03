@@ -83,7 +83,8 @@
     timeFrameStore,
     dataLayersStore,
     mapBBoxStore,
-    rasterTilesStore,
+    rasterMetaDataStore,
+    dataLayersAugmentedStore,
   } from "./_store";
 
   export let initialConfig;
@@ -104,7 +105,7 @@
   };
 
   const { location, boundary } = locationStore;
-  const { dlCalflod50m } = dataLayersStore;
+  const { [`dl_${DL_Calflod50m}`]: dl_Calflod50m } = dataLayersStore;
   const { bbox } = mapBBoxStore;
   const { tfTileLabel } = timeFrameStore;
 
@@ -119,14 +120,13 @@
       disabled: true,
     });
   }
-  $: if ($floodScenarioStore !== "med" && $dlCalflod50m.disabled) {
+  $: if ($floodScenarioStore !== "med" && $dl_Calflod50m.disabled) {
     dataLayersStore.update({
       id: DL_Calflod50m,
       disabled: false,
     });
   }
 
-  $: console.log($rasterTilesStore);
   $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
   if (process.env.NODE_ENV !== "production") {
@@ -139,7 +139,8 @@
       isFetchingStore,
       datasetStore,
       mapBBoxStore,
-      rasterTilesStore
+      rasterMetaDataStore,
+      dataLayersAugmentedStore
     );
   }
 
@@ -158,9 +159,9 @@
       ).forEach(({ results }, index) => {
         if (Array.isArray(results) && results.length) {
           // NOTE: calflod3d 50m won't update until slug names are changed
-          rasterTilesStore.update(sources[index], results);
+          rasterMetaDataStore.update(sources[index], results);
         } else {
-          rasterTilesStore.update(sources[index], []);
+          rasterMetaDataStore.update(sources[index], []);
         }
       });
     } catch (error) {

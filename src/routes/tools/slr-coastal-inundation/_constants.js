@@ -8,11 +8,6 @@ export const DEFAULT_CENTER = [-122.2813, 37.7813];
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
 export const DEFAULT_MAP_BBOX = [-121.478, 38.132, -122.991, 37.46]; // SF Bay, roughly
-export const DEFAULT_RASTER_TILES = {
-  [DL_Calflod5m]: [],
-  [DL_Calflod50m]: [],
-  [DL_Cosmos]: [],
-};
 
 export const DEFAULT_INITIAL_CONFIG = {
   boundaryId: "place",
@@ -76,3 +71,9 @@ export const DATA_LAYERS = [
     color: "rsblue", // #25C7FA
   },
 ];
+
+export const RASTER_METADATA = {
+  [DL_Calflod5m]: [],
+  [DL_Calflod50m]: [],
+  [DL_Cosmos]: [],
+};
