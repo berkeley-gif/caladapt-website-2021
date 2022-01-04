@@ -16,7 +16,7 @@
   import { Legend, StyleControl } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import Title from "./_Title.svelte";
-  import { Map } from "./_ComparativeSLRMap/";
+  import { Map } from "./_Map";
 
   const { location, boundary } = locationStore;
   const { tfTileLabel, timeFrame } = timeFrameStore;
