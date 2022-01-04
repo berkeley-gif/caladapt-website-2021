@@ -3,9 +3,7 @@
   import { Map, NavigationControl } from "~/components/tools/Map";
   import RasterLayers from "./Rasters";
 
-  export let scenario;
-  export let timeFrame;
-  export let dataLayersStore;
+  export let dataLayersAugmented;
   export let bbox;
   export let mapStyle;
 
@@ -20,8 +18,15 @@
   let mbGlMap;
   let curStyleUrl;
 
+  $: if (
+    process.env.NODE_ENV !== "production" &&
+    typeof window !== undefined &&
+    mapReady
+  ) {
+    window.map = mbGlMap;
+  }
+
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
-  $: dataLayers = $dataLayersStore;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
   $: if (mapReady && Array.isArray(bbox) && bbox.length) {
@@ -64,12 +69,6 @@
     on:moveend="{handleMoveend}"
   >
     <NavigationControl />
-    <RasterLayers
-      map="{mbGlMap}"
-      mapStyle="{mapStyle}"
-      dataLayers="{dataLayers}"
-      scenario="{scenario}"
-      timeFrame="{timeFrame}"
-    />
+    <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
   </Map>
 {/if}

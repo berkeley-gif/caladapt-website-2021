@@ -147,7 +147,7 @@
     <Map
       timeFrame="{$tfTileLabel}"
       scenario="{$floodScenarioStore}"
-      dataLayersStore="{dataLayersStore}"
+      dataLayersAugmented="{$dataLayersAugmentedStore}"
       bbox="{$location.bbox && $location.bbox}"
       mapStyle="{mapStyle}"
       on:moveend="{handleMapMoveend}"

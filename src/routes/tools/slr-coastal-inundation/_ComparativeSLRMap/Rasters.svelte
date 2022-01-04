@@ -1,29 +1,27 @@
 <script>
-  import { onDestroy } from "svelte";
-  import { getTileUrl } from "../_data";
+  import { onDestroy, getContext } from "svelte";
+  import { contextKey } from "~/helpers/mapbox";
 
-  export let map;
   export let mapStyle;
   export let dataLayers = [];
-  export let scenario;
-  export let timeFrame;
 
-  // these props only used to determine if raster layers should be updated
-  let curScenario;
-  let curTimeFrame;
   let styleDataChangeListenerAdded = false;
+  let prevRasterLayerProps;
 
   const VISIBLE = "visible";
   const VISIBILITY = "visibility";
   const NONE = "none";
 
+  const { getMap } = getContext(contextKey);
+  const map = getMap();
+
   const paintProps = {
     "raster-opacity": 0.5,
   };
 
-  const getSourceDef = (url) => ({
+  const getSourceDef = (tiles) => ({
     type: "raster",
-    tiles: [url],
+    tiles,
     tileSize: 256,
   });
 
@@ -60,37 +58,33 @@
       ? undefined
       : "settlement-subdivision-label";
 
-  $: dataLayerIds = new Set(dataLayers.map((d) => d.id));
+  const dataLayerIds = new Set(dataLayers.map((d) => d.id));
+  console.log(dataLayerIds);
 
-  $: rasterLayersProps = dataLayers.map(({ id, checked, color }) => ({
-    id,
-    tileUrl: getTileUrl(id, scenario, timeFrame, "sfbay", color),
-    visibility: checked ? VISIBLE : NONE,
-  }));
+  $: rasterLayersProps = dataLayers
+    .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
+    .map(({ id, checked, color, tileUrls }) => ({
+      id,
+      tileUrl: tileUrls.map((url) => `${url}?style=${color}`),
+      visibility: checked ? VISIBLE : NONE,
+    }));
 
-  $: if (scenario !== curScenario) {
-    updateRasterLayers();
-    curScenario = scenario;
-  }
-
-  $: if (timeFrame !== curTimeFrame) {
-    updateRasterLayers();
-    curTimeFrame = timeFrame;
-  }
-
-  $: if (map && rasterLayersProps.length) {
+  $: if (rasterLayersProps.length) {
     const { layers } = map.getStyle();
     const rasters = layers.filter((d) => dataLayerIds.has(d.id));
 
     if (Array.isArray(rasters) && rasters.length) {
-      // update raster layers
       maybeToggleRasterVisibility();
     }
 
     if (Array.isArray(rasters) && !rasters.length) {
-      // add raster layers
       addRasterLayers();
     }
+  }
+
+  $: if (JSON.stringify(rasterLayersProps) !== prevRasterLayerProps) {
+    updateRasterLayers();
+    prevRasterLayerProps = JSON.stringify(rasterLayersProps);
   }
 
   function addRasterLayers() {
@@ -147,6 +141,7 @@
     });
   }
 
+  // TODO: fix me
   // keeps the map layers in sync when the map style changes
   function handleStyleDataChange() {
     const { name } = map.getStyle();
@@ -155,7 +150,7 @@
     if (shouldUpdate) {
       for (let id of dataLayerIds) {
         if (!map.getLayer(id)) {
-          updateRasterLayers();
+          // updateRasterLayers();
           break;
         }
       }
