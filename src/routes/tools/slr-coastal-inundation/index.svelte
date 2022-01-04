@@ -149,6 +149,7 @@
     const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
     const bboxGeojson = toBBoxPolygon(bbox);
     const bboxGeom = JSON.stringify(bboxGeojson.geometry);
+    isFetchingStore.set(true);
     try {
       (
         await Promise.all(
@@ -166,6 +167,8 @@
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      isFetchingStore.set(false);
     }
   }
 
