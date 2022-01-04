@@ -8,6 +8,25 @@ const {
   },
 } = config;
 
+export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
+  fetch(
+    `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
+      geom
+    )}&cachebust=foo`
+  )
+    .then((res) => res.json())
+    .catch((error) => console.error(error));
+
+export const toBBoxPolygon = (coords) => {
+  if (Array.isArray(coords) || coords.length) {
+    try {
+      return bboxPolygon(coords);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
+
 // DEPRECIATED: tile URLs are now sourced from raster tile metadata returned by the API
 const getTileUrlCalflod3d = (source, scenario, timeFrame, region, color) =>
   `${tileURL}/${source}_${scenario}_${timeFrame}_mosaic_${region}/{z}/{x}/{y}.png?style=${color}`;
@@ -39,24 +58,5 @@ export const getTileUrl = (source, scenario, timeFrame, ...rest) => {
       return getTileUrlCalflod3d50m(timeFrame, scenario);
     default:
       throw new Error("unrecognized slr data source");
-  }
-};
-
-export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
-  fetch(
-    `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
-      geom
-    )}`
-  )
-    .then((res) => res.json())
-    .catch((error) => console.error(error));
-
-export const toBBoxPolygon = (coords) => {
-  if (Array.isArray(coords) || coords.length) {
-    try {
-      return bboxPolygon(coords);
-    } catch (error) {
-      console.error(error);
-    }
   }
 };

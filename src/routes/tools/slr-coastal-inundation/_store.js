@@ -150,10 +150,20 @@ export const dataLayersAugmentedStore = Object.defineProperty(
   derived(
     [dataLayersStore, rasterMetaDataStore],
     ([$dataLayersStore, $rasterMetaDataStore]) =>
-      $dataLayersStore.map((data) => ({
-        ...data,
-        tileUrls: getTileUrls($rasterMetaDataStore[data.id]),
-      }))
+      $dataLayersStore.map((data) => {
+        const tileUrls = getTileUrls($rasterMetaDataStore[data.id]);
+        return {
+          ...data,
+          ...(!tileUrls.length && {
+            checked: false,
+            disabled: true,
+          }),
+          ...(tileUrls.length && {
+            disabled: false,
+          }),
+          tileUrls,
+        };
+      })
   ),
   "name",
   {

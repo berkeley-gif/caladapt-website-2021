@@ -105,28 +105,11 @@
   };
 
   const { location, boundary } = locationStore;
-  const { [`dl_${DL_Calflod50m}`]: dl_Calflod50m } = dataLayersStore;
   const { bbox } = mapBBoxStore;
   const { tfTileLabel } = timeFrameStore;
 
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-
-  // temporary handle enabling & disabling data layers
-  // $: if ($floodScenarioStore === "med") {
-  //   dataLayersStore.update({
-  //     id: DL_Calflod50m,
-  //     checked: false,
-  //     disabled: true,
-  //   });
-  // }
-  // $: if ($floodScenarioStore !== "med" && $dl_Calflod50m.disabled) {
-  //   dataLayersStore.update({
-  //     id: DL_Calflod50m,
-  //     disabled: false,
-  //   });
-  // }
-
   $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
   if (process.env.NODE_ENV !== "production") {
