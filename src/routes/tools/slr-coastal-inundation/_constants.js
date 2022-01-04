@@ -1,7 +1,7 @@
 import { DEFAULT_BOUNDARIES } from "../_common/constants";
 
 export const DL_Cosmos = "cosmos";
-export const DL_Calflod5m = "calflod3dtfs";
+export const DL_Calflod5m = "calflod3dtfs_5m";
 export const DL_Calflod50m = "calflod3dtfs_50m";
 
 export const DEFAULT_CENTER = [-122.2813, 37.7813];
