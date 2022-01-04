@@ -43,17 +43,19 @@
   }
 
   $: dataUnavailableMsg = getUnavailableMsgText(
-    $dataLayersStore.filter((d) => d.disabled)
+    $dataLayersAugmentedStore.filter(
+      (d) => !Array.isArray(d.tileUrls) || !d.tileUrls.length
+    )
   );
 
   function getUnavailableMsgText(layers) {
     if (layers.length) {
       return `${layers
         .map((d) => d.label)
-        .join(" and ")} data unavailable for the
-        ${
-          $floodScenario.label
-        } flood scenario in the San Francisco Bay region.`;
+        .join(" and ")} data are unavailable for the
+        ${$floodScenario.label} flood scenario and ${
+        $timeFrame.label
+      } time period in the current location.`;
     }
     return "";
   }

@@ -113,19 +113,19 @@
   $: resources = [...externalResources, ...relatedTools];
 
   // temporary handle enabling & disabling data layers
-  $: if ($floodScenarioStore === "med") {
-    dataLayersStore.update({
-      id: DL_Calflod50m,
-      checked: false,
-      disabled: true,
-    });
-  }
-  $: if ($floodScenarioStore !== "med" && $dl_Calflod50m.disabled) {
-    dataLayersStore.update({
-      id: DL_Calflod50m,
-      disabled: false,
-    });
-  }
+  // $: if ($floodScenarioStore === "med") {
+  //   dataLayersStore.update({
+  //     id: DL_Calflod50m,
+  //     checked: false,
+  //     disabled: true,
+  //   });
+  // }
+  // $: if ($floodScenarioStore !== "med" && $dl_Calflod50m.disabled) {
+  //   dataLayersStore.update({
+  //     id: DL_Calflod50m,
+  //     disabled: false,
+  //   });
+  // }
 
   $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
