@@ -5,8 +5,8 @@
   export let mapStyle;
   export let dataLayers = [];
 
-  let styleDataChangeListenerAdded = false;
   let prevRasterLayerProps;
+  let prevMapStyle = mapStyle;
 
   const VISIBLE = "visible";
   const VISIBILITY = "visibility";
@@ -18,6 +18,8 @@
   const paintProps = {
     "raster-opacity": 0.5,
   };
+
+  const getSourceId = (id) => `${id}-source`;
 
   const getSourceDef = (tiles) => ({
     type: "raster",
@@ -35,31 +37,26 @@
 
   const isVisible = (id) => map.getLayoutProperty(id, VISIBILITY) === VISIBLE;
 
-  const getSourceId = (id) => `${id}-source`;
-
   const removeLayer = (id) => {
     if (map.getLayer(id)) {
       map.removeLayer(id);
     }
   };
+
   const removeSource = (sourceId) => {
     if (map.getSource(sourceId)) {
       map.removeSource(sourceId);
     }
   };
 
-  if (map && map.getStyle() && !styleDataChangeListenerAdded) {
+  if (map && map.getStyle()) {
     map.on("styledata", handleStyleDataChange);
-    styleDataChangeListenerAdded = true;
   }
 
   $: beforeId =
     mapStyle && mapStyle.includes("satellite")
       ? undefined
       : "settlement-subdivision-label";
-
-  const dataLayerIds = new Set(dataLayers.map((d) => d.id));
-  console.log(dataLayerIds);
 
   $: rasterLayersProps = dataLayers
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
@@ -68,6 +65,8 @@
       tileUrl: tileUrls.map((url) => `${url}?style=${color}`),
       visibility: checked ? VISIBLE : NONE,
     }));
+
+  $: dataLayerIds = new Set(rasterLayersProps.map((d) => d.id));
 
   $: if (rasterLayersProps.length) {
     const { layers } = map.getStyle();
@@ -141,19 +140,16 @@
     });
   }
 
-  // TODO: fix me
   // keeps the map layers in sync when the map style changes
   function handleStyleDataChange() {
-    const { name } = map.getStyle();
-    const identifier = mapStyle.split("-")[0];
-    const shouldUpdate = name.toLowerCase().includes(identifier);
-    if (shouldUpdate) {
+    if (mapStyle !== prevMapStyle) {
       for (let id of dataLayerIds) {
         if (!map.getLayer(id)) {
-          // updateRasterLayers();
+          updateRasterLayers();
           break;
         }
       }
+      prevMapStyle = mapStyle;
     }
   }
 
