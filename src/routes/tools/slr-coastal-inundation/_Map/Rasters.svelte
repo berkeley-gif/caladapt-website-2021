@@ -22,9 +22,11 @@
 
   const getSourceId = (id) => `${id}-source`;
 
-  const getSourceDef = (tiles) => ({
+  const getLayerId = (id, index) => `${id}-${index}`;
+
+  const getSourceDef = (tileUrl) => ({
     type: "raster",
-    tiles,
+    tiles: [tileUrl],
     tileSize: 256,
   });
 
@@ -89,44 +91,65 @@
 
   function addRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      const sourceId = getSourceId(id);
-      const source = getSourceDef(tileUrl);
-      const layer = getLayerDef(id, sourceId, paintProps, { visibility });
-      if (!map.getSource(sourceId)) {
-        map.addSource(sourceId, source);
-      }
-      if (!map.getLayer(id)) {
-        map.addLayer(layer, beforeId);
-      }
+      tileUrl.forEach((url, i) => {
+        const layerId = getLayerId(id, i);
+        const sourceId = getSourceId(layerId);
+        const source = getSourceDef(url);
+        const layer = getLayerDef(layerId, sourceId, paintProps, {
+          visibility,
+        });
+        if (!map.getSource(sourceId)) {
+          map.addSource(sourceId, source);
+        }
+        if (!map.getLayer(layerId)) {
+          map.addLayer(layer, beforeId);
+        }
+      });
     });
   }
 
   function maybeToggleRasterVisibility() {
-    rasterLayersProps.forEach(({ id, visibility }) => {
-      // toggle visibility to visible
-      if (map.getLayer(id) && !isVisible(id) && visibility === VISIBLE) {
-        map.setLayoutProperty(id, VISIBILITY, VISIBLE);
-      }
-      // toggle visibility to none
-      if (map.getLayer(id) && isVisible(id) && visibility === NONE) {
-        map.setLayoutProperty(id, VISIBILITY, NONE);
-      }
+    rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
+      tileUrl.forEach((_url, i) => {
+        const layerId = getLayerId(id, i);
+        // toggle visibility to visible
+        if (
+          map.getLayer(layerId) &&
+          !isVisible(layerId) &&
+          visibility === VISIBLE
+        ) {
+          map.setLayoutProperty(layerId, VISIBILITY, VISIBLE);
+        }
+        // toggle visibility to none
+        if (
+          map.getLayer(layerId) &&
+          isVisible(layerId) &&
+          visibility === NONE
+        ) {
+          map.setLayoutProperty(layerId, VISIBILITY, NONE);
+        }
+      });
     });
   }
 
   function updateRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      const sourceId = getSourceId(id);
-      const source = getSourceDef(tileUrl);
-      const layer = getLayerDef(id, sourceId, paintProps, { visibility });
-      removeLayer(id);
-      removeSource(sourceId);
-      try {
-        map.addSource(sourceId, source);
-        map.addLayer(layer, beforeId);
-      } catch (error) {
-        console.error(error);
-      }
+      tileUrl.forEach((url, i) => {
+        const layerId = getLayerId(id, i);
+        const sourceId = getSourceId(layerId);
+        const source = getSourceDef(url);
+        const layer = getLayerDef(layerId, sourceId, paintProps, {
+          visibility,
+        });
+        removeLayer(layerId);
+        removeSource(sourceId);
+        try {
+          map.addSource(sourceId, source);
+          map.addLayer(layer, beforeId);
+        } catch (error) {
+          console.error(error);
+        }
+      });
     });
   }
 
@@ -134,10 +157,13 @@
     if (!map.getStyle()) {
       return;
     }
-    rasterLayersProps.forEach(({ id }) => {
-      const sourceId = getSourceId(id);
-      removeLayer(id);
-      removeSource(sourceId);
+    rasterLayersProps.forEach(({ id, tileUrl }) => {
+      tileUrl.forEach((_url, i) => {
+        const layerId = getLayerId(id, i);
+        const sourceId = getSourceId(layerId);
+        removeLayer(id);
+        removeSource(sourceId);
+      });
     });
   }
 
