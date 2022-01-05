@@ -1,5 +1,6 @@
 <script>
   import { onDestroy, getContext } from "svelte";
+  import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
 
   export let mapStyle;
@@ -81,9 +82,9 @@
     }
   }
 
-  $: if (JSON.stringify(rasterLayersProps) !== prevRasterLayerProps) {
+  $: if (!equal(rasterLayersProps, prevRasterLayerProps)) {
     updateRasterLayers();
-    prevRasterLayerProps = JSON.stringify(rasterLayersProps);
+    prevRasterLayerProps = rasterLayersProps;
   }
 
   function addRasterLayers() {
