@@ -64,6 +64,24 @@
     }
   };
 
+  const addMapRasterLayer = (id, url, index, visibility) => {
+    const layerId = getLayerId(id, index);
+    const sourceId = getSourceId(layerId);
+    const source = getSourceDef(url);
+    const layer = getLayerDef(layerId, sourceId, paintProps, {
+      visibility,
+    });
+    addSource(sourceId, source);
+    addLayer(layerId, layer, beforeId);
+  };
+
+  const removeMapRasterLayer = (id, index) => {
+    const layerId = getLayerId(id, index);
+    const sourceId = getSourceId(layerId);
+    removeLayer(layerId);
+    removeSource(sourceId);
+  };
+
   const mapLayersProps = ({ id, checked, color, tileUrls }) => ({
     id,
     tileUrl: tileUrls.map((url) => `${url}?style=${color}`),
@@ -106,15 +124,8 @@
 
   function addRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      tileUrl.forEach((url, i) => {
-        const layerId = getLayerId(id, i);
-        const sourceId = getSourceId(layerId);
-        const source = getSourceDef(url);
-        const layer = getLayerDef(layerId, sourceId, paintProps, {
-          visibility,
-        });
-        addSource(sourceId, source);
-        addLayer(layerId, layer, beforeId);
+      tileUrl.forEach((url, index) => {
+        addMapRasterLayer(id, url, index, visibility);
       });
     });
   }
@@ -145,28 +156,17 @@
 
   function reapplyRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      tileUrl.forEach((url, i) => {
-        const layerId = getLayerId(id, i);
-        const sourceId = getSourceId(layerId);
-        const source = getSourceDef(url);
-        const layer = getLayerDef(layerId, sourceId, paintProps, {
-          visibility,
-        });
-        removeLayer(layerId);
-        removeSource(sourceId);
-        addSource(sourceId, source);
-        addLayer(layerId, layer, beforeId);
+      tileUrl.forEach((url, index) => {
+        removeMapRasterLayer(id, index);
+        addMapRasterLayer(id, url, index, visibility);
       });
     });
   }
 
   function removePreviousRasterLayers() {
     prevRasterLayerProps.forEach(({ id, tileUrl }) => {
-      tileUrl.forEach((_url, i) => {
-        const layerId = getLayerId(id, i);
-        const sourceId = getSourceId(layerId);
-        removeLayer(layerId);
-        removeSource(sourceId);
+      tileUrl.forEach((_url, index) => {
+        removeMapRasterLayer(id, index);
       });
     });
   }
@@ -176,11 +176,8 @@
       return;
     }
     rasterLayersProps.forEach(({ id, tileUrl }) => {
-      tileUrl.forEach((_url, i) => {
-        const layerId = getLayerId(id, i);
-        const sourceId = getSourceId(layerId);
-        removeLayer(layerId);
-        removeSource(sourceId);
+      tileUrl.forEach((_url, index) => {
+        removeMapRasterLayer(id, index);
       });
     });
   }
