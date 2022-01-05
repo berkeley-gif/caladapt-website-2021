@@ -43,9 +43,9 @@
     }
   };
 
-  const removeLayer = (id) => {
-    if (map.getLayer(id)) {
-      map.removeLayer(id);
+  const removeLayer = (layerId) => {
+    if (map.getLayer(layerId)) {
+      map.removeLayer(layerId);
     }
   };
 
@@ -81,7 +81,7 @@
 
   const mapLayersProps = ({ id, checked, color, tileUrls }) => ({
     id,
-    tileUrl: tileUrls.map((url) => `${url}?style=${color}`),
+    tileUrls: tileUrls.map((url) => `${url}?style=${color}`),
     visibility: checked ? VISIBLE : NONE,
   });
 
@@ -105,16 +105,16 @@
   }
 
   function addRasterLayers() {
-    rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      tileUrl.forEach((url, index) => {
+    rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
+      tileUrls.forEach((url, index) => {
         addMapRasterLayer(id, url, index, visibility);
       });
     });
   }
 
   function reapplyRasterLayers() {
-    rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      tileUrl.forEach((url, index) => {
+    rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
+      tileUrls.forEach((url, index) => {
         removeMapRasterLayer(id, index);
         addMapRasterLayer(id, url, index, visibility);
       });
@@ -122,8 +122,8 @@
   }
 
   function removePreviousRasterLayers() {
-    prevRasterLayerProps.forEach(({ id, tileUrl }) => {
-      tileUrl.forEach((_url, index) => {
+    prevRasterLayerProps.forEach(({ id, tileUrls }) => {
+      tileUrls.forEach((_url, index) => {
         removeMapRasterLayer(id, index);
       });
     });
@@ -133,8 +133,8 @@
     if (!map.getStyle()) {
       return;
     }
-    rasterLayersProps.forEach(({ id, tileUrl }) => {
-      tileUrl.forEach((_url, index) => {
+    rasterLayersProps.forEach(({ id, tileUrls }) => {
+      tileUrls.forEach((_url, index) => {
         removeMapRasterLayer(id, index);
       });
     });
