@@ -18,14 +18,6 @@
   let mbGlMap;
   let curStyleUrl;
 
-  $: if (
-    process.env.NODE_ENV !== "production" &&
-    typeof window !== undefined &&
-    mapReady
-  ) {
-    window.map = mbGlMap;
-  }
-
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
