@@ -21,6 +21,11 @@
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
 
+  // TODO: remove before deploying to prod
+  $: if (mapReady && typeof window !== undefined) {
+    window.map = mbGlMap;
+  }
+
   $: if (mapReady && Array.isArray(bbox) && bbox.length) {
     mapInstance.zoomToExtent(bbox, 12);
   }
