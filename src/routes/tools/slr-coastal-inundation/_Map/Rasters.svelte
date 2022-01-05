@@ -6,7 +6,7 @@
   export let mapStyle;
   export let dataLayers = [];
 
-  let prevRasterLayerProps;
+  let prevRasterLayerProps = [];
   let prevMapStyle = mapStyle;
 
   const VISIBLE = "visible";
@@ -64,6 +64,12 @@
     }
   };
 
+  const mapLayersProps = ({ id, checked, color, tileUrls }) => ({
+    id,
+    tileUrl: tileUrls.map((url) => `${url}?style=${color}`),
+    visibility: checked ? VISIBLE : NONE,
+  });
+
   if (map && map.getStyle()) {
     map.on("styledata", handleStyleDataChange);
   }
@@ -75,11 +81,7 @@
 
   $: rasterLayersProps = dataLayers
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
-    .map(({ id, checked, color, tileUrls }) => ({
-      id,
-      tileUrl: tileUrls.map((url) => `${url}?style=${color}`),
-      visibility: checked ? VISIBLE : NONE,
-    }));
+    .map(mapLayersProps);
 
   $: dataLayerIds = new Set(rasterLayersProps.map((d) => d.id));
 
@@ -97,7 +99,8 @@
   }
 
   $: if (!equal(rasterLayersProps, prevRasterLayerProps)) {
-    updateRasterLayers();
+    removePreviousRasterLayers();
+    addRasterLayers();
     prevRasterLayerProps = rasterLayersProps;
   }
 
@@ -140,7 +143,7 @@
     });
   }
 
-  function updateRasterLayers() {
+  function reapplyRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
       tileUrl.forEach((url, i) => {
         const layerId = getLayerId(id, i);
@@ -157,6 +160,17 @@
     });
   }
 
+  function removePreviousRasterLayers() {
+    prevRasterLayerProps.forEach(({ id, tileUrl }) => {
+      tileUrl.forEach((_url, i) => {
+        const layerId = getLayerId(id, i);
+        const sourceId = getSourceId(layerId);
+        removeLayer(layerId);
+        removeSource(sourceId);
+      });
+    });
+  }
+
   function removeRasterLayers() {
     if (!map.getStyle()) {
       return;
@@ -165,7 +179,7 @@
       tileUrl.forEach((_url, i) => {
         const layerId = getLayerId(id, i);
         const sourceId = getSourceId(layerId);
-        removeLayer(id);
+        removeLayer(layerId);
         removeSource(sourceId);
       });
     });
@@ -176,7 +190,7 @@
     if (mapStyle !== prevMapStyle) {
       for (let id of dataLayerIds) {
         if (!map.getLayer(id)) {
-          updateRasterLayers();
+          reapplyRasterLayers();
           break;
         }
       }
