@@ -40,9 +40,21 @@
 
   const isVisible = (id) => map.getLayoutProperty(id, VISIBILITY) === VISIBLE;
 
+  const addLayer = (layerId, layerDef, beforeId) => {
+    if (!map.getLayer(layerId)) {
+      map.addLayer(layerDef, beforeId);
+    }
+  };
+
   const removeLayer = (id) => {
     if (map.getLayer(id)) {
       map.removeLayer(id);
+    }
+  };
+
+  const addSource = (sourceId, sourceDef) => {
+    if (!map.getSource(sourceId)) {
+      map.addSource(sourceId, sourceDef);
     }
   };
 
@@ -98,12 +110,8 @@
         const layer = getLayerDef(layerId, sourceId, paintProps, {
           visibility,
         });
-        if (!map.getSource(sourceId)) {
-          map.addSource(sourceId, source);
-        }
-        if (!map.getLayer(layerId)) {
-          map.addLayer(layer, beforeId);
-        }
+        addSource(sourceId, source);
+        addLayer(layerId, layer, beforeId);
       });
     });
   }
@@ -143,12 +151,8 @@
         });
         removeLayer(layerId);
         removeSource(sourceId);
-        try {
-          map.addSource(sourceId, source);
-          map.addLayer(layer, beforeId);
-        } catch (error) {
-          console.error(error);
-        }
+        addSource(sourceId, source);
+        addLayer(layerId, layer, beforeId);
       });
     });
   }
