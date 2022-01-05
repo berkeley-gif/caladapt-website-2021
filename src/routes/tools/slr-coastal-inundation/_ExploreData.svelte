@@ -55,7 +55,7 @@
         .join(" and ")} data are unavailable for the
         ${$floodScenario.label} flood scenario and ${
         $timeFrame.label
-      } time period in the current location.`;
+      } time period in the current map view.`;
     }
     return "";
   }
