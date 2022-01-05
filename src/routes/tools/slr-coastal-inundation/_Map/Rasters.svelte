@@ -10,7 +10,6 @@
   let prevMapStyle = mapStyle;
 
   const VISIBLE = "visible";
-  const VISIBILITY = "visibility";
   const NONE = "none";
 
   const { getMap } = getContext(contextKey);
@@ -37,8 +36,6 @@
     paint,
     layout,
   });
-
-  const isVisible = (id) => map.getLayoutProperty(id, VISIBILITY) === VISIBLE;
 
   const addLayer = (layerId, layerDef, beforeId) => {
     if (!map.getLayer(layerId)) {
@@ -101,21 +98,6 @@
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
     .map(mapLayersProps);
 
-  $: dataLayerIds = new Set(rasterLayersProps.map((d) => d.id));
-
-  $: if (rasterLayersProps.length) {
-    const { layers } = map.getStyle();
-    const rasters = layers.filter((d) => dataLayerIds.has(d.id));
-
-    if (Array.isArray(rasters) && rasters.length) {
-      maybeToggleRasterVisibility();
-    }
-
-    if (Array.isArray(rasters) && !rasters.length) {
-      addRasterLayers();
-    }
-  }
-
   $: if (!equal(rasterLayersProps, prevRasterLayerProps)) {
     removePreviousRasterLayers();
     addRasterLayers();
@@ -126,30 +108,6 @@
     rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
       tileUrl.forEach((url, index) => {
         addMapRasterLayer(id, url, index, visibility);
-      });
-    });
-  }
-
-  function maybeToggleRasterVisibility() {
-    rasterLayersProps.forEach(({ id, tileUrl, visibility }) => {
-      tileUrl.forEach((_url, i) => {
-        const layerId = getLayerId(id, i);
-        // toggle visibility to visible
-        if (
-          map.getLayer(layerId) &&
-          !isVisible(layerId) &&
-          visibility === VISIBLE
-        ) {
-          map.setLayoutProperty(layerId, VISIBILITY, VISIBLE);
-        }
-        // toggle visibility to none
-        if (
-          map.getLayer(layerId) &&
-          isVisible(layerId) &&
-          visibility === NONE
-        ) {
-          map.setLayoutProperty(layerId, VISIBILITY, NONE);
-        }
       });
     });
   }
@@ -185,12 +143,7 @@
   // keeps the map layers in sync when the map style changes
   function handleStyleDataChange() {
     if (mapStyle !== prevMapStyle) {
-      for (let id of dataLayerIds) {
-        if (!map.getLayer(id)) {
-          reapplyRasterLayers();
-          break;
-        }
-      }
+      reapplyRasterLayers();
       prevMapStyle = mapStyle;
     }
   }
