@@ -1,5 +1,6 @@
 import bboxPolygon from "@turf/bbox-polygon";
 import config from "~/helpers/api-config";
+import { logException } from "~/helpers/logging";
 import { calflod50mLookup } from "./_data-layers-lookup";
 
 const {
@@ -13,9 +14,7 @@ export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
     `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
       geom
     )}&cachebust=foo`
-  )
-    .then((res) => res.json())
-    .catch((error) => console.error(error));
+  ).then((res) => res.json());
 
 export const toBBoxPolygon = (coords) => {
   if (Array.isArray(coords) || coords.length) {
@@ -23,6 +22,7 @@ export const toBBoxPolygon = (coords) => {
       return bboxPolygon(coords);
     } catch (error) {
       console.error(error);
+      logException(error);
     }
   }
 };

@@ -57,6 +57,7 @@
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logStores } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
 
   import {
     About,
@@ -150,6 +151,7 @@
       });
     } catch (error) {
       console.error(error);
+      logException(error);
     } finally {
       isFetchingStore.set(false);
     }
@@ -181,6 +183,7 @@
       console.log("app ready");
     } catch (error) {
       console.error("init error", error);
+      logException(error);
       notifier.error(
         "Unable to Load Tool",
         "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",
