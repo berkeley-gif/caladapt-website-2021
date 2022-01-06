@@ -131,8 +131,13 @@
   async function update(bbox, scenario, timeFrame) {
     if (!appReady || !bbox) return;
     const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
-    const bboxGeojson = toBBoxPolygon(bbox);
-    const bboxGeom = JSON.stringify(bboxGeojson.geometry);
+    let bboxGeom;
+    try {
+      bboxGeom = JSON.stringify(toBBoxPolygon(bbox).geometry);
+    } catch (error) {
+      console.error(error);
+      logException(error);
+    }
     isFetchingStore.set(true);
     try {
       (

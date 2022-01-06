@@ -1,6 +1,5 @@
 import bboxPolygon from "@turf/bbox-polygon";
 import config from "~/helpers/api-config";
-import { logException } from "~/helpers/logging";
 
 const {
   env: {
@@ -16,12 +15,7 @@ export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
   ).then((res) => res.json());
 
 export const toBBoxPolygon = (coords) => {
-  if (Array.isArray(coords) || coords.length) {
-    try {
-      return bboxPolygon(coords);
-    } catch (error) {
-      console.error(error);
-      logException(error);
-    }
+  if (Array.isArray(coords) && coords.length) {
+    return bboxPolygon(coords);
   }
 };
