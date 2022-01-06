@@ -9,6 +9,7 @@
     "build:github": "cross-env NODE_ENV=production SOURCE_MAPS=false sapper build",
     "export": "cross-env NODE_ENV=production SOURCE_MAPS=true sapper export --timeout=10000",
     "start": "node __sapper__/build",
+    "start:export": "npx serve __sapper__/export",
     "deploy": "zx ./scripts/deploy.mjs",
     "deploy-prod": "npm run deploy -- --location=prod",
     "deploy-dev": "npm run deploy -- --location=dev",
