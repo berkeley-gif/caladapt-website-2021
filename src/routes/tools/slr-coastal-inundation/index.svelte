@@ -148,7 +148,6 @@
         )
       ).forEach(({ results }, index) => {
         if (Array.isArray(results) && results.length) {
-          // NOTE: calflod3d 50m won't update until slug names are changed
           rasterMetaDataStore.update(sources[index], results);
         } else {
           rasterMetaDataStore.update(sources[index], []);
