@@ -8,13 +8,15 @@
     timeFrameStore,
     floodScenarioStore,
     dataLayersStore,
+    mapBBoxStore,
+    dataLayersAugmentedStore,
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
 
   import { Legend, StyleControl } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
   import Title from "./_Title.svelte";
-  import { Map } from "./_ComparativeSLRMap/";
+  import { Map } from "./_Map";
 
   const { location, boundary } = locationStore;
   const { tfTileLabel, timeFrame } = timeFrameStore;
@@ -41,17 +43,19 @@
   }
 
   $: dataUnavailableMsg = getUnavailableMsgText(
-    $dataLayersStore.filter((d) => d.disabled)
+    $dataLayersAugmentedStore.filter(
+      (d) => !Array.isArray(d.tileUrls) || !d.tileUrls.length
+    )
   );
 
   function getUnavailableMsgText(layers) {
     if (layers.length) {
       return `${layers
         .map((d) => d.label)
-        .join(" and ")} data unavailable for the
-        ${
-          $floodScenario.label
-        } flood scenario in the San Francisco Bay region.`;
+        .join(" and ")} data are unavailable for the
+        ${$floodScenario.label} flood scenario and ${
+        $timeFrame.label
+      } time period in the current map view.`;
     }
     return "";
   }
@@ -77,13 +81,17 @@
     ).default;
   }
 
-  function changeLocation(e) {
-    locationStore.updateBoundary(e.detail.boundaryId);
-    locationStore.updateLocation(e.detail.location);
+  function changeLocation({ detail: { boundaryId, location } }) {
+    locationStore.updateBoundary(boundaryId);
+    locationStore.updateLocation(location);
   }
 
   function handleStyleChange({ detail }) {
     mapStyle = detail;
+  }
+
+  function handleMapMoveend({ detail }) {
+    mapBBoxStore.set(detail);
   }
 </script>
 
@@ -141,9 +149,10 @@
     <Map
       timeFrame="{$tfTileLabel}"
       scenario="{$floodScenarioStore}"
-      dataLayersStore="{dataLayersStore}"
+      dataLayersAugmented="{$dataLayersAugmentedStore}"
       bbox="{$location.bbox && $location.bbox}"
       mapStyle="{mapStyle}"
+      on:moveend="{handleMapMoveend}"
     />
   </div>
 

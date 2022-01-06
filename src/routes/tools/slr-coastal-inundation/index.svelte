@@ -57,6 +57,7 @@
 
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logStores } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
 
   import {
     About,
@@ -69,7 +70,8 @@
 
   import ExploreData from "./_ExploreData.svelte";
 
-  import { DL_Cosmos, DL_Calflod50m, DL_Calflod5m } from "./_constants";
+  import { DL_Cosmos, DL_Calflod5m, DL_Calflod50m } from "./_constants";
+  import { getRasterMetaData, toBBoxPolygon } from "./_data";
 
   import {
     locationStore,
@@ -81,6 +83,9 @@
     floodScenarioStore,
     timeFrameStore,
     dataLayersStore,
+    mapBBoxStore,
+    rasterMetaDataStore,
+    dataLayersAugmentedStore,
   } from "./_store";
 
   export let initialConfig;
@@ -101,25 +106,12 @@
   };
 
   const { location, boundary } = locationStore;
-  const { dlCalflod50m } = dataLayersStore;
+  const { bbox } = mapBBoxStore;
+  const { tfTileLabel } = timeFrameStore;
 
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-
-  // temporary handle enabling & disabling data layers
-  $: if ($floodScenarioStore === "med") {
-    dataLayersStore.update({
-      id: DL_Calflod50m,
-      checked: false,
-      disabled: true,
-    });
-  }
-  $: if ($floodScenarioStore !== "med" && $dlCalflod50m.disabled) {
-    dataLayersStore.update({
-      id: DL_Calflod50m,
-      disabled: false,
-    });
-  }
+  $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
   if (process.env.NODE_ENV !== "production") {
     logStores(
@@ -129,8 +121,44 @@
       timeFrameStore,
       dataLayersStore,
       isFetchingStore,
-      datasetStore
+      datasetStore,
+      mapBBoxStore,
+      rasterMetaDataStore,
+      dataLayersAugmentedStore
     );
+  }
+
+  async function update(bbox, scenario, timeFrame) {
+    if (!appReady || !bbox) return;
+    const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
+    let bboxGeom;
+    try {
+      bboxGeom = JSON.stringify(toBBoxPolygon(bbox).geometry);
+    } catch (error) {
+      console.error(error);
+      logException(error);
+    }
+    isFetchingStore.set(true);
+    try {
+      (
+        await Promise.all(
+          sources.map((source) =>
+            getRasterMetaData(scenario, source, timeFrame, bboxGeom)
+          )
+        )
+      ).forEach(({ results }, index) => {
+        if (Array.isArray(results) && results.length) {
+          rasterMetaDataStore.update(sources[index], results);
+        } else {
+          rasterMetaDataStore.update(sources[index], []);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      logException(error);
+    } finally {
+      isFetchingStore.set(false);
+    }
   }
 
   async function initApp({
@@ -144,7 +172,6 @@
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
     unitsStore.set({ imperial });
-
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
     const loc = await getFeature(nearest, boundaryId);
@@ -156,9 +183,11 @@
     try {
       await initApp(initialConfig);
       appReady = true;
+      await update();
       console.log("app ready");
     } catch (error) {
       console.error("init error", error);
+      logException(error);
       notifier.error(
         "Unable to Load Tool",
         "Sorry! Something's probably wrong at our end. Try refereshing your browser. If you still see an error please contact us at support@cal-adapt.org.",

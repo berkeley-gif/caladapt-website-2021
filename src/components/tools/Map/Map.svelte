@@ -112,7 +112,6 @@
 
       el.on("load", () => {
         map = el;
-        if (process.env.NODE_ENV !== "production") window.map = map;
         map.resize();
         popup = new mapboxgl.Popup({
           closeButton: false,
@@ -152,6 +151,12 @@
       // Forwarch zoom change event
       el.on("zoomend", () => {
         dispatch("zoom", el.getZoom());
+      });
+
+      el.on("moveend", (event) => {
+        dispatch("moveend", {
+          event,
+        });
       });
     }
 
