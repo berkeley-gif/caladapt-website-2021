@@ -1,8 +1,13 @@
 import { DEFAULT_BOUNDARIES } from "../_common/constants";
 
+export const DL_Cosmos = "cosmos";
+export const DL_Calflod5m = "calflod3dtfs_5m";
+export const DL_Calflod50m = "calflod3dtfs_50m";
+
 export const DEFAULT_CENTER = [-122.2813, 37.7813];
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
+export const DEFAULT_MAP_BBOX = [-121.478, 38.132, -122.991, 37.46]; // SF Bay, roughly
 
 export const DEFAULT_INITIAL_CONFIG = {
   boundaryId: "place",
@@ -43,10 +48,6 @@ export const FLOOD_SCENARIOS = [
   },
 ];
 
-export const DL_Cosmos = "cosmos";
-export const DL_Calflod5m = "calflod3dtfs";
-export const DL_Calflod50m = "calflod3dtfs_50m";
-
 export const DATA_LAYERS = [
   {
     id: DL_Cosmos,
@@ -70,3 +71,9 @@ export const DATA_LAYERS = [
     color: "rsblue", // #25C7FA
   },
 ];
+
+export const RASTER_METADATA = {
+  [DL_Calflod5m]: [],
+  [DL_Calflod50m]: [],
+  [DL_Cosmos]: [],
+};

@@ -1,10 +1,9 @@
 <script>
-  import { Map, NavigationControl, StyleControl } from "~/components/tools/Map";
+  import { createEventDispatcher } from "svelte";
+  import { Map, NavigationControl } from "~/components/tools/Map";
   import RasterLayers from "./Rasters";
 
-  export let scenario;
-  export let timeFrame;
-  export let dataLayersStore;
+  export let dataLayersAugmented;
   export let bbox;
   export let mapStyle;
 
@@ -13,13 +12,19 @@
   const lat = 37.7813;
   const zoom = 9;
 
+  const dispatch = createEventDispatcher();
+
   let mapInstance;
   let mbGlMap;
   let curStyleUrl;
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
-  $: dataLayers = $dataLayersStore;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
+
+  // TODO: remove before deploying to prod
+  $: if (mapReady && typeof window !== undefined) {
+    window.map = mbGlMap;
+  }
 
   $: if (mapReady && Array.isArray(bbox) && bbox.length) {
     mapInstance.zoomToExtent(bbox, 12);
@@ -28,6 +33,16 @@
   $: if (mapReady && styleUrl && styleUrl !== curStyleUrl) {
     curStyleUrl = styleUrl;
     mbGlMap.setStyle(curStyleUrl);
+  }
+
+  function handleMoveend() {
+    if (mapReady) {
+      const {
+        _sw: { lng: xMax, lat: yMax },
+        _ne: { lng: xMin, lat: yMin },
+      } = mbGlMap.getBounds();
+      dispatch("moveend", [xMin, yMin, xMax, yMax]);
+    }
   }
 
   function handleMapReady({ detail }) {
@@ -48,14 +63,9 @@
     style="{styleUrl}"
     on:ready="{handleMapReady}"
     on:destroy="{handleMapDestroy}"
+    on:moveend="{handleMoveend}"
   >
     <NavigationControl />
-    <RasterLayers
-      map="{mbGlMap}"
-      mapStyle="{mapStyle}"
-      dataLayers="{dataLayers}"
-      scenario="{scenario}"
-      timeFrame="{timeFrame}"
-    />
+    <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
   </Map>
 {/if}

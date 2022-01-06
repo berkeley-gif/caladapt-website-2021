@@ -1,3 +1,4 @@
+import { derived } from "svelte/store";
 import { makeCustomWritableStore } from "../_common/stores";
 import {
   DEFAULT_FLOOD_SCENARIO,
@@ -5,6 +6,8 @@ import {
   FLOOD_SCENARIOS,
   TIME_PERIODS,
   DATA_LAYERS,
+  DEFAULT_MAP_BBOX,
+  RASTER_METADATA,
   DL_Cosmos,
   DL_Calflod5m,
   DL_Calflod50m,
@@ -41,19 +44,32 @@ export const timeFrameStore = makeCustomWritableStore(DEFAULT_TIME_FRAME, {
   ],
 });
 
+export const mapBBoxStore = makeCustomWritableStore(DEFAULT_MAP_BBOX, {
+  name: "mapBBoxStore",
+  getters: [
+    {
+      name: "bbox",
+      getter: ($s) => $s.map((d) => +d.toFixed(4)),
+    },
+  ],
+});
+
+const getTileUrls = (value) =>
+  Array.isArray(value) && value.length ? value.map((d) => d.tileurl) : [];
+
 export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
   name: "dataLayersStore",
   getters: [
     {
-      name: "dlCosmos",
+      name: `dl_${DL_Cosmos}`,
       getter: ($s) => $s.find((d) => d.id === DL_Cosmos),
     },
     {
-      name: "dlCalflod5m",
+      name: `dl_${DL_Calflod5m}`,
       getter: ($s) => $s.find((d) => d.id === DL_Calflod5m),
     },
     {
-      name: "dlCalflod50m",
+      name: `dl_${DL_Calflod50m}`,
       getter: ($s) => $s.find((d) => d.id === DL_Calflod50m),
     },
   ],
@@ -87,3 +103,72 @@ export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
     },
   ],
 });
+
+export const rasterMetaDataStore = makeCustomWritableStore(RASTER_METADATA, {
+  name: "rasterMetaDataStore",
+  getters: [
+    {
+      name: `tiles_${DL_Cosmos}`,
+      getter: ($s) => getTileUrls($s[DL_Cosmos]),
+    },
+    {
+      name: `tiles_${DL_Calflod5m}`,
+      getter: ($s) => getTileUrls($s[DL_Calflod5m]),
+    },
+    {
+      name: `tiles_${DL_Calflod50m}`,
+      getter: ($s) => getTileUrls($s[DL_Calflod50m]),
+    },
+  ],
+  updaters: [
+    {
+      name: `set_${DL_Cosmos}`,
+      update: (store) => (data) =>
+        store.update((s) => ({ ...s, cosmos: data })),
+    },
+    {
+      name: `set_${DL_Calflod5m}`,
+      update: (store) => (data) =>
+        store.update((s) => ({ ...s, calflod5m: data })),
+    },
+    {
+      name: `set_${DL_Calflod50m}`,
+      update: (store) => (data) =>
+        store.update((s) => ({ ...s, calflod50m: data })),
+    },
+    {
+      name: "update",
+      update: (store) => (key, values) =>
+        store.update((s) => ({ ...s, [key]: values })),
+    },
+  ],
+});
+
+// augments the data layers store to include the zxy tiles url for each layer
+// from the rasterMetaDataStore
+export const dataLayersAugmentedStore = Object.defineProperty(
+  derived(
+    [dataLayersStore, rasterMetaDataStore],
+    ([$dataLayersStore, $rasterMetaDataStore]) =>
+      $dataLayersStore.map((data) => {
+        const tileUrls = getTileUrls($rasterMetaDataStore[data.id]);
+        return {
+          ...data,
+          ...(!tileUrls.length && {
+            checked: false,
+            disabled: true,
+          }),
+          ...(tileUrls.length && {
+            disabled: false,
+          }),
+          tileUrls,
+        };
+      })
+  ),
+  "name",
+  {
+    get: function () {
+      return "dataLayersAugmentedStore";
+    },
+  }
+);
