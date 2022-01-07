@@ -1,42 +1,29 @@
 <script>
-  let className = undefined;
-  export { className as class };
-  export let id = undefined;
-  export let tabindex = undefined;
-  export let focusable = false;
   export let title = undefined;
   export let style = undefined;
   export let dimension = 60;
 
-  $: ariaLabel = $$props["aria-label"];
-  $: ariaLabelledBy = $$props["aria-labelledby"];
-  $: labelled = ariaLabel || ariaLabelledBy || title;
+  let name = "sea";
+
   $: attributes = {
     width: dimension,
     height: dimension,
-    role: labelled ? "img" : undefined,
-    focusable: tabindex === "0" ? true : focusable,
-    tabindex,
+    role: title ? "img" : "presentation",
+    ...(!title && { "aria-hidden": true }),
+    ...(title && { "aria-labelledby": `icon-title-${name}` }),
+    ...(style && { style }),
   };
 </script>
 
 <svg
-  on:click
-  on:mouseover
-  on:mouseenter
-  on:mouseleave
-  on:keyup
-  on:keydown
   xmlns="http://www.w3.org/2000/svg"
-  class="{className}"
   preserveAspectRatio="xMidYMid meet"
-  style="{style}"
-  id="{id}"
   viewBox="0 0 62 62"
-  aria-labelledby="iconTitle"
   {...attributes}
 >
-  <title id="iconTitle">Sea Icon</title>
+  {#if title}
+    <title id="{`icon-title-${name}`}">{title}</title>
+  {/if}
   <defs id="defs4">
     <linearGradient
       gradientTransform="matrix(1.9354839,0,0,1.9354839,0.99999955,0.99999955)"

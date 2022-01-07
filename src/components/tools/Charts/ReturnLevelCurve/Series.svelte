@@ -2,6 +2,7 @@
   import { getContext, createEventDispatcher } from "svelte";
   import { area } from "d3-shape";
   import { raise } from "layercake";
+  import { mouseoutBlur, mouseoverFocus } from "../Shared/events";
 
   export let series;
 
@@ -66,8 +67,8 @@
         r="3"
         cx="{$xScale(d.period)}"
         cy="{$yScale(d.value)}"
-        on:mouseout="{() => dispatch('mouseout')}"
-        on:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
+        use:mouseoutBlur="{() => dispatch('mouseout')}"
+        use:mouseoverFocus="{(e) => dispatch('mousemove', { e, props: d })}"
         on:mousemove="{handleMousemove(d)}"
       >
       </circle>
