@@ -116,7 +116,7 @@
         const start = val;
         const stop = stopValues[i + 1] || zmax;
         return {
-          label: `${start.toFixed(1)}-${stop.toFixed(1)} °F`,
+          label: `${start.toFixed(1)}-${stop.toFixed(1)} ${yAxis.units}`,
           color: colorScale(start),
         };
       })
