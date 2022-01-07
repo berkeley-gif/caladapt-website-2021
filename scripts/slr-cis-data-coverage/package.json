@@ -1,0 +1,24 @@
+{
+  "name": "slr-cis-data-coverage",
+  "version": "1.0.0",
+  "description": "data generation for SLR CIS tool's data coverage map",
+  "main": "index.mjs",
+  "scripts": {
+    "generate-data": "zx ./index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/berkeley-gif/caladapt-website-2021.git"
+  },
+  "author": "clhenrick",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/berkeley-gif/caladapt-website-2021/issues"
+  },
+  "homepage": "https://github.com/berkeley-gif/caladapt-website-2021#readme",
+  "dependencies": {
+    "mapshaper": "^0.5.85",
+    "node-fetch": "^3.1.0"
+  }
+}
