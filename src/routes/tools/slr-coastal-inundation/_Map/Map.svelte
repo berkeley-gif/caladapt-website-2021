@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { debounce } from "~/helpers/utilities";
   import { Map, NavigationControl } from "~/components/tools/Map";
   import RasterLayers from "./Rasters";
 
@@ -13,6 +14,8 @@
   const zoom = 9;
 
   const dispatch = createEventDispatcher();
+
+  const moveendDelayMS = 1500;
 
   let mapInstance;
   let mbGlMap;
@@ -63,7 +66,7 @@
     style="{styleUrl}"
     on:ready="{handleMapReady}"
     on:destroy="{handleMapDestroy}"
-    on:moveend="{handleMoveend}"
+    on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
     <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
