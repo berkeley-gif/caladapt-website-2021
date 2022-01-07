@@ -67,3 +67,8 @@ hr {
   position: absolute;
   width: 1px;
 }
+
+// totally hidden, not discoverable by assistive tech
+.hidden {
+  display: none !important;
+}

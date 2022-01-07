@@ -216,7 +216,7 @@
   on:tabChange="{handleTabChange}"
 >
   <!-- Map components -->
-  <div slot="tab_content_map_title" class="block title">
+  <div slot="map_title" class="block title">
     <Title
       simulation="{$simulationStore}"
       scenario="{$scenario.labelLong}"
@@ -230,7 +230,7 @@
   </div>
 
   <div
-    slot="tab_content_slippy_map"
+    slot="slippy_map"
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
     {#if !activeTab}
@@ -244,7 +244,7 @@
   </div>
 
   <div
-    slot="tab_content_slippy_map_controls"
+    slot="slippy_map_controls"
     class="graphic block"
     style="background-color: var(--gray-20);"
   >
@@ -264,7 +264,7 @@
   </div>
 
   <!-- Chart components -->
-  <div slot="tab_content_title" class="block title">
+  <div slot="chart_title" class="block title">
     {#if activeTab}
       <Title
         simulation="{$simulationStore}"
@@ -278,7 +278,7 @@
     {/if}
   </div>
 
-  <div slot="tab_content_stats">
+  <div slot="stats">
     {#if activeTab}
       <StatsPanel
         {...{
@@ -292,7 +292,7 @@
     {/if}
   </div>
 
-  <div slot="tab_content_graphic" class="graphic block">
+  <div slot="graphic" class="graphic block">
     {#if activeTab}
       <WildfireChart
         data="{$dataStore}"

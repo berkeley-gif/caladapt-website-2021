@@ -17,9 +17,10 @@
   export let ramp = []; // colors for legend items
   export let values = []; // values for legend items
   export let columns = 0; // discrete only
+  export let columnWidth = "auto"; // discrete only
   export let tickSize = 6; // continuous only
   export let ticks = width / 64; // continuous only
-  export let tickValues; // continuous only
+  export let tickValues = []; // continuous only
   export let noData = false;
 
   // TODO: consider splitting this all into separate components that render each type of legend
@@ -77,20 +78,24 @@
 
 <style>
   .legend--container {
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0.5rem;
+    position: var(--position, absolute);
+    right: var(--right, 0.5rem);
+    bottom: var(--bottom, 0.5rem);
+    left: var(--left, initial);
+    top: var(--top, initial);
     width: var(--width, auto);
     height: var(--height, auto);
     padding: var(--padding, 0.5rem);
-    background-color: var(--white, #fff);
-    border: 0.0625rem solid var(--gray-40);
+    background: var(--background, var(--white));
+    border-color: var(--border-color, var(--gray-40));
+    border-style: var(--border-style, solid);
+    border-width: var(--border-width, 0.0625rem);
     box-sizing: content-box;
   }
 
   .legend--columns {
     column-count: var(--columns);
-    column-width: auto;
+    column-width: var(--column-width, auto);
   }
 
   p {
@@ -100,8 +105,8 @@
   }
 
   ul {
-    margin: 0.5rem 0 0;
-    padding: 0;
+    margin: 0.5rem 0 0 !important;
+    padding: 0 !important;
     list-style: none;
   }
 
@@ -158,9 +163,12 @@
     --padding:{padding};
     --rectWidth:{rectWidth};
     --rectHeight:{rectHeight};
-    --columns:{columns};"
+    --columns:{columns};
+    --column-width:{columnWidth};"
 >
-  <p class="legend--title-text">{title}</p>
+  {#if title}
+    <p class="legend--title-text">{title}</p>
+  {/if}
   {#if subtitle}
     <p class="legend--subtitle-text">{subtitle}</p>
   {/if}
