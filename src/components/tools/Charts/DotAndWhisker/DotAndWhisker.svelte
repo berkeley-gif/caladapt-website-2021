@@ -32,8 +32,8 @@
     <g class="{group}" transform="translate({$rScale(group)},0)">
       {#each values as d}
         <g
-          class="{d.id}"
-          on:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
+          class="{d.key}"
+          use:mouseoverFocus="{(e) => dispatch('mousemove', { e, props: d })}"
           on:mousemove="{handleMousemove(d)}"
         >
           <line
