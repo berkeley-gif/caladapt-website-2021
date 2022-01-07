@@ -4,12 +4,14 @@
   export let dimension = 60;
 
   let name = "moon";
+
   $: attributes = {
-    id: `icon-${name}`,
     width: dimension,
     height: dimension,
-    role: "img",
-    "aria-labelledby": `icon-title-${name}`,
+    role: title ? "img" : "presentation",
+    ...(!title && { "aria-hidden": true }),
+    ...(title && { "aria-labelledby": `icon-title-${name}` }),
+    ...(title && { id: `icon-${name}` }),
     ...(style && { style }),
   };
 </script>
@@ -20,7 +22,9 @@
   viewBox="0 0 32 32"
   {...attributes}
 >
-  <title id="{`icon-title-${name}`}">{title ? title : `${name} icon`}</title>
+  {#if title}
+    <title id="{`icon-title-${name}`}">{title}</title>
+  {/if}
   <defs>
     <radialGradient id="gradient-moon">
       <stop offset="0" style="stop-color:#CCE0F4"></stop>

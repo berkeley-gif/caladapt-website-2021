@@ -4,12 +4,14 @@
   export let dimension = 60;
 
   let name = "sea";
+
   $: attributes = {
-    id: `icon-${name}`,
     width: dimension,
     height: dimension,
-    role: "img",
-    "aria-labelledby": `icon-title-${name}`,
+    role: title ? "img" : "presentation",
+    ...(!title && { "aria-hidden": true }),
+    ...(title && { "aria-labelledby": `icon-title-${name}` }),
+    ...(title && { id: `icon-${name}` }),
     ...(style && { style }),
   };
 </script>
@@ -20,7 +22,9 @@
   viewBox="0 0 62 62"
   {...attributes}
 >
-  <title id="{`icon-title-${name}`}">{title ? title : `${name} icon`}</title>
+  {#if title}
+    <title id="{`icon-title-${name}`}">{title}</title>
+  {/if}
   <defs id="defs4">
     <linearGradient
       gradientTransform="matrix(1.9354839,0,0,1.9354839,0.99999955,0.99999955)"
