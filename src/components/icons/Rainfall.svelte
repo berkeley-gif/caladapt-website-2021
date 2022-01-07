@@ -11,7 +11,6 @@
     role: title ? "img" : "presentation",
     ...(!title && { "aria-hidden": true }),
     ...(title && { "aria-labelledby": `icon-title-${name}` }),
-    ...(title && { id: `icon-${name}` }),
     ...(style && { style }),
   };
 </script>
