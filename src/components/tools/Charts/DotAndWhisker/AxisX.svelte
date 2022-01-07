@@ -3,7 +3,7 @@
 
   const { width, height, padding, rScale } = getContext("LayerCake");
 
-  export let formatTick;
+  export let formatTick = (d) => d;
 
   $: $rScale.rangeRound([0, $width]);
 </script>
