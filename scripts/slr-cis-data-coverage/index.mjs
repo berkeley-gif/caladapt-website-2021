@@ -93,12 +93,14 @@ async function dissolveLayers(layers) {
       -explode
       -dissolve2
       -o geojson-type=FeatureCollection 
+      precision=0.001
       ${OUTFILE_PATH}/${filename}`;
-    const error = await mapshaper.runCommands(cmd, { "input.geojson": values });
-    if (error) {
+    try {
+      await mapshaper.runCommands(cmd, { "input.geojson": values });
+    } catch (error) {
       console.log(`error writing ${filename}: `, error);
-    } else {
-      console.log(`wrote ${filename}`);
+      await $`exit 1`;
     }
+    console.log(`wrote ${filename}`);
   }
 }
