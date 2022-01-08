@@ -11,9 +11,9 @@ import mapshaper from "mapshaper";
 
 const API_BASE_URL = "https://api.cal-adapt.org/api/rstores";
 const LAYER_PARAMS = new Map([
-  ["cosmos", "name=cosmos+flooding+mosaic"],
-  ["calflod3d_5m", "slug=calflod&slug=tile&xpixsize=5"],
-  ["calflod3d_50m", "slug=calflod3dtfs_50m&slug=mosaic&xpixsize=50"],
+  ["cosmos", "slug=cosmosflooding"],
+  ["calflod3d_5m", "slug=calflod3dtfs_5m&slug=tile&xpixsize=5"],
+  ["calflod3d_50m", "slug=calflod3dtfs_50m"],
 ]);
 const OUTFILE_PATH = "../../static/data";
 
