@@ -111,7 +111,8 @@ module.exports = {
           use: {
             loader: "svelte-loader",
             options: {
-              css: false,
+              emitCss: false,
+              hotReload: false,
               generate: "ssr",
               hydratable: true,
               dev,
