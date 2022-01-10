@@ -40,8 +40,7 @@ async function getData(name) {
       ).json();
     }
   } catch (error) {
-    console.log(error);
-    await $`exit 1`;
+    handleError(null, error);
   }
 }
 
@@ -128,6 +127,10 @@ async function makeCentroids(layers) {
 }
 
 async function handleError(filename, error) {
-  console.log(`error writing ${filename}: `, error);
+  if (filename) {
+    console.log(`error writing ${filename}: `, error);
+  } else {
+    console.log(`error: `, error);
+  }
   await $`exit 1`;
 }
