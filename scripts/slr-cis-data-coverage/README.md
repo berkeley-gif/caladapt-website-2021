@@ -7,3 +7,5 @@ npm run slr-cis-data
 ```
 
 GeoJSON files (one for each data source) will be output in `/static/data/`.
+
+**NOTE**: It's recommended to run this script on a device that uses an Linux or Linux like OS, not Windows.
