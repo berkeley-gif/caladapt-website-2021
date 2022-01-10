@@ -1,6 +1,7 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
   import { raise } from "layercake";
+  import { mouseoutBlur, mouseoverFocus } from "../Shared/events";
 
   export let data;
 
@@ -25,14 +26,14 @@
 <g
   class="rl-group"
   transform="translate(-{$padding.left}, 0)"
-  on:mouseout="{() => dispatch('mouseout')}"
+  use:mouseoutBlur="{() => dispatch('mouseout')}"
 >
   {#each data as [group, values]}
     <g class="{group}" transform="translate({$rScale(group)},0)">
       {#each values as d}
         <g
           class="{d.id}"
-          on:mouseover="{(e) => dispatch('mousemove', { e, props: d })}"
+          use:mouseoverFocus="{(e) => dispatch('mousemove', { e, props: d })}"
           on:mousemove="{handleMousemove(d)}"
         >
           <line
