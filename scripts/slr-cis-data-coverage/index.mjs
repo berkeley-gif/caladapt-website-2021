@@ -9,11 +9,14 @@ import { $ } from "zx";
 import fetch from "node-fetch";
 import mapshaper from "mapshaper";
 
+const COSMOS = "cosmos";
+const CALFLOD5m = "calflod3d_5m";
+const CALFLOD50m = "calflod3d_50m";
 const API_BASE_URL = "https://api.cal-adapt.org/api/rstores";
 const LAYER_PARAMS = new Map([
-  ["cosmos", "slug=cosmosflooding"],
-  ["calflod3d_5m", "slug=calflod3dtfs_5m&slug=tile&xpixsize=5"],
-  ["calflod3d_50m", "slug=calflod3dtfs_50m"],
+  [COSMOS, "slug=cosmosflooding"],
+  [CALFLOD5m, "slug=calflod3dtfs_5m&slug=tile&xpixsize=5"],
+  [CALFLOD50m, "slug=calflod3dtfs_50m"],
 ]);
 const OUTFILE_PATH = "../../static/data";
 
@@ -23,6 +26,7 @@ async function main() {
   const data = await setLayersData();
   const processed = processLayers(data);
   await dissolveLayers(processed);
+  await makeCentroids(processed);
   await $`exit 0`;
 }
 
@@ -98,9 +102,33 @@ async function dissolveLayers(layers) {
     try {
       await mapshaper.runCommands(cmd, { "input.geojson": values });
     } catch (error) {
-      console.log(`error writing ${filename}: `, error);
-      await $`exit 1`;
+      await handleError(filename, error);
     }
     console.log(`wrote ${filename}`);
   }
+}
+
+async function makeCentroids(layers) {
+  const filename = `${CALFLOD5m}-centroids.geojson`;
+  const values = layers.get(CALFLOD5m);
+  const cmd = `-i input.geojson
+    -proj init=EPSG:4326 EPSG:4326
+    -explode
+    -points centroid
+    -o geojson-type=FeatureCollection 
+    drop-table
+    precision=0.001
+    ${OUTFILE_PATH}/${filename}
+  `;
+  try {
+    await mapshaper.runCommands(cmd, { "input.geojson": values });
+  } catch (error) {
+    await handleError(filename, error);
+  }
+  console.log(`wrote ${filename}`);
+}
+
+async function handleError(filename, error) {
+  console.log(`error writing ${filename}: `, error);
+  await $`exit 1`;
 }
