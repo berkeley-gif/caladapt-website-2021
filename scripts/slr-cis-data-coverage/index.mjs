@@ -5,8 +5,7 @@
  * Handles creating the geojson for the data coverage map for the SLR CIS tool
  */
 
-import { $ } from "zx";
-import fetch from "node-fetch";
+import { $, fetch } from "zx";
 import mapshaper from "mapshaper";
 
 const COSMOS = "cosmos";
@@ -81,7 +80,7 @@ function toGeoJson(geometries) {
 function processLayers(layers) {
   const processed = new Map();
   for (let [name, values] of layers.entries()) {
-    if (name !== "calflod3d_5m") {
+    if (name !== CALFLOD5m) {
       values = toGeoJson(dedupeGeoms(values.results));
     }
     processed.set(name, values);
