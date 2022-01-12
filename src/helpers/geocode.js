@@ -173,9 +173,9 @@ export const searchFeature = async (searchStr, boundaryId) => {
   return results;
 };
 
-export const getStationById = async (id, layerId) => {
+export const getStationById = async (id, layerId, params = {}) => {
   const url = `${apiEndpoint}/${layerId}/${id}`;
-  const [response, error] = await handleXHR(fetchData(url));
+  const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
     throw new Error(error.message);
   }
