@@ -19,3 +19,14 @@ export const toBBoxPolygon = (coords) => {
     return bboxPolygon(coords);
   }
 };
+
+export const getGeoJson = (layers) =>
+  Promise.all(
+    layers.map(
+      async (layer) =>
+        await fetch(
+          // TODO: rename static geojson files to include "tfs"
+          `/data/${layer.replace("tfs", "")}-dissolved.geojson`
+        ).then((res) => res.json())
+    )
+  );

@@ -2,7 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { debounce } from "~/helpers/utilities";
   import { Map, NavigationControl } from "~/components/tools/Map";
-  import RasterLayers from "./Rasters";
+  import RasterLayers from "./Rasters.svelte";
+  import TileIndexes from "./TileIndexes.svelte";
 
   export let dataLayersAugmented;
   export let bbox;
@@ -70,5 +71,6 @@
   >
     <NavigationControl />
     <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
+    <TileIndexes />
   </Map>
 {/if}
