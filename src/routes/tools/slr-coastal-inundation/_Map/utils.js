@@ -8,13 +8,13 @@ export class MapLayerHandler {
    * @param {Object} options.map - the mapboxgl.js map instance
    * @param {string|undefined} options.beforeId - the layer id where this layer should be inserted
    * @param {Object} paintProps - the layer style props
-   * @param {string} type - the type of layer, e.g. "raster", "geojson"
+   * @param {string} layerType - the type of layer, e.g. "raster", "geojson"
    */
-  constructor({ map, beforeId, paintProps, type }) {
+  constructor({ map, beforeId, paintProps, layerType }) {
     this.map = map;
     this.beforeId = beforeId;
     this.paintProps = paintProps;
-    this.type = type;
+    this.layerType = layerType;
   }
 
   _getSourceId(id) {
@@ -43,7 +43,7 @@ export class MapLayerHandler {
   }
 
   _getLayerDef(id, sourceId, paint, layout) {
-    const type = this.type;
+    const type = this.layerType;
     return {
       id,
       source: sourceId,
@@ -77,10 +77,11 @@ export class MapLayerHandler {
     }
   }
 
-  addMapLayer(id, url, index, visibility) {
+  // url should be something else here, like data or resource
+  addMapLayer(id, asset, index, visibility) {
     const layerId = this._getLayerId(id, index);
     const sourceId = this._getSourceId(layerId);
-    const source = this._getSourceDef(url);
+    const source = this._getSourceDef(asset);
     const layer = this._getLayerDef(layerId, sourceId, this.paintProps, {
       visibility,
     });
@@ -131,15 +132,15 @@ export class MapLayerHandler {
     }
   }
 
-  get type() {
-    return this._type;
+  get layerType() {
+    return this._layerType;
   }
 
-  set type(value) {
-    if (value === "raster" || value === "geojson") {
-      this._type = value;
+  set layerType(value) {
+    if (value === "raster" || value === "fill") {
+      this._layerType = value;
     } else {
-      throw new Error("layer type must be raster or geojson");
+      throw new Error("layerType must be 'raster' or 'fill'");
     }
   }
 }
