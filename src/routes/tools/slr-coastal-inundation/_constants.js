@@ -7,6 +7,11 @@ export const DL_Calflod50m = "calflod3dtfs_50m";
 export const VISIBLE = "visible";
 export const NONE = "none";
 
+export const LAYER_COLORS = new Map([
+  ["rsgreen", "#5DFA25"],
+  ["rsblue", "#25C7FA"],
+]);
+
 export const DEFAULT_CENTER = [-122.2813, 37.7813];
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
