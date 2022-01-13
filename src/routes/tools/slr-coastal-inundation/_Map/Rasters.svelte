@@ -37,7 +37,7 @@
     map,
     beforeId,
     paintProps,
-    type: "raster",
+    layerType: "raster",
   });
 
   $: rasterLayersProps = dataLayers
