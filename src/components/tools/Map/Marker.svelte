@@ -1,5 +1,5 @@
 <script>
-  import { getContext, onDestroy, onMount } from "svelte";
+  import { getContext, onDestroy } from "svelte";
   import { contextKey } from "./../../../helpers/mapbox";
 
   const { getMap, getMapbox } = getContext(contextKey);
