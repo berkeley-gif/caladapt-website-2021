@@ -12,7 +12,8 @@
   // initial map view
   const lng = -122.2813;
   const lat = 37.7813;
-  const zoom = 9;
+  let zoom = 9;
+  $: console.log("map zoom: ", zoom);
 
   const dispatch = createEventDispatcher();
 
@@ -39,6 +40,10 @@
     mbGlMap.setStyle(curStyleUrl);
   }
 
+  $: if (mapReady) {
+    mbGlMap.on("zoomend", handleZoomend);
+  }
+
   function handleMoveend() {
     if (mapReady) {
       const {
@@ -47,6 +52,10 @@
       } = mbGlMap.getBounds();
       dispatch("moveend", [xMin, yMin, xMax, yMax]);
     }
+  }
+
+  function handleZoomend() {
+    zoom = mbGlMap.getZoom();
   }
 
   function handleMapReady({ detail }) {
@@ -70,7 +79,13 @@
     on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
-    <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
-    <TileIndexes />
+
+    {#if zoom >= 7}
+      <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
+    {/if}
+
+    {#if zoom < 7}
+      <TileIndexes mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
+    {/if}
   </Map>
 {/if}
