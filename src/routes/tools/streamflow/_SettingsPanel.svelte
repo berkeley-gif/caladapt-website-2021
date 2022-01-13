@@ -1,27 +1,30 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { NumberInput } from "carbon-components-svelte";
 
-  import { PRIORITY_10_MODELS, DEFAULT_SCENARIOS } from "../_common/constants";
+  import {
+    PRIORITY_10_MODELS,
+    DEFAULT_SCENARIOS,
+    MONTHS_LIST,
+  } from "../_common/constants";
   import {
     INDICATOR_DESCRIPTION,
     SELECT_STATION_DESCRIPTION,
   } from "./_constants";
 
   import {
-    SelectClimvar,
+    RadioBtnGroup,
     SelectScenario,
     SelectModels,
+    SelectMonth,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
 
   import { locationStore, scenarioStore, modelsStore } from "../_common/stores";
-  import { indicatorList, indicatorStore } from "./_store";
+  import { indicatorList, indicatorStore, selectedMonthsStore } from "./_store";
 
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
-  const { indicator } = indicatorStore;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -36,11 +39,16 @@
   }
 
   function changeIndicator(e) {
-    indicatorStore.set(e.detail.id);
+    console.log(e.detail, "changeindicator");
+    indicatorStore.set(e.detail);
   }
 
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds);
+  }
+
+  function changeSelectedMonths(e) {
+    selectedMonthsStore.set(e.detail);
   }
 </script>
 
@@ -62,12 +70,21 @@
 </div>
 
 <div class="block">
-  <SelectClimvar
+  <RadioBtnGroup
     title="Select Indicator"
-    selectedId="{$indicatorStore}"
+    selected="{$indicatorStore}"
     items="{indicatorList}"
     on:change="{changeIndicator}"
   />
+  {#if $indicatorStore === "annual"}
+    <div class="spacing--v-16"></div>
+    <SelectMonth
+      multi="{true}"
+      items="{MONTHS_LIST}"
+      selectedId="{$selectedMonthsStore}"
+      on:change="{changeSelectedMonths}"
+    />
+  {/if}
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
