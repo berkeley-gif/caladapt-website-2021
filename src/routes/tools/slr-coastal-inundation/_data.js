@@ -22,11 +22,12 @@ export const toBBoxPolygon = (coords) => {
 
 export const getGeoJson = (layers) =>
   Promise.all(
-    layers.map(
-      async (layer) =>
-        await fetch(
-          // TODO: rename static geojson files to include "tfs"
-          `/data/${layer.replace("tfs", "")}-dissolved.geojson`
-        ).then((res) => res.json())
+    layers.map(async (layer) =>
+      Object.assign(
+        { id: layer },
+        await fetch(`/data/${layer}-dissolved.geojson`).then((res) =>
+          res.json()
+        )
+      )
     )
   );
