@@ -42,10 +42,10 @@ export class MapLayerHandler {
     return source;
   }
 
-  _getLayerDef(id, sourceId, paint, layout) {
+  _getLayerDef(layerId, sourceId, paint, layout) {
     const type = this.layerType;
     return {
-      id,
+      id: layerId,
       source: sourceId,
       type,
       paint: paint || {},
@@ -77,7 +77,6 @@ export class MapLayerHandler {
     }
   }
 
-  // url should be something else here, like data or resource
   addMapLayer(id, asset, index, visibility) {
     const layerId = this._getLayerId(id, index);
     const sourceId = this._getSourceId(layerId);
