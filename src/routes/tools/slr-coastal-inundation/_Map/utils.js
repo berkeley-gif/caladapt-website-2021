@@ -1,17 +1,26 @@
 /**
- * Class representing a MapboxGLJS layer
+ * Utility Class for handling adding and removing MapboxGLJS map layers
  */
 export class MapLayerHandler {
   /**
    *
    * @param {Object} options
-   * @param {Object} options.map - the mapboxgl.js map instance
-   * @param {string|undefined} options.beforeId - the layer id where this layer should be inserted
-   * @param {Object} paintProps - the layer style props
-   * @param {string} layerType - the type of layer, e.g. "raster" or "fill"
+   * @param {Object} options.map - required: the mapboxgl.js map instance
+   * @param {string} layerType - required: the type of layer, e.g. "raster"
+   * @param {string|undefined} options.beforeId - optional: the layer id where
+   *  this layer should be inserted below in the layer stacking z-order
+   * @param {Object} paintProps - optional: the layer style props
    */
-  constructor({ map, beforeId, layerType }) {
+  constructor({ map, beforeId, layerType, debug }) {
+    // limits what types of layers the MapLayerHandler accepts
     this.permittedLayers = new Set(["raster", "fill", "circle"]);
+
+    // enables console.logging for debugging purposes in some methods
+    this.debug =
+      debug !== undefined ? debug : process.env.NODE_ENV !== "production";
+
+    // note: these properties may also be set outside of the constructor
+    // but are not intended to be, doing so may have unintended consequences.
     this.map = map;
     this.beforeId = beforeId;
     this.layerType = layerType;
@@ -43,11 +52,10 @@ export class MapLayerHandler {
   }
 
   _getLayerDef(layerId, sourceId, paint, layout) {
-    const type = this.layerType;
     return {
       id: layerId,
       source: sourceId,
-      type,
+      type: this.layerType,
       paint: paint || {},
       layout: layout || {},
     };
@@ -56,6 +64,8 @@ export class MapLayerHandler {
   _addLayer(layerId, layerDef, beforeId) {
     if (!this.map.getLayer(layerId)) {
       this.map.addLayer(layerDef, beforeId);
+    } else {
+      this.warn("map layer already exists, skipping");
     }
   }
 
@@ -68,12 +78,20 @@ export class MapLayerHandler {
   _addSource(sourceId, sourceDef) {
     if (!this.map.getSource(sourceId)) {
       this.map.addSource(sourceId, sourceDef);
+    } else {
+      this.warn("map source already exists, skipping");
     }
   }
 
   _removeSource(sourceId) {
     if (this.map.getSource(sourceId)) {
       this.map.removeSource(sourceId);
+    }
+  }
+
+  _warn(message) {
+    if (this.debug) {
+      console.warn(message);
     }
   }
 
@@ -115,7 +133,7 @@ export class MapLayerHandler {
     if (typeof value === "string" || value === undefined) {
       this._beforeId = value;
     } else {
-      throw new Error("invalid beforeId");
+      throw new Error("invalid beforeId value");
     }
   }
 
@@ -127,7 +145,19 @@ export class MapLayerHandler {
     if (this.permittedLayers.has(value)) {
       this._layerType = value;
     } else {
-      throw new Error("layerType must be 'raster' or 'fill'");
+      throw new Error("Invalid layerType value");
+    }
+  }
+
+  get debug() {
+    return this._debug;
+  }
+
+  set debug(value) {
+    if (typeof value === "boolean") {
+      this._debug = value;
+    } else {
+      throw new Error("Invalid debug value");
     }
   }
 }
