@@ -147,8 +147,6 @@
     class="bx--aspect-ratio bx--aspect-ratio--16x9 graphic block"
   >
     <Map
-      timeFrame="{$tfTileLabel}"
-      scenario="{$floodScenarioStore}"
       dataLayersAugmented="{$dataLayersAugmentedStore}"
       bbox="{$location.bbox && $location.bbox}"
       mapStyle="{mapStyle}"
