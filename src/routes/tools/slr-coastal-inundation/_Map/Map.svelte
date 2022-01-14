@@ -1,7 +1,8 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
-  import { Map, NavigationControl } from "~/components/tools/Map";
+  import { getGeoJson } from "../_data";
+  import { Map as SlippyMap, NavigationControl } from "~/components/tools/Map";
   import RasterLayers from "./Rasters.svelte";
   import TileIndexes from "./TileIndexes.svelte";
 
@@ -22,6 +23,7 @@
   let mapInstance;
   let mbGlMap;
   let curStyleUrl;
+  let geojsons = new Map();
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
@@ -69,10 +71,19 @@
   function handleMapDestroy() {
     mbGlMap = null;
   }
+
+  onMount(async () => {
+    try {
+      const data = await getGeoJson(dataLayersAugmented.map((d) => d.id));
+      geojsons = new Map(data.map((d) => [d.id, d]));
+    } catch (error) {
+      console.log(error);
+    }
+  });
 </script>
 
 {#if mapStyle}
-  <Map
+  <SlippyMap
     bind:this="{mapInstance}"
     lng="{lng}"
     lat="{lat}"
@@ -97,7 +108,8 @@
         mapStyle="{mapStyle}"
         beforeId="{beforeId}"
         dataLayers="{dataLayersAugmented}"
+        geojsons="{geojsons}"
       />
     {/if}
-  </Map>
+  </SlippyMap>
 {/if}

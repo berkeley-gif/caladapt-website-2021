@@ -1,20 +1,17 @@
 <script>
-  import { onMount, onDestroy, getContext } from "svelte";
+  import { onDestroy, getContext } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
-  import { getGeoJson } from "../_data";
   import { MapLayerHandler } from "./utils";
   import { VISIBLE, NONE, LAYER_COLORS } from "../_constants";
 
   export let mapStyle;
   export let beforeId;
   export let dataLayers = [];
+  export let geojsons = new Map();
 
   let prevMapStyle = mapStyle;
   let prevLayerProps = [];
-  let geojsons = new Map();
-
-  const layers = dataLayers.map((d) => d.id);
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
@@ -92,15 +89,6 @@
       prevMapStyle = mapStyle;
     }
   }
-
-  onMount(async () => {
-    try {
-      const data = await getGeoJson(layers);
-      geojsons = new Map(data.map((d) => [d.id, d]));
-    } catch (error) {
-      console.log(error);
-    }
-  });
 
   onDestroy(() => {
     map.off("styledata", handleStyleDataChange);
