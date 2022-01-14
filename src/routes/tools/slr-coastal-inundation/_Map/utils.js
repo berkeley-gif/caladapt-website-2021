@@ -11,6 +11,7 @@ export class MapLayerHandler {
    * @param {string} layerType - the type of layer, e.g. "raster" or "fill"
    */
   constructor({ map, beforeId, layerType }) {
+    this.permittedLayers = new Set(["raster", "fill", "circle"]);
     this.map = map;
     this.beforeId = beforeId;
     this.layerType = layerType;
@@ -123,7 +124,7 @@ export class MapLayerHandler {
   }
 
   set layerType(value) {
-    if (value === "raster" || value === "fill") {
+    if (this.permittedLayers.has(value)) {
       this._layerType = value;
     } else {
       throw new Error("layerType must be 'raster' or 'fill'");
