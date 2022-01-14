@@ -34,6 +34,9 @@
       ? undefined
       : "settlement-subdivision-label";
 
+  $: beforeIdCentroids =
+    mapStyle && mapStyle.includes("satellite") ? undefined : "state-label";
+
   // TODO: remove before deploying to prod
   $: if (mapReady && typeof window !== undefined) {
     window.map = mbGlMap;
@@ -119,7 +122,7 @@
     {#if zoom <= 6}
       <TileCentroids
         mapStyle="{mapStyle}"
-        beforeId="{beforeId}"
+        beforeId="{beforeIdCentroids}"
         dataLayers="{dataLayersAugmented}"
         centroids="{centroids}"
       />
