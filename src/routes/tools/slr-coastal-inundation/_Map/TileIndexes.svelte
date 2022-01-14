@@ -1,5 +1,5 @@
 <script>
-  import { onMount, getContext } from "svelte";
+  import { onMount, onDestroy, getContext } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
   import { getGeoJson } from "../_data";
@@ -18,12 +18,11 @@
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
-  // to do: colors should be dynamic
-  const paintProps = {
-    "fill-color": "#25c7fa",
+  const getPaintProps = (color) => ({
+    "fill-color": color,
     "fill-opacity": 0.5,
-    "fill-outline-color": "#25c7fa",
-  };
+    "fill-outline-color": color,
+  });
 
   const mapLayersProps = ({ id, checked, color }) => ({
     id,
@@ -44,41 +43,49 @@
   $: layerHandler = new MapLayerHandler({
     map,
     beforeId,
-    paintProps,
     layerType: "fill",
   });
 
   $: layerProps = Boolean(geojsons.size) && dataLayers.map(mapLayersProps);
 
   $: if (layerProps && !equal(layerProps, prevLayerProps)) {
-    console.log("adding/updating tile index layers...");
     removePreviousLayers();
     addGeoJsonLayers();
     prevLayerProps = layerProps;
   }
 
   function addGeoJsonLayers() {
-    layerProps.forEach(({ id, visibility, data }) => {
-      layerHandler.addMapLayer(id, data, 0, visibility);
+    layerProps.forEach(({ id, visibility, data, color }) => {
+      layerHandler.addMapLayer({
+        id,
+        asset: data,
+        visibility,
+        paintProps: getPaintProps(color),
+      });
     });
   }
 
   function removeGeoJsonLayers() {
     layerProps.forEach(({ id }) => {
-      layerHandler.removeMapLayer(id, 0);
+      layerHandler.removeMapLayer(id);
     });
   }
 
   function removePreviousLayers() {
     prevLayerProps.forEach(({ id }) => {
-      layerHandler.removeMapLayer(id, 0);
+      layerHandler.removeMapLayer(id);
     });
   }
 
   function reapplyGeoJsonLayers() {
-    layerProps.forEach(({ id, visibility, data }) => {
-      layerHandler.removeMapLayer(id, 0);
-      layerHandler.addMapLayer(id, data, 0, visibility);
+    layerProps.forEach(({ id, visibility, data, color }) => {
+      layerHandler.removeMapLayer(id);
+      layerHandler.addMapLayer({
+        id,
+        asset: data,
+        visibility,
+        paintProps: getPaintProps(color),
+      });
     });
   }
 
@@ -97,10 +104,11 @@
     } catch (error) {
       console.log(error);
     }
+  });
 
-    return () => {
-      map.off("styledata", handleStyleDataChange);
-      removeGeoJsonLayers();
-    };
+  onDestroy(() => {
+    map.off("styledata", handleStyleDataChange);
+    removeGeoJsonLayers();
+    removePreviousLayers();
   });
 </script>
