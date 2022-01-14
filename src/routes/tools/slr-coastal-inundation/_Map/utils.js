@@ -8,12 +8,11 @@ export class MapLayerHandler {
    * @param {Object} options.map - the mapboxgl.js map instance
    * @param {string|undefined} options.beforeId - the layer id where this layer should be inserted
    * @param {Object} paintProps - the layer style props
-   * @param {string} layerType - the type of layer, e.g. "raster", "geojson"
+   * @param {string} layerType - the type of layer, e.g. "raster" or "fill"
    */
-  constructor({ map, beforeId, paintProps, layerType }) {
+  constructor({ map, beforeId, layerType }) {
     this.map = map;
     this.beforeId = beforeId;
-    this.paintProps = paintProps;
     this.layerType = layerType;
   }
 
@@ -21,8 +20,8 @@ export class MapLayerHandler {
     return `${id}-source`;
   }
 
-  _getLayerId(id, index) {
-    return `${id}-${index || 0}-layer`;
+  _getLayerId(id, index = 0) {
+    return `${id}-${index}-layer`;
   }
 
   _getSourceDef(value) {
@@ -77,11 +76,11 @@ export class MapLayerHandler {
     }
   }
 
-  addMapLayer(id, asset, index, visibility) {
+  addMapLayer({ id, asset, visibility, paintProps, index }) {
     const layerId = this._getLayerId(id, index);
     const sourceId = this._getSourceId(layerId);
     const source = this._getSourceDef(asset);
-    const layer = this._getLayerDef(layerId, sourceId, this.paintProps, {
+    const layer = this._getLayerDef(layerId, sourceId, paintProps, {
       visibility,
     });
     this._addSource(sourceId, source);
@@ -116,18 +115,6 @@ export class MapLayerHandler {
       this._beforeId = value;
     } else {
       throw new Error("invalid beforeId");
-    }
-  }
-
-  get paintProps() {
-    return this._paintProps;
-  }
-
-  set paintProps(value) {
-    if (typeof value === "object") {
-      this._paintProps = value;
-    } else {
-      throw new Error("invalid paintProps");
     }
   }
 
