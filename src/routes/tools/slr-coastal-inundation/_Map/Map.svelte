@@ -5,6 +5,7 @@
   import { Map as SlippyMap, NavigationControl } from "~/components/tools/Map";
   import RasterLayers from "./Rasters.svelte";
   import TileIndexes from "./TileIndexes.svelte";
+  import TileCentroids from "./TileCentroids.svelte";
 
   export let dataLayersAugmented;
   export let bbox;
@@ -112,6 +113,15 @@
         beforeId="{beforeId}"
         dataLayers="{dataLayersAugmented}"
         geojsons="{geojsons}"
+      />
+    {/if}
+
+    {#if zoom <= 6}
+      <TileCentroids
+        mapStyle="{mapStyle}"
+        beforeId="{beforeId}"
+        dataLayers="{dataLayersAugmented}"
+        centroids="{centroids}"
       />
     {/if}
   </SlippyMap>
