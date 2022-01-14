@@ -99,7 +99,7 @@ export class MapLayerHandler {
   }
 
   set map(value) {
-    if (typeof value === "object") {
+    if (typeof value === "object" && typeof value.version === "string") {
       this._map = value;
     } else {
       throw new Error("map must be a mapboxgljs map instance");
