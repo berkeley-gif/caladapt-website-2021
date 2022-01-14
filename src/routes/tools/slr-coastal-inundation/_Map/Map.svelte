@@ -24,6 +24,7 @@
   let mbGlMap;
   let curStyleUrl;
   let geojsons = new Map();
+  let centroids;
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
@@ -74,8 +75,10 @@
 
   onMount(async () => {
     try {
-      const data = await getGeoJson(dataLayersAugmented.map((d) => d.id));
+      const layerIds = dataLayersAugmented.map((d) => d.id);
+      const data = await getGeoJson(layerIds);
       geojsons = new Map(data.map((d) => [d.id, d]));
+      centroids = await getGeoJson(layerIds.find((id) => id.includes("5m")));
     } catch (error) {
       console.log(error);
     }

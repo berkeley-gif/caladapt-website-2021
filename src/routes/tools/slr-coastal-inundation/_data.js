@@ -20,14 +20,18 @@ export const toBBoxPolygon = (coords) => {
   }
 };
 
-export const getGeoJson = (layers) =>
-  Promise.all(
-    layers.map(async (layer) =>
-      Object.assign(
-        { id: layer },
-        await fetch(`/data/${layer}-dissolved.geojson`).then((res) =>
-          res.json()
+export const getGeoJson = (ids) => {
+  if (Array.isArray(ids) && ids.length) {
+    return Promise.all(
+      ids.map(async (layer) =>
+        Object.assign(
+          { id: layer },
+          await fetch(`/data/${layer}-dissolved.geojson`).then((res) =>
+            res.json()
+          )
         )
       )
-    )
-  );
+    );
+  }
+  return fetch(`/data/${ids}-centroids.geojson`).then((res) => res.json());
+};
