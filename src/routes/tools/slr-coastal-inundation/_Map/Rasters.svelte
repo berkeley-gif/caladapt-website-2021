@@ -38,7 +38,9 @@
   $: rasterLayersProps = dataLayers
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
     .map(mapLayersProps);
+  $: console.log(rasterLayersProps);
 
+  // TODO: figure out why 5m layer isn't added when switching from z6 to z7
   $: if (!equal(rasterLayersProps, prevRasterLayerProps)) {
     removePreviousRasterLayers();
     addRasterLayers();
@@ -104,5 +106,6 @@
   onDestroy(() => {
     map.off("styledata", handleStyleDataChange);
     removeRasterLayers();
+    removePreviousRasterLayers();
   });
 </script>
