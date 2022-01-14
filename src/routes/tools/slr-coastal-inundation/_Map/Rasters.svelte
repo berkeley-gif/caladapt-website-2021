@@ -36,7 +36,6 @@
   $: layerHandler = new MapLayerHandler({
     map,
     beforeId,
-    paintProps,
     layerType: "raster",
   });
 
@@ -53,7 +52,13 @@
   function addRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
       tileUrls.forEach((url, index) => {
-        layerHandler.addMapLayer(id, url, index, visibility);
+        layerHandler.addMapLayer({
+          id,
+          asset: url,
+          index,
+          visibility,
+          paintProps,
+        });
       });
     });
   }
@@ -62,7 +67,13 @@
     rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
       tileUrls.forEach((url, index) => {
         layerHandler.removeMapLayer(id, index);
-        layerHandler.addMapLayer(id, url, index, visibility);
+        layerHandler.addMapLayer({
+          id,
+          asset: url,
+          index,
+          visibility,
+          paintProps,
+        });
       });
     });
   }
