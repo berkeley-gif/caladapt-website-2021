@@ -25,6 +25,10 @@
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
+  $: beforeId =
+    mapStyle && mapStyle.includes("satellite")
+      ? undefined
+      : "settlement-subdivision-label";
 
   // TODO: remove before deploying to prod
   $: if (mapReady && typeof window !== undefined) {
@@ -81,11 +85,19 @@
     <NavigationControl />
 
     {#if zoom >= 7}
-      <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
+      <RasterLayers
+        mapStyle="{mapStyle}"
+        beforeId="{beforeId}"
+        dataLayers="{dataLayersAugmented}"
+      />
     {/if}
 
     {#if zoom < 7}
-      <TileIndexes mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
+      <TileIndexes
+        mapStyle="{mapStyle}"
+        beforeId="{beforeId}"
+        dataLayers="{dataLayersAugmented}"
+      />
     {/if}
   </Map>
 {/if}

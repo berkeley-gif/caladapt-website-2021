@@ -7,6 +7,7 @@
   import { VISIBLE, NONE, LAYER_COLORS } from "../_constants";
 
   export let mapStyle;
+  export let beforeId;
   export let dataLayers = [];
 
   let prevMapStyle = mapStyle;
@@ -34,11 +35,6 @@
   if (map && map.getStyle()) {
     map.on("styledata", handleStyleDataChange);
   }
-
-  $: beforeId =
-    mapStyle && mapStyle.includes("satellite")
-      ? undefined
-      : "settlement-subdivision-label";
 
   $: layerHandler = new MapLayerHandler({
     map,
