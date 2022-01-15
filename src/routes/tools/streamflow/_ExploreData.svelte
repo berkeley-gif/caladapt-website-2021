@@ -11,6 +11,7 @@
   } from "../_common/helpers";
   import { serialize } from "~/helpers/utilities";
   import { DEFAULT_STATION_LAYER } from "./_constants";
+  import { getBasinCenter } from "./_data";
 
   // Components
   import { Dashboard } from "~/components/tools/Partials";
@@ -26,17 +27,17 @@
     modelsStore,
     datasetStore,
     isFetchingStore,
-    dataStore,
   } from "../_common/stores";
-  import { climvarStore, indicatorStore } from "./_store";
+  import { climvarStore, indicatorStore, dataStore } from "./_store";
 
   const { location } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
-  const { data } = dataStore;
+  const { events, annual } = dataStore;
 
+  let data;
   let dataByDate;
   let showDownload = false;
   let showShare = false;
@@ -55,27 +56,22 @@
   let printContainer;
   let printSkipElements;
 
-  $: chartDescription =
-    $climvarStore === "tasmax"
-      ? $indicator.description
-      : $indicator.description.replace("extreme heat days", "warm nights");
+  $: chartDescription = $indicator.description;
+  $: console.log("events", $events);
+  $: console.log("annual", $annual);
 
   $: chartTitle = $location.title;
 
   $: formatFn = format(`.${$indicator.decimals}f`);
 
-  $: indicatorLabel =
-    $climvarStore === "tasmax"
-      ? $indicator.title
-      : $indicator.title.replace("Extreme Heat Days", "Warm Nights");
+  $: indicatorLabel = $indicator.title;
 
-  $: if ($data) {
-    if ($indicator.id === "timing") {
-      dataByDate = groupDataByDay(flattenData($data));
-    } else {
-      dataByDate = groupDataByYear(flattenData($data));
-    }
+  $: if ($indicator.id === "annual") {
+    data = $annual;
+    dataByDate = null;
   } else {
+    data = $events;
+    //dataByDate = groupDataByYear(flattenData(data));
     dataByDate = null;
   }
 
@@ -148,7 +144,7 @@
 
   function changeLocation(e) {
     showChangeLocation = false;
-    locationStore.updateLocation(e.detail.location);
+    locationStore.updateLocation(getBasinCenter(e.detail.location));
     console.log("location change");
   }
 </script>
@@ -183,22 +179,22 @@
     />
   </div> -->
 
-  <!--   <div slot="graphic" class="graphic block">
-    <ExtremeHeatChart
-      chartComponent="{$indicator.chartComponent}"
+  <div slot="graphic" class="graphic block">
+    <!--     <svelte:component
+      this="{$indicator.chartComponent}"
       data="{$data}"
       dataByDate="{dataByDate}"
-      formatFn="{formatFn}"
-      units="{$indicator.units}"
-      label="{indicatorLabel}"
-      dataSource="{$titles.join(', ')}"
-      on:showDownload="{loadDownload}"
-      on:showShare="{loadShare}"
-      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
+      yAxis="{{
+        key: 'value',
+        label: `${indicatorLabel}`,
+        domainMin: 0,
+        niceMax: 10,
+        tickFormat: formatFn,
+        units: `${$indicator.units}`,
+      }}"
       isFetching="{$isFetchingStore}"
-      chartDescription="{chartDescription}"
-    />
-  </div> -->
+    /> -->
+  </div>
 
   <div slot="settings" class="settings">
     <SettingsPanel

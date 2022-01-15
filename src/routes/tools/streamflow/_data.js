@@ -1,13 +1,25 @@
 // Node modules
-import { merge } from "d3-array";
+import { merge, rollups, sum } from "d3-array";
+import getCenter from "@turf/center";
+import { format } from "d3-format";
 
 // Helpers
 import config from "~/helpers/api-config";
-import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
-import { ENSEMBLES, OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
-import { buildEnvelope, convertAnnualRateToSum } from "../_common/helpers";
+import { handleXHR, fetchData, parseDateIso } from "~/helpers/utilities";
+import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
 
 const { apiEndpoint } = config.env.production;
+
+const transformResponse = function (response, throwNoData = true) {
+  if (!response) {
+    if (throwNoData) {
+      throw new Error("No data for this location");
+    } else {
+      return [];
+    }
+  }
+  return response.results.map((d) => ({ ...d, date: parseDateIso(d.time) }));
+};
 
 /**
  * The following 3 functions take the list of observed, models and ensemble
@@ -24,36 +36,19 @@ const { apiEndpoint } = config.env.production;
  */
 
 // The observed data is usually a single raster series, so only 1 slug
-const getObservedSeries = ({ climvarId }) => {
+const getObservedSeries = ({ climvarId, stationId }) => {
   return OBSERVED.map((d) => {
-    const slugs = [`${climvarId}_year_${d.id}`];
+    const slugs = [`${climvarId}_observed_monthly_${stationId}`];
     return { ...d, slugs, mark: "line", visible: true };
   });
 };
 
 // For each model, there are usually 2 raster series in the API,
 // the modeled historical (1950-2005) and modeled projections (2006-2099/2021)
-const getModelSeries = ({ climvarId, scenarioId, modelIds }) => {
+const getModelSeries = ({ climvarId, scenarioId, modelIds, stationId }) => {
   return PRIORITY_10_MODELS.filter((d) => modelIds.includes(d.id)).map((d) => {
-    const slugs = [
-      `${climvarId}_year_${d.id}_historical`,
-      `${climvarId}_year_${d.id}_${scenarioId}`,
-    ];
+    const slugs = [`${climvarId}_monthly_${d.id}_${scenarioId}_${stationId}`];
     return { ...d, slugs, mark: "line", visible: true };
-  });
-};
-
-// The ensemble has to be assembled from the max and min of 10/all models
-// Similar to the models, the models-max and models-min are 2 raster series each
-const getEnsembleSeries = ({ climvarId, scenarioId }) => {
-  return ENSEMBLES.filter((d) => d.id === `${scenarioId}_range`).map((d) => {
-    const slugs = [
-      `${climvarId}_year_models-min_historical`,
-      `${climvarId}_year_models-min_${scenarioId}`,
-      `${climvarId}_year_models-max_historical`,
-      `${climvarId}_year_models-max_${scenarioId}`,
-    ];
-    return { ...d, slugs, mark: "area", visible: true };
   });
 };
 
@@ -67,7 +62,7 @@ const getEnsembleSeries = ({ climvarId, scenarioId }) => {
  * @return {array}
  */
 const fetchEvents = async ({ slug, params, method = "GET" }) => {
-  const url = `${apiEndpoint}/series/${slug}/events/`;
+  const url = `${apiEndpoint}/tseries/${slug}/events/`;
   const [response, error] = await handleXHR(fetchData(url, params, method));
   if (error) {
     throw new Error(error.message);
@@ -83,25 +78,26 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-const fetchSeries = async ({ series, params, method = "GET", isRate }) => {
+const fetchSeries = async ({ series, params, method = "GET", monthIds }) => {
   try {
     const { slugs } = series;
     const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
     const responses = await Promise.all(promises);
-    const mergedResponses = merge(responses);
-    const values = mergedResponses.map(({ date, mean }) => ({
-      date,
-      value: isRate ? convertAnnualRateToSum({ date, value: mean }) : mean,
-    }));
-    if (!values.length) {
-      throw new Error(`${series.id}: No Data`);
-    }
+    const values = merge(responses);
     // For livneh, remove data values after 2006
     // because there are QA/QC issues with the data
     if (series.id === "livneh") {
+      const filteredValues = values
+        .filter((d) => d.date.getUTCFullYear() <= 2006)
+        .map((d) => {
+          return {
+            ...d,
+            value: (d.value * 1000) / 60.3707,
+          };
+        });
       return {
         ...series,
-        values: values.filter((d) => d.date.getUTCFullYear() <= 2006),
+        values: filteredValues,
       };
     }
     return { ...series, values };
@@ -120,16 +116,11 @@ const fetchSeries = async ({ series, params, method = "GET", isRate }) => {
  * @return {array}
  */
 
-export async function getObserved(
-  config,
-  params,
-  method = "GET",
-  isRate = false
-) {
+export async function getObserved(config, params, method = "GET") {
   try {
     const seriesList = getObservedSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, isRate })
+      fetchSeries({ series, params, method })
     );
     const data = await Promise.all(promises);
     return data;
@@ -138,39 +129,14 @@ export async function getObserved(
   }
 }
 
-export async function getModels(
-  config,
-  params,
-  method = "GET",
-  isRate = false
-) {
+export async function getModels(config, params, method = "GET") {
   try {
     const seriesList = getModelSeries(config);
     const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, isRate })
+      fetchSeries({ series, params, method })
     );
     const data = await Promise.all(promises);
     return data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-}
-
-export async function getEnsemble(
-  config,
-  params,
-  method = "GET",
-  isRate = false
-) {
-  try {
-    const seriesList = getEnsembleSeries(config);
-    const promises = seriesList.map((series) =>
-      fetchSeries({ series, params, method, isRate })
-    );
-    const data = await Promise.all(promises);
-    return data.map((d) => {
-      return { ...d, values: buildEnvelope(d.values) };
-    });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -184,28 +150,32 @@ export async function getEnsemble(
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({
-  location,
-  boundary,
-  imperial = true,
-  freq = "AS",
-}) {
-  const params = { imperial, freq };
-  let method;
-  switch (boundary.id) {
-    case "locagrid":
-      params.g = `Point(${location.center[0]} ${location.center[1]})`;
-      method = "GET";
-      return { params, method };
-    case "custom":
-      params.g = JSON.stringify(location.geometry);
-      params.stat = "mean";
-      method = "POST";
-      return { params, method };
-    default:
-      params.ref = `/api/${boundary.id}/${location.id}/`;
-      params.stat = "mean";
-      method = "GET";
-      return { params, method };
-  }
+export function getQueryParams() {
+  const params = { pagesize: 1800 };
+  return { params, method: "GET" };
 }
+
+export function getBasinCenter(feature) {
+  const { geometry } = getCenter(feature.geometry);
+  return { ...feature, geometry };
+}
+
+export const filterDataByMonths = (data, monthIds) => {
+  return data.map((series) => {
+    const filteredValues = series.values.filter(({ date }) =>
+      monthIds.includes(+date.getUTCMonth())
+    );
+    return { ...series, values: filteredValues };
+  });
+};
+
+export const aggregateMonthlyData = (data) => {
+  return data.map((series) => {
+    const aggregatedValues = rollups(
+      series.values,
+      (arr) => +format(".0f")(sum(arr, (d) => d.value)),
+      (dd) => dd.date.getUTCFullYear()
+    ).map(([year, value]) => ({ date: new Date(Date.UTC(year)), value }));
+    return { ...series, values: aggregatedValues };
+  });
+};

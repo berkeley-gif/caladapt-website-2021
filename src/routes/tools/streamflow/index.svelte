@@ -7,6 +7,7 @@
   import {
     DEFAULT_STATION_ID,
     DEFAULT_CLIMATE_VARIABLE,
+    DEFAULT_CLIMATE_INDICATOR,
     TOOL_SLUG,
   } from "./_constants";
 
@@ -42,16 +43,18 @@
     let initialConfig;
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
-      const { climvar, station, imperial } = query;
+      const { climvar, indicator, station, imperial } = query;
       initialConfig = {
         stationId: station,
         climvarId: climvar,
+        indicatorId: indicator,
         imperial: imperial === "true" ? true : false,
       };
     } else {
       initialConfig = {
         scenarioId: "rcp45",
         climvarId: DEFAULT_CLIMATE_VARIABLE,
+        indicatorId: DEFAULT_CLIMATE_INDICATOR,
         modelIds: ["HadGEM2-ES", "CNRM-CM5", "CanESM2", "MIROC5"],
         stationId: DEFAULT_STATION_ID,
         imperial: true,
@@ -72,7 +75,6 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
-  import getCenter from "@turf/center";
 
   // Helpers
   import { getStationById } from "~/helpers/geocode";
@@ -95,12 +97,16 @@
     modelsStore,
     unitsStore,
     locationStore,
-    dataStore,
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore } from "./_store";
-  import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
+  import { climvarStore, indicatorStore, dataStore } from "./_store";
+  import {
+    getObserved,
+    getModels,
+    getQueryParams,
+    getBasinCenter,
+  } from "./_data";
 
   export let initialConfig;
   export let tool;
@@ -134,21 +140,17 @@
     if (!appReady) return;
     if ($modelsStore.length === 0) return;
     try {
-      /*      const config = {
+      const config = {
         climvarId: $climvarStore,
         scenarioId: $scenarioStore,
         modelIds: $modelsStore,
+        stationId: $location.properties.symbol,
       };
-      const isRate = $climvarStore === "pr" ? true : false;
-      const { params, method } = getQueryParams({
-        location: $location,
-        imperial: true,
-      });
+      const { params, method } = getQueryParams();
       isFetchingStore.set(true);
-      const envelope = await getEnsemble(config, params, method, isRate);
-      const observed = await getObserved(config, params, method, isRate);
-      const modelsData = await getModels(config, params, method, isRate);
-      dataStore.set([...envelope, ...observed, ...modelsData]);*/
+      const observed = await getObserved(config, params, method);
+      const modelsData = await getModels(config, params, method);
+      dataStore.setEvents([...observed, ...modelsData]);
     } catch (err) {
       console.log("updateData", err);
       logException(err);
@@ -159,20 +161,22 @@
   }
 
   async function initApp(config) {
-    const { stationId, scenarioId, climvarId, modelIds, imperial } = config;
+    const {
+      stationId,
+      scenarioId,
+      indicatorId,
+      climvarId,
+      modelIds,
+      imperial,
+    } = config;
     climvarStore.set(climvarId);
+    indicatorStore.set(indicatorId);
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     // Set intial station
-    const station = await getStationById(stationId, "evtlocations", {
-      srs: 4326,
-    });
-    console.log("station", station);
-    const point = getCenter(station.geometry);
-    const newStation = { ...station, geometry: point.geometry };
-    console.log(newStation);
-    locationStore.updateLocation(newStation);
+    const station = await getStationById(stationId, "evtlocations");
+    locationStore.updateLocation(getBasinCenter(station));
     return;
   }
 
