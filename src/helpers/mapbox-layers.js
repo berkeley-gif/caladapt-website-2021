@@ -464,6 +464,22 @@ const data = [
       "circle-stroke-width": 2,
     },
   },
+  {
+    id: "evtlocations",
+    type: "symbol",
+    metadata: {
+      group: "stations",
+      title: "Central Valley Subbasins",
+    },
+    source: {
+      type: "geojson",
+      data: "https://api.cal-adapt.org/api/evtlocations/?pagesize=11&search=River&srs=4326&format=json",
+    },
+    layout: {
+      "icon-image": "circle-15",
+      "icon-allow-overlap": true,
+    },
+  },
 ];
 
 export default data;
