@@ -5,7 +5,7 @@ import { AvgRange } from "~/components/tools/Stats";
 export const TOOL_SLUG = "streamflow";
 
 export const DEFAULT_STATION_LAYER = layers.find(
-  (d) => d.id === "centralvalley_subbasins"
+  (d) => d.metadata.title === "Central Valley Subbasins"
 );
 export const DEFAULT_STATION_ID = 5;
 
@@ -41,6 +41,8 @@ export const CLIMATE_INDICATORS = [
 
 export const DEFAULT_CLIMATE_VARIABLE = CLIMATE_VARIABLES[0];
 export const DEFAULT_CLIMATE_INDICATOR = "annual";
+
+export const DEFAULT_SELECTED_MONTHS = [2, 3, 4];
 
 export const INDICATOR_DESCRIPTION = `
 <p>Indicators presented in this tool examine projected trends in four key characteristics of 
