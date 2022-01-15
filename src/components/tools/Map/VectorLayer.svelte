@@ -1,5 +1,6 @@
 <script>
   import { getContext, onDestroy, createEventDispatcher } from "svelte";
+  import getCenter from "@turf/center";
   import { contextKey, mapboxgl } from "./../../../helpers/mapbox";
 
   export let layer;
@@ -52,10 +53,16 @@
 
   if (enableClick) {
     map.on("click", layer.id, function (e) {
-      dispatch("overlayclick", e.features[0].id);
-      map.flyTo({
-        center: e.features[0].geometry.coordinates,
-      });
+      const feature = e.features[0];
+      dispatch("overlayclick", feature.id);
+      let center;
+      if (feature.geometry === "Point") {
+        center = feature.geometry.coordinates;
+      } else {
+        const pointFeature = getCenter(feature.geometry);
+        center = pointFeature.geometry.coordinates;
+      }
+      map.flyTo({ center });
     });
   }
 
