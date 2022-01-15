@@ -26,6 +26,8 @@
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
 
+  $: console.log("months", $selectedMonthsStore);
+
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
   }
