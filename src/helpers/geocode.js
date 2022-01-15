@@ -143,6 +143,8 @@ export const getTitle = (feature, layerId, placeName) => {
       return "Custom Boundary";
     case "hadisdstations":
       return `Weather Station at ${feature.properties.name}, ${feature.properties.city}, California`;
+    case "evtlocations":
+      return `${feature.properties.name}, California`;
     default:
       return placeName;
   }
@@ -283,7 +285,7 @@ export const searchFeature = async (searchStr, boundaryId) => {
   return results;
 };
 
-export const getStationById = async (id, layerId, params = {}) => {
+export const getStationById = async (id, layerId, params = { srs: 4326 }) => {
   const url = `${apiEndpoint}/${layerId}/${id}`;
   const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
