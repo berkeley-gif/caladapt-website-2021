@@ -5,8 +5,6 @@
 
   export let data;
 
-  let seriesVisibility;
-
   const legendItems = getContext("Legend");
   const { x, y, xScale, yScale, rScale, width, padding } =
     getContext("LayerCake");
