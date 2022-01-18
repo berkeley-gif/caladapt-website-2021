@@ -1,5 +1,5 @@
 module.exports = {
-  svelteSortOrder: "scripts-styles-markup",
+  svelteSortOrder: "options-scripts-styles-markup",
   svelteStrictMode: true,
   svelteBracketNewLine: true,
   svelteAllowShorthand: true,
