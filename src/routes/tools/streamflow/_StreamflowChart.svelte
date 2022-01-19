@@ -2,10 +2,9 @@
   import { createEventDispatcher } from "svelte";
   import { Button } from "carbon-components-svelte";
   import { Download16, Share16 } from "carbon-icons-svelte";
+  import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
-  import { HEATMAP_COLOR_SCALE } from "./_constants";
 
-  export let chartComponent;
   export let data;
   export let dataByDate;
   export let formatFn;
@@ -13,7 +12,7 @@
   export let label;
   export let dataSource;
   export let isFetching;
-  export let chartDescription;
+  export let description;
 
   const dispatch = createEventDispatcher();
 
@@ -30,34 +29,31 @@
   }
 </script>
 
-<svelte:component
-  this="{chartComponent}"
-  height="400px"
+<LineAreaChart
   data="{data}"
   dataByDate="{dataByDate}"
   yAxis="{{
     key: 'value',
-    label: `${label}`,
+    label,
     domainMin: 0,
     niceMax: 10,
     tickFormat: formatFn,
-    units: `${units}`,
+    units,
   }}"
-  colors="{HEATMAP_COLOR_SCALE}"
   isFetching="{isFetching}"
 />
 
-<div class="chart-notes margin--v-8">
+<div class="chart-notes margin--v-32">
   <p>
     Source: Cal-Adapt. Data: {dataSource}.
   </p>
 </div>
-<div class="chart-download margin--v-8">
+<div class="chart-download margin--v-16">
   <LearnMoreButton
     cta="{'Explain Chart'}"
     on:click="{() =>
       showLearnMore({
-        content: chartDescription,
+        content: description,
         header: 'About this Chart',
       })}"
   />

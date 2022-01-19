@@ -6,9 +6,9 @@
   import {
     flattenData,
     groupDataByYear,
-    groupDataByDay,
     formatDataForExport,
   } from "../_common/helpers";
+  import { getSelectedMonthStrings } from "./_helpers";
   import { serialize } from "~/helpers/utilities";
   import { DEFAULT_STATION_LAYER } from "./_constants";
   import { getBasinCenter } from "./_data";
@@ -16,9 +16,9 @@
   // Components
   import { Dashboard } from "~/components/tools/Partials";
   import SettingsPanel from "./_SettingsPanel.svelte";
-  /*  import StatsPanel from "./_StatsPanel.svelte";
-  import ExtremeHeatChart from "./_ExtremeHeatChart.svelte";
-  import ChartTitle from "./_ChartTitle.svelte";*/
+  import StreamflowChart from "./_StreamflowChart.svelte";
+  import ChartTitle from "./_ChartTitle.svelte";
+  import StatsPanel from "./_StatsPanel.svelte";
 
   // Store
   import {
@@ -28,7 +28,12 @@
     datasetStore,
     isFetchingStore,
   } from "../_common/stores";
-  import { climvarStore, indicatorStore, dataStore } from "./_store";
+  import {
+    climvarStore,
+    indicatorStore,
+    dataStore,
+    selectedMonthsStore,
+  } from "./_store";
 
   const { location } = locationStore;
   const { climvar } = climvarStore;
@@ -57,18 +62,23 @@
   let printSkipElements;
 
   $: chartDescription = $indicator.description;
-  $: console.log("events", $events);
-  $: console.log("annual", $annual);
 
   $: chartTitle = $location.title;
 
-  $: formatFn = format(`.${$indicator.decimals}f`);
+  $: formatFn = format(`,.${$indicator.decimals}f`);
 
-  $: indicatorLabel = $indicator.title;
+  $: indicatorLabel = `${$indicator.title} (${$indicator.units})`;
 
-  $: if ($indicator.id === "annual") {
+  $: monthsLabel =
+    $indicatorStore === "annual" && $selectedMonthsStore
+      ? getMonthsLabel()
+      : "";
+
+  $: if ($selectedMonthsStore && $events && $indicator.id === "annual") {
     data = $annual;
-    dataByDate = null;
+    dataByDate = groupDataByYear(flattenData(data));
+    console.log($selectedMonthsStore);
+    console.log(data);
   } else {
     data = $events;
     //dataByDate = groupDataByYear(flattenData(data));
@@ -147,6 +157,20 @@
     locationStore.updateLocation(getBasinCenter(e.detail.location));
     console.log("location change");
   }
+
+  function getMonthsLabel() {
+    if (Array.isArray($selectedMonthsStore) && $selectedMonthsStore.length) {
+      return getSelectedMonthStrings($selectedMonthsStore).reduce(
+        (acc, cur, idx, arr) =>
+          idx === 0
+            ? cur
+            : idx === arr.length - 1
+            ? `${acc} and ${cur}`
+            : `${acc}, ${cur}`,
+        ""
+      );
+    }
+  }
 </script>
 
 {#if $isFetchingStore}
@@ -154,19 +178,17 @@
 {/if}
 
 <Dashboard>
-  <!--   <div slot="chart_title" class="block title">
+  <div slot="chart_title" class="block title">
     <ChartTitle
       title="{chartTitle}"
-      indicatorLabel="{indicatorLabel}"
-      climvarLabel="{$climvar.title}"
+      indicatorLabel="{$indicator.title}"
+      monthsLabel="{monthsLabel}"
       scenarioLabel="{$scenario.labelLong}"
-      thresholdLabel="{thresholdLabel}"
       loadLocation="{loadLocation}"
-      durationLabel="{durationLabel}"
     />
-  </div> -->
+  </div>
 
-  <!--   <div slot="stats">
+  <div slot="stats">
     <StatsPanel
       {...{
         statsComponent: $indicator.statsComponent,
@@ -177,23 +199,22 @@
         isFetching: $isFetchingStore,
       }}
     />
-  </div> -->
+  </div>
 
   <div slot="graphic" class="graphic block">
-    <!--     <svelte:component
-      this="{$indicator.chartComponent}"
-      data="{$data}"
+    <StreamflowChart
+      data="{data}"
       dataByDate="{dataByDate}"
-      yAxis="{{
-        key: 'value',
-        label: `${indicatorLabel}`,
-        domainMin: 0,
-        niceMax: 10,
-        tickFormat: formatFn,
-        units: `${$indicator.units}`,
-      }}"
+      formatFn="{formatFn}"
+      units="{$indicator.units}"
+      label="{$indicatorLabel}"
+      description="{$indicator.description}"
+      dataSource="{$titles.join(', ')}"
+      on:showDownload="{loadDownload}"
+      on:showShare="{loadShare}"
+      on:showLearnMore="{({ detail }) => loadLearnMore(detail)}"
       isFetching="{$isFetchingStore}"
-    /> -->
+    />
   </div>
 
   <div slot="settings" class="settings">
