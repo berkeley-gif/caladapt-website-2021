@@ -260,8 +260,12 @@ const tools = [
     ],
     datasets: [
       {
-        slug: '5e555315-da6a-4a49-a2a2-53408720ce08',
+        slug: '7908b0d9-5d88-4f01-acac-76e02b70d44b',
         logo: 'scripps_100x100.png',
+      },
+      {
+        slug: 'ddc10d21-3915-4eed-b761-758a9d8442d6',
+        logo: 'ca_dwr.png',
       },
     ],
     related: [
