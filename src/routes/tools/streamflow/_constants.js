@@ -13,8 +13,8 @@ export const CLIMATE_VARIABLES = ["streamflow"];
 export const CLIMATE_INDICATORS = [
   {
     id: "annual",
-    label: "Annual",
-    title: "Total annual unimpaired flows in a water year",
+    label: "Total Annual",
+    title: "Total Annual Unimpaired Flows",
     units: "cfs",
     decimals: 0,
     chartComponent: LineAreaChart,
@@ -27,9 +27,9 @@ export const CLIMATE_INDICATORS = [
   },
   {
     id: "monthly",
-    label: "Monthly",
-    title: "Monthly Average Streamflow",
-    units: "",
+    label: "Monthly Average",
+    title: "Monthly Average Unimpaired Flows",
+    units: "cfs",
     decimals: 0,
     chartComponent: LineAreaChart,
     statsComponent: AvgRange,
