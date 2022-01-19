@@ -21,12 +21,15 @@
   import { StaticMap } from "~/components/tools/Location";
 
   import { locationStore, scenarioStore, modelsStore } from "../_common/stores";
-  import { indicatorList, indicatorStore, selectedMonthsStore } from "./_store";
+  import {
+    indicatorList,
+    indicatorStore,
+    selectedMonthsStore,
+    dataStore,
+  } from "./_store";
 
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
-
-  $: console.log("months", $selectedMonthsStore);
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -51,6 +54,11 @@
 
   function changeSelectedMonths(e) {
     selectedMonthsStore.set(e.detail);
+    monthsSideEffect();
+  }
+
+  function monthsSideEffect() {
+    dataStore.setMonths($selectedMonthsStore);
   }
 </script>
 
