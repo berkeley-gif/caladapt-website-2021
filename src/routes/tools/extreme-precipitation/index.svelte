@@ -467,7 +467,7 @@
           <li>
             <a
               target="_blank"
-              href="https://ral.ucar.edu/staff/ericg/Intro2EVT.pdf"
+              href="https://staff.ral.ucar.edu/ericg/Intro2EVT.pdf"
               >Gilleland, E. (2015).</a
             > Introduction to Extreme Value Theorem Analysis. National Center for
             Atmospheric Research.
