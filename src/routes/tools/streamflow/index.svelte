@@ -116,7 +116,6 @@
 
   // Derived stores
   const { location } = locationStore;
-  const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
 
   // Local props
@@ -134,7 +133,7 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
-  $: $climvar, $scenario, $modelsStore, $location, update();
+  $: $scenario, $modelsStore, $location, update();
 
   async function update() {
     if (!appReady) return;
