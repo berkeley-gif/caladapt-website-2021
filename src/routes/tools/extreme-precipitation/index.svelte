@@ -202,7 +202,7 @@
         ...potParams,
         ...(pct && { pct }),
       });
-      thresholdStore.set(thresh);
+      thresholdStore.set(+format(`.${DEFAULT_THRESHOLD_PRECISION}f`)(thresh));
     } catch (err) {
       console.log("update threshold error", err);
       logException(err);
@@ -312,7 +312,7 @@
       duration,
       ...(pct && { pct }),
     });
-    thresholdStore.set(thresh);
+    thresholdStore.set(+format(`.${DEFAULT_THRESHOLD_PRECISION}f`)(thresh));
   }
 
   onMount(() => {
