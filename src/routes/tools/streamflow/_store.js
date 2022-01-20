@@ -8,7 +8,13 @@ import {
   DEFAULT_SELECTED_MONTHS,
 } from "./_constants";
 import { makeCustomWritableStore } from "../_common/stores";
-import { filterDataByMonths, aggregateMonthlyData } from "./_data";
+import { DEFAULT_STAT_PERIODS } from "../_common/constants";
+import {
+  filterDataByMonths,
+  aggregateMonthlyData,
+  filterDataByPeriod,
+  aggregateMonthlyData2,
+} from "./_data";
 
 // List of climvars used in Annual Averages Tool
 export const climvarList = climvars
@@ -60,6 +66,16 @@ export const dataStore = makeCustomWritableStore(DATA, {
         if ($s.events && $s.monthIds) {
           return aggregateMonthlyData(
             filterDataByMonths($s.events, $s.monthIds)
+          );
+        }
+      },
+    },
+    {
+      name: "monthly",
+      getter: ($s) => {
+        if ($s.events) {
+          return aggregateMonthlyData2(
+            filterDataByPeriod($s.events, 1961, 1990)
           );
         }
       },
