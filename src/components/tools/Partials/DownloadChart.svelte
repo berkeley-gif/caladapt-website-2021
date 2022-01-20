@@ -51,11 +51,9 @@
           await exportPNG(printContainer, printSkipElements);
           break;
         case "csv":
-          var csvWithMetadata = `
-            ${csvFormatRows(metadata)} 
-            \n \n
-            ${csvFormat(csvData)}
-          `;
+          var csvWithMetadata = `${csvFormatRows(metadata)}\n\n${csvFormat(
+            csvData
+          )}`;
           await exportCSV(csvWithMetadata);
           break;
         case "svg":
