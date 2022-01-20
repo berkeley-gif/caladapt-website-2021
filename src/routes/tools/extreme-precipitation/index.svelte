@@ -3,7 +3,6 @@
   import { INITIAL_CONFIG } from "../_common/constants";
   import {
     TOOL_SLUG,
-    DEFAULT_RETURN_PERIOD,
     DEFAULT_DURATION,
     DEFAULT_THRESHOLD_TYPE,
   } from "./_constants";
@@ -62,7 +61,6 @@
         modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
-        intervals: DEFAULT_RETURN_PERIOD,
         duration: +duration,
         thresholdId: threshId,
       };
@@ -70,7 +68,6 @@
       initialConfig = {
         ...INITIAL_CONFIG,
         climvarId: "pr",
-        intervals: DEFAULT_RETURN_PERIOD,
         duration: DEFAULT_DURATION,
         thresholdId: DEFAULT_THRESHOLD_TYPE,
       };
@@ -286,14 +283,12 @@
     modelIds,
     imperial,
     duration,
-    intervals,
     thresholdId,
   }) {
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     durationStore.set(duration);
-    returnPeriodStore.set(intervals);
     thresholdTypeStore.set(thresholdId);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
@@ -305,6 +300,7 @@
       boundary: { id: boundaryId },
       imperial: true,
     });
+    const intervals = $returnPeriodStore;
     const pct = thresholdId === DEFAULT_THRESHOLD_TYPE ? null : thresholdId;
     const thresh = await getThreshold({
       ...params,
