@@ -1,5 +1,5 @@
 // Node modules
-import { merge, rollups, sum } from "d3-array";
+import { merge, rollups, sum, mean } from "d3-array";
 import getCenter from "@turf/center";
 import { format } from "d3-format";
 
@@ -18,7 +18,18 @@ const transformResponse = function (response, throwNoData = true) {
       return [];
     }
   }
-  return response.results.map((d) => ({ ...d, date: parseDateIso(d.time) }));
+  return response.results.map((d) => {
+    const date = parseDateIso(d.time);
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth();
+    let wateryear;
+    if (month >= 9) {
+      wateryear = year + 1;
+    } else {
+      wateryear = year;
+    }
+    return { ...d, date, wateryear };
+  });
 };
 
 /**
@@ -177,5 +188,25 @@ export const aggregateMonthlyData = (data) => {
       (dd) => dd.date.getUTCFullYear()
     ).map(([year, value]) => ({ date: new Date(Date.UTC(year)), value }));
     return { ...series, values: aggregatedValues };
+  });
+};
+
+export const aggregateMonthlyData2 = (data) => {
+  return data.map((series) => {
+    const aggregatedValues = rollups(
+      series.values,
+      (arr) => +format(".0f")(mean(arr, (d) => d.value)),
+      (dd) => dd.date.getUTCMonth()
+    ).map(([month, value]) => ({ date: new Date(2000, month, 1), value }));
+    return { ...series, values: aggregatedValues };
+  });
+};
+
+export const filterDataByPeriod = (data, start, end) => {
+  return data.map((series) => {
+    const filteredValues = series.values.filter(
+      ({ wateryear }) => wateryear >= start && wateryear <= end
+    );
+    return { ...series, values: filteredValues };
   });
 };

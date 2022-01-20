@@ -40,7 +40,7 @@
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
-  const { events, annual } = dataStore;
+  const { events, annual, monthly } = dataStore;
 
   let data;
   let dataByDate;
@@ -77,12 +77,11 @@
   $: if ($selectedMonthsStore && $events && $indicator.id === "annual") {
     data = $annual;
     dataByDate = groupDataByYear(flattenData(data));
-    console.log($selectedMonthsStore);
-    console.log(data);
+    console.log("annual", data);
   } else {
-    data = $events;
+    data = $monthly;
     //dataByDate = groupDataByYear(flattenData(data));
-    dataByDate = null;
+    console.log("monthly", data);
   }
 
   async function loadLearnMore({
@@ -207,7 +206,7 @@
       dataByDate="{dataByDate}"
       formatFn="{formatFn}"
       units="{$indicator.units}"
-      label="{$indicatorLabel}"
+      label="{indicatorLabel}"
       description="{$indicator.description}"
       dataSource="{$titles.join(', ')}"
       on:showDownload="{loadDownload}"

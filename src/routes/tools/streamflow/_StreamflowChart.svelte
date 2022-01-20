@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { Button } from "carbon-components-svelte";
+  import { timeFormat } from "d3-time-format";
   import { Download16, Share16 } from "carbon-icons-svelte";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
@@ -15,6 +16,8 @@
   export let description;
 
   const dispatch = createEventDispatcher();
+
+  const formatMonth = timeFormat("%b");
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -39,6 +42,13 @@
     niceMax: 10,
     tickFormat: formatFn,
     units,
+  }}"
+  xAxis="{{
+    key: 'date',
+    label: '',
+    domainMin: new Date(1999, 9, 1),
+    domainMax: new Date(2000, 8, 1),
+    tickFormat: formatMonth,
   }}"
   isFetching="{isFetching}"
 />
