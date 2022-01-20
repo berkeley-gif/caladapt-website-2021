@@ -90,6 +90,7 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { format } from "d3-format";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
@@ -130,7 +131,10 @@
     getQueryParams,
     getThreshold,
   } from "./_data";
-  import { DEFAULT_ROLLING_FUNCTION } from "./_constants";
+  import {
+    DEFAULT_ROLLING_FUNCTION,
+    DEFAULT_THRESHOLD_PRECISION,
+  } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -159,14 +163,20 @@
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
 
+  // do not add param if event duration is 1
+  $: duration = $durationStore === 1 ? null : $durationStore;
+
+  // params for fetching peak over threshold data
   $: potParams = {
-    intervals: $returnPeriodStore, // threshold value is same for all intervals
-    duration: $durationStore,
+    // threshold value is same for all intervals
+    intervals: $returnPeriodStore,
+    ...(duration && { duration }),
   };
 
+  // params for fetching events
   $: eventParams = {
     thresh: $thresholdStore,
-    window: $durationStore,
+    ...(duration && { window: duration }),
     rolling: DEFAULT_ROLLING_FUNCTION,
   };
 
@@ -302,7 +312,6 @@
       duration,
       ...(pct && { pct }),
     });
-    // thresholdListStore.add(thresh98p, "98th Percentile");
     thresholdStore.set(thresh);
   }
 
