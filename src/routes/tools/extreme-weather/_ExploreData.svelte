@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -65,9 +66,9 @@
     histogramData = null;
   }
 
-  $: if ($location && $location.title) {
+  afterUpdate(() => {
     chartTitle = `${$location.title} (${$location.geometry.coordinates[0]}°, ${$location.geometry.coordinates[1]}°)`;
-  }
+  });
 
   async function loadLearnMore({
     slugs = [],
