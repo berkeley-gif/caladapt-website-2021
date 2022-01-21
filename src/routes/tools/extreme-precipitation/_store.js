@@ -11,7 +11,6 @@ import {
 } from "./_constants";
 
 import {
-  calcHeatwaveCount,
   calcMaxDuration,
   calcEventsCount,
   groupEventsByWaterYear,

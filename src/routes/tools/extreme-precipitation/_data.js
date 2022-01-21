@@ -331,8 +331,8 @@ export const groupEventsByWaterYear = (series) => {
     yearRange = range(1950, 2100);
   }
   const data = series.values.map((d) => {
-    const month = parseInt(d.date.getMonth());
-    const year = parseInt(d.date.getFullYear());
+    const month = parseInt(d.date.getUTCMonth());
+    const year = parseInt(d.date.getUTCFullYear());
     let wateryear;
     if (month >= 9) {
       wateryear = year + 1;
