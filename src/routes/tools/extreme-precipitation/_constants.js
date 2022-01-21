@@ -92,6 +92,7 @@ export const DEFAULT_CLIMATE_VARIABLE = "pr";
 export const DEFAULT_CLIMATE_INDICATOR = "intensity";
 export const DEFAULT_DURATION = 2;
 export const DEFAULT_THRESHOLD_TYPE = "ams_low";
+export const DEFAULT_THRESHOLD_PRECISION = 2;
 export const DEFAULT_RETURN_PERIOD = 20;
 export const DEFAULT_ROLLING_FUNCTION = "sum";
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "max";
