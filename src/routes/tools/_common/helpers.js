@@ -2,6 +2,7 @@ import { rollups, sort, group } from "d3-array";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
+  INITIAL_CONFIG,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
 
@@ -233,4 +234,29 @@ export const convertAnnualRateToSum = ({ date, value }) => {
   } else {
     return value * 365;
   }
+};
+
+/**
+ * Create initial configuration
+ * @param {date}
+ * @param {number} value
+ * @return {number}
+ */
+// Helper function to convert precipitation values from a rate (inches/day)
+// to total accumulation in a year
+export const getInitialConfig = (query = {}) => {
+  if (Object.keys(query).length > 0) {
+    console.log(query);
+    // // TODO: validate bookmark
+    // const { boundary, climvar, scenario, models, lat, lng } = query;
+    // initialConfig = {
+    //   boundaryId: boundary,
+    //   scenarioId: scenario,
+    //   climvarId: climvar,
+    //   modelIds: models.split(","),
+    //   lat: +lat,
+    //   lng: +lng,
+    // };
+  }
+  return { ...INITIAL_CONFIG, ...query };
 };

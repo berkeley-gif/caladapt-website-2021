@@ -4,8 +4,9 @@
   // the data we need to render the page. It only runs once
   // during export.
   import resourcesList from "../../../../content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/constants";
-  export async function preload({ query }) {
+
+  export async function preload(page) {
+    console.log("preload", page);
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
@@ -34,27 +35,27 @@
     );
 
     // Set intitial config for tool
-    let initialConfig;
+    // let initialConfig;
 
-    if (Object.keys(query).length > 0) {
-      // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng } = query;
-      initialConfig = {
-        boundaryId: boundary,
-        scenarioId: scenario,
-        climvarId: climvar,
-        modelIds: models.split(","),
-        lat: +lat,
-        lng: +lng,
-      };
-    } else {
-      initialConfig = {
-        ...INITIAL_CONFIG,
-      };
-    }
+    // if (Object.keys(page.query).length > 0) {
+    //   // TODO: validate bookmark
+    //   const { boundary, climvar, scenario, models, lat, lng } = query;
+    //   initialConfig = {
+    //     boundaryId: boundary,
+    //     scenarioId: scenario,
+    //     climvarId: climvar,
+    //     modelIds: models.split(","),
+    //     lat: +lat,
+    //     lng: +lng,
+    //   };
+    // } else {
+    //   initialConfig = {
+    //     ...INITIAL_CONFIG,
+    //   };
+    // }
 
     return {
-      initialConfig,
+      //initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -67,10 +68,12 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { stores } from "@sapper/app";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import { getInitialConfig } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -96,13 +99,14 @@
   import { climvarStore } from "./_store";
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
 
-  export let initialConfig;
+  //export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
   export let helpItems;
 
   // Derived stores
+  const { page } = stores();
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -153,25 +157,28 @@
     }
   }
 
-  async function initApp(config) {
-    const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } =
-      config;
-    climvarStore.set(climvarId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
-    unitsStore.set({ imperial });
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
+  async function initApp() {
+    const { query } = $page;
+    const initialConfig = getInitialConfig(query);
+    console.log(initialConfig);
+    // const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } =
+    //   config;
+    // climvarStore.set(climvarId);
+    // scenarioStore.set(scenarioId);
+    // modelsStore.set(modelIds);
+    // unitsStore.set({ imperial });
+    // const addresses = await reverseGeocode(`${lng}, ${lat}`);
+    // const nearest = addresses.features[0];
+    // const loc = await getFeature(nearest, boundaryId);
+    // locationStore.updateLocation(loc);
+    // locationStore.updateBoundary(boundaryId);
     return;
   }
 
   onMount(() => {
-    initApp(initialConfig)
+    initApp()
       .then(() => {
-        appReady = true;
+        //appReady = true;
         console.log("app ready");
       })
       .catch((error) => {
