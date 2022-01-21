@@ -3,7 +3,6 @@
   import { INITIAL_CONFIG } from "../_common/constants";
   import {
     TOOL_SLUG,
-    DEFAULT_RETURN_PERIOD,
     DEFAULT_DURATION,
     DEFAULT_THRESHOLD_TYPE,
   } from "./_constants";
@@ -62,7 +61,6 @@
         modelIds: models.split(","),
         lat: +lat,
         lng: +lng,
-        intervals: DEFAULT_RETURN_PERIOD,
         duration: +duration,
         thresholdId: threshId,
       };
@@ -70,7 +68,6 @@
       initialConfig = {
         ...INITIAL_CONFIG,
         climvarId: "pr",
-        intervals: DEFAULT_RETURN_PERIOD,
         duration: DEFAULT_DURATION,
         thresholdId: DEFAULT_THRESHOLD_TYPE,
       };
@@ -90,6 +87,7 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { format } from "d3-format";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
@@ -130,7 +128,10 @@
     getQueryParams,
     getThreshold,
   } from "./_data";
-  import { DEFAULT_ROLLING_FUNCTION } from "./_constants";
+  import {
+    DEFAULT_ROLLING_FUNCTION,
+    DEFAULT_THRESHOLD_PRECISION,
+  } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -155,18 +156,27 @@
     }
   };
 
+  const formatThresh = (value) =>
+    +format(`.${DEFAULT_THRESHOLD_PRECISION}f`)(value);
+
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
 
+  // do not add param if event duration is 1
+  $: duration = $durationStore === 1 ? null : $durationStore;
+
+  // params for fetching peak over threshold data
   $: potParams = {
-    intervals: $returnPeriodStore, // threshold value is same for all intervals
-    duration: $durationStore,
+    // threshold value is same for all intervals
+    intervals: $returnPeriodStore,
+    ...(duration && { duration }),
   };
 
+  // params for fetching events
   $: eventParams = {
     thresh: $thresholdStore,
-    window: $durationStore,
+    ...(duration && { window: duration }),
     rolling: DEFAULT_ROLLING_FUNCTION,
   };
 
@@ -192,7 +202,7 @@
         ...potParams,
         ...(pct && { pct }),
       });
-      thresholdStore.set(thresh);
+      thresholdStore.set(formatThresh(thresh));
     } catch (err) {
       console.log("update threshold error", err);
       logException(err);
@@ -276,14 +286,12 @@
     modelIds,
     imperial,
     duration,
-    intervals,
     thresholdId,
   }) {
     scenarioStore.set(scenarioId);
     modelsStore.set(modelIds);
     unitsStore.set({ imperial });
     durationStore.set(duration);
-    returnPeriodStore.set(intervals);
     thresholdTypeStore.set(thresholdId);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
@@ -295,6 +303,7 @@
       boundary: { id: boundaryId },
       imperial: true,
     });
+    const intervals = $returnPeriodStore;
     const pct = thresholdId === DEFAULT_THRESHOLD_TYPE ? null : thresholdId;
     const thresh = await getThreshold({
       ...params,
@@ -302,8 +311,7 @@
       duration,
       ...(pct && { pct }),
     });
-    // thresholdListStore.add(thresh98p, "98th Percentile");
-    thresholdStore.set(thresh);
+    thresholdStore.set(formatThresh(thresh));
   }
 
   onMount(() => {
