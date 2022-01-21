@@ -156,6 +156,9 @@
     }
   };
 
+  const formatThresh = (value) =>
+    +format(`.${DEFAULT_THRESHOLD_PRECISION}f`)(value);
+
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
@@ -199,7 +202,7 @@
         ...potParams,
         ...(pct && { pct }),
       });
-      thresholdStore.set(+format(`.${DEFAULT_THRESHOLD_PRECISION}f`)(thresh));
+      thresholdStore.set(formatThresh(thresh));
     } catch (err) {
       console.log("update threshold error", err);
       logException(err);
@@ -308,7 +311,7 @@
       duration,
       ...(pct && { pct }),
     });
-    thresholdStore.set(+format(`.${DEFAULT_THRESHOLD_PRECISION}f`)(thresh));
+    thresholdStore.set(formatThresh(thresh));
   }
 
   onMount(() => {
