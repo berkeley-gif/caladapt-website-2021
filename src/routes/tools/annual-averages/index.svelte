@@ -34,28 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    // Set intitial config for tool
-    // let initialConfig;
-
-    // if (Object.keys(page.query).length > 0) {
-    //   // TODO: validate bookmark
-    //   const { boundary, climvar, scenario, models, lat, lng } = query;
-    //   initialConfig = {
-    //     boundaryId: boundary,
-    //     scenarioId: scenario,
-    //     climvarId: climvar,
-    //     modelIds: models.split(","),
-    //     lat: +lat,
-    //     lng: +lng,
-    //   };
-    // } else {
-    //   initialConfig = {
-    //     ...INITIAL_CONFIG,
-    //   };
-    // }
-
     return {
-      //initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -73,6 +52,7 @@
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import { INITIAL_CONFIG } from "../_common/constants";
   import { getInitialConfig } from "../_common/helpers";
 
   // Components
@@ -159,26 +139,24 @@
 
   async function initApp() {
     const { query } = $page;
-    const initialConfig = getInitialConfig(query);
-    console.log(initialConfig);
-    // const { lat, lng, boundaryId, scenarioId, climvarId, modelIds, imperial } =
-    //   config;
-    // climvarStore.set(climvarId);
-    // scenarioStore.set(scenarioId);
-    // modelsStore.set(modelIds);
-    // unitsStore.set({ imperial });
-    // const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    // const nearest = addresses.features[0];
-    // const loc = await getFeature(nearest, boundaryId);
-    // locationStore.updateLocation(loc);
-    // locationStore.updateBoundary(boundaryId);
+    const { lat, lng, boundary, scenario, climvar, models, imperial } =
+      getInitialConfig(INITIAL_CONFIG, query);
+    climvarStore.set(climvar);
+    scenarioStore.set(scenario);
+    modelsStore.set(models);
+    unitsStore.set({ imperial });
+    const addresses = await reverseGeocode(`${lng}, ${lat}`);
+    const nearest = addresses.features[0];
+    const loc = await getFeature(nearest, boundary);
+    locationStore.updateLocation(loc);
+    locationStore.updateBoundary(boundary);
     return;
   }
 
   onMount(() => {
     initApp()
       .then(() => {
-        //appReady = true;
+        appReady = true;
         console.log("app ready");
       })
       .catch((error) => {
