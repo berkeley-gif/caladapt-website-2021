@@ -32,47 +32,6 @@
       ["get-started", "faqs"].includes(slug)
     );
 
-    // // Set intitial config for tool
-    // let initialConfig;
-
-    // if (Object.keys(query).length) {
-    //   // TODO: validate bookmark
-    //   const {
-    //     boundary,
-    //     climvar,
-    //     frequency,
-    //     indicator,
-    //     models,
-    //     months,
-    //     scenario,
-    //     threshold,
-    //     lat,
-    //     lng,
-    //   } = query;
-    //   initialConfig = {
-    //     boundaryId: boundary,
-    //     scenarioId: scenario,
-    //     climvarId: climvar,
-    //     indicatorId: indicator,
-    //     frequency,
-    //     months: months
-    //       ? months.split(",").map((d) => +d)
-    //       : DEFAULT_SELECTED_MONTHS,
-    //     threshold,
-    //     modelIds: models.split(","),
-    //     lat: +lat,
-    //     lng: +lng,
-    //   };
-    // } else {
-    //   initialConfig = {
-    //     ...INITIAL_CONFIG,
-    //     indicatorId: DEFAULT_CLIMATE_INDICATOR,
-    //     frequency: DEFAULT_FREQUENCY_CODE,
-    //     months: DEFAULT_SELECTED_MONTHS,
-    //     threshold: DEFAULT_THRESHOLD_DEGREES,
-    //   };
-    // }
-
     return {
       tool,
       relatedTools,
