@@ -2,6 +2,7 @@ import { rollups, sort, group } from "d3-array";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
+  INITIAL_CONFIG,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
 
@@ -242,19 +243,20 @@ export const convertAnnualRateToSum = ({ date, value }) => {
  * @return {object}
  */
 // Helper function to create an object with initial settings for a Cal-Adapt tool
-export const getInitialConfig = (defaultParams = {}, urlParams = {}) => {
+export const getInitialConfig = (
+  urlParams = {},
+  defaultParams = INITIAL_CONFIG
+) => {
   if (Object.keys(urlParams).length === 0) {
     return defaultParams;
   }
 
-  const { models, lat, lng, months, ...rest } = urlParams;
+  const { models, months, ...rest } = urlParams;
 
   return {
     ...defaultParams,
     ...rest,
     ...(models && { models: models.split(",") }),
-    ...(lat && { lat: +lat }),
-    ...(lng && { lng: +lng }),
     ...(months && { months: months.split(",").map((d) => +d) }),
   };
 };
