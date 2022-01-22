@@ -6,7 +6,6 @@
   import resourcesList from "../../../../content/resources/data";
 
   export async function preload(page) {
-    console.log("preload", page);
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
