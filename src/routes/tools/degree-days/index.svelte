@@ -223,7 +223,7 @@
       imperial,
       threshold,
       frequency,
-    } = getInitialConfig(config, query);
+    } = getInitialConfig(query, config);
     climvarStore.set(climvar);
     indicatorsStore.set(indicator);
     scenarioStore.set(scenario);
