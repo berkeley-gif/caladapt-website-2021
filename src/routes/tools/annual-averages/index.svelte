@@ -51,7 +51,6 @@
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
-  import { INITIAL_CONFIG } from "../_common/constants";
   import { getInitialConfig } from "../_common/helpers";
 
   // Components
@@ -78,7 +77,6 @@
   import { climvarStore } from "./_store";
   import { getObserved, getModels, getEnsemble, getQueryParams } from "./_data";
 
-  //export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
@@ -139,7 +137,7 @@
   async function initApp() {
     const { query } = $page;
     const { lat, lng, boundary, scenario, climvar, models, imperial } =
-      getInitialConfig(INITIAL_CONFIG, query);
+      getInitialConfig(query);
     climvarStore.set(climvar);
     scenarioStore.set(scenario);
     modelsStore.set(models);
