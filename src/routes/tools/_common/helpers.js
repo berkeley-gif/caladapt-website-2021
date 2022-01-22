@@ -2,7 +2,6 @@ import { rollups, sort, group } from "d3-array";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
-  INITIAL_CONFIG,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
 
@@ -238,25 +237,23 @@ export const convertAnnualRateToSum = ({ date, value }) => {
 
 /**
  * Create initial configuration
- * @param {date}
- * @param {number} value
- * @return {number}
+ * @param {object} defaultParams - default params for tool
+ * @param {object} urlParams - params generated from url query string by sapper
+ * @return {object}
  */
-// Helper function to convert precipitation values from a rate (inches/day)
-// to total accumulation in a year
-export const getInitialConfig = (query = {}) => {
-  if (Object.keys(query).length > 0) {
-    console.log(query);
-    // // TODO: validate bookmark
-    // const { boundary, climvar, scenario, models, lat, lng } = query;
-    // initialConfig = {
-    //   boundaryId: boundary,
-    //   scenarioId: scenario,
-    //   climvarId: climvar,
-    //   modelIds: models.split(","),
-    //   lat: +lat,
-    //   lng: +lng,
-    // };
+// Helper function to create an object with initial settings for a Cal-Adapt tool
+export const getInitialConfig = (defaultParams = {}, urlParams = {}) => {
+  if (Object.keys(urlParams).length === 0) {
+    return defaultParams;
   }
-  return { ...INITIAL_CONFIG, ...query };
+
+  const { models, lat, lng, ...rest } = urlParams;
+
+  return {
+    ...defaultParams,
+    ...rest,
+    models: models.split(","),
+    lat: +lat,
+    lng: +lng,
+  };
 };
