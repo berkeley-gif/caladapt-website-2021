@@ -46,7 +46,7 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
-  import { stores } from "@sapper/app";
+  import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
@@ -85,7 +85,7 @@
   export let helpItems;
 
   // Derived stores
-  const { page } = stores();
+  const { page } = sapperStores();
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
