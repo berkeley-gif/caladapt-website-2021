@@ -247,13 +247,14 @@ export const getInitialConfig = (defaultParams = {}, urlParams = {}) => {
     return defaultParams;
   }
 
-  const { models, lat, lng, ...rest } = urlParams;
+  const { models, lat, lng, months, ...rest } = urlParams;
 
   return {
     ...defaultParams,
     ...rest,
-    models: models.split(","),
-    lat: +lat,
-    lng: +lng,
+    ...(models && { models: models.split(",") }),
+    ...(lat && { lat: +lat }),
+    ...(lng && { lng: +lng }),
+    ...(months && { months: months.split(",").map((d) => +d) }),
   };
 };
