@@ -6,7 +6,7 @@
   export let state;
 
   $: pathname = `${window.location.origin}${window.location.pathname}`;
-  $: bookmark = `${pathname}/?${state}`;
+  $: bookmark = `${pathname}?${state}`;
 </script>
 
 <Modal id="share" passiveModal bind:open modalHeading="Share Link">
