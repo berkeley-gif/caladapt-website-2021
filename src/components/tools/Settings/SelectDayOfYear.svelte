@@ -11,9 +11,10 @@
   $: placeholder = timeFormat(formatStr)(value);
 
   const dispatch = createEventDispatcher();
+  const currentYear = +new Date().getUTCFullYear();
 
   function isDateValid(m, d) {
-    const daysInMonth = new Date(2020, m, 0).getDate();
+    const daysInMonth = new Date(currentYear, m, 0).getDate();
     return typeof d === "number" && d <= daysInMonth;
   }
 
@@ -22,7 +23,6 @@
   }
 
   function change(e) {
-    console.log("change 1", e.detail);
     const parts = e.detail.split("/");
     const month = +parts[0];
     const date = +parts[1];
@@ -30,7 +30,7 @@
     const dateValid = isDateValid(month, date);
     if (monthValid && dateValid) {
       invalid = false;
-      dispatch("change", new Date(2020, month - 1, date));
+      dispatch("change", new Date(currentYear, month - 1, date));
     } else {
       invalid = true;
     }
