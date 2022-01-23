@@ -1,12 +1,6 @@
 <script context="module">
   import resourcesList from "content/resources/data";
-  import {
-    DEFAULT_CLIMATE_INDICATOR,
-    DEFAULT_FREQUENCY_CODE,
-    DEFAULT_SELECTED_MONTHS,
-    DEFAULT_THRESHOLD_DEGREES,
-    TOOL_SLUG,
-  } from "./_constants";
+  import { TOOL_SLUG } from "./_constants";
 
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
@@ -50,6 +44,12 @@
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import {
+    DEFAULT_CLIMATE_INDICATOR,
+    DEFAULT_FREQUENCY_CODE,
+    DEFAULT_SELECTED_MONTHS,
+    DEFAULT_THRESHOLD_DEGREES,
+  } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
   import { getInitialConfig } from "../_common/helpers";
 
@@ -162,6 +162,7 @@
 
   async function initApp() {
     const { query } = $page;
+    // Default configuration
     const config = {
       ...INITIAL_CONFIG,
       indicator: DEFAULT_CLIMATE_INDICATOR,
@@ -169,7 +170,7 @@
       months: DEFAULT_SELECTED_MONTHS,
       threshold: DEFAULT_THRESHOLD_DEGREES,
     };
-
+    // Get initial configuration (from default or from url)
     const {
       lat,
       lng,
@@ -183,6 +184,7 @@
       threshold,
       frequency,
     } = getInitialConfig(query, config);
+    // Set intial values for stores
     climvarStore.set(climvar);
     indicatorsStore.set(indicator);
     scenarioStore.set(scenario);
