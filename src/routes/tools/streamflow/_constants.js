@@ -1,6 +1,7 @@
 import layers from "~/helpers/mapbox-layers";
 import { LineAreaChart } from "~/components/tools/Charts";
 import { AvgRange } from "~/components/tools/Stats";
+import { DEFAULT_STAT_PERIODS } from "../_common/constants";
 
 export const TOOL_SLUG = "streamflow";
 
@@ -13,8 +14,8 @@ export const CLIMATE_VARIABLES = ["streamflow"];
 export const CLIMATE_INDICATORS = [
   {
     id: "annual",
-    label: "Total Annual",
-    title: "Total Annual Unimpaired Flows",
+    label: "Annual Total by Months",
+    title: "Annual Total Unimpaired Flows",
     units: "cfs",
     decimals: 0,
     chartComponent: LineAreaChart,
@@ -27,7 +28,7 @@ export const CLIMATE_INDICATORS = [
   },
   {
     id: "monthly",
-    label: "Monthly Average",
+    label: "Monthly Average by Period",
     title: "Monthly Average Unimpaired Flows",
     units: "cfs",
     decimals: 0,
@@ -43,6 +44,7 @@ export const DEFAULT_CLIMATE_VARIABLE = CLIMATE_VARIABLES[0];
 export const DEFAULT_CLIMATE_INDICATOR = "monthly";
 
 export const DEFAULT_SELECTED_MONTHS = [2, 3, 4];
+export const DEFAULT_SELECTED_PERIOD = "baseline";
 
 export const INDICATOR_DESCRIPTION = `
 <p>Indicators presented in this tool examine projected trends in four key characteristics of 
@@ -58,3 +60,5 @@ Extreme Heat Days and Warm Nights:</p>
 
 export const SELECT_STATION_DESCRIPTION = `<p>You can select another weather station on 
 the map or search for the nearest station to your area of interest.</p>`;
+
+export const DEFAULT_WATERYEAR = new Date().getUTCFullYear();

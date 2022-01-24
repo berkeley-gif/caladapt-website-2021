@@ -7,6 +7,7 @@ import { format } from "d3-format";
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, parseDateIso } from "~/helpers/utilities";
 import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
+import { DEFAULT_WATERYEAR } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 
@@ -162,7 +163,7 @@ export async function getModels(config, params, method = "GET") {
  * @return {string} method
  */
 export function getQueryParams() {
-  const params = { pagesize: 1800 };
+  const params = { pagesize: 1812 };
   return { params, method: "GET" };
 }
 
@@ -180,24 +181,30 @@ export const filterDataByMonths = (data, monthIds) => {
   });
 };
 
-export const aggregateMonthlyData = (data) => {
+export const sumMonthlyDataByWaterYear = (data) => {
   return data.map((series) => {
     const aggregatedValues = rollups(
       series.values,
       (arr) => +format(".0f")(sum(arr, (d) => d.value)),
-      (dd) => dd.date.getUTCFullYear()
+      (dd) => dd.wateryear
     ).map(([year, value]) => ({ date: new Date(Date.UTC(year)), value }));
     return { ...series, values: aggregatedValues };
   });
 };
 
-export const aggregateMonthlyData2 = (data) => {
+export const averageMonthlyDataByPeriod = (data) => {
   return data.map((series) => {
     const aggregatedValues = rollups(
       series.values,
       (arr) => +format(".0f")(mean(arr, (d) => d.value)),
       (dd) => dd.date.getUTCMonth()
-    ).map(([month, value]) => ({ date: new Date(2000, month, 1), value }));
+    ).map(([month, value]) => {
+      if (+month >= 9) {
+        return { date: new Date(DEFAULT_WATERYEAR - 1, month, 1), value };
+      } else {
+        return { date: new Date(DEFAULT_WATERYEAR, month, 1), value };
+      }
+    });
     return { ...series, values: aggregatedValues };
   });
 };

@@ -9,6 +9,7 @@
   import {
     INDICATOR_DESCRIPTION,
     SELECT_STATION_DESCRIPTION,
+    DEFAULT_STAT_PERIODS,
   } from "./_constants";
 
   import {
@@ -25,6 +26,7 @@
     indicatorList,
     indicatorStore,
     selectedMonthsStore,
+    selectedPeriodStore,
     dataStore,
   } from "./_store";
 
@@ -44,7 +46,6 @@
   }
 
   function changeIndicator(e) {
-    console.log(e.detail, "changeindicator");
     indicatorStore.set(e.detail);
   }
 
@@ -59,6 +60,16 @@
 
   function monthsSideEffect() {
     dataStore.setMonths($selectedMonthsStore);
+  }
+
+  function changeSelectedPeriod(e) {
+    console.log("change period", e.detail);
+    selectedPeriodStore.set(e.detail);
+    periodSideEffect();
+  }
+
+  function periodSideEffect() {
+    dataStore.setPeriod($selectedPeriodStore);
   }
 </script>
 
@@ -86,13 +97,20 @@
     items="{indicatorList}"
     on:change="{changeIndicator}"
   />
+  <div class="spacing--v-16"></div>
   {#if $indicatorStore === "annual"}
-    <div class="spacing--v-16"></div>
     <SelectMonth
       multi="{true}"
       items="{MONTHS_LIST}"
       selectedId="{$selectedMonthsStore}"
       on:change="{changeSelectedMonths}"
+    />
+  {:else}
+    <RadioBtnGroup
+      title="Select Period"
+      selected="{$selectedPeriodStoreStore}"
+      items="{DEFAULT_STAT_PERIODS}"
+      on:change="{changeSelectedPeriod}"
     />
   {/if}
   <LearnMoreButton

@@ -6,14 +6,15 @@ import {
   DEFAULT_CLIMATE_VARIABLE,
   DEFAULT_CLIMATE_INDICATOR,
   DEFAULT_SELECTED_MONTHS,
+  DEFAULT_SELECTED_PERIOD,
 } from "./_constants";
 import { makeCustomWritableStore } from "../_common/stores";
-import { DEFAULT_STAT_PERIODS } from "../_common/constants";
+
 import {
   filterDataByMonths,
-  aggregateMonthlyData,
+  sumMonthlyDataByWaterYear,
   filterDataByPeriod,
-  aggregateMonthlyData2,
+  averageMonthlyDataByPeriod,
 } from "./_data";
 
 // List of climvars used in Annual Averages Tool
@@ -51,6 +52,8 @@ export const indicatorStore = makeCustomWritableStore(
 
 export const selectedMonthsStore = writable(DEFAULT_SELECTED_MONTHS);
 
+export const selectedPeriodStoreStore = writable(DEFAULT_SELECTED_PERIOD);
+
 const DATA = { events: null, monthIds: DEFAULT_SELECTED_MONTHS };
 
 export const dataStore = makeCustomWritableStore(DATA, {
@@ -64,7 +67,7 @@ export const dataStore = makeCustomWritableStore(DATA, {
       name: "annual",
       getter: ($s) => {
         if ($s.events && $s.monthIds) {
-          return aggregateMonthlyData(
+          return sumMonthlyDataByWaterYear(
             filterDataByMonths($s.events, $s.monthIds)
           );
         }
@@ -74,7 +77,7 @@ export const dataStore = makeCustomWritableStore(DATA, {
       name: "monthly",
       getter: ($s) => {
         if ($s.events) {
-          return aggregateMonthlyData2(
+          return averageMonthlyDataByPeriod(
             filterDataByPeriod($s.events, 1961, 1990)
           );
         }
