@@ -5,6 +5,7 @@
   import { Download16, Share16 } from "carbon-icons-svelte";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { LearnMoreButton } from "~/components/tools/Partials";
+  import { DEFAULT_WATERYEAR } from "./_constants";
 
   export let data;
   export let dataByDate;
@@ -16,8 +17,26 @@
   export let description;
 
   const dispatch = createEventDispatcher();
+  const DEFAULT_WATERYEAR_STARTDATE = new Date(DEFAULT_WATERYEAR - 1, 9, 1);
+  const DEFAULT_WATERYEAR_ENDDATE = new Date(DEFAULT_WATERYEAR, 8, 1);
 
-  const formatMonth = timeFormat("%b");
+  let xAxis;
+
+  $: if (label.includes("Monthly")) {
+    xAxis = {
+      key: "date",
+      label: "",
+      domainMin: DEFAULT_WATERYEAR_STARTDATE,
+      domainMax: DEFAULT_WATERYEAR_ENDDATE,
+      tickFormat: timeFormat("%b"),
+    };
+  } else {
+    xAxis = {
+      key: "date",
+      label: "",
+      tickFormat: timeFormat("%Y"),
+    };
+  }
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -43,13 +62,7 @@
     tickFormat: formatFn,
     units,
   }}"
-  xAxis="{{
-    key: 'date',
-    label: '',
-    domainMin: new Date(1999, 9, 1),
-    domainMax: new Date(2000, 8, 1),
-    tickFormat: formatMonth,
-  }}"
+  xAxis="{xAxis}"
   isFetching="{isFetching}"
 />
 
