@@ -238,8 +238,8 @@ export const convertAnnualRateToSum = ({ date, value }) => {
 
 /**
  * Create initial configuration
- * @param {object} defaultParams - default params for tool
  * @param {object} urlParams - params generated from url query string by sapper
+ * @param {object} defaultParams - default params for tool
  * @return {object}
  */
 // Helper function to create an object with initial settings for a Cal-Adapt tool
