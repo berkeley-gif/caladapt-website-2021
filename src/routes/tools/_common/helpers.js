@@ -1,8 +1,10 @@
-import { rollups, sort, group } from "d3-array";
+import { rollups, sort, group, extent } from "d3-array";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
   INITIAL_CONFIG,
+  MONTHS_LIST,
+  PRIORITY_10_MODELS,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
 
@@ -236,6 +238,22 @@ export const convertAnnualRateToSum = ({ date, value }) => {
   }
 };
 
+function validateModels(value) {
+  if (typeof value !== "string" || !value.split(",").length) {
+    return false;
+  }
+  const models = PRIORITY_10_MODELS.map(({ id }) => id);
+  return value.split(",").every((d) => models.includes(d));
+}
+
+function validateMonths(value) {
+  if (typeof value !== "string" || !value.split(",").length) {
+    return false;
+  }
+  const range = extent(MONTHS_LIST, (d) => d.id);
+  return value.split(",").every((d) => +d >= range[0] && +d <= range[1]);
+}
+
 /**
  * Create initial configuration
  * @param {object} urlParams - params generated from url query string by sapper
@@ -253,10 +271,13 @@ export const getInitialConfig = (
 
   const { models, months, ...rest } = urlParams;
 
+  console.log("validateMonths", validateMonths(months));
+  console.log("validateModels", validateModels(models));
+
   return {
     ...defaultParams,
     ...rest,
-    ...(models && { models: models.split(",") }),
-    ...(months && { months: months.split(",").map((d) => +d) }),
+    ...(validateModels(models) && { models: models.split(",") }),
+    ...(validateMonths(months) && { months: months.split(",").map((d) => +d) }),
   };
 };
