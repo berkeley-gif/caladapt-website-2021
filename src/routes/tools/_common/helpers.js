@@ -271,9 +271,6 @@ export const getInitialConfig = (
 
   const { models, months, ...rest } = urlParams;
 
-  console.log("validateMonths", validateMonths(months));
-  console.log("validateModels", validateModels(models));
-
   return {
     ...defaultParams,
     ...rest,
