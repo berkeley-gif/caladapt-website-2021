@@ -1,5 +1,5 @@
 <script>
-  import { onDestroy, getContext, beforeUpdate, tick } from "svelte";
+  import { onDestroy, getContext, afterUpdate } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
   import { MapLayerHandler } from "./utils";
@@ -41,8 +41,7 @@
 
   $: layerProps = Boolean(geojsons.size) && dataLayers.map(mapLayersProps);
 
-  beforeUpdate(async () => {
-    await tick();
+  afterUpdate(() => {
     if (layerProps && !equal(layerProps, prevLayerProps)) {
       removePreviousLayers();
       addGeoJsonLayers();

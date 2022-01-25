@@ -1,5 +1,5 @@
 <script>
-  import { onDestroy, getContext, beforeUpdate, tick } from "svelte";
+  import { onDestroy, getContext, afterUpdate } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
   import { MapLayerHandler } from "./utils";
@@ -40,8 +40,7 @@
     Boolean(centroids) &&
     dataLayers.filter((d) => d.id.includes("5m")).map(mapLayersProps);
 
-  beforeUpdate(async () => {
-    await tick();
+  afterUpdate(() => {
     if (layerProps && !equal(layerProps, prevLayerProps)) {
       removePreviousLayer();
       addCentroidsLayer();

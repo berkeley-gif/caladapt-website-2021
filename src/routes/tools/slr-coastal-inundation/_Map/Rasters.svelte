@@ -1,5 +1,5 @@
 <script>
-  import { onDestroy, getContext, beforeUpdate, tick } from "svelte";
+  import { onDestroy, getContext, afterUpdate } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
   import { MapLayerHandler } from "./utils";
@@ -39,8 +39,7 @@
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
     .map(mapLayersProps);
 
-  beforeUpdate(async () => {
-    await tick();
+  afterUpdate(() => {
     if (!equal(rasterLayersProps, prevRasterLayerProps)) {
       removePreviousRasterLayers();
       addRasterLayers();
