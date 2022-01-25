@@ -239,19 +239,29 @@ export const convertAnnualRateToSum = ({ date, value }) => {
 };
 
 function validateModels(value) {
-  if (typeof value !== "string" || !value.split(",").length) {
-    return false;
+  if (typeof value !== "string") {
+    return null;
   }
+  const parts = value.split(",");
   const models = PRIORITY_10_MODELS.map(({ id }) => id);
-  return value.split(",").every((d) => models.includes(d));
+  if (parts.length && parts.every((d) => models.includes(d))) {
+    return parts;
+  } else {
+    return null;
+  }
 }
 
 function validateMonths(value) {
-  if (typeof value !== "string" || !value.split(",").length) {
-    return false;
+  if (typeof value !== "string") {
+    return null;
   }
+  const parts = value.split(",").map((d) => +d);
   const range = extent(MONTHS_LIST, (d) => d.id);
-  return value.split(",").every((d) => +d >= range[0] && +d <= range[1]);
+  if (parts.length && parts.every((d) => d >= range[0] && d <= range[1])) {
+    return parts;
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -274,7 +284,7 @@ export const getInitialConfig = (
   return {
     ...defaultParams,
     ...rest,
-    ...(validateModels(models) && { models: models.split(",") }),
-    ...(validateMonths(months) && { months: months.split(",").map((d) => +d) }),
+    ...(validateModels(models) && { models: validateModels(models) }),
+    ...(validateMonths(months) && { months: validateMonths(months) }),
   };
 };
