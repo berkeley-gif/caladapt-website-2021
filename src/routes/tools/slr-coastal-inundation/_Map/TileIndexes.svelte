@@ -94,5 +94,7 @@
     map.off("styledata", handleStyleDataChange);
     removeGeoJsonLayers();
     removePreviousLayers();
+    layerHandler.removeMapRef();
+    layerHandler = null;
   });
 </script>

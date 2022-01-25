@@ -108,5 +108,7 @@
     map.off("styledata", handleStyleDataChange);
     removeRasterLayers();
     removePreviousRasterLayers();
+    layerHandler.removeMapRef();
+    layerHandler = null;
   });
 </script>

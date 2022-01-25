@@ -85,5 +85,7 @@
     removeCentroidsLayer();
     removePreviousLayer();
     map.off("styledata", handleStyleDataChange);
+    layerHandler.removeMapRef();
+    layerHandler = null;
   });
 </script>
