@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
@@ -70,6 +71,14 @@
   let csvData;
   let printContainer;
   let printSkipElements;
+
+  let chartTitle = "";
+
+  afterUpdate(() => {
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
@@ -174,7 +183,7 @@
       Change Location
     </Button>
     <div class="h3">
-      {$location.title}
+      {chartTitle}
     </div>
     <div class="h4">
       Projected changes in <span class="annotate">{$climvar.title}</span>
