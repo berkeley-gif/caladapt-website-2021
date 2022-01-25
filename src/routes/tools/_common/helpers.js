@@ -1,7 +1,10 @@
-import { rollups, sort, group } from "d3-array";
+import { rollups, sort, group, extent } from "d3-array";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
+  INITIAL_CONFIG,
+  MONTHS_LIST,
+  PRIORITY_10_MODELS,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
 
@@ -233,4 +236,55 @@ export const convertAnnualRateToSum = ({ date, value }) => {
   } else {
     return value * 365;
   }
+};
+
+function validateModels(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+  const parts = value.split(",");
+  const models = PRIORITY_10_MODELS.map(({ id }) => id);
+  if (parts.length && parts.every((d) => models.includes(d))) {
+    return parts;
+  } else {
+    return null;
+  }
+}
+
+function validateMonths(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+  const parts = value.split(",").map((d) => +d);
+  const range = extent(MONTHS_LIST, (d) => d.id);
+  if (parts.length && parts.every((d) => d >= range[0] && d <= range[1])) {
+    return parts;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * Create initial configuration
+ * @param {object} urlParams - params generated from url query string by sapper
+ * @param {object} defaultParams - default params for tool
+ * @return {object}
+ */
+// Helper function to create an object with initial settings for a Cal-Adapt tool
+export const getInitialConfig = (
+  urlParams = {},
+  defaultParams = INITIAL_CONFIG
+) => {
+  if (Object.keys(urlParams).length === 0) {
+    return defaultParams;
+  }
+
+  const { models, months, ...rest } = urlParams;
+
+  return {
+    ...defaultParams,
+    ...rest,
+    ...(validateModels(models) && { models: validateModels(models) }),
+    ...(validateMonths(months) && { months: validateMonths(months) }),
+  };
 };

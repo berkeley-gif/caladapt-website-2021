@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -24,7 +25,7 @@
 
   const { location } = locationStore;
   const { climvar } = climvarStore;
-  const { doyText } = doyStore;
+  const { doyText, doyNumber } = doyStore;
   //TODO: Use dataset info from API after data download tool is migrated
   //const { titles } = datasetStore;
   const titles = ["Hourly Observed Historical Data (Met Office Hadley Centre)"];
@@ -65,9 +66,9 @@
     histogramData = null;
   }
 
-  $: if ($location && $location.title) {
+  afterUpdate(() => {
     chartTitle = `${$location.title} (${$location.geometry.coordinates[0]}°, ${$location.geometry.coordinates[1]}°)`;
-  }
+  });
 
   async function loadLearnMore({
     slugs = [],
@@ -87,8 +88,7 @@
     bookmark = serialize({
       climvar: $climvarStore,
       station: $locationStore.id,
-      doy: $doyText,
-      extremes: $extremesStore,
+      doy: $doyNumber,
     });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
