@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -59,12 +60,12 @@
   let printContainer;
   let printSkipElements;
 
+  let chartTitle = "";
+
   $: chartDescription =
     $climvarStore === "tasmax"
       ? $indicator.description
       : $indicator.description.replace("extreme heat days", "warm nights");
-
-  $: chartTitle = $location.title;
 
   $: formatFn = format(`.${$indicator.decimals}f`);
 
@@ -89,6 +90,12 @@
   } else {
     dataByDate = null;
   }
+
+  afterUpdate(() => {
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
