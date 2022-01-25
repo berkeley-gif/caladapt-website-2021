@@ -1,8 +1,11 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
-  import { Map, NavigationControl } from "~/components/tools/Map";
-  import RasterLayers from "./Rasters";
+  import { getGeoJson } from "../_data";
+  import { Map as SlippyMap, NavigationControl } from "~/components/tools/Map";
+  import RasterLayers from "./Rasters.svelte";
+  import TileIndexes from "./TileIndexes.svelte";
+  import TileCentroids from "./TileCentroids.svelte";
 
   export let dataLayersAugmented;
   export let bbox;
@@ -11,7 +14,8 @@
   // initial map view
   const lng = -122.2813;
   const lat = 37.7813;
-  const zoom = 9;
+  let zoom = 9;
+  $: console.log("map zoom: ", zoom);
 
   const dispatch = createEventDispatcher();
 
@@ -20,9 +24,18 @@
   let mapInstance;
   let mbGlMap;
   let curStyleUrl;
+  let geojsons = new Map();
+  let centroids;
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
+  $: beforeId =
+    mapStyle && mapStyle.includes("satellite")
+      ? undefined
+      : "settlement-subdivision-label";
+
+  $: beforeIdCentroids =
+    mapStyle && mapStyle.includes("satellite") ? undefined : "state-label";
 
   // TODO: remove before deploying to prod
   $: if (mapReady && typeof window !== undefined) {
@@ -38,6 +51,10 @@
     mbGlMap.setStyle(curStyleUrl);
   }
 
+  $: if (mapReady) {
+    mbGlMap.on("zoomend", handleZoomend);
+  }
+
   function handleMoveend() {
     if (mapReady) {
       const {
@@ -48,6 +65,10 @@
     }
   }
 
+  function handleZoomend() {
+    zoom = mbGlMap.getZoom();
+  }
+
   function handleMapReady({ detail }) {
     mbGlMap = detail;
   }
@@ -55,10 +76,21 @@
   function handleMapDestroy() {
     mbGlMap = null;
   }
+
+  onMount(async () => {
+    try {
+      const layerIds = dataLayersAugmented.map((d) => d.id);
+      const data = await getGeoJson(layerIds);
+      geojsons = new Map(data.map((d) => [d.id, d]));
+      centroids = await getGeoJson(layerIds.find((id) => id.includes("5m")));
+    } catch (error) {
+      console.log(error);
+    }
+  });
 </script>
 
 {#if mapStyle}
-  <Map
+  <SlippyMap
     bind:this="{mapInstance}"
     lng="{lng}"
     lat="{lat}"
@@ -69,6 +101,31 @@
     on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
-    <RasterLayers mapStyle="{mapStyle}" dataLayers="{dataLayersAugmented}" />
-  </Map>
+
+    {#if zoom >= 7}
+      <RasterLayers
+        mapStyle="{mapStyle}"
+        beforeId="{beforeId}"
+        dataLayers="{dataLayersAugmented}"
+      />
+    {/if}
+
+    {#if zoom < 7}
+      <TileIndexes
+        mapStyle="{mapStyle}"
+        beforeId="{beforeId}"
+        dataLayers="{dataLayersAugmented}"
+        geojsons="{geojsons}"
+      />
+    {/if}
+
+    {#if zoom <= 6}
+      <TileCentroids
+        mapStyle="{mapStyle}"
+        beforeId="{beforeIdCentroids}"
+        dataLayers="{dataLayersAugmented}"
+        centroids="{centroids}"
+      />
+    {/if}
+  </SlippyMap>
 {/if}
