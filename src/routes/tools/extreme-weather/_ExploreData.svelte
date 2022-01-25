@@ -25,7 +25,7 @@
 
   const { location } = locationStore;
   const { climvar } = climvarStore;
-  const { doyText } = doyStore;
+  const { doyText, doyNumber } = doyStore;
   //TODO: Use dataset info from API after data download tool is migrated
   //const { titles } = datasetStore;
   const titles = ["Hourly Observed Historical Data (Met Office Hadley Centre)"];
@@ -88,8 +88,7 @@
     bookmark = serialize({
       climvar: $climvarStore,
       station: $locationStore.id,
-      doy: $doyText,
-      extremes: $extremesStore,
+      doy: $doyNumber,
     });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))

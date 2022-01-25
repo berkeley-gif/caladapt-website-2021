@@ -15,7 +15,7 @@ export const DEFAULT_INITIAL_CONFIG = {
   year: DEFAULT_SELECTED_YEAR,
   simulation: DEFAULT_SELECTED_SIMULATION,
   modelSingle: DEFAULT_SELECTED_MODEL_SINGLE,
-  climvarId: DEFAULT_CLIMVAR,
+  climvar: DEFAULT_CLIMVAR,
   lng: DEFAULT_CENTER[0],
   lat: DEFAULT_CENTER[1],
   imperial: false,

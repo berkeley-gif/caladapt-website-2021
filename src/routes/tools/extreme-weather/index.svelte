@@ -4,12 +4,8 @@
   // the data we need to render the page. It only runs once
   // during export.
   import resourcesList from "../../../../content/resources/data";
-  import {
-    DEFAULT_STATION_ID,
-    DEFAULT_CLIMATE_VARIABLE,
-    TOOL_SLUG,
-  } from "./_constants";
-  export async function preload({ query }) {
+  import { TOOL_SLUG } from "./_constants";
+  export async function preload() {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
@@ -27,37 +23,28 @@
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
 
-    // Set intitial config for tool
-    let initialConfig;
-    if (Object.keys(query).length > 0) {
-      // TODO: validate bookmark
-      const { climvar, station, imperial } = query;
-      initialConfig = {
-        stationId: station,
-        climvarId: climvar,
-        imperial: imperial === "true" ? true : false,
-      };
-    } else {
-      initialConfig = {
-        stationId: DEFAULT_STATION_ID,
-        climvarId: DEFAULT_CLIMATE_VARIABLE,
-        imperial: true,
-      };
-    }
-
-    return { initialConfig, tool, relatedTools, externalResources };
+    return { tool, relatedTools, externalResources };
   }
 </script>
 
 <script>
   import { onMount } from "svelte";
-  import { timeParse } from "d3-time-format";
+  import { timeParse, timeFormat } from "d3-time-format";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
   import { getStationById } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import { INITIAL_CONFIG } from "../_common/constants";
+  import { getInitialConfig } from "../_common/helpers";
+  import {
+    DEFAULT_STATION_ID,
+    DEFAULT_CLIMATE_VARIABLE,
+    DEFAULT_SELECTED_EXTREME,
+    DEFAULT_SELECTED_DAY,
+  } from "./_constants";
 
   // Components
   import { Header, About, ToolNavigation } from "~/components/tools/Partials";
@@ -80,10 +67,10 @@
     getQueryParams,
   } from "./_data";
 
-  export let initialConfig;
   export let tool;
 
   // Derived stores
+  const { page } = sapperStores();
   const { climvar } = climvarStore;
 
   // Local props
@@ -156,24 +143,27 @@
     }
   }
 
-  async function initApp(config) {
-    const { stationId, climvarId, imperial, doy } = config;
-    climvarStore.set(climvarId);
+  async function initApp() {
+    const { query } = $page;
+    const config = {
+      station: DEFAULT_STATION_ID,
+      climvar: DEFAULT_CLIMATE_VARIABLE,
+      doy: timeFormat("%j")(DEFAULT_SELECTED_DAY),
+      imperial: true,
+    };
+    const { station, climvar, imperial, doy } = getInitialConfig(query, config);
+    // Set stores
+    climvarStore.set(climvar);
+    doyStore.set(timeParse("%j")(+doy));
     unitsStore.set({ imperial });
     // Set intial station
-    const station = await getStationById(stationId, "hadisdstations");
-    locationStore.updateLocation(station);
-    // Set today's date as default
-    if (!doy) {
-      doyStore.set(new Date());
-    } else {
-      doyStore.set(timeParse("%j")(+doy));
-    }
+    const feature = await getStationById(station, "hadisdstations");
+    locationStore.updateLocation(feature);
     return;
   }
 
   onMount(() => {
-    initApp(initialConfig)
+    initApp()
       .then(() => {
         appReady = true;
         console.log("app ready");

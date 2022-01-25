@@ -100,10 +100,10 @@ export const OBSERVED = [
 export const OBSERVED_FILTER_YEAR = 2006;
 
 export const INITIAL_CONFIG = {
-  boundaryId: "locagrid",
-  scenarioId: "rcp45",
-  climvarId: "tasmax",
-  modelIds: ["HadGEM2-ES", "CNRM-CM5", "CanESM2", "MIROC5"],
+  boundary: "locagrid",
+  scenario: "rcp45",
+  climvar: "tasmax",
+  models: ["HadGEM2-ES", "CNRM-CM5", "CanESM2", "MIROC5"],
   lat: 38.58,
   lng: -121.46,
   imperial: true,

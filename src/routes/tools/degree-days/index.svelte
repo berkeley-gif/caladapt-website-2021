@@ -1,19 +1,12 @@
 <script context="module">
   import resourcesList from "content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/constants";
-  import {
-    DEFAULT_CLIMATE_INDICATOR,
-    DEFAULT_FREQUENCY_CODE,
-    DEFAULT_SELECTED_MONTHS,
-    DEFAULT_THRESHOLD_DEGREES,
-    TOOL_SLUG,
-  } from "./_constants";
+  import { TOOL_SLUG } from "./_constants";
 
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
-  export async function preload({ query }) {
+  export async function preload() {
     // Get tools metadata
     const toolsList = (await (await this.fetch("tools.json")).json()).tools;
 
@@ -33,49 +26,7 @@
       ["get-started", "faqs"].includes(slug)
     );
 
-    // Set intitial config for tool
-    let initialConfig;
-
-    if (Object.keys(query).length) {
-      // TODO: validate bookmark
-      const {
-        boundary,
-        climvar,
-        frequency,
-        indicator,
-        models,
-        months,
-        scenario,
-        threshold,
-        lat,
-        lng,
-      } = query;
-      initialConfig = {
-        boundaryId: boundary,
-        scenarioId: scenario,
-        climvarId: climvar,
-        indicatorId: indicator,
-        frequency,
-        months: months
-          ? months.split(",").map((d) => +d)
-          : DEFAULT_SELECTED_MONTHS,
-        threshold,
-        modelIds: models.split(","),
-        lat: +lat,
-        lng: +lng,
-      };
-    } else {
-      initialConfig = {
-        ...INITIAL_CONFIG,
-        indicatorId: DEFAULT_CLIMATE_INDICATOR,
-        frequency: DEFAULT_FREQUENCY_CODE,
-        months: DEFAULT_SELECTED_MONTHS,
-        threshold: DEFAULT_THRESHOLD_DEGREES,
-      };
-    }
-
     return {
-      initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -88,10 +39,19 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import {
+    DEFAULT_CLIMATE_INDICATOR,
+    DEFAULT_FREQUENCY_CODE,
+    DEFAULT_SELECTED_MONTHS,
+    DEFAULT_THRESHOLD_DEGREES,
+  } from "./_constants";
+  import { INITIAL_CONFIG } from "../_common/constants";
+  import { getInitialConfig } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -123,13 +83,13 @@
   } from "./_store";
   import { getObserved, getModels, getQueryParams } from "./_data";
 
-  export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
   export let helpItems;
 
   // Derived stores
+  const { page } = sapperStores();
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -200,37 +160,49 @@
     }
   }
 
-  async function initApp({
-    lat,
-    lng,
-    boundaryId,
-    indicatorId,
-    scenarioId,
-    climvarId,
-    modelIds,
-    months,
-    imperial,
-    threshold,
-    frequency,
-  }) {
-    climvarStore.set(climvarId);
-    indicatorsStore.set(indicatorId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
+  async function initApp() {
+    const { query } = $page;
+    // Default configuration
+    const config = {
+      ...INITIAL_CONFIG,
+      indicator: DEFAULT_CLIMATE_INDICATOR,
+      frequency: DEFAULT_FREQUENCY_CODE,
+      months: DEFAULT_SELECTED_MONTHS,
+      threshold: DEFAULT_THRESHOLD_DEGREES,
+    };
+    // Get initial configuration (from default or from url)
+    const {
+      lat,
+      lng,
+      boundary,
+      indicator,
+      scenario,
+      climvar,
+      models,
+      months,
+      imperial,
+      threshold,
+      frequency,
+    } = getInitialConfig(query, config);
+    // Set intial values for stores
+    climvarStore.set(climvar);
+    indicatorsStore.set(indicator);
+    scenarioStore.set(scenario);
+    modelsStore.set(models);
     unitsStore.set({ imperial });
     thresholdStore.set(threshold);
     frequencyStore.set(frequency);
     selectedMonthsStore.set(months);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundaryId);
+    const loc = await getFeature(nearest, boundary);
     locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
+    locationStore.updateBoundary(boundary);
     return;
   }
 
   onMount(() => {
-    initApp(initialConfig)
+    initApp()
       .then(() => {
         appReady = true;
       })

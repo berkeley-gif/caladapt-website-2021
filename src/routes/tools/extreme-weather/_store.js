@@ -16,6 +16,7 @@ import { closest } from "~/helpers/utilities";
 import { getCompassQuadrant } from "../_common/helpers";
 
 const textFormat = timeFormat("%B %e");
+const doyNumberFormat = timeFormat("%j");
 const dateFormat = timeFormat("%B %-e, %Y");
 const formatFn = format(".1f");
 
@@ -65,6 +66,11 @@ export const doyStore = (() => {
   return {
     set,
     subscribe,
+    get doyNumber() {
+      return derived(store, ($store) => {
+        return doyNumberFormat($store);
+      });
+    },
     get doyText() {
       return derived(store, ($store) => {
         return textFormat($store);

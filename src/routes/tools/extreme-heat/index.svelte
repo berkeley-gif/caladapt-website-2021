@@ -1,6 +1,5 @@
 <script context="module">
   import resourcesList from "../../../../content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/constants";
   import { TOOL_SLUG } from "./_constants";
 
   // The preload function takes a
@@ -35,28 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    // Set intitial config for tool
-    let initialConfig;
-
-    if (Object.keys(query).length > 0) {
-      // TODO: validate bookmark
-      const { boundary, climvar, scenario, models, lat, lng } = query;
-      initialConfig = {
-        boundaryId: boundary,
-        scenarioId: scenario,
-        climvarId: climvar,
-        modelIds: models.split(","),
-        lat: +lat,
-        lng: +lng,
-      };
-    } else {
-      initialConfig = {
-        ...INITIAL_CONFIG,
-      };
-    }
-
     return {
-      initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -69,10 +47,12 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import { getInitialConfig } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -108,13 +88,13 @@
   } from "./_data";
   import { DEFAULT_THRESHOLDS } from "./_constants";
 
-  export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
   export let helpItems;
 
   // Derived stores
+  const { page } = sapperStores();
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -200,28 +180,25 @@
     }
   }
 
-  async function initApp({
-    lat,
-    lng,
-    boundaryId,
-    scenarioId,
-    climvarId,
-    modelIds,
-    imperial,
-  }) {
-    climvarStore.set(climvarId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
+  async function initApp() {
+    const { query } = $page;
+    // Get initial configuration (from default or from url)
+    const { lat, lng, boundary, scenario, climvar, models, imperial } =
+      getInitialConfig(query);
+    // Set intial values for stores
+    climvarStore.set(climvar);
+    scenarioStore.set(scenario);
+    modelsStore.set(models);
     unitsStore.set({ imperial });
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundaryId);
+    const loc = await getFeature(nearest, boundary);
     locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
+    locationStore.updateBoundary(boundary);
     const thresh98p = await getDefaultThreshold({
       location: loc,
-      boundary: { id: boundaryId },
-      climvar: { id: climvarId },
+      boundary: { id: boundary },
+      climvar: { id: climvar },
     });
     thresholdListStore.add(thresh98p, "98th Percentile");
     thresholdStore.set(thresh98p);
@@ -232,7 +209,7 @@
   }
 
   onMount(() => {
-    initApp(initialConfig)
+    initApp()
       .then(() => {
         appReady = true;
       })
