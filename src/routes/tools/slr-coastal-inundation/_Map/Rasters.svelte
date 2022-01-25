@@ -1,82 +1,22 @@
 <script>
-  import { onDestroy, getContext } from "svelte";
+  import { onDestroy, getContext, afterUpdate } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
+  import { MapLayerHandler } from "./utils";
+  import { VISIBLE, NONE } from "../_constants";
 
   export let mapStyle;
+  export let beforeId;
   export let dataLayers = [];
 
   let prevRasterLayerProps = [];
   let prevMapStyle = mapStyle;
-
-  const VISIBLE = "visible";
-  const NONE = "none";
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
   const paintProps = {
     "raster-opacity": 0.5,
-  };
-
-  const getSourceId = (id) => `${id}-source`;
-
-  const getLayerId = (id, index) => `${id}-${index}`;
-
-  const getSourceDef = (tileUrl) => ({
-    type: "raster",
-    tiles: [tileUrl],
-    tileSize: 256,
-  });
-
-  const getLayerDef = (id, sourceId, paint, layout) => ({
-    id,
-    source: sourceId,
-    type: "raster",
-    paint,
-    layout,
-  });
-
-  const addLayer = (layerId, layerDef, beforeId) => {
-    if (!map.getLayer(layerId)) {
-      map.addLayer(layerDef, beforeId);
-    }
-  };
-
-  const removeLayer = (layerId) => {
-    if (map.getLayer(layerId)) {
-      map.removeLayer(layerId);
-    }
-  };
-
-  const addSource = (sourceId, sourceDef) => {
-    if (!map.getSource(sourceId)) {
-      map.addSource(sourceId, sourceDef);
-    }
-  };
-
-  const removeSource = (sourceId) => {
-    if (map.getSource(sourceId)) {
-      map.removeSource(sourceId);
-    }
-  };
-
-  const addMapRasterLayer = (id, url, index, visibility) => {
-    const layerId = getLayerId(id, index);
-    const sourceId = getSourceId(layerId);
-    const source = getSourceDef(url);
-    const layer = getLayerDef(layerId, sourceId, paintProps, {
-      visibility,
-    });
-    addSource(sourceId, source);
-    addLayer(layerId, layer, beforeId);
-  };
-
-  const removeMapRasterLayer = (id, index) => {
-    const layerId = getLayerId(id, index);
-    const sourceId = getSourceId(layerId);
-    removeLayer(layerId);
-    removeSource(sourceId);
   };
 
   const mapLayersProps = ({ id, checked, color, tileUrls }) => ({
@@ -89,25 +29,34 @@
     map.on("styledata", handleStyleDataChange);
   }
 
-  $: beforeId =
-    mapStyle && mapStyle.includes("satellite")
-      ? undefined
-      : "settlement-subdivision-label";
+  $: layerHandler = new MapLayerHandler({
+    map,
+    beforeId,
+    layerType: "raster",
+  });
 
   $: rasterLayersProps = dataLayers
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
     .map(mapLayersProps);
 
-  $: if (!equal(rasterLayersProps, prevRasterLayerProps)) {
-    removePreviousRasterLayers();
-    addRasterLayers();
-    prevRasterLayerProps = rasterLayersProps;
-  }
+  afterUpdate(() => {
+    if (!equal(rasterLayersProps, prevRasterLayerProps)) {
+      removePreviousRasterLayers();
+      addRasterLayers();
+      prevRasterLayerProps = rasterLayersProps;
+    }
+  });
 
   function addRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
       tileUrls.forEach((url, index) => {
-        addMapRasterLayer(id, url, index, visibility);
+        layerHandler.addMapLayer({
+          id,
+          asset: url,
+          index,
+          visibility,
+          paintProps,
+        });
       });
     });
   }
@@ -115,8 +64,14 @@
   function reapplyRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
       tileUrls.forEach((url, index) => {
-        removeMapRasterLayer(id, index);
-        addMapRasterLayer(id, url, index, visibility);
+        layerHandler.removeMapLayer(id, index);
+        layerHandler.addMapLayer({
+          id,
+          asset: url,
+          index,
+          visibility,
+          paintProps,
+        });
       });
     });
   }
@@ -124,7 +79,7 @@
   function removePreviousRasterLayers() {
     prevRasterLayerProps.forEach(({ id, tileUrls }) => {
       tileUrls.forEach((_url, index) => {
-        removeMapRasterLayer(id, index);
+        layerHandler.removeMapLayer(id, index);
       });
     });
   }
@@ -135,7 +90,7 @@
     }
     rasterLayersProps.forEach(({ id, tileUrls }) => {
       tileUrls.forEach((_url, index) => {
-        removeMapRasterLayer(id, index);
+        layerHandler.removeMapLayer(id, index);
       });
     });
   }
@@ -151,5 +106,8 @@
   onDestroy(() => {
     map.off("styledata", handleStyleDataChange);
     removeRasterLayers();
+    removePreviousRasterLayers();
+    layerHandler.removeMapRef();
+    layerHandler = null;
   });
 </script>

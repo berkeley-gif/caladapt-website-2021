@@ -9,8 +9,8 @@ import { $, fetch } from "zx";
 import mapshaper from "mapshaper";
 
 const COSMOS = "cosmos";
-const CALFLOD5m = "calflod3d_5m";
-const CALFLOD50m = "calflod3d_50m";
+const CALFLOD5m = "calflod3dtfs_5m";
+const CALFLOD50m = "calflod3dtfs_50m";
 const API_BASE_URL = "https://api.cal-adapt.org/api/rstores";
 const LAYER_PARAMS = new Map([
   [COSMOS, "slug=cosmosflooding"],
@@ -29,15 +29,24 @@ async function main() {
   await $`exit 0`;
 }
 
+async function handleResponse(response) {
+  const json = await response.json();
+  if (json && Array.isArray(json.results) && json.results.length) {
+    return json.results;
+  } else {
+    throw new Error("Empty API response, aborting...");
+  }
+}
+
 async function getData(name) {
   try {
-    if (name === "calflod3d_5m") {
+    if (name === CALFLOD5m) {
       // not all individual 5m tiles are in the API so we use a local geojson instead
       return require("./calflod3d_5m_tile_index.json");
     } else {
-      return await (
+      return handleResponse(
         await fetch(`${API_BASE_URL}/?${LAYER_PARAMS.get(name)}&pagesize=125`)
-      ).json();
+      );
     }
   } catch (error) {
     handleError(null, error);
@@ -80,7 +89,7 @@ function processLayers(layers) {
   const processed = new Map();
   for (let [name, values] of layers.entries()) {
     if (name !== CALFLOD5m) {
-      values = toGeoJson(dedupeGeoms(values.results));
+      values = toGeoJson(dedupeGeoms(values));
     }
     processed.set(name, values);
   }

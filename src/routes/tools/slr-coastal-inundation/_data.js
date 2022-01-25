@@ -19,3 +19,19 @@ export const toBBoxPolygon = (coords) => {
     return bboxPolygon(coords);
   }
 };
+
+export const getGeoJson = (ids) => {
+  if (Array.isArray(ids) && ids.length) {
+    return Promise.all(
+      ids.map(async (layer) =>
+        Object.assign(
+          { id: layer },
+          await fetch(`/data/${layer}-dissolved.geojson`).then((res) =>
+            res.json()
+          )
+        )
+      )
+    );
+  }
+  return fetch(`/data/${ids}-centroids.geojson`).then((res) => res.json());
+};
