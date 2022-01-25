@@ -9,7 +9,7 @@
   import {
     INDICATOR_DESCRIPTION,
     SELECT_STATION_DESCRIPTION,
-    DEFAULT_STAT_PERIODS,
+    PERIOD_LIST,
   } from "./_constants";
 
   import {
@@ -17,6 +17,7 @@
     SelectScenario,
     SelectModels,
     SelectMonth,
+    Select,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
@@ -32,6 +33,8 @@
 
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
+
+  $: console.log("from settings", $selectedPeriodStore);
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -54,22 +57,13 @@
   }
 
   function changeSelectedMonths(e) {
+    console.log("change month", e.detail);
     selectedMonthsStore.set(e.detail);
-    monthsSideEffect();
-  }
-
-  function monthsSideEffect() {
-    dataStore.setMonths($selectedMonthsStore);
   }
 
   function changeSelectedPeriod(e) {
     console.log("change period", e.detail);
     selectedPeriodStore.set(e.detail);
-    periodSideEffect();
-  }
-
-  function periodSideEffect() {
-    dataStore.setPeriod($selectedPeriodStore);
   }
 </script>
 
@@ -98,19 +92,19 @@
     on:change="{changeIndicator}"
   />
   <div class="spacing--v-16"></div>
-  {#if $indicatorStore === "annual"}
+  {#if $indicatorStore === "monthly"}
+    <Select
+      title="Select Period"
+      selected="{$selectedPeriodStore}"
+      items="{PERIOD_LIST}"
+      on:change="{changeSelectedPeriod}"
+    />
+  {:else}
     <SelectMonth
       multi="{true}"
       items="{MONTHS_LIST}"
       selectedId="{$selectedMonthsStore}"
       on:change="{changeSelectedMonths}"
-    />
-  {:else}
-    <RadioBtnGroup
-      title="Select Period"
-      selected="{$selectedPeriodStoreStore}"
-      items="{DEFAULT_STAT_PERIODS}"
-      on:change="{changeSelectedPeriod}"
     />
   {/if}
   <LearnMoreButton

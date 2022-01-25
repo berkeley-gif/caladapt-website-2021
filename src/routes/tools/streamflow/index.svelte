@@ -167,6 +167,7 @@
       climvarId,
       modelIds,
       imperial,
+      period,
     } = config;
     climvarStore.set(climvarId);
     indicatorStore.set(indicatorId);

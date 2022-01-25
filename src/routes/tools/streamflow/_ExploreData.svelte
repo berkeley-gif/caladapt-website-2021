@@ -33,6 +33,8 @@
     indicatorStore,
     dataStore,
     selectedMonthsStore,
+    totalAnnual,
+    averageMonthly,
   } from "./_store";
 
   const { location } = locationStore;
@@ -40,7 +42,7 @@
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
-  const { events, annual, monthly } = dataStore;
+  const { events } = dataStore;
 
   let data;
   let dataByDate;
@@ -74,14 +76,14 @@
       ? getMonthsLabel()
       : "";
 
-  $: if ($selectedMonthsStore && $events && $indicator.id === "annual") {
-    data = $annual;
+  $: if ($events && $averageMonthly) {
+    data = $indicator.id === "annual" ? $totalAnnual : $averageMonthly;
+    console.log("events exists", data);
     dataByDate = groupDataByYear(flattenData(data));
-    console.log("annual", data);
   } else {
-    data = $monthly;
-    //dataByDate = groupDataByYear(flattenData(data));
-    console.log("monthly", data);
+    data = null;
+    dataByDate = null;
+    console.log("evens does not exist", data);
   }
 
   async function loadLearnMore({

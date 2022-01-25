@@ -41,9 +41,14 @@ export const CLIMATE_INDICATORS = [
 ];
 
 export const DEFAULT_CLIMATE_VARIABLE = CLIMATE_VARIABLES[0];
-export const DEFAULT_CLIMATE_INDICATOR = "monthly";
+export const DEFAULT_CLIMATE_INDICATOR = "annual";
 
 export const DEFAULT_SELECTED_MONTHS = [2, 3, 4];
+
+export const PERIOD_LIST = DEFAULT_STAT_PERIODS.map((d) => ({
+  ...d,
+  text: d.label,
+}));
 export const DEFAULT_SELECTED_PERIOD = "baseline";
 
 export const INDICATOR_DESCRIPTION = `

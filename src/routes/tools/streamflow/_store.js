@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 import climvars from "~/helpers/climate-variables";
 import {
   CLIMATE_VARIABLES,
@@ -7,6 +7,7 @@ import {
   DEFAULT_CLIMATE_INDICATOR,
   DEFAULT_SELECTED_MONTHS,
   DEFAULT_SELECTED_PERIOD,
+  PERIOD_LIST,
 } from "./_constants";
 import { makeCustomWritableStore } from "../_common/stores";
 
@@ -52,54 +53,62 @@ export const indicatorStore = makeCustomWritableStore(
 
 export const selectedMonthsStore = writable(DEFAULT_SELECTED_MONTHS);
 
-export const selectedPeriodStoreStore = writable(DEFAULT_SELECTED_PERIOD);
+export const selectedPeriodStore = writable(DEFAULT_SELECTED_PERIOD);
 
-const DATA = { events: null, monthIds: DEFAULT_SELECTED_MONTHS };
+// export const selectedPeriodStore = makeCustomWritableStore(DEFAULT_SELECTED_PERIOD, {
+//   name: "selectedPeriodStore",
+//   getters: [
+//     {
+//       name: "period",
+//       getter: ($s) => PERIOD_LIST.find((d) => d.id === $s),
+//     },
+//   ],
+// });
 
-export const dataStore = makeCustomWritableStore(DATA, {
-  name: "dataStore",
-  getters: [
-    {
-      name: "events",
-      getter: ($s) => $s.events,
-    },
-    {
-      name: "annual",
-      getter: ($s) => {
-        if ($s.events && $s.monthIds) {
-          return sumMonthlyDataByWaterYear(
-            filterDataByMonths($s.events, $s.monthIds)
-          );
-        }
+export const dataStore = makeCustomWritableStore(
+  { events: null },
+  {
+    name: "dataStore",
+    getters: [
+      {
+        name: "events",
+        getter: ($s) => $s.events,
       },
-    },
-    {
-      name: "monthly",
-      getter: ($s) => {
-        if ($s.events) {
-          return averageMonthlyDataByPeriod(
-            filterDataByPeriod($s.events, 1961, 1990)
-          );
-        }
+    ],
+    updaters: [
+      {
+        name: "setEvents",
+        update: (store) => (_data) =>
+          store.update((s) => {
+            s.events = _data;
+            return s;
+          }),
       },
-    },
-  ],
-  updaters: [
-    {
-      name: "setEvents",
-      update: (store) => (_data) =>
-        store.update((s) => {
-          s.events = _data;
-          return s;
-        }),
-    },
-    {
-      name: "setMonths",
-      update: (store) => (_monthIds) =>
-        store.update((s) => {
-          s.monthIds = _monthIds;
-          return s;
-        }),
-    },
-  ],
-});
+    ],
+  }
+);
+
+// Total annual streamflow
+export const totalAnnual = derived(
+  [dataStore, selectedMonthsStore],
+  ([$dataStore, $selectedMonthsStore]) => {
+    if (!$dataStore.events || !$selectedMonthsStore) return null;
+    return sumMonthlyDataByWaterYear(
+      filterDataByMonths($dataStore.events, $selectedMonthsStore)
+    );
+  }
+);
+
+// Total annual streamflow
+export const averageMonthly = derived(
+  [dataStore, selectedPeriodStore],
+  ([$dataStore, $selectedPeriodStore]) => {
+    console.log("from store", $dataStore, $selectedPeriodStore);
+    if (!$dataStore.events || !$selectedPeriodStore) return null;
+    const period = PERIOD_LIST.find(({ id }) => id === $selectedPeriodStore);
+    console.log(period);
+    return averageMonthlyDataByPeriod(
+      filterDataByPeriod($dataStore.events, period.start, period.end)
+    );
+  }
+);
