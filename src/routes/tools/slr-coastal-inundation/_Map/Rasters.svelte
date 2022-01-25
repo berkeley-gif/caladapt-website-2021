@@ -1,5 +1,5 @@
 <script>
-  import { onDestroy, getContext } from "svelte";
+  import { onDestroy, getContext, beforeUpdate, tick } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
   import { MapLayerHandler } from "./utils";
@@ -39,12 +39,14 @@
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
     .map(mapLayersProps);
 
-  // TODO: figure out why 5m layer isn't added when switching from z6 to z7
-  $: if (!equal(rasterLayersProps, prevRasterLayerProps)) {
-    removePreviousRasterLayers();
-    addRasterLayers();
-    prevRasterLayerProps = rasterLayersProps;
-  }
+  beforeUpdate(async () => {
+    await tick();
+    if (!equal(rasterLayersProps, prevRasterLayerProps)) {
+      removePreviousRasterLayers();
+      addRasterLayers();
+      prevRasterLayerProps = rasterLayersProps;
+    }
+  });
 
   function addRasterLayers() {
     rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
