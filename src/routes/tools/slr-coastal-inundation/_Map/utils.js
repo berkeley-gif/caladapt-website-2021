@@ -65,7 +65,7 @@ export class MapLayerHandler {
     if (!this.map.getLayer(layerId)) {
       this.map.addLayer(layerDef, beforeId);
     } else {
-      this._warn("map layer already exists, skipping");
+      this._warn(`map layer ${layerId} already exists, skipping`);
     }
   }
 
@@ -79,7 +79,7 @@ export class MapLayerHandler {
     if (!this.map.getSource(sourceId)) {
       this.map.addSource(sourceId, sourceDef);
     } else {
-      this._warn("map source already exists, skipping");
+      this._warn(`map source ${sourceId} already exists, skipping`);
     }
   }
 
@@ -111,6 +111,10 @@ export class MapLayerHandler {
     const sourceId = this._getSourceId(layerId);
     this._removeLayer(layerId);
     this._removeSource(sourceId);
+  }
+
+  removeMapRef() {
+    this._map = null;
   }
 
   get map() {
