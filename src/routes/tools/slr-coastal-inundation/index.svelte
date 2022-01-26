@@ -29,9 +29,9 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const aboutContent = await (
+    const { aboutContent } = await (
       await this.fetch("tools/slr-coastal-inundation.json")
-    ).text();
+    ).json();
 
     let initialConfig = {
       ...DEFAULT_INITIAL_CONFIG,
@@ -238,7 +238,7 @@
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
       <div slot="description">
-        {aboutContent}
+        {@html aboutContent}
       </div>
     </About>
   </div>
