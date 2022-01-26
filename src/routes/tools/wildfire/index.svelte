@@ -188,7 +188,6 @@
     simulationStore.set(simulation);
 
     const loc = await getFeature({ center: [+lng, +lat] }, boundary);
-    console.log("loc", loc);
     if (boundary === "locagrid") {
       const { place_name } = (await reverseGeocode(`${lng}, ${lat}`))
         .features[0];
