@@ -156,8 +156,9 @@
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      ["climate indicator", `${$climvar.label} ${$indicator.label}`],
-      ["threshold", `${$thresholdStore} ${$climvar.units.imperial}`],
+      ["climate indicator", `${indicatorLabel}`],
+      ["threshold", `${thresholdLabel}`],
+      ["duration", `${durationLabel}`],
     ];
     printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
