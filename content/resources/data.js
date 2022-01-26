@@ -1,47 +1,5 @@
 const data = [
   {
-    date: '2020-01-04',
-    title: 'Cal-Adapt API',
-    text: `Cal-Adapt provides a public REST API for programmatically accessing climate data 
-    hosted on Cal-Adapt and makes it easier to build data driven applications and analyses. 
-    Read the Cal-Adapt API documentation to explore all the available features and 
-    check out our cookbooks for example scripts and workflows.`,
-    category: 'developers',
-    link: 'https://berkeley-gif.github.io/caladapt-docs/',
-    image: 'blog/download.png',
-    author: 'Cal-Adapt',
-  },
-  {
-    date: '2020-01-20',
-    title: 'R package',
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-    incididunt ut labore et dolore magna aliqua.`,
-    category: 'developers',
-    link: '#!',
-    image: '/logos/r-logo.jpg',
-    author: 'Cal-Adapt',
-  },
-  {
-    date: '2020-01-20',
-    title: 'ArcGIS extension',
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-    incididunt ut labore et dolore magna aliqua.`,
-    category: 'developers',
-    link: '#!',
-    image: '/logos/arcgis-logo.png',
-    author: 'Cal-Adapt',
-  },
-{
-    date: '2020-01-20',
-    title: 'Jupyter Notebooks',
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-    incididunt ut labore et dolore magna aliqua.`,
-    category: 'developers',
-    link: 'https://berkeley-gif.github.io/caladapt-docs/cookbook.html',
-    image: '/logos/arcgis-logo.png',
-    author: 'Cal-Adapt',
-  },
-  {
     date: '2020-01-20',
     title: 'California Adaptation Clearinghouse',
     text: `The Adaptation Clearinghouse is the State of California’s consolidated searchable 
