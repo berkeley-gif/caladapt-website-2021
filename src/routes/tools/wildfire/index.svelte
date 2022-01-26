@@ -190,7 +190,7 @@
     const loc = await getFeature({ center: [+lng, +lat] }, boundary);
     console.log("loc", loc);
     if (boundary === "locagrid") {
-      const { place_name } = (await reverseGeocode(`${+lng}, ${+lat}`))
+      const { place_name } = (await reverseGeocode(`${lng}, ${lat}`))
         .features[0];
       loc.title = getTitle(loc, boundary, place_name);
     }
