@@ -25,7 +25,7 @@ const data = [
       from California Ocean Protection Council used by several state agencies 
       in developing guidance for planning decisions.`,
     link: "http://www.opc.ca.gov/webmaster/ftp/pdf/docs/rising-seas-in-california-an-update-on-sea-level-rise-science.pdf",
-    image: "",
+    image: "/placeholders/rect_16x9.svg",
     author: "State"
   },
   {
@@ -33,7 +33,7 @@ const data = [
     text: `Latest guidance from California Ocean Protection Council for incorporating 
       sea-level rise in risk assessment and planning based on the Rising Seas report.`,
     link: "https://www.opc.ca.gov/webmaster/ftp/pdf/agenda_items/20180314/Item3_Exhibit-A_OPC_SLR_Guidance-rd3.pdf",
-    image: "",
+    image: "/placeholders/rect_16x9.svg",
     author: "State"
   },
   {
@@ -41,7 +41,7 @@ const data = [
     text: `Updated planning guidance from California Coastal Commission for 
       addressing sea level rise in Local Coastal Programs and Coastal Development Permits.`,
     link: "https://www.coastal.ca.gov/climate/slrguidance.html",
-    image: "",
+    image: "/placeholders/rect_16x9.svg",
     author: "State"
   },
   {
@@ -49,7 +49,7 @@ const data = [
     text: `Explore and understand features of the multiple sea level rise and 
       flood visualization tools available in California.`,
     link: "https://www.seathefuture.org/#/",
-    image: "",
+    image: "/placeholders/rect_16x9.svg",
     author: ""
   },
   {
@@ -58,7 +58,7 @@ const data = [
       decision makers with locally relevant data to help understand, visualize, 
       and adapt to sea level rise and coastal storms.`,
     link: "https://ourcoastourfuture.org/",
-    image: "",
+    image: "/placeholders/rect_16x9.svg",
     author: ""
   },
   {
@@ -66,7 +66,7 @@ const data = [
     text: `Data and tools from USGS to map and estimate community exposure to 
       various natural hazards.`,
     link: "https://www.usgs.gov/apps/hera/index.php",
-    image: "",
+    image: "/placeholders/rect_16x9.svg",
     author: "USGS"
   },
 ];
