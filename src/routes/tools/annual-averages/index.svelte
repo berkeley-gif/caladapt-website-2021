@@ -49,7 +49,7 @@
   import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
-  import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
   import { getInitialConfig } from "../_common/helpers";
 
@@ -144,10 +144,13 @@
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundary);
-    locationStore.updateLocation(loc);
+    const location = await getFeature({ center: [+lng, +lat] }, boundary);
+    if (boundary === "locagrid") {
+      const { place_name } = (await reverseGeocode(`${+lng}, ${+lat}`))
+        .features[0];
+      location.title = getTitle(location, boundary, place_name);
+    }
+    locationStore.updateLocation(location);
     locationStore.updateBoundary(boundary);
     return;
   }

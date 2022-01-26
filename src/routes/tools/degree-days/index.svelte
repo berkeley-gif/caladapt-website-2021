@@ -42,7 +42,7 @@
   import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
-  import { getFeature, reverseGeocode } from "~/helpers/geocode";
+  import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
   import {
     DEFAULT_CLIMATE_INDICATOR,
@@ -193,9 +193,12 @@
     thresholdStore.set(threshold);
     frequencyStore.set(frequency);
     selectedMonthsStore.set(months);
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundary);
+    const loc = await getFeature({ center: [+lng, +lat] }, boundary);
+    if (boundary === "locagrid") {
+      const { place_name } = (await reverseGeocode(`${+lng}, ${+lat}`))
+        .features[0];
+      loc.title = getTitle(location, boundary, place_name);
+    }
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
