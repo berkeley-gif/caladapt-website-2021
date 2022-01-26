@@ -1,17 +1,12 @@
 <script context="module">
   import resourcesList from "../../../../content/resources/data";
-  import { INITIAL_CONFIG } from "../_common/constants";
-  import {
-    TOOL_SLUG,
-    DEFAULT_DURATION,
-    DEFAULT_THRESHOLD_TYPE,
-  } from "./_constants";
+  import { TOOL_SLUG } from "./_constants";
 
   // The preload function takes a
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
-  export async function preload({ query }) {
+  export async function preload() {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
@@ -39,42 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    // Set intitial config for tool
-    let initialConfig;
-
-    if (Object.keys(query).length > 0) {
-      // TODO: validate bookmark
-      const {
-        boundary,
-        climvar,
-        scenario,
-        models,
-        lat,
-        lng,
-        duration,
-        threshId,
-      } = query;
-      initialConfig = {
-        boundaryId: boundary,
-        scenarioId: scenario,
-        climvarId: climvar,
-        modelIds: models.split(","),
-        lat: +lat,
-        lng: +lng,
-        duration: +duration,
-        thresholdId: threshId,
-      };
-    } else {
-      initialConfig = {
-        ...INITIAL_CONFIG,
-        climvarId: "pr",
-        duration: DEFAULT_DURATION,
-        thresholdId: DEFAULT_THRESHOLD_TYPE,
-      };
-    }
-
     return {
-      initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -88,10 +48,18 @@
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
   import { format } from "d3-format";
+  import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
   import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import {
+    DEFAULT_ROLLING_FUNCTION,
+    DEFAULT_THRESHOLD_PRECISION,
+    DEFAULT_THRESHOLD_TYPE,
+    DEFAULT_INITIAL_CONFIG,
+  } from "./_constants";
+  import { getInitialConfig } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -128,10 +96,6 @@
     getQueryParams,
     getThreshold,
   } from "./_data";
-  import {
-    DEFAULT_ROLLING_FUNCTION,
-    DEFAULT_THRESHOLD_PRECISION,
-  } from "./_constants";
 
   export let initialConfig;
   export let tool;
@@ -140,6 +104,7 @@
   export let helpItems;
 
   // Derived stores
+  const { page } = sapperStores();
   const { location, boundary } = locationStore;
   const { scenario } = scenarioStore;
   const { intensity, events } = dataStore;
@@ -278,37 +243,42 @@
     }
   }
 
-  async function initApp({
-    lat,
-    lng,
-    boundaryId,
-    scenarioId,
-    modelIds,
-    imperial,
-    duration,
-    thresholdId,
-  }) {
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
+  async function initApp() {
+    const { query } = $page;
+    // Get initial configuration (from default or from url)
+    const {
+      lat,
+      lng,
+      boundary,
+      scenario,
+      models,
+      imperial,
+      duration,
+      threshType,
+    } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
+    // Set intial values for stores
+    scenarioStore.set(scenario);
+    modelsStore.set(models);
     unitsStore.set({ imperial });
-    durationStore.set(duration);
-    thresholdTypeStore.set(thresholdId);
+    durationStore.set(+duration);
+    thresholdTypeStore.set(threshType);
     const addresses = await reverseGeocode(`${lng}, ${lat}`);
     const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundaryId);
+    const loc = await getFeature(nearest, boundary);
     locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
+    locationStore.updateBoundary(boundary);
     const { params } = getQueryParams({
       location: loc,
-      boundary: { id: boundaryId },
+      boundary: { id: boundary },
       imperial: true,
     });
     const intervals = $returnPeriodStore;
-    const pct = thresholdId === DEFAULT_THRESHOLD_TYPE ? null : thresholdId;
+    const pct = threshType === DEFAULT_THRESHOLD_TYPE ? null : threshType;
+    const durationNum = +duration === 1 ? null : +duration;
     const thresh = await getThreshold({
       ...params,
       intervals,
-      duration,
+      ...(durationNum && { duration: durationNum }),
       ...(pct && { pct }),
     });
     thresholdStore.set(formatThresh(thresh));
