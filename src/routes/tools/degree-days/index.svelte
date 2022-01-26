@@ -197,7 +197,7 @@
     if (boundary === "locagrid") {
       const { place_name } = (await reverseGeocode(`${+lng}, ${+lat}`))
         .features[0];
-      loc.title = getTitle(location, boundary, place_name);
+      loc.title = getTitle(loc, boundary, place_name);
     }
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);

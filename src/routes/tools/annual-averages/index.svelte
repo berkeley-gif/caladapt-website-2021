@@ -144,13 +144,13 @@
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const location = await getFeature({ center: [+lng, +lat] }, boundary);
+    const loc = await getFeature({ center: [+lng, +lat] }, boundary);
     if (boundary === "locagrid") {
       const { place_name } = (await reverseGeocode(`${+lng}, ${+lat}`))
         .features[0];
-      location.title = getTitle(location, boundary, place_name);
+      loc.title = getTitle(loc, boundary, place_name);
     }
-    locationStore.updateLocation(location);
+    locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
   }
