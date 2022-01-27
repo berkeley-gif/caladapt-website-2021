@@ -50,7 +50,7 @@
     DEFAULT_THRESHOLD_DEGREES,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getInitialConfig, maybeSetPlaceName } from "../_common/helpers";
+  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -192,7 +192,7 @@
     thresholdStore.set(threshold);
     frequencyStore.set(frequency);
     selectedMonthsStore.set(months);
-    const loc = await maybeSetPlaceName(+lng, +lat, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;

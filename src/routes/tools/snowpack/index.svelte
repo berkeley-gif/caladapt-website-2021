@@ -55,7 +55,7 @@
     DEFAULT_SELECTED_MODEL_SINGLE,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getInitialConfig, maybeSetPlaceName } from "../_common/helpers";
+  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
 
   import {
     About,
@@ -189,7 +189,7 @@
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
     durationStore.set(+duration);
-    const loc = await maybeSetPlaceName(+lng, +lat, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;

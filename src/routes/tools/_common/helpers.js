@@ -303,7 +303,7 @@ export const getInitialConfig = (
  * @return {object}
  */
 // Helper function to create an object with initial location for a Cal-Adapt tool
-export async function maybeSetPlaceName(lng, lat, boundary) {
+export async function setInitialLocation(lng, lat, boundary) {
   let loc = DEFAULT_LOCATION;
 
   try {

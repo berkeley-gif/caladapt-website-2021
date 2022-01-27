@@ -50,7 +50,7 @@
 
   // Helpers
   import { logException } from "~/helpers/logging";
-  import { getInitialConfig, maybeSetPlaceName } from "../_common/helpers";
+  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -143,7 +143,7 @@
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const loc = await maybeSetPlaceName(+lng, +lat, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
