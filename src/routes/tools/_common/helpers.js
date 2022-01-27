@@ -5,8 +5,11 @@ import {
   INITIAL_CONFIG,
   MONTHS_LIST,
   PRIORITY_10_MODELS,
+  DEFAULT_LOCATION,
+  DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
+import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -281,10 +284,47 @@ export const getInitialConfig = (
 
   const { models, months, ...rest } = urlParams;
 
+  const validModelsList = validateModels(models);
+  const validMonthsList = validateMonths(months);
+
   return {
     ...defaultParams,
     ...rest,
-    ...(validateModels(models) && { models: validateModels(models) }),
-    ...(validateMonths(months) && { months: validateMonths(months) }),
+    ...(validModelsList && { models: validModelsList }),
+    ...(validMonthsList && { months: validMonthsList }),
   };
 };
+
+/**
+ * Create initial location
+ * @param {float} lng
+ * @param {float} lat
+ * @param {string} boundary - boundary id
+ * @return {object}
+ */
+// Helper function to create an object with initial location for a Cal-Adapt tool
+export async function maybeSetPlaceName(lng, lat, boundary) {
+  let loc = DEFAULT_LOCATION;
+
+  try {
+    loc = await getFeature({ center: [lng, lat] }, boundary);
+  } catch (error) {
+    console.warn(error);
+  }
+
+  if (boundary === "locagrid") {
+    let placeName = DEFAULT_LOCAGRIDCELL_TITLE;
+    try {
+      const result = await reverseGeocode(`${lng}, ${lat}`);
+      if (result && result.features && result.features.length) {
+        placeName = result.features[0].place_name;
+      }
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      loc.title = getTitle(loc, boundary, placeName);
+    }
+  }
+
+  return loc;
+}
