@@ -77,44 +77,6 @@ export const getFeatureById = async (id, layerId) => {
   return response;
 };
 
-export const createAdditionalProps = (feature, layerId) => {
-  let title;
-  let address = "California";
-  switch (layerId) {
-    case "locagrid":
-      title = feature.properties.name;
-      break;
-    case "counties":
-      title = `${feature.properties.name} County`;
-      address = feature.properties.state_name;
-      break;
-    case "censustracts":
-      title = `Census Tract ${feature.properties.tract}`;
-      break;
-    case "hydrounits":
-      title = `${feature.properties.name} Watershed`;
-      break;
-    case "cdistricts":
-      title = `Congressional District ${feature.properties.cd114fp}`;
-      break;
-    case "custom":
-      title = "Custom Boundary";
-      address = "";
-      break;
-    case "ca":
-      title = "State of California";
-      address = "";
-      break;
-    case "hadisdstations":
-      title = `Weather Station: ${feature.properties.name}`;
-      address = `${feature.properties.city}, California`;
-      break;
-    default:
-      title = feature.properties.name ? feature.properties.name : "No Title";
-  }
-  return { title, address };
-};
-
 export const getTitle = (feature, layerId, placeName) => {
   switch (layerId) {
     case "locagrid":
