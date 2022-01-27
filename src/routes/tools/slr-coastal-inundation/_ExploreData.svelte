@@ -19,7 +19,7 @@
   import { Map } from "./_Map";
 
   const { location, boundary } = locationStore;
-  const { tfTileLabel, timeFrame } = timeFrameStore;
+  const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
 
   // async component imports
@@ -31,7 +31,7 @@
 
   let learnMoreProps = {};
 
-  let mapStyle;
+  let mapStyle = "dark-v10";
   let legendRamp;
 
   if (typeof window !== "undefined" && !legendRamp) {
@@ -52,10 +52,7 @@
     if (layers.length) {
       return `${layers
         .map((d) => d.label)
-        .join(" and ")} data are unavailable for the
-        ${$floodScenario.label} flood scenario and ${
-        $timeFrame.label
-      } time period in the current map view.`;
+        .join(" and ")} data are unavailable for the current map view.`;
     }
     return "";
   }
@@ -131,7 +128,7 @@
         --background="var(--gray-20)"
       />
       <StyleControl
-        selected="{mapStyle && mapStyle.split('/').pop()}"
+        selected="{mapStyle}"
         on:change="{handleStyleChange}"
         --position="relative"
         --bottom="0"
