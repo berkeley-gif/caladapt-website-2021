@@ -190,6 +190,8 @@
     modelsStore.set(models);
     unitsStore.set({ imperial });
     const loc = await maybeSetPlaceName(+lng, +lat, boundary);
+    locationStore.updateLocation(loc);
+    locationStore.updateBoundary(boundary);
     const thresh98p = await getDefaultThreshold({
       location: loc,
       boundary: { id: boundary },
