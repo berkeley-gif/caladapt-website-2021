@@ -1,14 +1,8 @@
-import { readFileSync } from "fs";
-import { resolve } from "path";
-import marked from "marked";
+import { getToolContent } from "../_common/server-utils";
 
 export function get(_req, res) {
   try {
-    const file = "about.md";
-    const dir = "content/tools/slr-coastal-inundation/";
-    const path = resolve(process.cwd(), dir, file);
-    const data = readFileSync(path, "utf-8");
-    const aboutContent = marked(data);
+    const aboutContent = getToolContent("slr-coastal-inundation", "about");
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ aboutContent }));
   } catch (error) {
