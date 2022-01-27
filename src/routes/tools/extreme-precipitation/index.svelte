@@ -51,7 +51,6 @@
   import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
-  import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
   import {
     DEFAULT_ROLLING_FUNCTION,
@@ -59,7 +58,7 @@
     DEFAULT_THRESHOLD_TYPE,
     DEFAULT_INITIAL_CONFIG,
   } from "./_constants";
-  import { getInitialConfig } from "../_common/helpers";
+  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -97,7 +96,6 @@
     getThreshold,
   } from "./_data";
 
-  export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
@@ -262,9 +260,7 @@
     unitsStore.set({ imperial });
     durationStore.set(+duration);
     thresholdTypeStore.set(threshType);
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     const { params } = getQueryParams({
@@ -285,7 +281,7 @@
   }
 
   onMount(() => {
-    initApp(initialConfig)
+    initApp()
       .then(() => {
         appReady = true;
       })
