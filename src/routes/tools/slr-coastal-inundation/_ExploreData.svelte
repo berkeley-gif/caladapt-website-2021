@@ -52,10 +52,7 @@
     if (layers.length) {
       return `${layers
         .map((d) => d.label)
-        .join(" and ")} data are unavailable for the
-        ${$floodScenario.label} flood scenario and ${
-        $timeFrame.label
-      } time period in the current map view.`;
+        .join(" and ")} data are unavailable for the current map view.`;
     }
     return "";
   }
