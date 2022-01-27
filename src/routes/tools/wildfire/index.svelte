@@ -30,11 +30,16 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
+    const { aboutContent } = await (
+      await this.fetch("tools/wildfire.json")
+    ).json();
+
     return {
       tool,
       relatedTools,
       externalResources,
       helpItems,
+      aboutContent,
     };
   }
 </script>
@@ -87,6 +92,7 @@
   export let relatedTools;
   export let externalResources;
   export let helpItems;
+  export let aboutContent;
 
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
@@ -252,28 +258,7 @@
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
       <div slot="description">
-        <p>
-          The frequency, severity and impacts of wildfire are sensitive to
-          climate change as well as many other factors, including development
-          patterns, temperature increases, wind patterns, precipitation change
-          and pest infestations. Therefore, it is more difficult to project
-          exactly where and how fires will burn. Instead, climate models
-          estimate increased risk to wildfires.
-        </p>
-        <p>
-          The Annual or Monthly Average Area Burned can help inform at a high
-          level if wildfire activity is likely to increase. However, this
-          information is not complete - many regions across the state have no
-          projections (such as regions outside combined fire state and federal
-          protection responsibility areas), and more detailed analyses and
-          projections are needed for local decision-making.
-        </p>
-        <p>
-          These projections are most robust for the Sierra Nevada given model
-          inputs. However, as we have seen in recent years, much of California
-          can expect an increased risk of wildfire, with a wildfire season that
-          starts earlier, runs longer, and features more extreme fire events.
-        </p>
+        {@html aboutContent}
       </div>
     </About>
   </div>
