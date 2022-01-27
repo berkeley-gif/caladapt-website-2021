@@ -3,7 +3,7 @@
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
-  import resourcesList from "../../../../content/resources/data";
+  import resourcesList from "content/resources/data";
   import { TOOL_SLUG } from "./_constants";
   export async function preload() {
     // Get tools metadata
@@ -23,7 +23,11 @@
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
 
-    return { tool, relatedTools, externalResources };
+    const { aboutContent, description } = await (
+      await this.fetch("tools/extreme-weather.json")
+    ).json();
+
+    return { tool, relatedTools, externalResources, description, aboutContent };
   }
 </script>
 
@@ -37,12 +41,10 @@
   // Helpers
   import { getStationById } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
-  import { INITIAL_CONFIG } from "../_common/constants";
   import { getInitialConfig } from "../_common/helpers";
   import {
     DEFAULT_STATION_ID,
     DEFAULT_CLIMATE_VARIABLE,
-    DEFAULT_SELECTED_EXTREME,
     DEFAULT_SELECTED_DAY,
   } from "./_constants";
 
@@ -68,6 +70,8 @@
   } from "./_data";
 
   export let tool;
+  export let description;
+  export let aboutContent;
 
   // Derived stores
   const { page } = sapperStores();
@@ -91,19 +95,6 @@
       currentView = entry.target.id;
     }
   };
-
-  const description = [
-    `Explore extreme temperatures and wind speed for past weather and present day. This tool
-      provides data from 38 weather stations across California, utilizing a
-      quality-controlled dataset for hourly weather observations curated for use
-      by the energy sector (<a
-        href="https://www.energy.ca.gov/sites/default/files/2021-05/CEC-500-2020-039.pdf"
-        target="_blank">Doherty 2020</a
-      >). Present day weather conditions are from NOAA.`,
-    `<em style="font-size:1rem;">Note: This tool is still under development. We are soliciting feedback
-      from our users. Please email us at support@cal-adapt.org with your
-      comments and questions.</em>`,
-  ];
 
   // Reactive props
   $: $climvar, $doyStore, $locationStore, $extremesStore, update();
@@ -211,38 +202,7 @@
   <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
     <About datasets="{[]}">
       <div slot="description">
-        <p>
-          Extreme Value Theory (EVT) is a statistical methodology used for
-          describing rare events. There are several ways to apply EVT to weather
-          variables including fitting a Generalized Extreme Value distribution
-          (GEV) over Block Maxima (annual maximum value) and the
-          Peaks-Over-Threshold approach where probability distribution of
-          exceedances over a pre-defined threshold are modeled using a
-          generalized Pareto distribution. This tool explores extreme events in
-          California using a Block Maxima approach.
-        </p>
-        <p>
-          Annual Maximum values of the climate variable from a 21 day window
-          around the day of interest are extracted from a 30 year daily
-          timeseries for the Baseline Period (1991–2020). A GEV distribution for
-          Temperature and an inverted Weibull distribution for Wind Speed is
-          applied to this time series. Shape and scale parameters for the
-          distribution are estimated using the Maximum Likelihood method.
-          Exceedance Probabilities for different threshold values (return
-          levels) are estimated from the fitted model with 95% confidence
-          intervals.
-        </p>
-        <p>
-          <strong>User Advisory</strong>: The Extreme Weather Tool is designed
-          to broadly inform estimated probabilities of extreme weather events
-          across a wide range of environments and climate zones in California.
-          On a local scale, different statistical assumptions (i.e. fitting
-          techniques for distribution parameters, choice of extreme value
-          distribution) may be more appropriate. We encourage users to ensure
-          the empirical fit of the applied distribution is acceptable to their
-          end use before using estimates produced from this tool for planning
-          purposes.
-        </p>
+        {@html aboutContent}
       </div>
       <div slot="extra-sources">
         <div class="bx--row source">

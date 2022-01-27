@@ -1,4 +1,4 @@
-export default [
+export const description = [
   `Explore extreme temperatures and wind speed for past weather and present day. This tool
     provides data from 38 weather stations across California, utilizing a
     quality-controlled dataset for hourly weather observations curated for use
