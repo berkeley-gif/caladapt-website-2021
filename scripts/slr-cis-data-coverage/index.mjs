@@ -43,6 +43,9 @@ async function getData(name) {
     if (name === CALFLOD5m) {
       // not all individual 5m tiles are in the API so we use a local geojson instead
       return require("./calflod3d_5m_tile_index.json");
+    } else if (name === CALFLOD50m) {
+      // not all individual 5m tiles are in the API so we use a local geojson instead
+      return require("./calflod3d_50m_tile_index.json");
     } else {
       return handleResponse(
         await fetch(`${API_BASE_URL}/?${LAYER_PARAMS.get(name)}&pagesize=125`)
@@ -88,7 +91,7 @@ function toGeoJson(geometries) {
 function processLayers(layers) {
   const processed = new Map();
   for (let [name, values] of layers.entries()) {
-    if (name !== CALFLOD5m) {
+    if (name !== CALFLOD5m && name !== CALFLOD50m) {
       values = toGeoJson(dedupeGeoms(values));
     }
     processed.set(name, values);
