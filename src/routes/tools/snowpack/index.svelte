@@ -30,11 +30,16 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
+    const { aboutContent } = await (
+      await this.fetch("tools/snowpack.json")
+    ).json();
+
     return {
       tool,
       relatedTools,
       externalResources,
       helpItems,
+      aboutContent,
     };
   }
 </script>
@@ -45,7 +50,6 @@
   import { inview } from "svelte-inview/dist/";
   import { stores as sapperStores } from "@sapper/app";
 
-  import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
   import {
     DEFAULT_CENTER,
@@ -56,7 +60,7 @@
     DEFAULT_SELECTED_MODEL_SINGLE,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getInitialConfig } from "../_common/helpers";
+  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
 
   import {
     About,
@@ -92,6 +96,7 @@
   export let relatedTools;
   export let externalResources;
   export let helpItems;
+  export let aboutContent;
 
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
@@ -190,9 +195,7 @@
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
     durationStore.set(+duration);
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
@@ -250,17 +253,7 @@
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
       <div slot="description">
-        <p>
-          If heat-trapping emissions continue unabated, more precipitation will
-          fall as rain instead of snow, and the snow that does fall will melt
-          earlier, reducing the Sierra Nevada spring snowpack by as much as 70
-          to 90 percent. How much snowpack will be lost depends in part on
-          future precipitation patterns, the projections for which remain
-          uncertain. However, even under wetter climate projections, the loss of
-          snowpack would pose challenges to water managers, hamper hydropower
-          generation, and nearly eliminate skiing and other snow-related
-          recreational activities.
-        </p>
+        {@html aboutContent}
       </div>
     </About>
   </div>

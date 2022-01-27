@@ -24,6 +24,8 @@ export const DEFAULT_LOCATION = {
   bbox: [-121.5, 38.5625, -121.4375, 38.625],
 };
 
+export const DEFAULT_LOCAGRIDCELL_TITLE = "LOCA Grid Cell";
+
 export const DEFAULT_SCENARIOS = scenarios.filter((d) =>
   ["rcp45", "rcp85"].includes(d.id)
 );
