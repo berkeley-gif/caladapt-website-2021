@@ -1,14 +1,8 @@
-import { readFileSync } from "fs";
-import { resolve } from "path";
-import marked from "marked";
+import { getToolContent } from "../_common/server-utils";
 
 export function get(_req, res) {
   try {
-    const file = "about.md";
-    const dir = "content/tools/annual-averages/";
-    const path = resolve(process.cwd(), dir, file);
-    const data = readFileSync(path, "utf-8");
-    const aboutContent = marked(data);
+    const aboutContent = getToolContent("annual-averages", "about");
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ aboutContent }));
   } catch (error) {
