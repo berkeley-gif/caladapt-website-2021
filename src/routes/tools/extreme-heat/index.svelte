@@ -35,7 +35,7 @@
     );
 
     const { aboutContent } = await (
-      await this.fetch("tools/annual-averages.json")
+      await this.fetch("tools/extreme-heat.json")
     ).json();
 
     return {
