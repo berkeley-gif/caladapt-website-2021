@@ -29,6 +29,10 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
+    const { aboutContent } = await (
+      await this.fetch("tools/slr-coastal-inundation.json")
+    ).json();
+
     let initialConfig = {
       ...DEFAULT_INITIAL_CONFIG,
     };
@@ -46,6 +50,7 @@
       relatedTools,
       externalResources,
       helpItems,
+      aboutContent,
     };
   }
 </script>
@@ -93,6 +98,7 @@
   export let relatedTools;
   export let externalResources;
   export let helpItems;
+  export let aboutContent;
 
   let appReady = false;
 
@@ -232,7 +238,7 @@
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
       <div slot="description">
-        <p>To do...</p>
+        {@html aboutContent}
       </div>
     </About>
   </div>
