@@ -50,9 +50,8 @@
   import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
-  import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
-  import { getInitialConfig } from "../_common/helpers";
+  import { getInitialConfig, maybeSetPlaceName } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -190,12 +189,7 @@
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const loc = await getFeature({ center: [+lng, +lat] }, boundary);
-    if (boundary === "locagrid") {
-      const { place_name } = (await reverseGeocode(`${lng}, ${lat}`))
-        .features[0];
-      loc.title = getTitle(loc, boundary, place_name);
-    }
+    const loc = await maybeSetPlaceName(+lng, +lat, boundary);
     const thresh98p = await getDefaultThreshold({
       location: loc,
       boundary: { id: boundary },

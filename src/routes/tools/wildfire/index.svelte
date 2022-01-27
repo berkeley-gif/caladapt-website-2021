@@ -45,11 +45,10 @@
   import { inview } from "svelte-inview/dist/";
   import { stores as sapperStores } from "@sapper/app";
 
-  import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
   import { logStores } from "~/helpers/utilities";
   import { logException } from "~/helpers/logging";
   import { DEFAULT_INITIAL_CONFIG } from "./_constants";
-  import { getInitialConfig } from "../_common/helpers";
+  import { getInitialConfig, maybeSetPlaceName } from "../_common/helpers";
 
   import {
     About,
@@ -187,12 +186,7 @@
     modelSingleStore.set(modelSingle);
     simulationStore.set(simulation);
 
-    const loc = await getFeature({ center: [+lng, +lat] }, boundary);
-    if (boundary === "locagrid") {
-      const { place_name } = (await reverseGeocode(`${lng}, ${lat}`))
-        .features[0];
-      loc.title = getTitle(loc, boundary, place_name);
-    }
+    const loc = await maybeSetPlaceName(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
 

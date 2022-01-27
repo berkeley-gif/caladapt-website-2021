@@ -42,7 +42,6 @@
   import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
-  import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
   import {
     DEFAULT_CLIMATE_INDICATOR,
@@ -51,7 +50,7 @@
     DEFAULT_THRESHOLD_DEGREES,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getInitialConfig } from "../_common/helpers";
+  import { getInitialConfig, maybeSetPlaceName } from "../_common/helpers";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -193,12 +192,7 @@
     thresholdStore.set(threshold);
     frequencyStore.set(frequency);
     selectedMonthsStore.set(months);
-    const loc = await getFeature({ center: [+lng, +lat] }, boundary);
-    if (boundary === "locagrid") {
-      const { place_name } = (await reverseGeocode(`${lng}, ${lat}`))
-        .features[0];
-      loc.title = getTitle(loc, boundary, place_name);
-    }
+    const loc = await maybeSetPlaceName(+lng, +lat, boundary);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
