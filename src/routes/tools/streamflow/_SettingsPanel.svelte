@@ -62,7 +62,6 @@
   }
 
   function changeSelectedPeriod(e) {
-    console.log("change period", e.detail);
     selectedPeriodStore.set(e.detail);
   }
 </script>
@@ -95,7 +94,7 @@
   {#if $indicatorStore === "monthly"}
     <Select
       title="Select Period"
-      selected="{$selectedPeriodStore}"
+      selectedId="{$selectedPeriodStore}"
       items="{PERIOD_LIST}"
       on:change="{changeSelectedPeriod}"
     />

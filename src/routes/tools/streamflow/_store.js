@@ -53,17 +53,18 @@ export const indicatorStore = makeCustomWritableStore(
 
 export const selectedMonthsStore = writable(DEFAULT_SELECTED_MONTHS);
 
-export const selectedPeriodStore = writable(DEFAULT_SELECTED_PERIOD);
-
-// export const selectedPeriodStore = makeCustomWritableStore(DEFAULT_SELECTED_PERIOD, {
-//   name: "selectedPeriodStore",
-//   getters: [
-//     {
-//       name: "period",
-//       getter: ($s) => PERIOD_LIST.find((d) => d.id === $s),
-//     },
-//   ],
-// });
+export const selectedPeriodStore = makeCustomWritableStore(
+  DEFAULT_SELECTED_PERIOD,
+  {
+    name: "selectedPeriodStore",
+    getters: [
+      {
+        name: "period",
+        getter: ($s) => PERIOD_LIST.find((d) => d.id === $s),
+      },
+    ],
+  }
+);
 
 export const dataStore = makeCustomWritableStore(
   { events: null },
@@ -88,7 +89,7 @@ export const dataStore = makeCustomWritableStore(
   }
 );
 
-// Total annual streamflow
+// Calculate total annual streamflow for selected months
 export const totalAnnual = derived(
   [dataStore, selectedMonthsStore],
   ([$dataStore, $selectedMonthsStore]) => {
@@ -99,14 +100,12 @@ export const totalAnnual = derived(
   }
 );
 
-// Total annual streamflow
+// Calculate average monthly streamflow for selected period
 export const averageMonthly = derived(
   [dataStore, selectedPeriodStore],
   ([$dataStore, $selectedPeriodStore]) => {
-    console.log("from store", $dataStore, $selectedPeriodStore);
     if (!$dataStore.events || !$selectedPeriodStore) return null;
     const period = PERIOD_LIST.find(({ id }) => id === $selectedPeriodStore);
-    console.log(period);
     return averageMonthlyDataByPeriod(
       filterDataByPeriod($dataStore.events, period.start, period.end)
     );

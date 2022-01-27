@@ -78,12 +78,10 @@
 
   $: if ($events && $averageMonthly) {
     data = $indicator.id === "annual" ? $totalAnnual : $averageMonthly;
-    console.log("events exists", data);
     dataByDate = groupDataByYear(flattenData(data));
   } else {
     data = null;
     dataByDate = null;
-    console.log("evens does not exist", data);
   }
 
   async function loadLearnMore({
