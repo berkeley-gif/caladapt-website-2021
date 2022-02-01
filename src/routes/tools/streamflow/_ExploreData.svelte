@@ -35,6 +35,7 @@
     selectedMonthsStore,
     totalAnnual,
     averageMonthly,
+    selectedPeriodStore,
   } from "./_store";
 
   const { location } = locationStore;
@@ -43,6 +44,7 @@
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
   const { events } = dataStore;
+  const { period } = selectedPeriodStore;
 
   let data;
   let dataByDate;
@@ -75,6 +77,8 @@
     $indicatorStore === "annual" && $selectedMonthsStore
       ? getMonthsLabel()
       : "";
+
+  $: periodLabel = $period.text;
 
   $: if ($events && $averageMonthly) {
     data = $indicator.id === "annual" ? $totalAnnual : $averageMonthly;
@@ -184,6 +188,7 @@
       monthsLabel="{monthsLabel}"
       scenarioLabel="{$scenario.labelLong}"
       loadLocation="{loadLocation}"
+      periodLabel="{periodLabel}"
     />
   </div>
 
