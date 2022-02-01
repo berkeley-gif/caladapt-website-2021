@@ -28,13 +28,10 @@
     indicatorStore,
     selectedMonthsStore,
     selectedPeriodStore,
-    dataStore,
   } from "./_store";
 
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
-
-  $: console.log("from settings", $selectedPeriodStore);
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -57,7 +54,6 @@
   }
 
   function changeSelectedMonths(e) {
-    console.log("change month", e.detail);
     selectedMonthsStore.set(e.detail);
   }
 

@@ -27,11 +27,11 @@
     modelsStore,
     datasetStore,
     isFetchingStore,
+    dataStore,
   } from "../_common/stores";
   import {
     climvarStore,
     indicatorStore,
-    dataStore,
     selectedMonthsStore,
     totalAnnual,
     averageMonthly,
@@ -43,7 +43,6 @@
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
-  const { events } = dataStore;
   const { period } = selectedPeriodStore;
 
   let data;
@@ -80,7 +79,7 @@
 
   $: periodLabel = $period.text;
 
-  $: if ($events && $averageMonthly) {
+  $: if ($dataStore && $averageMonthly) {
     data = $indicator.id === "annual" ? $totalAnnual : $averageMonthly;
     dataByDate = groupDataByYear(flattenData(data));
   } else {

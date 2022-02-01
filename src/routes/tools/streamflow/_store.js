@@ -9,7 +9,7 @@ import {
   DEFAULT_SELECTED_PERIOD,
   PERIOD_LIST,
 } from "./_constants";
-import { makeCustomWritableStore } from "../_common/stores";
+import { makeCustomWritableStore, dataStore } from "../_common/stores";
 
 import {
   filterDataByMonths,
@@ -66,36 +66,13 @@ export const selectedPeriodStore = makeCustomWritableStore(
   }
 );
 
-export const dataStore = makeCustomWritableStore(
-  { events: null },
-  {
-    name: "dataStore",
-    getters: [
-      {
-        name: "events",
-        getter: ($s) => $s.events,
-      },
-    ],
-    updaters: [
-      {
-        name: "setEvents",
-        update: (store) => (_data) =>
-          store.update((s) => {
-            s.events = _data;
-            return s;
-          }),
-      },
-    ],
-  }
-);
-
 // Calculate total annual streamflow for selected months
 export const totalAnnual = derived(
   [dataStore, selectedMonthsStore],
   ([$dataStore, $selectedMonthsStore]) => {
-    if (!$dataStore.events || !$selectedMonthsStore) return null;
+    if (!$dataStore || !$selectedMonthsStore) return null;
     return sumMonthlyDataByWaterYear(
-      filterDataByMonths($dataStore.events, $selectedMonthsStore)
+      filterDataByMonths($dataStore, $selectedMonthsStore)
     );
   }
 );
@@ -104,10 +81,10 @@ export const totalAnnual = derived(
 export const averageMonthly = derived(
   [dataStore, selectedPeriodStore],
   ([$dataStore, $selectedPeriodStore]) => {
-    if (!$dataStore.events || !$selectedPeriodStore) return null;
+    if (!$dataStore || !$selectedPeriodStore) return null;
     const period = PERIOD_LIST.find(({ id }) => id === $selectedPeriodStore);
     return averageMonthlyDataByPeriod(
-      filterDataByPeriod($dataStore.events, period.start, period.end)
+      filterDataByPeriod($dataStore, period.start, period.end)
     );
   }
 );

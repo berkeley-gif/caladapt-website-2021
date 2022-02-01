@@ -99,8 +99,9 @@
     locationStore,
     datasetStore,
     isFetchingStore,
+    dataStore,
   } from "../_common/stores";
-  import { climvarStore, indicatorStore, dataStore } from "./_store";
+  import { climvarStore, indicatorStore } from "./_store";
   import {
     getObserved,
     getModels,
@@ -149,7 +150,7 @@
       isFetchingStore.set(true);
       const observed = await getObserved(config, params, method);
       const modelsData = await getModels(config, params, method);
-      dataStore.setEvents([...observed, ...modelsData]);
+      dataStore.set([...observed, ...modelsData]);
     } catch (err) {
       console.log("updateData", err);
       logException(err);
