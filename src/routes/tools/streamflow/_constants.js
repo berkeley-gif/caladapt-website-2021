@@ -8,7 +8,7 @@ export const TOOL_SLUG = "streamflow";
 export const DEFAULT_STATION_LAYER = layers.find(
   (d) => d.metadata.title === "Central Valley Subbasins"
 );
-export const DEFAULT_STATION_ID = 5;
+export const DEFAULT_STATION_ID = 1;
 
 export const CLIMATE_VARIABLES = ["streamflow"];
 export const CLIMATE_INDICATORS = [

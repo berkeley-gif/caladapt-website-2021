@@ -16,6 +16,7 @@ import {
   sumMonthlyDataByWaterYear,
   filterDataByPeriod,
   averageMonthlyDataByPeriod,
+  calculateRunoffMidPoint,
 } from "./_data";
 
 // List of climvars used in Annual Averages Tool
@@ -88,3 +89,9 @@ export const averageMonthly = derived(
     );
   }
 );
+
+// Calculate average monthly streamflow for selected period
+export const runoffMidpoint = derived([averageMonthly], ([$averageMonthly]) => {
+  if (!$averageMonthly) return null;
+  return calculateRunoffMidPoint($averageMonthly);
+});

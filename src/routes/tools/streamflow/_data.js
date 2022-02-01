@@ -1,5 +1,5 @@
 // Node modules
-import { merge, rollups, sum, mean } from "d3-array";
+import { merge, rollups, sum, mean, cumsum } from "d3-array";
 import getCenter from "@turf/center";
 import { format } from "d3-format";
 
@@ -215,5 +215,22 @@ export const filterDataByPeriod = (data, start, end) => {
       ({ wateryear }) => wateryear >= start && wateryear <= end
     );
     return { ...series, values: filteredValues };
+  });
+};
+
+export const calculateRunoffMidPoint = (data) => {
+  return data.map((series) => {
+    const cumulativeRunoff = cumsum(series.values, (d) => d.value);
+    const totalRunoff = sum(series.values, (d) => d.value);
+    const midpointIndex = cumulativeRunoff.findIndex(
+      (d) => d >= totalRunoff / 2
+    );
+    return {
+      ...series,
+      midpoint: {
+        label: series.values[midpointIndex].date,
+        value: cumulativeRunoff[midpointIndex],
+      },
+    };
   });
 };

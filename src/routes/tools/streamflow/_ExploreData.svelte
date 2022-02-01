@@ -36,6 +36,7 @@
     totalAnnual,
     averageMonthly,
     selectedPeriodStore,
+    runoffMidpoint,
   } from "./_store";
 
   const { location } = locationStore;
@@ -86,6 +87,8 @@
     data = null;
     dataByDate = null;
   }
+
+  $: console.log($runoffMidpoint);
 
   async function loadLearnMore({
     slugs = [],
@@ -200,6 +203,7 @@
         formatFn,
         models: $modelsStore,
         isFetching: $isFetchingStore,
+        indicatorId: $indicator.id,
       }}
     />
   </div>
