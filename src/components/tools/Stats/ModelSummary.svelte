@@ -1,6 +1,5 @@
 <script>
   import { SkeletonText } from "carbon-components-svelte";
-  import { timeFormat } from "d3-time-format";
   import {
     DEFAULT_STAT_GROUPS,
     DEFAULT_STAT_PERIODS,
@@ -46,20 +45,12 @@
 
   function calculateMetrics(_data) {
     return _data.map((series) => {
-      const { id, label, date, value } = series;
-      if (date && value) {
-        return {
-          id,
-          label: `${label}<br/>${timeFormat("%b")(date)}`,
-          value: format(series.value),
-        };
-      } else {
-        return {
-          id,
-          label: `${label}<br/>`,
-          value: "-",
-        };
-      }
+      const { id, label, value } = series;
+      return {
+        id,
+        label,
+        value: value ? format(value) : "-",
+      };
     });
   }
 </script>

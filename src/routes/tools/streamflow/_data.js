@@ -2,6 +2,7 @@
 import { merge, rollups, sum, mean, cumsum } from "d3-array";
 import getCenter from "@turf/center";
 import { format } from "d3-format";
+import { timeFormat } from "d3-time-format";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -224,18 +225,18 @@ export const calculateRunoffMidPoint = (data) => {
     if (!values.length) {
       return {
         id,
-        label,
-        date: null,
+        label: `${label}<br/>No Data`,
         value: null,
       };
     }
     const cumulativeRunoff = cumsum(values, (d) => d.value);
     const totalRunoff = sum(values, (d) => d.value);
     const midpoint = cumulativeRunoff.findIndex((d) => d >= totalRunoff / 2);
+    const midpointDate = values[midpoint].date;
+    const newLabel = `${label}<br/>${timeFormat("%b")(midpointDate)}`;
     return {
       id,
-      label,
-      date: values[midpoint].date,
+      label: newLabel,
       value: cumulativeRunoff[midpoint],
     };
   });
