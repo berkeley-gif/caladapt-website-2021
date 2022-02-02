@@ -3,15 +3,10 @@
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page. It only runs once
   // during export.
-  import resourcesList from "../../../../content/resources/data";
-  import {
-    DEFAULT_STATION_ID,
-    DEFAULT_CLIMATE_VARIABLE,
-    DEFAULT_CLIMATE_INDICATOR,
-    TOOL_SLUG,
-  } from "./_constants";
+  import resourcesList from "content/resources/data";
+  import { TOOL_SLUG } from "./_constants";
 
-  export async function preload({ query }) {
+  export async function preload() {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
@@ -39,7 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    // Set intitial config for tool
+    /*    // Set intitial config for tool
     let initialConfig;
     if (Object.keys(query).length > 0) {
       // TODO: validate bookmark
@@ -59,10 +54,9 @@
         stationId: DEFAULT_STATION_ID,
         imperial: true,
       };
-    }
+    }*/
 
     return {
-      initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -75,10 +69,18 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { stores as sapperStores } from "@sapper/app";
 
   // Helpers
   import { getStationById } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
+  import { INITIAL_CONFIG } from "../_common/constants";
+  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
+  import {
+    DEFAULT_STATION_ID,
+    DEFAULT_CLIMATE_VARIABLE,
+    DEFAULT_CLIMATE_INDICATOR,
+  } from "./_constants";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -109,13 +111,13 @@
     getBasinCenter,
   } from "./_data";
 
-  export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
   export let helpItems;
 
   // Derived stores
+  const { page } = sapperStores();
   const { location } = locationStore;
   const { scenario } = scenarioStore;
 
@@ -160,29 +162,32 @@
     }
   }
 
-  async function initApp(config) {
-    const {
-      stationId,
-      scenarioId,
-      indicatorId,
-      climvarId,
-      modelIds,
-      imperial,
-      period,
-    } = config;
-    climvarStore.set(climvarId);
-    indicatorStore.set(indicatorId);
-    scenarioStore.set(scenarioId);
-    modelsStore.set(modelIds);
+  async function initApp() {
+    const { query } = $page;
+    // Default configuration
+    const config = {
+      ...INITIAL_CONFIG,
+      climvar: DEFAULT_CLIMATE_VARIABLE,
+      indicator: DEFAULT_CLIMATE_INDICATOR,
+      station: DEFAULT_STATION_ID,
+    };
+    const { station, scenario, indicator, climvar, models, imperial } =
+      getInitialConfig(query, config);
+    climvarStore.set(climvar);
+    indicatorStore.set(indicator);
+    scenarioStore.set(scenario);
+    modelsStore.set(models);
     unitsStore.set({ imperial });
     // Set intial station
-    const station = await getStationById(stationId, "evtlocations");
-    locationStore.updateLocation(getBasinCenter(station));
+    const feature = await getStationById(station, "evtlocations");
+    // Feature in API is a polygon (basin), but for purposes of this tool
+    // we need to treat it as a station
+    locationStore.updateLocation(getBasinCenter(feature));
     return;
   }
 
   onMount(() => {
-    initApp(initialConfig)
+    initApp()
       .then(() => {
         appReady = true;
         console.log("app ready");
@@ -231,28 +236,7 @@
       datasets="{datasets}"
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
-      <div slot="description">
-        <p>
-          As temperatures increase and snowpack diminishes, streamflows are also
-          projected to shift in their timing. Of particular concern in
-          California is the spring snowmelt, which feeds streamflow when it is
-          needed most for irrigation and energy purposes. This tool enables the
-          user to explore the timing and magnitude of streamflow in selected
-          months of the water-year, which runs from October 1 to September 30
-          (i.e., water year 2018 runs from October 1, 2017 to September 30,
-          2018).
-        </p>
-        <p>
-          Because California’s major watersheds have been altered by large-scale
-          projects such as dams and diversions, which enable human management of
-          water to meet needs related to agriculture, urban uses, energy, and
-          ecology, it would be misleading to do a straight comparison of
-          “observed” streamflows at a given point. This obstacle is overcome
-          through calculation of natural or “unimpaired” flows, which are what
-          would occur if flows were not subjected to storage in reservoirs or to
-          diversions (e.g., irrigation, power generation, water supply).
-        </p>
-      </div>
+      <div slot="description"></div>
     </About>
   </div>
 
