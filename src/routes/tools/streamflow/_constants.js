@@ -42,6 +42,7 @@ export const CLIMATE_INDICATORS = [
 
 export const DEFAULT_CLIMATE_VARIABLE = CLIMATE_VARIABLES[0];
 export const DEFAULT_CLIMATE_INDICATOR = "monthly";
+export const DEFAULT_CLIMATE_SCENARIO = "rcp45";
 
 export const DEFAULT_SELECTED_MONTHS = [2, 3, 4];
 
