@@ -1,6 +1,6 @@
 import layers from "~/helpers/mapbox-layers";
 import { LineAreaChart } from "~/components/tools/Charts";
-import { AvgRange } from "~/components/tools/Stats";
+import { AvgRange, ModelSummary } from "~/components/tools/Stats";
 import { DEFAULT_STAT_PERIODS } from "../_common/constants";
 
 export const TOOL_SLUG = "streamflow";
@@ -33,7 +33,7 @@ export const CLIMATE_INDICATORS = [
     units: "cfs",
     decimals: 0,
     chartComponent: LineAreaChart,
-    statsComponent: AvgRange,
+    statsComponent: ModelSummary,
     description: `<p>This chart shows a heatmap of extreme heat days for an 
     individual GCM or for the historical observed data.</p><p>Click on any of 
     the legend keys to highlight corresponding timeseries.</p>`,
@@ -67,3 +67,16 @@ export const SELECT_STATION_DESCRIPTION = `<p>You can select another weather sta
 the map or search for the nearest station to your area of interest.</p>`;
 
 export const DEFAULT_WATERYEAR = new Date().getUTCFullYear();
+
+export const DEFAULT_MONTHLY_STAT_GROUPS = [
+  {
+    id: "observed",
+    label: "Historical Runoff Midpoint",
+    historical: true,
+  },
+  {
+    id: "modeled-projections",
+    label: "Projected Runoff Midpoint",
+    historical: false,
+  },
+];

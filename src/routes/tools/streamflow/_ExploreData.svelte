@@ -7,6 +7,7 @@
     flattenData,
     groupDataByYear,
     formatDataForExport,
+    groupDataByMonth,
   } from "../_common/helpers";
   import { getSelectedMonthStrings } from "./_helpers";
   import { serialize } from "~/helpers/utilities";
@@ -48,6 +49,7 @@
 
   let data;
   let dataByDate;
+  let statsData;
   let showDownload = false;
   let showShare = false;
   let showChangeLocation = false;
@@ -80,15 +82,7 @@
 
   $: periodLabel = $period.text;
 
-  $: if ($dataStore && $averageMonthly) {
-    data = $indicator.id === "annual" ? $totalAnnual : $averageMonthly;
-    dataByDate = groupDataByYear(flattenData(data));
-  } else {
-    data = null;
-    dataByDate = null;
-  }
-
-  $: console.log($runoffMidpoint);
+  $: $averageMonthly, $totalAnnual, updateData();
 
   async function loadLearnMore({
     slugs = [],
@@ -176,6 +170,25 @@
       );
     }
   }
+
+  function updateData() {
+    if (!$dataStore || !$totalAnnual || !$averageMonthly) {
+      data = null;
+      dataByDate = null;
+      return;
+    }
+    if ($indicator.id === "annual") {
+      data = $totalAnnual;
+      dataByDate = groupDataByYear(flattenData(data));
+      console.log("databydate", dataByDate);
+      statsData = dataByDate;
+    } else {
+      data = $averageMonthly;
+      dataByDate = groupDataByMonth(flattenData(data));
+      console.log("databydate", dataByDate);
+      statsData = $runoffMidpoint;
+    }
+  }
 </script>
 
 {#if $isFetchingStore}
@@ -199,11 +212,12 @@
       {...{
         statsComponent: $indicator.statsComponent,
         units: $indicator.units,
-        dataByDate,
+        statsData,
         formatFn,
         models: $modelsStore,
         isFetching: $isFetchingStore,
         indicatorId: $indicator.id,
+        periodId: $period.id,
       }}
     />
   </div>

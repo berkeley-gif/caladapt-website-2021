@@ -86,27 +86,32 @@
     items="{indicatorList}"
     on:change="{changeIndicator}"
   />
-  <div class="spacing--v-16"></div>
-  {#if $indicatorStore === "monthly"}
-    <Select
-      title="Select Period"
-      selectedId="{$selectedPeriodStore}"
-      items="{PERIOD_LIST}"
-      on:change="{changeSelectedPeriod}"
-    />
-  {:else}
+  <LearnMoreButton
+    on:click="{() =>
+      showLearnMore({
+        content: INDICATOR_DESCRIPTION,
+      })}"
+  />
+</div>
+
+<div class="block">
+  {#if $indicatorStore === "annual"}
     <SelectMonth
       multi="{true}"
       items="{MONTHS_LIST}"
       selectedId="{$selectedMonthsStore}"
       on:change="{changeSelectedMonths}"
     />
+  {:else}
+    <Select
+      title="Select Period"
+      selectedId="{$selectedPeriodStore}"
+      items="{PERIOD_LIST}"
+      on:change="{changeSelectedPeriod}"
+    />
   {/if}
   <LearnMoreButton
-    on:click="{() =>
-      showLearnMore({
-        content: INDICATOR_DESCRIPTION,
-      })}"
+    on:click="{() => showLearnMore({ slugs: ['emissions-scenario'] })}"
   />
 </div>
 

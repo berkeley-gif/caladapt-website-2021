@@ -220,17 +220,23 @@ export const filterDataByPeriod = (data, start, end) => {
 
 export const calculateRunoffMidPoint = (data) => {
   return data.map((series) => {
-    const cumulativeRunoff = cumsum(series.values, (d) => d.value);
-    const totalRunoff = sum(series.values, (d) => d.value);
-    const midpointIndex = cumulativeRunoff.findIndex(
-      (d) => d >= totalRunoff / 2
-    );
+    const { id, label, values } = series;
+    if (!values.length) {
+      return {
+        id,
+        label,
+        date: null,
+        value: null,
+      };
+    }
+    const cumulativeRunoff = cumsum(values, (d) => d.value);
+    const totalRunoff = sum(values, (d) => d.value);
+    const midpoint = cumulativeRunoff.findIndex((d) => d >= totalRunoff / 2);
     return {
-      ...series,
-      midpoint: {
-        label: series.values[midpointIndex].date,
-        value: cumulativeRunoff[midpointIndex],
-      },
+      id,
+      label,
+      date: values[midpoint].date,
+      value: cumulativeRunoff[midpoint],
     };
   });
 };
