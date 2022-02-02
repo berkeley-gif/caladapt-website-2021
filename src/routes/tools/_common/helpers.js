@@ -1,5 +1,4 @@
 import { rollups, sort, group, extent } from "d3-array";
-import { timeFormat } from "d3-time-format";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
@@ -359,9 +358,7 @@ export function groupDataByMonth(_arr) {
   return Array.from(
     group(_arr, (d) => d.date.getUTCMonth()),
     ([month, values]) => {
-      const date = timeFormat("%B")(
-        new Date(new Date().getUTCFullYear(), month, 1)
-      );
+      const date = new Date(new Date().getUTCFullYear(), month, 1);
       const rows = values.map((d) => {
         if ("min" in d && "max" in d) {
           return {
