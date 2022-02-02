@@ -19,14 +19,6 @@
   .wide {
     grid-column-end: span 2;
   }
-
-  :global(.wide .stat-data) {
-    justify-content: start;
-  }
-
-  :global(.wide .stat-data-item) {
-    margin: 0.75rem;
-  }
 </style>
 
 {#if indicatorId === "annual"}
