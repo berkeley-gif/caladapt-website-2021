@@ -11,6 +11,7 @@ import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
 import { DEFAULT_WATERYEAR } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
+const monthFormat = timeFormat("%b");
 
 const transformResponse = function (response, throwNoData = true) {
   if (!response) {
@@ -233,7 +234,7 @@ export const calculateRunoffMidPoint = (data) => {
     const totalRunoff = sum(values, (d) => d.value);
     const midpoint = cumulativeRunoff.findIndex((d) => d >= totalRunoff / 2);
     const midpointDate = values[midpoint].date;
-    const newLabel = `${label}<br/>${timeFormat("%b")(midpointDate)}`;
+    const newLabel = `${label}<br/>${monthFormat(midpointDate)}`;
     return {
       id,
       label: newLabel,
@@ -241,3 +242,14 @@ export const calculateRunoffMidPoint = (data) => {
     };
   });
 };
+
+export function formatMonthlyDataForExport(_arr) {
+  return _arr.map((item) => {
+    const row = {};
+    row.month = monthFormat(item.date.getUTCMonth());
+    item.values.forEach((d) => {
+      row[d.label] = d.value;
+    });
+    return row;
+  });
+}

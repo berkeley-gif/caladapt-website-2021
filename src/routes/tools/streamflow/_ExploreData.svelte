@@ -12,7 +12,7 @@
   import { getSelectedMonthStrings } from "./_helpers";
   import { serialize } from "~/helpers/utilities";
   import { DEFAULT_STATION_LAYER } from "./_constants";
-  import { getBasinCenter } from "./_data";
+  import { getBasinCenter, formatMonthlyDataForExport } from "./_data";
 
   // Components
   import { Dashboard } from "~/components/tools/Partials";
@@ -41,7 +41,6 @@
   } from "./_store";
 
   const { location } = locationStore;
-  const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
   const { titles } = datasetStore;
@@ -82,7 +81,7 @@
 
   $: periodLabel = $period.text;
 
-  $: $averageMonthly, $totalAnnual, updateData();
+  $: $dataStore, $indicator, $averageMonthly, $totalAnnual, recalculateData();
 
   async function loadLearnMore({
     slugs = [],
@@ -118,34 +117,22 @@
     ).default;
   }
 
-  function formatDailyDataForExport(_arr) {
-    return _arr.map((item) => {
-      const row = {};
-      row.date = item.date;
-      item.values.forEach((d) => {
-        if (Array.isArray(d.value)) {
-          row[`${d.label} Min`] = d.value[0];
-          row[`${d.label} Max`] = d.value[1];
-        } else {
-          row[d.label] = d.value;
-        }
-      });
-      return row;
-    });
-  }
-
   async function loadDownload() {
     showDownload = true;
-    if ($indicator.id === "timing") {
-      csvData = formatDailyDataForExport(dataByDate);
-    } else {
+    let timeFrame;
+    if ($indicator.id === "annual") {
       csvData = formatDataForExport(dataByDate);
+      timeFrame = monthsLabel;
+    } else {
+      csvData = formatMonthlyDataForExport(dataByDate);
+      timeFrame = periodLabel;
     }
     metadata = [
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      ["climate indicator", `${$climvar.label} ${$indicator.label}`],
+      ["indicator", indicatorLabel],
+      ["period", timeFrame],
     ];
     printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
@@ -157,7 +144,6 @@
   function changeLocation(e) {
     showChangeLocation = false;
     locationStore.updateLocation(getBasinCenter(e.detail.location));
-    console.log("location change");
   }
 
   function getMonthsLabel() {
@@ -174,10 +160,11 @@
     }
   }
 
-  function updateData() {
+  function recalculateData() {
     if (!$dataStore || !$totalAnnual || !$averageMonthly) {
       data = null;
       dataByDate = null;
+      statsData = null;
       return;
     }
     if ($indicator.id === "annual") {
