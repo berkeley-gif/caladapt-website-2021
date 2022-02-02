@@ -101,7 +101,10 @@
   async function loadShare() {
     bookmark = serialize({
       climvar: $climvarStore,
-      station: $locationStore.id,
+      station: $location.id,
+      indicator: $indicatorStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
     });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
@@ -180,12 +183,10 @@
     if ($indicator.id === "annual") {
       data = $totalAnnual;
       dataByDate = groupDataByYear(flattenData(data));
-      console.log("databydate", dataByDate);
       statsData = dataByDate;
     } else {
       data = $averageMonthly;
       dataByDate = groupDataByMonth(flattenData(data));
-      console.log("databydate", dataByDate);
       statsData = $runoffMidpoint;
     }
   }

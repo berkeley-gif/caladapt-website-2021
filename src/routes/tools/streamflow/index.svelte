@@ -34,28 +34,6 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    /*    // Set intitial config for tool
-    let initialConfig;
-    if (Object.keys(query).length > 0) {
-      // TODO: validate bookmark
-      const { climvar, indicator, station, imperial } = query;
-      initialConfig = {
-        stationId: station,
-        climvarId: climvar,
-        indicatorId: indicator,
-        imperial: imperial === "true" ? true : false,
-      };
-    } else {
-      initialConfig = {
-        scenarioId: "rcp45",
-        climvarId: DEFAULT_CLIMATE_VARIABLE,
-        indicatorId: DEFAULT_CLIMATE_INDICATOR,
-        modelIds: ["HadGEM2-ES", "CNRM-CM5", "CanESM2", "MIROC5"],
-        stationId: DEFAULT_STATION_ID,
-        imperial: true,
-      };
-    }*/
-
     return {
       tool,
       relatedTools,
@@ -75,7 +53,7 @@
   import { getStationById } from "~/helpers/geocode";
   import { logException } from "~/helpers/logging";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
+  import { getInitialConfig } from "../_common/helpers";
   import {
     DEFAULT_STATION_ID,
     DEFAULT_CLIMATE_VARIABLE,
