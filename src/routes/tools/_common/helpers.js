@@ -1,4 +1,5 @@
 import { rollups, sort, group, extent } from "d3-array";
+import { timeFormat } from "d3-time-format";
 import {
   DEFAULT_COMPASS_QUADRANTS,
   DEFAULT_COMPASS_QUADRANT_ANGLE,
@@ -327,4 +328,56 @@ export async function setInitialLocation(lng, lat, boundary) {
   }
 
   return loc;
+}
+
+/**
+ * Groups a flattened array of objects by year. From:
+ *  [
+ *   { date: Date Sun Dec 31 1950, value: 90, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1951, value: 95, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1952, value: 97, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   ...
+ * ]
+ * to:
+ * [
+ *  {
+ *    date: Date Sun Dec 31 1950,
+ *    values: [
+ *      { id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry), value: 90 },
+ *      { id: MIROC5, label: MIROC5 (Complement), value: 87 },
+ *      { id: livneh, label: Observed, value: 92 },
+ *      ...
+ *    ]
+ *  },
+ *  ...
+ * ]
+ * Used for chart tooltips
+ * @param {array} _arr - array of series objects
+ * @return {array}
+ */
+export function groupDataByMonth(_arr) {
+  return Array.from(
+    group(_arr, (d) => d.date.getUTCMonth()),
+    ([month, values]) => {
+      const date = timeFormat("%B")(
+        new Date(new Date().getUTCFullYear(), month, 1)
+      );
+      const rows = values.map((d) => {
+        if ("min" in d && "max" in d) {
+          return {
+            id: d.id,
+            label: d.label,
+            value: [d["min"], d["max"]],
+          };
+        } else {
+          return {
+            id: d.id,
+            label: d.label,
+            value: d.value,
+          };
+        }
+      });
+      return { date, values: rows };
+    }
+  );
 }
