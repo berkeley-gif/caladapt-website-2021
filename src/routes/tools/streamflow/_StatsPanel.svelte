@@ -19,6 +19,14 @@
   .wide {
     grid-column-end: span 2;
   }
+
+  :global(.wide .stat-data) {
+    justify-content: start;
+  }
+
+  :global(.wide .stat-data-item) {
+    margin: 0.75rem;
+  }
 </style>
 
 {#if indicatorId === "annual"}
@@ -74,7 +82,7 @@
         this="{statsComponent}"
         units="{units}"
         data="{statsData
-          ? statsData.filter(({ label }) => label === 'Observed')
+          ? statsData.filter(({ id }) => id === 'livneh')
           : null}"
         groupList="{DEFAULT_MONTHLY_STAT_GROUPS.filter(
           ({ id }) => id === 'observed'
@@ -91,7 +99,7 @@
         this="{statsComponent}"
         units="{units}"
         data="{statsData
-          ? statsData.filter(({ label }) => label !== 'Observed')
+          ? statsData.filter(({ id }) => id !== 'livneh')
           : null}"
         groupList="{DEFAULT_MONTHLY_STAT_GROUPS.filter(
           ({ id }) => id === 'modeled-projections'
