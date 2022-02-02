@@ -34,11 +34,16 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
+    const { aboutContent } = await (
+      await this.fetch("tools/streamflow.json")
+    ).json();
+
     return {
       tool,
       relatedTools,
       externalResources,
       helpItems,
+      aboutContent,
     };
   }
 </script>
@@ -93,6 +98,7 @@
   export let relatedTools;
   export let externalResources;
   export let helpItems;
+  export let aboutContent;
 
   // Derived stores
   const { page } = sapperStores();
@@ -214,7 +220,9 @@
       datasets="{datasets}"
       on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
     >
-      <div slot="description"></div>
+      <div slot="description">
+        {@html aboutContent}
+      </div>
     </About>
   </div>
 
