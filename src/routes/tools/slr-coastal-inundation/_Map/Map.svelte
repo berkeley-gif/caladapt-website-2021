@@ -8,14 +8,12 @@
   import TileCentroids from "./TileCentroids.svelte";
 
   export let dataLayersAugmented;
-  export let bbox;
   export let mapStyle;
 
   // initial map view
-  const lng = -122.2813;
-  const lat = 37.7813;
+  const lng = -122.24;
+  const lat = 37.8279;
   let zoom = 9;
-  $: console.log("map zoom: ", zoom);
 
   const dispatch = createEventDispatcher();
 
@@ -40,10 +38,6 @@
   // TODO: remove before deploying to prod
   $: if (mapReady && typeof window !== undefined) {
     window.map = mbGlMap;
-  }
-
-  $: if (mapReady && Array.isArray(bbox) && bbox.length) {
-    mapInstance.zoomToExtent(bbox, 12);
   }
 
   $: if (mapReady && styleUrl && styleUrl !== curStyleUrl) {

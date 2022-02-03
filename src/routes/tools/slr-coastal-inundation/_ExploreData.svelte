@@ -2,7 +2,7 @@
   import { Dashboard } from "~/components/tools/Partials";
   import { Loading } from "carbon-components-svelte";
 
-  import { isFetchingStore, locationStore } from "../_common/stores";
+  import { isFetchingStore } from "../_common/stores";
   import {
     timeFrameStore,
     floodScenarioStore,
@@ -17,7 +17,6 @@
   import Title from "./_Title.svelte";
   import { Map } from "./_Map";
 
-  const { location } = locationStore;
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
 
@@ -128,7 +127,6 @@
   >
     <Map
       dataLayersAugmented="{$dataLayersAugmentedStore}"
-      bbox="{$location.bbox && $location.bbox}"
       mapStyle="{mapStyle}"
       on:moveend="{handleMapMoveend}"
     />
