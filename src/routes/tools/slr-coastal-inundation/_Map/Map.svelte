@@ -2,7 +2,11 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
   import { getGeoJson } from "../_data";
-  import { Map as SlippyMap, NavigationControl } from "~/components/tools/Map";
+  import {
+    Map as SlippyMap,
+    NavigationControl,
+    Search,
+  } from "~/components/tools/Map";
   import RasterLayers from "./Rasters.svelte";
   import TileIndexes from "./TileIndexes.svelte";
   import TileCentroids from "./TileCentroids.svelte";
@@ -95,6 +99,7 @@
     on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
+    <Search />
 
     {#if zoom >= 7}
       <RasterLayers
