@@ -1,6 +1,5 @@
 // Node modules
 import { merge, rollups, sum, mean, cumsum } from "d3-array";
-import getCenter from "@turf/center";
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 
@@ -167,11 +166,6 @@ export async function getModels(config, params, method = "GET") {
 export function getQueryParams() {
   const params = { pagesize: 1812 };
   return { params, method: "GET" };
-}
-
-export function getBasinCenter(feature) {
-  const { geometry } = getCenter(feature.geometry);
-  return { ...feature, geometry };
 }
 
 export const filterDataByMonths = (data, monthIds) => {

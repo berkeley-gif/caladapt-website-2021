@@ -87,12 +87,8 @@
     dataStore,
   } from "../_common/stores";
   import { climvarStore, indicatorStore } from "./_store";
-  import {
-    getObserved,
-    getModels,
-    getQueryParams,
-    getBasinCenter,
-  } from "./_data";
+  import { getObserved, getModels, getQueryParams } from "./_data";
+  import { getBasinCenter } from "./_helpers";
 
   export let tool;
   export let relatedTools;

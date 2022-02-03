@@ -1,3 +1,4 @@
+import getCenter from "@turf/center";
 import { MONTHS_LIST } from "~/routes/tools/_common/constants";
 
 export const getSelectedMonthStrings = (monthIdsArr) => {
@@ -8,3 +9,8 @@ export const getSelectedMonthStrings = (monthIdsArr) => {
     );
   }
 };
+
+export function getBasinCenter(feature) {
+  const { geometry } = getCenter(feature.geometry);
+  return { ...feature, geometry };
+}
