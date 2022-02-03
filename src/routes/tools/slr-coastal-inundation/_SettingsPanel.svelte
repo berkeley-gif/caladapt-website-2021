@@ -12,7 +12,6 @@
   import { TIME_PERIODS, FLOOD_SCENARIOS } from "./_constants";
 
   import { LearnMoreButton } from "~/components/tools/Partials";
-  import { StaticMap } from "~/components/tools/Location";
   import { RadioBtnGroup, SelectLayers } from "~/components/tools/Settings";
 
   const dispatch = createEventDispatcher();
@@ -20,10 +19,6 @@
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
-  }
-
-  function showChangeLocation() {
-    dispatch("showLoadLocation");
   }
 
   function changeFloodScenario({ detail }) {
@@ -38,24 +33,6 @@
     dataLayersStore.setChecked({ checked, id });
   }
 </script>
-
-<div class="block">
-  <span class="bx--label">Select Location</span>
-  <StaticMap
-    location="{$location}"
-    height="{250}"
-    on:click="{() => showChangeLocation()}"
-  />
-  <div class="center-row">
-    <LearnMoreButton
-      on:click="{() =>
-        showLearnMore({
-          content: 'To do...',
-          header: 'Select Location',
-        })}"
-    />
-  </div>
-</div>
 
 <div class="block">
   <SelectLayers

@@ -3,8 +3,6 @@
   import { Location16 } from "carbon-icons-svelte";
   import { getCSSProp } from "~/helpers/utilities";
 
-  export let location;
-  export let loadLocation;
   export let floodScenario;
   export let timeFrame;
   export let dataLayers;
@@ -38,17 +36,6 @@
 </style>
 
 <div>
-  <Button
-    class="btn-change-location"
-    size="small"
-    icon="{Location16}"
-    kind="ghost"
-    on:click="{loadLocation}"
-  >
-    Change Location
-  </Button>
-
-  <h2>{location}</h2>
   <p class="h4">
     {@html layerHtml}
     <span class="annotate">{floodScenario}</span>
