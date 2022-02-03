@@ -12,20 +12,27 @@
 
   let suggestions = [];
   let value = "";
+  let searchInput;
 
-  $: console.log(suggestions);
+  $: console.log(suggestions.map((d) => d.title));
 
   onMount(() => {
-    const searchInput = document.getElementById("map-search-box");
+    searchInput = document.getElementById("map-search-box");
     searchInput.setAttribute("list", datalistId);
   });
 
-  function handleChange({ target: { value } }) {
-    if (suggestions.length) {
-      console.log("selection choice: ", value);
-      // TODO dispatch selected location item with center or bbox
-      dispatch("change", value);
+  function handleInput(event) {
+    if (!suggestions.length) {
+      return;
     }
+    const found = suggestions.find((d) => d.title === event.target.value);
+    if (found) {
+      searchInput.setCustomValidity("");
+      dispatch("change", found);
+    } else {
+      searchInput.setCustomValidity("Please select a location.");
+    }
+    searchInput.reportValidity();
   }
 
   async function handleKeydown(event) {
@@ -106,7 +113,7 @@
 <div>
   <Search
     bind:value
-    on:change="{handleChange}"
+    on:input="{handleInput}"
     on:keydown="{handleKeydown}"
     on:clear="{clearSearch}"
     id="{searchInputId}"
@@ -117,7 +124,7 @@
   <datalist id="{datalistId}">
     {#if suggestions.length}
       {#each suggestions as item (item.id)}
-        <option data-id="{item.id}">{item.title}</option>
+        <option value="{item.title}">{item.title}</option>
       {/each}
     {/if}
   </datalist>

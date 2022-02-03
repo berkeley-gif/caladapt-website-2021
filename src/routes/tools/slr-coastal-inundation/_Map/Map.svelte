@@ -53,6 +53,10 @@
     mbGlMap.on("zoomend", handleZoomend);
   }
 
+  function handleSearchChange({ detail }) {
+    console.log(detail);
+  }
+
   function handleMoveend() {
     if (mapReady) {
       const {
@@ -99,7 +103,7 @@
     on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
-    <Search />
+    <Search on:change="{handleSearchChange}" />
 
     {#if zoom >= 7}
       <RasterLayers
