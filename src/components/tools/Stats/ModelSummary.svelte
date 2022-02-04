@@ -6,11 +6,14 @@
   } from "~/routes/tools/_common/constants";
   import StatBlock from "./StatBlock.svelte";
 
-  /** Array of data values, e.g.
+  /** This stat component could be used to present a statistic for an array of objects. Each object would
+   * need to have `id`, `label`, and `value`` props.
+   * This component is used in the Streamflow tool to present the month and value for each model when the 
+   * midpoint of the runoff occurs. e.g.
   {
     values: [
-      { id: "livneh", label: "Observed", value: 74.6, date:  Date Sat Dec 31 1949 16:00:00 GMT-0800 (Pacific Standard Time)},
-      { id: "CanESM2", label: "CanESM2 (Average)", value: 75.2, date:  Date Sat Dec 31 1949 16:00:00 GMT-0800 (Pacific Standard Time)},
+      { id: "livneh", label: "Observed<br/>Feb", value: 74.6},
+      { id: "CanESM2", label: "CanESM2 (Average)<br/>Mar", value: 75.2},
     ]
   }
   */
@@ -36,6 +39,8 @@
   export let units;
   export let format = (d) => d;
   export let isFetching = false;
+  /** Toggles the display of Change Period button */
+  export let showChangePeriod = false;
 
   let selectedGroup = groupList.find((d) => d.id === groupId);
 
@@ -70,6 +75,6 @@
     models="{models}"
     metrics="{metrics}"
     dateRange="{null}"
-    changePeriod="{false}"
+    changePeriod="{showChangePeriod}"
   />
 {/if}
