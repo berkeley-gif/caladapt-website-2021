@@ -6,7 +6,7 @@
   import { geocode } from "~/helpers/geocode";
 
   const dispatch = createEventDispatcher();
-  const description = "Enter a place name or address";
+  const description = "Search for a place name or address";
 
   let searchValue = "";
   let suggestions = [];

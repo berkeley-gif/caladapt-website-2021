@@ -54,7 +54,14 @@
   }
 
   function handleSearchChange({ detail }) {
-    console.log(detail);
+    if (!mapReady) return;
+    if (Array.isArray(detail.bbox) && detail.bbox.length) {
+      mapInstance.zoomToExtent(detail.bbox, 12);
+    } else if (detail.center && detail.center.length) {
+      mapInstance.flyTo(detail.center, 15);
+    } else {
+      console.warn("no center or bbox from geocode result");
+    }
   }
 
   function handleMoveend() {
