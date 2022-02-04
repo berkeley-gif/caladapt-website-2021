@@ -19,10 +19,9 @@ export const CLIMATE_INDICATORS = [
     decimals: 0,
     statsComponent: AvgRange,
     description: `<p>The colored lines on this visualization represent 
-    a timeseries of number of extreme heat days from individual downscaled GCMs. 
-    The historical observed data is represented by 
-    a gray line from 1950-2006.</p><p>Click on any of the legend keys to highlight 
-    corresponding timeseries.</p>`,
+    a timeseries of annual total unimpaired flow from individual downscaled GCMs for selected months.
+    The historical observed data is represented by a gray line from 1950-2006.</p>
+    <p>Click on any of the legend keys to highlight corresponding timeseries.</p>`,
   },
   {
     id: "monthly",
@@ -31,9 +30,10 @@ export const CLIMATE_INDICATORS = [
     units: "cfs",
     decimals: 0,
     statsComponent: ModelSummary,
-    description: `<p>This chart shows a heatmap of extreme heat days for an 
-    individual GCM or for the historical observed data.</p><p>Click on any of 
-    the legend keys to highlight corresponding timeseries.</p>`,
+    description: `<p>The colored lines on this visualization represent 
+    a monthly average unimpaired flow from individual downscaled GCMs for selected period.
+    The historical observed data is represented by a gray line for the historical period.</p>
+    <p>Click on any of the legend keys to highlight corresponding timeseries.</p>`,
   },
 ];
 
@@ -50,19 +50,14 @@ export const PERIOD_LIST = DEFAULT_STAT_PERIODS.map((d) => ({
 export const DEFAULT_SELECTED_PERIOD = "baseline";
 
 export const INDICATOR_DESCRIPTION = `
-<p>Indicators presented in this tool examine projected trends in four key characteristics of 
-Extreme Heat Days and Warm Nights:</p>
+<p>Indicators presented in this tool examine projected trends in two key characteristics of streamflow:</p>
 <ul>
-  <li><strong>Frequency</strong>: The number of Extreme Heat Days/Warm Nights that occur every year.</li>
-  <li><strong>Timing</strong>: The length of the season between the first Extreme Heat Day/Warm 
-  Night and the last.</li>
-  <li><strong>Maximum Duration</strong>: The length of the longest heat wave.</li>
-  <li><strong>Heat Waves</strong>: The number of Heat Wave events that occur every year. The duration 
-  (number of days) of a Heat Wave event can be set by the user.</li>
+  <li><strong>Annual Total</strong>: The number of Extreme Heat Days/Warm Nights that occur every year.</li>
+  <li><strong>Monthly Average</strong>: The length of the longest heat wave.</li>
 </ul>`;
 
-export const SELECT_STATION_DESCRIPTION = `<p>You can select another weather station on 
-the map or search for the nearest station to your area of interest.</p>`;
+export const SELECT_STATION_DESCRIPTION = `<p>You can select another streamflow location on 
+the map or search for the closest location to your area of interest.</p>`;
 
 export const DEFAULT_WATERYEAR = new Date().getUTCFullYear();
 
