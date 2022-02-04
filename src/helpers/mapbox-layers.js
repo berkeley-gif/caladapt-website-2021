@@ -464,6 +464,9 @@ const data = [
       "circle-stroke-width": 2,
     },
   },
+  // Drainage basins are stored as polygon features in the API but need to represented as
+  // point locations in the Streamflow tool. Using the `symbol` type in the layer definition
+  // creates an overlay that represents the center of the drainage basin as points
   {
     id: "evtlocations",
     type: "symbol",
