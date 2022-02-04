@@ -7,7 +7,7 @@ import { timeFormat } from "d3-time-format";
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, parseDateIso } from "~/helpers/utilities";
 import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
-import { DEFAULT_WATERYEAR } from "./_constants";
+import { DEFAULT_WATERYEAR, NUM_OF_EVENTS } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 const monthFormat = timeFormat("%b");
@@ -164,7 +164,7 @@ export async function getModels(config, params, method = "GET") {
  * @return {string} method
  */
 export function getQueryParams() {
-  const params = { pagesize: 1812 };
+  const params = { pagesize: NUM_OF_EVENTS };
   return { params, method: "GET" };
 }
 

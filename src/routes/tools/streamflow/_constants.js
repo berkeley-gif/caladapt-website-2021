@@ -78,3 +78,8 @@ export const DEFAULT_MONTHLY_STAT_GROUPS = [
     historical: false,
   },
 ];
+
+// The Cal-Adapt API responses are paginated
+// This param sets the pagesize to get all features of the monthly timeseries
+// 12 months * 151 years = 1812
+export const NUM_OF_EVENTS = 1812;
