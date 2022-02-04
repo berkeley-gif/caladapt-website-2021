@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -66,9 +67,9 @@
   let printContainer;
   let printSkipElements;
 
-  $: chartDescription = $indicator.description;
+  let chartTitle = "";
 
-  $: chartTitle = $location.title;
+  $: chartDescription = $indicator.description;
 
   $: formatFn = format(`,.${$indicator.decimals}f`);
 
@@ -82,6 +83,12 @@
   $: periodLabel = $period.text;
 
   $: $dataStore, $indicator, $averageMonthly, $totalAnnual, recalculateData();
+
+  afterUpdate(() => {
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
