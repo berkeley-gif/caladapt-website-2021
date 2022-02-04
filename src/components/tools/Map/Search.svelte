@@ -1,41 +1,23 @@
 <script>
   // NOTE: this Search box element only geocodes using the MapBox geocoder
   // it does not currently use the Cal-Adapt API boundary lookup
-  import { createEventDispatcher, onMount } from "svelte";
-  import { Search } from "carbon-components-svelte";
+  import { createEventDispatcher } from "svelte";
+  import { Button, Search } from "carbon-components-svelte";
   import { geocode } from "~/helpers/geocode";
 
   const dispatch = createEventDispatcher();
   const description = "Enter a place name or address";
-  const searchInputId = "map-search-box";
-  const datalistId = "search-suggestions";
 
+  let searchValue = "";
   let suggestions = [];
-  let value = "";
-  let searchInput;
 
-  $: console.log(suggestions.map((d) => d.title));
-
-  onMount(() => {
-    searchInput = document.getElementById("map-search-box");
-    searchInput.setAttribute("list", datalistId);
-  });
-
-  function handleInput(event) {
-    if (!suggestions.length) {
-      return;
-    }
-    const found = suggestions.find((d) => d.title === event.target.value);
-    if (found) {
-      searchInput.setCustomValidity("");
-      dispatch("change", found);
-    } else {
-      searchInput.setCustomValidity("Please select a location.");
-    }
-    searchInput.reportValidity();
+  function handleBtnClick(suggestion) {
+    searchValue = suggestion.title;
+    suggestions = [];
+    dispatch("change", suggestion);
   }
 
-  async function handleKeydown(event) {
+  async function handleInputKeydown(event) {
     const {
       key,
       target: { value },
@@ -43,7 +25,6 @@
     let flag = false;
 
     if (key === "Escape" || key === "Esc") {
-      event.target.blur();
       clearSearch();
       flag = true;
     }
@@ -61,7 +42,7 @@
 
   async function handleSearch() {
     if (!suggestions.length) {
-      suggestions = await getResults(value);
+      suggestions = await getResults(searchValue);
     }
   }
 
@@ -81,7 +62,7 @@
   }
 
   function clearSearch() {
-    value = "";
+    searchValue = "";
     suggestions = [];
   }
 </script>
@@ -108,24 +89,37 @@
       outline: none;
     }
   }
+
+  ul,
+  li {
+    list-style: none;
+  }
+
+  ul {
+    padding-left: 0.9rem !important;
+  }
 </style>
 
 <div>
   <Search
-    bind:value
-    on:input="{handleInput}"
-    on:keydown="{handleKeydown}"
+    bind:value="{searchValue}"
+    on:keydown="{handleInputKeydown}"
     on:clear="{clearSearch}"
-    id="{searchInputId}"
     size="sm"
     labelText="{description}"
     placeholder="{description}"
   />
-  <datalist id="{datalistId}">
-    {#if suggestions.length}
+  {#if suggestions.length}
+    <ul>
       {#each suggestions as item (item.id)}
-        <option value="{item.title}">{item.title}</option>
+        <li>
+          <Button
+            on:click="{() => handleBtnClick(item)}"
+            size="small"
+            kind="ghost">{item.title}</Button
+          >
+        </li>
       {/each}
-    {/if}
-  </datalist>
+    </ul>
+  {/if}
 </div>
