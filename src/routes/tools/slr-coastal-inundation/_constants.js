@@ -74,7 +74,7 @@ export const DATA_LAYERS = [
   {
     id: DL_Calflod50m,
     label: "CalFloD3D-TFS (50m)",
-    checked: false,
+    checked: true,
     disabled: false,
     color: "rsblue", // #25C7FA
   },
