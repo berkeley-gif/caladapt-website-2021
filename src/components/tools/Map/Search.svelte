@@ -4,17 +4,26 @@
   import { createEventDispatcher } from "svelte";
   import { Button, Search } from "carbon-components-svelte";
   import { geocode } from "~/helpers/geocode";
+  import { debounce } from "~/helpers/utilities";
 
   const dispatch = createEventDispatcher();
   const description = "Search for a place name or address";
+  const inputDebounceMs = 350;
 
   let searchValue = "";
   let suggestions = [];
 
-  function handleBtnClick(suggestion) {
-    searchValue = suggestion.title;
+  function selectSearchResult(feature) {
+    searchValue = feature.title;
     suggestions = [];
-    dispatch("change", suggestion);
+    dispatch("change", feature);
+  }
+
+  async function handleSearchInput(event) {
+    const { value } = event.target;
+    if (value && value.length >= 3) {
+      await handleSearch();
+    }
   }
 
   async function handleInputKeydown(event) {
@@ -29,8 +38,8 @@
       flag = true;
     }
 
-    if (key === "Enter" && value) {
-      await handleSearch();
+    if (key === "Enter" && value && suggestions.length) {
+      selectSearchResult(suggestions[0]);
       flag = true;
     }
 
@@ -41,9 +50,7 @@
   }
 
   async function handleSearch() {
-    if (!suggestions.length) {
-      suggestions = await getResults(searchValue);
-    }
+    suggestions = await getResults(searchValue);
   }
 
   async function getResults(searchStr) {
@@ -103,6 +110,7 @@
 <div>
   <Search
     bind:value="{searchValue}"
+    on:input="{debounce(handleSearchInput, inputDebounceMs)}"
     on:keydown="{handleInputKeydown}"
     on:clear="{clearSearch}"
     size="sm"
@@ -114,7 +122,7 @@
       {#each suggestions as item (item.id)}
         <li>
           <Button
-            on:click="{() => handleBtnClick(item)}"
+            on:click="{() => selectSearchResult(item)}"
             size="small"
             kind="ghost">{item.title}</Button
           >
