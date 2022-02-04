@@ -1,5 +1,4 @@
 import layers from "~/helpers/mapbox-layers";
-import { LineAreaChart } from "~/components/tools/Charts";
 import { AvgRange, ModelSummary } from "~/components/tools/Stats";
 import { DEFAULT_STAT_PERIODS } from "../_common/constants";
 
@@ -18,7 +17,6 @@ export const CLIMATE_INDICATORS = [
     title: "Annual Total Unimpaired Flows",
     units: "cfs",
     decimals: 0,
-    chartComponent: LineAreaChart,
     statsComponent: AvgRange,
     description: `<p>The colored lines on this visualization represent 
     a timeseries of number of extreme heat days from individual downscaled GCMs. 
@@ -32,7 +30,6 @@ export const CLIMATE_INDICATORS = [
     title: "Monthly Average Unimpaired Flows",
     units: "cfs",
     decimals: 0,
-    chartComponent: LineAreaChart,
     statsComponent: ModelSummary,
     description: `<p>This chart shows a heatmap of extreme heat days for an 
     individual GCM or for the historical observed data.</p><p>Click on any of 
