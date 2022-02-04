@@ -12,6 +12,7 @@ export { default as BoundarySelection } from "./BoundarySelection.svelte";
 export { default as LayerInfo } from "./LayerInfo.svelte";
 export { default as ImageOverlay } from "./ImageOverlay.svelte";
 export { default as Legend } from "./Legend.svelte";
+export { default as Search } from "./Search.svelte";
 
 // Controls
 export { default as AttributionControl } from "./controls/AttributionControl.svelte";

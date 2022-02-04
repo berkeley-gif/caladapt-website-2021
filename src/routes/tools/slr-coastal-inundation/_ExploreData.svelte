@@ -2,8 +2,7 @@
   import { Dashboard } from "~/components/tools/Partials";
   import { Loading } from "carbon-components-svelte";
 
-  import { BOUNDARIES } from "./_constants";
-  import { isFetchingStore, locationStore } from "../_common/stores";
+  import { isFetchingStore } from "../_common/stores";
   import {
     timeFrameStore,
     floodScenarioStore,
@@ -18,16 +17,13 @@
   import Title from "./_Title.svelte";
   import { Map } from "./_Map";
 
-  const { location, boundary } = locationStore;
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
 
   // async component imports
-  let ChangeLocation;
   let LearnMoreModal;
 
   let showLearnMore = false;
-  let showChangeLocation = false;
 
   let learnMoreProps = {};
 
@@ -71,18 +67,6 @@
     ).default;
   }
 
-  async function loadLocation() {
-    showChangeLocation = true;
-    ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
-    ).default;
-  }
-
-  function changeLocation({ detail: { boundaryId, location } }) {
-    locationStore.updateBoundary(boundaryId);
-    locationStore.updateLocation(location);
-  }
-
   function handleStyleChange({ detail }) {
     mapStyle = detail;
   }
@@ -99,8 +83,6 @@
 <Dashboard useMap="{true}">
   <div slot="map_title" class="block title">
     <Title
-      location="{$location.title}"
-      loadLocation="{loadLocation}"
       timeFrame="{$timeFrame.label}"
       floodScenario="{$floodScenario.label}"
       dataLayers="{$dataLayersStore}"
@@ -145,30 +127,15 @@
   >
     <Map
       dataLayersAugmented="{$dataLayersAugmentedStore}"
-      bbox="{$location.bbox && $location.bbox}"
       mapStyle="{mapStyle}"
       on:moveend="{handleMapMoveend}"
     />
   </div>
 
   <div slot="settings" class="settings">
-    <SettingsPanel
-      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
-      on:showLoadLocation="{() => loadLocation()}"
-    />
+    <SettingsPanel on:showLearnMore="{(e) => loadLearnMore(e.detail)}" />
   </div>
 </Dashboard>
-
-<svelte:component
-  this="{ChangeLocation}"
-  bind:open="{showChangeLocation}"
-  location="{$location}"
-  boundary="{$boundary}"
-  boundaryList="{BOUNDARIES}"
-  addStateBoundary="{false}"
-  enableUpload="{false}"
-  on:change="{changeLocation}"
-/>
 
 <svelte:component
   this="{LearnMoreModal}"

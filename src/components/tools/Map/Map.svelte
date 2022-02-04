@@ -45,6 +45,10 @@
     }
   }
 
+  export function flyTo(center, zoom, options = {}) {
+    map.flyTo({ center, zoom, ...options });
+  }
+
   export function resize() {
     map && map.resize();
   }

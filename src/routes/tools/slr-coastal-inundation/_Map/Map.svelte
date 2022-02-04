@@ -2,20 +2,22 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
   import { getGeoJson } from "../_data";
-  import { Map as SlippyMap, NavigationControl } from "~/components/tools/Map";
+  import {
+    Map as SlippyMap,
+    NavigationControl,
+    Search,
+  } from "~/components/tools/Map";
   import RasterLayers from "./Rasters.svelte";
   import TileIndexes from "./TileIndexes.svelte";
   import TileCentroids from "./TileCentroids.svelte";
 
   export let dataLayersAugmented;
-  export let bbox;
   export let mapStyle;
 
   // initial map view
-  const lng = -122.2813;
-  const lat = 37.7813;
+  const lng = -122.24;
+  const lat = 37.8279;
   let zoom = 9;
-  $: console.log("map zoom: ", zoom);
 
   const dispatch = createEventDispatcher();
 
@@ -42,10 +44,6 @@
     window.map = mbGlMap;
   }
 
-  $: if (mapReady && Array.isArray(bbox) && bbox.length) {
-    mapInstance.zoomToExtent(bbox, 12);
-  }
-
   $: if (mapReady && styleUrl && styleUrl !== curStyleUrl) {
     curStyleUrl = styleUrl;
     mbGlMap.setStyle(curStyleUrl);
@@ -53,6 +51,17 @@
 
   $: if (mapReady) {
     mbGlMap.on("zoomend", handleZoomend);
+  }
+
+  function handleSearchChange({ detail }) {
+    if (!mapReady) return;
+    if (Array.isArray(detail.bbox) && detail.bbox.length) {
+      mapInstance.zoomToExtent(detail.bbox, 12);
+    } else if (detail.center && detail.center.length) {
+      mapInstance.flyTo(detail.center, 15);
+    } else {
+      console.warn("no center or bbox from geocode result");
+    }
   }
 
   function handleMoveend() {
@@ -101,6 +110,7 @@
     on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
+    <Search on:change="{handleSearchChange}" />
 
     {#if zoom >= 7}
       <RasterLayers
