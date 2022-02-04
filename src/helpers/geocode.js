@@ -175,6 +175,15 @@ export const searchFeature = async (searchStr, boundaryId) => {
   return results;
 };
 
+/**
+ * There are 3 station datasets in the Cal-Adapt API (Feb 2022):
+ *  - HadISD weather stations used in Extreme Weather tool
+ *  - Drainange basins used in Streamflow tool
+ *  - Tide guage stations used in Hourly SLR tool
+ * The HadISD weather stations are stored as a separate layer in EPS 4326 (https://api.cal-adapt.org/api/hadisdstations/).
+ * The other 2 are stored in Event Location List in EPSG 3857 (https://api.cal-adapt.org/api/evtlocations/1/)
+ * A default srs param is used to always request geojson in EPSG 4326 for use in tools
+ **/
 export const getStationById = async (id, layerId, params = { srs: 4326 }) => {
   const url = `${apiEndpoint}/${layerId}/${id}`;
   const [response, error] = await handleXHR(fetchData(url, params));
