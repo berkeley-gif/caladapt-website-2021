@@ -78,7 +78,9 @@ export const DEFAULT_MONTHLY_STAT_GROUPS = [
   },
 ];
 
-// The Cal-Adapt API responses are paginated
-// This param sets the pagesize to get all features of the monthly timeseries
-// 12 months * 151 years = 1812
-export const NUM_OF_EVENTS = 1812;
+/** The Cal-Adapt API returns a paginated response for large datasets, with the default number of records returned
+ * per page being 10. The streamflow data is stored as monthly timeseries spanning 151 years for GCMS (1950-2100) and
+ * 95 years for Observed (1921-2005). To get all records of the timeseries in a single request use the pagesize query
+ * parameter. For streamflow data pagesize = 12 months * 151 years = 1812
+ **/
+export const NUM_OF_RECORDS = 1812;
