@@ -34,6 +34,15 @@
     }
   }
 
+  function getFeatureCenter(feature) {
+    if (feature.geometry === "Point") {
+      return feature.geometry.coordinates;
+    } else {
+      const point = getCenter(feature.geometry);
+      return point.geometry.coordinates;
+    }
+  }
+
   map.on("mouseenter", layer.id, function (e) {
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = "pointer";
@@ -53,16 +62,16 @@
 
   if (enableClick) {
     map.on("click", layer.id, function (e) {
-      const feature = e.features[0];
-      dispatch("overlayclick", feature.id);
-      let center;
-      if (feature.geometry === "Point") {
-        center = feature.geometry.coordinates;
-      } else {
-        const pointFeature = getCenter(feature.geometry);
-        center = pointFeature.geometry.coordinates;
+      const feature = e.features && e.feature.length ? e.feature[0] : null;
+      const center = getFeatureCenter(feature);
+      try {
+        dispatch("overlayclick", feature.id);
+        if (center) {
+          map.flyTo({ center });
+        }
+      } catch (error) {
+        console.warn("mapboxgl error:", error);
       }
-      map.flyTo({ center });
     });
   }
 
