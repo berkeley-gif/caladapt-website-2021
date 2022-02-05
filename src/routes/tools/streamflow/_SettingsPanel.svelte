@@ -7,7 +7,9 @@
     MONTHS_LIST,
   } from "../_common/constants";
   import {
-    INDICATOR_DESCRIPTION,
+    LEARN_MORE_INDICATOR,
+    LEARN_MORE_SELECT_MONTH,
+    LEARN_MORE_SELECT_PERIOD,
     SELECT_STATION_DESCRIPTION,
     PERIOD_LIST,
   } from "./_constants";
@@ -89,7 +91,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: INDICATOR_DESCRIPTION,
+        content: LEARN_MORE_INDICATOR,
       })}"
   />
 </div>
@@ -102,6 +104,12 @@
       selectedId="{$selectedMonthsStore}"
       on:change="{changeSelectedMonths}"
     />
+    <LearnMoreButton
+      on:click="{() =>
+        showLearnMore({
+          content: LEARN_MORE_SELECT_MONTH,
+        })}"
+    />
   {:else}
     <Select
       title="Select Period"
@@ -109,10 +117,13 @@
       items="{PERIOD_LIST}"
       on:change="{changeSelectedPeriod}"
     />
+    <LearnMoreButton
+      on:click="{() =>
+        showLearnMore({
+          content: LEARN_MORE_SELECT_PERIOD,
+        })}"
+    />
   {/if}
-  <LearnMoreButton
-    on:click="{() => showLearnMore({ slugs: ['emissions-scenario'] })}"
-  />
 </div>
 
 <div class="block">
