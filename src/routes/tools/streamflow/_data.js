@@ -12,6 +12,12 @@ import { DEFAULT_WATERYEAR, NUM_OF_RECORDS } from "./_constants";
 const { apiEndpoint } = config.env.production;
 const monthFormat = timeFormat("%b");
 
+/**
+ * Tranform API response to an array of objects by water year
+
+ * @param {object} response - json object
+ * @return {array} values
+ */
 const transformResponse = function (response, throwNoData = true) {
   if (!response) {
     if (throwNoData) {
@@ -168,6 +174,21 @@ export function getQueryParams() {
   return { params, method: "GET" };
 }
 
+/**
+ * The streamflow data request is returned from the API as monthly timeseries spanning 151 years for
+ * GCMS (1950-2100) and 95 years for Observed (1921-2005).
+ * Both indicators (Total Annual for selected months) & (Monthly Average for selected period) are
+ * calculated by filtering and aggregating the monthly timeseries in different ways. New data is fetched
+ * from the API only if the user changes the location, scenario or list of models.
+ * The following functions are used to perform the filtering and aggregation of the monthly timeseries.
+ **/
+
+/**
+ * Filter a monthly timeseries by month indexes
+ * @param {array} data
+ * @param {array} monthIds
+ * @return {array}
+ */
 export const filterDataByMonths = (data, monthIds) => {
   return data.map((series) => {
     const filteredValues = series.values.filter(({ date }) =>
@@ -177,6 +198,11 @@ export const filterDataByMonths = (data, monthIds) => {
   });
 };
 
+/**
+ * Group a monthly timeseries by water year, calculate sum of all months for each wateryear
+ * @param {array} data
+ * @return {array}
+ */
 export const sumMonthlyDataByWaterYear = (data) => {
   return data.map((series) => {
     const aggregatedValues = rollups(
@@ -188,6 +214,27 @@ export const sumMonthlyDataByWaterYear = (data) => {
   });
 };
 
+/**
+ * Filter a monthly timeseries by range of water years
+ * @param {array} data
+ * @param {number} start water year
+ * @param {number} end water year
+ * @return {array}
+ */
+export const filterDataByPeriod = (data, start, end) => {
+  return data.map((series) => {
+    const filteredValues = series.values.filter(
+      ({ wateryear }) => wateryear >= start && wateryear <= end
+    );
+    return { ...series, values: filteredValues };
+  });
+};
+
+/**
+ * Group a monthly timeseries by month, calculate average of all water years for each month
+ * @param {array} data
+ * @return {array}
+ */
 export const averageMonthlyDataByPeriod = (data) => {
   return data.map((series) => {
     const aggregatedValues = rollups(
@@ -205,15 +252,13 @@ export const averageMonthlyDataByPeriod = (data) => {
   });
 };
 
-export const filterDataByPeriod = (data, start, end) => {
-  return data.map((series) => {
-    const filteredValues = series.values.filter(
-      ({ wateryear }) => wateryear >= start && wateryear <= end
-    );
-    return { ...series, values: filteredValues };
-  });
-};
-
+/**
+ * Calculate Runoff Midpoint for each timeseries. The runoff midpoint is the point in
+ * time by which half of the total water that runs off in a given year has done so.
+ * This value is used in the Stat Panel for Monthly Average Streamflow indicator.
+ * @param {array} data
+ * @return {array}
+ */
 export const calculateRunoffMidPoint = (data) => {
   return data.map((series) => {
     const { id, label, values } = series;
@@ -237,6 +282,11 @@ export const calculateRunoffMidPoint = (data) => {
   });
 };
 
+/**
+ * Format data for export to csv
+ * @param {array}
+ * @return {array}
+ */
 export function formatMonthlyDataForExport(_arr) {
   return _arr.map((item) => {
     const row = {};

@@ -116,6 +116,14 @@
   // Reactive props
   $: datasets = tool.datasets;
   $: resources = [...externalResources, ...relatedTools];
+
+  /**
+   * The streamflow data request is returned from the API as monthly timeseries spanning 151 years for
+   * GCMS (1950-2100) and 95 years for Observed (1921-2005).
+   * Both indicators (Total Annual for selected months) & (Monthly Average for selected period) are
+   * calculated by filtering and aggregating the monthly timeseries in different ways. New data is fetched
+   * from the API only if the user changes the location, scenario or list of models.
+   **/
   $: $scenario, $modelsStore, $location, update();
 
   async function update() {
