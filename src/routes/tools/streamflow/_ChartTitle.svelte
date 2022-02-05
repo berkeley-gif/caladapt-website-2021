@@ -9,7 +9,9 @@
   export let loadLocation;
   export let periodLabel;
 
-  $: label = indicatorLabel.includes("Annual") ? monthsLabel : periodLabel;
+  $: label = indicatorLabel.includes("Annual")
+    ? `by water year for <span class="annotate">${monthsLabel}</span>`
+    : `for <span class="annotate">${periodLabel}</span>`;
 </script>
 
 <style>
@@ -31,7 +33,6 @@
   {title}
 </h2>
 <p class="h4">
-  Projected changes in <span class="annotate">{indicatorLabel}</span> by Water
-  Year under a <span class="annotate">{scenarioLabel}</span> for
-  <span class="annotate">{label}</span>.
+  Projected changes in <span class="annotate">{indicatorLabel}</span>
+  {@html label} under a <span class="annotate">{scenarioLabel}</span>.
 </p>

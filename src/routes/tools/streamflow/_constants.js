@@ -13,7 +13,7 @@ export const CLIMATE_VARIABLES = ["streamflow"];
 export const CLIMATE_INDICATORS = [
   {
     id: "annual",
-    label: "Annual Total by Months",
+    label: "Annual",
     title: "Annual Total Unimpaired Flows",
     units: "cfs",
     decimals: 0,
@@ -25,8 +25,8 @@ export const CLIMATE_INDICATORS = [
   },
   {
     id: "monthly",
-    label: "Monthly Average by Period",
-    title: "Monthly Average Unimpaired Flows",
+    label: "Monthly",
+    title: "Average Monthly Unimpaired Flows",
     units: "cfs",
     decimals: 0,
     statsComponent: ModelSummary,
@@ -50,6 +50,13 @@ export const PERIOD_LIST = DEFAULT_STAT_PERIODS.map((d) => ({
 export const DEFAULT_SELECTED_PERIOD = "baseline";
 
 export const INDICATOR_DESCRIPTION = `
+<p>Indicators presented in this tool examine projected trends in two key characteristics of streamflow:</p>
+<ul>
+  <li><strong>Annual Total</strong>: The number of Extreme Heat Days/Warm Nights that occur every year.</li>
+  <li><strong>Monthly Average</strong>: The length of the longest heat wave.</li>
+</ul>`;
+
+export const TIMEFRAME_DESCRIPTION = `
 <p>Indicators presented in this tool examine projected trends in two key characteristics of streamflow:</p>
 <ul>
   <li><strong>Annual Total</strong>: The number of Extreme Heat Days/Warm Nights that occur every year.</li>
