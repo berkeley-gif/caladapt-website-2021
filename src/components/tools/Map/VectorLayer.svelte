@@ -35,11 +35,15 @@
   }
 
   function getFeatureCenter(feature) {
-    if (feature.geometry === "Point") {
-      return feature.geometry.coordinates;
-    } else {
-      const point = getCenter(feature.geometry);
-      return point.geometry.coordinates;
+    try {
+      if (feature.geometry === "Point") {
+        return feature.geometry.coordinates;
+      } else {
+        const center = getCenter(feature.geometry);
+        return center.geometry.coordinates;
+      }
+    } catch (error) {
+      console.warn(error);
     }
   }
 
@@ -62,15 +66,13 @@
 
   if (enableClick) {
     map.on("click", layer.id, function (e) {
-      const feature = e.features && e.feature.length ? e.feature[0] : null;
-      const center = getFeatureCenter(feature);
-      try {
+      const feature = e.features && e.features.length ? e.features[0] : null;
+      if (feature && feature.id) {
         dispatch("overlayclick", feature.id);
+        const center = getFeatureCenter(feature);
         if (center) {
           map.flyTo({ center });
         }
-      } catch (error) {
-        console.warn("mapboxgl error:", error);
       }
     });
   }
