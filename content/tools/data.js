@@ -59,12 +59,9 @@ const tools = [
     resources: [
       'California Adaptation Clearinghouse', 
       "California's 4th Climate Change Assessment",
-      "Rising Seas in California",
       "State of California Sea Level Rise Guidance",
-      "California Coastal Commission Sea Level Rise Policy Guidance",
       "Sea the Future",
       "Our Coast Our Future",
-      "Hazard Exposure and Reporting Analytics",
     ],
   },
   {

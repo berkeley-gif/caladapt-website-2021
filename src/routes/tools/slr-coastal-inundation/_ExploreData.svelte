@@ -17,6 +17,8 @@
   import Title from "./_Title.svelte";
   import { Map } from "./_Map";
 
+  export let learnMoreContent;
+
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
 
@@ -133,7 +135,10 @@
   </div>
 
   <div slot="settings" class="settings">
-    <SettingsPanel on:showLearnMore="{(e) => loadLearnMore(e.detail)}" />
+    <SettingsPanel
+      learnMoreContent="{learnMoreContent}"
+      on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
+    />
   </div>
 </Dashboard>
 
