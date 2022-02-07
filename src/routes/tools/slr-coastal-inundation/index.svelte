@@ -29,7 +29,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent } = await (
+    const { aboutContent, learnMoreContent } = await (
       await this.fetch("tools/slr-coastal-inundation.json")
     ).json();
 
@@ -51,6 +51,7 @@
       externalResources,
       helpItems,
       aboutContent,
+      learnMoreContent,
     };
   }
 </script>
@@ -99,6 +100,7 @@
   export let externalResources;
   export let helpItems;
   export let aboutContent;
+  export let learnMoreContent;
 
   let appReady = false;
 
@@ -225,7 +227,7 @@
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData />
+    <ExploreData learnMoreContent="{learnMoreContent}" />
   {:else}
     <Loading />
   {/if}
