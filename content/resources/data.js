@@ -33,7 +33,7 @@ const data = [
     text: `Latest guidance from California Ocean Protection Council for incorporating 
       sea-level rise in risk assessment and planning based on the Rising Seas report.`,
     link: "https://www.opc.ca.gov/webmaster/ftp/pdf/agenda_items/20180314/Item3_Exhibit-A_OPC_SLR_Guidance-rd3.pdf",
-    image: "/placeholders/rect_16x9.svg",
+    image: "logos/soc-slr-guidance-logo.jpg",
     author: "State"
   },
   {
@@ -49,7 +49,7 @@ const data = [
     text: `Explore and understand features of the multiple sea level rise and 
       flood visualization tools available in California.`,
     link: "https://www.seathefuture.org/#/",
-    image: "/placeholders/rect_16x9.svg",
+    image: "logos/sea-the-future-logo.png",
     author: ""
   },
   {
@@ -58,7 +58,7 @@ const data = [
       decision makers with locally relevant data to help understand, visualize, 
       and adapt to sea level rise and coastal storms.`,
     link: "https://ourcoastourfuture.org/",
-    image: "/placeholders/rect_16x9.svg",
+    image: "logos/our-coast-our-future-logo.png",
     author: ""
   },
   {
