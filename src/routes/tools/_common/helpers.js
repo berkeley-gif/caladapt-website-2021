@@ -330,17 +330,17 @@ export async function setInitialLocation(lng, lat, boundary) {
 }
 
 /**
- * Groups a flattened array of objects by year. From:
+ * Groups a flattened array of objects by month. From:
  *  [
- *   { date: Date Sun Dec 31 1950, value: 90, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
- *   { date: Date Sun Dec 31 1951, value: 95, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
- *   { date: Date Sun Dec 31 1952, value: 97, year: 1950, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1950, value: 90, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1951, value: 95, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
+ *   { date: Date Sun Dec 31 1952, value: 97, id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry)},
  *   ...
  * ]
  * to:
  * [
  *  {
- *    date: Date Sun Dec 31 1950,
+ *    date: Date Sun Dec 1 xxxx,
  *    values: [
  *      { id: HadGEM2-ES, label: HadGEM2-ES (Warm/Dry), value: 90 },
  *      { id: MIROC5, label: MIROC5 (Complement), value: 87 },
