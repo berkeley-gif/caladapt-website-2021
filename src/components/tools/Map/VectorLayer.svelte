@@ -1,5 +1,6 @@
 <script>
   import { getContext, onDestroy, createEventDispatcher } from "svelte";
+  import getCenter from "@turf/center";
   import { contextKey, mapboxgl } from "./../../../helpers/mapbox";
 
   export let layer;
@@ -33,6 +34,19 @@
     }
   }
 
+  function getFeatureCenter(feature) {
+    try {
+      if (feature.geometry.type === "Point") {
+        return feature.geometry.coordinates;
+      } else {
+        const center = getCenter(feature.geometry);
+        return center.geometry.coordinates;
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
   map.on("mouseenter", layer.id, function (e) {
     // Change the cursor style as a UI indicator.
     map.getCanvas().style.cursor = "pointer";
@@ -52,10 +66,14 @@
 
   if (enableClick) {
     map.on("click", layer.id, function (e) {
-      dispatch("overlayclick", e.features[0].id);
-      map.flyTo({
-        center: e.features[0].geometry.coordinates,
-      });
+      const feature = e.features && e.features.length ? e.features[0] : null;
+      if (feature && feature.id) {
+        dispatch("overlayclick", feature.id);
+        const center = getFeatureCenter(feature);
+        if (center) {
+          map.flyTo({ center });
+        }
+      }
     });
   }
 

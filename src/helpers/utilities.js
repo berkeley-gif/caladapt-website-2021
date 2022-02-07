@@ -612,3 +612,23 @@ export const getCSSProp = (element, propName) =>
 
 export const isValidNumber = (value) =>
   typeof value === "number" && !isNaN(value);
+
+/**
+ * Calculate water year
+ * A "water year" is defined as the 12-month period October 1, for any given year
+ * through September 30, of the following year. The water year is designated
+ * by the calendar year in which it ends and which includes 9 of the 12 months.
+ * Thus, the year ending September 30, 1999 is called the "1999" water year.
+ * https://water.usgs.gov/nwc/explain_data.html
+ * @param {date}
+ * @return {number}
+ */
+export function getWaterYear(date) {
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  if (month >= 9) {
+    return year + 1;
+  } else {
+    return year;
+  }
+}

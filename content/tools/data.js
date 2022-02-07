@@ -226,13 +226,30 @@ const tools = [
     ],
   },
   {
-    title: 'Stream Flow',
+    title: 'Streamflow',
     desc: `Charts of VIC routed and bias corrected streamflows driven by LOCA downscaled temperature 
     and precipitation.`,
     categories: ['Precipitation'],
     slug: 'streamflow',
     icons: [
       'img/icons/rainfall.svg',
+    ],
+    datasets: [
+      {
+        slug: '7908b0d9-5d88-4f01-acac-76e02b70d44b',
+        logo: 'scripps_100x100.png',
+      },
+      {
+        slug: 'ddc10d21-3915-4eed-b761-758a9d8442d6',
+        logo: 'ca_dwr.png',
+      },
+    ],
+    related: [
+      'extreme-precipitation',
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
     ],
   },
   {
