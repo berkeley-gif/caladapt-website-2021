@@ -464,6 +464,25 @@ const data = [
       "circle-stroke-width": 2,
     },
   },
+  // Drainage basins are stored as polygon features in the API but need to represented as
+  // point locations in the Streamflow tool. Using the `symbol` type in the Mapbox layer definition
+  // creates an Mapbox overlay that represents the center of the drainage basin as points
+  {
+    id: "evtlocations",
+    type: "symbol",
+    metadata: {
+      group: "stations",
+      title: "Central Valley Subbasins",
+    },
+    source: {
+      type: "geojson",
+      data: "https://api.cal-adapt.org/api/evtlocations/?pagesize=11&search=River&srs=4326&format=json",
+    },
+    layout: {
+      "icon-image": "circle-15",
+      "icon-allow-overlap": true,
+    },
+  },
 ];
 
 export default data;

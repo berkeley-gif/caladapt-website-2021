@@ -1,6 +1,5 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { extent } from "d3-array";
   import { Button } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
 
@@ -12,6 +11,7 @@
   export let period;
   export let models;
   export let units;
+  export let changePeriod = true;
 
   const dispatch = createEventDispatcher();
 
@@ -92,20 +92,22 @@
   </div>
 
   <!-- change period -->
-  <Button
-    icon="{Calendar16}"
-    kind="ghost"
-    size="small"
-    on:click="{loadOptions}"
-  >
-    Change Period
-  </Button>
+  {#if changePeriod}
+    <Button
+      icon="{Calendar16}"
+      kind="ghost"
+      size="small"
+      on:click="{loadOptions}"
+    >
+      Change Period
+    </Button>
+  {/if}
 
   <!-- metrics -->
   <div class="stat-data">
     {#each metrics as item (item.id)}
       <div class="stat-data-item">
-        <div class="stat-text">{item.label}</div>
+        <div class="stat-text">{@html item.label}</div>
         <div class="stat-value">
           {item.value}
           <sup><span class="stat-units">{units}</span></sup>
