@@ -36,7 +36,7 @@
 
   function getFeatureCenter(feature) {
     try {
-      if (feature.geometry === "Point") {
+      if (feature.geometry.type === "Point") {
         return feature.geometry.coordinates;
       } else {
         const center = getCenter(feature.geometry);
@@ -67,6 +67,7 @@
   if (enableClick) {
     map.on("click", layer.id, function (e) {
       const feature = e.features && e.features.length ? e.features[0] : null;
+      console.log("feature", feature);
       if (feature && feature.id) {
         dispatch("overlayclick", feature.id);
         const center = getFeatureCenter(feature);
