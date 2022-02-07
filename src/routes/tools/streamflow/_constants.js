@@ -63,6 +63,13 @@ export const LEARN_MORE_SELECT_PERIOD = `<p>Select a period to explore observed 
 export const SELECT_STATION_DESCRIPTION = `<p>You can select another streamflow location on 
 the map or search for the closest location to your area of interest.</p>`;
 
+/** A "water year" is defined as the 12-month period October 1, for any given year
+ * through September 30, of the following year. For the Monthly Averages data
+ * presented in the streamflow tool, after filtering data for time period of interest,
+ * the data is aggregated by month. The DEFAULT_WATERYEAR is used to create dates for the
+ * monthly data so the months can be plotted with the LineArea chart component which
+ * uses d3's scaleTime() to create the x-axis.
+ **/
 export const DEFAULT_WATERYEAR = new Date().getUTCFullYear();
 
 export const DEFAULT_MONTHLY_STAT_GROUPS = [

@@ -5,7 +5,12 @@ import { timeFormat } from "d3-time-format";
 
 // Helpers
 import config from "~/helpers/api-config";
-import { handleXHR, fetchData, parseDateIso } from "~/helpers/utilities";
+import {
+  handleXHR,
+  fetchData,
+  parseDateIso,
+  getWaterYear,
+} from "~/helpers/utilities";
 import { OBSERVED, PRIORITY_10_MODELS } from "../_common/constants";
 import { DEFAULT_WATERYEAR, NUM_OF_RECORDS } from "./_constants";
 
@@ -28,15 +33,7 @@ const transformResponse = function (response, throwNoData = true) {
   }
   return response.results.map((d) => {
     const date = parseDateIso(d.time);
-    const year = date.getUTCFullYear();
-    const month = date.getUTCMonth();
-    let wateryear;
-    if (month >= 9) {
-      wateryear = year + 1;
-    } else {
-      wateryear = year;
-    }
-    return { ...d, date, wateryear };
+    return { ...d, date, wateryear: getWaterYear(date) };
   });
 };
 
@@ -230,8 +227,17 @@ export const filterDataByPeriod = (data, start, end) => {
   });
 };
 
+/** A "water year" is defined as the 12-month period October 1, for any given year
+ * through September 30, of the following year. For the Monthly Averages data
+ * presented in the streamflow tool, after filtering data for time period of interest,
+ * the data is aggregated by month. The
+ **/
+
 /**
- * Group a monthly timeseries by month, calculate average of all water years for each month
+ * Group a monthly timeseries by month, calculate average of all water years for each month.
+ * DEFAULT_WATERYEAR is used to create dates for the monthly data so the months
+ * can be plotted with the LineArea chart component which uses d3's scaleTime() to
+ * create the x-axis.
  * @param {array} data
  * @return {array}
  */

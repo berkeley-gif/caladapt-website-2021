@@ -17,6 +17,15 @@
   export let description;
 
   const dispatch = createEventDispatcher();
+
+  /** A "water year" is defined as the 12-month period October 1, for any given year
+   * through September 30, of the following year. For the Monthly Averages data
+   * presented in the streamflow tool, after filtering data for time period of interest,
+   * the data is aggregated by month. The DEFAULT_WATERYEAR is used to create dates for the
+   * monthly data so the months can be plotted with the LineArea chart component which
+   * uses d3's scaleTime() to create the x-axis. Calculate the start and end dates of the
+   * default water year to create min & max domains for the x axis.
+   **/
   const DEFAULT_WATERYEAR_STARTDATE = new Date(DEFAULT_WATERYEAR - 1, 9, 1);
   const DEFAULT_WATERYEAR_ENDDATE = new Date(DEFAULT_WATERYEAR, 8, 1);
 
