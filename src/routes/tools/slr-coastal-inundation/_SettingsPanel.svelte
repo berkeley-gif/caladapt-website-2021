@@ -1,7 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
 
-  import { locationStore } from "../_common/stores";
   import {
     floodScenarioStore,
     timeFrameStore,
@@ -14,8 +13,10 @@
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { RadioBtnGroup, SelectLayers } from "~/components/tools/Settings";
 
+  export let learnMoreContent;
+
+  const { floodScenario, mapLayers, timePeriod } = learnMoreContent;
   const dispatch = createEventDispatcher();
-  const { location } = locationStore;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -43,7 +44,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: 'To do...',
+        content: mapLayers,
         header: 'Select Data Layers',
       })}"
   />
@@ -59,7 +60,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: 'To do...',
+        content: timePeriod,
         header: 'Select Time Period',
       })}"
   />
@@ -75,7 +76,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: 'To do...',
+        content: floodScenario,
         header: 'Select Flood Scenario',
       })}"
   />
