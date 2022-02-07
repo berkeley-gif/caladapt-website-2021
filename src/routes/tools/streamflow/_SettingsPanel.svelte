@@ -6,13 +6,7 @@
     DEFAULT_SCENARIOS,
     MONTHS_LIST,
   } from "../_common/constants";
-  import {
-    LEARN_MORE_INDICATOR,
-    LEARN_MORE_SELECT_MONTH,
-    LEARN_MORE_SELECT_PERIOD,
-    SELECT_STATION_DESCRIPTION,
-    PERIOD_LIST,
-  } from "./_constants";
+  import { PERIOD_LIST } from "./_constants";
 
   import {
     RadioBtnGroup,
@@ -32,8 +26,17 @@
     selectedPeriodStore,
   } from "./_store";
 
+  export let learnMoreContent;
+
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
+
+  const {
+    indicatorInfo,
+    selectMonthInfo,
+    selectPeriodInfo,
+    selectStationInfo,
+  } = learnMoreContent;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -75,7 +78,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: SELECT_STATION_DESCRIPTION,
+        content: selectStationInfo,
         header: 'Select Station',
       })}"
   />
@@ -91,7 +94,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: LEARN_MORE_INDICATOR,
+        content: indicatorInfo,
       })}"
   />
 </div>
@@ -107,7 +110,7 @@
     <LearnMoreButton
       on:click="{() =>
         showLearnMore({
-          content: LEARN_MORE_SELECT_MONTH,
+          content: selectMonthInfo,
         })}"
     />
   {:else}
@@ -120,7 +123,7 @@
     <LearnMoreButton
       on:click="{() =>
         showLearnMore({
-          content: LEARN_MORE_SELECT_PERIOD,
+          content: selectPeriodInfo,
         })}"
     />
   {/if}

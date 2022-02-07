@@ -20,7 +20,7 @@ export const CLIMATE_INDICATORS = [
     statsComponent: AvgRange,
     description: `<p>The colored lines on this visualization represent 
     a timeseries of estimated annual total unimpaired flow for selected months from individual downscaled GCMs for selected months.
-    The historical observed data is represented by a gray line from 1950-2006.</p>
+    The historical observed data is represented by a gray line from 1921-2006.</p>
     <p>Click on any of the legend keys to highlight corresponding timeseries.</p>`,
   },
   {
@@ -32,7 +32,7 @@ export const CLIMATE_INDICATORS = [
     statsComponent: ModelSummary,
     description: `<p>The colored lines on this visualization represent 
     a monthly average unimpaired flow for selected periods from individual downscaled GCMs.
-    The historical observed data is represented by a gray line for the historical period.</p>
+    The historical observed data, if available, is represented by a gray line.</p>
     <p>Click on any of the legend keys to highlight corresponding timeseries.</p>`,
   },
 ];
@@ -48,20 +48,6 @@ export const PERIOD_LIST = DEFAULT_STAT_PERIODS.map((d) => ({
   text: d.label,
 }));
 export const DEFAULT_SELECTED_PERIOD = "baseline";
-
-export const LEARN_MORE_INDICATOR = `
-<p>Unimpaired flows are flows that would have been observed in the absence of human activities.</p>
-<ul>
-  <li><strong>Annual</strong>: The total annual unimpaired flow by water year.</li>
-  <li><strong>Monthly</strong>: The monthly average unimpaired flow for a range of water years.</li>
-</ul>`;
-
-export const LEARN_MORE_SELECT_MONTH = `<p>Select one or more months to explore the Annual Total Unimpaired Streamflow per water year for those months.</p>`;
-
-export const LEARN_MORE_SELECT_PERIOD = `<p>Select a period to explore observed or projected changes in Monthly Average Streamflow.</p>`;
-
-export const SELECT_STATION_DESCRIPTION = `<p>You can select another streamflow location on 
-the map or search for the closest location to your area of interest.</p>`;
 
 /** A "water year" is defined as the 12-month period October 1, for any given year
  * through September 30, of the following year. For the Monthly Averages data

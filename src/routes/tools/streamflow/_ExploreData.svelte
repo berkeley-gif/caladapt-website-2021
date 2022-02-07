@@ -41,6 +41,8 @@
     runoffMidpoint,
   } from "./_store";
 
+  export let learnMoreContent;
+
   const { location } = locationStore;
   const { scenario } = scenarioStore;
   const { indicator } = indicatorStore;
@@ -242,6 +244,7 @@
 
   <div slot="settings" class="settings">
     <SettingsPanel
+      learnMoreContent="{learnMoreContent}"
       on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
       on:showLoadLocation="{() => loadLocation()}"
     />

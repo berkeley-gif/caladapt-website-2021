@@ -34,7 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent } = await (
+    const { aboutContent, learnMoreContent } = await (
       await this.fetch("tools/streamflow.json")
     ).json();
 
@@ -44,6 +44,7 @@
       externalResources,
       helpItems,
       aboutContent,
+      learnMoreContent,
     };
   }
 </script>
@@ -95,6 +96,7 @@
   export let externalResources;
   export let helpItems;
   export let aboutContent;
+  export let learnMoreContent;
 
   // Derived stores
   const { page } = sapperStores();
@@ -212,7 +214,7 @@
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData />
+    <ExploreData learnMoreContent="{learnMoreContent}" />
   {:else}
     <Loading />
   {/if}
