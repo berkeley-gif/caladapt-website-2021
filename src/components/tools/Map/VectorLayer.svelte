@@ -67,7 +67,6 @@
   if (enableClick) {
     map.on("click", layer.id, function (e) {
       const feature = e.features && e.features.length ? e.features[0] : null;
-      console.log("feature", feature);
       if (feature && feature.id) {
         dispatch("overlayclick", feature.id);
         const center = getFeatureCenter(feature);
