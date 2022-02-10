@@ -35,6 +35,7 @@
 
 <script>
   import { Header, Resources } from "~/components/tools/Partials";
+  import SelectLocation from "./_SelectLocation.svelte";
 
   export let tool;
   export let toolIntro;
@@ -56,6 +57,10 @@
 />
 
 <div class="bx--grid">
+  <div>
+    <SelectLocation />
+  </div>
+
   <div id="resources">
     <Resources resources="{resources}" />
   </div>
