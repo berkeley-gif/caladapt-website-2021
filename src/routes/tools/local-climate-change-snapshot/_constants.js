@@ -13,11 +13,6 @@ export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y.*ens32";
  **/
 export const AREABURNED_TIMESERIES_SLUG_EXP = "^fire_year.*bau";
 
-export const SCENARIO_COLORS = new Map([
-  ["rsgreen", "#5DFA25"],
-  ["rsblue", "#25C7FA"],
-]);
-
 export const SERIES = [
   {
     id: "observed",
