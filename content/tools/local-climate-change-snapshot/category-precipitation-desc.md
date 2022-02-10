@@ -1,0 +1,3 @@
+California's climate varies between wet and dry years. Research suggests that for much of the state, wet years will become wetter and the dry years will become drier. Dry years are also likely to be followed by dry years, increasing the risk of drought.
+
+While California does not see the average annual precipitation changing significantly in the next 50-75 years, precipitation will likely be delivered in more intense storms and within a shorter wet season. We are already seeing some of the impacts from a shift towards larger year to year fluctuations.
