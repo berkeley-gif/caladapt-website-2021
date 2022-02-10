@@ -21,7 +21,7 @@
       .filter((d) => tool.resources.includes(d.title))
       .map((d) => ({ ...d, category: "external" }));
 
-    const { toolIntro, CLIMATE_CATEGORIES, CLIMATE_INDICATORS } = await (
+    const { toolIntro } = await (
       await this.fetch("tools/local-climate-change-snapshot.json")
     ).json();
 
