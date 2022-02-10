@@ -25,7 +25,14 @@ const tools = [
         logo: 'gif_80x80.png'
       }
     ],
-    related: [],
+    related: [
+      'annual-averages',
+      'extreme-heat',
+      'extreme-precipitation',
+      'maps-of-projected-change',
+      'extended-drought',
+      'wildfire',
+    ],
     resources: [
       'California Adaptation Clearinghouse', 
       "California's 4th Climate Change Assessment",
