@@ -12,27 +12,39 @@
     // Filter metadata for current tool
     const tool = toolsList.find((d) => d.slug === TOOL_SLUG);
 
-    const { CLIMATE_CATEGORIES, CLIMATE_INDICATORS } = await (
+    const { categories, indicators } = await (
       await this.fetch("tools/local-climate-change-snapshot.json")
     ).json();
 
     return {
       tool,
-      CLIMATE_CATEGORIES,
-      CLIMATE_INDICATORS,
+      categories,
+      indicators,
     };
   }
 </script>
 
 <script>
+  import { Loading } from "carbon-components-svelte";
+
+  // Components
+  import ExploreData from "./_ExploreData.svelte";
+
   export let tool;
-  export let CLIMATE_CATEGORIES;
-  export let CLIMATE_INDICATORS;
+  export let categories;
+  export let indicators;
+
+  let appReady = true;
 </script>
 
 <svelte:head>
   <title>{tool.title}</title>
 </svelte:head>
 
-<!-- placeholder div to add height -->
-<div id="explore"></div>
+<div id="explore-data">
+  {#if appReady}
+    <ExploreData categories="{categories}" indicators="{indicators}" />
+  {:else}
+    <Loading />
+  {/if}
+</div>
