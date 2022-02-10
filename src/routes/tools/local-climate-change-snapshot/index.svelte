@@ -12,7 +12,16 @@
     // Filter metadata for current tool
     const tool = toolsList.find((d) => d.slug === TOOL_SLUG);
 
-    return { tool };
+    const { toolIntro, CLIMATE_CATEGORIES, CLIMATE_INDICATORS } = await (
+      await this.fetch("tools/local-climate-change-snapshot.json")
+    ).json();
+
+    return {
+      tool,
+      toolIntro,
+      CLIMATE_CATEGORIES,
+      CLIMATE_INDICATORS,
+    };
   }
 </script>
 
@@ -21,25 +30,24 @@
   import { Header } from "~/components/tools/Partials";
 
   export let tool;
+  export let toolIntro;
+  export let CLIMATE_CATEGORIES;
+  export let CLIMATE_INDICATORS;
 </script>
 
 <svelte:head>
   <title>{tool.title}</title>
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css"
+    rel="stylesheet"
+  />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" title="{tool.title}">
-  <div slot="description">
-    <p class="lead">
-      <InlineNotification
-        hideCloseButton
-        lowContrast
-        kind="warning-alt"
-        title="Under Construction"
-        subtitle=""
-      />
-    </p>
-  </div>
-</Header>
+<Header
+  iconPaths="{tool.icons}"
+  title="{tool.title}"
+  description="{toolIntro}"
+/>
 
 <!-- placeholder div to add height -->
 <div id="explore"></div>
