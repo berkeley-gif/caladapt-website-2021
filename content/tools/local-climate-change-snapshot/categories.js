@@ -1,3 +1,6 @@
+/** This structure is similar to content/tools/data.js
+ * TODO: move resource details into content/resources/data.js
+ **/
 export const CLIMATE_CATEGORIES = [
   {
     id: "temperature",

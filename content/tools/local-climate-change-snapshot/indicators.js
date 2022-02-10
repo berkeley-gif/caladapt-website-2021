@@ -1,7 +1,10 @@
+/** The taglines used in this list are now part of Glossary except maybe kbdigt600
+ * TODO: Figure out how to use glossary entries and remove tagline property
+ **/
 export const indicatorList = [
   {
     id: 'tasmax',
-    categoryId: 'Temperature',
+    categoryId: 'temperature',
     name: 'Annual Average Maximum Temperature',
     units: '°F',
     decimals: 1,
@@ -10,7 +13,7 @@ export const indicatorList = [
   },
   {
     id: 'exheat',
-    categoryId: 'Temperature',
+    categoryId: 'temperature',
     name: 'Extreme Heat Days',
     units: 'days',
     decimals: 0,
@@ -19,7 +22,7 @@ export const indicatorList = [
   },
   {
     id: 'tasmin',
-    categoryId: 'Temperature',
+    categoryId: 'temperature',
     name: 'Annual Average Minimum Temperature',
     units: '°F',
     decimals: 1,
@@ -28,7 +31,7 @@ export const indicatorList = [
   },
   {
     id: 'exheatn',
-    categoryId: 'Temperature',
+    categoryId: 'temperature',
     name: 'Warm Nights',
     units: 'nights',
     decimals: 0,
@@ -37,7 +40,7 @@ export const indicatorList = [
   },
   {
     id: 'rx1day',
-    categoryId: 'Precipitation',
+    categoryId: 'precipitation',
     name: 'Maximum 1-day Precipitation',
     units: 'inches',
     decimals: 3,
@@ -47,7 +50,7 @@ export const indicatorList = [
   },
   {
     id: 'cddm',
-    categoryId: 'Precipitation',
+    categoryId: 'precipitation',
     name: 'Maximum Length of Dry Spell',
     units: 'days',
     decimals: 0,
@@ -57,7 +60,7 @@ export const indicatorList = [
   },
   {
     id: 'speiltm1',
-    categoryId: 'Precipitation',
+    categoryId: 'precipitation',
     name: 'SPEI 1-month',
     units: 'months',
     decimals: 1,
@@ -76,7 +79,7 @@ export const indicatorList = [
   },
   {
     id: 'swe',
-    categoryId: 'Precipitation',
+    categoryId: 'precipitation',
     name: 'April SWE',
     units: 'inches',
     decimals: 1,
@@ -87,7 +90,7 @@ export const indicatorList = [
   },
   {
     id: 'pr',
-    categoryId: 'Precipitation',
+    categoryId: 'precipitation',
     name: 'Annual Precipitation',
     units: 'inches',
     decimals: 1,
@@ -96,7 +99,7 @@ export const indicatorList = [
   },
   {
     id: 'fire',
-    categoryId: 'Wildfire',
+    categoryId: 'wildfire',
     name: 'Annual Average Area Burned',
     units: 'acres',
     decimals: 1,
@@ -105,7 +108,7 @@ export const indicatorList = [
   },
   {
     id: 'kbdigt600',
-    categoryId: 'Wildfire',
+    categoryId: 'wildfire',
     name: 'KBDI > 600',
     units: 'days',
     decimals: 0,
