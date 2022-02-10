@@ -1,1 +1,0 @@
-Overall temperatures are projected to rise in California during the 21st century. While the entire state will experience temperature increases, the local impacts will vary greatly with many communities and ecosystems already experiencing the effects of rising temperatures.
