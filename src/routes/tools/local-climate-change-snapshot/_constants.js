@@ -45,10 +45,9 @@ export const SERIES = [
   },
 ];
 
-/** Chart and Table data for the Area Burned indicator is assembled from the 4 GCMs.
- * There is no ensemble equivalent in the API.
- **/
-export const DEFAULT_CLIMATE_VARIABLE = "temperature";
+// The list of climate categories and indicators is in content/tools/local-climate-change-snapshot/
+export const DEFAULT_CLIMATE_CATEGORY = "temperature";
 export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
+
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
