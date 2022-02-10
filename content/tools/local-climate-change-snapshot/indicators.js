@@ -1,7 +1,7 @@
 /** The taglines used in this list are now part of Glossary except maybe kbdigt600
  * TODO: Figure out how to use glossary entries and remove tagline property
  **/
-export const indicatorList = [
+export const CLIMATE_INDICATORS = [
   {
     id: 'tasmax',
     categoryId: 'temperature',
