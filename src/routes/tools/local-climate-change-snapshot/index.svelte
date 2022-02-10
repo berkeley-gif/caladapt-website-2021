@@ -1,6 +1,8 @@
 <script context="module">
   import { TOOL_SLUG } from "./_constants";
-  export async function preload({ query }) {
+  import resourcesList from "content/resources/data";
+
+  export async function preload() {
     // Get tools metadata
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
@@ -12,6 +14,13 @@
     // Filter metadata for current tool
     const tool = toolsList.find((d) => d.slug === TOOL_SLUG);
 
+    const relatedTools = toolsList
+      .filter((d) => tool.related.includes(d.slug))
+      .map((d) => ({ ...d, category: "caladapt" }));
+    const externalResources = resourcesList
+      .filter((d) => tool.resources.includes(d.title))
+      .map((d) => ({ ...d, category: "external" }));
+
     const { toolIntro, CLIMATE_CATEGORIES, CLIMATE_INDICATORS } = await (
       await this.fetch("tools/local-climate-change-snapshot.json")
     ).json();
@@ -19,20 +28,17 @@
     return {
       tool,
       toolIntro,
-      CLIMATE_CATEGORIES,
-      CLIMATE_INDICATORS,
+      resources: [...relatedTools, ...externalResources],
     };
   }
 </script>
 
 <script>
-  import { InlineNotification } from "carbon-components-svelte";
-  import { Header } from "~/components/tools/Partials";
+  import { Header, Resources } from "~/components/tools/Partials";
 
   export let tool;
   export let toolIntro;
-  export let CLIMATE_CATEGORIES;
-  export let CLIMATE_INDICATORS;
+  export let resources;
 </script>
 
 <svelte:head>
@@ -49,5 +55,8 @@
   description="{toolIntro}"
 />
 
-<!-- placeholder div to add height -->
-<div id="explore"></div>
+<div class="bx--grid">
+  <div id="resources">
+    <Resources resources="{resources}" />
+  </div>
+</div>
