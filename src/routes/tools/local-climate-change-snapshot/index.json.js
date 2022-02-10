@@ -13,8 +13,8 @@ export function get(_req, res) {
     res.end(
       JSON.stringify({
         toolIntro,
-        CLIMATE_CATEGORIES,
-        CLIMATE_INDICATORS,
+        categories: CLIMATE_CATEGORIES,
+        indicators: CLIMATE_INDICATORS,
       })
     );
   } catch (error) {
