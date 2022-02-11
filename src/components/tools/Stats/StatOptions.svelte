@@ -46,6 +46,9 @@
   // If user confirms changes, dispatch change event with selected groupd and period
   // If user has selected a custom period, create a new period object
   function update() {
+    if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
+      return;
+    }
     group = groupList.find(({ id }) => id === selectedGroupId);
     if (selectedPeriodId === "custom") {
       const start = getItem(startYear_selectedIndex);
@@ -102,12 +105,16 @@
         titleText="Start"
         placeholder="Select start year"
         items="{items}"
+        invalid="{startYear_selectedIndex < 0}"
+        invalidText="Select Start Year"
       />
       <ComboBox
         bind:selectedIndex="{endYear_selectedIndex}"
         titleText="End"
         placeholder="Select end year"
         items="{filteredItems}"
+        invalid="{endYear_selectedIndex < 0}"
+        invalidText="Select End Year"
       />
     </div>
   {/if}
