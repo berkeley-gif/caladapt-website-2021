@@ -42,6 +42,25 @@
     return item.text.includes(value);
   }
 
+  function updateIndex(e) {
+    const { key, keyCode, target } = e;
+    if (["Enter", "Tab"].includes(key) || [13, 9].includes(keyCode)) {
+      const { value, id } = target;
+      switch (id) {
+        case "years-select-start":
+          startYear_selectedIndex = items.findIndex((d) => d.text === value);
+          return;
+        case "years-select-end":
+          endYear_selectedIndex = filteredItems.findIndex(
+            (d) => d.text === value
+          );
+          return;
+        default:
+          return;
+      }
+    }
+  }
+
   $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
   $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
   $: startYear_selectedIndex, updateLinkedList();
@@ -112,6 +131,8 @@
         invalid="{startYear_selectedIndex < 0}"
         invalidText="Select a year from the list"
         shouldFilterItem="{shouldFilterItem}"
+        on:keydown="{updateIndex}"
+        id="years-select-start"
       />
       <ComboBox
         bind:selectedIndex="{endYear_selectedIndex}"
@@ -121,6 +142,8 @@
         invalid="{endYear_selectedIndex < 0}"
         invalidText="Select a year from the list"
         shouldFilterItem="{shouldFilterItem}"
+        on:keydown="{updateIndex}"
+        id="years-select-end"
       />
     </div>
   {/if}
