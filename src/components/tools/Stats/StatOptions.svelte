@@ -28,6 +28,10 @@
 
   const getItemByIndex = (i, arr) => (arr[i] ? arr[i].text : null);
 
+  /**
+   * When start year is selected, the items in the end year combobox dropdown menu are filtered
+   * to show only values greater than the start year
+   **/
   function updateLinkedList() {
     if (startYear_selectedIndex < 0) {
       filteredItems = items;
@@ -37,11 +41,19 @@
     }
   }
 
+  /**
+   * When user types in the year, the combobox dropdown menu is filtered to show only
+   * values that complete the characters typed in the combobox
+   **/
   function shouldFilterItem(item, value) {
     if (!value) return true;
     return item.text.includes(value);
   }
 
+  /**
+   * When user presses the Enter or Tab key in combobox after typing in a year, update
+   * the combobox selected index if the year matches an item in the combobox dropdown menu
+   **/
   function updateIndex(e) {
     const { key, keyCode, target } = e;
     if (["Enter", "Tab"].includes(key) || [13, 9].includes(keyCode)) {
@@ -65,9 +77,12 @@
   $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
   $: startYear_selectedIndex, updateLinkedList();
 
-  // If user confirms changes, dispatch change event with selected groupd and period
-  // If user has selected a custom period, create a new period object
-  // If either start or end year is not selected do not dispatch change event
+  /**
+   * Dispatch change event with current group object and selected period object when user selects Confirm.
+   * For custom period:
+   *  - check if both start and end year are defined
+   *  - create a new period object
+   **/
   function update() {
     group = groupList.find(({ id }) => id === selectedGroupId);
     if (selectedPeriodId === "custom") {
