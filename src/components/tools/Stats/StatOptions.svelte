@@ -26,9 +26,7 @@
   let endYear_selectedIndex = -1;
   let filteredItems;
 
-  const getItem = (i) => (items[i] ? +items[i].text : "N/A");
-  const getFilteredItem = (i) =>
-    filteredItems[i] ? +filteredItems[i].text : "N/A";
+  const getItemByIndex = (i, arr) => (arr[i] ? arr[i].text : null);
 
   function updateLinkedList() {
     if (startYear_selectedIndex < 0) {
@@ -52,13 +50,13 @@
   // If user has selected a custom period, create a new period object
   // If either start or end year is not selected do not dispatch change event
   function update() {
-    if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
-      return;
-    }
     group = groupList.find(({ id }) => id === selectedGroupId);
     if (selectedPeriodId === "custom") {
-      const start = getItem(startYear_selectedIndex);
-      const end = getFilteredItem(endYear_selectedIndex);
+      if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
+        return;
+      }
+      const start = getItemByIndex(startYear_selectedIndex, items);
+      const end = getItemByIndex(endYear_selectedIndex, filteredItems);
       period = {
         id: "custom",
         label: `${start}-${end}`,
