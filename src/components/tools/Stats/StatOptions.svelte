@@ -39,12 +39,18 @@
     }
   }
 
+  function shouldFilterItem(item, value) {
+    if (!value) return true;
+    return item.text.includes(value);
+  }
+
   $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
   $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
   $: startYear_selectedIndex, updateLinkedList();
 
   // If user confirms changes, dispatch change event with selected groupd and period
   // If user has selected a custom period, create a new period object
+  // If either start or end year is not selected do not dispatch change event
   function update() {
     if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
       return;
@@ -106,7 +112,8 @@
         placeholder="Select start year"
         items="{items}"
         invalid="{startYear_selectedIndex < 0}"
-        invalidText="Select Start Year"
+        invalidText="Select a year from the list"
+        shouldFilterItem="{shouldFilterItem}"
       />
       <ComboBox
         bind:selectedIndex="{endYear_selectedIndex}"
@@ -114,7 +121,8 @@
         placeholder="Select end year"
         items="{filteredItems}"
         invalid="{endYear_selectedIndex < 0}"
-        invalidText="Select End Year"
+        invalidText="Select a year from the list"
+        shouldFilterItem="{shouldFilterItem}"
       />
     </div>
   {/if}
