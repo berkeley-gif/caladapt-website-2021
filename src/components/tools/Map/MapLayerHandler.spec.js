@@ -1,4 +1,4 @@
-import { MapLayerHandler } from "./utils";
+import { MapLayerHandler } from "./MapLayerHandler";
 
 describe("MapLayerHandler", () => {
   // mocks the mapboxgl.js Map instance
@@ -13,10 +13,7 @@ describe("MapLayerHandler", () => {
     { version: "x.x.x" }
   );
 
-  console.log(map);
-
-  // let map = { version: "x.x.x" };
-  let beforeId = "foo";
+  let beforeId = "settlement-subdivision-label";
   let layerType = "raster";
   let debug = false;
 
