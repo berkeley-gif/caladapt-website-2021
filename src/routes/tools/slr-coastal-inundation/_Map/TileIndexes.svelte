@@ -2,7 +2,7 @@
   import { onDestroy, getContext, afterUpdate } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
-  import { MapLayerHandler } from "./utils";
+  import { MapLayerHandler } from "~/components/tools/Map";
   import { VISIBLE, NONE, LAYER_COLORS } from "../_constants";
 
   export let mapStyle;
