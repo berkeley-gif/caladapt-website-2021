@@ -33,6 +33,7 @@
   import { logException } from "~/helpers/logging";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
   import { INITIAL_CONFIG } from "../_common/constants";
+  import { getQueryParams, getTimeseries } from "./_data";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -43,6 +44,7 @@
     unitsStore,
     locationStore,
     isFetchingStore,
+    dataStore,
   } from "../_common/stores";
   import {
     categoryListStore,
@@ -72,7 +74,20 @@
   async function update() {
     if (!appReady) return;
     try {
+      const config = {
+        indicatorId: $indicatorStore.id,
+      };
+      // Get params object for querying the Cal-Adapt API
+      const { params, method } = getQueryParams({
+        location: $location,
+        boundary: $boundary,
+        imperial: true,
+      });
+
       isFetchingStore.set(true);
+
+      const data = await getTimeseries(config, params, method);
+      console.log("data", data);
     } catch (error) {
       console.error("updateData", error);
       logException(error);
