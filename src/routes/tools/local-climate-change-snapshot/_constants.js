@@ -1,3 +1,5 @@
+import { INITIAL_CONFIG } from "../_common/constants";
+
 export const TOOL_SLUG = "local-climate-change-snapshot";
 
 /** Regex can be used to search the Cal-Adapt API to get a list of slugs using
@@ -43,6 +45,11 @@ export const SERIES = [
 // The list of climate categories and indicators is in content/tools/local-climate-change-snapshot/
 export const DEFAULT_CLIMATE_CATEGORY = "temperature";
 export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
+
+export const DEFAULT_INITIAL_CONFIG = {
+  ...INITIAL_CONFIG,
+  indicator: DEFAULT_CLIMATE_INDICATOR,
+};
 
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
