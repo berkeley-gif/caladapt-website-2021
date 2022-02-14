@@ -33,7 +33,7 @@
   import { logException } from "~/helpers/logging";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getQueryParams, getTimeseries } from "./_data";
+  import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -85,9 +85,10 @@
       });
 
       isFetchingStore.set(true);
-
-      const data = await getTimeseries(config, params, method);
-      console.log("data", data);
+      const observed = await getObserved(config, params, method);
+      const projections = await getProjections(config, params, method);
+      dataStore.set([...observed, ...projections]);
+      console.log("data", $dataStore);
     } catch (error) {
       console.error("updateData", error);
       logException(error);

@@ -7,7 +7,8 @@ export const TOOL_SLUG = "local-climate-change-snapshot";
  * https://api.cal-adapt.org/api/series/?slug_re=^tasmax_(year|month).*ens32
  * https://api.cal-adapt.org/api/series/?slug_re=^tasmax_30y.*ens32
  **/
-export const DEFAULT_TIMESERIES_SLUG_EXP = "^indicator_(year|month).*ens32";
+export const DEFAULT_PROJECTIONS_SLUG_EXP = "^indicator_(year|month).*ens32";
+export const DEFAULT_OBSERVED_SLUG_EXP = "^indicator_(year|month).*livneh";
 export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y.*ens32";
 
 /** Chart and Table data for the Area Burned indicator is assembled from the 4 GCMs.
@@ -15,32 +16,37 @@ export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y.*ens32";
  **/
 export const AREABURNED_TIMESERIES_SLUG_EXP = "^fire_year.*bau";
 
-export const SERIES = [
+export const OBSERVED = [
   {
-    id: "observed",
+    id: "livneh",
     label: "Observed",
     color: "rgba(110, 110, 110, 1)",
-    org: "University of Colorado Boulder",
   },
+];
+export const SERIES = [
   {
     id: "rcp45",
     label: "Medium Emissions (RCP 4.5)",
     color: "rgba(59, 153, 167, 1)",
-    org: "Geospatial Innovation Facility",
   },
   {
     id: "rcp85",
     label: "High Emissions (RCP 8.5)",
     color: "rgba(131, 87, 170, 1)",
-    org: "Geospatial Innovation Facility",
   },
   {
     id: "historical",
     label: "Modeled Historical",
     color: "rgba(170, 144, 60, 1)",
-    org: "Geospatial Innovation Facility",
   },
 ];
+export const RANGES = SERIES.map(({ id, label, color }) => {
+  return {
+    id: `${id}_range`,
+    label: `${label} Range`,
+    color: color.replace(/[^,]+(?=\))/, "0.3"),
+  };
+});
 
 // The list of climate categories and indicators is in content/tools/local-climate-change-snapshot/
 export const DEFAULT_CLIMATE_CATEGORY = "temperature";

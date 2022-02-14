@@ -4,8 +4,8 @@ import { handleXHR, fetchData } from "~/helpers/utilities";
 
 // Constants
 import {
-  DEFAULT_TIMESERIES_SLUG_EXP,
-  SERIES,
+  DEFAULT_PROJECTIONS_SLUG_EXP,
+  DEFAULT_OBSERVED_SLUG_EXP,
   DEFAULT_POLYGON_AGGREGATE_FUNCTION,
 } from "./_constants";
 
@@ -33,10 +33,28 @@ const fetchUrls = async (exp) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-export async function getTimeseries(config, params, method = "GET") {
+export async function getObserved(config, params, method = "GET") {
   try {
     const { indicatorId } = config;
-    const exp = DEFAULT_TIMESERIES_SLUG_EXP.replace("indicator", indicatorId);
+    const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
+    const urls = await fetchUrls(exp);
+    return urls;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Get data for chart
+ * @param {object} config - prop for climate indicator.
+ * @param {object} params - props for for geometry, stat, units, etc.
+ * @param {string} method - default is GET, POST for uploaded boundaries
+ * @return {array}
+ */
+export async function getProjections(config, params, method = "GET") {
+  try {
+    const { indicatorId } = config;
+    const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     return urls;
   } catch (error) {
