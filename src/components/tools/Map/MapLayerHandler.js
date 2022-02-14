@@ -1,5 +1,6 @@
 /**
  * Utility Class for handling adding and removing MapboxGLJS map layers
+ * see: routes/tools/slr-coastal-inundation/Map for an example usage.
  */
 export class MapLayerHandler {
   /**
