@@ -22,7 +22,9 @@
     "sass:test-build": "node-sass --quiet --include-path ./node_modules src/scss/main.scss > /dev/null",
     "pretest": "npm run lint",
     "prepare": "husky install",
-    "slr-cis-data": "npm run generate-data --workspace=slr-cis-data-coverage"
+    "slr-cis-data": "npm run generate-data --workspace=slr-cis-data-coverage",
+    "test": "jest src",
+    "test:watch": "npm run test -- --watch"
   },
   "dependencies": {
     "@mapbox/togeojson": "^0.16.0",
