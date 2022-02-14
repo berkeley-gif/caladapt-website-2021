@@ -20,3 +20,6 @@ export { default as GeolocateControl } from "./controls/GeolocateControl.svelte"
 export { default as NavigationControl } from "./controls/NavigationControl.svelte";
 export { default as ScalingControl } from "./controls/ScalingControl.svelte";
 export { default as StyleControl } from "./controls/StyleControl.svelte";
+
+// Utilities
+export { MapLayerHandler } from "./MapLayerHandler";
