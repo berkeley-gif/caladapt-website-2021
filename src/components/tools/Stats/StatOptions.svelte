@@ -55,8 +55,8 @@
    * the combobox selected index if the year matches an item in the combobox dropdown menu
    **/
   function updateIndex(e) {
-    const { key, keyCode, target } = e;
-    if (["Enter", "Tab"].includes(key) || [13, 9].includes(keyCode)) {
+    const { key, target } = e;
+    if (["Enter", "Tab"].includes(key)) {
       const { value, id } = target;
       switch (id) {
         case "years-select-start":
