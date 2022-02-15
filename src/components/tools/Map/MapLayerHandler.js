@@ -7,10 +7,10 @@ export class MapLayerHandler {
    *
    * @param {Object} options
    * @param {Object} options.map - required: the mapboxgl.js map instance
-   * @param {string} layerType - required: the type of layer, e.g. "raster"
+   * @param {string} options.layerType - required: the type of layer, e.g. "raster"
    * @param {string|undefined} options.beforeId - optional: the layer id where
    *  this layer should be inserted below in the layer stacking z-order
-   * @param {Object} paintProps - optional: the layer style props
+   * @param {Object} options.debug - optional: whether or not to log warnings
    */
   constructor({ map, beforeId, layerType, debug }) {
     // limits what types of layers the MapLayerHandler accepts
