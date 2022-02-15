@@ -136,9 +136,71 @@ describe("MapLayerHandler", () => {
     expect(console.warn).toBeCalledWith("something awful happened!");
   });
 
-  test("addMapLayer", () => {});
+  test("addMapLayer: addSource", () => {
+    const mapLayerHandler = getMlhInstance();
+    mapLayerHandler._addSource = jest.fn();
+    mapLayerHandler.addMapLayer({
+      id: "my",
+      asset: "https://tiles.com/{z}/{x}/{y}.png",
+      visibility: "visible",
+      paintProps: {
+        "raster-opacity": 0.5,
+      },
+      index: 1,
+    });
+    expect(mapLayerHandler._addSource).toBeCalledWith("my-1-layer-source", {
+      tiles: ["https://tiles.com/{z}/{x}/{y}.png"],
+      tileSize: 256,
+      type: "raster",
+    });
+  });
 
-  test("removeMapLayer", () => {});
+  test("addMapLayer: addLayer", () => {
+    const mapLayerHandler = getMlhInstance();
+    mapLayerHandler._addLayer = jest.fn();
+    mapLayerHandler.addMapLayer({
+      id: "my",
+      asset: "https://tiles.com/{z}/{x}/{y}.png",
+      visibility: "visible",
+      paintProps: {
+        "raster-opacity": 0.5,
+      },
+      index: 1,
+    });
+    expect(mapLayerHandler._addLayer).toBeCalledWith(
+      "my-1-layer",
+      {
+        id: "my-1-layer",
+        source: "my-1-layer-source",
+        type: "raster",
+        paint: {
+          "raster-opacity": 0.5,
+        },
+        layout: {
+          visibility: "visible",
+        },
+      },
+      beforeId
+    );
+  });
 
-  test("removeMapRef", () => {});
+  test("removeMapLayer: removeLayer", () => {
+    const mapLayerHandler = getMlhInstance();
+    mapLayerHandler._removeLayer = jest.fn();
+    mapLayerHandler.removeMapLayer("my", 1);
+    expect(mapLayerHandler._removeLayer).toBeCalledWith("my-1-layer");
+  });
+
+  test("removeMapLayer: removeSource", () => {
+    const mapLayerHandler = getMlhInstance();
+    mapLayerHandler._removeSource = jest.fn();
+    mapLayerHandler.removeMapLayer("my", 1);
+    expect(mapLayerHandler._removeSource).toBeCalledWith("my-1-layer-source");
+  });
+
+  test("removeMapRef", () => {
+    const mapLayerHandler = getMlhInstance();
+    mapLayerHandler.removeMapRef();
+    expect(mapLayerHandler.map).toBeNull();
+  });
 });
