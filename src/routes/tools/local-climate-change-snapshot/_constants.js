@@ -59,3 +59,5 @@ export const DEFAULT_INITIAL_CONFIG = {
 
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
+
+export const ENVELOPE_SEARCH_EXP = /ens32min|ens32max/;
