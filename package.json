@@ -22,7 +22,9 @@
     "sass:test-build": "node-sass --quiet --include-path ./node_modules src/scss/main.scss > /dev/null",
     "pretest": "npm run lint",
     "prepare": "husky install",
-    "slr-cis-data": "npm run generate-data --workspace=slr-cis-data-coverage"
+    "slr-cis-data": "npm run generate-data --workspace=slr-cis-data-coverage",
+    "test": "jest src",
+    "test:watch": "npm run test -- --watch"
   },
   "dependencies": {
     "@mapbox/togeojson": "^0.16.0",
@@ -60,18 +62,24 @@
     "sirv": "^1.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/svelte": "^3.0.3",
     "autoprefixer": "^10.1.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^27.5.1",
     "carbon-components": "^10.30.0",
     "carbon-components-svelte": "^0.42.2",
     "cross-env": "^7.0.3",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-jest": "^26.1.0",
     "eslint-plugin-svelte3": "^3.1.2",
     "file-loader": "^6.0.0",
     "front-matter": "^4.0.2",
     "html-loader": "^2.1.2",
     "husky": "^7.0.1",
+    "jest": "^27.5.1",
     "layercake": "^4.0.3",
     "lint-staged": "^11.1.2",
     "marked": "^1.2.7",
@@ -82,6 +90,7 @@
     "sapper": "^0.28.0",
     "svelte": "^3.44.3",
     "svelte-inview": "^2.0.1",
+    "svelte-jester": "^2.3.1",
     "svelte-loader": "2.13.6",
     "svelte-preprocess": "^4.6.1",
     "webpack": "^4.46.0",

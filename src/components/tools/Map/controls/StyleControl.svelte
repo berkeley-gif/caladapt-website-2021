@@ -1,6 +1,9 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { RadioButtonGroup, RadioButton } from "carbon-components-svelte";
+
+  // NOTE: carbon components need direct path imports for tests not to fail
+  import RadioButtonGroup from "carbon-components-svelte/src/RadioButtonGroup/RadioButtonGroup.svelte";
+  import RadioButton from "carbon-components-svelte/src/RadioButton/RadioButton.svelte";
 
   export let titleText = "Select basemap style";
   export let styles = [

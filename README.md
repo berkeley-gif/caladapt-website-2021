@@ -32,6 +32,38 @@ npm run deploy-dev
 
 This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
 
+## Running Tests
+
+### Unit Tests
+
+Unit tests are run using [Jest](https://www.npmjs.com/package/jest) and [@testing-library/svelte](https://www.npmjs.com/package/@testing-library/svelte).
+
+To run all tests:
+
+```bash
+npm run test
+```
+
+To run tests in watch mode:
+
+```bash
+npm run test:watch
+```
+
+To run tests for a specific file:
+
+```bash
+npm run test -- <pattern>
+```
+
+...where `<pattern>` is a regex for a specific test name.
+
+For help on writing tests for Svelte components see the following resources:
+
+- [Svelte Society: Unit Testing Svelte Components](https://sveltesociety.dev/recipes/testing-and-debugging/unit-testing-svelte-component/)
+- [@testing-library docs](https://testing-library.com/docs/)
+- [jest docs](https://jestjs.io/docs/getting-started)
+
 ## Bundle Analyzer
 
 To inspect the bundled JavaScript code first run the `dev` script:
