@@ -5,6 +5,7 @@ import {
   DotAndWhiskerChart,
 } from "~/components/tools/Charts";
 import { AvgRange, MonthTiming } from "~/components/tools/Stats";
+import { INITIAL_CONFIG } from "../_common/constants";
 
 export const TOOL_SLUG = "extreme-precipitation";
 
@@ -96,6 +97,12 @@ export const DEFAULT_THRESHOLD_PRECISION = 2;
 export const DEFAULT_RETURN_PERIOD = 20;
 export const DEFAULT_ROLLING_FUNCTION = "sum";
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "max";
+
+export const DEFAULT_INITIAL_CONFIG = {
+  ...INITIAL_CONFIG,
+  duration: DEFAULT_DURATION,
+  threshType: DEFAULT_THRESHOLD_TYPE,
+};
 
 export const HEATMAP_COLOR_SCALE = ["#19cdbb", "#368ce1", "#6d41ab"];
 
