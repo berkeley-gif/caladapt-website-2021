@@ -25,8 +25,25 @@
   let startYear_selectedIndex = -1;
   let endYear_selectedIndex = -1;
   let filteredItems;
+  let startYearListRef;
+  let endYearListRef;
 
-  const getItemByIndex = (i, arr) => (arr[i] ? arr[i].text : null);
+  const highlightClass = ".bx--list-box__menu-item--highlighted";
+
+  const getItemValue = (i, arr) => (arr[i] ? arr[i].text : null);
+  const getItemIndex = (value, arr) =>
+    arr.findIndex(({ text }) => text === value);
+
+  /**
+   * Search for highlighted items in ComboBox Dropdown and returns the index
+   * Returns -1 if no highlighted item
+   **/
+  const getHighlightedIndex = (node, arr) => {
+    if (!node) return -1;
+    const el = node.querySelector(highlightClass);
+    if (!el) return -1;
+    return getItemIndex(el.id, arr);
+  };
 
   /**
    * When start year is selected, the items in the end year combobox dropdown menu are filtered
@@ -53,19 +70,29 @@
   /**
    * When user presses the Enter or Tab key in combobox after typing in a year, update
    * the combobox selected index if the year matches an item in the combobox dropdown menu
+   * TODO: Keyboard support for ComboBox component has been implemented in latest version
+   * of carbon-components-svelte. So may not need this function.
+   * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
    **/
   function updateIndex(e) {
     const { key, target } = e;
+    const { value, id } = target;
+    let idx;
     if (["Enter", "Tab"].includes(key)) {
-      const { value, id } = target;
       switch (id) {
         case "years-select-start":
-          startYear_selectedIndex = items.findIndex((d) => d.text === value);
+          idx = getItemIndex(value, items);
+          if (idx < 0) {
+            idx = getHighlightedIndex(startYearListRef, items);
+          }
+          startYear_selectedIndex = idx;
           return;
         case "years-select-end":
-          endYear_selectedIndex = filteredItems.findIndex(
-            (d) => d.text === value
-          );
+          idx = getItemIndex(value, filteredItems);
+          if (idx < 0) {
+            idx = getHighlightedIndex(endYearListRef, filteredItems);
+          }
+          endYear_selectedIndex = idx;
           return;
         default:
           return;
@@ -89,8 +116,8 @@
       if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
         return;
       }
-      const start = getItemByIndex(startYear_selectedIndex, items);
-      const end = getItemByIndex(endYear_selectedIndex, filteredItems);
+      const start = getItemValue(startYear_selectedIndex, items);
+      const end = getItemValue(endYear_selectedIndex, filteredItems);
       period = {
         id: "custom",
         label: `${start}-${end}`,
@@ -148,6 +175,7 @@
         shouldFilterItem="{shouldFilterItem}"
         on:keydown="{updateIndex}"
         id="years-select-start"
+        bind:listRef="{startYearListRef}"
       />
       <ComboBox
         bind:selectedIndex="{endYear_selectedIndex}"
@@ -159,6 +187,7 @@
         shouldFilterItem="{shouldFilterItem}"
         on:keydown="{updateIndex}"
         id="years-select-end"
+        bind:listRef="{endYearListRef}"
       />
     </div>
   {/if}
