@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, beforeUpdate, tick } from "svelte";
   import { range } from "d3-array";
   import {
     RadioButtonGroup,
@@ -23,7 +23,9 @@
 
   // Props and functions for defining a custom period
   let startYear_selectedIndex = -1;
+  let startYear_selectedIndexCache = -1;
   let endYear_selectedIndex = -1;
+  let endYear_selectedIndexCache = -1;
   let filteredItems;
   let startYearListRef;
   let endYearListRef;
@@ -82,25 +84,25 @@
    * TODO: This functionality may not be need with new version of ComboBox component
    * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
    **/
-  function updateIndex(e) {
+  async function updateIndex(e) {
     const { key, target } = e;
     const { value, id } = target;
     let idx;
-    if (["Enter", "Tab"].includes(key)) {
+    if (["Enter", " "].includes(key)) {
       switch (id) {
         case "years-select-start":
           idx = getItemIndex(value, items);
           if (idx < 0) {
             idx = getHighlightedIndex(startYearListRef, items);
           }
-          startYear_selectedIndex = idx;
+          startYear_selectedIndexCache = idx;
           return;
         case "years-select-end":
           idx = getItemIndex(value, filteredItems);
           if (idx < 0) {
             idx = getHighlightedIndex(endYearListRef, filteredItems);
           }
-          endYear_selectedIndex = idx;
+          endYear_selectedIndexCache = idx;
           return;
         default:
           return;
@@ -133,6 +135,17 @@
     }
     dispatch("change", { group, period });
   }
+
+  beforeUpdate(async () => {
+    if (startYear_selectedIndex !== startYear_selectedIndexCache) {
+      await tick();
+      startYear_selectedIndex = startYear_selectedIndexCache;
+    }
+    if (endYear_selectedIndex !== endYear_selectedIndexCache) {
+      await tick();
+      endYear_selectedIndex = endYear_selectedIndexCache;
+    }
+  });
 </script>
 
 <style>
