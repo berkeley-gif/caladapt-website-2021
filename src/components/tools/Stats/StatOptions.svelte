@@ -137,10 +137,14 @@
   }
 
   beforeUpdate(async () => {
+    // bypasses a bug with ComboBox where updating the selectedIndex from within the keydown
+    // event handler will apply the incorrect index value
     if (startYear_selectedIndex !== startYear_selectedIndexCache) {
       await tick();
       startYear_selectedIndex = startYear_selectedIndexCache;
     }
+    // bypasses a bug with ComboBox where updating the selectedIndex from within the keydown
+    // event handler will apply the incorrect index value
     if (endYear_selectedIndex !== endYear_selectedIndexCache) {
       await tick();
       endYear_selectedIndex = endYear_selectedIndexCache;
