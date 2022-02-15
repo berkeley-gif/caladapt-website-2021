@@ -7,4 +7,5 @@ module.exports = {
   },
   moduleFileExtensions: [...defaults.moduleFileExtensions, "svelte"],
   setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
+  transformIgnorePatterns: ["node_modules/(?!carbon-components-svelte)"],
 };
