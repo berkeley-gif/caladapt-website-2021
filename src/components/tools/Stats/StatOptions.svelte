@@ -30,6 +30,10 @@
 
   const highlightClass = ".bx--list-box__menu-item--highlighted";
 
+  $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
+  $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
+  $: startYear_selectedIndex, updateLinkedList();
+
   const getItemValue = (i, arr) => (arr[i] ? arr[i].text : null);
   const getItemIndex = (value, arr) =>
     arr.findIndex(({ text }) => text === value);
@@ -103,10 +107,6 @@
       }
     }
   }
-
-  $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
-  $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
-  $: startYear_selectedIndex, updateLinkedList();
 
   /**
    * Dispatch change event with current group object and selected period object when user selects Confirm.
