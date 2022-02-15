@@ -35,8 +35,13 @@
     arr.findIndex(({ text }) => text === value);
 
   /**
-   * Search for highlighted items in ComboBox Dropdown and returns the index
-   * Returns -1 if no highlighted item
+   * After entering the partial year in input box, the user might use ArrowDown or ArrowUp keys
+   * to hihglight an item in the ComboBox dropdown menu. This function:
+   *  - finds the highlighted item
+   *  - search list items by highlighted item id
+   *  - returns array index of highlighted item
+   * TODO: This functionality may not be need with new version of ComboBox component
+   * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
    **/
   const getHighlightedIndex = (node, arr) => {
     if (!node) return -1;
@@ -70,8 +75,7 @@
   /**
    * When user presses the Enter or Tab key in combobox after typing in a year, update
    * the combobox selected index if the year matches an item in the combobox dropdown menu
-   * TODO: Keyboard support for ComboBox component has been implemented in latest version
-   * of carbon-components-svelte. So may not need this function.
+   * TODO: This functionality may not be need with new version of ComboBox component
    * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
    **/
   function updateIndex(e) {
