@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -64,13 +65,11 @@
   let printContainer;
   let printSkipElements;
 
+  let chartTitle = "";
+  let thresholdLabel = "";
+
   $: chartDescription = $indicator.description;
-
-  $: chartTitle = $location.title;
-
   $: formatFn = format(`.${$indicator.decimals}f`);
-
-  $: thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
   $: indicatorLabel = $indicator.title;
   $: durationLabel = `${$durationStore}-day`;
   $: intervalsLabel = `${$returnPeriodStore} years`;
@@ -85,6 +84,13 @@
     data = $indicator.id === "frequency" ? $frequency : $duration;
     dataByDate = groupDataByYear(flattenData(data));
   }
+
+  afterUpdate(() => {
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+      thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
