@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, beforeUpdate, tick } from "svelte";
   import { range } from "d3-array";
   import {
     RadioButtonGroup,
@@ -23,13 +23,43 @@
 
   // Props and functions for defining a custom period
   let startYear_selectedIndex = -1;
+  let startYear_selectedIndexCache = -1;
   let endYear_selectedIndex = -1;
+  let endYear_selectedIndexCache = -1;
   let filteredItems;
+  let startYearListRef;
+  let endYearListRef;
 
-  const getItem = (i) => (items[i] ? +items[i].text : "N/A");
-  const getFilteredItem = (i) =>
-    filteredItems[i] ? +filteredItems[i].text : "N/A";
+  const highlightClass = ".bx--list-box__menu-item--highlighted";
 
+  $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
+  $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
+  $: startYear_selectedIndex, updateLinkedList();
+
+  const getItemValue = (i, arr) => (arr[i] ? arr[i].text : null);
+  const getItemIndex = (value, arr) =>
+    arr.findIndex(({ text }) => text === value);
+
+  /**
+   * After entering the partial year in input box, the user might use ArrowDown or ArrowUp keys
+   * to hihglight an item in the ComboBox dropdown menu. This function:
+   *  - finds the highlighted item
+   *  - search list items by highlighted item id
+   *  - returns array index of highlighted item
+   * TODO: This functionality may not be need with new version of ComboBox component
+   * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
+   **/
+  const getHighlightedIndex = (node, arr) => {
+    if (!node) return -1;
+    const el = node.querySelector(highlightClass);
+    if (!el) return -1;
+    return getItemIndex(el.id, arr);
+  };
+
+  /**
+   * When start year is selected, the items in the end year combobox dropdown menu are filtered
+   * to show only values greater than the start year
+   **/
   function updateLinkedList() {
     if (startYear_selectedIndex < 0) {
       filteredItems = items;
@@ -39,17 +69,61 @@
     }
   }
 
-  $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
-  $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
-  $: startYear_selectedIndex, updateLinkedList();
+  /**
+   * When user types in the year, the combobox dropdown menu is filtered to show only
+   * values that complete the characters typed in the combobox
+   **/
+  function shouldFilterItem(item, value) {
+    if (!value) return true;
+    return item.text.includes(value);
+  }
 
-  // If user confirms changes, dispatch change event with selected groupd and period
-  // If user has selected a custom period, create a new period object
+  /**
+   * When user presses the Enter or Tab key in combobox after typing in a year, update
+   * the combobox selected index if the year matches an item in the combobox dropdown menu
+   * TODO: This functionality may not be need with new version of ComboBox component
+   * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
+   **/
+  async function updateIndex(e) {
+    const { key, target } = e;
+    const { value, id } = target;
+    let idx;
+    if (["Enter", " "].includes(key)) {
+      switch (id) {
+        case "years-select-start":
+          idx = getItemIndex(value, items);
+          if (idx < 0) {
+            idx = getHighlightedIndex(startYearListRef, items);
+          }
+          startYear_selectedIndexCache = idx;
+          return;
+        case "years-select-end":
+          idx = getItemIndex(value, filteredItems);
+          if (idx < 0) {
+            idx = getHighlightedIndex(endYearListRef, filteredItems);
+          }
+          endYear_selectedIndexCache = idx;
+          return;
+        default:
+          return;
+      }
+    }
+  }
+
+  /**
+   * Dispatch change event with current group object and selected period object when user selects Confirm.
+   * For custom period:
+   *  - check if both start and end year are defined
+   *  - create a new period object
+   **/
   function update() {
     group = groupList.find(({ id }) => id === selectedGroupId);
     if (selectedPeriodId === "custom") {
-      const start = getItem(startYear_selectedIndex);
-      const end = getFilteredItem(endYear_selectedIndex);
+      if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
+        return;
+      }
+      const start = getItemValue(startYear_selectedIndex, items);
+      const end = getItemValue(endYear_selectedIndex, filteredItems);
       period = {
         id: "custom",
         label: `${start}-${end}`,
@@ -61,6 +135,21 @@
     }
     dispatch("change", { group, period });
   }
+
+  beforeUpdate(async () => {
+    // bypasses a bug with ComboBox where updating the selectedIndex from within the keydown
+    // event handler will apply the incorrect index value
+    if (startYear_selectedIndex !== startYear_selectedIndexCache) {
+      await tick();
+      startYear_selectedIndex = startYear_selectedIndexCache;
+    }
+    // bypasses a bug with ComboBox where updating the selectedIndex from within the keydown
+    // event handler will apply the incorrect index value
+    if (endYear_selectedIndex !== endYear_selectedIndexCache) {
+      await tick();
+      endYear_selectedIndex = endYear_selectedIndexCache;
+    }
+  });
 </script>
 
 <style>
@@ -102,12 +191,24 @@
         titleText="Start"
         placeholder="Select start year"
         items="{items}"
+        invalid="{startYear_selectedIndex < 0}"
+        invalidText="Select a year from the list"
+        shouldFilterItem="{shouldFilterItem}"
+        on:keydown="{updateIndex}"
+        id="years-select-start"
+        bind:listRef="{startYearListRef}"
       />
       <ComboBox
         bind:selectedIndex="{endYear_selectedIndex}"
         titleText="End"
         placeholder="Select end year"
         items="{filteredItems}"
+        invalid="{endYear_selectedIndex < 0}"
+        invalidText="Select a year from the list"
+        shouldFilterItem="{shouldFilterItem}"
+        on:keydown="{updateIndex}"
+        id="years-select-end"
+        bind:listRef="{endYearListRef}"
       />
     </div>
   {/if}
