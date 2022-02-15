@@ -36,6 +36,8 @@
     returnPeriodStore,
   } from "./_store";
 
+  export let learnMoreContent;
+
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -229,6 +231,7 @@
 
   <div slot="settings" class="settings">
     <SettingsPanel
+      learnMoreContent="{learnMoreContent}"
       on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
       on:showLoadLocation="{() => loadLocation()}"
     />

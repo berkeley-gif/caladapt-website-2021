@@ -3,8 +3,34 @@ import { getToolContent } from "../_common/server-utils";
 export function get(_req, res) {
   try {
     const aboutContent = getToolContent("extreme-precipitation", "about");
+    const durationInfo = getToolContent(
+      "extreme-precipitation",
+      "learn-more-duration"
+    );
+    const indicatorInfo = getToolContent(
+      "extreme-precipitation",
+      "learn-more-indicators"
+    );
+    const periodInfo = getToolContent(
+      "extreme-precipitation",
+      "learn-more-returnperiod"
+    );
+    const thresholdTypeInfo = getToolContent(
+      "extreme-precipitation",
+      "learn-more-thresholdtype"
+    );
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ aboutContent }));
+    res.end(
+      JSON.stringify({
+        aboutContent,
+        learnMoreContent: {
+          durationInfo,
+          indicatorInfo,
+          periodInfo,
+          thresholdTypeInfo,
+        },
+      })
+    );
   } catch (error) {
     console.error(error);
     res.writeHead(404, {

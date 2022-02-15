@@ -105,24 +105,3 @@ export const DEFAULT_INITIAL_CONFIG = {
 };
 
 export const HEATMAP_COLOR_SCALE = ["#19cdbb", "#368ce1", "#6d41ab"];
-
-export const INDICATOR_DESCRIPTION = `
-<p>Indicators presented in this tool examine projected trends in four characteristics of 
-Extreme Precipitation Events:</p>
-<ul>
-  <li><strong>Intensity</strong>: The estimated intensity (Return Level) of Extreme Precipitation Events.</li>
-  <li><strong>Frequency</strong>: The number of Extreme Precipitation Events per water year.</li>
-  <li><strong>Timing</strong>: The length of the season between the first Extreme Precipitation Events and the last.</li>
-  <li><strong>Maximum Duration</strong>: The length of the longest stretch of consecutive Extreme Precipitation Events.</li>
-</ul>`;
-
-export const THRESHOLD_TYPE_DESCRIPTION = `The extreme threshold sets the conditions for which a precipitation event 
-is considered “extreme“. The threshold value is calculated from observed precipitation accumulation in the historical record (1961 to 1990). 
-By default, the threshold is set to the Lowest Annual Maximum value. Other alternatives are 90th, 95th and 99th percentiles. 
-Selecting too high a threshold (in arid locations) or too low a threshold can decrease the reliability of the estimates.`;
-
-export const RETURN_PERIOD_DESCRIPTION =
-  "The Return Period estimates the average time between extreme events. This is sometimes worded as a “1 in x years” event.";
-
-export const DURATION_DESCRIPTION =
-  "Event duration is the number of days over which precipitation falls that contribute to a single event. Changing this value will change the extreme threshold.";
