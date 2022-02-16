@@ -98,8 +98,8 @@
 </p>
 
 <p>
-  <strong>Note</strong>: Based on feedback from our users, we have updated the tool to use the 
-  average of precipitation values from all intersecting grid cells for a polygon boundary before calculating metrics for the climate indicators. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high frequency estimates. The return levels estimates using this methodology are more closely align with precipitation frequency estimates provided by NOAA.
+  <strong>Update (Feb 20, 2022)</strong>: Based on feedback from our users, we have updated the tool to use the 
+  average of precipitation values from all intersecting grid cells for a polygon boundary before calculating metrics for the climate indicators. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high frequency estimates. The return levels estimates using this methodology more closely align with precipitation frequency estimates provided by NOAA.
 </p>
 
 <p class="h3">References</p>
