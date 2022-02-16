@@ -5,6 +5,7 @@
 
   // Helpers
   import { SMALL_SCALE_BOUNDARIES } from "../_common/constants";
+  import { NOTIFICATION_TEXT } from "./_constants";
   import {
     flattenData,
     groupDataByYear,
@@ -67,6 +68,7 @@
 
   let chartTitle = "";
   let thresholdLabel = "";
+  let polygonAggregationMsg = "";
 
   $: chartDescription = $indicator.description;
   $: formatFn = format(`.${$indicator.decimals}f`);
@@ -85,10 +87,19 @@
     dataByDate = groupDataByYear(flattenData(data));
   }
 
+  function getNotificationText() {
+    if ($boundary.id === "locagrid") {
+      return "";
+    } else {
+      return NOTIFICATION_TEXT;
+    }
+  }
+
   afterUpdate(() => {
     if ($location && $location.title) {
       chartTitle = $location.title;
       thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
+      polygonAggregationMsg = getNotificationText();
     }
   });
 
@@ -199,6 +210,7 @@
       thresholdLabel="{thresholdLabel}"
       intervalsLabel="{intervalsLabel}"
       loadLocation="{loadLocation}"
+      polygonAggregationMsg="{polygonAggregationMsg}"
     />
   </div>
 

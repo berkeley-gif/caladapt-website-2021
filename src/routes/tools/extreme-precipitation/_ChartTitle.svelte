@@ -1,5 +1,5 @@
 <script>
-  import { Button } from "carbon-components-svelte";
+  import { Button, InlineNotification } from "carbon-components-svelte";
   import { Location16 } from "carbon-icons-svelte";
 
   export let title;
@@ -9,6 +9,7 @@
   export let thresholdLabel;
   export let loadLocation;
   export let intervalsLabel;
+  export let polygonAggregationMsg = "";
 </script>
 
 <style>
@@ -49,3 +50,12 @@
   rainfall total is above an extreme threshold of
   <span class="annotate">{thresholdLabel}</span>.
 </p>
+
+{#if polygonAggregationMsg}
+  <InlineNotification
+    lowContrast
+    title="Update"
+    subtitle="{polygonAggregationMsg}"
+    kind="info"
+  />
+{/if}
