@@ -18,11 +18,7 @@
   const cardHeight = 20;
   const cardWidth = 18;
 
-  $: toolsByCategory =
-    process.env.NODE_ENV === "production" && !process.env.slrCoastalInundation
-      ? tools.filter((d) => d.slug !== "slr-coastal-inundation")
-      : tools;
-
+  $: toolsByCategory = tools;
   let seletedCategory;
 
   function getToolsByCategory(e) {
