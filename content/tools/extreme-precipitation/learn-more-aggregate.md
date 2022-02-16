@@ -1,0 +1,1 @@
+Extreme Precipitation indicators for polygon boundaries (e.g. a watershed) are calculated after spatially aggregating precipitation values for all intersecting grid cells. The default spatial aggregation option is Mean. Selecting the Maximum option aggregates the maximum values from all intersecting grid cells.

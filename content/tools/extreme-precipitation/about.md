@@ -12,7 +12,7 @@
   override these defaults by selecting a new “event duration” (number of
   days over which precipitation accumulates), or by selecting a
   different “threshold“ value that corresponds to either the 90th, 95th
-  or 99th percentiles. The tool then displays the extreme events that
+  or 99th percentiles. The tool displays the extreme events that
   exceed the threshold in different ways. The Frequency chart shows the
   estimated intensity of precipitation events (Return Level) for a
   selected period (Return Period) and how it changes over the historical
@@ -95,6 +95,11 @@
   encourage users to ensure the empirical fit of the applied
   distribution is acceptable to their end use before using estimates
   produced from this tool for planning purposes.
+</p>
+
+<p>
+  <strong>Note</strong>: Based on feedback from our users, we have updated the tool to use the 
+  average of precipitation values from all intersecting grid cells for a polygon boundary before calculating metrics for the climate indicators. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high frequency estimates. The return levels estimates using this methodology are more closely align with precipitation frequency estimates provided by NOAA.
 </p>
 
 <p class="h3">References</p>
