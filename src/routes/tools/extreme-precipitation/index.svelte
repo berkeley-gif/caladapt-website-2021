@@ -153,8 +153,12 @@
   };
 
   $: $returnPeriodStore, updateIntensity();
-  $: $thresholdTypeStore, $location, $durationStore, updateThreshold();
-  $: $aggregateFnStore, $modelsStore, $scenarioStore, $thresholdStore, update();
+  $: $aggregateFnStore,
+    $thresholdTypeStore,
+    $location,
+    $durationStore,
+    updateThreshold();
+  $: $modelsStore, $scenarioStore, $thresholdStore, update();
 
   async function updateThreshold() {
     if (!appReady) return;
