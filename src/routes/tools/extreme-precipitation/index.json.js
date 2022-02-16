@@ -19,6 +19,10 @@ export function get(_req, res) {
       "extreme-precipitation",
       "learn-more-thresholdtype"
     );
+    const aggregationInfo = getToolContent(
+      "extreme-precipitation",
+      "learn-more-aggregate"
+    );
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
@@ -28,6 +32,7 @@ export function get(_req, res) {
           indicatorInfo,
           periodInfo,
           thresholdTypeInfo,
+          aggregationInfo,
         },
       })
     );

@@ -7,7 +7,11 @@
     DEFAULT_SCENARIOS,
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
-  import { THRESHOLD_TYPES, RETURN_PERIODS } from "./_constants";
+  import {
+    THRESHOLD_TYPES,
+    RETURN_PERIODS,
+    POLYGON_AGGREGATE_FUNCTIONS,
+  } from "./_constants";
 
   import {
     SelectClimvar,
@@ -27,12 +31,18 @@
     thresholdStore,
     thresholdTypeStore,
     returnPeriodStore,
+    aggregateFnStore,
   } from "./_store";
 
   export let learnMoreContent;
 
-  const { durationInfo, indicatorInfo, periodInfo, thresholdTypeInfo } =
-    learnMoreContent;
+  const {
+    durationInfo,
+    indicatorInfo,
+    periodInfo,
+    thresholdTypeInfo,
+    aggregationInfo,
+  } = learnMoreContent;
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
   const { indicator } = indicatorStore;
@@ -71,6 +81,10 @@
 
   function changeReturnPeriod(e) {
     returnPeriodStore.set(e.detail);
+  }
+
+  function changeAggregateFn(e) {
+    aggregateFnStore.set(e.detail);
   }
 </script>
 
@@ -163,6 +177,21 @@
     on:click="{() =>
       showLearnMore({
         content: thresholdTypeInfo,
+      })}"
+  />
+</div>
+
+<div class="block">
+  <RadioBtnGroup
+    selected="{$aggregateFnStore}"
+    items="{POLYGON_AGGREGATE_FUNCTIONS}"
+    title="Select Aggregate Function"
+    on:change="{changeAggregateFn}"
+  />
+  <LearnMoreButton
+    on:click="{() =>
+      showLearnMore({
+        content: aggregationInfo,
       })}"
   />
 </div>
