@@ -14,13 +14,15 @@ npm install # or yarn
 npm run dev
 ```
 
+The project should be viewable in your browser at `http://localhost:3000`.
+
 ## Deploying
 
-First, make the `deploy` script is executable in your environment:
+First, make the [`deploy`](./scripts/deploy.mjs) script is executable in your environment:
 
 ```bash
 # on unix systems:
-chmod +x scripts/deploy.mj
+chmod +x scripts/deploy.mjs
 ```
 
 Then run the appropriate deploy script for the environment on which you would like to deploy to:
@@ -31,6 +33,24 @@ npm run deploy-dev
 ```
 
 This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
+
+### Viewing the build locally prior to deploying
+
+If you would like to view the build locally prior to deploying, first create the build without transfering it to the server:
+
+```bash
+npm run deploy-dev -- --transfer=false
+```
+
+Then run a local server that will serve the contents of `__sapper__/export`:
+
+```bash
+npm run start:export
+```
+
+You may then view the built site on `http://localhost:5000`.
+
+This can be useful when debugging issues for the production environment.
 
 ## Bundle Analyzer
 
