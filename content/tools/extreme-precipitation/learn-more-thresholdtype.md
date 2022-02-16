@@ -1,0 +1,3 @@
+The extreme threshold sets the conditions for which a precipitation event is considered “extreme“. The threshold value is calculated from observed precipitation accumulation in the historical record (1961 to 1990).
+
+By default, the threshold is set to the Lowest Annual Maximum value. Other alternatives are 90th, 95th and 99th percentiles. Selecting too high a threshold (in arid locations) or too low a threshold can decrease the reliability of the estimates.

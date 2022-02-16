@@ -7,14 +7,7 @@
     DEFAULT_SCENARIOS,
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
-  import {
-    INDICATOR_DESCRIPTION,
-    THRESHOLD_TYPES,
-    THRESHOLD_TYPE_DESCRIPTION,
-    RETURN_PERIODS,
-    RETURN_PERIOD_DESCRIPTION,
-    DURATION_DESCRIPTION,
-  } from "./_constants";
+  import { THRESHOLD_TYPES, RETURN_PERIODS } from "./_constants";
 
   import {
     SelectClimvar,
@@ -36,6 +29,10 @@
     returnPeriodStore,
   } from "./_store";
 
+  export let learnMoreContent;
+
+  const { durationInfo, indicatorInfo, periodInfo, thresholdTypeInfo } =
+    learnMoreContent;
   const dispatch = createEventDispatcher();
   const { location } = locationStore;
   const { indicator } = indicatorStore;
@@ -106,7 +103,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: INDICATOR_DESCRIPTION,
+        content: indicatorInfo,
       })}"
   />
 </div>
@@ -122,7 +119,7 @@
     <LearnMoreButton
       on:click="{() =>
         showLearnMore({
-          content: RETURN_PERIOD_DESCRIPTION,
+          content: periodInfo,
         })}"
     />
   </div>
@@ -150,7 +147,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: DURATION_DESCRIPTION,
+        content: durationInfo,
       })}"
   />
 </div>
@@ -165,7 +162,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: THRESHOLD_TYPE_DESCRIPTION,
+        content: thresholdTypeInfo,
       })}"
   />
 </div>

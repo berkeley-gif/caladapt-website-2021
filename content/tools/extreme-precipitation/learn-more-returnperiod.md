@@ -1,0 +1,1 @@
+The Return Period estimates the average time between extreme events. This is sometimes worded as a “1 in x years” event.
