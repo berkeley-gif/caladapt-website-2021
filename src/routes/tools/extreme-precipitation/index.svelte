@@ -93,6 +93,7 @@
     durationStore,
     returnPeriodStore,
     dataStore,
+    aggregateFnStore,
   } from "./_store";
   import {
     getObserved,
@@ -153,7 +154,7 @@
 
   $: $returnPeriodStore, updateIntensity();
   $: $thresholdTypeStore, $location, $durationStore, updateThreshold();
-  $: $modelsStore, $scenarioStore, $thresholdStore, update();
+  $: $aggregateFnStore, $modelsStore, $scenarioStore, $thresholdStore, update();
 
   async function updateThreshold() {
     if (!appReady) return;
@@ -163,6 +164,7 @@
         location: $location,
         boundary: $boundary,
         imperial: true,
+        stat: $aggregateFnStore,
       });
       const pct =
         $thresholdTypeStore === DEFAULT_THRESHOLD_TYPE
@@ -194,6 +196,7 @@
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
+        stat: $aggregateFnStore,
       });
       const pct =
         $thresholdTypeStore === DEFAULT_THRESHOLD_TYPE
@@ -227,6 +230,7 @@
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
+        stat: $aggregateFnStore,
       });
       isFetchingStore.set(true);
       const observed = await getObserved(
