@@ -1,0 +1,1 @@
+Event duration is the number of days over which precipitation falls that contribute to a single event. Changing this value will change the extreme threshold.
