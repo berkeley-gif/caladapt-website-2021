@@ -96,7 +96,17 @@ export const DEFAULT_THRESHOLD_TYPE = "ams_low";
 export const DEFAULT_THRESHOLD_PRECISION = 2;
 export const DEFAULT_RETURN_PERIOD = 20;
 export const DEFAULT_ROLLING_FUNCTION = "sum";
-export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "max";
+export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
+export const POLYGON_AGGREGATE_FUNCTIONS = [
+  {
+    id: "mean",
+    label: "Mean",
+  },
+  {
+    id: "max",
+    label: "Maximum",
+  },
+];
 
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
