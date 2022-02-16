@@ -34,7 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent, learnMoreContent, notificationText } = await (
+    const { aboutContent, learnMoreContent } = await (
       await this.fetch("tools/extreme-precipitation.json")
     ).json();
 
