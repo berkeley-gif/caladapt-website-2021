@@ -128,7 +128,14 @@ module.exports = {
       ],
     },
     mode,
-    plugins: [new WebpackModules()],
+    plugins: [
+      new webpack.DefinePlugin({
+        "process.cal_adapt_features": {
+          ...featureFlags[deploy],
+        },
+      }),
+      new WebpackModules(),
+    ],
     performance: {
       hints: false, // it doesn't matter if server.js is large
     },

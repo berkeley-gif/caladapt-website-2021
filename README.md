@@ -14,13 +14,15 @@ npm install # or yarn
 npm run dev
 ```
 
+The project should be viewable in your browser at `http://localhost:3000`.
+
 ## Deploying
 
-First, make the `deploy` script is executable in your environment:
+First, make the [`deploy`](./scripts/deploy.mjs) script is executable in your environment:
 
 ```bash
 # on unix systems:
-chmod +x scripts/deploy.mj
+chmod +x scripts/deploy.mjs
 ```
 
 Then run the appropriate deploy script for the environment on which you would like to deploy to:
@@ -31,6 +33,24 @@ npm run deploy-dev
 ```
 
 This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
+
+### Viewing the build locally prior to deploying
+
+If you would like to view the build locally prior to deploying, first create the build without transfering it to the server:
+
+```bash
+npm run deploy-dev -- --transfer=false
+```
+
+Then run a local server that will serve the contents of `__sapper__/export`:
+
+```bash
+npm run start:export
+```
+
+You may then view the built site on `http://localhost:5000`.
+
+This can be useful when debugging issues for the production environment.
 
 ## Bundle Analyzer
 
@@ -83,6 +103,12 @@ Static files are served using [sirv](https://github.com/lukeed/sirv).
 ## Bundler configuration
 
 Webpack is used to provide code-splitting and dynamic imports, as well as compiling Svelte components.
+
+## Feature Flags
+
+The [`featureFlags`](./featureFlags.json) JSON document contains environment variables that are used to enable or disable various features or routes of the website. For client-side code these varaibles are accessible under `process.env` and in server side code (e.g. Sapper's preloading) they are accessible under `process.cal_adapt_features`. They differ due to how `process.env` is handled by browser (client) and NodeJS (server side) environments with Webpack.
+
+Note that the values of feature flags will differ depending on the deploy environment that is set when deploying the app (e.g. the location being deployed to such as `dev.cal-adapt.org`, `beta.cal-adapt.org`, or `cal-adapt.org`). The [deploy script](./scripts/deploy.mjs) sets an environment variable `DEPLOY` which is used in the [`webpack.config.js`](./webpack.config.js) to set the values of feature flags. During local development the value of the `DEPLOY` env variable will fallback to `dev` (the same as deploying to `dev.cal-adapt.org`).
 
 ## Using external components
 
