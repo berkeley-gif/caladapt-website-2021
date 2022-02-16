@@ -84,6 +84,12 @@ Static files are served using [sirv](https://github.com/lukeed/sirv).
 
 Webpack is used to provide code-splitting and dynamic imports, as well as compiling Svelte components.
 
+## Feature Flags
+
+The [`featureFlags`](./featureFlags.json) JSON document contains environment variables that are used to enable or disable various features or routes of the website. For client-side code these varaibles are accessible under `process.env` and in server side code (e.g. Sapper's preloading) they are accessible under `process.cal_adapt_features`. They differ due to how `process.env` is handled by browser (client) and NodeJS (server side) environments with Webpack.
+
+Note that the values of feature flags will differ depending on the deploy environment that is set when deploying the app (e.g. the location being deployed to such as `dev.cal-adapt.org`, `beta.cal-adapt.org`, or `cal-adapt.org`). The [deploy script](./scripts/deploy.mjs) sets an environment variable `DEPLOY` which is used in the [`webpack.config.js`](./webpack.config.js) to set the values of feature flags. During local development the value of the `DEPLOY` env variable will fallback to `dev` (the same as deploying to `dev.cal-adapt.org`).
+
 ## Using external components
 
 When using Svelte components installed from npm, such as [@sveltejs/svelte-virtual-list](https://github.com/sveltejs/svelte-virtual-list), Svelte needs the original component source (rather than any precompiled JavaScript that ships with the component). This allows the component to be rendered server-side, and also keeps your client-side app smaller.
