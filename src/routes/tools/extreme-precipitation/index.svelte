@@ -34,7 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent, learnMoreContent } = await (
+    const { aboutContent, learnMoreContent, notificationText } = await (
       await this.fetch("tools/extreme-precipitation.json")
     ).json();
 
@@ -45,6 +45,7 @@
       helpItems,
       aboutContent,
       learnMoreContent,
+      notificationText,
     };
   }
 </script>
@@ -93,6 +94,7 @@
     durationStore,
     returnPeriodStore,
     dataStore,
+    aggregateFnStore,
   } from "./_store";
   import {
     getObserved,
@@ -108,6 +110,7 @@
   export let helpItems;
   export let aboutContent;
   export let learnMoreContent;
+  export let notificationText;
 
   // Derived stores
   const { page } = sapperStores();
@@ -152,7 +155,11 @@
   };
 
   $: $returnPeriodStore, updateIntensity();
-  $: $thresholdTypeStore, $location, $durationStore, updateThreshold();
+  $: $aggregateFnStore,
+    $thresholdTypeStore,
+    $location,
+    $durationStore,
+    updateThreshold();
   $: $modelsStore, $scenarioStore, $thresholdStore, update();
 
   async function updateThreshold() {
@@ -163,6 +170,7 @@
         location: $location,
         boundary: $boundary,
         imperial: true,
+        stat: $aggregateFnStore,
       });
       const pct =
         $thresholdTypeStore === DEFAULT_THRESHOLD_TYPE
@@ -194,6 +202,7 @@
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
+        stat: $aggregateFnStore,
       });
       const pct =
         $thresholdTypeStore === DEFAULT_THRESHOLD_TYPE
@@ -227,6 +236,7 @@
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
+        stat: $aggregateFnStore,
       });
       isFetchingStore.set(true);
       const observed = await getObserved(
@@ -324,7 +334,10 @@
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData learnMoreContent="{learnMoreContent}" />
+    <ExploreData
+      learnMoreContent="{learnMoreContent}"
+      notificationText="{notificationText}"
+    />
   {:else}
     <Loading />
   {/if}

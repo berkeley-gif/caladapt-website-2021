@@ -9,6 +9,7 @@
   export let items;
   export let selected;
   export let title = "Select Indicator";
+  export let disabled = false;
 
   const dispatch = createEventDispatcher();
   let ready = false;
@@ -22,7 +23,12 @@
 </script>
 
 {#if ready}
-  <RadioButtonGroup legendText="{title}" orientation="vertical" bind:selected>
+  <RadioButtonGroup
+    bind:disabled
+    legendText="{title}"
+    orientation="vertical"
+    bind:selected
+  >
     {#each items as { id, label }}
       <RadioButton labelText="{label}" value="{id}" />
     {/each}
