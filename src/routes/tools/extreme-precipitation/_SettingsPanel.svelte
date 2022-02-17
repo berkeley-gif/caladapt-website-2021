@@ -44,8 +44,10 @@
     aggregationInfo,
   } = learnMoreContent;
   const dispatch = createEventDispatcher();
-  const { location } = locationStore;
+  const { location, boundary } = locationStore;
   const { indicator } = indicatorStore;
+
+  $: isPolygonBoundary = $boundary.id === "locagrid" ? false : true;
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -186,6 +188,7 @@
     selected="{$aggregateFnStore}"
     items="{POLYGON_AGGREGATE_FUNCTIONS}"
     title="Select Spatial Aggregation"
+    disabled="{!isPolygonBoundary}"
     on:change="{changeAggregateFn}"
   />
   <LearnMoreButton
