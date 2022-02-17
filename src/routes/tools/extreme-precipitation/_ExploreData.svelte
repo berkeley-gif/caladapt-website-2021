@@ -38,6 +38,7 @@
   } from "./_store";
 
   export let learnMoreContent;
+  export let notificationText;
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
@@ -67,6 +68,7 @@
 
   let chartTitle = "";
   let thresholdLabel = "";
+  let polygonAggregationMsg = "";
 
   $: chartDescription = $indicator.description;
   $: formatFn = format(`.${$indicator.decimals}f`);
@@ -85,10 +87,19 @@
     dataByDate = groupDataByYear(flattenData(data));
   }
 
+  function getNotificationText() {
+    if ($boundary.id === "locagrid") {
+      return "";
+    } else {
+      return notificationText.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+  }
+
   afterUpdate(() => {
     if ($location && $location.title) {
       chartTitle = $location.title;
       thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
+      polygonAggregationMsg = getNotificationText();
     }
   });
 
@@ -164,8 +175,9 @@
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      ["climate indicator", `${$climvar.label} ${$indicator.label}`],
-      ["threshold", `${$thresholdStore} ${$climvar.units.imperial}`],
+      ["climate indicator", `${indicatorLabel}`],
+      ["threshold", `${thresholdLabel}`],
+      ["duration", `${durationLabel}`],
     ];
     printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
@@ -199,6 +211,7 @@
       thresholdLabel="{thresholdLabel}"
       intervalsLabel="{intervalsLabel}"
       loadLocation="{loadLocation}"
+      polygonAggregationMsg="{polygonAggregationMsg}"
     />
   </div>
 

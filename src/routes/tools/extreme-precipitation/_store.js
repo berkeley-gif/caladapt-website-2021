@@ -8,6 +8,7 @@ import {
   DEFAULT_DURATION,
   DEFAULT_RETURN_PERIOD,
   DEFAULT_THRESHOLD_TYPE,
+  DEFAULT_POLYGON_AGGREGATE_FUNCTION,
 } from "./_constants";
 
 import {
@@ -99,3 +100,5 @@ export const dataStore = makeCustomWritableStore(DATA, {
     },
   ],
 });
+
+export const aggregateFnStore = writable(DEFAULT_POLYGON_AGGREGATE_FUNCTION);

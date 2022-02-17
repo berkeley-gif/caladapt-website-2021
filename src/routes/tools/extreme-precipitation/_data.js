@@ -17,10 +17,7 @@ import {
   OBSERVED_FILTER_YEAR,
   DEFAULT_STAT_PERIODS,
 } from "../_common/constants";
-import {
-  DEFAULT_CLIMATE_VARIABLE,
-  DEFAULT_POLYGON_AGGREGATE_FUNCTION,
-} from "./_constants";
+import { DEFAULT_CLIMATE_VARIABLE } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 const dayNumberFormat = timeFormat("%j");
@@ -253,27 +250,25 @@ export async function getIntensityData(config, params, method = "GET") {
  * @return {string} method
  */
 
-export function getQueryParams({ location, boundary, imperial = true }) {
-  const params = { imperial };
+export function getQueryParams({ location, boundary, imperial = true, stat }) {
+  const params = { imperial, stat };
   let method;
   switch (boundary.id) {
     case "locagrid":
       params.g = `Point(${location.center[0]} ${location.center[1]})`;
       method = "GET";
+      delete params.stat;
       return { params, method };
     case "ca":
       params.ref = "/media/ca.json";
-      params.stat = DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       method = "GET";
       return { params, method };
     case "custom":
       params.g = JSON.stringify(location.geometry);
-      params.stat = DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       method = "POST";
       return { params, method };
     default:
       params.ref = `/api/${boundary.id}/${location.id}/`;
-      params.stat = DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       method = "GET";
       return { params, method };
   }
