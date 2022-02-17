@@ -52,6 +52,44 @@ You may then view the built site on `http://localhost:5000`.
 
 This can be useful when debugging issues for the production environment.
 
+## Running Tests
+
+### Unit Tests
+
+Unit tests are run using [Jest](https://www.npmjs.com/package/jest) and [@testing-library/svelte](https://www.npmjs.com/package/@testing-library/svelte).
+
+To run all tests:
+
+```bash
+npm run test
+```
+
+To run tests in watch mode:
+
+```bash
+npm run test:watch
+```
+
+To run tests for a specific file:
+
+```bash
+npm run test -- <pattern>
+```
+
+...where `<pattern>` is a regex for a specific file or test name.
+
+For help on writing tests for Svelte components see the following resources:
+
+- [Svelte Society: Unit Testing Svelte Components](https://sveltesociety.dev/recipes/testing-and-debugging/unit-testing-svelte-component/)
+- [@testing-library docs](https://testing-library.com/docs/)
+- [jest docs](https://jestjs.io/docs/getting-started)
+
+## Feature Flags
+
+The [`featureFlags`](./featureFlags.json) JSON document contains environment variables that are used to enable or disable various features or routes of the website. For client-side code these varaibles are accessible under `process.env` and in server side code (e.g. Sapper's preloading) they are accessible under `process.cal_adapt_features`. They differ due to how `process.env` is handled by browser (client) and NodeJS (server side) environments with Webpack.
+
+Note that the values of feature flags will differ depending on the deploy environment that is set when deploying the app (e.g. the location being deployed to such as `dev.cal-adapt.org`, `beta.cal-adapt.org`, or `cal-adapt.org`). The [deploy script](./scripts/deploy.mjs) sets an environment variable `DEPLOY` which is used in the [`webpack.config.js`](./webpack.config.js) to set the values of feature flags. During local development the value of the `DEPLOY` env variable will fallback to `dev` (the same as deploying to `dev.cal-adapt.org`).
+
 ## Bundle Analyzer
 
 To inspect the bundled JavaScript code first run the `dev` script:
@@ -103,12 +141,6 @@ Static files are served using [sirv](https://github.com/lukeed/sirv).
 ## Bundler configuration
 
 Webpack is used to provide code-splitting and dynamic imports, as well as compiling Svelte components.
-
-## Feature Flags
-
-The [`featureFlags`](./featureFlags.json) JSON document contains environment variables that are used to enable or disable various features or routes of the website. For client-side code these varaibles are accessible under `process.env` and in server side code (e.g. Sapper's preloading) they are accessible under `process.cal_adapt_features`. They differ due to how `process.env` is handled by browser (client) and NodeJS (server side) environments with Webpack.
-
-Note that the values of feature flags will differ depending on the deploy environment that is set when deploying the app (e.g. the location being deployed to such as `dev.cal-adapt.org`, `beta.cal-adapt.org`, or `cal-adapt.org`). The [deploy script](./scripts/deploy.mjs) sets an environment variable `DEPLOY` which is used in the [`webpack.config.js`](./webpack.config.js) to set the values of feature flags. During local development the value of the `DEPLOY` env variable will fallback to `dev` (the same as deploying to `dev.cal-adapt.org`).
 
 ## Using external components
 

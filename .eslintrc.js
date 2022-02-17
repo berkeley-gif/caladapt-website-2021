@@ -10,10 +10,16 @@ module.exports = {
     es6: true,
     browser: true,
     node: true,
+    "jest/globals": true,
   },
-  plugins: ["svelte3"],
+  plugins: ["svelte3", "jest"],
   rules: {
     "no-unused-vars": 1,
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error",
   },
   overrides: [
     {
