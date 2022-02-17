@@ -115,7 +115,3 @@ export const DEFAULT_INITIAL_CONFIG = {
 };
 
 export const HEATMAP_COLOR_SCALE = ["#19cdbb", "#368ce1", "#6d41ab"];
-
-export const NOTIFICATION_TEXT = `This tool now uses average precipitation values from all 
-intersecting grid cells for polygon boundaries while calculating frequency estimates. See About 
-the Tool for more information.`;

@@ -5,7 +5,6 @@
 
   // Helpers
   import { SMALL_SCALE_BOUNDARIES } from "../_common/constants";
-  import { NOTIFICATION_TEXT } from "./_constants";
   import {
     flattenData,
     groupDataByYear,
@@ -39,6 +38,7 @@
   } from "./_store";
 
   export let learnMoreContent;
+  export let notificationText;
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
@@ -91,7 +91,7 @@
     if ($boundary.id === "locagrid") {
       return "";
     } else {
-      return NOTIFICATION_TEXT;
+      return notificationText;
     }
   }
 

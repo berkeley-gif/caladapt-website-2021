@@ -23,6 +23,10 @@ export function get(_req, res) {
       "extreme-precipitation",
       "learn-more-aggregate"
     );
+    const notificationText = getToolContent(
+      "extreme-precipitation",
+      "notification-text"
+    );
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
@@ -34,6 +38,7 @@ export function get(_req, res) {
           thresholdTypeInfo,
           aggregationInfo,
         },
+        notificationText,
       })
     );
   } catch (error) {

@@ -34,7 +34,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent, learnMoreContent } = await (
+    const { aboutContent, learnMoreContent, notificationText } = await (
       await this.fetch("tools/extreme-precipitation.json")
     ).json();
 
@@ -45,6 +45,7 @@
       helpItems,
       aboutContent,
       learnMoreContent,
+      notificationText,
     };
   }
 </script>
@@ -109,6 +110,7 @@
   export let helpItems;
   export let aboutContent;
   export let learnMoreContent;
+  export let notificationText;
 
   // Derived stores
   const { page } = sapperStores();
@@ -332,7 +334,10 @@
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData learnMoreContent="{learnMoreContent}" />
+    <ExploreData
+      learnMoreContent="{learnMoreContent}"
+      notificationText="{notificationText}"
+    />
   {:else}
     <Loading />
   {/if}
