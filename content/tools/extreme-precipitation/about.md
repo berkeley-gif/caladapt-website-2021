@@ -98,7 +98,7 @@
 </p>
 
 <p>
-  <strong>Update (Feb 20, 2022)</strong>: Based on feedback from our users, we have updated the tool to use the 
+  <strong>Update (Feb 20, 2022)</strong>: Based on feedback from users, we have updated the tool to use the 
   average of precipitation values from all intersecting grid cells for a polygon boundary before calculating frequency estimates. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high frequency estimates. Values using this methodology more closely align with precipitation frequency estimates provided by NOAA.
 </p>
 
