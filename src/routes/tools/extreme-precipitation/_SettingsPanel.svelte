@@ -185,7 +185,7 @@
   <RadioBtnGroup
     selected="{$aggregateFnStore}"
     items="{POLYGON_AGGREGATE_FUNCTIONS}"
-    title="Select Aggregate Function"
+    title="Select Spatial Aggregation"
     on:change="{changeAggregateFn}"
   />
   <LearnMoreButton
