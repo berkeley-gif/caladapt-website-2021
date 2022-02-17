@@ -47,7 +47,7 @@
   const { location, boundary } = locationStore;
   const { indicator } = indicatorStore;
 
-  $: isPolygonBoundary = $boundary.id === "locagrid" ? false : true;
+  $: isPolygonBoundary = $boundary.id !== "locagrid";
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
