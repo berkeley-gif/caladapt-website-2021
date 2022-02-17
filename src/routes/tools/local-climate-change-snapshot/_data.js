@@ -106,8 +106,8 @@ export async function getProjections(config, params, method = "GET") {
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({ location, boundary, imperial = true }) {
-  const params = { imperial, stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION };
+export function getQueryParams({ location, boundary, imperial = true, stat }) {
+  const params = { imperial, stat };
   let method = "GET";
   switch (boundary.id) {
     case "locagrid":

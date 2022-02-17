@@ -51,7 +51,10 @@
     indicatorListStore,
     indicatorStore,
   } from "./_store";
-  import { DEFAULT_INITIAL_CONFIG } from "./_constants";
+  import {
+    DEFAULT_INITIAL_CONFIG,
+    DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+  } from "./_constants";
 
   export let tool;
   export let categories;
@@ -82,6 +85,7 @@
         location: $location,
         boundary: $boundary,
         imperial: true,
+        stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
       });
 
       isFetchingStore.set(true);
