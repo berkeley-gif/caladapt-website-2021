@@ -1,10 +1,10 @@
 <script context="module">
   export async function preload() {
-    const data = await this.fetch(`tools.json`)
+    const { categories, tools } = await this.fetch(`tools.json`)
       .then((r) => r.json())
       .then((data) => data);
 
-    return { data };
+    return { tools, categories };
   }
 </script>
 
@@ -12,14 +12,13 @@
   import { Card, CardsContainer } from "~/components/cards";
   import { Banner, FilterCategories } from "~/partials";
 
-  export let data;
+  export let categories;
+  export let tools;
 
-  const { categories, tools } = data;
   const cardHeight = 20;
   const cardWidth = 18;
 
   $: toolsByCategory = tools;
-
   let seletedCategory;
 
   function getToolsByCategory(e) {
