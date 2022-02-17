@@ -79,12 +79,7 @@
   import { DL_Cosmos, DL_Calflod5m, DL_Calflod50m } from "./_constants";
   import { getRasterMetaData, toBBoxPolygon } from "./_data";
 
-  import {
-    locationStore,
-    isFetchingStore,
-    datasetStore,
-    unitsStore,
-  } from "../_common/stores";
+  import { isFetchingStore, datasetStore } from "../_common/stores";
   import {
     floodScenarioStore,
     timeFrameStore,
@@ -113,7 +108,6 @@
     }
   };
 
-  const { location, boundary } = locationStore;
   const { bbox } = mapBBoxStore;
   const { tfTileLabel } = timeFrameStore;
 
@@ -124,8 +118,6 @@
   if (process.env.NODE_ENV !== "production") {
     logStores(
       floodScenarioStore,
-      location,
-      boundary,
       timeFrameStore,
       dataLayersStore,
       isFetchingStore,
@@ -169,22 +161,9 @@
     }
   }
 
-  async function initApp({
-    lat,
-    lng,
-    boundaryId,
-    imperial,
-    floodScenario,
-    timeFrame,
-  }) {
+  async function initApp({ floodScenario, timeFrame }) {
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
-    unitsStore.set({ imperial });
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
   }
 
   onMount(async () => {
