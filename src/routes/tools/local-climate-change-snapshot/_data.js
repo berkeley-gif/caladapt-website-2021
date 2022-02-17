@@ -8,7 +8,9 @@ import {
   DEFAULT_OBSERVED_SLUG_EXP,
   DEFAULT_POLYGON_AGGREGATE_FUNCTION,
   ENVELOPE_SEARCH_EXP,
+  OBSERVED,
   SERIES,
+  RANGES,
 } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
@@ -38,7 +40,7 @@ const fetchUrls = async (exp) => {
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({ url, params, method = "GET" }) => {
+const fetchEvents = async ({ url, id, params, method = "GET" }) => {
   const [response, error] = await handleXHR(
     fetchData(`${url}events/`, params, method)
   );
@@ -46,7 +48,6 @@ const fetchEvents = async ({ url, params, method = "GET" }) => {
     throw new Error(error.message);
   }
   const values = transformResponse(response);
-  const { id } = SERIES.find(({ id }) => url.includes(id));
   const isRange = url.search(ENVELOPE_SEARCH_EXP) > 0 ? true : false;
   return { id, isRange, values };
 };
@@ -63,7 +64,12 @@ export async function getObserved(config, params, method = "GET") {
     const { indicatorId } = config;
     const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
-    return urls;
+    const promises = urls.map((url) => {
+      const { id } = OBSERVED.find(({ id }) => url.includes(id));
+      return fetchEvents({ url, id, params });
+    });
+    const data = await Promise.all(promises);
+    return data;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -81,7 +87,10 @@ export async function getProjections(config, params, method = "GET") {
     const { indicatorId } = config;
     const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
-    const promises = urls.map((url) => fetchEvents({ url, params }));
+    const promises = urls.map((url) => {
+      const { id } = SERIES.find(({ id }) => url.includes(id));
+      return fetchEvents({ url, id, params });
+    });
     const data = await Promise.all(promises);
     return data;
   } catch (error) {
