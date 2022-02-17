@@ -14,7 +14,7 @@ export function get(req, res) {
       // to prod, but not for dev or beta.
       tools: process.cal_adapt_features.slrCoastalInundation
         ? tools
-        : tools.filter((d) => d.slug === "slr-coastal-inundation"),
+        : tools.filter((d) => d.slug !== "slr-coastal-inundation"),
       categories,
     });
   }
