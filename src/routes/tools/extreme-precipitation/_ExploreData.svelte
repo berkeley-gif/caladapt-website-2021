@@ -91,7 +91,7 @@
     if ($boundary.id === "locagrid") {
       return "";
     } else {
-      return notificationText;
+      return notificationText.replace(/<\/?[^>]+(>|$)/g, "");
     }
   }
 
