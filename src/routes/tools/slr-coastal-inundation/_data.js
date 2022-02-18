@@ -6,6 +6,8 @@ const {
   },
 } = config;
 
+// queries the cal-adapt API for slr sources raster metadata
+// this metadata includes the tile URLs used to render map tiles
 export const getRasterMetaData = (scenario, source, timeFrame, bbox) =>
   fetch(
     `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
@@ -13,6 +15,7 @@ export const getRasterMetaData = (scenario, source, timeFrame, bbox) =>
     )}`
   ).then((res) => res.json());
 
+// fetches geojson files from static/data that are used for displaying tile indexes & centroids
 export const getGeoJson = (ids) => {
   if (Array.isArray(ids) && ids.length) {
     return Promise.all(
