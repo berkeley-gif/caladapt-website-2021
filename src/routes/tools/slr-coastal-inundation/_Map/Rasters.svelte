@@ -19,8 +19,9 @@
     "raster-opacity": 0.5,
   };
 
-  const mapLayersProps = ({ id, checked, color, tileUrls }) => ({
+  const mapLayersProps = ({ id, checked, color, tileUrls, slugs }) => ({
     id,
+    slugs,
     tileUrls: tileUrls.map((url) => `${url}?style=${color}`),
     visibility: checked ? VISIBLE : NONE,
   });
@@ -48,12 +49,11 @@
   });
 
   function addRasterLayers() {
-    rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
+    rasterLayersProps.forEach(({ tileUrls, visibility, slugs }) => {
       tileUrls.forEach((url, index) => {
         layerHandler.addMapLayer({
-          id,
+          id: slugs[index],
           asset: url,
-          index,
           visibility,
           paintProps,
         });
@@ -62,13 +62,13 @@
   }
 
   function reapplyRasterLayers() {
-    rasterLayersProps.forEach(({ id, tileUrls, visibility }) => {
+    rasterLayersProps.forEach(({ tileUrls, visibility, slugs }) => {
       tileUrls.forEach((url, index) => {
-        layerHandler.removeMapLayer(id, index);
+        const slug = slugs[index];
+        layerHandler.removeMapLayer(slug);
         layerHandler.addMapLayer({
-          id,
+          id: slug,
           asset: url,
-          index,
           visibility,
           paintProps,
         });
@@ -77,9 +77,9 @@
   }
 
   function removePreviousRasterLayers() {
-    prevRasterLayerProps.forEach(({ id, tileUrls }) => {
+    prevRasterLayerProps.forEach(({ tileUrls, slugs }) => {
       tileUrls.forEach((_url, index) => {
-        layerHandler.removeMapLayer(id, index);
+        layerHandler.removeMapLayer(slugs[index]);
       });
     });
   }
@@ -88,9 +88,9 @@
     if (!map.getStyle()) {
       return;
     }
-    rasterLayersProps.forEach(({ id, tileUrls }) => {
+    rasterLayersProps.forEach(({ tileUrls, slugs }) => {
       tileUrls.forEach((_url, index) => {
-        layerHandler.removeMapLayer(id, index);
+        layerHandler.removeMapLayer(slugs[index]);
       });
     });
   }
