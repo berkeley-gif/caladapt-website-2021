@@ -5,7 +5,6 @@
     floodScenarioStore,
     timeFrameStore,
     dataLayersStore,
-    dataLayersAugmentedStore,
   } from "./_store";
 
   import { TIME_PERIODS, FLOOD_SCENARIOS } from "./_constants";
@@ -38,7 +37,7 @@
 <div class="block">
   <SelectLayers
     title="Select Map Data Layers"
-    items="{[...$dataLayersAugmentedStore]}"
+    items="{[...$dataLayersStore]}"
     on:change="{changeDataLayers}"
   />
   <LearnMoreButton

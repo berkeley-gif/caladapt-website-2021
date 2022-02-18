@@ -1,5 +1,3 @@
-import { DEFAULT_BOUNDARIES } from "../_common/constants";
-
 export const DL_Cosmos = "cosmos";
 export const DL_Calflod5m = "calflod3dtfs_5m";
 export const DL_Calflod50m = "calflod3dtfs_50m";
@@ -12,23 +10,15 @@ export const LAYER_COLORS = new Map([
   ["rsblue", "#25C7FA"],
 ]);
 
-export const DEFAULT_CENTER = [-122.2813, 37.7813];
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
-export const DEFAULT_MAP_BBOX = [-121.478, 38.132, -122.991, 37.46]; // SF Bay, roughly
+export const DEFAULT_MAP_BBOX = [-122.9204, 37.5257, -121.5595, 38.1288];
 
 export const DEFAULT_INITIAL_CONFIG = {
-  boundaryId: "place",
   floodScenario: DEFAULT_FLOOD_SCENARIO,
   timeFrame: DEFAULT_TIME_FRAME,
-  lng: DEFAULT_CENTER[0],
-  lat: DEFAULT_CENTER[1],
-  imperial: false,
+  bbox: DEFAULT_MAP_BBOX,
 };
-
-export const BOUNDARIES = DEFAULT_BOUNDARIES.filter((d) =>
-  ["counties", "censustracts", "hydrounits", "place"].includes(d.id)
-);
 
 export const TIME_PERIODS = [
   {
