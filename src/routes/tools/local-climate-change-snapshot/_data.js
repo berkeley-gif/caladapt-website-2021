@@ -1,9 +1,12 @@
+import { group, merge } from "d3-array";
+
 // Helpers
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import { buildEnvelope, convertAnnualRateToSum } from "../_common/helpers";
 
 // Constants
+import { OBSERVED_FILTER_YEAR } from "../_common/constants";
 import {
   DEFAULT_PROJECTIONS_SLUG_EXP,
   DEFAULT_OBSERVED_SLUG_EXP,
@@ -17,7 +20,7 @@ import {
 const { apiEndpoint } = config.env.production;
 
 /**
- * Fetches a list of series from Cal-Adapt API that match the regex
+ * Fetches a list of series for an indicator from Cal-Adapt API that match the regex
  * @param {string} exp - regex string
  * @return {array} list of urls
  */
@@ -36,6 +39,7 @@ const fetchUrls = async (exp) => {
  * Identify ensemble min & max series, these will be used to calculate the envelope/range
  * Input parameters:
  * url - url of raster series in API
+ * name - describes the series. It is used later to separate out avg/min/max for a scenario
  * params - object with props for geometry, stat, units, etc.
  * method - default is GET, POST used for user uploaded boundaries
  * @param {object}
@@ -43,7 +47,7 @@ const fetchUrls = async (exp) => {
  */
 const fetchEvents = async ({
   url,
-  id,
+  name,
   params,
   method = "GET",
   isRate = false,
@@ -54,22 +58,63 @@ const fetchEvents = async ({
   if (error) {
     throw new Error(error.message);
   }
-  let values;
-  if (isRate) {
-    values = transformResponse(response).map(({ date, value }) => ({
-      date,
-      value: convertAnnualRateToSum({ date, value }),
-    }));
-  } else {
-    values = transformResponse(response);
-  }
+  const values = isRate
+    ? transformResponse(response).map((d) => ({
+        date: d.date,
+        value: convertAnnualRateToSum(d),
+      }))
+    : transformResponse(response);
   const isRange = url.search(ENVELOPE_SEARCH_EXP) > 0 ? true : false;
-  return { id, isRange, values };
+  // For livneh, remove data values after 2006
+  // because there are QA/QC issues with the data
+  if (name === "livneh") {
+    return {
+      name,
+      isRange,
+      values: values.filter(
+        (d) => d.date.getUTCFullYear() < OBSERVED_FILTER_YEAR
+      ),
+    };
+  }
+  return { name, isRange, values };
 };
 
 /**
- * Get data for chart
- * @param {object} config - prop for climate indicator.
+ * Add additional props for series (e.g. color, label, type)
+ * @param {array} - one min series & one max series for each scenario
+ * @return {array} - one series for each scenario with min & max values
+ */
+const createAverages = (_data) => {
+  return _data.map(({ name, values }) => {
+    const props = SERIES.find(({ id }) => name === id);
+    return { ...props, type: "line", values };
+  });
+};
+
+/**
+ * Group the ensemble min & max timeseries by name (corresponds to scenario in this case)
+ * Create a new single series with type "area" for each scenario using min & max values
+ * Add additional props for series (e.g. color, label, type)
+ * @param {array} - one min series & one max series for each scenario
+ * @return {array} - one series for each scenario with min & max values
+ */
+const createRanges = (_data) => {
+  const groupByScenarios = Array.from(group(_data, (d) => d.name));
+  return groupByScenarios.map(([name, _arrays]) => {
+    const values = merge(_arrays.map(({ values }) => values));
+    const envelope = buildEnvelope(values);
+    const props = RANGES.find(({ id }) => id.includes(name));
+    return {
+      ...props,
+      type: "area",
+      values: envelope,
+    };
+  });
+};
+
+/**
+ * Get observed data for chart
+ * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
@@ -81,18 +126,22 @@ export async function getObserved(config, params, method = "GET") {
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) => {
       const { id } = OBSERVED.find(({ id }) => url.includes(id));
-      return fetchEvents({ url, id, params, isRate });
+      return fetchEvents({ url, name: id, params, isRate });
     });
     const data = await Promise.all(promises);
-    return data;
+    return data.map(({ name, values }) => {
+      // Add additional props for observed (e.g. color, label, type)
+      const props = OBSERVED.find(({ id }) => id === name);
+      return { ...props, type: "line", values };
+    });
   } catch (error) {
     throw new Error(error.message);
   }
 }
 
 /**
- * Get data for chart
- * @param {object} config - prop for climate indicator.
+ * Get projected data for chart
+ * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
@@ -104,10 +153,12 @@ export async function getProjections(config, params, method = "GET") {
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) => {
       const { id } = SERIES.find(({ id }) => url.includes(id));
-      return fetchEvents({ url, id, params, isRate });
+      return fetchEvents({ url, name: id, params, isRate });
     });
     const data = await Promise.all(promises);
-    return data;
+    const ranges = createRanges(data.filter(({ isRange }) => isRange));
+    const averages = createAverages(data.filter(({ isRange }) => !isRange));
+    return [...averages, ...ranges];
   } catch (error) {
     throw new Error(error.message);
   }

@@ -96,7 +96,7 @@
       const observed = await getObserved(config, params, method);
       const projections = await getProjections(config, params, method);
       dataStore.set([...observed, ...projections]);
-      console.log("data", $dataStore);
+      console.log($dataStore);
     } catch (error) {
       console.error("updateData", error);
       logException(error);

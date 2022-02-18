@@ -40,17 +40,27 @@ export const SERIES = [
     color: "rgba(170, 144, 60, 1)",
   },
 ];
-export const RANGES = SERIES.map(({ id, label, color }) => {
-  return {
-    id: `${id}_range`,
-    label: `${label} Range`,
-    color: color.replace(/[^,]+(?=\))/, "0.3"),
-  };
-});
+export const RANGES = [
+  {
+    id: "rcp45_range",
+    label: "Medium Emissions Range",
+    color: "rgba(59, 153, 167, 0.3)",
+  },
+  {
+    id: "rcp85_range",
+    label: "High Emissions Range",
+    color: "rgba(131, 87, 170, 0.3)",
+  },
+  {
+    id: "historical_range",
+    label: "Modeled Historical Range",
+    color: "rgba(170, 144, 60, 0.3)",
+  },
+];
 
 // The list of climate categories and indicators is in content/tools/local-climate-change-snapshot/
 export const DEFAULT_CLIMATE_CATEGORY = "temperature";
-export const DEFAULT_CLIMATE_INDICATOR = "pr";
+export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
 
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
