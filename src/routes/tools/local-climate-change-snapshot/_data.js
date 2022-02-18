@@ -36,7 +36,6 @@ const fetchUrls = async (exp) => {
 
 /**
  * Fetches data from the events endpoint in Cal-Adapt API
- * Identify ensemble min & max series, these will be used to calculate the envelope/range
  * Input parameters:
  * url - url of raster series in API
  * params - object with props for geometry, stat, units, etc.
