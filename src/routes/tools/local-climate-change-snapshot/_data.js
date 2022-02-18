@@ -44,7 +44,7 @@ const fetchUrls = async (exp) => {
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({ url, params, method = "GET", isRate = false }) => {
+const fetchEvents = async ({ url, params, method = "GET", isRate = true }) => {
   const [response, error] = await handleXHR(
     fetchData(`${url}events/`, params, method)
   );
