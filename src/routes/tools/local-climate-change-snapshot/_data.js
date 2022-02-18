@@ -12,6 +12,7 @@ import {
   DEFAULT_OBSERVED_SLUG_EXP,
   DEFAULT_POLYGON_AGGREGATE_FUNCTION,
   ENVELOPE_SEARCH_EXP,
+  AVERAGE_SEARCH_EXP,
   OBSERVED,
   SERIES,
   RANGES,
@@ -79,10 +80,10 @@ const fetchEvents = async ({ url, params, method = "GET", isRate = true }) => {
  * @return {array} - average timeseries for 3 scenarios (historical, rcp45, rcp85)
  */
 const createAverages = (_data) => {
-  const lineData = _data.filter(
-    ({ slug }) => slug.search(ENVELOPE_SEARCH_EXP) < 0
+  const avgData = _data.filter(
+    ({ slug }) => slug.search(AVERAGE_SEARCH_EXP) > 0
   );
-  return lineData.map(({ slug, values }) => {
+  return avgData.map(({ slug, values }) => {
     const props = SERIES.find(({ id }) => slug.includes(id));
     return { ...props, type: "line", values };
   });
@@ -97,7 +98,7 @@ const createAverages = (_data) => {
  * @return {array} - ensemble timeseries with min & max values for 3 scenarios (historical, rcp45, rcp85)
  */
 const createRanges = (_data) => {
-  const areaData = _data
+  const rangeData = _data
     .filter(({ slug }) => slug.search(ENVELOPE_SEARCH_EXP) > 0)
     .map(({ slug, values }) => {
       // id in the RANGES array are in the form "[scenario]_range". The slug
@@ -106,7 +107,7 @@ const createRanges = (_data) => {
       return { ...props, type: "area", values };
     });
   // Group the ensemble min & max for each scenario
-  const groupByIds = Array.from(group(areaData, (d) => d.id));
+  const groupByIds = Array.from(group(rangeData, (d) => d.id));
   return groupByIds.map(([groupId, _arrays]) => {
     const values = merge(_arrays.map(({ values }) => values));
     const envelope = buildEnvelope(values);
