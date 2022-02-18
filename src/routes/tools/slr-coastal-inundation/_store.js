@@ -147,7 +147,7 @@ export const rasterMetaDataStore = makeCustomWritableStore(RASTER_METADATA, {
   ],
 });
 
-// augments the data layers store to include the zxy tiles url for each layer
+// augments the data layers store to include the map tile urls and slugs for each layer
 // from the rasterMetaDataStore
 export const dataLayersAugmentedStore = Object.defineProperty(
   derived(

@@ -78,11 +78,10 @@
   import { DL_Cosmos, DL_Calflod5m, DL_Calflod50m } from "./_constants";
   import { getRasterMetaData } from "./_data";
 
-  import { isFetchingStore, datasetStore } from "../_common/stores";
+  import { isFetchingStore } from "../_common/stores";
   import {
     floodScenarioStore,
     timeFrameStore,
-    dataLayersStore,
     mapBBoxStore,
     rasterMetaDataStore,
     dataLayersAugmentedStore,
@@ -114,15 +113,13 @@
   $: resources = [...externalResources, ...relatedTools];
   $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
+  // log changes to stores when in development
   if (process.env.NODE_ENV !== "production") {
     logStores(
       floodScenarioStore,
       timeFrameStore,
-      dataLayersStore,
       isFetchingStore,
-      datasetStore,
       mapBBoxStore,
-      rasterMetaDataStore,
       dataLayersAugmentedStore
     );
   }
@@ -207,10 +204,7 @@
 
 <div class="bx--grid">
   <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
-    <About
-      datasets="{datasets}"
-      on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
-    >
+    <About datasets="{datasets}">
       <div slot="description">
         {@html aboutContent}
       </div>
