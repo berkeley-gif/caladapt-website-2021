@@ -31,8 +31,8 @@ export class MapLayerHandler {
     return `${id}-source`;
   }
 
-  _getLayerId(id, index = 0) {
-    return `${id}-${index}-layer`;
+  _getLayerId(id) {
+    return `${id}-layer`;
   }
 
   _getSourceDef(value) {
@@ -96,9 +96,9 @@ export class MapLayerHandler {
     }
   }
 
-  addMapLayer({ id, asset, visibility, paintProps, index }) {
-    const layerId = this._getLayerId(id, index);
-    const sourceId = this._getSourceId(layerId);
+  addMapLayer({ id, asset, visibility, paintProps }) {
+    const layerId = this._getLayerId(id);
+    const sourceId = this._getSourceId(id);
     const source = this._getSourceDef(asset);
     const layer = this._getLayerDef(layerId, sourceId, paintProps, {
       visibility,
@@ -107,9 +107,9 @@ export class MapLayerHandler {
     this._addLayer(layerId, layer, this.beforeId);
   }
 
-  removeMapLayer(id, index) {
-    const layerId = this._getLayerId(id, index);
-    const sourceId = this._getSourceId(layerId);
+  removeMapLayer(id) {
+    const layerId = this._getLayerId(id);
+    const sourceId = this._getSourceId(id);
     this._removeLayer(layerId);
     this._removeSource(sourceId);
   }
