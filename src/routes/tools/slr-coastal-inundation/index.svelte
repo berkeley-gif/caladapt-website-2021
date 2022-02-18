@@ -76,7 +76,7 @@
   import ExploreData from "./_ExploreData.svelte";
 
   import { DL_Cosmos, DL_Calflod5m, DL_Calflod50m } from "./_constants";
-  import { getRasterMetaData, toBBoxPolygon } from "./_data";
+  import { getRasterMetaData } from "./_data";
 
   import { isFetchingStore, datasetStore } from "../_common/stores";
   import {
@@ -130,19 +130,12 @@
   async function update(bbox, scenario, timeFrame) {
     if (!appReady || !bbox) return;
     const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
-    let bboxGeom;
-    try {
-      bboxGeom = JSON.stringify(toBBoxPolygon(bbox).geometry);
-    } catch (error) {
-      console.error(error);
-      logException(error);
-    }
     isFetchingStore.set(true);
     try {
       (
         await Promise.all(
           sources.map((source) =>
-            getRasterMetaData(scenario, source, timeFrame, bboxGeom)
+            getRasterMetaData(scenario, source, timeFrame, bbox)
           )
         )
       ).forEach(({ results }, index) => {

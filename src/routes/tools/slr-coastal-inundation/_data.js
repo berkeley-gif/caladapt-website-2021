@@ -1,4 +1,3 @@
-import bboxPolygon from "@turf/bbox-polygon";
 import config from "~/helpers/api-config";
 
 const {
@@ -7,18 +6,12 @@ const {
   },
 } = config;
 
-export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
+export const getRasterMetaData = (scenario, source, timeFrame, bbox) =>
   fetch(
     `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
-      geom
+      bbox
     )}`
   ).then((res) => res.json());
-
-export const toBBoxPolygon = (coords) => {
-  if (Array.isArray(coords) && coords.length) {
-    return bboxPolygon(coords);
-  }
-};
 
 export const getGeoJson = (ids) => {
   if (Array.isArray(ids) && ids.length) {
