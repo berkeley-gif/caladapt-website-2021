@@ -40,6 +40,7 @@ const fetchUrls = async (exp) => {
  * url - url of raster series in API
  * params - object with props for geometry, stat, units, etc.
  * method - default is GET, POST used for user uploaded boundaries
+ * isRate - boolean value that indicates if indicator should be converted from annual rate to annual total
  * @param {object}
  * @return {array}
  */
@@ -50,6 +51,7 @@ const fetchEvents = async ({ url, params, method = "GET", isRate = false }) => {
   if (error) {
     throw new Error(error.message);
   }
+  // Add slug to keep track of which timeseries the data comes from
   const slug = url.split("series/")[1];
   const values = isRate
     ? transformResponse(response).map((d) => ({
@@ -78,7 +80,7 @@ const fetchEvents = async ({ url, params, method = "GET", isRate = false }) => {
  */
 const createAverages = (_data) => {
   const lineData = _data.filter(
-    ({ slug }) => slug.search(ENVELOPE_SEARCH_EXP) <= 0
+    ({ slug }) => slug.search(ENVELOPE_SEARCH_EXP) < 0
   );
   return lineData.map(({ slug, values }) => {
     const props = SERIES.find(({ id }) => slug.includes(id));
@@ -103,6 +105,7 @@ const createRanges = (_data) => {
       const props = RANGES.find(({ id }) => slug.includes(id.split("_")[0]));
       return { ...props, type: "area", values };
     });
+  // Group the ensemble min & max for each scenario
   const groupByIds = Array.from(group(areaData, (d) => d.id));
   return groupByIds.map(([groupId, _arrays]) => {
     const values = merge(_arrays.map(({ values }) => values));
@@ -131,7 +134,7 @@ export async function getObserved(config, params, method = "GET") {
     const promises = urls.map((url) => fetchEvents({ url, params, isRate }));
     const data = await Promise.all(promises);
     return data.map(({ slug, values }) => {
-      // Add additional props for timeseries (e.g. color, label, type)
+      // Add additional props for timeseries (e.g. id, color, label, type)
       const props = OBSERVED.find(({ id }) => slug.includes(id));
       return { ...props, type: "line", values };
     });
