@@ -80,9 +80,7 @@
     try {
       const config = {
         indicatorId: $indicatorStore.id,
-        isRate: INDICATORS_WITH_RATES.includes($indicatorStore.id)
-          ? true
-          : false,
+        isRate: INDICATORS_WITH_RATES.includes($indicatorStore.id),
       };
       // Get params object for querying the Cal-Adapt API
       const { params, method } = getQueryParams({
