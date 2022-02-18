@@ -39,74 +39,79 @@ const fetchUrls = async (exp) => {
  * Identify ensemble min & max series, these will be used to calculate the envelope/range
  * Input parameters:
  * url - url of raster series in API
- * name - describes the series. It is used later to separate out avg/min/max for a scenario
  * params - object with props for geometry, stat, units, etc.
  * method - default is GET, POST used for user uploaded boundaries
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({
-  url,
-  name,
-  params,
-  method = "GET",
-  isRate = false,
-}) => {
+const fetchEvents = async ({ url, params, method = "GET", isRate = false }) => {
   const [response, error] = await handleXHR(
     fetchData(`${url}events/`, params, method)
   );
   if (error) {
     throw new Error(error.message);
   }
+  const slug = url.split("series/")[1];
   const values = isRate
     ? transformResponse(response).map((d) => ({
         date: d.date,
         value: convertAnnualRateToSum(d),
       }))
     : transformResponse(response);
-  const isRange = url.search(ENVELOPE_SEARCH_EXP) > 0 ? true : false;
   // For livneh, remove data values after 2006
   // because there are QA/QC issues with the data
-  if (name === "livneh") {
+  if (slug.includes("livneh")) {
     return {
-      name,
-      isRange,
+      slug,
       values: values.filter(
         (d) => d.date.getUTCFullYear() < OBSERVED_FILTER_YEAR
       ),
     };
   }
-  return { name, isRange, values };
+  return { slug, values };
 };
 
 /**
- * Add additional props for series (e.g. color, label, type)
- * @param {array} - one min series & one max series for each scenario
- * @return {array} - one series for each scenario with min & max values
+ * Filter data to find timseries that correspond to ensemble avg
+ * Add additional props (e.g. id, color, label, type)
+ * @param {array} - array of all timeseries
+ * @return {array} - average timeseries for 3 scenarios (historical, rcp45, rcp85)
  */
 const createAverages = (_data) => {
-  return _data.map(({ name, values }) => {
-    const props = SERIES.find(({ id }) => name === id);
+  const lineData = _data.filter(
+    ({ slug }) => slug.search(ENVELOPE_SEARCH_EXP) <= 0
+  );
+  return lineData.map(({ slug, values }) => {
+    const props = SERIES.find(({ id }) => slug.includes(id));
     return { ...props, type: "line", values };
   });
 };
 
 /**
- * Group the ensemble min & max timeseries by name (corresponds to scenario in this case)
- * Create a new single series with type "area" for each scenario using min & max values
- * Add additional props for series (e.g. color, label, type)
- * @param {array} - one min series & one max series for each scenario
- * @return {array} - one series for each scenario with min & max values
+ * Filter data to find timseries that correspond to ensemble min & max
+ * Add additional props (e.g. id, color, label, type)
+ * Group the ensemble min & max timeseries by id
+ * Create a new ensemble timeseries for envelope
+ * @param {array} - array of all timeseries
+ * @return {array} - ensemble timeseries with min & max values for 3 scenarios (historical, rcp45, rcp85)
  */
 const createRanges = (_data) => {
-  const groupByScenarios = Array.from(group(_data, (d) => d.name));
-  return groupByScenarios.map(([name, _arrays]) => {
+  const areaData = _data
+    .filter(({ slug }) => slug.search(ENVELOPE_SEARCH_EXP) > 0)
+    .map(({ slug, values }) => {
+      // id in the RANGES array are in the form "[scenario]_range". The slug
+      // only has [scenario] part. So use only part of the id to search
+      const props = RANGES.find(({ id }) => slug.includes(id.split("_")[0]));
+      return { ...props, type: "area", values };
+    });
+  const groupByIds = Array.from(group(areaData, (d) => d.id));
+  return groupByIds.map(([groupId, _arrays]) => {
     const values = merge(_arrays.map(({ values }) => values));
     const envelope = buildEnvelope(values);
-    const props = RANGES.find(({ id }) => id.includes(name));
+    // return props common to both ensemble min & max (id, label, color, type)
+    // and a new values array
     return {
-      ...props,
-      type: "area",
+      ..._arrays[0],
       values: envelope,
     };
   });
@@ -124,14 +129,11 @@ export async function getObserved(config, params, method = "GET") {
     const { indicatorId, isRate } = config;
     const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
-    const promises = urls.map((url) => {
-      const { id } = OBSERVED.find(({ id }) => url.includes(id));
-      return fetchEvents({ url, name: id, params, isRate });
-    });
+    const promises = urls.map((url) => fetchEvents({ url, params, isRate }));
     const data = await Promise.all(promises);
-    return data.map(({ name, values }) => {
-      // Add additional props for observed (e.g. color, label, type)
-      const props = OBSERVED.find(({ id }) => id === name);
+    return data.map(({ slug, values }) => {
+      // Add additional props for timeseries (e.g. color, label, type)
+      const props = OBSERVED.find(({ id }) => slug.includes(id));
       return { ...props, type: "line", values };
     });
   } catch (error) {
@@ -151,13 +153,10 @@ export async function getProjections(config, params, method = "GET") {
     const { indicatorId, isRate } = config;
     const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
-    const promises = urls.map((url) => {
-      const { id } = SERIES.find(({ id }) => url.includes(id));
-      return fetchEvents({ url, name: id, params, isRate });
-    });
+    const promises = urls.map((url) => fetchEvents({ url, params, isRate }));
     const data = await Promise.all(promises);
-    const ranges = createRanges(data.filter(({ isRange }) => isRange));
-    const averages = createAverages(data.filter(({ isRange }) => !isRange));
+    const ranges = createRanges(data);
+    const averages = createAverages(data);
     return [...averages, ...ranges];
   } catch (error) {
     throw new Error(error.message);
