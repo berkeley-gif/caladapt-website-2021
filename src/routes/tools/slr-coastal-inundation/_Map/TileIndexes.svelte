@@ -23,7 +23,7 @@
   });
 
   const mapLayersProps = ({ id, checked, color }) => ({
-    id,
+    id: `${id}-tile-index`,
     color: LAYER_COLORS.get(color),
     data: geojsons.get(id),
     visibility: checked ? VISIBLE : NONE,
