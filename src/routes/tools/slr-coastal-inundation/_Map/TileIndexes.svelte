@@ -10,9 +10,6 @@
   export let dataLayers = [];
   export let geojsons = new Map();
 
-  let prevMapStyle = mapStyle;
-  let prevLayerProps = [];
-
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
@@ -23,21 +20,23 @@
   });
 
   const mapLayersProps = ({ id, checked, color }) => ({
-    id,
+    id: `${id}-tile-index`,
     color: LAYER_COLORS.get(color),
     data: geojsons.get(id),
     visibility: checked ? VISIBLE : NONE,
   });
 
-  if (map && map.getStyle()) {
-    map.on("styledata", handleStyleDataChange);
-  }
-
-  $: layerHandler = new MapLayerHandler({
+  let prevMapStyle = mapStyle;
+  let prevLayerProps = [];
+  let layerHandler = new MapLayerHandler({
     map,
     beforeId,
     layerType: "fill",
   });
+
+  if (map && map.getStyle()) {
+    map.on("styledata", handleStyleDataChange);
+  }
 
   $: layerProps = Boolean(geojsons.size) && dataLayers.map(mapLayersProps);
 
@@ -87,6 +86,7 @@
   // keeps the map layers in sync when the map style changes
   function handleStyleDataChange() {
     if (mapStyle !== prevMapStyle) {
+      layerHandler.beforeId = beforeId;
       reapplyGeoJsonLayers();
       prevMapStyle = mapStyle;
     }

@@ -57,6 +57,9 @@ export const mapBBoxStore = makeCustomWritableStore(DEFAULT_MAP_BBOX, {
 const getTileUrls = (value) =>
   Array.isArray(value) && value.length ? value.map((d) => d.tileurl) : [];
 
+const getSlugs = (value) =>
+  Array.isArray(value) && value.length ? value.map((d) => d.slug) : [];
+
 export const dataLayersStore = makeCustomWritableStore(DATA_LAYERS, {
   name: "dataLayersStore",
   getters: [
@@ -144,7 +147,7 @@ export const rasterMetaDataStore = makeCustomWritableStore(RASTER_METADATA, {
   ],
 });
 
-// augments the data layers store to include the zxy tiles url for each layer
+// augments the data layers store to include the map tile urls and slugs for each layer
 // from the rasterMetaDataStore
 export const dataLayersAugmentedStore = Object.defineProperty(
   derived(
@@ -152,6 +155,7 @@ export const dataLayersAugmentedStore = Object.defineProperty(
     ([$dataLayersStore, $rasterMetaDataStore]) =>
       $dataLayersStore.map((data) => {
         const tileUrls = getTileUrls($rasterMetaDataStore[data.id]);
+        const slugs = getSlugs($rasterMetaDataStore[data.id]);
         return {
           ...data,
           ...(!tileUrls.length && {
@@ -162,6 +166,7 @@ export const dataLayersAugmentedStore = Object.defineProperty(
             disabled: false,
           }),
           tileUrls,
+          slugs,
         };
       })
   ),
