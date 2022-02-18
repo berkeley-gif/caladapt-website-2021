@@ -9,9 +9,6 @@
   export let beforeId;
   export let dataLayers = [];
 
-  let prevRasterLayerProps = [];
-  let prevMapStyle = mapStyle;
-
   const { getMap } = getContext(contextKey);
   const map = getMap();
 
@@ -26,15 +23,17 @@
     visibility: checked ? VISIBLE : NONE,
   });
 
-  if (map && map.getStyle()) {
-    map.on("styledata", handleStyleDataChange);
-  }
-
-  $: layerHandler = new MapLayerHandler({
+  let prevRasterLayerProps = [];
+  let prevMapStyle = mapStyle;
+  let layerHandler = new MapLayerHandler({
     map,
     beforeId,
     layerType: "raster",
   });
+
+  if (map && map.getStyle()) {
+    map.on("styledata", handleStyleDataChange);
+  }
 
   $: rasterLayersProps = dataLayers
     .filter((d) => Array.isArray(d.tileUrls) && d.tileUrls.length)
@@ -98,6 +97,7 @@
   // keeps the map layers in sync when the map style changes
   function handleStyleDataChange() {
     if (mapStyle !== prevMapStyle) {
+      layerHandler.beforeId = beforeId;
       reapplyRasterLayers();
       prevMapStyle = mapStyle;
     }
