@@ -58,7 +58,7 @@ describe("MapLayerHandler", () => {
   test("getLayerId", () => {
     const mapLayerHandler = getMlhInstance();
     const result = mapLayerHandler._getLayerId("foo");
-    expect(result).toEqual("foo-0-layer");
+    expect(result).toEqual("foo-layer");
   });
 
   test("getSourceDef: tile url", () => {
@@ -146,9 +146,8 @@ describe("MapLayerHandler", () => {
       paintProps: {
         "raster-opacity": 0.5,
       },
-      index: 1,
     });
-    expect(mapLayerHandler._addSource).toBeCalledWith("my-1-layer-source", {
+    expect(mapLayerHandler._addSource).toBeCalledWith("my-source", {
       tiles: ["https://tiles.com/{z}/{x}/{y}.png"],
       tileSize: 256,
       type: "raster",
@@ -165,13 +164,12 @@ describe("MapLayerHandler", () => {
       paintProps: {
         "raster-opacity": 0.5,
       },
-      index: 1,
     });
     expect(mapLayerHandler._addLayer).toBeCalledWith(
-      "my-1-layer",
+      "my-layer",
       {
-        id: "my-1-layer",
-        source: "my-1-layer-source",
+        id: "my-layer",
+        source: "my-source",
         type: "raster",
         paint: {
           "raster-opacity": 0.5,
@@ -187,15 +185,15 @@ describe("MapLayerHandler", () => {
   test("removeMapLayer: removeLayer", () => {
     const mapLayerHandler = getMlhInstance();
     mapLayerHandler._removeLayer = jest.fn();
-    mapLayerHandler.removeMapLayer("my", 1);
-    expect(mapLayerHandler._removeLayer).toBeCalledWith("my-1-layer");
+    mapLayerHandler.removeMapLayer("my");
+    expect(mapLayerHandler._removeLayer).toBeCalledWith("my-layer");
   });
 
   test("removeMapLayer: removeSource", () => {
     const mapLayerHandler = getMlhInstance();
     mapLayerHandler._removeSource = jest.fn();
-    mapLayerHandler.removeMapLayer("my", 1);
-    expect(mapLayerHandler._removeSource).toBeCalledWith("my-1-layer-source");
+    mapLayerHandler.removeMapLayer("my");
+    expect(mapLayerHandler._removeSource).toBeCalledWith("my-source");
   });
 
   test("removeMapRef", () => {
