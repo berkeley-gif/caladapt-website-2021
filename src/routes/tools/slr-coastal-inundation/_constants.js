@@ -12,7 +12,7 @@ export const LAYER_COLORS = new Map([
 
 export const DEFAULT_FLOOD_SCENARIO = "med";
 export const DEFAULT_TIME_FRAME = "[2020,2040]";
-export const DEFAULT_MAP_BBOX = [-121.478, 38.132, -122.991, 37.46]; // SF Bay, roughly
+export const DEFAULT_MAP_BBOX = [-122.9204, 37.5257, -121.5595, 38.1288];
 
 export const DEFAULT_INITIAL_CONFIG = {
   floodScenario: DEFAULT_FLOOD_SCENARIO,

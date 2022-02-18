@@ -61,7 +61,6 @@
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
-  import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logStores } from "~/helpers/utilities";
   import { logException } from "~/helpers/logging";
 
@@ -161,9 +160,10 @@
     }
   }
 
-  async function initApp({ floodScenario, timeFrame }) {
+  async function initApp({ floodScenario, timeFrame, bbox }) {
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
+    mapBBoxStore.set(bbox);
   }
 
   onMount(async () => {
