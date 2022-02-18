@@ -50,7 +50,7 @@ export const RANGES = SERIES.map(({ id, label, color }) => {
 
 // The list of climate categories and indicators is in content/tools/local-climate-change-snapshot/
 export const DEFAULT_CLIMATE_CATEGORY = "temperature";
-export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
+export const DEFAULT_CLIMATE_INDICATOR = "pr";
 
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
@@ -61,3 +61,5 @@ export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
 
 export const ENVELOPE_SEARCH_EXP = /ens32min|ens32max/;
+
+export const INDICATORS_WITH_RATES = ["pr"];

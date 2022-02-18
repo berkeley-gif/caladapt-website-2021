@@ -54,6 +54,7 @@
   import {
     DEFAULT_INITIAL_CONFIG,
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+    INDICATORS_WITH_RATES,
   } from "./_constants";
 
   export let tool;
@@ -79,6 +80,9 @@
     try {
       const config = {
         indicatorId: $indicatorStore.id,
+        isRate: INDICATORS_WITH_RATES.includes($indicatorStore.id)
+          ? true
+          : false,
       };
       // Get params object for querying the Cal-Adapt API
       const { params, method } = getQueryParams({

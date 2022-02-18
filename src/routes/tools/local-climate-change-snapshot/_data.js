@@ -1,6 +1,7 @@
 // Helpers
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
+import { buildEnvelope, convertAnnualRateToSum } from "../_common/helpers";
 
 // Constants
 import {
@@ -40,14 +41,28 @@ const fetchUrls = async (exp) => {
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({ url, id, params, method = "GET" }) => {
+const fetchEvents = async ({
+  url,
+  id,
+  params,
+  method = "GET",
+  isRate = false,
+}) => {
   const [response, error] = await handleXHR(
     fetchData(`${url}events/`, params, method)
   );
   if (error) {
     throw new Error(error.message);
   }
-  const values = transformResponse(response);
+  let values;
+  if (isRate) {
+    values = transformResponse(response).map(({ date, value }) => ({
+      date,
+      value: convertAnnualRateToSum({ date, value }),
+    }));
+  } else {
+    values = transformResponse(response);
+  }
   const isRange = url.search(ENVELOPE_SEARCH_EXP) > 0 ? true : false;
   return { id, isRange, values };
 };
@@ -61,12 +76,12 @@ const fetchEvents = async ({ url, id, params, method = "GET" }) => {
  */
 export async function getObserved(config, params, method = "GET") {
   try {
-    const { indicatorId } = config;
+    const { indicatorId, isRate } = config;
     const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) => {
       const { id } = OBSERVED.find(({ id }) => url.includes(id));
-      return fetchEvents({ url, id, params });
+      return fetchEvents({ url, id, params, isRate });
     });
     const data = await Promise.all(promises);
     return data;
@@ -84,12 +99,12 @@ export async function getObserved(config, params, method = "GET") {
  */
 export async function getProjections(config, params, method = "GET") {
   try {
-    const { indicatorId } = config;
+    const { indicatorId, isRate } = config;
     const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) => {
       const { id } = SERIES.find(({ id }) => url.includes(id));
-      return fetchEvents({ url, id, params });
+      return fetchEvents({ url, id, params, isRate });
     });
     const data = await Promise.all(promises);
     return data;
