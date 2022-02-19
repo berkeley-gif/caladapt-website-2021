@@ -41,11 +41,16 @@ const fetchUrls = async (exp) => {
  * url - url of raster series in API
  * params - object with props for geometry, stat, units, etc.
  * method - default is GET, POST used for user uploaded boundaries
- * isRate - boolean value that indicates if indicator should be converted from annual rate to annual total
+ * isAnnualRate - boolean value that indicates if indicator should be converted from annual rate to annual total
  * @param {object}
  * @return {array}
  */
-const fetchEvents = async ({ url, params, method = "GET", isRate = true }) => {
+const fetchEvents = async ({
+  url,
+  params,
+  method = "GET",
+  isAnnualRate = true,
+}) => {
   const [response, error] = await handleXHR(
     fetchData(`${url}events/`, params, method)
   );
@@ -54,7 +59,7 @@ const fetchEvents = async ({ url, params, method = "GET", isRate = true }) => {
   }
   // Add slug to keep track of which timeseries the data comes from
   const slug = url.split("series/")[1];
-  const values = isRate
+  const values = isAnnualRate
     ? transformResponse(response).map((d) => ({
         date: d.date,
         value: convertAnnualRateToSum(d),
@@ -129,10 +134,12 @@ const createRanges = (_data) => {
  */
 export async function getObserved(config, params, method = "GET") {
   try {
-    const { indicatorId, isRate } = config;
+    const { indicatorId, isAnnualRate } = config;
     const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
-    const promises = urls.map((url) => fetchEvents({ url, params, isRate }));
+    const promises = urls.map((url) =>
+      fetchEvents({ url, params, isAnnualRate })
+    );
     const data = await Promise.all(promises);
     return data.map(({ slug, values }) => {
       // Add additional props for timeseries (e.g. id, color, label, type)
@@ -153,10 +160,12 @@ export async function getObserved(config, params, method = "GET") {
  */
 export async function getProjections(config, params, method = "GET") {
   try {
-    const { indicatorId, isRate } = config;
+    const { indicatorId, isAnnualRate } = config;
     const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
-    const promises = urls.map((url) => fetchEvents({ url, params, isRate }));
+    const promises = urls.map((url) =>
+      fetchEvents({ url, params, isAnnualRate })
+    );
     const data = await Promise.all(promises);
     const ranges = createRanges(data);
     const averages = createAverages(data);
