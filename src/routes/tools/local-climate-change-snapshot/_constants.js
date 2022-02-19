@@ -1,3 +1,4 @@
+import chroma from "chroma-js";
 import { INITIAL_CONFIG } from "../_common/constants";
 
 export const TOOL_SLUG = "local-climate-change-snapshot";
@@ -39,49 +40,49 @@ export const DEFAULT_INITIAL_CONFIG = {
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
 
-export const COLOR_livneh = "rgb(110, 110, 110)";
-export const COLOR_rcp45 = "rgb(59, 153, 167)";
-export const COLOR_rcp85 = "rgb(131, 87, 170)";
-export const COLOR_historical = "rgb(170, 144, 60)";
+export const COLOR_livneh = chroma(110, 110, 110);
+export const COLOR_rcp45 = chroma(59, 153, 167);
+export const COLOR_rcp85 = chroma(131, 87, 170);
+export const COLOR_historical = chroma(170, 144, 60);
 
 export const OBSERVED = [
   {
     id: "livneh",
     label: "Observed",
-    color: COLOR_livneh,
+    color: COLOR_livneh.hex(),
   },
 ];
 export const SERIES = [
   {
     id: "rcp45",
     label: "Medium Emissions (RCP 4.5)",
-    color: COLOR_rcp45,
+    color: COLOR_rcp45.hex(),
   },
   {
     id: "rcp85",
     label: "High Emissions (RCP 8.5)",
-    color: COLOR_rcp85,
+    color: COLOR_rcp85.hex(),
   },
   {
     id: "historical",
     label: "Modeled Historical",
-    color: COLOR_historical,
+    color: COLOR_historical.hex(),
   },
 ];
 export const RANGES = [
   {
     id: "rcp45_range",
     label: "Medium Emissions Range",
-    color: COLOR_rcp45.replace(/[^,]+(?=\))/, "0.3"),
+    color: COLOR_rcp45.alpha(0.3).hex(),
   },
   {
     id: "rcp85_range",
     label: "High Emissions Range",
-    color: COLOR_rcp85.replace(/[^,]+(?=\))/, "0.3"),
+    color: COLOR_rcp85.alpha(0.3).hex(),
   },
   {
     id: "historical_range",
     label: "Modeled Historical Range",
-    color: COLOR_historical.replace(/[^,]+(?=\))/, "0.3"),
+    color: COLOR_historical.alpha(0.3).hex(),
   },
 ];
