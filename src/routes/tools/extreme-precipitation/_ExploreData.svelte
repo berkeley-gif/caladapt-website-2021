@@ -71,14 +71,14 @@
 
   let chartTitle = "";
   let thresholdLabel = "";
+  let intervalsLabel = "";
+  let durationLabel = "";
   let polygonAggregationMsg = "";
   let uncertaintyMsg = "";
 
   $: chartDescription = $indicator.description;
   $: formatFn = format(`.${$indicator.decimals}f`);
   $: indicatorLabel = $indicator.title;
-  $: durationLabel = `${$durationStore}-day`;
-  $: intervalsLabel = `${$returnPeriodStore} years`;
 
   $: if ($indicator.id === "intensity") {
     data = $intensity;
@@ -104,7 +104,7 @@
   }
 
   function getUncertaintyText() {
-    if (!$uncertaintyStore) return "";
+    if (!$uncertaintyStore || $indicator.id !== "intensity") return "";
     const { lowSampleSize, nullCIValues } = $uncertaintyStore;
     if (lowSampleSize && nullCIValues) {
       return removeTags(`${warningLowSampleSize}. ${warningMissingCI}`);
@@ -120,10 +120,12 @@
   afterUpdate(() => {
     if ($location && $location.title) {
       chartTitle = $location.title;
-      thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
-      polygonAggregationMsg = getNotificationText();
-      uncertaintyMsg = getUncertaintyText();
     }
+    thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
+    intervalsLabel = `${$returnPeriodStore} years`;
+    durationLabel = `${$durationStore}-day`;
+    polygonAggregationMsg = getNotificationText();
+    uncertaintyMsg = getUncertaintyText();
   });
 
   async function loadLearnMore({
@@ -263,6 +265,7 @@
       units="{$climvar.units.imperial}"
       label="{indicatorLabel}"
       dataSource="{$titles.join(', ')}"
+      niceMax="{['intensity'].includes($indicator.id) ? 5 : 10}"
       height="{['timing', 'intensity'].includes($indicator.id) ? 550 : 400}"
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"

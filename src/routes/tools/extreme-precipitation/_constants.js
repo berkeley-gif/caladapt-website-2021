@@ -16,7 +16,7 @@ export const CLIMATE_INDICATORS = [
     label: "Intensity",
     title: "Estimated Intensity of Extreme Precipitation Events",
     units: "",
-    decimals: 0,
+    decimals: 1,
     chartComponent: DotAndWhiskerChart,
     statsComponent: AvgRange,
     description: `<p>The colored dots on this visualization represent
