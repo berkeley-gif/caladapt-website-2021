@@ -107,22 +107,18 @@ export const dataStore = makeCustomWritableStore(DATA, {
 export const aggregateFnStore = writable(DEFAULT_POLYGON_AGGREGATE_FUNCTION);
 
 /**
- * The Estimated Intensity array consists of return levels for a particular combination
- * of GCM + percentile + event duration using the Peak Over Threshold statistical method.
- * Part of the response returned from the API includes n (number of samples),
- * ci_lower (lower end of the confidence interval), ci_upper (upper end of the confidence interval).
- * If any of the GCMs have number of samples < 100 or if any of the confidence intervals are
- * undefined, display a warning message about diminished certainty in the estimates.
+ * The Estimated Intensity data consists of return levels and other metrics generated
+ * by the API using Peak Over Threshold statistical method for observed/models. These metrics include:
+ * - n (number of samples),
+ * - ci_lower (lower end of the confidence interval)
+ * - ci_upper (upper end of the confidence interval).
+ * If any of the observed/models have n < 100 or if any of the confidence intervals are
+ * undefined, display a warning message indicating diminished certainty in the estimates.
  **/
 export const uncertaintyStore = derived(dataStore, ($dataStore) => {
   if (!dataStore || !$dataStore.intensity) return;
-  const metrics = $dataStore.intensity.map(({ n, ci_lower, ci_upper }) => ({
-    n,
-    ci_lower,
-    ci_upper,
-  }));
-  const lowSampleSize = metrics.some(({ n }) => n < 100);
-  const nullCIValues = metrics.some(
+  const lowSampleSize = $dataStore.intensity.some(({ n }) => n < 100);
+  const nullCIValues = $dataStore.intensity.some(
     ({ ci_lower, ci_upper }) => ci_lower === null || ci_upper === null
   );
   return { lowSampleSize, nullCIValues };
