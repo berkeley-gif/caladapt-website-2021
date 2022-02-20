@@ -119,7 +119,7 @@ export const uncertaintyStore = derived(dataStore, ($dataStore) => {
   if (!dataStore || !$dataStore.intensity) return;
   const lowSampleSize = $dataStore.intensity.some(({ n }) => n < 100);
   const nullCIValues = $dataStore.intensity.some(
-    ({ ci_lower, ci_upper }) => ci_lower === null || ci_upper === null
+    ({ ci_lower, ci_upper }) => !ci_lower || !ci_upper
   );
   return { lowSampleSize, nullCIValues };
 });
