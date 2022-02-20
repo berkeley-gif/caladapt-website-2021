@@ -27,6 +27,14 @@ export function get(_req, res) {
       "extreme-precipitation",
       "notification-text"
     );
+    const warningLowSampleSize = getToolContent(
+      "extreme-precipitation",
+      "warning-low-sample-size"
+    );
+    const warningMissingCI = getToolContent(
+      "extreme-precipitation",
+      "warning-missing-ci"
+    );
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
@@ -39,6 +47,8 @@ export function get(_req, res) {
           aggregationInfo,
         },
         notificationText,
+        warningLowSampleSize,
+        warningMissingCI,
       })
     );
   } catch (error) {
