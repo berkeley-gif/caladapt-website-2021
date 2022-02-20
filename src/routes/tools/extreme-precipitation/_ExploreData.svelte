@@ -35,10 +35,13 @@
     durationStore,
     dataStore,
     returnPeriodStore,
+    uncertaintyStore,
   } from "./_store";
 
   export let learnMoreContent;
   export let notificationText;
+  export let warningLowSampleSize;
+  export let warningMissingCI;
 
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
@@ -69,6 +72,7 @@
   let chartTitle = "";
   let thresholdLabel = "";
   let polygonAggregationMsg = "";
+  let uncertaintyMsg = "";
 
   $: chartDescription = $indicator.description;
   $: formatFn = format(`.${$indicator.decimals}f`);
@@ -87,11 +91,29 @@
     dataByDate = groupDataByYear(flattenData(data));
   }
 
+  function removeTags(html) {
+    return html.replace(/<\/?[^>]+(>|$)/g, "");
+  }
+
   function getNotificationText() {
     if ($boundary.id === "locagrid") {
       return "";
     } else {
-      return notificationText.replace(/<\/?[^>]+(>|$)/g, "");
+      return removeTags(notificationText);
+    }
+  }
+
+  function getUncertaintyText() {
+    if (!$uncertaintyStore) return "";
+    const { lowSampleSize, nullCIValues } = $uncertaintyStore;
+    if (lowSampleSize && nullCIValues) {
+      return removeTags(`${warningLowSampleSize}. ${warningMissingCI}`);
+    } else if (lowSampleSize) {
+      return removeTags(warningLowSampleSize);
+    } else if (nullCIValues) {
+      return removeTags(warningMissingCI);
+    } else {
+      return "";
     }
   }
 
@@ -100,6 +122,7 @@
       chartTitle = $location.title;
       thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
       polygonAggregationMsg = getNotificationText();
+      uncertaintyMsg = getUncertaintyText();
     }
   });
 
@@ -212,6 +235,7 @@
       intervalsLabel="{intervalsLabel}"
       loadLocation="{loadLocation}"
       polygonAggregationMsg="{polygonAggregationMsg}"
+      uncertaintyMsg="{uncertaintyMsg}"
     />
   </div>
 
