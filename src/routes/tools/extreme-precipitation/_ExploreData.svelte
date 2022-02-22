@@ -265,7 +265,7 @@
       units="{$climvar.units.imperial}"
       label="{indicatorLabel}"
       dataSource="{$titles.join(', ')}"
-      niceMax="{$indicator.id === 'indicator' ? 5 : 10}"
+      niceMax="{$indicator.id === 'intensity' ? 5 : 10}"
       height="{['timing', 'intensity'].includes($indicator.id) ? 550 : 400}"
       on:showDownload="{loadDownload}"
       on:showShare="{loadShare}"
