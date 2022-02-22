@@ -1,5 +1,5 @@
 <script>
-  export let indicators;
+  import { indicatorStore } from "./_store";
 
-  console.log("indicators", indicators.length);
+  $: console.log("indicator", $indicatorStore.id);
 </script>

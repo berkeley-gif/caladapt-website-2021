@@ -7,14 +7,11 @@
   import Snapshot from "./_DataSnapshot.svelte";
   import DataNotes from "./_DataNotes.svelte";
   import CategoryResources from "./_CategoryResources.svelte";
-
-  export let categories;
-  export let indicators;
 </script>
 
 <LocationTitle />
-<SelectCategory categories="{categories}" />
-<SelectIndicator indicators="{indicators}" />
+<SelectCategory />
+<SelectIndicator />
 <Chart />
 <Snapshot />
 <DataNotes />

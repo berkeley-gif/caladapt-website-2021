@@ -1,5 +1,5 @@
 <script>
-  export let categories;
+  import { categoryListStore } from "./_store";
 
-  console.log("categories", categories.length);
+  $: console.log("categories", $categoryListStore.length);
 </script>
