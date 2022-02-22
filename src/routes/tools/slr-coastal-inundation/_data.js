@@ -1,4 +1,3 @@
-import bboxPolygon from "@turf/bbox-polygon";
 import config from "~/helpers/api-config";
 
 const {
@@ -7,19 +6,16 @@ const {
   },
 } = config;
 
-export const getRasterMetaData = (scenario, source, timeFrame, geom) =>
+// queries the cal-adapt API for slr sources raster metadata
+// this metadata includes the tile URLs used to render map tiles
+export const getRasterMetaData = (scenario, source, timeFrame, bbox) =>
   fetch(
     `${apiEndpoint}/rstores/?slug=${source}&slug=${scenario}&slug=${timeFrame}&bbintersects=${encodeURIComponent(
-      geom
+      bbox
     )}`
   ).then((res) => res.json());
 
-export const toBBoxPolygon = (coords) => {
-  if (Array.isArray(coords) && coords.length) {
-    return bboxPolygon(coords);
-  }
-};
-
+// fetches geojson files from static/data that are used for displaying tile indexes & centroids
 export const getGeoJson = (ids) => {
   if (Array.isArray(ids) && ids.length) {
     return Promise.all(

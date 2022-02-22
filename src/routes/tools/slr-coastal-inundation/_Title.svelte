@@ -1,6 +1,5 @@
 <script>
-  import { Button, InlineNotification } from "carbon-components-svelte";
-  import { Location16 } from "carbon-icons-svelte";
+  import { InlineNotification } from "carbon-components-svelte";
   import { getCSSProp } from "~/helpers/utilities";
 
   export let floodScenario;

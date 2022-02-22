@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
 
@@ -36,6 +37,9 @@
     returnPeriodStore,
   } from "./_store";
 
+  export let learnMoreContent;
+  export let notificationText;
+
   const { location, boundary } = locationStore;
   const { climvar } = climvarStore;
   const { scenario } = scenarioStore;
@@ -62,13 +66,12 @@
   let printContainer;
   let printSkipElements;
 
+  let chartTitle = "";
+  let thresholdLabel = "";
+  let polygonAggregationMsg = "";
+
   $: chartDescription = $indicator.description;
-
-  $: chartTitle = $location.title;
-
   $: formatFn = format(`.${$indicator.decimals}f`);
-
-  $: thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
   $: indicatorLabel = $indicator.title;
   $: durationLabel = `${$durationStore}-day`;
   $: intervalsLabel = `${$returnPeriodStore} years`;
@@ -83,6 +86,22 @@
     data = $indicator.id === "frequency" ? $frequency : $duration;
     dataByDate = groupDataByYear(flattenData(data));
   }
+
+  function getNotificationText() {
+    if ($boundary.id === "locagrid") {
+      return "";
+    } else {
+      return notificationText.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+  }
+
+  afterUpdate(() => {
+    if ($location && $location.title) {
+      chartTitle = $location.title;
+      thresholdLabel = `${$thresholdStore} ${$climvar.units.imperial}`;
+      polygonAggregationMsg = getNotificationText();
+    }
+  });
 
   async function loadLearnMore({
     slugs = [],
@@ -156,8 +175,9 @@
       ["feature", $location.title],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
-      ["climate indicator", `${$climvar.label} ${$indicator.label}`],
-      ["threshold", `${$thresholdStore} ${$climvar.units.imperial}`],
+      ["climate indicator", `${indicatorLabel}`],
+      ["threshold", `${thresholdLabel}`],
+      ["duration", `${durationLabel}`],
     ];
     printContainer = document.querySelector("#explore-data");
     printSkipElements = ["settings"];
@@ -191,6 +211,7 @@
       thresholdLabel="{thresholdLabel}"
       intervalsLabel="{intervalsLabel}"
       loadLocation="{loadLocation}"
+      polygonAggregationMsg="{polygonAggregationMsg}"
     />
   </div>
 
@@ -229,6 +250,7 @@
 
   <div slot="settings" class="settings">
     <SettingsPanel
+      learnMoreContent="{learnMoreContent}"
       on:showLearnMore="{(e) => loadLearnMore(e.detail)}"
       on:showLoadLocation="{() => loadLocation()}"
     />

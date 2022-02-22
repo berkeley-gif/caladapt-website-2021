@@ -2,16 +2,13 @@
   import { onDestroy, getContext, afterUpdate } from "svelte";
   import equal from "fast-deep-equal";
   import { contextKey } from "~/helpers/mapbox";
-  import { MapLayerHandler } from "./utils";
+  import { MapLayerHandler } from "~/components/tools/Map";
   import { VISIBLE, NONE, LAYER_COLORS } from "../_constants";
 
   export let mapStyle;
   export let beforeId; // TODO: beforeId should be city labels for low zooms
   export let dataLayers = [];
   export let centroids;
-
-  let prevMapStyle = mapStyle;
-  let prevLayerProps = [];
 
   const { getMap } = getContext(contextKey);
   const map = getMap();
@@ -26,15 +23,17 @@
     visibility: checked ? VISIBLE : NONE,
   });
 
-  if (map && map.getStyle()) {
-    map.on("styledata", handleStyleDataChange);
-  }
-
-  $: layerHandler = new MapLayerHandler({
+  let prevMapStyle = mapStyle;
+  let prevLayerProps = [];
+  let layerHandler = new MapLayerHandler({
     map,
     beforeId,
     layerType: "circle",
   });
+
+  if (map && map.getStyle()) {
+    map.on("styledata", handleStyleDataChange);
+  }
 
   $: layerProps =
     Boolean(centroids) &&
@@ -78,6 +77,7 @@
 
   function handleStyleDataChange() {
     if (mapStyle !== prevMapStyle) {
+      layerHandler.beforeId = beforeId;
       reapplyCentroidsLayer();
       prevMapStyle = mapStyle;
     }

@@ -61,7 +61,6 @@
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
 
-  import { getFeature, reverseGeocode } from "~/helpers/geocode";
   import { logStores } from "~/helpers/utilities";
   import { logException } from "~/helpers/logging";
 
@@ -77,18 +76,12 @@
   import ExploreData from "./_ExploreData.svelte";
 
   import { DL_Cosmos, DL_Calflod5m, DL_Calflod50m } from "./_constants";
-  import { getRasterMetaData, toBBoxPolygon } from "./_data";
+  import { getRasterMetaData } from "./_data";
 
-  import {
-    locationStore,
-    isFetchingStore,
-    datasetStore,
-    unitsStore,
-  } from "../_common/stores";
+  import { isFetchingStore } from "../_common/stores";
   import {
     floodScenarioStore,
     timeFrameStore,
-    dataLayersStore,
     mapBBoxStore,
     rasterMetaDataStore,
     dataLayersAugmentedStore,
@@ -113,7 +106,6 @@
     }
   };
 
-  const { location, boundary } = locationStore;
   const { bbox } = mapBBoxStore;
   const { tfTileLabel } = timeFrameStore;
 
@@ -121,17 +113,13 @@
   $: resources = [...externalResources, ...relatedTools];
   $: update($bbox, $floodScenarioStore, $tfTileLabel);
 
+  // log changes to stores when in development
   if (process.env.NODE_ENV !== "production") {
     logStores(
       floodScenarioStore,
-      location,
-      boundary,
       timeFrameStore,
-      dataLayersStore,
       isFetchingStore,
-      datasetStore,
       mapBBoxStore,
-      rasterMetaDataStore,
       dataLayersAugmentedStore
     );
   }
@@ -139,19 +127,12 @@
   async function update(bbox, scenario, timeFrame) {
     if (!appReady || !bbox) return;
     const sources = [DL_Cosmos, DL_Calflod5m, DL_Calflod50m];
-    let bboxGeom;
-    try {
-      bboxGeom = JSON.stringify(toBBoxPolygon(bbox).geometry);
-    } catch (error) {
-      console.error(error);
-      logException(error);
-    }
     isFetchingStore.set(true);
     try {
       (
         await Promise.all(
           sources.map((source) =>
-            getRasterMetaData(scenario, source, timeFrame, bboxGeom)
+            getRasterMetaData(scenario, source, timeFrame, bbox)
           )
         )
       ).forEach(({ results }, index) => {
@@ -169,22 +150,10 @@
     }
   }
 
-  async function initApp({
-    lat,
-    lng,
-    boundaryId,
-    imperial,
-    floodScenario,
-    timeFrame,
-  }) {
+  async function initApp({ floodScenario, timeFrame, bbox }) {
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
-    unitsStore.set({ imperial });
-    const addresses = await reverseGeocode(`${lng}, ${lat}`);
-    const nearest = addresses.features[0];
-    const loc = await getFeature(nearest, boundaryId);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundaryId);
+    mapBBoxStore.set(bbox);
   }
 
   onMount(async () => {
@@ -235,10 +204,7 @@
 
 <div class="bx--grid">
   <div id="about" use:inview="{{}}" on:enter="{handleEntry}">
-    <About
-      datasets="{datasets}"
-      on:datasetLoaded="{(e) => datasetStore.set(e.detail)}"
-    >
+    <About datasets="{datasets}">
       <div slot="description">
         {@html aboutContent}
       </div>

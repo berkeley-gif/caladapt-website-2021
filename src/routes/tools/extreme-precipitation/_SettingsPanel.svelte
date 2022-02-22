@@ -8,12 +8,9 @@
     SELECT_LOCATION_DESCRIPTION,
   } from "../_common/constants";
   import {
-    INDICATOR_DESCRIPTION,
     THRESHOLD_TYPES,
-    THRESHOLD_TYPE_DESCRIPTION,
     RETURN_PERIODS,
-    RETURN_PERIOD_DESCRIPTION,
-    DURATION_DESCRIPTION,
+    POLYGON_AGGREGATE_FUNCTIONS,
   } from "./_constants";
 
   import {
@@ -34,11 +31,23 @@
     thresholdStore,
     thresholdTypeStore,
     returnPeriodStore,
+    aggregateFnStore,
   } from "./_store";
 
+  export let learnMoreContent;
+
+  const {
+    durationInfo,
+    indicatorInfo,
+    periodInfo,
+    thresholdTypeInfo,
+    aggregationInfo,
+  } = learnMoreContent;
   const dispatch = createEventDispatcher();
-  const { location } = locationStore;
+  const { location, boundary } = locationStore;
   const { indicator } = indicatorStore;
+
+  $: isPolygonBoundary = $boundary.id !== "locagrid";
 
   function showLearnMore({ slugs = [], content = "", header = "Glossary" }) {
     dispatch("showLearnMore", { slugs, content, header });
@@ -75,6 +84,10 @@
   function changeReturnPeriod(e) {
     returnPeriodStore.set(e.detail);
   }
+
+  function changeAggregateFn(e) {
+    aggregateFnStore.set(e.detail);
+  }
 </script>
 
 <!-- Chart Settings -->
@@ -106,7 +119,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: INDICATOR_DESCRIPTION,
+        content: indicatorInfo,
       })}"
   />
 </div>
@@ -122,7 +135,7 @@
     <LearnMoreButton
       on:click="{() =>
         showLearnMore({
-          content: RETURN_PERIOD_DESCRIPTION,
+          content: periodInfo,
         })}"
     />
   </div>
@@ -150,7 +163,7 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: DURATION_DESCRIPTION,
+        content: durationInfo,
       })}"
   />
 </div>
@@ -165,7 +178,23 @@
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
-        content: THRESHOLD_TYPE_DESCRIPTION,
+        content: thresholdTypeInfo,
+      })}"
+  />
+</div>
+
+<div class="block">
+  <RadioBtnGroup
+    selected="{$aggregateFnStore}"
+    items="{POLYGON_AGGREGATE_FUNCTIONS}"
+    title="Select Spatial Aggregation"
+    disabled="{!isPolygonBoundary}"
+    on:change="{changeAggregateFn}"
+  />
+  <LearnMoreButton
+    on:click="{() =>
+      showLearnMore({
+        content: aggregationInfo,
       })}"
   />
 </div>

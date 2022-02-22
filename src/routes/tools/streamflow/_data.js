@@ -296,7 +296,7 @@ export const calculateRunoffMidPoint = (data) => {
 export function formatMonthlyDataForExport(_arr) {
   return _arr.map((item) => {
     const row = {};
-    row.month = monthFormat(item.date.getUTCMonth());
+    row.month = monthFormat(item.date);
     item.values.forEach((d) => {
       row[d.label] = d.value;
     });

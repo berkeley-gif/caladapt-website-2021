@@ -112,7 +112,7 @@
     <NavigationControl />
     <Search on:change="{handleSearchChange}" />
 
-    {#if zoom >= 7}
+    {#if zoom >= 8}
       <RasterLayers
         mapStyle="{mapStyle}"
         beforeId="{beforeId}"
@@ -120,7 +120,7 @@
       />
     {/if}
 
-    {#if zoom < 7}
+    {#if zoom < 8}
       <TileIndexes
         mapStyle="{mapStyle}"
         beforeId="{beforeId}"
