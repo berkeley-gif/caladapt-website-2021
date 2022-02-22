@@ -1,6 +1,5 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { extent } from "d3-array";
   import { Button } from "carbon-components-svelte";
   import { Information16, Calendar16 } from "carbon-icons-svelte";
 
