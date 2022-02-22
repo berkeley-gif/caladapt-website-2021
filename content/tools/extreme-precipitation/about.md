@@ -13,11 +13,11 @@
   days over which precipitation accumulates), or by selecting a
   different “threshold“ value that corresponds to either the 90th, 95th
   or 99th percentiles. The tool displays the extreme events that
-  exceed the threshold in different ways. The Frequency chart shows the
+  exceed the threshold in different ways. The Intensity chart shows the
   estimated intensity of precipitation events (Return Level) for a
   selected period (Return Period) and how it changes over the historical
   period (1961–1990), mid-century (2035–2064) and end-century
-  (2071–2099). The other charts display the total number of events, the
+  (2071–2099). The other charts display the frequency of these events, the
   timing of these events and the longest stretch of consecutive extreme
   events.
 </p>
@@ -99,7 +99,7 @@
 
 <p>
   <strong>Update (Feb 20, 2022)</strong>: Based on feedback from users, we have updated the tool to use the 
-  average of precipitation values from all intersecting grid cells for a polygon boundary before calculating frequency estimates. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high frequency estimates. Values using this methodology more closely align with precipitation frequency estimates provided by NOAA.
+  average of precipitation values from all intersecting grid cells for a polygon boundary before calculating intensity estimates. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high intensity estimates. Values using the average method more closely align with precipitation intensity estimates provided by NOAA.
 </p>
 
 <p class="h3">References</p>

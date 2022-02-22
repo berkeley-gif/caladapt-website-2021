@@ -34,9 +34,13 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent, learnMoreContent, notificationText } = await (
-      await this.fetch("tools/extreme-precipitation.json")
-    ).json();
+    const {
+      aboutContent,
+      learnMoreContent,
+      notificationText,
+      warningLowSampleSize,
+      warningMissingCI,
+    } = await (await this.fetch("tools/extreme-precipitation.json")).json();
 
     return {
       tool,
@@ -46,6 +50,8 @@
       aboutContent,
       learnMoreContent,
       notificationText,
+      warningLowSampleSize,
+      warningMissingCI,
     };
   }
 </script>
@@ -111,6 +117,8 @@
   export let aboutContent;
   export let learnMoreContent;
   export let notificationText;
+  export let warningLowSampleSize;
+  export let warningMissingCI;
 
   // Derived stores
   const { page } = sapperStores();
@@ -285,6 +293,7 @@
       location: loc,
       boundary: { id: boundary },
       imperial: true,
+      stat: $aggregateFnStore,
     });
     const intervals = $returnPeriodStore;
     const pct = threshType === DEFAULT_THRESHOLD_TYPE ? null : threshType;
@@ -337,6 +346,8 @@
     <ExploreData
       learnMoreContent="{learnMoreContent}"
       notificationText="{notificationText}"
+      warningLowSampleSize="{warningLowSampleSize}"
+      warningMissingCI="{warningMissingCI}"
     />
   {:else}
     <Loading />

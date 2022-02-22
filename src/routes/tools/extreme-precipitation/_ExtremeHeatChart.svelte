@@ -15,6 +15,7 @@
   export let isFetching;
   export let chartDescription;
   export let height;
+  export let niceMax;
 
   const dispatch = createEventDispatcher();
 
@@ -40,7 +41,7 @@
     key: 'value',
     label: `${label}`,
     domainMin: 0,
-    niceMax: 10,
+    niceMax: niceMax,
     tickFormat: formatFn,
     units: `${units}`,
   }}"
