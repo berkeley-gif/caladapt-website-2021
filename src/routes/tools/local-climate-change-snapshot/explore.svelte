@@ -33,7 +33,12 @@
   import { logException } from "~/helpers/logging";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import { getQueryParams, getProjections, getObserved } from "./_data";
+  import {
+    getQueryParams,
+    getProjections,
+    getObserved,
+    getSnapshot,
+  } from "./_data";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -44,12 +49,13 @@
     unitsStore,
     locationStore,
     isFetchingStore,
-    dataStore,
   } from "../_common/stores";
   import {
     categoryListStore,
     indicatorListStore,
     indicatorStore,
+    snapshotStore,
+    dataStore,
   } from "./_store";
   import {
     DEFAULT_INITIAL_CONFIG,
@@ -95,8 +101,11 @@
       isFetchingStore.set(true);
       const observed = await getObserved(config, params, method);
       const projections = await getProjections(config, params, method);
-      dataStore.set([...observed, ...projections]);
-      console.log($dataStore);
+      dataStore.setObserved(observed);
+      dataStore.setProjections(projections);
+      const projections30y = await getSnapshot(config, params, method);
+      dataStore.setProjections30y(projections30y);
+      console.log("dataStore", $dataStore);
     } catch (error) {
       console.error("updateData", error);
       logException(error);
