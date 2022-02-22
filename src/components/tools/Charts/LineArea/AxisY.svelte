@@ -1,5 +1,6 @@
 <script>
-  import { getContext } from "svelte";
+  import { max } from "d3-array";
+  import { getContext, onMount, afterUpdate } from "svelte";
 
   const { width, padding, yScale } = getContext("LayerCake");
 
@@ -9,6 +10,12 @@
   export let label = "Axis Label";
 
   let tickVals;
+  let ref;
+
+  function getPadding(value) {
+    // add an extra padding of 10 pixels;
+    return value + 10;
+  }
 
   $: if (ticks) {
     tickVals = Array.isArray(ticks) ? ticks : $yScale.ticks(ticks);
@@ -16,6 +23,21 @@
     tickVals = $yScale.ticks().map(formatTick);
   }
   $: d = `M 0 0 L ${$width + $padding.left} 0`;
+
+  afterUpdate(() => {
+    // Use getComputedTextLength to get the computed length for the text within all the
+    // tick value labels. Use the maximum length value to update the padding for the axis label
+    // This prevent the axis label from overlapping the topmost y axis tick value.
+    try {
+      const tickLengths = Array.from(ref.querySelectorAll(".tick-label")).map(
+        (el) => el.getComputedTextLength()
+      );
+      const axisLabel = ref.querySelector(".label");
+      axisLabel.setAttribute("x", getPadding(max(tickLengths)));
+    } catch (error) {
+      console.warn(error);
+    }
+  });
 </script>
 
 <style>
@@ -24,7 +46,11 @@
   }
 </style>
 
-<g class="axis y-axis" transform="translate(-{$padding.left}, 0)">
+<g
+  bind:this="{ref}"
+  class="axis y-axis"
+  transform="translate(-{$padding.left}, 0)"
+>
   {#each tickVals as tick, i}
     <g class="tick tick-{tick}" transform="translate(0, {$yScale(tick)})">
       {#if gridlines}
@@ -37,7 +63,7 @@
       {#if i === +tickVals.length - 1}
         <text
           y="-4"
-          x="{$padding.left + 10}"
+          x="{getPadding($padding.left)}"
           class="label"
           style="font-size:14px;fill:#666">{label}</text
         >
