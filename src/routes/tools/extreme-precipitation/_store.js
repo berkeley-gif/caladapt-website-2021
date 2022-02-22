@@ -1,4 +1,5 @@
 import { writable, derived } from "svelte/store";
+import { merge } from "d3-array";
 import climvars from "~/helpers/climate-variables";
 import { makeCustomWritableStore } from "../_common/stores";
 import {
@@ -9,6 +10,8 @@ import {
   DEFAULT_RETURN_PERIOD,
   DEFAULT_THRESHOLD_TYPE,
   DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+  WARNING_LOW_SAMPLE_SIZE,
+  WARNING_MISSING_CI,
 } from "./_constants";
 
 import {
@@ -102,3 +105,21 @@ export const dataStore = makeCustomWritableStore(DATA, {
 });
 
 export const aggregateFnStore = writable(DEFAULT_POLYGON_AGGREGATE_FUNCTION);
+
+/**
+ * The Estimated Intensity data consists of return levels and other metrics generated
+ * by the API using Peak Over Threshold statistical method for observed/models. These metrics include:
+ * - n (number of samples),
+ * - ci_lower (lower end of the confidence interval)
+ * - ci_upper (upper end of the confidence interval).
+ * If any of the observed/models have n < 100 or if any of the confidence intervals are
+ * undefined, display a warning message indicating diminished certainty in the estimates.
+ **/
+export const uncertaintyStore = derived(dataStore, ($dataStore) => {
+  if (!dataStore || !$dataStore.intensity) return;
+  const lowSampleSize = $dataStore.intensity.some(({ n }) => n < 100);
+  const nullCIValues = $dataStore.intensity.some(
+    ({ ci_lower, ci_upper }) => !ci_lower || !ci_upper
+  );
+  return { lowSampleSize, nullCIValues };
+});

@@ -10,6 +10,7 @@
   export let loadLocation;
   export let intervalsLabel;
   export let polygonAggregationMsg = "";
+  export let uncertaintyMsg = "";
 </script>
 
 <style>
@@ -51,10 +52,20 @@
   <span class="annotate">{thresholdLabel}</span>.
 </p>
 
+{#if uncertaintyMsg}
+  <InlineNotification
+    lowContrast
+    hideCloseButton
+    title="Note:"
+    subtitle="{uncertaintyMsg}"
+    kind="warning"
+  />
+{/if}
+
 {#if polygonAggregationMsg}
   <InlineNotification
     lowContrast
-    title="Update"
+    title="Update:"
     subtitle="{polygonAggregationMsg}"
     kind="info"
   />
