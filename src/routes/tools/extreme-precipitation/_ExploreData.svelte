@@ -107,7 +107,7 @@
     if (!$uncertaintyStore || $indicator.id !== "intensity") return "";
     const { lowSampleSize, nullCIValues } = $uncertaintyStore;
     if (lowSampleSize && nullCIValues) {
-      return removeTags(`${warningLowSampleSize}. ${warningMissingCI}`);
+      return removeTags(`${warningLowSampleSize} ${warningMissingCI}`);
     } else if (lowSampleSize) {
       return removeTags(warningLowSampleSize);
     } else if (nullCIValues) {
