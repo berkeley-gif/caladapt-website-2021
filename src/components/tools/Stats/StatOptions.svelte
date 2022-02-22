@@ -28,19 +28,16 @@
   $: invalidCustomEnd = !isCustomEndValid(customEndYear);
   $: preventModalSubmit = invalidCustomStart || invalidCustomEnd;
 
-  $: {
-    console.log(customStartYear);
-    console.log(customEndYear);
-    console.log(invalidCustomStart);
-    console.log(invalidCustomEnd);
-  }
-
   function isCustomStartValid(value) {
     return isValidNumber(value) && value >= minYear && value < maxYear;
   }
 
   function isCustomEndValid(value) {
-    return isValidNumber(value) && value > customStartYear && value < maxYear;
+    return (
+      isValidNumber(value) &&
+      value > Math.max(customStartYear, minYear) &&
+      value < maxYear
+    );
   }
 
   function isValidNumber(value) {
@@ -73,7 +70,7 @@
   }
 
   afterUpdate(() => {
-    // resets the custom year values in case they were invalid and selectedPeriodId changed
+    // reset the custom year values if they were invalid and selectedPeriodId changed
     if (selectedPeriodId !== "custom" && preventModalSubmit) {
       customStartYear = period.start;
       customEndYear = period.end;
@@ -136,9 +133,10 @@
         max="{maxYear}"
         label="Custom End Year"
         invalid="{invalidCustomEnd}"
-        invalidText="{`Value must be greater than ${
-          customStartYear >= minYear ? customStartYear : minYear
-        } and less than ${maxYear}`}"
+        invalidText="{`Value must be greater than ${Math.max(
+          customStartYear,
+          minYear
+        )} and less than ${maxYear}`}"
         helperText="{`Enter a year greater than the start year.`}"
         hideSteppers="{true}"
       />
