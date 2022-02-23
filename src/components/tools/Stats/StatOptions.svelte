@@ -7,7 +7,7 @@
     NumberInput,
   } from "carbon-components-svelte";
   import {
-    OBSERVED_FILTER_YEAR,
+    MODELED_FUTURE_PROJECTIONS_YEAR,
     MODELED_MAX_YEAR,
   } from "~/helpers/app-constants";
 
@@ -15,7 +15,7 @@
   export let periodList;
   export let group;
   export let period;
-  export let dateRange = [OBSERVED_FILTER_YEAR, MODELED_MAX_YEAR];
+  export let dateRange = [MODELED_FUTURE_PROJECTIONS_YEAR, MODELED_MAX_YEAR];
   export let open = false;
 
   const dispatch = createEventDispatcher();
@@ -25,7 +25,7 @@
   let selectedGroupId = group && group.id;
   let selectedPeriodId = period && period.id;
 
-  let customStartYear = period ? period.start : OBSERVED_FILTER_YEAR;
+  let customStartYear = period ? period.start : MODELED_FUTURE_PROJECTIONS_YEAR;
   let customEndYear = period ? period.end : MODELED_MAX_YEAR - 1;
 
   $: invalidCustomStart = !isCustomStartValid(customStartYear);
