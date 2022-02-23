@@ -58,6 +58,7 @@
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
     INDICATORS_WITH_VALUES_AS_RATES,
     DEFAULT_SNAPSHOT_SLUG_EXP,
+    DEFAULT_SWE_MONTH,
   } from "./_constants";
 
   export let tool;
@@ -91,11 +92,13 @@
         ),
       };
       // Get params object for querying the Cal-Adapt API
+      const month = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
         stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+        ...(month && { month }),
       });
 
       isFetchingStore.set(true);
@@ -110,7 +113,6 @@
         DEFAULT_SNAPSHOT_SLUG_EXP
       );
       dataStore.setProjections30y(projections30y);
-      console.log("dataStore", $dataStore);
     } catch (error) {
       console.error("updateData", error);
       logException(error);

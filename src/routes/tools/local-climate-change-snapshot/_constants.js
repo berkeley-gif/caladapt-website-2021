@@ -43,6 +43,8 @@ export const DEFAULT_INITIAL_CONFIG = {
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
 
+export const DEFAULT_SWE_MONTH = 4;
+
 export const COLOR_livneh = chroma(110, 110, 110);
 export const COLOR_rcp45 = chroma(59, 153, 167);
 export const COLOR_rcp85 = chroma(131, 87, 170);
