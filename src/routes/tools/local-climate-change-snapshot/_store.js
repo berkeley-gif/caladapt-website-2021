@@ -1,6 +1,6 @@
 import { writable, derived } from "svelte/store";
 import { makeCustomWritableStore } from "../_common/stores";
-import { calcSeries30yAvgByPeriod } from "./_data";
+import { calc30yAvgByPeriod, map30yExtentByPeriod } from "./_data";
 
 export const categoryListStore = writable(null);
 export const indicatorListStore = writable(null);
@@ -53,23 +53,52 @@ export const dataStore = makeCustomWritableStore(DATA, {
 });
 
 /**
- * The Estimated Intensity data consists of return levels and other metrics generated
- * by the API using Peak Over Threshold statistical method for observed/models. These metrics include:
- * - n (number of samples),
- * - ci_lower (lower end of the confidence interval)
- * - ci_upper (upper end of the confidence interval).
- * If any of the observed/models have n < 100 or if any of the confidence intervals are
- * undefined, display a warning message indicating diminished certainty in the estimates.
+ * Calculate 30 year stats for 3 scenarios and 3 periods. There are 5 possible combinations
+ * that have valid values:
+ * 1. Modeled Historical Scenario & Baseline Period
+ * 2. RCP 4.5 Scenario & Mid-Century Period
+ * 3. RCP 4.5 Scenario & End-Century Period
+ * 4. RCP 8.5 Scenario & Mid-Century Period
+ * 5. RCP 8.5 Scenario & End-Century Period
  **/
 export const snapshotProjectionsStore = derived(dataStore, ($dataStore) => {
-  if (!$dataStore || !$dataStore.projections) return;
+  if (!$dataStore || !$dataStore.projections || !$dataStore.projections30y)
+    return;
+  // Get the annual ensemble average for each scenario
   const ensembleAverages = $dataStore.projections.filter(
     ({ id }) => !id.includes("range")
   );
-  return calcSeries30yAvgByPeriod(ensembleAverages);
+  // Calculate 30 year average for the 5 valid scenario & period combinations
+  const data30yAvg = calc30yAvgByPeriod(ensembleAverages);
+  // Map 30 year extent for each scenario to the periods
+  const data30yExtent = map30yExtentByPeriod($dataStore.projections30y);
+
+  // Find the baseline 30 year average (combination #1)
+  const baseline = data30yAvg.find(
+    ({ seriesId, periodId }) =>
+      seriesId === "historical" && periodId === "baseline"
+  );
+
+  // Combine the 30y avg & 30y extent for the valid combinations
+  // Calculate change from baseline by subtracting 30 year average for each combination
+  // The change from baseline value for combination #1 will obviously be 0. This is represented by
+  // a "-" in the Snapshot table.
+  return data30yAvg.map((d) => {
+    const { seriesId, periodId, avg } = d;
+    const change = baseline ? avg - baseline.avg : null;
+    const match = data30yExtent.find(
+      (c) => c.seriesId.includes(seriesId) && c.periodId === periodId
+    );
+    return { ...match, ...d, change };
+  });
 });
 
+/**
+ * Calculate 30 year stats for observed data. There is only 1 possible combination
+ * that has valid values:
+ * 1. Observed & Baseline Period
+ **/
 export const snapshotObservedStore = derived(dataStore, ($dataStore) => {
   if (!$dataStore || !$dataStore.observed) return;
-  return calcSeries30yAvgByPeriod($dataStore.observed);
+  return calc30yAvgByPeriod($dataStore.observed);
 });

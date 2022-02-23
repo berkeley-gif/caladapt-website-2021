@@ -218,12 +218,9 @@ export function getQueryParams({ location, boundary, imperial = true, stat }) {
  * Calculate 30 year average for each series & period combination
  * @param {array} series
  * @param {array} periods
- * @return {array} series & period combination that has a valid 30 year avg value
+ * @return {array} series & period combinations that have a valid 30 year avg value
  */
-export function calcSeries30yAvgByPeriod(
-  series,
-  periods = DEFAULT_STAT_PERIODS
-) {
+export function calc30yAvgByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
   const data = series.map((d) => {
     const { values, id: seriesId, label: seriesLabel } = d;
     const dataByPeriods = periods.map((period) => {
@@ -232,13 +229,41 @@ export function calcSeries30yAvgByPeriod(
         ({ date }) =>
           date.getUTCFullYear() >= start && date.getUTCFullYear() <= end
       );
-      let avg30y = null;
+      let avg = null;
       if (filteredValues.length) {
-        avg30y = mean(filteredValues, (d) => d.value);
+        avg = mean(filteredValues, (d) => d.value);
       }
-      return { periodId, periodLabel, seriesId, seriesLabel, avg30y };
+      return { periodId, periodLabel, seriesId, seriesLabel, avg };
     });
     return [...dataByPeriods];
   });
-  return merge(data).filter(({ avg30y }) => avg30y);
+  return merge(data).filter(({ avg }) => avg);
+}
+
+/**
+ * Map 30 year extent for each series & period combination
+ * @param {array} series
+ * @param {array} periods
+ * @return {array} series & period combination that have a valid 30 year extent
+ */
+export function map30yExtentByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
+  const data = series.map((d) => {
+    const { values, id: seriesId, label: seriesLabel } = d;
+    const dataByPeriods = periods.map((period) => {
+      const { id: periodId, label: periodLabel, start, end } = period;
+      const filteredValues = values.filter(
+        ({ date }) =>
+          date.getUTCFullYear() >= start && date.getUTCFullYear() <= end
+      );
+      let min = null;
+      let max = null;
+      if (filteredValues.length && filteredValues.length === 1) {
+        min = filteredValues[0].min;
+        max = filteredValues[0].max;
+      }
+      return { periodId, periodLabel, seriesId, seriesLabel, min, max };
+    });
+    return [...dataByPeriods];
+  });
+  return merge(data).filter(({ min, max }) => min && max);
 }
