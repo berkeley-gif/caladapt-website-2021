@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   import { NumberInput } from "carbon-components-svelte";
 
   import {
@@ -81,8 +81,14 @@
     thresholdTypeStore.set(e.detail.id);
   }
 
+  /**
+   * The Return Period Select component is displayed only for the Intensity Indicator.
+   * The component is re-mounted after users browser other indicators and come back to Intensity.
+   * Parsing the e.detail value as integer ensures that the Return Period last selected by the user
+   * is displayed correctly on re-mount
+   **/
   function changeReturnPeriod(e) {
-    returnPeriodStore.set(e.detail);
+    returnPeriodStore.set(parseInt(e.detail));
   }
 
   function changeAggregateFn(e) {
