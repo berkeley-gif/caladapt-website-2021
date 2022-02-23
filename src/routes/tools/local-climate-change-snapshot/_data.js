@@ -1,4 +1,4 @@
-import { group, merge } from "d3-array";
+import { group, merge, mean } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -6,7 +6,10 @@ import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import { buildEnvelope, convertAnnualRateToSum } from "../_common/helpers";
 
 // Constants
-import { OBSERVED_FILTER_YEAR } from "../_common/constants";
+import {
+  OBSERVED_FILTER_YEAR,
+  DEFAULT_STAT_PERIODS,
+} from "../_common/constants";
 import {
   DEFAULT_PROJECTIONS_SLUG_EXP,
   DEFAULT_OBSERVED_SLUG_EXP,
@@ -209,4 +212,35 @@ export function getQueryParams({ location, boundary, imperial = true, stat }) {
       params.ref = `/api/${boundary.id}/${location.id}/`;
   }
   return { params, method };
+}
+
+/**
+ * Creates the param object used to fetch data from API
+ * @param {object} location
+ * @param {object} boundary - obj representing a mapbox layer
+ * @param {boolean} imperial - represents units
+ * @return {object} params
+ * @return {string} method
+ */
+export function calcSeries30yAvgByPeriod(
+  series,
+  periods = DEFAULT_STAT_PERIODS
+) {
+  const data = series.map((d) => {
+    const { values, id: seriesId, label: seriesLabel } = d;
+    const dataByPeriods = periods.map((period) => {
+      const { id: periodId, label: periodLabel, start, end } = period;
+      const filteredValues = values.filter(
+        ({ date }) =>
+          date.getUTCFullYear() >= start && date.getUTCFullYear() <= end
+      );
+      let avg30y = null;
+      if (filteredValues.length) {
+        avg30y = mean(filteredValues, (d) => d.value);
+      }
+      return { periodId, periodLabel, seriesId, seriesLabel, avg30y };
+    });
+    return [...dataByPeriods];
+  });
+  return merge(data).filter(({ avg30y }) => avg30y);
 }

@@ -14,7 +14,7 @@ export const DEFAULT_PROJECTIONS_SLUG_EXP = "^indicator_(year|month).*ens32";
 // This search exp is used to fetch observed data for an indicator
 // Observed data consists of just 1 value per year
 export const DEFAULT_OBSERVED_SLUG_EXP = "^indicator_(year|month).*livneh";
-export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y.*ens32";
+export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y_.*ens32";
 // This search exp is used to separate timeseries with ens32avg from ens32min/ens32max
 // The envelope/range is created from the ensemble min & max & plotted as area,
 // while the ensemble avg is plotted as lines

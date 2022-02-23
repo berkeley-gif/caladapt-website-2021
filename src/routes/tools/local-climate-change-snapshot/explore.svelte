@@ -49,8 +49,9 @@
     categoryListStore,
     indicatorListStore,
     indicatorStore,
-    snapshotStore,
     dataStore,
+    snapshotProjectionsStore,
+    snapshotObservedStore,
   } from "./_store";
   import {
     DEFAULT_INITIAL_CONFIG,
@@ -76,6 +77,9 @@
     console.table($indicatorStore);
     console.groupEnd();
   }
+
+  $: console.log("snapshot projections", $snapshotProjectionsStore);
+  $: console.log("snapshot baseline", $snapshotObservedStore);
 
   async function update() {
     if (!appReady) return;
