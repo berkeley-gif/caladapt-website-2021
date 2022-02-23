@@ -25,15 +25,17 @@
   $: d = `M 0 0 L ${$width + $padding.left} 0`;
 
   afterUpdate(() => {
-    // Use getComputedTextLength to get the computed length for the text within all the
-    // tick value labels. Use the maximum length value to update the padding for the axis label
+    // Use getComputedTextLength to get the computed length for the text within the topmost tick label.
+    // Use the maximum length value to update the padding for the axis label
     // This prevent the axis label from overlapping the topmost y axis tick value.
     try {
-      const tickLengths = Array.from(ref.querySelectorAll(".tick-label")).map(
-        (el) => el.getComputedTextLength()
-      );
+      const tickLabels = Array.from(ref.querySelectorAll(".tick-label"));
+      const lastLabel = tickLabels[tickLabels.length - 1];
       const axisLabel = ref.querySelector(".label");
-      axisLabel.setAttribute("x", getPadding(max(tickLengths)));
+      axisLabel.setAttribute(
+        "x",
+        getPadding(lastLabel.getComputedTextLength())
+      );
     } catch (error) {
       console.warn(error);
     }
