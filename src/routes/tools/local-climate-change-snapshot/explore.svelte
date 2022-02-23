@@ -68,6 +68,7 @@
   // Derived stores
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
+  const { chartDataStore } = dataStore;
 
   let appReady = false;
   let debug = process.env.NODE_ENV !== "production";
@@ -79,8 +80,15 @@
     console.groupEnd();
   }
 
-  $: console.log("snapshot projections", $snapshotProjectionsStore);
-  $: console.log("snapshot baseline", $snapshotObservedStore);
+  $: if (
+    $chartDataStore &&
+    $snapshotObservedStore &&
+    $snapshotProjectionsStore
+  ) {
+    console.log("chart data", $chartDataStore);
+    console.log("snapshot table baseline", $snapshotObservedStore);
+    console.log("snapshot table projections", $snapshotProjectionsStore);
+  }
 
   async function update() {
     if (!appReady) return;

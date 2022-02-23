@@ -19,21 +19,19 @@ const DATA = { observed: null, projections: null, projections30y: null };
  * 		1. Modeled Historical Mid-Century & End-Century
  * 		2. RCP 4.5 Mid-Century & End-Century
  * 		3. RCP 8.5 Mid-Century & End-Century
+ *
+ * The data in observed & projections props are used for the Chart.
+ * The data in projections30y is used in creating the snapshotProjectionsStore
  **/
 export const dataStore = makeCustomWritableStore(DATA, {
   name: "dataStore",
   getters: [
     {
-      name: "observed",
-      getter: ($s) => $s.observed,
-    },
-    {
-      name: "projections",
-      getter: ($s) => $s.projections,
-    },
-    {
-      name: "projections30y",
-      getter: ($s) => $s.projections30y,
+      name: "chartDataStore",
+      getter: ($s) => {
+        if (!$s.observed || !$s.projections) return null;
+        return [...$s.observed, ...$s.projections];
+      },
     },
   ],
   updaters: [
