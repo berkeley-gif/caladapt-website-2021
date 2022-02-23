@@ -110,16 +110,16 @@
         ...(months && { months }),
       });
       isFetchingStore.set(true);
-      const observed = await getObserved(config, params, method);
-      const projections = await getProjections(config, params, method);
+      const observed = await getObserved({ config, params, method });
+      const projections = await getProjections({ config, params, method });
       dataStore.setObserved(observed);
       dataStore.setProjections(projections);
-      const projections30y = await getProjections(
+      const projections30y = await getProjections({
         config,
         params,
         method,
-        DEFAULT_SNAPSHOT_SLUG_EXP
-      );
+        searhcStr: DEFAULT_SNAPSHOT_SLUG_EXP,
+      });
       dataStore.setProjections30y(projections30y);
     } catch (error) {
       console.error("updateData", error);

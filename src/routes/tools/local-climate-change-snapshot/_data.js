@@ -132,22 +132,22 @@ const createRanges = (_data) => {
  * Get observed data for chart
  * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} searchStr - optional, regex string for searching the API
  * @param {string} method - optional, use POST for uploaded boundaries
+ * @param {string} searchStr - optional, regex string for searching the API
  * @return {array}
  */
-export async function getObserved(
+export async function getObserved({
   config,
   params,
+  method = "GET",
   searchStr = DEFAULT_OBSERVED_SLUG_EXP,
-  method = "GET"
-) {
+}) {
   try {
     const { indicatorId, isAnnualRate } = config;
     const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) =>
-      fetchEvents({ url, params, isAnnualRate })
+      fetchEvents({ url, params, method, isAnnualRate })
     );
     const data = await Promise.all(promises);
     return data.map(({ slug, values }) => {
@@ -164,22 +164,22 @@ export async function getObserved(
  * Get projected data for chart
  * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} searchStr - optional, regex string for searching the API
  * @param {string} method - optional, use POST for uploaded boundaries
+ * @param {string} searchStr - optional, regex string for searching the API
  * @return {array}
  */
-export async function getProjections(
+export async function getProjections({
   config,
   params,
+  method = "GET",
   searchStr = DEFAULT_PROJECTIONS_SLUG_EXP,
-  method = "GET"
-) {
+}) {
   try {
     const { indicatorId, isAnnualRate } = config;
     const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) =>
-      fetchEvents({ url, params, isAnnualRate })
+      fetchEvents({ url, params, method, isAnnualRate })
     );
     const data = await Promise.all(promises);
     const ranges = createRanges(data);
