@@ -193,6 +193,8 @@ export async function getProjections(
  * @param {object} location
  * @param {object} boundary - obj representing a mapbox layer
  * @param {boolean} imperial - represents units
+ * @param {string} stat - spatial aggregation function
+ * @param {number} months - used only for April SWE
  * @return {object} params
  * @return {string} method
  */
@@ -203,7 +205,6 @@ export function getQueryParams({
   stat,
   months,
 }) {
-  // months param is only used for April SWE
   const params = { imperial, stat, ...(months && { months }) };
   let method = "GET";
   switch (boundary.id) {
@@ -225,7 +226,7 @@ export function getQueryParams({
  * Calculate 30 year average for each scenario & period combination
  * @param {array} scenarios
  * @param {array} periods
- * @return {array} series & period combinations that have a valid 30 year avg value
+ * @return {array} scenario & period combinations that have a valid 30 year avg value
  */
 export function calc30yAvgByPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
   const data = scenarios.map((d) => {
@@ -249,9 +250,9 @@ export function calc30yAvgByPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
 
 /**
  * Map 30 year extent for each scenario & period combination
- * @param {array} series
+ * @param {array} scenarios
  * @param {array} periods
- * @return {array} series & period combination that have a valid 30 year extent
+ * @return {array} scenario & period combination that have a valid 30 year extent
  */
 export function map30yExtentByPeriod(
   scenarios,
