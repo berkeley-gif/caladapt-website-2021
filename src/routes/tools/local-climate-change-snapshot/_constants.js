@@ -35,6 +35,9 @@ export const INDICATORS_WITH_VALUES_AS_RATES = ["pr"];
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
   indicator: DEFAULT_CLIMATE_INDICATOR,
+  // TODO: remove boundary default prop
+  // using counties boundary makes it easier to compare data with tool on v2
+  boundary: "counties",
 };
 
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
