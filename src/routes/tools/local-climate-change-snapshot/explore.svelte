@@ -44,17 +44,21 @@
     unitsStore,
     locationStore,
     isFetchingStore,
-    dataStore,
   } from "../_common/stores";
   import {
     categoryListStore,
     indicatorListStore,
     indicatorStore,
+    dataStore,
+    snapshotProjectionsStore,
+    snapshotObservedStore,
   } from "./_store";
   import {
     DEFAULT_INITIAL_CONFIG,
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
     INDICATORS_WITH_VALUES_AS_RATES,
+    DEFAULT_SNAPSHOT_SLUG_EXP,
+    DEFAULT_SWE_MONTH,
   } from "./_constants";
 
   export let tool;
@@ -64,6 +68,7 @@
   // Derived stores
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
+  const { chartDataStore } = dataStore;
 
   let appReady = false;
   let debug = process.env.NODE_ENV !== "production";
@@ -73,6 +78,16 @@
     console.table($locationStore);
     console.table($indicatorStore);
     console.groupEnd();
+  }
+
+  $: if (
+    $chartDataStore &&
+    $snapshotObservedStore &&
+    $snapshotProjectionsStore
+  ) {
+    console.log("chart data", $chartDataStore);
+    console.log("snapshot table baseline", $snapshotObservedStore);
+    console.log("snapshot table projections", $snapshotProjectionsStore);
   }
 
   async function update() {
@@ -85,18 +100,27 @@
         ),
       };
       // Get params object for querying the Cal-Adapt API
+      // extra months param required for April SWE indicator
+      const months = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
         stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+        ...(months && { months }),
       });
-
       isFetchingStore.set(true);
-      const observed = await getObserved(config, params, method);
-      const projections = await getProjections(config, params, method);
-      dataStore.set([...observed, ...projections]);
-      console.log($dataStore);
+      const observed = await getObserved({ config, params, method });
+      const projections = await getProjections({ config, params, method });
+      dataStore.setObserved(observed);
+      dataStore.setProjections(projections);
+      const projections30y = await getProjections({
+        config,
+        params,
+        method,
+        searhcStr: DEFAULT_SNAPSHOT_SLUG_EXP,
+      });
+      dataStore.setProjections30y(projections30y);
     } catch (error) {
       console.error("updateData", error);
       logException(error);

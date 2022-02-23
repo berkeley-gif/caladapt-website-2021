@@ -1,4 +1,4 @@
-import { group, merge } from "d3-array";
+import { group, merge, mean } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -6,7 +6,10 @@ import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import { buildEnvelope, convertAnnualRateToSum } from "../_common/helpers";
 
 // Constants
-import { OBSERVED_FILTER_YEAR } from "../_common/constants";
+import {
+  OBSERVED_FILTER_YEAR,
+  DEFAULT_STAT_PERIODS,
+} from "../_common/constants";
 import {
   DEFAULT_PROJECTIONS_SLUG_EXP,
   DEFAULT_OBSERVED_SLUG_EXP,
@@ -129,16 +132,22 @@ const createRanges = (_data) => {
  * Get observed data for chart
  * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} method - default is GET, POST for uploaded boundaries
+ * @param {string} method - optional, use POST for uploaded boundaries
+ * @param {string} searchStr - optional, regex string for searching the API
  * @return {array}
  */
-export async function getObserved(config, params, method = "GET") {
+export async function getObserved({
+  config,
+  params,
+  method = "GET",
+  searchStr = DEFAULT_OBSERVED_SLUG_EXP,
+}) {
   try {
     const { indicatorId, isAnnualRate } = config;
-    const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
+    const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) =>
-      fetchEvents({ url, params, isAnnualRate })
+      fetchEvents({ url, params, method, isAnnualRate })
     );
     const data = await Promise.all(promises);
     return data.map(({ slug, values }) => {
@@ -155,16 +164,22 @@ export async function getObserved(config, params, method = "GET") {
  * Get projected data for chart
  * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} method - default is GET, POST for uploaded boundaries
+ * @param {string} method - optional, use POST for uploaded boundaries
+ * @param {string} searchStr - optional, regex string for searching the API
  * @return {array}
  */
-export async function getProjections(config, params, method = "GET") {
+export async function getProjections({
+  config,
+  params,
+  method = "GET",
+  searchStr = DEFAULT_PROJECTIONS_SLUG_EXP,
+}) {
   try {
     const { indicatorId, isAnnualRate } = config;
-    const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
+    const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) =>
-      fetchEvents({ url, params, isAnnualRate })
+      fetchEvents({ url, params, method, isAnnualRate })
     );
     const data = await Promise.all(promises);
     const ranges = createRanges(data);
@@ -180,11 +195,19 @@ export async function getProjections(config, params, method = "GET") {
  * @param {object} location
  * @param {object} boundary - obj representing a mapbox layer
  * @param {boolean} imperial - represents units
+ * @param {string} stat - spatial aggregation function
+ * @param {number} months - used only for April SWE
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({ location, boundary, imperial = true, stat }) {
-  const params = { imperial, stat };
+export function getQueryParams({
+  location,
+  boundary,
+  imperial = true,
+  stat,
+  months,
+}) {
+  const params = { imperial, stat, ...(months && { months }) };
   let method = "GET";
   switch (boundary.id) {
     case "locagrid":
@@ -199,4 +222,61 @@ export function getQueryParams({ location, boundary, imperial = true, stat }) {
       params.ref = `/api/${boundary.id}/${location.id}/`;
   }
   return { params, method };
+}
+
+/**
+ * Calculate 30 year average for each scenario & period combination
+ * @param {array} scenarios
+ * @param {array} periods
+ * @return {array} scenario & period combinations that have a valid 30 year avg value
+ */
+export function calc30yAvgByPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
+  const data = scenarios.map((d) => {
+    const { values, id: scenarioId, label: scenarioLabel } = d;
+    const dataByPeriods = periods.map((period) => {
+      const { id: periodId, label: periodLabel, start, end } = period;
+      const filteredValues = values.filter(
+        ({ date }) =>
+          date.getUTCFullYear() >= start && date.getUTCFullYear() <= end
+      );
+      let avg = null;
+      if (filteredValues.length) {
+        avg = mean(filteredValues, (d) => d.value);
+      }
+      return { periodId, periodLabel, scenarioId, scenarioLabel, avg };
+    });
+    return [...dataByPeriods];
+  });
+  return merge(data).filter(({ avg }) => avg !== null);
+}
+
+/**
+ * Map 30 year extent for each scenario & period combination
+ * @param {array} scenarios
+ * @param {array} periods
+ * @return {array} scenario & period combination that have a valid 30 year extent
+ */
+export function map30yExtentByPeriod(
+  scenarios,
+  periods = DEFAULT_STAT_PERIODS
+) {
+  const data = scenarios.map((d) => {
+    const { values, id: scenarioId, label: scenarioLabel } = d;
+    const dataByPeriods = periods.map((period) => {
+      const { id: periodId, label: periodLabel, start, end } = period;
+      const filteredValues = values.filter(
+        ({ date }) =>
+          date.getUTCFullYear() >= start && date.getUTCFullYear() <= end
+      );
+      let min = null;
+      let max = null;
+      if (filteredValues.length && filteredValues.length === 1) {
+        min = filteredValues[0].min;
+        max = filteredValues[0].max;
+      }
+      return { periodId, periodLabel, scenarioId, scenarioLabel, min, max };
+    });
+    return [...dataByPeriods];
+  });
+  return merge(data).filter(({ min, max }) => min !== null && max !== null);
 }

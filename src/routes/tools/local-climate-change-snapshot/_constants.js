@@ -14,7 +14,7 @@ export const DEFAULT_PROJECTIONS_SLUG_EXP = "^indicator_(year|month).*ens32";
 // This search exp is used to fetch observed data for an indicator
 // Observed data consists of just 1 value per year
 export const DEFAULT_OBSERVED_SLUG_EXP = "^indicator_(year|month).*livneh";
-export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y.*ens32";
+export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y_.*ens32";
 // This search exp is used to separate timeseries with ens32avg from ens32min/ens32max
 // The envelope/range is created from the ensemble min & max & plotted as area,
 // while the ensemble avg is plotted as lines
@@ -35,10 +35,15 @@ export const INDICATORS_WITH_VALUES_AS_RATES = ["pr"];
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
   indicator: DEFAULT_CLIMATE_INDICATOR,
+  // TODO: remove boundary default prop
+  // using counties boundary makes it easier to compare data with tool on v2
+  boundary: "counties",
 };
 
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const AREABURNED_POLYGON_AGGREGATE_FUNCTION = "sum";
+
+export const DEFAULT_SWE_MONTH = 4;
 
 export const COLOR_livneh = chroma(110, 110, 110);
 export const COLOR_rcp45 = chroma(59, 153, 167);
