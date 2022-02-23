@@ -203,6 +203,7 @@ export function getQueryParams({
   stat,
   months,
 }) {
+  // months param is only used for April SWE
   const params = { imperial, stat, ...(months && { months }) };
   let method = "GET";
   switch (boundary.id) {
@@ -247,7 +248,7 @@ export function calc30yAvgByPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
 }
 
 /**
- * Map 30 year extent for each scenarios & period combination
+ * Map 30 year extent for each scenario & period combination
  * @param {array} series
  * @param {array} periods
  * @return {array} series & period combination that have a valid 30 year extent

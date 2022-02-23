@@ -92,6 +92,7 @@
         ),
       };
       // Get params object for querying the Cal-Adapt API
+      // extra months param required for April SWE indicator
       const months = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
       const { params, method } = getQueryParams({
         location: $location,
