@@ -63,8 +63,8 @@ export const dataStore = makeCustomWritableStore(DATA, {
 });
 
 /**
- * Calculate 30 year stats for 3 scenarios and 3 periods. There are 5 possible combinations
- * that have valid values:
+ * Calculate 30 year stats for 3 scenarios and 3 periods for the Snapshot table.
+ * There are 5 possible combinations that have valid values:
  * 1. Modeled Historical Scenario & Baseline Period
  * 2. RCP 4.5 Scenario & Mid-Century Period
  * 3. RCP 4.5 Scenario & End-Century Period
@@ -104,8 +104,8 @@ export const snapshotProjectionsStore = derived(dataStore, ($dataStore) => {
 });
 
 /**
- * Calculate 30 year stats for observed data. There is only 1 possible combination
- * that has valid values:
+ * Calculate 30 year stats for observed data for the Snapshot Table.
+ * There is only 1 possible combination that has valid values:
  * 1. Observed & Baseline Period
  **/
 export const snapshotObservedStore = derived(dataStore, ($dataStore) => {
