@@ -10,7 +10,6 @@ import { OBSERVED_FILTER_YEAR } from "../_common/constants";
 import {
   DEFAULT_PROJECTIONS_SLUG_EXP,
   DEFAULT_OBSERVED_SLUG_EXP,
-  DEFAULT_SNAPSHOT_SLUG_EXP,
   DEFAULT_POLYGON_AGGREGATE_FUNCTION,
   ENVELOPE_SEARCH_EXP,
   AVERAGE_SEARCH_EXP,
@@ -133,10 +132,15 @@ const createRanges = (_data) => {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-export async function getObserved(config, params, method = "GET") {
+export async function getObserved(
+  config,
+  params,
+  method = "GET",
+  searchStr = DEFAULT_OBSERVED_SLUG_EXP
+) {
   try {
     const { indicatorId, isAnnualRate } = config;
-    const exp = DEFAULT_OBSERVED_SLUG_EXP.replace("indicator", indicatorId);
+    const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) =>
       fetchEvents({ url, params, isAnnualRate })
@@ -159,10 +163,15 @@ export async function getObserved(config, params, method = "GET") {
  * @param {string} method - default is GET, POST for uploaded boundaries
  * @return {array}
  */
-export async function getProjections(config, params, method = "GET") {
+export async function getProjections(
+  config,
+  params,
+  method = "GET",
+  searchStr = DEFAULT_PROJECTIONS_SLUG_EXP
+) {
   try {
     const { indicatorId, isAnnualRate } = config;
-    const exp = DEFAULT_PROJECTIONS_SLUG_EXP.replace("indicator", indicatorId);
+    const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
     const promises = urls.map((url) =>
       fetchEvents({ url, params, isAnnualRate })
@@ -171,28 +180,6 @@ export async function getProjections(config, params, method = "GET") {
     const ranges = createRanges(data);
     const averages = createAverages(data);
     return [...averages, ...ranges];
-  } catch (error) {
-    throw new Error(error.message);
-  }
-}
-
-/**
- * Get projected data for chart
- * @param {object} config - props describing climate indicator.
- * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} method - default is GET, POST for uploaded boundaries
- * @return {array}
- */
-export async function getSnapshot(config, params, method = "GET") {
-  try {
-    const { indicatorId, isAnnualRate } = config;
-    const exp = DEFAULT_SNAPSHOT_SLUG_EXP.replace("indicator", indicatorId);
-    const urls = await fetchUrls(exp);
-    const promises = urls.map((url) =>
-      fetchEvents({ url, params, isAnnualRate })
-    );
-    const data = await Promise.all(promises);
-    return data;
   } catch (error) {
     throw new Error(error.message);
   }

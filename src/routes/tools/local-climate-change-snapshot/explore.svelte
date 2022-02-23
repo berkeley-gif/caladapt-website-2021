@@ -33,12 +33,7 @@
   import { logException } from "~/helpers/logging";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
   import { INITIAL_CONFIG } from "../_common/constants";
-  import {
-    getQueryParams,
-    getProjections,
-    getObserved,
-    getSnapshot,
-  } from "./_data";
+  import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
   import ExploreData from "./_ExploreData.svelte";
@@ -61,6 +56,7 @@
     DEFAULT_INITIAL_CONFIG,
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
     INDICATORS_WITH_VALUES_AS_RATES,
+    DEFAULT_SNAPSHOT_SLUG_EXP,
   } from "./_constants";
 
   export let tool;
@@ -103,7 +99,12 @@
       const projections = await getProjections(config, params, method);
       dataStore.setObserved(observed);
       dataStore.setProjections(projections);
-      const projections30y = await getSnapshot(config, params, method);
+      const projections30y = await getProjections(
+        config,
+        params,
+        method,
+        DEFAULT_SNAPSHOT_SLUG_EXP
+      );
       dataStore.setProjections30y(projections30y);
       console.log("dataStore", $dataStore);
     } catch (error) {
