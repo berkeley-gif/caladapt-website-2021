@@ -221,13 +221,13 @@ export function getQueryParams({
 }
 
 /**
- * Calculate 30 year average for each series & period combination
- * @param {array} series
+ * Calculate 30 year average for each scenario & period combination
+ * @param {array} scenarios
  * @param {array} periods
  * @return {array} series & period combinations that have a valid 30 year avg value
  */
-export function calc30yAvgByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
-  const data = series.map((d) => {
+export function calc30yAvgByPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
+  const data = scenarios.map((d) => {
     const { values, id: scenarioId, label: scenarioLabel } = d;
     const dataByPeriods = periods.map((period) => {
       const { id: periodId, label: periodLabel, start, end } = period;
@@ -247,13 +247,16 @@ export function calc30yAvgByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
 }
 
 /**
- * Map 30 year extent for each series & period combination
+ * Map 30 year extent for each scenarios & period combination
  * @param {array} series
  * @param {array} periods
  * @return {array} series & period combination that have a valid 30 year extent
  */
-export function map30yExtentByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
-  const data = series.map((d) => {
+export function map30yExtentByPeriod(
+  scenarios,
+  periods = DEFAULT_STAT_PERIODS
+) {
+  const data = scenarios.map((d) => {
     const { values, id: scenarioId, label: scenarioLabel } = d;
     const dataByPeriods = periods.map((period) => {
       const { id: periodId, label: periodLabel, start, end } = period;
