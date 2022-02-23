@@ -132,14 +132,15 @@ const createRanges = (_data) => {
  * Get observed data for chart
  * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} method - default is GET, POST for uploaded boundaries
+ * @param {string} searchStr - optional, regex string for searching the API
+ * @param {string} method - optional, use POST for uploaded boundaries
  * @return {array}
  */
 export async function getObserved(
   config,
   params,
-  method = "GET",
-  searchStr = DEFAULT_OBSERVED_SLUG_EXP
+  searchStr = DEFAULT_OBSERVED_SLUG_EXP,
+  method = "GET"
 ) {
   try {
     const { indicatorId, isAnnualRate } = config;
@@ -163,14 +164,15 @@ export async function getObserved(
  * Get projected data for chart
  * @param {object} config - props describing climate indicator.
  * @param {object} params - props for for geometry, stat, units, etc.
- * @param {string} method - default is GET, POST for uploaded boundaries
+ * @param {string} searchStr - optional, regex string for searching the API
+ * @param {string} method - optional, use POST for uploaded boundaries
  * @return {array}
  */
 export async function getProjections(
   config,
   params,
-  method = "GET",
-  searchStr = DEFAULT_PROJECTIONS_SLUG_EXP
+  searchStr = DEFAULT_PROJECTIONS_SLUG_EXP,
+  method = "GET"
 ) {
   try {
     const { indicatorId, isAnnualRate } = config;
