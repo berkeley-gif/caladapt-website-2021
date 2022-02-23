@@ -92,15 +92,14 @@
         ),
       };
       // Get params object for querying the Cal-Adapt API
-      const month = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
+      const months = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
         stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
-        ...(month && { month }),
+        ...(months && { months }),
       });
-
       isFetchingStore.set(true);
       const observed = await getObserved(config, params, method);
       const projections = await getProjections(config, params, method);

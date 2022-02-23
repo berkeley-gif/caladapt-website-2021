@@ -196,8 +196,14 @@ export async function getProjections(
  * @return {object} params
  * @return {string} method
  */
-export function getQueryParams({ location, boundary, imperial = true, stat }) {
-  const params = { imperial, stat };
+export function getQueryParams({
+  location,
+  boundary,
+  imperial = true,
+  stat,
+  months,
+}) {
+  const params = { imperial, stat, ...(months && { months }) };
   let method = "GET";
   switch (boundary.id) {
     case "locagrid":
