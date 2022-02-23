@@ -8,6 +8,18 @@ export const indicatorStore = writable(null);
 
 const DATA = { observed: null, projections: null, projections30y: null };
 
+/**
+ * This custom dataStore stores the following data:
+ * observed = annual livneh timeseries
+ * projections = annual ensembles for
+ * 		1. Modeled Historical average & range
+ * 		2. RCP 4.5 average & range
+ * 		3. RCP 8.5 average & range
+ * projections30y = 30 year ensemble extents for
+ * 		1. Modeled Historical Mid-Century & End-Century
+ * 		2. RCP 4.5 Mid-Century & End-Century
+ * 		3. RCP 8.5 Mid-Century & End-Century
+ **/
 export const dataStore = makeCustomWritableStore(DATA, {
   name: "dataStore",
   getters: [
