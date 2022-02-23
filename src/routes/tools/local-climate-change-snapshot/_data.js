@@ -215,12 +215,10 @@ export function getQueryParams({ location, boundary, imperial = true, stat }) {
 }
 
 /**
- * Creates the param object used to fetch data from API
- * @param {object} location
- * @param {object} boundary - obj representing a mapbox layer
- * @param {boolean} imperial - represents units
- * @return {object} params
- * @return {string} method
+ * Calculate 30 year average for each series & period combination
+ * @param {array} series
+ * @param {array} periods
+ * @return {array} series & period combination that has a valid 30 year avg value
  */
 export function calcSeries30yAvgByPeriod(
   series,
