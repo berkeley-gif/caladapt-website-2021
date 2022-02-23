@@ -75,8 +75,8 @@ export const snapshotProjectionsStore = derived(dataStore, ($dataStore) => {
 
   // Find the baseline 30 year average (combination #1)
   const baseline = data30yAvg.find(
-    ({ seriesId, periodId }) =>
-      seriesId === "historical" && periodId === "baseline"
+    ({ scenarioId, periodId }) =>
+      scenarioId === "historical" && periodId === "baseline"
   );
 
   // Combine the 30y avg & 30y extent for the valid combinations
@@ -84,10 +84,10 @@ export const snapshotProjectionsStore = derived(dataStore, ($dataStore) => {
   // The change from baseline value for combination #1 will obviously be 0. This is represented by
   // a "-" in the Snapshot table.
   return data30yAvg.map((d) => {
-    const { seriesId, periodId, avg } = d;
+    const { scenarioId, periodId, avg } = d;
     const change = baseline ? avg - baseline.avg : null;
     const match = data30yExtent.find(
-      (c) => c.seriesId.includes(seriesId) && c.periodId === periodId
+      (c) => c.scenarioId.includes(scenarioId) && c.periodId === periodId
     );
     return { ...match, ...d, change };
   });

@@ -222,7 +222,7 @@ export function getQueryParams({ location, boundary, imperial = true, stat }) {
  */
 export function calc30yAvgByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
   const data = series.map((d) => {
-    const { values, id: seriesId, label: seriesLabel } = d;
+    const { values, id: scenarioId, label: scenarioLabel } = d;
     const dataByPeriods = periods.map((period) => {
       const { id: periodId, label: periodLabel, start, end } = period;
       const filteredValues = values.filter(
@@ -233,7 +233,7 @@ export function calc30yAvgByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
       if (filteredValues.length) {
         avg = mean(filteredValues, (d) => d.value);
       }
-      return { periodId, periodLabel, seriesId, seriesLabel, avg };
+      return { periodId, periodLabel, scenarioId, scenarioLabel, avg };
     });
     return [...dataByPeriods];
   });
@@ -248,7 +248,7 @@ export function calc30yAvgByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
  */
 export function map30yExtentByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
   const data = series.map((d) => {
-    const { values, id: seriesId, label: seriesLabel } = d;
+    const { values, id: scenarioId, label: scenarioLabel } = d;
     const dataByPeriods = periods.map((period) => {
       const { id: periodId, label: periodLabel, start, end } = period;
       const filteredValues = values.filter(
@@ -261,7 +261,7 @@ export function map30yExtentByPeriod(series, periods = DEFAULT_STAT_PERIODS) {
         min = filteredValues[0].min;
         max = filteredValues[0].max;
       }
-      return { periodId, periodLabel, seriesId, seriesLabel, min, max };
+      return { periodId, periodLabel, scenarioId, scenarioLabel, min, max };
     });
     return [...dataByPeriods];
   });
