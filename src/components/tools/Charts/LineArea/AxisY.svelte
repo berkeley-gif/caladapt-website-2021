@@ -1,5 +1,4 @@
 <script>
-  import { max } from "d3-array";
   import { getContext, afterUpdate } from "svelte";
 
   const { width, padding, yScale } = getContext("LayerCake");
