@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher, tick } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { NumberInput } from "carbon-components-svelte";
 
   import {
