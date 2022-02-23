@@ -1,11 +1,9 @@
 <script>
   import { createEventDispatcher, afterUpdate } from "svelte";
-  import {
-    RadioButtonGroup,
-    RadioButton,
-    Modal,
-    NumberInput,
-  } from "carbon-components-svelte";
+  import NumberInput from "carbon-components-svelte/src/NumberInput/NumberInput.svelte";
+  import Modal from "carbon-components-svelte/src/Modal/Modal.svelte";
+  import RadioButton from "carbon-components-svelte/src/RadioButton/RadioButton.svelte";
+  import RadioButtonGroup from "carbon-components-svelte/src/RadioButtonGroup/RadioButtonGroup.svelte";
   import {
     MODELED_FUTURE_PROJECTIONS_YEAR,
     MODELED_MAX_YEAR,
