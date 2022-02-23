@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import "@testing-library/jest-dom";
-import { render } from "@testing-library/svelte";
+import { render, fireEvent } from "@testing-library/svelte";
 import StatOptions from "./StatOptions.svelte";
 
 describe("Stats/StatOptions", () => {
@@ -176,5 +176,61 @@ describe("Stats/StatOptions", () => {
     const parent = modal.parentElement;
     const isVisible = parent.classList.contains("is-visible");
     expect(isVisible).toEqual(false);
+  });
+
+  test("custom year range invalid start year", async () => {
+    const { getByDisplayValue, getByText } = render(StatOptions, {
+      target,
+      props: {
+        groupList,
+        periodList,
+        group,
+        period: { id: "custom", start: 2050, end: 2080 },
+        dateRange,
+        open,
+      },
+    });
+    const input = getByDisplayValue("2050");
+    await fireEvent.input(input, { target: { value: "2000" } });
+    expect(() =>
+      getByText("Value must be between 2006 and 2100.")
+    ).not.toThrow();
+  });
+
+  test("custom year range invalid end year", async () => {
+    const { getByDisplayValue, getByText } = render(StatOptions, {
+      target,
+      props: {
+        groupList,
+        periodList,
+        group,
+        period: { id: "custom", start: 2050, end: 2080 },
+        dateRange,
+        open,
+      },
+    });
+    const input = getByDisplayValue("2080");
+    await fireEvent.input(input, { target: { value: "2040" } });
+    expect(() =>
+      getByText("Value must be greater than 2050 and less than 2100")
+    ).not.toThrow();
+  });
+
+  test("modal confirm button disabled", async () => {
+    const { getByDisplayValue, getByRole } = render(StatOptions, {
+      target,
+      props: {
+        groupList,
+        periodList,
+        group,
+        period: { id: "custom", start: 2050, end: 2080 },
+        dateRange,
+        open,
+      },
+    });
+    const input = getByDisplayValue("2080");
+    await fireEvent.input(input, { target: { value: "2040" } });
+    const button = getByRole("button", { name: "Confirm" });
+    expect(button.disabled).toEqual(true);
   });
 });
