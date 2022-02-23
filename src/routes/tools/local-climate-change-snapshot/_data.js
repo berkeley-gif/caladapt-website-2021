@@ -247,7 +247,7 @@ export function calc30yAvgByPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
     });
     return [...dataByPeriods];
   });
-  return merge(data).filter(({ avg }) => avg);
+  return merge(data).filter(({ avg }) => avg !== null);
 }
 
 /**
@@ -278,5 +278,5 @@ export function map30yExtentByPeriod(
     });
     return [...dataByPeriods];
   });
-  return merge(data).filter(({ min, max }) => min && max);
+  return merge(data).filter(({ min, max }) => min !== null && max !== null);
 }
