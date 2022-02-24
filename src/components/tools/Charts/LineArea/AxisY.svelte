@@ -19,7 +19,7 @@
   $: if (ticks) {
     tickVals = Array.isArray(ticks) ? ticks : $yScale.ticks(ticks);
   } else {
-    tickVals = $yScale.ticks().map(formatTick);
+    tickVals = $yScale.ticks();
   }
   $: d = `M 0 0 L ${$width + $padding.left} 0`;
 
@@ -59,7 +59,7 @@
         ></path>
       {/if}
       <text class="tick-label" y="-4" style="font-size:12px;fill:#666"
-        >{tick}</text
+        >{formatTick(tick)}</text
       >
       {#if i === +tickVals.length - 1}
         <text
