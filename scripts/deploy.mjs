@@ -60,8 +60,12 @@ async function usage(message) {
   if (message) {
     console.log(message);
   }
-  console.log("Usage: zx deploy.mjs --location=<string> --transfer=<boolean> --build=<boolean>");
-  console.log("--location is required; --transfer & --build are optional, both default to true");
+  console.log(
+    "Usage: zx deploy.mjs --location=<string> --transfer=<boolean> --build=<boolean>"
+  );
+  console.log(
+    "--location is required; --transfer & --build are optional, both default to true"
+  );
   await $`exit 0`;
 }
 
