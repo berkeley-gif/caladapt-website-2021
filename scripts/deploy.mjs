@@ -115,12 +115,11 @@ async function deployDev() {
 async function deployNetlify() {
   try {
     await sapperExport();
-    await $`netlify deploy 
-      --dir ${SAPPER_EXPORT_DIR}
-      --auth $NETLIFY_AUTH_TOKEN
-      --alias $NETLIFY_ALIAS
-      --open
-      `;
+    await $`netlify deploy \
+      --dir ${SAPPER_EXPORT_DIR}\
+      --auth $NETLIFY_AUTH_TOKEN\
+      --alias $NETLIFY_ALIAS\
+      --open`;
     await $`exit 0`;
   } catch (error) {
     handleError(error);
