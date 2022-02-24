@@ -56,8 +56,11 @@
   import {
     DEFAULT_INITIAL_CONFIG,
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+    AREABURNED_POLYGON_AGGREGATE_FUNCTION,
     INDICATORS_WITH_VALUES_AS_RATES,
+    DEFAULT_PROJECTIONS_SLUG_EXP,
     DEFAULT_SNAPSHOT_SLUG_EXP,
+    AREABURNED_TIMESERIES_SLUG_EXP,
     DEFAULT_SWE_MONTH,
   } from "./_constants";
 
@@ -99,26 +102,42 @@
           $indicatorStore.id
         ),
       };
+
       // Get params object for querying the Cal-Adapt API
       // extra months param required for April SWE indicator
       const months = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
+      const stat =
+        $indicatorStore.id === "fire"
+          ? AREABURNED_POLYGON_AGGREGATE_FUNCTION
+          : DEFAULT_POLYGON_AGGREGATE_FUNCTION;
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
-        stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+        stat,
         ...(months && { months }),
       });
+
       isFetchingStore.set(true);
+
+      const projectionsSearchStr =
+        $indicatorStore.id === "fire"
+          ? AREABURNED_TIMESERIES_SLUG_EXP
+          : DEFAULT_PROJECTIONS_SLUG_EXP;
       const observed = await getObserved({ config, params, method });
-      const projections = await getProjections({ config, params, method });
+      const projections = await getProjections({
+        config,
+        params,
+        method,
+        searchStr: projectionsSearchStr,
+      });
       dataStore.setObserved(observed);
       dataStore.setProjections(projections);
       const projections30y = await getProjections({
         config,
         params,
         method,
-        searhcStr: DEFAULT_SNAPSHOT_SLUG_EXP,
+        searchStr: DEFAULT_SNAPSHOT_SLUG_EXP,
       });
       dataStore.setProjections30y(projections30y);
     } catch (error) {
