@@ -51,45 +51,51 @@ export const COLOR_rcp45 = chroma(59, 153, 167);
 export const COLOR_rcp85 = chroma(131, 87, 170);
 export const COLOR_historical = chroma(170, 144, 60);
 
-export const SCENARIOS = ["historical", "rcp45", "rcp85"];
 export const OBSERVED = [
   {
     id: "livneh",
     label: "Observed",
     color: COLOR_livneh.hex(),
+    type: "line",
   },
 ];
-export const SERIES = [
+export const SCENARIOS = [
   {
     id: "rcp45",
     label: "Medium Emissions (RCP 4.5)",
     color: COLOR_rcp45.hex(),
+    type: "line",
   },
   {
     id: "rcp85",
     label: "High Emissions (RCP 8.5)",
     color: COLOR_rcp85.hex(),
+    type: "line",
   },
   {
     id: "historical",
     label: "Modeled Historical",
     color: COLOR_historical.hex(),
+    type: "line",
   },
 ];
-export const RANGES = [
+export const SCENARIO_RANGES = [
   {
     id: "rcp45_range",
     label: "Medium Emissions Range",
     color: COLOR_rcp45.alpha(0.3).hex(),
+    type: "area",
   },
   {
     id: "rcp85_range",
     label: "High Emissions Range",
     color: COLOR_rcp85.alpha(0.3).hex(),
+    type: "area",
   },
   {
     id: "historical_range",
     label: "Modeled Historical Range",
     color: COLOR_historical.alpha(0.3).hex(),
+    type: "area",
   },
 ];
