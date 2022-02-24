@@ -27,10 +27,11 @@ export const AREABURNED_TIMESERIES_SLUG_EXP = "^fire_year.*bau";
 
 // The list of climate categories and indicators is in content/tools/local-climate-change-snapshot/
 export const DEFAULT_CLIMATE_CATEGORY = "temperature";
-export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
+export const DEFAULT_CLIMATE_INDICATOR = "fire";
 // Precipitation indicator has values as rates e.g. mm/year
 // These should be converted to annual sum by multiplying by number of days in the year
 export const INDICATORS_WITH_VALUES_AS_RATES = ["pr"];
+export const INDICATORS_WITH_NO_ENSEMBLES = ["fire"];
 
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
@@ -50,6 +51,7 @@ export const COLOR_rcp45 = chroma(59, 153, 167);
 export const COLOR_rcp85 = chroma(131, 87, 170);
 export const COLOR_historical = chroma(170, 144, 60);
 
+export const SCENARIOS = ["historical", "rcp45", "rcp85"];
 export const OBSERVED = [
   {
     id: "livneh",
