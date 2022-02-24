@@ -34,6 +34,37 @@ npm run deploy-dev
 
 This will first run `sapper export` and then transfer the output to the appropriate location on the Cal-Adapt webserver.
 
+### Deploying to Netlify
+
+You may deploy a local build to be hosted on [Netlify](https://netlify.com) for sharing a new feature or bugfix in isolation.
+
+First install the [Netlify CLI tools](https://cli.netlify.com/):
+
+```bash
+npm install netlify-cli -g
+```
+
+Then log-in to Netlify:
+
+```bash
+netlify login
+```
+
+Set the appropriate environment variables prior to running the deploy script:
+
+```bash
+# the netlify personal access token
+export NETLIFY_AUTH_TOKEN="xxx"
+# name of the subdomain for the deployment
+export NETLIFY_ALIAS="my-branch-name"
+```
+
+And then deploy as follows:
+
+```
+npm run deploy-netlify
+```
+
 ### Viewing the build locally prior to deploying
 
 If you would like to view the build locally prior to deploying, first create the build without transfering it to the server:
