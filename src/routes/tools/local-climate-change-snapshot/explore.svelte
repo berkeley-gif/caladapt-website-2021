@@ -83,15 +83,16 @@
     console.groupEnd();
   }
 
-  $: if (
-    $chartDataStore &&
-    $snapshotObservedStore &&
-    $snapshotProjectionsStore
-  ) {
-    console.log("chart data", $chartDataStore);
-    console.log("snapshot table baseline", $snapshotObservedStore);
-    console.log("snapshot table projections", $snapshotProjectionsStore);
-  }
+  // $: if (
+  //   $chartDataStore &&
+  //   $snapshotObservedStore &&
+  //   $snapshotProjectionsStore
+  // ) {
+  //   console.log("chart data", $chartDataStore);
+  //   console.log("snapshot table baseline", $snapshotObservedStore);
+  //   console.log("snapshot table projections", $snapshotProjectionsStore);
+  // }
+  $: console.log("data", $dataStore);
 
   async function update() {
     if (!appReady) return;
@@ -124,6 +125,11 @@
         $indicatorStore.id === "fire"
           ? AREABURNED_TIMESERIES_SLUG_EXP
           : DEFAULT_PROJECTIONS_SLUG_EXP;
+      const snapshotSearchStr =
+        $indicatorStore.id === "fire"
+          ? AREABURNED_TIMESERIES_SLUG_EXP
+          : DEFAULT_SNAPSHOT_SLUG_EXP;
+
       const observed = await getObserved({ config, params, method });
       const projections = await getProjections({
         config,
@@ -137,7 +143,7 @@
         config,
         params,
         method,
-        searchStr: DEFAULT_SNAPSHOT_SLUG_EXP,
+        searchStr: snapshotSearchStr,
       });
       dataStore.setProjections30y(projections30y);
     } catch (error) {
