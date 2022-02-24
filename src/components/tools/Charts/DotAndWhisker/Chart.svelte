@@ -5,7 +5,6 @@
   import { min, max, groups } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
-  import { isEmptyData } from "~/helpers/utilities";
   import {
     DEFAULT_Y_MIN,
     DEFAULT_Y_MAX,
