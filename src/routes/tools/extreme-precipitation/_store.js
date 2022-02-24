@@ -1,5 +1,4 @@
 import { writable, derived } from "svelte/store";
-import { merge } from "d3-array";
 import climvars from "~/helpers/climate-variables";
 import { makeCustomWritableStore } from "../_common/stores";
 import {
