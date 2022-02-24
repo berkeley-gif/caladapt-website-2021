@@ -1,153 +1,81 @@
 <script>
-  import { createEventDispatcher, beforeUpdate, tick } from "svelte";
-  import { range } from "d3-array";
+  import { createEventDispatcher, afterUpdate } from "svelte";
+  import NumberInput from "carbon-components-svelte/src/NumberInput/NumberInput.svelte";
+  import Modal from "carbon-components-svelte/src/Modal/Modal.svelte";
+  import RadioButton from "carbon-components-svelte/src/RadioButton/RadioButton.svelte";
+  import RadioButtonGroup from "carbon-components-svelte/src/RadioButtonGroup/RadioButtonGroup.svelte";
   import {
-    RadioButtonGroup,
-    RadioButton,
-    ComboBox,
-    Modal,
-  } from "carbon-components-svelte";
+    MODELED_FUTURE_PROJECTIONS_YEAR,
+    MODELED_MAX_YEAR,
+  } from "~/helpers/app-constants";
 
   export let groupList;
   export let periodList;
   export let group;
   export let period;
-  export let dateRange;
+  export let dateRange = [MODELED_FUTURE_PROJECTIONS_YEAR, MODELED_MAX_YEAR];
   export let open = false;
 
   const dispatch = createEventDispatcher();
+  const [minYear, maxYear] = dateRange;
 
   // Props for binding to RadioButtonGroup
-  let selectedGroupId = group.id;
-  let selectedPeriodId = period.id;
+  let selectedGroupId = group && group.id;
+  let selectedPeriodId = period && period.id;
 
-  // Props and functions for defining a custom period
-  let startYear_selectedIndex = -1;
-  let startYear_selectedIndexCache = -1;
-  let endYear_selectedIndex = -1;
-  let endYear_selectedIndexCache = -1;
-  let filteredItems;
-  let startYearListRef;
-  let endYearListRef;
+  let customStartYear = period ? period.start : MODELED_FUTURE_PROJECTIONS_YEAR;
+  let customEndYear = period ? period.end : MODELED_MAX_YEAR - 1;
 
-  const highlightClass = ".bx--list-box__menu-item--highlighted";
+  $: invalidCustomStart = !isCustomStartValid(customStartYear);
+  $: invalidCustomEnd = !isCustomEndValid(customEndYear);
+  $: preventModalSubmit = invalidCustomStart || invalidCustomEnd;
 
-  $: yearsList = range(dateRange[0], dateRange[1] + 1, 1);
-  $: items = yearsList.map((d) => ({ id: d, text: `${d}` }));
-  $: startYear_selectedIndex, updateLinkedList();
-
-  const getItemValue = (i, arr) => (arr[i] ? arr[i].text : null);
-  const getItemIndex = (value, arr) =>
-    arr.findIndex(({ text }) => text === value);
-
-  /**
-   * After entering the partial year in input box, the user might use ArrowDown or ArrowUp keys
-   * to hihglight an item in the ComboBox dropdown menu. This function:
-   *  - finds the highlighted item
-   *  - search list items by highlighted item id
-   *  - returns array index of highlighted item
-   * TODO: This functionality may not be need with new version of ComboBox component
-   * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
-   **/
-  const getHighlightedIndex = (node, arr) => {
-    if (!node) return -1;
-    const el = node.querySelector(highlightClass);
-    if (!el) return -1;
-    return getItemIndex(el.id, arr);
-  };
-
-  /**
-   * When start year is selected, the items in the end year combobox dropdown menu are filtered
-   * to show only values greater than the start year
-   **/
-  function updateLinkedList() {
-    if (startYear_selectedIndex < 0) {
-      filteredItems = items;
-      endYear_selectedIndex = -1;
-    } else {
-      filteredItems = items.slice(startYear_selectedIndex + 1);
-    }
+  function isCustomStartValid(value) {
+    return isValidNumber(value) && value >= minYear && value < maxYear;
   }
 
-  /**
-   * When user types in the year, the combobox dropdown menu is filtered to show only
-   * values that complete the characters typed in the combobox
-   **/
-  function shouldFilterItem(item, value) {
-    if (!value) return true;
-    return item.text.includes(value);
+  function isCustomEndValid(value) {
+    return (
+      isValidNumber(value) &&
+      value > Math.max(customStartYear, minYear) &&
+      value < maxYear
+    );
   }
 
-  /**
-   * When user presses the Enter or Tab key in combobox after typing in a year, update
-   * the combobox selected index if the year matches an item in the combobox dropdown menu
-   * TODO: This functionality may not be need with new version of ComboBox component
-   * https://github.com/carbon-design-system/carbon-components-svelte/issues/195
-   **/
-  async function updateIndex(e) {
-    const { key, target } = e;
-    const { value, id } = target;
-    let idx;
-    if (["Enter", " "].includes(key)) {
-      switch (id) {
-        case "years-select-start":
-          idx = getItemIndex(value, items);
-          if (idx < 0) {
-            idx = getHighlightedIndex(startYearListRef, items);
-          }
-          startYear_selectedIndexCache = idx;
-          return;
-        case "years-select-end":
-          idx = getItemIndex(value, filteredItems);
-          if (idx < 0) {
-            idx = getHighlightedIndex(endYearListRef, filteredItems);
-          }
-          endYear_selectedIndexCache = idx;
-          return;
-        default:
-          return;
-      }
-    }
+  function isValidNumber(value) {
+    return (
+      typeof value === "number" && !isNaN(value) && Number.isInteger(value)
+    );
   }
 
-  /**
-   * Dispatch change event with current group object and selected period object when user selects Confirm.
-   * For custom period:
-   *  - check if both start and end year are defined
-   *  - create a new period object
-   **/
+  function getCustomPeriod(startYear, endYear) {
+    return {
+      id: "custom",
+      label: `${startYear}-${endYear}`,
+      start: startYear,
+      end: endYear,
+    };
+  }
+
   function update() {
     group = groupList.find(({ id }) => id === selectedGroupId);
     if (selectedPeriodId === "custom") {
-      if (startYear_selectedIndex < 0 || endYear_selectedIndex < 0) {
-        return;
-      }
-      const start = getItemValue(startYear_selectedIndex, items);
-      const end = getItemValue(endYear_selectedIndex, filteredItems);
-      period = {
-        id: "custom",
-        label: `${start}-${end}`,
-        start,
-        end,
-      };
+      period = getCustomPeriod(customStartYear, customEndYear);
     } else {
       period = periodList.find(({ id }) => id === selectedPeriodId);
     }
     dispatch("change", { group, period });
   }
 
-  beforeUpdate(async () => {
-    // bypasses a bug with ComboBox where updating the selectedIndex from within the keydown
-    // event handler will apply the incorrect index value
-    if (startYear_selectedIndex !== startYear_selectedIndexCache) {
-      await tick();
-      startYear_selectedIndex = startYear_selectedIndexCache;
-    }
-    // bypasses a bug with ComboBox where updating the selectedIndex from within the keydown
-    // event handler will apply the incorrect index value
-    if (endYear_selectedIndex !== endYear_selectedIndexCache) {
-      await tick();
-      endYear_selectedIndex = endYear_selectedIndexCache;
+  function close() {
+    dispatch("cancel");
+  }
+
+  afterUpdate(() => {
+    // reset the custom year values if they were invalid and selectedPeriodId changed
+    if (selectedPeriodId !== "custom" && preventModalSubmit) {
+      customStartYear = period.start;
+      customEndYear = period.end;
     }
   });
 </script>
@@ -155,19 +83,24 @@
 <style>
   .years-select {
     display: flex;
-    justify-content: space-around;
-    margin-top: 1rem;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .years-select :global(.bx--label) {
+    text-transform: none;
   }
 </style>
 
 <Modal
-  primaryButtonText="Confirm"
-  secondaryButtonText="Cancel"
   on:click:button--secondary="{() => (open = false)}"
   bind:open
-  modalHeading="Change Stats"
   on:submit="{update}"
-  on:close="{() => dispatch('cancel')}"
+  on:close="{close}"
+  primaryButtonText="Confirm"
+  secondaryButtonText="Cancel"
+  modalHeading="Change Stats"
+  primaryButtonDisabled="{preventModalSubmit}"
 >
   <div class="h5">Select Group</div>
   <RadioButtonGroup bind:selected="{selectedGroupId}">
@@ -186,37 +119,36 @@
 
   {#if selectedPeriodId === "custom"}
     <div class="years-select">
-      <ComboBox
-        bind:selectedIndex="{startYear_selectedIndex}"
-        titleText="Start"
-        placeholder="Select start year"
-        items="{items}"
-        invalid="{startYear_selectedIndex < 0}"
-        invalidText="Select a year from the list"
-        shouldFilterItem="{shouldFilterItem}"
-        on:keydown="{updateIndex}"
-        id="years-select-start"
-        bind:listRef="{startYearListRef}"
+      <NumberInput
+        bind:value="{customStartYear}"
+        min="{minYear}"
+        max="{maxYear}"
+        label="Custom Start Year"
+        invalid="{invalidCustomStart}"
+        invalidText="{`Value must be between ${minYear} and ${maxYear}.`}"
+        helperText="{`Enter a year between ${minYear} and ${maxYear}.`}"
+        hideSteppers="{true}"
       />
-      <ComboBox
-        bind:selectedIndex="{endYear_selectedIndex}"
-        titleText="End"
-        placeholder="Select end year"
-        items="{filteredItems}"
-        invalid="{endYear_selectedIndex < 0}"
-        invalidText="Select a year from the list"
-        shouldFilterItem="{shouldFilterItem}"
-        on:keydown="{updateIndex}"
-        id="years-select-end"
-        bind:listRef="{endYearListRef}"
+      <NumberInput
+        bind:value="{customEndYear}"
+        min="{(customStartYear || minYear) + 1}"
+        max="{maxYear}"
+        label="Custom End Year"
+        invalid="{invalidCustomEnd}"
+        invalidText="{`Value must be greater than ${Math.max(
+          customStartYear,
+          minYear
+        )} and less than ${maxYear}`}"
+        helperText="{`Enter a year greater than the start year.`}"
+        hideSteppers="{true}"
       />
     </div>
   {/if}
 
   <p style="margin-top:1.5rem;">
-    <strong
-      >Climate scientists recommend a period length of at least a few decades.</strong
-    >
+    <strong>
+      Climate scientists recommend a period length of at least a few decades.
+    </strong>
   </p>
   <p>
     Future climate projections express natural climate variability. Analyzing a
