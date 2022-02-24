@@ -26,11 +26,11 @@ export function buildEnvelope(_data) {
     (d) => d.date.getUTCFullYear()
   );
   return dataArr.map(([key, value]) => {
-    const sortedArr = sort(value);
+    const arrExtent = extent(value);
     return {
       date: new Date(Date.UTC(key, 0, 1)),
-      min: sortedArr[0],
-      max: sortedArr[1],
+      min: arrExtent[0],
+      max: arrExtent[1],
     };
   });
 }
