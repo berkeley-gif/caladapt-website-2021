@@ -1,6 +1,5 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { NumberInput } from "carbon-components-svelte";
 
   import {
     PRIORITY_10_MODELS,
@@ -11,6 +10,8 @@
     THRESHOLD_TYPES,
     RETURN_PERIODS,
     POLYGON_AGGREGATE_FUNCTIONS,
+    MIN_DURATION_DAYS,
+    MAX_DURATION_DAYS,
   } from "./_constants";
 
   import {
@@ -19,6 +20,7 @@
     RadioBtnGroup,
     SelectModels,
     Select,
+    SelectThresholdNumeric,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
   import { StaticMap } from "~/components/tools/Location";
@@ -159,11 +161,12 @@
 </div>
 
 <div class="block">
-  <NumberInput
-    label="Change Event Duration"
-    min="{1}"
-    max="{7}"
+  <SelectThresholdNumeric
+    title="Change Event Duration"
     value="{$durationStore}"
+    minValue="{MIN_DURATION_DAYS}"
+    maxValue="{MAX_DURATION_DAYS}"
+    delay="{1200}"
     on:change="{changeDuration}"
   />
   <LearnMoreButton
