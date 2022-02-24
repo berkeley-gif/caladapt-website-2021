@@ -1,4 +1,4 @@
-import { group, merge, mean } from "d3-array";
+import { group, merge, mean, rollups } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
@@ -160,6 +160,43 @@ export async function getObserved({
   }
 }
 
+function buildAverage(_data) {
+  const dataArr = rollups(
+    _data,
+    (v) => v.map((i) => i.value),
+    (d) => d.date.getUTCFullYear()
+  );
+  return dataArr.map(([key, value]) => {
+    return {
+      date: new Date(Date.UTC(key, 0, 1)),
+      value: mean(value),
+    };
+  });
+}
+
+function processFireData(_data) {
+  const addScenarios = _data.map(({ slug, values }) => {
+    const props = SERIES.find(({ id }) => slug.includes(id));
+    return { ...props, values };
+  });
+  // Group the ensemble min & max for each scenario
+  const groupByIds = Array.from(group(addScenarios, (d) => d.id));
+  return groupByIds.map(([groupId, _arrays]) => {
+    const values = merge(_arrays.map(({ values }) => values));
+    const envelope = buildEnvelope(values);
+    const average = buildAverage(values);
+    console.log("values", values);
+    console.log("envelope", envelope);
+    console.log("average", average);
+    // return props common to both ensemble min & max (id, label, color, type)
+    // and a new values array
+    return {
+      ..._arrays[0],
+      values: envelope,
+    };
+  });
+}
+
 /**
  * Get projected data for chart
  * @param {object} config - props describing climate indicator.
@@ -182,9 +219,17 @@ export async function getProjections({
       fetchEvents({ url, params, method, isAnnualRate })
     );
     const data = await Promise.all(promises);
-    const ranges = createRanges(data);
-    const averages = createAverages(data);
-    return [...averages, ...ranges];
+    let ranges;
+    let averages;
+    if (indicatorId === "fire") {
+      const fireData = processFireData(data);
+      //ranges = createRanges(fireData);
+      averages = createAverages(fireData);
+    } else {
+      ranges = createRanges(data);
+      averages = createAverages(data);
+    }
+    return [...averages];
   } catch (error) {
     throw new Error(error.message);
   }
