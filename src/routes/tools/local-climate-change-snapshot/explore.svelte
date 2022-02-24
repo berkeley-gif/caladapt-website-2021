@@ -104,13 +104,17 @@
         ),
       };
 
-      // Get params object for querying the Cal-Adapt API
-      // extra months param required for April SWE indicator
+      /**
+       * Get params object for querying the Cal-Adapt API
+       */
+      // Use extra `months`` param for April SWE indicator only
       const months = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
+      // Use a different `stats`` param for Area Burned (Wildfire) data
       const stat =
         $indicatorStore.id === "fire"
           ? AREABURNED_POLYGON_AGGREGATE_FUNCTION
           : DEFAULT_POLYGON_AGGREGATE_FUNCTION;
+      // Get params
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
@@ -121,15 +125,30 @@
 
       isFetchingStore.set(true);
 
+      /**
+       * Regex strings are used to search the Cal-Adapt API and get a list
+       * of endpoints to fetch data from.
+       */
+
+      // Regex string for finding ensemble avg, min, max for an indicator
+      // For Area Burned (Wildfire) data:
+      //  - use a different regex
+      //  - there is no ensemble avg, min, max. It is calculated from 4 GCMs
       const projectionsSearchStr =
         $indicatorStore.id === "fire"
           ? AREABURNED_TIMESERIES_SLUG_EXP
           : DEFAULT_PROJECTIONS_SLUG_EXP;
-      const snapshotSearchStr =
-        $indicatorStore.id === "fire"
-          ? AREABURNED_TIMESERIES_SLUG_EXP
-          : DEFAULT_SNAPSHOT_SLUG_EXP;
 
+      // Regex string for finding 30 year ensemble range for an indicator
+      // For Area Burned (Wildfire) data:
+      //  - there is no pre-calculated 30 year ensemble range
+      //  - it is calculated from 4 GCMs
+      const snapshotSearchStr =
+        $indicatorStore.id === "fire" ? null : DEFAULT_SNAPSHOT_SLUG_EXP;
+
+      /**
+       * Fetch data and set data store
+       */
       const observed = await getObserved({ config, params, method });
       const projections = await getProjections({
         config,
@@ -137,14 +156,14 @@
         method,
         searchStr: projectionsSearchStr,
       });
-      dataStore.setObserved(observed);
-      dataStore.setProjections(projections);
       const projections30y = await getProjections({
         config,
         params,
         method,
         searchStr: snapshotSearchStr,
       });
+      dataStore.setObserved(observed);
+      dataStore.setProjections(projections);
       dataStore.setProjections30y(projections30y);
     } catch (error) {
       console.error("updateData", error);
