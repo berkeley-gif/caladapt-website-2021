@@ -2,12 +2,15 @@
   import { SkeletonText, SkeletonPlaceholder } from "carbon-components-svelte";
   import { LayerCake, Svg, Html } from "layercake";
   import { scaleBand } from "d3-scale";
-  import { timeFormat, timeParse } from "d3-time-format";
   import { min, max, groups } from "d3-array";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import {
+    DEFAULT_Y_MIN,
+    DEFAULT_Y_MAX,
+  } from "~/routes/tools/_common/constants";
 
-  import ReturnLevels from "./ReturnLevels.svelte";
+  import DotAndWhisker from "./DotAndWhisker.svelte";
   import AxisX from "./AxisX.svelte";
   import AxisY from "./AxisY.svelte";
   import Tooltip from "./Tooltip.svelte";
@@ -18,67 +21,54 @@
   export let yAxis = {
     key: "value",
     label: "YAxis Label",
-    baseValue: null,
+    domainMin: null,
+    domainMax: null,
+    niceMax: null,
     tickFormat: (d) => d,
     units: "",
   };
   export let xAxis = {
-    key: "key",
+    key: "id",
+    groupKey: "groupLabel",
     label: "XAxis Label",
-    baseValue: null,
+    tickFormat: (d) => d,
     units: "",
   };
+  export let isFetching = false;
 
   let chartContainer;
   const legendItems = writable(null);
   let dataByGroup;
-  let ymin;
-  let ymax;
-
   let xKeys;
   let xGroups;
   let x0;
   let x1;
+  let ymin;
+  let ymax;
 
   let evt;
   let hideTooltip = true;
 
-  let dateParse = timeParse("%Y-%m-%d");
-  let dateFormat = timeFormat("%Y");
-  function formatGroup(group) {
-    const parts = group.split(":");
-    const years = parts.map((d) => dateFormat(dateParse(d)));
-    return years.join("–");
-  }
+  let noData = false;
 
-  function createTooltip(d) {
-    let tooltip;
-    tooltip = `<span class="title">${formatGroup(d.timestep)}</span>`;
-    tooltip += `<span class="title">
-      <span class="key" style="background:${d.color}"></span>
-      ${d.label}
-    </span>`;
-    const val = Math.round(d.value * 100) / 100;
-    const lower = Math.round(d.lowerci * 100) / 100;
-    const upper = Math.round(d.upperci * 100) / 100;
-    tooltip += `<span>Return level: ${val} ${yAxis.units}</span>`;
-    if (lower === 0 || upper === 0) {
-      tooltip += "<span>Insufficient observations to calculate CI</span>";
-    } else {
-      tooltip += `<span>95% CI: ${lower} – ${upper} ${yAxis.units}</span>`;
-    }
-    return tooltip;
-  }
+  $: if (!Array.isArray(data) || !data.length) {
+    noData = true;
+    x0 = scaleBand();
+    x1 = scaleBand();
+    ymin = DEFAULT_Y_MIN;
+    ymax = DEFAULT_Y_MAX;
+    dataByGroup = [];
+    legendItems.set([]);
+    setContext("Legend", legendItems);
+  } else {
+    noData = false;
 
-  $: if (data) {
-    // Update Data
-    dataByGroup = groups(data, (d) => d.timestep);
-    console.log("chart data", dataByGroup);
+    // Group Data
+    dataByGroup = groups(data, (d) => d.groupLabel);
 
-    // Update X Axis
-    xKeys = Array.from(new Set(data.map((d) => d.key)));
+    // Update X Domain
+    xKeys = Array.from(new Set(data.map((d) => d.id)));
     xGroups = dataByGroup.map((series) => series[0]);
-    console.log(xKeys, xGroups);
 
     x0 = scaleBand().domain(xGroups).padding(0.5);
 
@@ -89,33 +79,43 @@
       .align(0);
 
     // Update Y Domain
-    ymin = min(data, (d) => d.lowerci);
-    ymax = max(data, (d) => d.upperci);
-    if (yAxis.baseValue === 0) {
-      ymin = yAxis.baseValue;
+    if (typeof yAxis.domainMin === "number" && !isNaN(yAxis.domainMin)) {
+      ymin = yAxis.domainMin;
+    } else {
+      ymin = min(data, (d) => d.ci_lower);
+    }
+
+    if (typeof yAxis.domainMax === "number" && !isNaN(yAxis.domainMax)) {
+      ymax = yAxis.domainMax;
+    } else {
+      ymax = max(data, (d) => d.ci_upper);
+    }
+
+    if (
+      typeof yAxis.niceMax === "number" &&
+      !isNaN(yAxis.niceMax) &&
+      yAxis.niceMax > ymax
+    ) {
+      ymax = yAxis.niceMax;
     }
 
     // Update Legend
     legendItems.set(
-      xKeys.map((key) => {
-        const series = data.find((d) => d.key === key);
+      xKeys.map((id) => {
+        const series = data.find((d) => d.id === id);
         return {
-          key: series.key,
+          id: series.id,
           label: series.label,
           color: series.color,
           visible: true,
         };
       })
     );
-    console.log($legendItems);
     setContext("Legend", legendItems);
   }
 </script>
 
-{#if data}
-  <div class="chart-legend">
-    <Legend />
-  </div>
+{#if data && !isFetching}
   <div style="{`height:${height}`}" bind:this="{chartContainer}">
     <LayerCake
       padding="{{ top: 20, right: 10, bottom: 30, left: 25 }}"
@@ -129,13 +129,13 @@
       data="{dataByGroup}"
     >
       <Svg>
-        <AxisX formatTick="{formatGroup}" />
+        <AxisX />
         <AxisY
           formatTick="{yAxis.tickFormat}"
           label="{yAxis.label}"
           gridlines="{true}"
         />
-        <ReturnLevels
+        <DotAndWhisker
           data="{dataByGroup}"
           on:mousemove="{(event) => (evt = hideTooltip = event)}"
           on:mouseout="{() => (hideTooltip = true)}"
@@ -143,19 +143,19 @@
       </Svg>
       <Html pointerEvents="{false}">
         {#if hideTooltip !== true}
-          <Tooltip evt="{evt}" let:detail>
-            {@html createTooltip(detail.props)}
-          </Tooltip>
+          <Tooltip evt="{evt}" units="{yAxis.units}" let:detail />
         {/if}
       </Html>
     </LayerCake>
   </div>
-{:else}
-  <div class="chart-legend">
-    <SkeletonText />
-    <SkeletonText />
+  <div class="chart-legend margin--v-16">
+    <Legend />
   </div>
+{:else}
   <div style="{`height:${height}`}">
     <SkeletonPlaceholder style="height:100%;width:100%;" />
+  </div>
+  <div class="chart-legend margin--v-16">
+    <SkeletonText />
   </div>
 {/if}

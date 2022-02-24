@@ -5,6 +5,7 @@
 
   export let data;
 
+  const legendItems = getContext("Legend");
   const { x, y, xScale, yScale, rScale, width, padding } =
     getContext("LayerCake");
   const dispatch = createEventDispatcher();
@@ -21,6 +22,9 @@
 
   $: $rScale.rangeRound([0, $width]);
   $: $xScale.rangeRound([0, $rScale.bandwidth()]);
+  $: seriesVisibility = Object.fromEntries(
+    $legendItems.map(({ id, visible }) => [id, visible])
+  );
 </script>
 
 <g
@@ -32,16 +36,17 @@
     <g class="{group}" transform="translate({$rScale(group)},0)">
       {#each values as d}
         <g
-          class="{d.key}"
+          class="{d.id}"
           use:mouseoverFocus="{(e) => dispatch('mousemove', { e, props: d })}"
           on:mousemove="{handleMousemove(d)}"
+          class:hidden="{!seriesVisibility[d.id]}"
         >
           <line
             class="ci"
             stroke="var(--gray-30)"
             stroke-width="{2}"
-            y1="{$yScale(d.lowerci)}"
-            y2="{$yScale(d.upperci)}"
+            y1="{$yScale(d.ci_lower)}"
+            y2="{$yScale(d.ci_upper)}"
             x1="{$xScale($x(d))}"
             x2="{$xScale($x(d))}"></line>
           <rect

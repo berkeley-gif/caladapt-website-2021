@@ -1,0 +1,1 @@
+This tool now defaults to using average precipitation values from all intersecting grid cells for polygon boundaries while calculating indicators. See About the Tool for more information.
