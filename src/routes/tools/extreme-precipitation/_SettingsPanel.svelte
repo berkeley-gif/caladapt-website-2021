@@ -88,7 +88,7 @@
    * is displayed correctly on re-mount
    **/
   function changeReturnPeriod(e) {
-    returnPeriodStore.set(parseInt(e.detail));
+    returnPeriodStore.set(parseInt(e.detail, 10));
   }
 
   function changeAggregateFn(e) {
