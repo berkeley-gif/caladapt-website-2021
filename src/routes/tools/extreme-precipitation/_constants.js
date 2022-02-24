@@ -9,6 +9,38 @@ import { INITIAL_CONFIG } from "../_common/constants";
 
 export const TOOL_SLUG = "extreme-precipitation";
 
+export const DEFAULT_CLIMATE_VARIABLE = "pr";
+export const DEFAULT_CLIMATE_INDICATOR = "intensity";
+
+export const RETURN_PERIODS = [2, 5, 10, 20, 50, 100];
+export const DEFAULT_THRESHOLD_TYPE = "ams_low";
+export const DEFAULT_THRESHOLD_PRECISION = 2;
+export const DEFAULT_RETURN_PERIOD = 20;
+export const DEFAULT_ROLLING_FUNCTION = "sum";
+export const HEATMAP_COLOR_SCALE = ["#19cdbb", "#368ce1", "#6d41ab"];
+
+export const DEFAULT_DURATION = 2;
+export const MIN_DURATION_DAYS = 1;
+export const MAX_DURATION_DAYS = 7;
+
+export const DEFAULT_INITIAL_CONFIG = {
+  ...INITIAL_CONFIG,
+  duration: DEFAULT_DURATION,
+  threshType: DEFAULT_THRESHOLD_TYPE,
+};
+
+export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
+export const POLYGON_AGGREGATE_FUNCTIONS = [
+  {
+    id: "mean",
+    label: "Mean",
+  },
+  {
+    id: "max",
+    label: "Maximum",
+  },
+];
+
 export const CLIMATE_VARIABLES = ["pr"];
 export const CLIMATE_INDICATORS = [
   {
@@ -86,32 +118,3 @@ export const THRESHOLD_TYPES = [
     label: "99th Percentile",
   },
 ];
-
-export const RETURN_PERIODS = [2, 5, 10, 20, 50, 100];
-
-export const DEFAULT_CLIMATE_VARIABLE = "pr";
-export const DEFAULT_CLIMATE_INDICATOR = "intensity";
-export const DEFAULT_DURATION = 2;
-export const DEFAULT_THRESHOLD_TYPE = "ams_low";
-export const DEFAULT_THRESHOLD_PRECISION = 2;
-export const DEFAULT_RETURN_PERIOD = 20;
-export const DEFAULT_ROLLING_FUNCTION = "sum";
-export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
-export const POLYGON_AGGREGATE_FUNCTIONS = [
-  {
-    id: "mean",
-    label: "Mean",
-  },
-  {
-    id: "max",
-    label: "Maximum",
-  },
-];
-
-export const DEFAULT_INITIAL_CONFIG = {
-  ...INITIAL_CONFIG,
-  duration: DEFAULT_DURATION,
-  threshType: DEFAULT_THRESHOLD_TYPE,
-};
-
-export const HEATMAP_COLOR_SCALE = ["#19cdbb", "#368ce1", "#6d41ab"];
