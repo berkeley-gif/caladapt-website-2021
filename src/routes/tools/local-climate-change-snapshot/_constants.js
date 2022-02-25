@@ -18,8 +18,8 @@ export const DEFAULT_SNAPSHOT_SLUG_EXP = "^indicator_30y_.*ens32";
 // This search exp is used to separate timeseries with ens32avg from ens32min/ens32max
 // The envelope/range is created from the ensemble min & max & plotted as area,
 // while the ensemble avg is plotted as lines
-export const ENVELOPE_SEARCH_EXP = /min|max/;
-export const AVERAGE_SEARCH_EXP = /avg/;
+export const ENVELOPE_SEARCH_EXP = /ens32min|ens32max/;
+export const AVERAGE_SEARCH_EXP = /ens32avg/;
 /** Chart and Table data for the Area Burned indicator is assembled from the 4 GCMs.
  * There is no ensemble equivalent in the API.
  **/
@@ -56,7 +56,6 @@ export const OBSERVED = [
     id: "livneh",
     label: "Observed",
     color: COLOR_livneh.hex(),
-    type: "line",
   },
 ];
 export const SCENARIOS = [
@@ -64,19 +63,16 @@ export const SCENARIOS = [
     id: "rcp45",
     label: "Medium Emissions (RCP 4.5)",
     color: COLOR_rcp45.hex(),
-    type: "line",
   },
   {
     id: "rcp85",
     label: "High Emissions (RCP 8.5)",
     color: COLOR_rcp85.hex(),
-    type: "line",
   },
   {
     id: "historical",
     label: "Modeled Historical",
     color: COLOR_historical.hex(),
-    type: "line",
   },
 ];
 export const SCENARIO_RANGES = [
@@ -84,18 +80,15 @@ export const SCENARIO_RANGES = [
     id: "rcp45_range",
     label: "Medium Emissions Range",
     color: COLOR_rcp45.alpha(0.3).hex(),
-    type: "area",
   },
   {
     id: "rcp85_range",
     label: "High Emissions Range",
     color: COLOR_rcp85.alpha(0.3).hex(),
-    type: "area",
   },
   {
     id: "historical_range",
     label: "Modeled Historical Range",
     color: COLOR_historical.alpha(0.3).hex(),
-    type: "area",
   },
 ];
