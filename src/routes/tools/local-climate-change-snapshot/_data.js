@@ -1,15 +1,3 @@
-import {
-  group,
-  groups,
-  merge,
-  mean,
-  rollups,
-  min,
-  max,
-  extent,
-  flatGroup,
-} from "d3-array";
-
 // Helpers
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
@@ -17,12 +5,7 @@ import { convertAnnualRateToSum } from "../_common/helpers";
 
 // Constants
 import { OBSERVED_FILTER_YEAR } from "../_common/constants";
-import {
-  DEFAULT_OBSERVED_SLUG_EXP,
-  OBSERVED,
-  SCENARIOS,
-  SCENARIO_RANGES,
-} from "./_constants";
+import { DEFAULT_OBSERVED_SLUG_EXP, OBSERVED, SCENARIOS } from "./_constants";
 
 const { apiEndpoint } = config.env.production;
 
@@ -107,9 +90,9 @@ export async function getObserved({
     );
     const data = await Promise.all(promises);
     return data.map(({ slug, values }) => {
-      // Add additional props for series (e.g. id, color, label, type)
+      // Add additional props for timeseries (e.g. id, color, label)
       const props = OBSERVED.find(({ id }) => slug.includes(id));
-      return { ...props, values };
+      return { slug, ...props, values };
     });
   } catch (error) {
     throw new Error(error.message);
@@ -139,9 +122,9 @@ export async function getProjections({
     );
     const data = await Promise.all(promises);
     return data.map(({ slug, values }) => {
-      // Add additional props for timeseries (e.g. id, color, label, type)
+      // Add additional props for timeseries (e.g. id, color, label)
       const props = SCENARIOS.find(({ id }) => slug.includes(id));
-      return { ...props, values };
+      return { slug, ...props, values };
     });
   } catch (error) {
     throw new Error(error.message);
