@@ -1,4 +1,4 @@
-import { groups, merge, mean } from "d3-array";
+import { groups, merge, mean, rollups, extent } from "d3-array";
 
 // Helpers
 import { buildEnvelope } from "../_common/helpers";
@@ -124,6 +124,138 @@ function map30yExtentToPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
 }
 
 /**
+ * Groups data from multiple timeseries by year and
+ * returns a single timeseries with average for each year.
+ * Used for creating line to represent an ensemble average.
+ * @param {array} _data
+ * @return {object}
+ */
+function buildLine(_data) {
+  const dataArr = rollups(
+    _data,
+    (v) => v.map((i) => i.value),
+    (d) => d.date.getUTCFullYear()
+  );
+  return dataArr.map(([key, value]) => {
+    return {
+      date: new Date(Date.UTC(key, 0, 1)),
+      value: mean(value),
+    };
+  });
+}
+
+/**
+ * Create an emsemble from individual timeseries
+ * For `fire` there are 4 models * 2 scenarios
+ * @param {array} - array of all timeseries for models
+ * @return {array} - average & range timeseries for 3 scenarios (historical, rcp45, rcp85)
+ */
+const createEnsembleFromModels = (_data) => {
+  const groupByIds = groups(_data, (d) => d.id);
+
+  const ranges = groupByIds.map(([groupId, _arrays]) => {
+    const values = merge(_arrays.map(({ values }) => values));
+    const envelope = buildEnvelope(values);
+    // Find matching props for scenario range
+    // The ranges are plotted as areas and have different id, color & label props
+    const props = SCENARIO_RANGES.find(({ id }) => id.includes(groupId));
+    return {
+      ...props,
+      values: envelope,
+      type: "area",
+    };
+  });
+
+  const averages = groupByIds.map(([groupId, _arrays]) => {
+    const values = merge(_arrays.map(({ values }) => values));
+    const lines = buildLine(values);
+    // Find matching props for scenario
+    // The lines are plotted as areas and have different id, color & label props
+    const props = SCENARIOS.find(({ id }) => id.includes(groupId));
+    return {
+      ...props,
+      values: lines,
+      type: "line",
+    };
+  });
+
+  return [...averages, ...ranges];
+};
+
+/**
+ * Create a snapshot from individual timeseries
+ * For `fire` there are 4 models * 2 scenarios
+ *
+ * Steps:
+ * - Map all 8 model-scenario combinations to the 3 periods
+ *   & calculate `avg` of the values. Use this `avg` for all further calculations
+ * - Group by scenario & period (because now we don't care about the models)
+ * - Calculate stats (avg, min, max) for each scenario-period combination
+ * - Calculate change from baseline in a separate step. Note: there are 2 baseline
+ *   values here, one for RCP 4.5 and one for RCP 8.5.
+ *
+ * @param {array} - array of all timeseries for models
+ * @return {array} - stats for 6 scenario & period combinations
+ */
+const createSnapshotFromModels = (_data) => {
+  // Map all 8 model-scenario combinations to the 3 periods
+  const modelDataByPeriods = _data.map((series) => {
+    const { id: scenarioId, label: scenarioLabel, values } = series;
+    const avgDataArr = DEFAULT_STAT_PERIODS.map((period) => {
+      const { id: periodId, label: periodLabel, start, end } = period;
+      const filteredValues = values.filter(
+        ({ date }) =>
+          date.getUTCFullYear() >= start && date.getUTCFullYear() <= end
+      );
+      return {
+        scenarioId,
+        scenarioLabel,
+        periodId,
+        periodLabel,
+        avg: mean(filteredValues, (d) => d.value), // value used for all further calcs
+      };
+    });
+    return [...avgDataArr];
+  });
+  // Group by scenario & period
+  const groupByScenarioPeriod = groups(
+    merge(modelDataByPeriods),
+    (d) => d.periodId,
+    (d) => d.scenarioId
+  );
+  // Calculate stats except `change` for each scenario-period combination
+  const statsByScenarioPeriod = groupByScenarioPeriod.map(
+    ([periodId, _scenariosArr]) => {
+      const avgForScenario = _scenariosArr.map(([scenarioId, _arrays]) => {
+        const values = _arrays.map((d) => d.avg);
+        const avg = mean(values);
+        const range = extent(values);
+        const { periodId, periodLabel, scenarioLabel } = _arrays[0];
+        return {
+          periodId,
+          periodLabel,
+          scenarioId,
+          scenarioLabel,
+          avg,
+          min: range[0],
+          max: range[1],
+        };
+      });
+      return [...avgForScenario];
+    }
+  );
+  const snapshotData = merge(statsByScenarioPeriod);
+  // Calculate change from baseline and return
+  return snapshotData.map((d) => {
+    const { scenarioId, avg } = d;
+    const modeledBaseline = snapshotData.find(
+      (c) => c.periodId === "baseline" && c.scenarioId === scenarioId
+    );
+    return { ...d, change: avg - modeledBaseline.avg };
+  });
+};
+
+/**
  * Assemble annual timeseries for observed and projections for the the Chart component
  * There are 7 timeseries for all indicators except `fire`
  * `fire` does not have any Observed data
@@ -135,12 +267,19 @@ function map30yExtentToPeriod(scenarios, periods = DEFAULT_STAT_PERIODS) {
  * 6. RCP 4.5 Scenario Envelope/Range
  * 7. RCP 8.5 Scenario Envelope/Range
  **/
-export function getDataForChart(_data) {
+export function getDataForChart(_data, isEnsemble = true) {
   const { observed, projections } = _data;
   const observedSeries = createObservedSeries(observed);
-  const averages = createAverages(projections);
-  const ranges = createRanges(projections);
-  return [...observedSeries, ...averages, ...ranges];
+  let ranges;
+  let averages;
+  if (isEnsemble) {
+    averages = createAverages(projections);
+    ranges = createRanges(projections);
+    return [...observedSeries, ...averages, ...ranges];
+  } else {
+    const ensembles = createEnsembleFromModels(projections);
+    return [...observedSeries, ...ensembles];
+  }
 }
 
 /**
@@ -157,7 +296,7 @@ export function getDataForChart(_data) {
  *
  * The 30 year stats calculated are:
  * avg - average
- * change - change from modeled baseline
+ * change - change is difference of average from modeled baseline average, can be +/-
  * min - 30 year minimum
  * max - 30 year maximum
  *
@@ -166,15 +305,10 @@ export function getDataForChart(_data) {
  * change - change is difference of average from modeled baseline average
  * min - 30 year minimum is pre-calculated and fetched from the API
  * max - 30 year maximum is pre-calculated and fetched from the API
- *
- * Calculation method for `fire`:
- * avg - 30 year average is calculated using ensemble average values
- * change - change is difference of average from modeled baseline average
- * min - 30 year minimum is pre-calculated and fetched from the API
- * max - 30 year maximum is pre-calculated and fetched from the API
  **/
-export function getDataForSnapshot(_data) {
+export function getDataForSnapshot(_data, isEnsemble = true) {
   const { observed, projections, projections30y } = _data;
+  if (!isEnsemble) return createSnapshotFromModels(projections);
 
   //** Calculate 30 year average for #1
   // There is no change, min or max for observed data

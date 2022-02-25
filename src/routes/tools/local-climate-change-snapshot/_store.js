@@ -26,8 +26,15 @@ export const indicatorStore = writable(null);
  *    3. CanESM2
  *    4. HadGEM2-ES
  * projections30y = no data
+ *
+ * isEnsemble is true for all indicators except `fire`
  **/
-const DATA = { observed: null, projections: null, projections30y: null };
+const DATA = {
+  observed: null,
+  projections: null,
+  projections30y: null,
+  isEnsemble: true,
+};
 
 export const dataStore = makeCustomWritableStore(DATA, {
   name: "dataStore",
@@ -36,14 +43,14 @@ export const dataStore = makeCustomWritableStore(DATA, {
       name: "chartDataStore",
       getter: ($s) => {
         if (!$s.observed || !$s.projections) return null;
-        return getDataForChart($s);
+        return getDataForChart($s, $s.isEnsemble);
       },
     },
     {
       name: "snapshotDataStore",
       getter: ($s) => {
         if (!$s.projections || !$s.projections30y) return null;
-        return getDataForSnapshot($s);
+        return getDataForSnapshot($s, $s.isEnsemble);
       },
     },
   ],
@@ -69,6 +76,14 @@ export const dataStore = makeCustomWritableStore(DATA, {
       update: (store) => (_data) =>
         store.update((s) => {
           s.projections30y = _data;
+          return s;
+        }),
+    },
+    {
+      name: "setEnsembleFlag",
+      update: (store) => (bool) =>
+        store.update((s) => {
+          s.isEnsemble = bool;
           return s;
         }),
     },

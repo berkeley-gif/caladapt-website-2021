@@ -153,6 +153,9 @@
         method,
         searchStr: snapshotSearchStr,
       });
+      dataStore.setEnsembleFlag(
+        !INDICATORS_WITH_NO_ENSEMBLES.includes($indicatorStore.id)
+      );
       dataStore.setObserved(observed);
       dataStore.setProjections(projections);
       dataStore.setProjections30y(projections30y);

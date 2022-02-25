@@ -114,6 +114,7 @@ export async function getProjections({
   searchStr,
 }) {
   try {
+    if (!searchStr) return [];
     const { indicatorId, isAnnualRate } = config;
     const exp = searchStr.replace("indicator", indicatorId);
     const urls = await fetchUrls(exp);
