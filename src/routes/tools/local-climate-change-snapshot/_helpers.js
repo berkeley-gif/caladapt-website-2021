@@ -176,13 +176,11 @@ export function getDataForChart(_data) {
 export function getDataForSnapshot(_data) {
   const { observed, projections, projections30y } = _data;
 
-  //** Calculate 30 year average for #1 combination
-
+  //** Calculate 30 year average for #1
   // There is no change, min or max for observed data
   const observedStats = calc30yAvgByPeriod(observed);
 
-  //** Calculate 30 year stats for #2-#6 combinations
-
+  //** Calculate 30 year stats for #2-#6
   // Get the annual ensemble average for each scenario
   const ensembleAverages = projections.filter(
     ({ slug }) => slug.search(AVERAGE_SEARCH_EXP) > 0

@@ -31,6 +31,8 @@ export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
 // Precipitation indicator has values as rates e.g. mm/year
 // These should be converted to annual sum by multiplying by number of days in the year
 export const INDICATORS_WITH_VALUES_AS_RATES = ["pr"];
+// Area Burned indicator has no pre-calculated ensembles
+// All data for table and chart is assembled from 4 models & 2 scenarios
 export const INDICATORS_WITH_NO_ENSEMBLES = ["fire"];
 
 export const DEFAULT_INITIAL_CONFIG = {
