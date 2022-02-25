@@ -50,14 +50,13 @@
     indicatorListStore,
     indicatorStore,
     dataStore,
-    snapshotProjectionsStore,
-    snapshotObservedStore,
   } from "./_store";
   import {
     DEFAULT_INITIAL_CONFIG,
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
     AREABURNED_POLYGON_AGGREGATE_FUNCTION,
     INDICATORS_WITH_VALUES_AS_RATES,
+    INDICATORS_WITH_NO_ENSEMBLES,
     DEFAULT_PROJECTIONS_SLUG_EXP,
     DEFAULT_SNAPSHOT_SLUG_EXP,
     AREABURNED_TIMESERIES_SLUG_EXP,
@@ -71,7 +70,7 @@
   // Derived stores
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
-  const { chartDataStore } = dataStore;
+  const { chartDataStore, snapshotDataStore } = dataStore;
 
   let appReady = false;
   let debug = process.env.NODE_ENV !== "production";
@@ -83,16 +82,9 @@
     console.groupEnd();
   }
 
-  // $: if (
-  //   $chartDataStore &&
-  //   $snapshotObservedStore &&
-  //   $snapshotProjectionsStore
-  // ) {
-  //   console.log("chart data", $chartDataStore);
-  //   console.log("snapshot table baseline", $snapshotObservedStore);
-  //   console.log("snapshot table projections", $snapshotProjectionsStore);
-  // }
   $: console.log("data", $dataStore);
+  $: console.log("chart data", $chartDataStore);
+  $: console.log("snapshot data", $snapshotDataStore);
 
   async function update() {
     if (!appReady) return;
@@ -129,22 +121,21 @@
        * Regex strings are used to search the Cal-Adapt API and get a list
        * of endpoints to fetch data from.
        */
+      // For all indicators except `fire` use the default Regex string
+      // For `fire` the regex returns endpoints for models. There is no ensemble avg, min, max
+      const projectionsSearchStr = INDICATORS_WITH_NO_ENSEMBLES.includes(
+        $indicatorStore.id
+      )
+        ? AREABURNED_TIMESERIES_SLUG_EXP
+        : DEFAULT_PROJECTIONS_SLUG_EXP;
 
-      // Regex string for finding ensemble avg, min, max for an indicator
-      // For Area Burned (Wildfire) data:
-      //  - use a different regex
-      //  - there is no ensemble avg, min, max. It is calculated from 4 GCMs
-      const projectionsSearchStr =
-        $indicatorStore.id === "fire"
-          ? AREABURNED_TIMESERIES_SLUG_EXP
-          : DEFAULT_PROJECTIONS_SLUG_EXP;
-
-      // Regex string for finding 30 year ensemble range for an indicator
-      // For Area Burned (Wildfire) data:
-      //  - there is no pre-calculated 30 year ensemble range
-      //  - it is calculated from 4 GCMs
-      const snapshotSearchStr =
-        $indicatorStore.id === "fire" ? null : DEFAULT_SNAPSHOT_SLUG_EXP;
+      // For all indicators except `fire` use the default snapshot Regex string
+      // For `fire` there is no regex.
+      const snapshotSearchStr = INDICATORS_WITH_NO_ENSEMBLES.includes(
+        $indicatorStore.id
+      )
+        ? null
+        : DEFAULT_SNAPSHOT_SLUG_EXP;
 
       /**
        * Fetch data and set data store
