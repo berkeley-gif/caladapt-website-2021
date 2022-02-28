@@ -36,7 +36,7 @@ This will first run `sapper export` and then transfer the output to the appropri
 
 ### Deploying to Netlify
 
-You may deploy a local build to be hosted on [Netlify](https://netlify.com) for sharing a new feature or bugfix in isolation.
+You may deploy a local build to be hosted on [Netlify](https://netlify.com) for sharing a new feature or bug fix in isolation.
 
 First install the [Netlify CLI tools](https://cli.netlify.com/):
 
@@ -53,10 +53,10 @@ netlify login
 Set the appropriate environment variables prior to running the deploy script:
 
 ```bash
-# the netlify personal access token
-export NETLIFY_AUTH_TOKEN="xxx"
-# name of the subdomain for the deployment
-export NETLIFY_ALIAS="my-branch-name"
+# the netlify personal access token:
+export NETLIFY_AUTH_TOKEN="xxxxxxxxx"
+# the subdomain for the deployment, e.g.
+export NETLIFY_ALIAS="bug-fix-abc"
 ```
 
 And then deploy as follows:
