@@ -1,6 +1,7 @@
 <script>
   import { Dashboard } from "~/components/tools/Partials";
-  import { Loading } from "carbon-components-svelte";
+  import { Loading, Button } from "carbon-components-svelte";
+  import { Share16 } from "carbon-icons-svelte";
 
   import { isFetchingStore } from "../_common/stores";
   import {
@@ -24,10 +25,13 @@
 
   // async component imports
   let LearnMoreModal;
+  let ShareLink;
 
   let showLearnMore = false;
+  let showShare = false;
 
   let learnMoreProps = {};
+  let bookmark = "";
 
   let mapStyle = "dark-v10";
   let legendRamp;
@@ -67,6 +71,12 @@
         "~/components/tools/Partials/LearnMore/LearnMoreModal.svelte"
       )
     ).default;
+  }
+
+  async function loadShare() {
+    showShare = true;
+    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
+      .default;
   }
 
   function handleStyleChange({ detail }) {
@@ -120,6 +130,8 @@
         --border-style="none"
         --background="var(--gray-20)"
       />
+      <Button size="small" icon="{Share16}" on:click="{loadShare}">Share</Button
+      >
     </div>
   </div>
 
@@ -146,4 +158,10 @@
   this="{LearnMoreModal}"
   bind:open="{showLearnMore}"
   {...learnMoreProps}
+/>
+
+<svelte:component
+  this="{ShareLink}"
+  bind:open="{showShare}"
+  state="{bookmark}"
 />
