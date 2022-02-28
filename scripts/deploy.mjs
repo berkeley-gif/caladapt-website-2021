@@ -117,6 +117,12 @@ async function deployDev() {
 }
 
 async function deployNetlify() {
+  if (!process.env.NETLIFY_AUTH_TOKEN || !process.env.NETLIFY_ALIAS) {
+    throw new Error(
+      "Deploying to Netlify requires setting environment variables: $NETLIFY_AUTH_TOKEN and $NETLIFY_ALIAS"
+    );
+  }
+
   try {
     await sapperExport();
     await $`netlify deploy \
