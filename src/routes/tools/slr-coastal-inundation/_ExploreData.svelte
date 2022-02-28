@@ -88,6 +88,17 @@
   }
 </script>
 
+<style>
+  .map-controls-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .share-btn-container {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
 {#if $isFetchingStore}
   <Loading />
 {/if}
@@ -107,13 +118,13 @@
     class="block"
     style="background: var(--gray-20);"
   >
-    <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
         values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
         ramp="{legendRamp}"
         width="{'auto'}"
-        columns="{3}"
+        columns="{0}"
         --position="relative"
         --right="0"
         --bottom="0"
@@ -130,8 +141,11 @@
         --border-style="none"
         --background="var(--gray-20)"
       />
-      <Button size="small" icon="{Share16}" on:click="{loadShare}">Share</Button
-      >
+      <div class="share-btn-container">
+        <Button size="small" icon="{Share16}" on:click="{loadShare}"
+          >Share</Button
+        >
+      </div>
     </div>
   </div>
 
