@@ -53,7 +53,11 @@ async function main() {
     allowBuild = false;
   }
 
-  await handleLocation(location);
+  try {
+    await handleLocation(location);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 async function usage(message) {
