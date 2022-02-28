@@ -74,8 +74,8 @@ async function usage(message) {
 }
 
 async function handleError(error) {
-  console.log(error.message);
-  await $`exit 1`;
+  console.log(`Error: ${error.message}`);
+  process.exit(1);
 }
 
 async function sapperExport() {
