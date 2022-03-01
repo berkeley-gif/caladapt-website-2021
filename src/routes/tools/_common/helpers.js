@@ -12,6 +12,18 @@ import { isLeapYear } from "~/helpers/utilities";
 import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
 
 /**
+ * Creates a string of URL query params for a share / bookmark link
+ * Typically this is passed to the ShareLink component's "state" prop.
+ * @param {object} values
+ * @returns {string}
+ */
+export function makeBookmark(values = {}) {
+  return Object.entries(values)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
+}
+
+/**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
  * min and max value for each year.
  * Used for creating envelopes to represent an ensemble range.
