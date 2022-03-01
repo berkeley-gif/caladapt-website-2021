@@ -7,4 +7,4 @@ category: webinar
 date: "2021-12-09"
 ---
 
-Showcases the launch of a revamped Cal-Adapt website and introduces you to its new look and features.
+This webinar showcases the launch of a revamped Cal-Adapt website and introduces you to its new look and features.
