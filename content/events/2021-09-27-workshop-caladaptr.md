@@ -20,7 +20,7 @@ The workshop will include hands-on exercises using R Notebooks, which require so
 
 The 90-minute workshop will include 1 hour of presentations and short exercises, followed by 30-minutes of self-paced practice where the instructor will be available for assistance. People who just want to get an overview of the workflow and run some sample code are welcome to drop off after an hour.
 
-The wworkshop will cover:
+The workshop will cover:
 - An introduction to importing Cal-Adapt climate data in R using caladaptR
 - Constructing API request for specific climate variables, datasets, locations, and dates
 - Fetching data via the Cal-Adapt API and getting results back as data frames and rasters
