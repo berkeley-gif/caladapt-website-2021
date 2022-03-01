@@ -70,7 +70,6 @@
   import {
     floodScenarioStore,
     timeFrameStore,
-    mapBBoxStore,
     mapViewStore,
     dataLayersStore,
     rasterMetaDataStore,
@@ -97,7 +96,7 @@
   };
 
   const { page } = sapperStores();
-  const { bbox } = mapBBoxStore;
+  const { bbox } = mapViewStore;
   const { tfTileLabel } = timeFrameStore;
 
   $: datasets = tool.datasets;
@@ -110,7 +109,6 @@
       floodScenarioStore,
       timeFrameStore,
       isFetchingStore,
-      mapBBoxStore,
       mapViewStore,
       dataLayersAugmentedStore
     );
@@ -148,7 +146,6 @@
       getInitialConfig(query);
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
-    mapBBoxStore.set(bbox);
     dataLayersStore.set(dataLayers);
     mapViewStore.set({ lat, lng, zoom, bbox });
   }

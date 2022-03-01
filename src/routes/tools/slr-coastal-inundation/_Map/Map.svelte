@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
   import { getGeoJson } from "../_data";
   import { mapViewStore } from "../_store";
@@ -14,8 +14,6 @@
 
   export let dataLayersAugmented;
   export let mapStyle;
-
-  const dispatch = createEventDispatcher();
 
   const moveendDelayMS = 1500;
   const { lat, lng } = $mapViewStore;
@@ -78,7 +76,6 @@
         lat,
         zoom,
       });
-      dispatch("moveend", bbox);
     }
   }
 

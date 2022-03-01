@@ -8,7 +8,6 @@
     timeFrameStore,
     floodScenarioStore,
     dataLayersStore,
-    mapBBoxStore,
     mapViewStore,
     dataLayersAugmentedStore,
   } from "./_store";
@@ -97,10 +96,6 @@
   function handleStyleChange({ detail }) {
     mapStyle = detail;
   }
-
-  function handleMapMoveend({ detail }) {
-    mapBBoxStore.set(detail);
-  }
 </script>
 
 <style>
@@ -171,7 +166,6 @@
     <Map
       dataLayersAugmented="{$dataLayersAugmentedStore}"
       mapStyle="{mapStyle}"
-      on:moveend="{handleMapMoveend}"
     />
   </div>
 
