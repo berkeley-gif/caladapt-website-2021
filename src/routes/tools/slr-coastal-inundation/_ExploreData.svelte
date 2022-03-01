@@ -81,9 +81,9 @@
       .map((d) => d.id)
       .join(",");
     bookmark = makeBookmark({
-      lat,
-      lng,
-      zoom,
+      lat: lat.toFixed(6),
+      lng: lng.toFixed(6),
+      zoom: zoom.toFixed(4),
       dataLayers,
       timeFrame: $timeFrame.id,
       floodScenario: $floodScenario.id,
