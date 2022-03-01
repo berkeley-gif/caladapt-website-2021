@@ -106,6 +106,7 @@
   // log changes to stores when in development
   if (process.env.NODE_ENV !== "production") {
     logStores(
+      isFetchingStore,
       floodScenarioStore,
       timeFrameStore,
       isFetchingStore,
@@ -140,7 +141,7 @@
     }
   }
 
-  async function initApp() {
+  function initApp() {
     const { query } = $page;
     const { lat, lng, zoom, dataLayers, floodScenario, timeFrame, bbox } =
       getInitialConfig(query);
@@ -152,7 +153,7 @@
 
   onMount(async () => {
     try {
-      await initApp();
+      initApp();
       appReady = true;
       await update();
       console.log("app ready");

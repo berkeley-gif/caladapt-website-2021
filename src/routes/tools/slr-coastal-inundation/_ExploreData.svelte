@@ -130,6 +130,7 @@
       floodScenario="{$floodScenario.label}"
       dataLayers="{$dataLayersStore}"
       dataUnavailableMsg="{dataUnavailableMsg}"
+      isFetchingData="{$isFetchingStore}"
     />
   </div>
 
