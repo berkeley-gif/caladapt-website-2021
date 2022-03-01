@@ -113,7 +113,8 @@
   }
   .share-btn-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
   }
 </style>
 
@@ -160,6 +161,7 @@
         --background="var(--gray-20)"
       />
       <div class="share-btn-container">
+        <p class="bx--label">Share Map View</p>
         <Button size="small" icon="{Share16}" on:click="{handleShareBtnClick}"
           >Share</Button
         >
