@@ -9,9 +9,11 @@
     floodScenarioStore,
     dataLayersStore,
     mapBBoxStore,
+    mapViewStore,
     dataLayersAugmentedStore,
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
+  import { makeBookmark } from "../_common/helpers";
 
   import { Legend, StyleControl } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
@@ -74,6 +76,14 @@
   }
 
   async function loadShare() {
+    const { lat, lng, zoom } = $mapViewStore;
+    bookmark = makeBookmark({
+      lat,
+      lng,
+      zoom,
+      timeFrame: $timeFrame.id,
+      floodScenario: $floodScenario.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
