@@ -2,6 +2,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
   import { getGeoJson } from "../_data";
+  import { mapViewStore } from "../_store";
   import {
     Map as SlippyMap,
     NavigationControl,
@@ -14,14 +15,12 @@
   export let dataLayersAugmented;
   export let mapStyle;
 
-  // initial map view
-  const lng = -122.24;
-  const lat = 37.8279;
-  let zoom = 9;
-
   const dispatch = createEventDispatcher();
 
   const moveendDelayMS = 1500;
+  const { lat, lng } = $mapViewStore;
+
+  $: zoom = $mapViewStore.zoom;
 
   let mapInstance;
   let mbGlMap;
@@ -70,12 +69,21 @@
         _sw: { lng: xMax, lat: yMax },
         _ne: { lng: xMin, lat: yMin },
       } = mbGlMap.getBounds();
-      dispatch("moveend", [xMin, yMin, xMax, yMax]);
+      const bbox = [xMin, yMin, xMax, yMax];
+      const zoom = mbGlMap.getZoom();
+      const { lng, lat } = mbGlMap.getCenter();
+      mapViewStore.set({
+        bbox,
+        lng,
+        lat,
+        zoom,
+      });
+      dispatch("moveend", bbox);
     }
   }
 
   function handleZoomend() {
-    zoom = mbGlMap.getZoom();
+    mapViewStore.setZoom(mbGlMap.getZoom());
   }
 
   function handleMapReady({ detail }) {
