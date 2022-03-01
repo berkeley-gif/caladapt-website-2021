@@ -77,10 +77,15 @@
 
   async function loadShare() {
     const { lat, lng, zoom } = $mapViewStore;
+    const dataLayers = $dataLayersAugmentedStore
+      .filter((d) => d.checked && !d.disabled)
+      .map((d) => d.id)
+      .join(",");
     bookmark = makeBookmark({
       lat,
       lng,
       zoom,
+      dataLayers,
       timeFrame: $timeFrame.id,
       floodScenario: $floodScenario.id,
     });

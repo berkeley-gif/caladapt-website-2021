@@ -4,8 +4,8 @@ export function getInitialConfig(urlParams = {}) {
   if (!Object.keys(urlParams).length) {
     return DEFAULT_INITIAL_CONFIG;
   }
-  const { layers, ...rest } = urlParams;
-  const dataLayers = validateLayers(layers);
+  let { dataLayers: layerStr, ...rest } = urlParams;
+  const dataLayers = validateLayers(layerStr);
   return {
     ...DEFAULT_INITIAL_CONFIG,
     ...rest,
@@ -14,19 +14,13 @@ export function getInitialConfig(urlParams = {}) {
 }
 
 function validateLayers(str) {
-  if (!str || typeof str !== "string" || str.length) {
+  if (!str || typeof str !== "string" || !str.length) {
     return DATA_LAYERS.slice();
   }
   const layerIds = new Set(str.split(","));
-
-  return DATA_LAYERS.map(({ id, ...rest }) => {
-    if (layerIds.has(id)) {
-      return {
-        id,
-        ...rest,
-        checked: true,
-      };
-    }
-    return { id, ...rest };
-  });
+  return DATA_LAYERS.map(({ id, ...rest }) => ({
+    ...rest,
+    id,
+    checked: layerIds.has(id),
+  }));
 }
