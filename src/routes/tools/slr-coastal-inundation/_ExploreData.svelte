@@ -82,10 +82,11 @@
 
   function setBookmarkParams() {
     const { lat, lng, zoom } = $mapViewStore;
-    const dataLayers = $dataLayersAugmentedStore
-      .filter((d) => d.checked && !d.disabled)
-      .map((d) => d.id)
-      .join(",");
+    const dataLayers =
+      $dataLayersAugmentedStore
+        .filter((d) => d.checked && !d.disabled)
+        .map((d) => d.id)
+        .join(",") || "none";
     bookmark = makeBookmark({
       lat: lat.toFixed(6),
       lng: lng.toFixed(6),

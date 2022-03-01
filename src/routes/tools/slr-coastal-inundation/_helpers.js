@@ -14,7 +14,7 @@ export function getInitialConfig(urlParams = {}) {
 }
 
 function validateLayers(str) {
-  if (!str || typeof str !== "string" || !str.length) {
+  if (!str || typeof str !== "string") {
     return DATA_LAYERS.slice();
   }
   const layerIds = new Set(str.split(","));
