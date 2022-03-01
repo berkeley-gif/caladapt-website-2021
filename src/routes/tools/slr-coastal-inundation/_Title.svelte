@@ -27,6 +27,9 @@
 </script>
 
 <style>
+  div {
+    min-height: 4rem;
+  }
   div :global(span.annotate-color) {
     display: inline-block;
     padding-left: 0.5rem;
