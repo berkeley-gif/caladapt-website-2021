@@ -75,6 +75,12 @@
   }
 
   async function loadShare() {
+    showShare = true;
+    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
+      .default;
+  }
+
+  function setBookmarkParams() {
     const { lat, lng, zoom } = $mapViewStore;
     const dataLayers = $dataLayersAugmentedStore
       .filter((d) => d.checked && !d.disabled)
@@ -88,9 +94,11 @@
       timeFrame: $timeFrame.id,
       floodScenario: $floodScenario.id,
     });
-    showShare = true;
-    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
-      .default;
+  }
+
+  async function handleShareBtnClick() {
+    setBookmarkParams();
+    await loadShare();
   }
 
   function handleStyleChange({ detail }) {
@@ -152,7 +160,7 @@
         --background="var(--gray-20)"
       />
       <div class="share-btn-container">
-        <Button size="small" icon="{Share16}" on:click="{loadShare}"
+        <Button size="small" icon="{Share16}" on:click="{handleShareBtnClick}"
           >Share</Button
         >
       </div>
