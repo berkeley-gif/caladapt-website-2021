@@ -20,13 +20,15 @@
 
   $: zoom = $mapViewStore.zoom;
 
-  let mapInstance;
-  let mbGlMap;
+  let mapInstance; // the components/tools/Map.svelte component instance
+  let mbGlMap; // the MapBoxGL map instance
   let curStyleUrl;
   let geojsons = new Map();
   let centroids;
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
+  $: activeLayers = dataLayersAugmented.filter((d) => d.checked);
+  $: console.log(activeLayers);
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
   $: beforeId =
     mapStyle && mapStyle.includes("satellite")
@@ -117,30 +119,32 @@
     <NavigationControl />
     <Search on:change="{handleSearchChange}" />
 
-    {#if zoom >= 8}
-      <RasterLayers
-        mapStyle="{mapStyle}"
-        beforeId="{beforeId}"
-        dataLayers="{dataLayersAugmented}"
-      />
-    {/if}
+    {#if Array.isArray(activeLayers) && activeLayers.length}
+      {#if zoom >= 8}
+        <RasterLayers
+          mapStyle="{mapStyle}"
+          beforeId="{beforeId}"
+          dataLayers="{dataLayersAugmented}"
+        />
+      {/if}
 
-    {#if zoom < 8}
-      <TileIndexes
-        mapStyle="{mapStyle}"
-        beforeId="{beforeId}"
-        dataLayers="{dataLayersAugmented}"
-        geojsons="{geojsons}"
-      />
-    {/if}
+      {#if zoom < 8}
+        <TileIndexes
+          mapStyle="{mapStyle}"
+          beforeId="{beforeId}"
+          dataLayers="{dataLayersAugmented}"
+          geojsons="{geojsons}"
+        />
+      {/if}
 
-    {#if zoom <= 6}
-      <TileCentroids
-        mapStyle="{mapStyle}"
-        beforeId="{beforeIdCentroids}"
-        dataLayers="{dataLayersAugmented}"
-        centroids="{centroids}"
-      />
+      {#if zoom <= 6}
+        <TileCentroids
+          mapStyle="{mapStyle}"
+          beforeId="{beforeIdCentroids}"
+          dataLayers="{dataLayersAugmented}"
+          centroids="{centroids}"
+        />
+      {/if}
     {/if}
   </SlippyMap>
 {/if}
