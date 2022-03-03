@@ -6,7 +6,7 @@ import {
   FLOOD_SCENARIOS,
   TIME_PERIODS,
   DATA_LAYERS,
-  DEFAULT_MAP_BBOX,
+  DEFAULT_MAP_VIEW,
   RASTER_METADATA,
   DL_Cosmos,
   DL_Calflod5m,
@@ -44,12 +44,42 @@ export const timeFrameStore = makeCustomWritableStore(DEFAULT_TIME_FRAME, {
   ],
 });
 
-export const mapBBoxStore = makeCustomWritableStore(DEFAULT_MAP_BBOX, {
-  name: "mapBBoxStore",
+export const mapViewStore = makeCustomWritableStore(DEFAULT_MAP_VIEW, {
+  name: "mapViewStore",
   getters: [
     {
+      name: "zoom",
+      getter: ($s) => $s.zoom,
+    },
+    {
+      name: "lat",
+      getter: ($s) => $s.lat,
+    },
+    {
+      name: "lng",
+      getter: ($s) => $s.lng,
+    },
+    {
       name: "bbox",
-      getter: ($s) => $s.map((d) => +d.toFixed(4)),
+      getter: ($s) => $s.bbox.map((d) => +d.toFixed(4)),
+    },
+  ],
+  updaters: [
+    {
+      name: "setZoom",
+      update: (store) => (value) =>
+        store.update((s) => {
+          s.zoom = value;
+          return s;
+        }),
+    },
+    {
+      name: "setBBox",
+      update: (store) => (value) =>
+        store.update((s) => {
+          s.bbox = value;
+          return s;
+        }),
     },
   ],
 });

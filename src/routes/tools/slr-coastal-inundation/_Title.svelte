@@ -6,6 +6,7 @@
   export let timeFrame;
   export let dataLayers;
   export let dataUnavailableMsg = "";
+  export let isFetchingData = true;
 
   $: visibleLayers = dataLayers.filter((d) => d.checked);
   $: layerHtml = getLayerHtml(visibleLayers);
@@ -27,6 +28,9 @@
 </script>
 
 <style>
+  div {
+    min-height: 4rem;
+  }
   div :global(span.annotate-color) {
     display: inline-block;
     padding-left: 0.5rem;
@@ -42,7 +46,7 @@
   </p>
 </div>
 
-{#if dataUnavailableMsg}
+{#if !isFetchingData && dataUnavailableMsg}
   <InlineNotification
     lowContrast
     hideCloseButton
