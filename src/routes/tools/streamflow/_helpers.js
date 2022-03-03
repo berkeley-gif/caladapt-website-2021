@@ -11,6 +11,10 @@ export const getSelectedMonthStrings = (monthIdsArr) => {
 };
 
 export function getBasinCenter(feature) {
-  const { geometry } = getCenter(feature.geometry);
-  return { ...feature, geometry };
+  try {
+    const { geometry } = getCenter(feature.geometry);
+    return { ...feature, geometry };
+  } catch (error) {
+    console.warn(error);
+  }
 }

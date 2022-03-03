@@ -1,6 +1,8 @@
 import { range } from "d3-array";
 import { timeFormat } from "d3-time-format";
 
+import { MODELED_FUTURE_PROJECTIONS_YEAR } from "~/helpers/app-constants";
+
 import models from "~/helpers/climate-models";
 import scenarios from "~/helpers/climate-scenarios";
 import boundaries from "~/helpers/mapbox-layers";
@@ -99,7 +101,7 @@ export const OBSERVED = [
 
 // For livneh, typically we remove data values after 2006
 // because there are QA/QC issues with the data
-export const OBSERVED_FILTER_YEAR = 2006;
+export const OBSERVED_FILTER_YEAR = MODELED_FUTURE_PROJECTIONS_YEAR;
 
 export const INITIAL_CONFIG = {
   boundary: "locagrid",

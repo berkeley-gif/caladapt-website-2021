@@ -1,5 +1,4 @@
 import { writable, derived } from "svelte/store";
-import { merge } from "d3-array";
 import climvars from "~/helpers/climate-variables";
 import { makeCustomWritableStore } from "../_common/stores";
 import {
@@ -10,8 +9,6 @@ import {
   DEFAULT_RETURN_PERIOD,
   DEFAULT_THRESHOLD_TYPE,
   DEFAULT_POLYGON_AGGREGATE_FUNCTION,
-  WARNING_LOW_SAMPLE_SIZE,
-  WARNING_MISSING_CI,
 } from "./_constants";
 
 import {

@@ -53,21 +53,29 @@ async function main() {
     allowBuild = false;
   }
 
-  await handleLocation(location);
+  try {
+    await handleLocation(location);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 async function usage(message) {
   if (message) {
     console.log(message);
   }
-  console.log("Usage: zx deploy.mjs --location=<string> --transfer=<boolean> --build=<boolean>");
-  console.log("--location is required; --transfer & --build are optional, both default to true");
+  console.log(
+    "Usage: zx deploy.mjs --location=<string> --transfer=<boolean> --build=<boolean>"
+  );
+  console.log(
+    "--location is required; --transfer & --build are optional, both default to true"
+  );
   await $`exit 0`;
 }
 
 async function handleError(error) {
-  console.log(error.message);
-  await $`exit 1`;
+  console.log(`Error: ${error.message}`);
+  process.exit(1);
 }
 
 async function sapperExport() {
@@ -113,9 +121,19 @@ async function deployDev() {
 }
 
 async function deployNetlify() {
+  if (!process.env.NETLIFY_AUTH_TOKEN || !process.env.NETLIFY_ALIAS) {
+    throw new Error(
+      "Deploying to Netlify requires setting environment variables: $NETLIFY_AUTH_TOKEN and $NETLIFY_ALIAS"
+    );
+  }
+
   try {
     await sapperExport();
-    await $`netlify deploy --dir=${SAPPER_EXPORT_DIR}`;
+    await $`netlify deploy \
+      --dir ${SAPPER_EXPORT_DIR}\
+      --auth $NETLIFY_AUTH_TOKEN\
+      --alias $NETLIFY_ALIAS\
+      --open`;
     await $`exit 0`;
   } catch (error) {
     handleError(error);
@@ -148,7 +166,7 @@ function setEnvProd() {
 }
 
 function setEnvNetlify() {
-  process.env.NODE_ENV = "development";
+  process.env.NODE_ENV = "production";
   process.env.DEPLOY = "netlify";
 }
 

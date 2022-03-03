@@ -4,7 +4,7 @@
   export let units;
 
   function formatValue(d) {
-    return +Math.round(d * 100) / 100;
+    return Math.round(d * 100) / 100;
   }
 
   $: ({ e, props } = evt.detail);

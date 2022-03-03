@@ -29,20 +29,23 @@
   const DEFAULT_WATERYEAR_STARTDATE = new Date(DEFAULT_WATERYEAR - 1, 9, 1);
   const DEFAULT_WATERYEAR_ENDDATE = new Date(DEFAULT_WATERYEAR, 8, 1);
 
+  const xAxisCommon = {
+    key: "date",
+    label: "",
+  };
+
   let xAxis;
 
   $: if (label.includes("Monthly")) {
     xAxis = {
-      key: "date",
-      label: "",
+      ...xAxisCommon,
+      tickFormat: timeFormat("%b"),
       domainMin: DEFAULT_WATERYEAR_STARTDATE,
       domainMax: DEFAULT_WATERYEAR_ENDDATE,
-      tickFormat: timeFormat("%b"),
     };
   } else {
     xAxis = {
-      key: "date",
-      label: "",
+      ...xAxisCommon,
       tickFormat: timeFormat("%Y"),
     };
   }

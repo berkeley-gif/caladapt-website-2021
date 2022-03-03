@@ -21,7 +21,7 @@
   timing of these events and the longest stretch of consecutive extreme
   events.
 </p>
-<p class="h3">What is a Threshold value?</p>
+<h3>What is a Threshold value?</h3>
 <p>
   The extreme threshold sets the conditions for which a precipitation
   event is considered “extreme“. By default, the threshold is set to the
@@ -32,20 +32,20 @@
   or too low a threshold can decrease the reliability of the estimates.
 </p>
 
-<p class="h3">What is an Event Duration?</p>
+<h3>What is an Event Duration?</h3>
 <p>
   Event duration is the number of days over which precipitation falls
   that contribute to a single event. Changing this value will change the
   extreme threshold.
 </p>
 
-<p class="h3">What is a Return Period?</p>
+<h3>What is a Return Period?</h3>
 <p>
   The return period estimates the average time between extreme events.
   This is sometimes worded as a “1 in x years” event.
 </p>
 
-<p class="h3">What is a Return Level (Estimated Intensity)?</p>
+<h3>What is a Return Level (Estimated Intensity)?</h3>
 <p>
   The return level is the estimated amount of precipitation that would
   be expected to be exceeded once every return period. Effectively it is
@@ -59,7 +59,7 @@
   are calculated from historical observed values.
 </p>
 
-<p class="h3">Technical Approach</p>
+<h3>Technical Approach</h3>
 <p>
   Extreme Value Theory (EVT) is a statistical methodology used for
   describing rare events. There are several ways to apply EVT to
@@ -102,7 +102,7 @@
   average of precipitation values from all intersecting grid cells for a polygon boundary before calculating intensity estimates. An earlier version of this tool used the maximum values from all intersecting grid cells which resulted in very high intensity estimates. Values using the average method more closely align with precipitation intensity estimates provided by NOAA.
 </p>
 
-<p class="h3">References</p>
+<h3>References</h3>
 <ul style="padding-left: 1rem;">
   <li>
     <a
