@@ -22,13 +22,12 @@
 
   let mapInstance; // the components/tools/Map.svelte component instance
   let mbGlMap; // the MapBoxGL map instance
-  let curStyleUrl;
-  let geojsons = new Map();
-  let centroids;
+  let curStyleUrl; // for diff'ing map style updates
+  let geojsons = new Map(); // holds geojson layers for TileIndexes
+  let centroids; // holds geojson layers for Centroids
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
   $: activeLayers = dataLayersAugmented.filter((d) => d.checked);
-  $: console.log(activeLayers);
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
   $: beforeId =
     mapStyle && mapStyle.includes("satellite")

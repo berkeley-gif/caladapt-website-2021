@@ -85,6 +85,7 @@
   export let learnMoreContent;
 
   let appReady = false;
+  let baseMapStyle;
 
   // Monitor sections as they enter & leave viewport
   let currentView;
@@ -143,8 +144,17 @@
 
   async function initApp() {
     const { query } = $page;
-    const { lat, lng, zoom, dataLayers, floodScenario, timeFrame, bbox } =
-      getInitialConfig(query);
+    const {
+      lat,
+      lng,
+      zoom,
+      mapStyle,
+      dataLayers,
+      floodScenario,
+      timeFrame,
+      bbox,
+    } = getInitialConfig(query);
+    baseMapStyle = mapStyle;
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
     dataLayersStore.set(dataLayers);
@@ -191,7 +201,10 @@
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData learnMoreContent="{learnMoreContent}" />
+    <ExploreData
+      learnMoreContent="{learnMoreContent}"
+      mapStyle="{baseMapStyle}"
+    />
   {:else}
     <Loading />
   {/if}

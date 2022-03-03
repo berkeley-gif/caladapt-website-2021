@@ -20,6 +20,7 @@
   import { Map } from "./_Map";
 
   export let learnMoreContent;
+  export let mapStyle;
 
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
@@ -34,7 +35,6 @@
   let learnMoreProps = {};
   let bookmark = "";
 
-  let mapStyle = "dark-v10";
   let legendRamp;
 
   if (typeof window !== "undefined" && !legendRamp) {
@@ -92,6 +92,7 @@
       lng: lng.toFixed(6),
       zoom: zoom.toFixed(4),
       dataLayers,
+      mapStyle,
       timeFrame: $timeFrame.id,
       floodScenario: $floodScenario.id,
     });

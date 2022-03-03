@@ -17,6 +17,7 @@ export const DEFAULT_MAP_BBOX = [-122.9204, 37.5257, -121.5595, 38.1288];
 export const DEFAULT_MAP_LNG = -122.24;
 export const DEFAULT_MAP_LAT = 37.8279;
 export const DEFAULT_MAP_ZOOM = 9;
+export const DEFAULT_MAP_STYLE = "dark-v10";
 
 export const DEFAULT_MAP_VIEW = {
   lng: DEFAULT_MAP_LNG,
@@ -53,6 +54,7 @@ export const DEFAULT_INITIAL_CONFIG = {
   floodScenario: DEFAULT_FLOOD_SCENARIO,
   timeFrame: DEFAULT_TIME_FRAME,
   dataLayers: DATA_LAYERS,
+  mapStyle: DEFAULT_MAP_STYLE,
   ...DEFAULT_MAP_VIEW,
 };
 
