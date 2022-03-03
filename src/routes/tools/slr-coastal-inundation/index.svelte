@@ -141,7 +141,7 @@
     }
   }
 
-  function initApp() {
+  async function initApp() {
     const { query } = $page;
     const { lat, lng, zoom, dataLayers, floodScenario, timeFrame, bbox } =
       getInitialConfig(query);
@@ -153,7 +153,7 @@
 
   onMount(async () => {
     try {
-      initApp();
+      await initApp();
       appReady = true;
       await update();
       console.log("app ready");
