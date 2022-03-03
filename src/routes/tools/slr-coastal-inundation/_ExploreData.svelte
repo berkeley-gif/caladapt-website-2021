@@ -1,16 +1,18 @@
 <script>
   import { Dashboard } from "~/components/tools/Partials";
-  import { Loading } from "carbon-components-svelte";
+  import { Loading, Button } from "carbon-components-svelte";
+  import { Share16 } from "carbon-icons-svelte";
 
   import { isFetchingStore } from "../_common/stores";
   import {
     timeFrameStore,
     floodScenarioStore,
     dataLayersStore,
-    mapBBoxStore,
+    mapViewStore,
     dataLayersAugmentedStore,
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
+  import { makeBookmark } from "../_common/helpers";
 
   import { Legend, StyleControl } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
@@ -18,18 +20,21 @@
   import { Map } from "./_Map";
 
   export let learnMoreContent;
+  export let mapStyle;
 
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
 
   // async component imports
   let LearnMoreModal;
+  let ShareLink;
 
   let showLearnMore = false;
+  let showShare = false;
 
   let learnMoreProps = {};
+  let bookmark = "";
 
-  let mapStyle = "dark-v10";
   let legendRamp;
 
   if (typeof window !== "undefined" && !legendRamp) {
@@ -69,14 +74,51 @@
     ).default;
   }
 
+  async function loadShare() {
+    showShare = true;
+    ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
+      .default;
+  }
+
+  function setBookmarkParams() {
+    const { lat, lng, zoom } = $mapViewStore;
+    const dataLayers =
+      $dataLayersAugmentedStore
+        .filter((d) => d.checked && !d.disabled)
+        .map((d) => d.id)
+        .join(",") || "none";
+    bookmark = makeBookmark({
+      lat: lat.toFixed(6),
+      lng: lng.toFixed(6),
+      zoom: zoom.toFixed(4),
+      dataLayers,
+      mapStyle,
+      timeFrame: $timeFrame.id,
+      floodScenario: $floodScenario.id,
+    });
+  }
+
+  async function handleShareBtnClick() {
+    setBookmarkParams();
+    await loadShare();
+  }
+
   function handleStyleChange({ detail }) {
     mapStyle = detail;
   }
-
-  function handleMapMoveend({ detail }) {
-    mapBBoxStore.set(detail);
-  }
 </script>
+
+<style>
+  .map-controls-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .share-btn-container {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+</style>
 
 {#if $isFetchingStore}
   <Loading />
@@ -89,6 +131,7 @@
       floodScenario="{$floodScenario.label}"
       dataLayers="{$dataLayersStore}"
       dataUnavailableMsg="{dataUnavailableMsg}"
+      isFetchingData="{$isFetchingStore}"
     />
   </div>
 
@@ -97,13 +140,13 @@
     class="block"
     style="background: var(--gray-20);"
   >
-    <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
         values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
         ramp="{legendRamp}"
         width="{'auto'}"
-        columns="{3}"
+        columns="{0}"
         --position="relative"
         --right="0"
         --bottom="0"
@@ -120,6 +163,12 @@
         --border-style="none"
         --background="var(--gray-20)"
       />
+      <div class="share-btn-container">
+        <p class="bx--label">Share Map View</p>
+        <Button size="small" icon="{Share16}" on:click="{handleShareBtnClick}"
+          >Share</Button
+        >
+      </div>
     </div>
   </div>
 
@@ -130,7 +179,6 @@
     <Map
       dataLayersAugmented="{$dataLayersAugmentedStore}"
       mapStyle="{mapStyle}"
-      on:moveend="{handleMapMoveend}"
     />
   </div>
 
@@ -146,4 +194,10 @@
   this="{LearnMoreModal}"
   bind:open="{showLearnMore}"
   {...learnMoreProps}
+/>
+
+<svelte:component
+  this="{ShareLink}"
+  bind:open="{showShare}"
+  state="{bookmark}"
 />

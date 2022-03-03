@@ -1,8 +1,7 @@
 <script context="module">
-  import { DEFAULT_INITIAL_CONFIG } from "./_constants";
   import resourcesList from "content/resources/data";
 
-  export async function preload({ query, path }) {
+  export async function preload({ path }) {
     const slug = path.split("/")[2];
     const toolsList = await this.fetch("tools.json")
       .then((r) => r.json())
@@ -33,19 +32,7 @@
       await this.fetch("tools/slr-coastal-inundation.json")
     ).json();
 
-    let initialConfig = {
-      ...DEFAULT_INITIAL_CONFIG,
-    };
-
-    if (Object.keys(query).length) {
-      initialConfig = {
-        ...initialConfig,
-        ...query,
-      };
-    }
-
     return {
-      initialConfig,
       tool,
       relatedTools,
       externalResources,
@@ -60,6 +47,7 @@
   import { onMount } from "svelte";
   import { Loading } from "carbon-components-svelte";
   import { inview } from "svelte-inview/dist/";
+  import { stores as sapperStores } from "@sapper/app";
 
   import { logStores } from "~/helpers/utilities";
   import { logException } from "~/helpers/logging";
@@ -82,12 +70,13 @@
   import {
     floodScenarioStore,
     timeFrameStore,
-    mapBBoxStore,
+    mapViewStore,
+    dataLayersStore,
     rasterMetaDataStore,
     dataLayersAugmentedStore,
   } from "./_store";
+  import { getInitialConfig } from "./_helpers";
 
-  export let initialConfig;
   export let tool;
   export let relatedTools;
   export let externalResources;
@@ -96,6 +85,7 @@
   export let learnMoreContent;
 
   let appReady = false;
+  let baseMapStyle;
 
   // Monitor sections as they enter & leave viewport
   let currentView;
@@ -106,7 +96,8 @@
     }
   };
 
-  const { bbox } = mapBBoxStore;
+  const { page } = sapperStores();
+  const { bbox } = mapViewStore;
   const { tfTileLabel } = timeFrameStore;
 
   $: datasets = tool.datasets;
@@ -116,10 +107,11 @@
   // log changes to stores when in development
   if (process.env.NODE_ENV !== "production") {
     logStores(
+      isFetchingStore,
       floodScenarioStore,
       timeFrameStore,
       isFetchingStore,
-      mapBBoxStore,
+      mapViewStore,
       dataLayersAugmentedStore
     );
   }
@@ -150,15 +142,31 @@
     }
   }
 
-  async function initApp({ floodScenario, timeFrame, bbox }) {
+  async function initApp() {
+    const { query } = $page;
+    const {
+      lat,
+      lng,
+      zoom,
+      mapStyle,
+      dataLayers,
+      floodScenario,
+      timeFrame,
+      bbox,
+    } = getInitialConfig(query);
+    baseMapStyle = mapStyle;
     floodScenarioStore.set(floodScenario);
     timeFrameStore.set(timeFrame);
-    mapBBoxStore.set(bbox);
+    dataLayersStore.set(dataLayers);
+    mapViewStore.set({ lat, lng, zoom, bbox });
   }
 
   onMount(async () => {
     try {
-      await initApp(initialConfig);
+      // setting isFetching prevents the missing data message from appearing
+      // when the app first loads.
+      isFetchingStore.set(true);
+      await initApp();
       appReady = true;
       await update();
       console.log("app ready");
@@ -196,7 +204,10 @@
 
 <div id="explore-data" use:inview="{{}}" on:enter="{handleEntry}">
   {#if appReady}
-    <ExploreData learnMoreContent="{learnMoreContent}" />
+    <ExploreData
+      learnMoreContent="{learnMoreContent}"
+      mapStyle="{baseMapStyle}"
+    />
   {:else}
     <Loading />
   {/if}

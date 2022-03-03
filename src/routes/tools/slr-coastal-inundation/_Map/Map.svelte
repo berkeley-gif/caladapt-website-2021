@@ -1,7 +1,8 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { debounce } from "~/helpers/utilities";
   import { getGeoJson } from "../_data";
+  import { mapViewStore } from "../_store";
   import {
     Map as SlippyMap,
     NavigationControl,
@@ -14,22 +15,19 @@
   export let dataLayersAugmented;
   export let mapStyle;
 
-  // initial map view
-  const lng = -122.24;
-  const lat = 37.8279;
-  let zoom = 9;
-
-  const dispatch = createEventDispatcher();
-
   const moveendDelayMS = 1500;
+  const { lat, lng } = $mapViewStore;
 
-  let mapInstance;
-  let mbGlMap;
-  let curStyleUrl;
-  let geojsons = new Map();
-  let centroids;
+  $: zoom = $mapViewStore.zoom;
+
+  let mapInstance; // the components/tools/Map.svelte component instance
+  let mbGlMap; // the MapBoxGL map instance
+  let curStyleUrl; // for diff'ing map style updates
+  let geojsons = new Map(); // holds geojson layers for TileIndexes
+  let centroids; // holds geojson layers for Centroids
 
   $: styleUrl = `mapbox://styles/mapbox/${mapStyle}`;
+  $: activeLayers = dataLayersAugmented.filter((d) => d.checked);
   $: mapReady = Boolean(mapInstance) && Boolean(mbGlMap);
   $: beforeId =
     mapStyle && mapStyle.includes("satellite")
@@ -70,12 +68,20 @@
         _sw: { lng: xMax, lat: yMax },
         _ne: { lng: xMin, lat: yMin },
       } = mbGlMap.getBounds();
-      dispatch("moveend", [xMin, yMin, xMax, yMax]);
+      const bbox = [xMin, yMin, xMax, yMax];
+      const zoom = mbGlMap.getZoom();
+      const { lng, lat } = mbGlMap.getCenter();
+      mapViewStore.set({
+        bbox,
+        lng,
+        lat,
+        zoom,
+      });
     }
   }
 
   function handleZoomend() {
-    zoom = mbGlMap.getZoom();
+    mapViewStore.setZoom(mbGlMap.getZoom());
   }
 
   function handleMapReady({ detail }) {
@@ -112,30 +118,32 @@
     <NavigationControl />
     <Search on:change="{handleSearchChange}" />
 
-    {#if zoom >= 8}
-      <RasterLayers
-        mapStyle="{mapStyle}"
-        beforeId="{beforeId}"
-        dataLayers="{dataLayersAugmented}"
-      />
-    {/if}
+    {#if Array.isArray(activeLayers) && activeLayers.length}
+      {#if zoom >= 8}
+        <RasterLayers
+          mapStyle="{mapStyle}"
+          beforeId="{beforeId}"
+          dataLayers="{dataLayersAugmented}"
+        />
+      {/if}
 
-    {#if zoom < 8}
-      <TileIndexes
-        mapStyle="{mapStyle}"
-        beforeId="{beforeId}"
-        dataLayers="{dataLayersAugmented}"
-        geojsons="{geojsons}"
-      />
-    {/if}
+      {#if zoom < 8}
+        <TileIndexes
+          mapStyle="{mapStyle}"
+          beforeId="{beforeId}"
+          dataLayers="{dataLayersAugmented}"
+          geojsons="{geojsons}"
+        />
+      {/if}
 
-    {#if zoom <= 6}
-      <TileCentroids
-        mapStyle="{mapStyle}"
-        beforeId="{beforeIdCentroids}"
-        dataLayers="{dataLayersAugmented}"
-        centroids="{centroids}"
-      />
+      {#if zoom <= 6}
+        <TileCentroids
+          mapStyle="{mapStyle}"
+          beforeId="{beforeIdCentroids}"
+          dataLayers="{dataLayersAugmented}"
+          centroids="{centroids}"
+        />
+      {/if}
     {/if}
   </SlippyMap>
 {/if}
