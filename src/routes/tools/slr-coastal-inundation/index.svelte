@@ -163,6 +163,9 @@
 
   onMount(async () => {
     try {
+      // setting isFetching prevents the missing data message from appearing
+      // when the app first loads.
+      isFetchingStore.set(true);
       await initApp();
       appReady = true;
       await update();
