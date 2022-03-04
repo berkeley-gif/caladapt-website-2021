@@ -143,7 +143,7 @@
     <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
-        values="{['CoSMoS', 'CalFlod3D-TFS', 'CoSMoS & CalFlod3D-TFS']}"
+        values="{['CoSMoS', 'CalFloD3D-TFS', 'CoSMoS & CalFloD3D-TFS']}"
         ramp="{legendRamp}"
         width="{'auto'}"
         columns="{0}"
