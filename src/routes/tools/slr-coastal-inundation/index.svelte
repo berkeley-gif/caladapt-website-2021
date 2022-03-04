@@ -28,7 +28,7 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent, learnMoreContent } = await (
+    const { aboutContent, learnMoreContent, mapExplainer } = await (
       await this.fetch("tools/slr-coastal-inundation.json")
     ).json();
 
@@ -39,6 +39,7 @@
       helpItems,
       aboutContent,
       learnMoreContent,
+      mapExplainer,
     };
   }
 </script>
@@ -83,6 +84,7 @@
   export let helpItems;
   export let aboutContent;
   export let learnMoreContent;
+  export let mapExplainer;
 
   let appReady = false;
   let baseMapStyle;
@@ -207,6 +209,7 @@
     <ExploreData
       learnMoreContent="{learnMoreContent}"
       mapStyle="{baseMapStyle}"
+      mapExplainer="{mapExplainer}"
     />
   {:else}
     <Loading />

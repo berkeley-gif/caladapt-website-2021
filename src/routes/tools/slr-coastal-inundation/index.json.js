@@ -15,6 +15,10 @@ export function get(_req, res) {
       "slr-coastal-inundation",
       "learn-more-time-period"
     );
+    const mapExplainer = getToolContent(
+      "slr-coastal-inundation",
+      "map-explainer"
+    );
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
@@ -24,6 +28,7 @@ export function get(_req, res) {
           mapLayers,
           timePeriod,
         },
+        mapExplainer,
       })
     );
   } catch (error) {

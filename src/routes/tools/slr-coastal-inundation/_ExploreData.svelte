@@ -21,6 +21,7 @@
 
   export let learnMoreContent;
   export let mapStyle;
+  export let mapExplainer;
 
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
@@ -119,7 +120,7 @@
     flex-direction: column;
   }
   .map-info-text {
-    max-width: 65ch;
+    max-width: 75ch;
   }
 </style>
 
@@ -143,11 +144,7 @@
     class="block"
     style="background: var(--gray-20);"
   >
-    <p class="map-info-text">
-      This map shows data coverage extents for the two models at lower zoom
-      levels (e.g. at the county or state level resolutions), zoom in to view
-      the coastal inundation datasets.
-    </p>
+    <div class="map-info-text">{@html mapExplainer}</div>
     <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
