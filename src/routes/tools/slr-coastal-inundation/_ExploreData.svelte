@@ -119,8 +119,8 @@
     align-items: flex-start;
     flex-direction: column;
   }
-  .map-info-text {
-    max-width: 75ch;
+  .map-info-text-container :global(p) {
+    max-width: 70ch;
   }
 </style>
 
@@ -144,7 +144,7 @@
     class="block"
     style="background: var(--gray-20);"
   >
-    <div class="map-info-text">{@html mapExplainer}</div>
+    <div class="map-info-text-container">{@html mapExplainer}</div>
     <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
