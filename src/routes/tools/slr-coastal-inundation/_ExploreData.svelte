@@ -118,6 +118,9 @@
     align-items: flex-start;
     flex-direction: column;
   }
+  .map-info-text {
+    max-width: 65ch;
+  }
 </style>
 
 {#if $isFetchingStore}
@@ -140,6 +143,11 @@
     class="block"
     style="background: var(--gray-20);"
   >
+    <p class="map-info-text">
+      This map shows data coverage extents for the two models at lower zoom
+      levels (e.g. at the county or state level resolutions), zoom in to view
+      the coastal inundation datasets.
+    </p>
     <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
