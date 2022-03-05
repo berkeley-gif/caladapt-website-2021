@@ -21,6 +21,7 @@
 
   export let learnMoreContent;
   export let mapStyle;
+  export let mapExplainer;
 
   const { timeFrame } = timeFrameStore;
   const { floodScenario } = floodScenarioStore;
@@ -118,6 +119,9 @@
     align-items: flex-start;
     flex-direction: column;
   }
+  .map-info-text-container :global(p) {
+    max-width: 70ch;
+  }
 </style>
 
 {#if $isFetchingStore}
@@ -140,6 +144,7 @@
     class="block"
     style="background: var(--gray-20);"
   >
+    <div class="map-info-text-container">{@html mapExplainer}</div>
     <div class="map-controls-container">
       <Legend
         title="Map Data Layers"
