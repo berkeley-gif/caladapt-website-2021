@@ -1,4 +1,4 @@
-import { writable, derived } from "svelte/store";
+import { writable } from "svelte/store";
 import { makeCustomWritableStore } from "../_common/stores";
 import { getDataForChart, getDataForSnapshot } from "./_helpers";
 

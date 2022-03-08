@@ -32,7 +32,6 @@
   // Helpers
   import { logException } from "~/helpers/logging";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
-  import { INITIAL_CONFIG } from "../_common/constants";
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components

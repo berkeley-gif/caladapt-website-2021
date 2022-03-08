@@ -8,7 +8,6 @@ import { DEFAULT_STAT_PERIODS } from "../_common/constants";
 import {
   ENVELOPE_SEARCH_EXP,
   AVERAGE_SEARCH_EXP,
-  OBSERVED,
   SCENARIOS,
   SCENARIO_RANGES,
 } from "./_constants";
