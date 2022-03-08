@@ -31,6 +31,9 @@ export const DEFAULT_CLIMATE_INDICATOR = "tasmax";
 // Precipitation indicator has values as rates e.g. mm/year
 // These should be converted to annual sum by multiplying by number of days in the year
 export const INDICATORS_WITH_VALUES_AS_RATES = ["pr"];
+// Area Burned indicator has no pre-calculated ensembles
+// All data for table and chart is assembled from 4 models & 2 scenarios
+export const INDICATORS_WITH_NO_ENSEMBLES = ["fire"];
 
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
@@ -57,7 +60,7 @@ export const OBSERVED = [
     color: COLOR_livneh.hex(),
   },
 ];
-export const SERIES = [
+export const SCENARIOS = [
   {
     id: "rcp45",
     label: "Medium Emissions (RCP 4.5)",
@@ -74,7 +77,7 @@ export const SERIES = [
     color: COLOR_historical.hex(),
   },
 ];
-export const RANGES = [
+export const SCENARIO_RANGES = [
   {
     id: "rcp45_range",
     label: "Medium Emissions Range",

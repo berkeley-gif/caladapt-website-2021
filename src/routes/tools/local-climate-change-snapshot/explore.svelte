@@ -32,7 +32,6 @@
   // Helpers
   import { logException } from "~/helpers/logging";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
-  import { INITIAL_CONFIG } from "../_common/constants";
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
@@ -50,14 +49,16 @@
     indicatorListStore,
     indicatorStore,
     dataStore,
-    snapshotProjectionsStore,
-    snapshotObservedStore,
   } from "./_store";
   import {
     DEFAULT_INITIAL_CONFIG,
     DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+    AREABURNED_POLYGON_AGGREGATE_FUNCTION,
     INDICATORS_WITH_VALUES_AS_RATES,
+    INDICATORS_WITH_NO_ENSEMBLES,
+    DEFAULT_PROJECTIONS_SLUG_EXP,
     DEFAULT_SNAPSHOT_SLUG_EXP,
+    AREABURNED_TIMESERIES_SLUG_EXP,
     DEFAULT_SWE_MONTH,
   } from "./_constants";
 
@@ -68,7 +69,7 @@
   // Derived stores
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
-  const { chartDataStore } = dataStore;
+  const { chartDataStore, snapshotDataStore } = dataStore;
 
   let appReady = false;
   let debug = process.env.NODE_ENV !== "production";
@@ -80,15 +81,9 @@
     console.groupEnd();
   }
 
-  $: if (
-    $chartDataStore &&
-    $snapshotObservedStore &&
-    $snapshotProjectionsStore
-  ) {
-    console.log("chart data", $chartDataStore);
-    console.log("snapshot table baseline", $snapshotObservedStore);
-    console.log("snapshot table projections", $snapshotProjectionsStore);
-  }
+  $: console.log("data", $dataStore);
+  $: console.log("chart data", $chartDataStore);
+  $: console.log("snapshot data", $snapshotDataStore);
 
   async function update() {
     if (!appReady) return;
@@ -99,27 +94,69 @@
           $indicatorStore.id
         ),
       };
-      // Get params object for querying the Cal-Adapt API
-      // extra months param required for April SWE indicator
+
+      /**
+       * Get params object for querying the Cal-Adapt API
+       */
+      // Use extra `months`` param for April SWE indicator only
       const months = $indicatorStore.id === "swe" ? DEFAULT_SWE_MONTH : null;
+      // Use a different `stats`` param for Area Burned (Wildfire) data
+      const stat =
+        $indicatorStore.id === "fire"
+          ? AREABURNED_POLYGON_AGGREGATE_FUNCTION
+          : DEFAULT_POLYGON_AGGREGATE_FUNCTION;
+      // Get params
       const { params, method } = getQueryParams({
         location: $location,
         boundary: $boundary,
         imperial: true,
-        stat: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+        stat,
         ...(months && { months }),
       });
+
       isFetchingStore.set(true);
+
+      /**
+       * Regex strings are used to search the Cal-Adapt API and get a list
+       * of endpoints to fetch data from.
+       */
+      // For all indicators except `fire` use the default Regex string
+      // For `fire` the regex returns endpoints for models. There is no ensemble avg, min, max
+      const projectionsSearchStr = INDICATORS_WITH_NO_ENSEMBLES.includes(
+        $indicatorStore.id
+      )
+        ? AREABURNED_TIMESERIES_SLUG_EXP
+        : DEFAULT_PROJECTIONS_SLUG_EXP;
+
+      // For all indicators except `fire` use the default snapshot Regex string
+      // For `fire` there is no regex.
+      const snapshotSearchStr = INDICATORS_WITH_NO_ENSEMBLES.includes(
+        $indicatorStore.id
+      )
+        ? null
+        : DEFAULT_SNAPSHOT_SLUG_EXP;
+
+      /**
+       * Fetch data and set data store
+       */
       const observed = await getObserved({ config, params, method });
-      const projections = await getProjections({ config, params, method });
-      dataStore.setObserved(observed);
-      dataStore.setProjections(projections);
+      const projections = await getProjections({
+        config,
+        params,
+        method,
+        searchStr: projectionsSearchStr,
+      });
       const projections30y = await getProjections({
         config,
         params,
         method,
-        searhcStr: DEFAULT_SNAPSHOT_SLUG_EXP,
+        searchStr: snapshotSearchStr,
       });
+      dataStore.setEnsembleFlag(
+        !INDICATORS_WITH_NO_ENSEMBLES.includes($indicatorStore.id)
+      );
+      dataStore.setObserved(observed);
+      dataStore.setProjections(projections);
       dataStore.setProjections30y(projections30y);
     } catch (error) {
       console.error("updateData", error);
