@@ -1,15 +1,14 @@
 <script>
-  import {
-    InlineNotification,
-    NotificationActionButton,
-    Link,
-  } from "carbon-components-svelte";
+  import { InlineNotification } from "carbon-components-svelte";
 </script>
 
 <style>
   .alert :global(.bx--inline-notification) {
     margin: 0;
     max-width: 100%;
+  }
+  p {
+    margin: 0;
   }
 </style>
 
@@ -18,13 +17,12 @@
     lowContrast
     hideCloseButton
     kind="info"
-    title="This is a preview of the new Cal-Adapt website."
-    subtitle="Return to cal-adapt.org to access all climate tools and data."
+    title="This is a preview of Cal-Adapt's new tools which may not be feature complete."
   >
-    <div slot="actions">
-      <NotificationActionButton>
-        <Link href="https://cal-adapt.org/">Return to cal-adapt.org</Link>
-      </NotificationActionButton>
-    </div>
+    <p class="bx--inline-notification__subtitle">
+      Return to <a class="bx--link" href="https://cal-adapt.org"
+        >Cal-Adapt.org</a
+      > to access all completed climate tools and data.
+    </p>
   </InlineNotification>
 </div>
