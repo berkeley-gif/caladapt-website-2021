@@ -2,6 +2,7 @@
 import config from "~/helpers/api-config";
 import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import { convertAnnualRateToSum } from "../_common/helpers";
+import { slugRegExp } from "./_helpers";
 
 // Constants
 import { OBSERVED_FILTER_YEAR } from "../_common/constants";
@@ -46,14 +47,20 @@ const fetchEvents = async ({
   if (error) {
     throw new Error(error.message);
   }
-  // Add slug to keep track of which ensemble series the data comes from
-  const slug = url.split("series/")[1];
   const values = isAnnualRate
     ? transformResponse(response).map((d) => ({
         date: d.date,
         value: convertAnnualRateToSum(d),
       }))
     : transformResponse(response);
+  // Add slug to keep track of which ensemble series the data comes from
+  let slug;
+  const regExpResult = slugRegExp.exec(url);
+  if (!regExpResult) {
+    throw new Error("slug not found in url");
+  } else {
+    slug = regExpResult[0];
+  }
   // For livneh, remove data values after 2006
   // because there are QA/QC issues with the data
   if (slug.includes("livneh")) {
