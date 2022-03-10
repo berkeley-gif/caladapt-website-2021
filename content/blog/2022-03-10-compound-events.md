@@ -1,7 +1,7 @@
 ---
 title: "Representing Compound Events on Cal-Adapt"
 author: Cal-Adapt
-image: compound-events.png
+image: caladapt_post.png
 tags: other
 snippet: A discussion of compound hazard events and indicators available on Cal-Adapt to understand their interaction. 
 ---
@@ -43,9 +43,9 @@ Defining drought is challenging, as drought means different things to different 
 
 Drought in California can build and persist for varying lengths of time, each with different societal impacts.  Meteorological droughts occur on short timescales (a couple of months) in response to transient factors: low humidity, high temperatures, high wind, and low cloud cover during periods of reduced precipitation.  Agricultural droughts occur over a few seasons, resulting in persistent soil water deficiencies, manifesting in plant stress, reduced crop yield and biomass and impacts to ecosystems.  Hydrological droughts take many months to years to build, resulting in reduced streamflow, lower reservoir/lake levels with major impacts to wetlands (i.e. California’s delta and coastal sloughs), and reduction in groundwater table level.  Multi-decadal droughts, sometimes referred to as “mega-droughts” can occur over many years, leading to ecological regime shifts, reduction in groundwater, major changes in lake, stream function and structure.  California is currently in a multi-decadal drought, with climate change making such events more likely.
 
-<image placeholder>
+<img src="/img/blog/drought_monitor.png" style="width:100%;margin:1rem auto;" alt="Figure of drought conditions from 2000-2021 from U.S. Drought Monitor website">
 
-US Drought Monitor showing faction of California under drought conditions from 2000 – 2021.  California has been in a persistent multi-decadal drought since 2012, with only two wet seasons occurring during this period.  Some argue that California never recovered from the drought 2007-2010, and consider California as experiencing a “mega-drought.”
+[U.S. Drought Monitor](https://www.drought.gov/states/california) showing faction of California under drought conditions from 2000 – 2021.  California has been in a persistent multi-decadal drought since 2012, with only two wet seasons occurring during this period.  Some argue that California never recovered from the drought 2007-2010, and consider California as experiencing a “mega-drought.”
 
 Drought in California comes in many shapes and sizes.  Depending on the societal or environmental impact, people try to quantify drought according to several characteristics.  Some common characteristics of drought include duration (how long a drought has been occurring), magnitude (accumulated water deficit), intensity (magnitude relative to duration), severity (how impactful the drought has been), spatial extent (area impacted by drought) or frequency (how often are droughts occurring).  How you measure and describe a drought is often a function of what attribute you are trying to show.
 
@@ -61,7 +61,7 @@ The standardized precipitation-evaporation index (SPEI) depicts the combined imp
 
 *What doesn’t SPEI tell us?*  California’s annual and long term water supplies are dependent on snowpack.  Rapid onset droughts, or a very hot spring can cause rapid snowmelt – decreasing water availability for a year.  This is not reflected in SPEI.  Cal-Adapt’s selection of a 9 month lag of SPEI, means short term “flash” droughts are not reflected in the index.  A late fall/early winter flash drought could extend fire weather season and stress ecosystems, but could be missed by this version of SPEI.
 
-<image placeholder>
+<img src="/img/blog/compound_event_spei_headwaters_merced.png" style="width:100%;margin:1rem auto;" alt="Figure of SPEI chart from Cal-Adapt website">
 
 This figure shows the most likely outcome (modeled average) and range of future projections of the Standardized Precipitation-Evaporation Index (SPEI) 1-month values for the Headwaters Merced River Watershed (Yosemite Valley). The SPEI values correspond to the number of months per year in which SPEI <= -1 (implying moderate to severe drought), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.
 
@@ -88,7 +88,7 @@ If you want [to get technical](https://books.google.com/books?id=zUiUwKYMq_8C&lr
 
 *What doesn’t KBDI tell us?*  A lot.  It is not a prediction of wildfire occurrence or spread.  KBDI knows nothing about the vegetation on the ground, or fuels for a fire.  It might, for example, suggest that the Mojave Desert is ripe to burn.  It does not know, per-se, if a Diablo wind is present, or if it is a calm day.  Again, treat KBDI as a rough estimate and look at the aggregate (across seasons, months or years) rather than at individual days.
 
-<image placeholder>
+<img src="/img/blog/compound_event_kbdi_headwaters_merced.png" style="width:100%;margin:1rem auto;" alt="Figure of KBDI chart from Cal-Adapt website">
 
 This figure shows the most likely outcome (modeled average) and range of future projections of the Keetch-Byram Drought Index (KBDI) values for the Headwaters Merced River Watershed (Yosemite Valley). The KBDI values correspond to the number of days per year in which KBDI > 600 (implying severe drought and extreme wildfire risk), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.
 
