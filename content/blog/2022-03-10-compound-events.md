@@ -78,7 +78,7 @@ Cal-Adapt has lots of great information on wildfire, so why create a new index? 
 The Keetch-Byram Drought Index (KBDI) provides an estimate for the dryness of soil and vegetative detritus.  KBDI is cumulative with drought values increasing on dry and warm days, and decreasing during rainy periods – meaning in California we would expect KBDI to increase from the end of the wet season (spring) into the dry season (summer & fall).  Fire danger is complex (impacted by human activity, vegetation, wind, temperature, relative humidity, atmospheric stability, etc.) and KBDI represents a simplified proxy for favorability of occurrence and spread of wildfire but is not itself a predictor of fire.  The table below explains what values of KBDI represent:
 
 | KBDI     | Wildfire risk proxy |
-| :----:   | :---- |
+|  ----:   | :---- |
 |   0 – 200| Soil moisture and fuel moistures are high - low wildfire risk. |
 | 200 – 400| Soil and fuels start to dry - average wildfire risk. |
 | 400 – 600| Onset of drought - moderate to serious wildfire risk. |
