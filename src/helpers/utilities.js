@@ -508,7 +508,7 @@ export function debounce(func, wait, immediate) {
 export async function getDataset(opt) {
   try {
     const response = await fetchData(`${apiEndpoint}/datasets/${opt.slug}`, {
-      v: 1,
+      v: 2,
     });
     const dataset = await response.json();
     const id = dataset.url.split("datasets")[1].replaceAll("/", "");
