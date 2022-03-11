@@ -3,7 +3,7 @@ title: "Representing Compound Events on Cal-Adapt"
 author: Cal-Adapt
 image: caladapt_post.png
 tags: other
-snippet: A discussion of compound hazard events and indicators available on Cal-Adapt to understand their interaction.
+snippet: A discussion of compound hazard events and the drought and wildfire weather indicators that are available on Cal-Adapt
 ---
 
 ## Representing Compound Events on Cal-Adapt
@@ -45,13 +45,14 @@ Defining drought is challenging, as drought means different things to different 
 
 Drought in California can build and persist for varying lengths of time, each with different societal impacts.  Meteorological droughts occur on short timescales (a couple of months) in response to transient factors: low humidity, high temperatures, high wind, and low cloud cover during periods of reduced precipitation.  Agricultural droughts occur over a few seasons, resulting in persistent soil water deficiencies, manifesting in plant stress, reduced crop yield and biomass and impacts to ecosystems.  Hydrological droughts take many months to years to build, resulting in reduced streamflow, lower reservoir/lake levels with major impacts to wetlands (i.e. California’s delta and coastal sloughs), and reduction in groundwater table level.  Multi-decadal droughts, sometimes referred to as “mega-droughts” can occur over many years, leading to ecological regime shifts, reduction in groundwater, major changes in lake, stream function and structure.  California is currently in a multi-decadal drought, with climate change making such events more likely.
 
-<img src="/img/blog/drought_monitor.png" style="width:100%;margin:1rem auto;" alt="Figure of drought conditions from 2000-2021 from U.S. Drought Monitor website">
-
-[U.S. Drought Monitor](https://www.drought.gov/states/california) showing faction of California under drought conditions from 2000 – 2021.  California has been in a persistent multi-decadal drought since 2012, with only two wet seasons occurring during this period.  Some argue that California never recovered from the drought 2007-2010, and consider California as experiencing a “mega-drought.”
+<figure class="image">
+  <img src="/img/blog/drought_monitor.png" alt="Figure of drought conditions from 2000-2021 from U.S. Drought Monitor website">
+  <figcaption><a href="https://www.drought.gov/states/california" target="_blank">U.S. Drought Monitor</a> showing faction of California under drought conditions from 2000 – 2021.  California has been in a persistent multi-decadal drought since 2012, with only two wet seasons occurring during this period.  Some argue that California never recovered from the drought 2007-2010, and consider California as experiencing a “mega-drought.”</figcaption>
+</figure>
 
 Drought in California comes in many shapes and sizes.  Depending on the societal or environmental impact, people try to quantify drought according to several characteristics.  Some common characteristics of drought include duration (how long a drought has been occurring), magnitude (accumulated water deficit), intensity (magnitude relative to duration), severity (how impactful the drought has been), spatial extent (area impacted by drought) or frequency (how often are droughts occurring).  How you measure and describe a drought is often a function of what attribute you are trying to show.
 
-Characterizing drought in a simple way that Cal-Adapt users find accessible is a challenge given the many dimensions of drought.  One approach is to use a drought metric, a simplified index that combines information from many individual climate variables.  [Zargar et al. (2011)](https://cdnsciencepub.com/doi/abs/10.1139/a11-013) found almost 150 indices to describe drought – now 10+ years later there are likely more!  After a deep dive into drought indices, we settled on the Standardized Precipitation-Evapotranspiration Index (SPEI) as a good compromise.  It includes the impacts of increasing temperature on soil moisture loss, a critically important mechanism for driving future droughts in California due to warming.  For our purposes, we lean into California’s Mediterranean climate, and calculated drought on the timescale of 9 months to fully encapsulate any given rainy season.  A length of 9 months falls in between agricultural and hydrological drought, on the sliding scale of drought timescales.
+Characterizing drought in a simple way that Cal-Adapt users find accessible is a challenge given the many dimensions of drought.  One approach is to use a drought metric, a simplified index that combines information from many individual climate variables.  <a href="https://cdnsciencepub.com/doi/abs/10.1139/a11-013" target="_blank">Zargar et al. (2011)</a> found almost 150 indices to describe drought – now 10+ years later there are likely more!  After a deep dive into drought indices, we settled on the Standardized Precipitation-Evapotranspiration Index (SPEI) as a good compromise.  It includes the impacts of increasing temperature on soil moisture loss, a critically important mechanism for driving future droughts in California due to warming.  For our purposes, we lean into California’s Mediterranean climate, and calculated drought on the timescale of 9 months to fully encapsulate any given rainy season.  A length of 9 months falls in between agricultural and hydrological drought, on the sliding scale of drought timescales.
 
 #### SPEI
 
@@ -63,15 +64,16 @@ The standardized precipitation-evaporation index (SPEI) depicts the combined imp
 
 *What doesn’t SPEI tell us?*  California’s annual and long term water supplies are dependent on snowpack.  Rapid onset droughts, or a very hot spring can cause rapid snowmelt – decreasing water availability for a year.  This is not reflected in SPEI.  Cal-Adapt’s selection of a 9 month lag of SPEI, means short term “flash” droughts are not reflected in the index.  A late fall/early winter flash drought could extend fire weather season and stress ecosystems, but could be missed by this version of SPEI.
 
-<img src="/img/blog/compound_event_spei_headwaters_merced.png" style="width:100%;margin:1rem auto;" alt="Figure of SPEI chart from Cal-Adapt website">
-
-This figure shows the most likely outcome (modeled average) and range of future projections of the Standardized Precipitation-Evaporation Index (SPEI) 1-month values for the Headwaters Merced River Watershed (Yosemite Valley). The SPEI values correspond to the number of months per year in which SPEI <= -1 (implying moderate to severe drought), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.
+<figure class="image">
+  <img src="/img/blog/compound_event_spei_headwaters_merced.png" alt="Figure of SPEI chart from Cal-Adapt website">
+  <figcaption>This figure shows the most likely outcome (modeled average) and range of future projections of the Standardized Precipitation-Evaporation Index (SPEI) 1-month values for the Headwaters Merced River Watershed (Yosemite Valley). The SPEI values correspond to the number of months per year in which SPEI <= -1 (implying moderate to severe drought), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.</figcaption>
+</figure>
 
 If the version of SPEI on Cal-Adapt doesn’t meet your needs, or you prefer a different drought index, please let us know.
 
 ### Wildfire
 
-Cal-Adapt has lots of great information on wildfire, so why create a new index?  Work done for California’s Fourth Climate Assessment included [rigorous and detailed simulations of wildfire conditions](https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-014_ADA.pdf), but were so numerous and large that including them in Cal-Adapt was impractical.  Summaries in the form of decadal probabilities of wildfire and hectares burned per year were produced and used for tools on Cal-Adapt.  However, for decision-making and planning purposes, these summaries were found to be non-actionable.  Here we provide estimates of fire weather risk through calculation of the Keetch-Byram Drought Index (KBDI), from which we are able to estimate the number of days per year of extreme fire risk across California.
+Cal-Adapt has lots of great information on wildfire, so why create a new index?  Work done for California’s Fourth Climate Assessment included <a href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-014_ADA.pdf" target="_blank">rigorous and detailed simulations of wildfire conditions</a>, but were so numerous and large that including them in Cal-Adapt was impractical.  Summaries in the form of decadal probabilities of wildfire and hectares burned per year were produced and used for tools on Cal-Adapt.  However, for decision-making and planning purposes, these summaries were found to be non-actionable.  Here we provide estimates of fire weather risk through calculation of the Keetch-Byram Drought Index (KBDI), from which we are able to estimate the number of days per year of extreme fire risk across California.
 
 #### KBDI
 
@@ -84,17 +86,20 @@ The Keetch-Byram Drought Index (KBDI) provides an estimate for the dryness of so
 | 400 – 600| Onset of drought - moderate to serious wildfire risk. |
 | 600 – 800| Severe drought - extreme wildfire risk and increased wildfire occurrence.|
 
+&nbsp;
+
 *What does KBDI mean?*  Practically speaking it tells us nothing about wildfire predictions, it just notes the degree to which if a fire was initiated how susceptible is the environment to fire growth and propagation.  Wildfire behavior is too complex to model with a simple index, as it depends both on human and natural factors.  However, examining how at a given location or region, the degree to which burning is possible is helpful for understanding changes in risk and exposure to wildfire.
 
-If you want [to get technical](https://books.google.com/books?id=zUiUwKYMq_8C&lr&pg=PP1#v=onepage&q&f=false), KBDI attempts to estimate how much precipitation is needed to bring soil back to its max capacity to hold water.  But, since this capacity is a function of soil type, amongst other things, it is location specific – and not calibrated to California’s (highly varied) soil.  Better to just think of KBDI as a rough measure of water deficits in the ground and vegetation on the ground.
+If you want <a href="https://books.google.com/books?id=zUiUwKYMq_8C&lr&pg=PP1#v=onepage&q&f=false" target="_blank">to get technical</a>, KBDI attempts to estimate how much precipitation is needed to bring soil back to its max capacity to hold water.  But, since this capacity is a function of soil type, amongst other things, it is location specific – and not calibrated to California’s (highly varied) soil.  Better to just think of KBDI as a rough measure of water deficits in the ground and vegetation on the ground.
 
 *What to look for in KBDI?*  Bigger values indicate larger soil moisture deficiencies, and a greater potential for wildfires to persist and spread.  You can look for both the number of days above a given threshold (say 600), and when in the year these days are occurring.  Many locations will see an increase in the number of days with dry conditions, but perhaps more critically these dry days may occur earlier in the spring and later into the fall.  Both are critical to understand for decision-makers thinking about a community’s vulnerability to fire and resilience capacity.
 
 *What doesn’t KBDI tell us?*  A lot.  It is not a prediction of wildfire occurrence or spread.  KBDI knows nothing about the vegetation on the ground, or fuels for a fire.  It might, for example, suggest that the Mojave Desert is ripe to burn.  It does not know, per-se, if a Diablo wind is present, or if it is a calm day.  Again, treat KBDI as a rough estimate and look at the aggregate (across seasons, months or years) rather than at individual days.
 
-<img src="/img/blog/compound_event_kbdi_headwaters_merced.png" style="width:100%;margin:1rem auto;" alt="Figure of KBDI chart from Cal-Adapt website">
-
-This figure shows the most likely outcome (modeled average) and range of future projections of the Keetch-Byram Drought Index (KBDI) values for the Headwaters Merced River Watershed (Yosemite Valley). The KBDI values correspond to the number of days per year in which KBDI > 600 (implying severe drought and extreme wildfire risk), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.
+<figure class="image">
+  <img src="/img/blog/compound_event_kbdi_headwaters_merced.png" alt="Figure of KBDI chart from Cal-Adapt website">
+  <figcaption>This figure shows the most likely outcome (modeled average) and range of future projections of the Keetch-Byram Drought Index (KBDI) values for the Headwaters Merced River Watershed (Yosemite Valley). The KBDI values correspond to the number of days per year in which KBDI > 600 (implying severe drought and extreme wildfire risk), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.</figcaption>
+</figure>
 
 ### The Future of Conveying Risk from Compound Events
 
