@@ -52,7 +52,16 @@ const tools = [
     icons: [
       'img/icons/sea.svg',
     ],
-    datasets: [],
+    datasets: [
+      {
+        slug: '5f5c10e7-107c-4e07-b3ce-c473b7a7eb2c',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'ccb284d6-c627-43c7-a2de-b21d0de2a6c6',
+        logo: 'gif_80x80.png'
+      }
+    ],
     related: [
       "slr-calflod-3d"
     ],
