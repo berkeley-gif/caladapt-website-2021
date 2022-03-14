@@ -41,7 +41,7 @@ Having enumerated the long list of challenges to understanding compound events, 
 
 ### Drought
 
-Defining drought is challenging, as drought means different things to different people - depending on what their concerns are.  An ecologist, farmer, water resources planner, well driller, suburban homeowner and city resident each have different ways of looking at drought.
+Defining drought is challenging, as drought means different things to different people - depending on what their concerns are.  An ecologist, farmer, water resources planner, well driller, suburbanite and city resident each have different ways of looking at drought.
 
 Drought in California can build and persist for varying lengths of time, each with different societal impacts.  Meteorological droughts occur on short timescales (a couple of months) in response to transient factors: low humidity, high temperatures, high wind, and low cloud cover during periods of reduced precipitation.  Agricultural droughts occur over a few seasons, resulting in persistent soil water deficiencies, manifesting in plant stress, reduced crop yield and biomass and impacts to ecosystems.  Hydrological droughts take many months to years to build, resulting in reduced streamflow, lower reservoir/lake levels with major impacts to wetlands (i.e. California’s delta and coastal sloughs), and reduction in groundwater table level.  Multi-decadal droughts, sometimes referred to as “mega-droughts” can occur over many years, leading to ecological regime shifts, reduction in groundwater, major changes in lake, stream function and structure.  California is currently in a multi-decadal drought, with climate change making such events more likely.
 
