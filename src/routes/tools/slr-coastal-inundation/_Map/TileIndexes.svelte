@@ -41,11 +41,28 @@
   $: layerProps = Boolean(geojsons.size) && dataLayers.map(mapLayersProps);
 
   afterUpdate(() => {
-    if (layerProps && !equal(layerProps, prevLayerProps)) {
+    const areEqual = equal(layerProps, prevLayerProps);
+    const mapLayersActual = map
+      .getStyle()
+      .layers.filter((d) => /cosmos|calflod/i.test(d.id));
+
+    if (layerProps && !areEqual) {
       removePreviousLayers();
       addGeoJsonLayers();
       prevLayerProps = layerProps;
     }
+
+    if (areEqual && !mapLayersActual.length) {
+      reapplyGeoJsonLayers();
+    }
+  });
+
+  onDestroy(() => {
+    removeGeoJsonLayers();
+    removePreviousLayers();
+    layerHandler.removeMapRef();
+    layerHandler = null;
+    map.off("styledata", handleStyleDataChange);
   });
 
   function addGeoJsonLayers() {
@@ -91,12 +108,4 @@
       prevMapStyle = mapStyle;
     }
   }
-
-  onDestroy(() => {
-    map.off("styledata", handleStyleDataChange);
-    removeGeoJsonLayers();
-    removePreviousLayers();
-    layerHandler.removeMapRef();
-    layerHandler = null;
-  });
 </script>
