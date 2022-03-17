@@ -108,7 +108,7 @@ export class MapLayerHandler {
   }
 
   removeMapLayer(id) {
-    if (this.mapHasStyle()) {
+    if (this.mapStyle) {
       const layerId = this._getLayerId(id);
       const sourceId = this._getSourceId(id);
       this._removeLayer(layerId);
@@ -118,10 +118,6 @@ export class MapLayerHandler {
 
   removeMapRef() {
     this._map = null;
-  }
-
-  mapHasStyle() {
-    return Boolean(this.mapStyle);
   }
 
   get map() {
