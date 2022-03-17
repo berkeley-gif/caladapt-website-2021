@@ -43,7 +43,7 @@
     const areEqual = equal(layerProps, prevLayerProps);
     const mapLayersActual = map
       .getStyle()
-      .layers.filter((d) => /cosmos|calflod/i.test(d.id));
+      .layers.filter((d) => /calflod3dtfs_5m-centroids/i.test(d.id));
 
     if (layerProps && !areEqual) {
       removePreviousLayer();
