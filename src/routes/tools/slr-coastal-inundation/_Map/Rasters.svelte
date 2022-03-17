@@ -40,10 +40,17 @@
     .map(mapLayersProps);
 
   afterUpdate(() => {
-    if (!equal(rasterLayersProps, prevRasterLayerProps)) {
+    const areEqual = equal(rasterLayersProps, prevRasterLayerProps);
+    const mapLayersActual = map
+      .getStyle()
+      .layers.filter((d) => /cosmos|calflod/i.test(d.id));
+    if (!areEqual) {
       removePreviousRasterLayers();
       addRasterLayers();
       prevRasterLayerProps = rasterLayersProps;
+    }
+    if (areEqual && !mapLayersActual.length) {
+      reapplyRasterLayers();
     }
   });
 
@@ -84,9 +91,6 @@
   }
 
   function removeRasterLayers() {
-    if (!map.getStyle()) {
-      return;
-    }
     rasterLayersProps.forEach(({ tileUrls, slugs }) => {
       tileUrls.forEach((_url, index) => {
         layerHandler.removeMapLayer(slugs[index]);
@@ -104,10 +108,10 @@
   }
 
   onDestroy(() => {
-    map.off("styledata", handleStyleDataChange);
     removeRasterLayers();
     removePreviousRasterLayers();
     layerHandler.removeMapRef();
     layerHandler = null;
+    map.off("styledata", handleStyleDataChange);
   });
 </script>
