@@ -57,6 +57,14 @@
     }
   });
 
+  onDestroy(() => {
+    removeGeoJsonLayers();
+    removePreviousLayers();
+    layerHandler.removeMapRef();
+    layerHandler = null;
+    map.off("styledata", handleStyleDataChange);
+  });
+
   function addGeoJsonLayers() {
     layerProps.forEach(({ id, visibility, data, color }) => {
       layerHandler.addMapLayer({
@@ -100,12 +108,4 @@
       prevMapStyle = mapStyle;
     }
   }
-
-  onDestroy(() => {
-    map.off("styledata", handleStyleDataChange);
-    removeGeoJsonLayers();
-    removePreviousLayers();
-    layerHandler.removeMapRef();
-    layerHandler = null;
-  });
 </script>

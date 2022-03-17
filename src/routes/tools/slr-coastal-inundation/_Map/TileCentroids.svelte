@@ -56,6 +56,14 @@
     }
   });
 
+  onDestroy(() => {
+    removeCentroidsLayer();
+    removePreviousLayer();
+    layerHandler.removeMapRef();
+    layerHandler = null;
+    map.off("styledata", handleStyleDataChange);
+  });
+
   function addCentroidsLayer() {
     layerProps.forEach(({ id, visibility, data }) => {
       layerHandler.addMapLayer({
@@ -91,12 +99,4 @@
       prevMapStyle = mapStyle;
     }
   }
-
-  onDestroy(() => {
-    removeCentroidsLayer();
-    removePreviousLayer();
-    map.off("styledata", handleStyleDataChange);
-    layerHandler.removeMapRef();
-    layerHandler = null;
-  });
 </script>

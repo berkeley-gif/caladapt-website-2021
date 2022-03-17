@@ -54,6 +54,14 @@
     }
   });
 
+  onDestroy(() => {
+    removeRasterLayers();
+    removePreviousRasterLayers();
+    layerHandler.removeMapRef();
+    layerHandler = null;
+    map.off("styledata", handleStyleDataChange);
+  });
+
   function addRasterLayers() {
     rasterLayersProps.forEach(({ tileUrls, visibility, slugs }) => {
       tileUrls.forEach((url, index) => {
@@ -106,12 +114,4 @@
       prevMapStyle = mapStyle;
     }
   }
-
-  onDestroy(() => {
-    removeRasterLayers();
-    removePreviousRasterLayers();
-    layerHandler.removeMapRef();
-    layerHandler = null;
-    map.off("styledata", handleStyleDataChange);
-  });
 </script>
