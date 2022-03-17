@@ -108,14 +108,20 @@ export class MapLayerHandler {
   }
 
   removeMapLayer(id) {
-    const layerId = this._getLayerId(id);
-    const sourceId = this._getSourceId(id);
-    this._removeLayer(layerId);
-    this._removeSource(sourceId);
+    if (this.mapHasStyle()) {
+      const layerId = this._getLayerId(id);
+      const sourceId = this._getSourceId(id);
+      this._removeLayer(layerId);
+      this._removeSource(sourceId);
+    }
   }
 
   removeMapRef() {
     this._map = null;
+  }
+
+  mapHasStyle() {
+    return Boolean(this.mapStyle);
   }
 
   get map() {
@@ -128,6 +134,10 @@ export class MapLayerHandler {
     } else {
       throw new Error("map must be a mapboxgljs map instance");
     }
+  }
+
+  get mapStyle() {
+    return this.map && this.map.getStyle();
   }
 
   get beforeId() {
