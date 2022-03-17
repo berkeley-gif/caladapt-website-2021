@@ -40,10 +40,19 @@
     dataLayers.filter((d) => d.id.includes("5m")).map(mapLayersProps);
 
   afterUpdate(() => {
-    if (layerProps && !equal(layerProps, prevLayerProps)) {
+    const areEqual = equal(layerProps, prevLayerProps);
+    const mapLayersActual = map
+      .getStyle()
+      .layers.filter((d) => /cosmos|calflod/i.test(d.id));
+
+    if (layerProps && !areEqual) {
       removePreviousLayer();
       addCentroidsLayer();
       prevLayerProps = layerProps;
+    }
+
+    if (areEqual && !mapLayersActual.length) {
+      reapplyCentroidsLayer();
     }
   });
 
