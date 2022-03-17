@@ -12,9 +12,9 @@ What happens when two (or more!) climate hazards occur at the same time?  Nothin
 
 Scientists, as is their confusing way, use the terms compound and cascading climate events somewhat interchangeably.  To make things a bit easier to understand we are adopting simplified definitions for each of these terms:
 
-* *Concurrent or Compound Climate Events* – occur when two or more weather events occur simultaneously, leading to a disproportionately larger societal impact.
+- *Concurrent or Compound Climate Events* – occur when two or more weather events occur simultaneously, leading to a disproportionately larger societal impact.
 
-* *Successive or Cascading Climate Events* – occur when two or more weather events occur in succession of each other, either building societal impacts over time or potentially leading to a future extreme event.
+- *Successive or Cascading Climate Events* – occur when two or more weather events occur in succession of each other, either building societal impacts over time or potentially leading to a future extreme event.
 
 Both compound and cascading events depend critically on multiple aspects of the climate system but vary in terms of when the effects are felt.
 
@@ -24,16 +24,15 @@ Californians are well acquainted with compound events: wildfire, landslides, dro
 
 Risk from compound events is harder to assess, compared to single factor events like a heat wave.  Here are a few reasons why:
 
-+ Well understood statistics and simple metrics like mean and standard deviation don’t provide much insight into compound events. Compound events are, by definition, dependent on multiple variables, breaking the traditional statistical rule of independence  -  increasing the complexity of analysis to represent and understand these events.
+- Well understood statistics and simple metrics like mean and standard deviation don’t provide much insight into compound events. Compound events are, by definition, dependent on multiple variables, breaking the traditional statistical rule of independence  -  increasing the complexity of analysis to represent and understand these events.
 
-+ Rare events like compound events are difficult to characterize in risk assessments and vulnerability studies so are often not included by decision-makers. Resilience planning for these high-risk, low-frequency events requires a new way of thinking.
+- Rare events like compound events are difficult to characterize in risk assessments and vulnerability studies so are often not included by decision-makers. Resilience planning for these high-risk, low-frequency events requires a new way of thinking.
 
-+ Compound events often impact multiple sectors of society and the economy, necessitating coordinated responses from multiple entities that may not have historically worked together.
+- Compound events often impact multiple sectors of society and the economy, necessitating coordinated responses from multiple entities that may not have historically worked together.
 
-+ Both compound and cascading events require climate models to make an accurate prediction of future weather events and get the timing and location of weather events correct.  Much work has gone into showing that the mean values of climate models are very good, but models’ ability to predict the right timing and place of weather events is less certain.
+- Both compound and cascading events require climate models to make an accurate prediction of future weather events and get the timing and location of weather events correct.  Much work has gone into showing that the mean values of climate models are very good, but models’ ability to predict the right timing and place of weather events is less certain.
 
-+ Projecting future climate is hard, predicting how people will respond to climate is harder.  Not considered here, but of high importance, is how societal disruptions from climate change will cascade – discrete disruptions and vulnerabilities, followed by additional climate stress can be a cascading event.  (An example of this might be drought and extreme heat leading to fires damaging or destroying a community, leading to residents in temporary housing being exposed to subsequent climate induced events like smoke, landslides, intense precipitation or extreme heat).  Individual climate or weather events can have outsized impacts following earlier, unrelated high-impact events.  Collectively this is referred to as cascading disasters – a very important topic, but not the focus of this blogpost.
-
+- Projecting future climate is hard, predicting how people will respond to climate is harder.  Not considered here, but of high importance, is how societal disruptions from climate change will cascade – discrete disruptions and vulnerabilities, followed by additional climate stress can be a cascading event.  (An example of this might be drought and extreme heat leading to fires damaging or destroying a community, leading to residents in temporary housing being exposed to subsequent climate induced events like smoke, landslides, intense precipitation or extreme heat).  Individual climate or weather events can have outsized impacts following earlier, unrelated high-impact events.  Collectively this is referred to as cascading disasters – a very important topic, but not the focus of this blogpost.
 
 ### Visualizing Compound Events on Cal-Adapt
 
@@ -66,7 +65,7 @@ The standardized precipitation-evaporation index (SPEI) depicts the combined imp
 
 <figure class="image">
   <img src="/img/blog/compound_event_spei_headwaters_merced.png" alt="Figure of SPEI chart from Cal-Adapt website">
-  <figcaption>This figure shows the most likely outcome (modeled average) and range of future projections of the Standardized Precipitation-Evaporation Index (SPEI) 1-month values for the Headwaters Merced River Watershed (Yosemite Valley). The SPEI values correspond to the number of months per year in which SPEI <= -1 (implying moderate to severe drought), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.</figcaption>
+  <figcaption>This figure shows the most likely outcome (modeled average) and range of future projections of the Standardized Precipitation-Evaporation Index (SPEI) 1-month values for the Headwaters Merced River Watershed (Yosemite Valley). The SPEI values correspond to the number of months per year in which SPEI &lt= -1 (implying moderate to severe drought), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.</figcaption>
 </figure>
 
 If the version of SPEI on Cal-Adapt doesn’t meet your needs, or you prefer a different drought index, please let us know.
@@ -79,12 +78,12 @@ Cal-Adapt has lots of great information on wildfire, so why create a new index? 
 
 The Keetch-Byram Drought Index (KBDI) provides an estimate for the dryness of soil and vegetative detritus.  KBDI is cumulative with drought values increasing on dry and warm days, and decreasing during rainy periods – meaning in California we would expect KBDI to increase from the end of the wet season (spring) into the dry season (summer & fall).  Fire danger is complex (impacted by human activity, vegetation, wind, temperature, relative humidity, atmospheric stability, etc.) and KBDI represents a simplified proxy for favorability of occurrence and spread of wildfire but is not itself a predictor of fire.  The table below explains what values of KBDI represent:
 
-| KBDI     | Wildfire risk proxy |
-|  ----:   | :---- |
-|   0 – 200| Soil moisture and fuel moistures are high - low wildfire risk. |
-| 200 – 400| Soil and fuels start to dry - average wildfire risk. |
-| 400 – 600| Onset of drought - moderate to serious wildfire risk. |
-| 600 – 800| Severe drought - extreme wildfire risk and increased wildfire occurrence.|
+| KBDI      | Wildfire risk proxy                                                      |
+|  :----:   | :----:                                                                   |
+|   0 – 200 | Soil moisture and fuel moistures are high - low wildfire risk.           |
+| 200 – 400 | Soil and fuels start to dry - average wildfire risk.                     |
+| 400 – 600 | Onset of drought - moderate to serious wildfire risk.                    |
+| 600 – 800 | Severe drought - extreme wildfire risk and increased wildfire occurrence.|
 
 &nbsp;
 
@@ -98,7 +97,7 @@ If you want <a href="https://books.google.com/books?id=zUiUwKYMq_8C&lr&pg=PP1#v=
 
 <figure class="image">
   <img src="/img/blog/compound_event_kbdi_headwaters_merced.png" alt="Figure of KBDI chart from Cal-Adapt website">
-  <figcaption>This figure shows the most likely outcome (modeled average) and range of future projections of the Keetch-Byram Drought Index (KBDI) values for the Headwaters Merced River Watershed (Yosemite Valley). The KBDI values correspond to the number of days per year in which KBDI > 600 (implying severe drought and extreme wildfire risk), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.</figcaption>
+  <figcaption>This figure shows the most likely outcome (modeled average) and range of future projections of the Keetch-Byram Drought Index (KBDI) values for the Headwaters Merced River Watershed (Yosemite Valley). The KBDI values correspond to the number of days per year in which KBDI &gt 600 (implying severe drought and extreme wildfire risk), projected to the end of the century for the medium (RCP 4.5) and high (RCP 8.5) emissions scenarios. This chart was generated using Cal-Adapt's Local Climate Change Snapshot tool.</figcaption>
 </figure>
 
 ### The Future of Conveying Risk from Compound Events
