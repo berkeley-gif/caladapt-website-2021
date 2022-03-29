@@ -28,9 +28,8 @@
       ["get-started", "faqs"].includes(d.slug)
     );
 
-    const { aboutContent, learnMoreContent, mapExplainer } = await (
-      await this.fetch("tools/slr-coastal-inundation.json")
-    ).json();
+    const { aboutContent, description, learnMoreContent, mapExplainer } =
+      await (await this.fetch("tools/slr-coastal-inundation.json")).json();
 
     return {
       tool,
@@ -38,6 +37,7 @@
       externalResources,
       helpItems,
       aboutContent,
+      description,
       learnMoreContent,
       mapExplainer,
     };
@@ -83,6 +83,7 @@
   export let externalResources;
   export let helpItems;
   export let aboutContent;
+  export let description;
   export let learnMoreContent;
   export let mapExplainer;
 
@@ -196,10 +197,8 @@
 
 <Header
   iconPaths="{tool.icons}"
-  title="{tool.title}"
-  description="Explore projected water levels associated with Sea Level Rise and
-   a near 100-year storm scenario along the California coast and San Francisco
-   Bay from two different models."
+  title="{`${tool.title} (beta)`}"
+  description="{description}"
 />
 
 <ToolNavigation href="{`/tools/${tool.slug}`}" />
