@@ -9,12 +9,7 @@ export function get(req, res) {
 
   if (!json || process.env.NODE_ENV !== "production") {
     json = JSON.stringify({
-      // Potentially hides the SLR CIS tool behind a feature flag.
-      // This will prevent Sapper from building this page route when deploying
-      // to prod, but not for dev or beta.
-      tools: process.cal_adapt_features.slrCoastalInundation
-        ? tools
-        : tools.filter((d) => d.slug !== "slr-coastal-inundation"),
+      tools,
       categories,
     });
   }
