@@ -24,6 +24,7 @@ describe("MapLayerHandler", () => {
       addLayer: jest.fn(),
       removeLayer: jest.fn(),
       getLayer: jest.fn(() => true),
+      getStyle: jest.fn(() => [{}, {}]),
       version: "x.x.x",
     };
   });
@@ -194,6 +195,16 @@ describe("MapLayerHandler", () => {
     mapLayerHandler._removeSource = jest.fn();
     mapLayerHandler.removeMapLayer("my");
     expect(mapLayerHandler._removeSource).toBeCalledWith("my-source");
+  });
+
+  test("removeMapLayer: noop", () => {
+    map.getStyle.mockReturnValue(undefined);
+    const mapLayerHandler = getMlhInstance();
+    mapLayerHandler._removeLayer = jest.fn();
+    mapLayerHandler._removeSource = jest.fn();
+    mapLayerHandler.removeMapLayer("my");
+    expect(mapLayerHandler._removeLayer).not.toHaveBeenCalled();
+    expect(mapLayerHandler._removeSource).not.toHaveBeenCalled();
   });
 
   test("removeMapRef", () => {

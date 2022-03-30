@@ -40,11 +40,28 @@
     dataLayers.filter((d) => d.id.includes("5m")).map(mapLayersProps);
 
   afterUpdate(() => {
-    if (layerProps && !equal(layerProps, prevLayerProps)) {
+    const areEqual = equal(layerProps, prevLayerProps);
+    const mapLayersActual = map
+      .getStyle()
+      .layers.filter((d) => /calflod3dtfs_5m-centroids/i.test(d.id));
+
+    if (layerProps && !areEqual) {
       removePreviousLayer();
       addCentroidsLayer();
       prevLayerProps = layerProps;
     }
+
+    if (areEqual && !mapLayersActual.length) {
+      reapplyCentroidsLayer();
+    }
+  });
+
+  onDestroy(() => {
+    removeCentroidsLayer();
+    removePreviousLayer();
+    layerHandler.removeMapRef();
+    layerHandler = null;
+    map.off("styledata", handleStyleDataChange);
   });
 
   function addCentroidsLayer() {
@@ -82,12 +99,4 @@
       prevMapStyle = mapStyle;
     }
   }
-
-  onDestroy(() => {
-    removeCentroidsLayer();
-    removePreviousLayer();
-    map.off("styledata", handleStyleDataChange);
-    layerHandler.removeMapRef();
-    layerHandler = null;
-  });
 </script>
