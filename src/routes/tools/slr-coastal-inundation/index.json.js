@@ -1,28 +1,28 @@
 import { getToolContent } from "../_common/server-utils";
 
 export function get(_req, res) {
+  // names of files that reside in content/tools/slr-coastal-inundation
+  const contentItems = [
+    "about",
+    "learn-more-flood-scenario",
+    "learn-more-map-layers",
+    "learn-more-time-period",
+    "map-explainer",
+  ];
+
   try {
-    const aboutContent = getToolContent("slr-coastal-inundation", "about");
-    const floodScenario = getToolContent(
-      "slr-coastal-inundation",
-      "learn-more-flood-scenario"
-    );
-    const mapLayers = getToolContent(
-      "slr-coastal-inundation",
-      "learn-more-map-layers"
-    );
-    const timePeriod = getToolContent(
-      "slr-coastal-inundation",
-      "learn-more-time-period"
-    );
-    const mapExplainer = getToolContent(
-      "slr-coastal-inundation",
-      "map-explainer"
-    );
+    const [aboutContent, floodScenario, mapLayers, timePeriod, mapExplainer] =
+      contentItems.map((item) =>
+        getToolContent("slr-coastal-inundation", item)
+      );
+
+    const description = require("content/tools/slr-coastal-inundation/description.json");
+
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
         aboutContent,
+        description,
         learnMoreContent: {
           floodScenario,
           mapLayers,

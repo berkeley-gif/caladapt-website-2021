@@ -2,25 +2,21 @@
   "beta": {
     "showBetaBanner": "true",
     "loggingEnabled": "false",
-    "noRobots": "true",
-    "slrCoastalInundation": "true"
+    "noRobots": "true"
   },
   "dev": {
     "showBetaBanner": "false",
     "loggingEnabled": "false",
-    "noRobots": "true",
-    "slrCoastalInundation": "true"
+    "noRobots": "true"
   },
   "netlify": {
     "showBetaBanner": "false",
     "loggingEnabled": "false",
-    "noRobots": "true",
-    "slrCoastalInundation": "true"
+    "noRobots": "true"
   },
   "prod": {
     "showBetaBanner": "false",
     "loggingEnabled": "true",
-    "noRobots": "false",
-    "slrCoastalInundation": "false"
+    "noRobots": "false"
   }
 }
