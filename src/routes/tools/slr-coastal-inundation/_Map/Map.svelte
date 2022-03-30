@@ -6,8 +6,9 @@
   import {
     Map as SlippyMap,
     NavigationControl,
-    Search,
+    // Search,
   } from "~/components/tools/Map";
+  import MapSearch from "./MapSearch.svelte";
   import RasterLayers from "./Rasters.svelte";
   import TileIndexes from "./TileIndexes.svelte";
   import TileCentroids from "./TileCentroids.svelte";
@@ -116,7 +117,7 @@
     on:moveend="{debounce(handleMoveend, moveendDelayMS)}"
   >
     <NavigationControl />
-    <Search on:change="{handleSearchChange}" />
+    <MapSearch on:change="{handleSearchChange}" />
 
     {#if Array.isArray(activeLayers) && activeLayers.length}
       {#if zoom >= 8}
