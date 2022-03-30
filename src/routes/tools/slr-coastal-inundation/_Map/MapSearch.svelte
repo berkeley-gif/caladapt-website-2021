@@ -1,9 +1,10 @@
 <script>
-  import { dispatch } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import Search from "cal-adapt-svelte-components/Search/Search.svelte";
   import { geocode } from "~/helpers/geocode";
   import { debounce } from "~/helpers/utilities";
 
+  const dispatch = createEventDispatcher();
   const inputDebounceMs = 350;
 
   let searchValue = "";
@@ -36,6 +37,7 @@
         return response.features.map(({ place_name, ...rest }) => ({
           ...rest,
           title: place_name,
+          value: place_name,
         }));
       }
     } catch (error) {
@@ -56,10 +58,9 @@
 
 <div>
   <Search
-    bind:value="{searchValue}"
+    bind:searchValue
     on:input="{debounce(handleSearchInput, inputDebounceMs)}"
     on:select="{selectSearchResult}"
-    searchValue="{searchValue}"
     suggestions="{suggestions}"
   />
 </div>
