@@ -1,7 +1,7 @@
 ---
 title: "Introducing the Sea Level Rise - Coastal Inundation Scenarios Tool"
 author: Cal-Adapt
-image: slr-cis-cosmos.png
+image: slr-cis_cosmos.png
 tags: tools
 snippet: This new tool explores projected water levels associated with Sea Level Rise and a near 100-year storm scenario along the California coast and San Francisco Bay from two different models - CalFloD3D-TFS and CoSMoS.
 ---
