@@ -23,6 +23,8 @@
     const { value } = event.target;
     if (value && value.length >= 3) {
       await handleSearch();
+    } else {
+      suggestions = [];
     }
   }
 
@@ -52,7 +54,7 @@
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
-    width: 24rem;
+    width: 75ch;
   }
 </style>
 
