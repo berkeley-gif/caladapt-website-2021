@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import Search from "cal-adapt-svelte-components/Search/Search.svelte";
+  import Search from "@berkeley-gif/cal-adapt-svelte-components/Search/Search.svelte";
   import { geocode } from "~/helpers/geocode";
   import { debounce } from "~/helpers/utilities";
 
