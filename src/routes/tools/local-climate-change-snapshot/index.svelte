@@ -53,7 +53,7 @@
 <Header iconPaths="{tool.icons}" />
 
 <div class="bx--grid">
-  <div>
+  <div class="margin--v-48">
     <SelectLocation />
   </div>
 
