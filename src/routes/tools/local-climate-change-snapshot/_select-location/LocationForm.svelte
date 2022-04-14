@@ -105,26 +105,32 @@
       console.warn(error);
     }
     if (results && results.features && results.features.length) {
-      searchSuggestions = parseSearchResults(results.features, selectedRadio);
+      searchSuggestions = parseSearchResults(results.features);
     } else {
       searchSuggestions = [];
     }
   }
 
-  function parseSearchResults(searchResults, boundaryType) {
-    const mapAddressResults = ({ id, place_name, ...rest }) => ({
+  function parseSearchResults(searchResults) {
+    return searchResults.map(
+      selectedRadio === "address" ? mapAddressResults : mapBoundaryResults
+    );
+  }
+
+  function mapAddressResults({ id, place_name, ...rest }) {
+    return {
       id,
       title: place_name,
       ...rest,
-    });
-    const mapBoundaryResults = (feature) => ({
+    };
+  }
+
+  function mapBoundaryResults(feature) {
+    return {
       id: feature.id,
-      title: getTitle(feature, boundaryType, ""),
+      title: getTitle(feature, selectedRadio, ""),
       ...feature,
-    });
-    return searchResults.map(
-      boundaryType === "address" ? mapAddressResults : mapBoundaryResults
-    );
+    };
   }
 </script>
 
