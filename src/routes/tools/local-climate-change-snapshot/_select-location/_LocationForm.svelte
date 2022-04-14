@@ -5,8 +5,9 @@
     RadioButton,
     RadioButtonGroup,
   } from "carbon-components-svelte";
-  import { geocode, searchBoundaryLayer, getTitle } from "~/helpers/geocode";
+  import { getTitle } from "~/helpers/geocode";
   import { debounce } from "~/helpers/utilities";
+  import { geocodeAddress, geocodeBoundary } from "./_fetchLocation";
 
   const buttonText = "Generate Snapshot".toUpperCase();
   const inputDebounceMS = 300;
@@ -36,13 +37,37 @@
   ];
 
   let isValid = false;
-  let selectedRadio = "place";
+  let selectedRadio = "address";
+
+  let searchBox;
   let searchValue = "";
   let searchSuggestions = [];
+
+  let abortController;
 
   $: {
     console.log("selected radio: ", selectedRadio);
     console.log("searchSuggestions: ", searchSuggestions);
+  }
+
+  function handleRadioChange() {
+    handleAbortFetch();
+    clearSearch();
+  }
+
+  function clearSearch() {
+    console.log("clear search");
+    if (searchBox) {
+      searchBox.clearSearch();
+    }
+    searchSuggestions = [];
+  }
+
+  function handleAbortFetch() {
+    console.log("abort fetch request");
+    if (abortController) {
+      abortController.abort();
+    }
   }
 
   function handleSearchSelect(event) {
@@ -50,14 +75,17 @@
     // TODO: dispatch selected suggestion
   }
 
-  // TODO: maybe re-fire when selectedRadio changes
   function handleSearchInput() {
     if (searchValue.length >= 3) {
+      handleAbortFetch();
+      abortController = new AbortController();
       if (selectedRadio === "address") {
         handleAddressSearch(searchValue);
       } else {
         handleBoundarySearch(searchValue, selectedRadio);
       }
+    } else {
+      searchSuggestions = [];
     }
   }
 
@@ -65,7 +93,9 @@
     console.log("address search: ", string);
     let results;
     try {
-      results = await geocode(string);
+      results = await geocodeAddress(string, {
+        signal: abortController.signal,
+      });
       console.log(results);
     } catch (error) {
       console.warn(error);
@@ -87,7 +117,10 @@
     console.log("boundary search: ", string, boundaryType);
     let results;
     try {
-      results = await searchBoundaryLayer(string, boundaryType);
+      results = await geocodeBoundary(string, {
+        boundaryType,
+        signal: abortController.signal,
+      });
       console.log(results);
     } catch (error) {
       console.warn(error);
@@ -136,6 +169,7 @@
 
 <form on:submit|preventDefault>
   <Search
+    bind:this="{searchBox}"
     bind:searchValue
     on:input="{debounce(handleSearchInput, inputDebounceMS)}"
     on:select="{handleSearchSelect}"
@@ -146,6 +180,7 @@
 
   <RadioButtonGroup
     bind:selected="{selectedRadio}"
+    on:change="{handleRadioChange}"
     legendText="{radioLegendText}"
   >
     {#each radios as { label, value }}
