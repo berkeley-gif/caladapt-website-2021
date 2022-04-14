@@ -9,6 +9,9 @@
   import { debounce } from "~/helpers/utilities";
   import { geocodeSearch } from "./geocode-search";
 
+  /** the selected location's data as chosen by the user, this could also be set by the map */
+  export let selectedLocation = null;
+
   const buttonText = "Generate Snapshot".toUpperCase();
   const inputDebounceMS = 300;
   const searchLabelText = "Search for a place name or address";
@@ -36,7 +39,6 @@
     },
   ];
 
-  let isValid = false;
   let selectedRadio = "address";
 
   let searchBox;
@@ -46,8 +48,16 @@
   let abortController;
 
   $: {
+    console.log("selectedLocation: ", selectedLocation);
     console.log("selected radio: ", selectedRadio);
     console.log("searchSuggestions: ", searchSuggestions);
+  }
+
+  $: isValid = selectedLocation !== null;
+
+  $: if (searchValue === "" && (selectedLocation || searchSuggestions.length)) {
+    selectedLocation = null;
+    searchSuggestions = [];
   }
 
   function handleRadioChange() {
@@ -60,7 +70,6 @@
     if (searchBox) {
       searchBox.clearSearch();
     }
-    searchSuggestions = [];
   }
 
   function handleAbortFetch() {
@@ -72,7 +81,7 @@
 
   function handleSearchSelect(event) {
     console.log("Search selection made: ", event.detail);
-    // TODO: dispatch selected suggestion
+    selectedLocation = event.detail;
   }
 
   function handleSearchInput() {
