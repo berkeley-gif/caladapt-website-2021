@@ -7,7 +7,7 @@
   } from "carbon-components-svelte";
   import { getTitle } from "~/helpers/geocode";
   import { debounce } from "~/helpers/utilities";
-  import { geocodeAddress, geocodeBoundary } from "./_fetchLocation";
+  import { geocodeSearch } from "./geocode-search";
 
   const buttonText = "Generate Snapshot".toUpperCase();
   const inputDebounceMS = 300;
@@ -79,59 +79,43 @@
     if (searchValue.length >= 3) {
       handleAbortFetch();
       abortController = new AbortController();
-      if (selectedRadio === "address") {
-        handleAddressSearch(searchValue);
-      } else {
-        handleBoundarySearch(searchValue, selectedRadio);
-      }
+      handleGeocodeSearch();
     } else {
       searchSuggestions = [];
     }
   }
 
-  async function handleAddressSearch(string) {
-    console.log("address search: ", string);
+  async function handleGeocodeSearch() {
     let results;
     try {
-      results = await geocodeAddress(string, {
+      results = await geocodeSearch(searchValue, {
+        boundaryType: selectedRadio,
         signal: abortController.signal,
       });
-      console.log(results);
     } catch (error) {
       console.warn(error);
     }
     if (results && results.features && results.features.length) {
-      searchSuggestions = results.features.map(
-        ({ id, place_name, ...rest }) => ({
-          id,
-          title: place_name,
-          ...rest,
-        })
-      );
+      searchSuggestions = parseSearchResults(results.features, selectedRadio);
     } else {
       searchSuggestions = [];
     }
   }
 
-  async function handleBoundarySearch(string, boundaryType) {
-    console.log("boundary search: ", string, boundaryType);
-    let results;
-    try {
-      results = await geocodeBoundary(string, {
-        boundaryType,
-        signal: abortController.signal,
-      });
-      console.log(results);
-    } catch (error) {
-      console.warn(error);
-    }
-    if (results && results.features && results.features.length) {
-      searchSuggestions = results.features.map((feature) => ({
-        id: feature.id,
-        title: getTitle(feature, boundaryType, ""),
-        ...feature,
-      }));
-    }
+  function parseSearchResults(searchResults, boundaryType) {
+    const mapAddressResults = ({ id, place_name, ...rest }) => ({
+      id,
+      title: place_name,
+      ...rest,
+    });
+    const mapBoundaryResults = (feature) => ({
+      id: feature.id,
+      title: getTitle(feature, boundaryType, ""),
+      ...feature,
+    });
+    return searchResults.map(
+      boundaryType === "address" ? mapAddressResults : mapBoundaryResults
+    );
   }
 </script>
 
