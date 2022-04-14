@@ -36,7 +36,7 @@
     </Row>
     {#if showDescription}
       <Row>
-        <Column>
+        <Column lg="{8}" md="{8}" sm="{4}">
           <p class="lead">
             Climate change related effects vary significantly throughout
             California, mirroring our state’s diverse climate, topography, and
@@ -47,7 +47,7 @@
             when they become available.
           </p>
         </Column>
-        <Column>
+        <Column lg="{8}" md="{8}" sm="{4}">
           <p class="lead">
             The Local Climate Change Snapshot Tool tool is designed to be
             straightforward and accessible for most users. Watch a <a
