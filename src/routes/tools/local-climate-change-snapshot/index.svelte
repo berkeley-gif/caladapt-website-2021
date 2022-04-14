@@ -36,7 +36,7 @@
 <script>
   import { Resources } from "~/components/tools/Partials";
   import { Header } from "./_common";
-  import SelectLocation from "./_select-location/_SelectLocation.svelte";
+  import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
   export let resources;

@@ -1,7 +1,7 @@
 <script>
   import { Row, Column } from "carbon-components-svelte";
-  import LocationMap from "./_LocationMap.svelte";
-  import LocationForm from "./_LocationForm.svelte";
+  import LocationMap from "./LocationMap.svelte";
+  import LocationForm from "./LocationForm.svelte";
 </script>
 
 <Row>
