@@ -1,14 +1,14 @@
 <script>
+  import { Search } from "@berkeley-gif/cal-adapt-svelte-components";
   import {
     Button,
     RadioButton,
     RadioButtonGroup,
-    Search,
   } from "carbon-components-svelte";
 
   const buttonText = "Generate Snapshot".toUpperCase();
-  const searchLabelText = "Search for a place or address";
-  const radioLegendText = "Select a location type to search for";
+  const searchLabelText = "Search for a place name or address";
+  const radioLegendText = "Select the type of location to search for";
   const radios = [
     {
       label: "Address",
@@ -34,13 +34,26 @@
 
   let isValid = false;
   let selectedRadio = "address";
+  let searchValue = "";
+  let searchSuggestions = [];
 
   $: console.log("selected radio: ", selectedRadio);
+
+  function handleSearchInput(event) {
+    console.log("Search input event: ", event);
+    // TODO: handle fetching suggestions from MapBox & Cal-Adapt geocoding APIs
+  }
+
+  function handleSearchSelect(event) {
+    console.log("Search selection: ", event);
+    // TODO: dispatch selected suggestion
+  }
 </script>
 
 <style>
   p {
     font-size: 1.25rem;
+    margin-bottom: 3rem;
   }
 
   form {
@@ -58,7 +71,14 @@
 </p>
 
 <form on:submit|preventDefault>
-  <Search placeholder="{searchLabelText}" labelText="{searchLabelText}" />
+  <Search
+    bind:searchValue
+    on:input="{handleSearchInput}"
+    on:select="{handleSearchSelect}"
+    description="{searchLabelText}"
+    suggestions="{searchSuggestions}"
+    outlineColor="var(--gray-90)"
+  />
   <RadioButtonGroup
     bind:selected="{selectedRadio}"
     legendText="{radioLegendText}"
