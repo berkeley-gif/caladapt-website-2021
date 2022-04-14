@@ -147,9 +147,11 @@ export const handle = (promise) => {
 
  * @param {string} url - path to the resource
  * @param {object} params - query parameters
+ * @param {string} method – "GET" or "POST" for type of request
+ * @param {AbortSignal} signal – AbortController signal to abort the request
  * @return {Promise}
  */
-export function fetchData(url, params = {}, method = "GET") {
+export function fetchData(url, params = {}, method = "GET", signal) {
   let request;
   if (method === "POST") {
     const formData = new FormData();
@@ -162,6 +164,7 @@ export function fetchData(url, params = {}, method = "GET") {
         Accept: "application/json",
       },
       body: formData,
+      ...(signal && { signal }),
     });
   } else {
     request = fetch(`${url}?${serialize(params)}`, {
@@ -169,6 +172,7 @@ export function fetchData(url, params = {}, method = "GET") {
       headers: {
         Accept: "application/json",
       },
+      ...(signal && { signal }),
     });
   }
   return request;
