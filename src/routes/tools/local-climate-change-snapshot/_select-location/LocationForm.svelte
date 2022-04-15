@@ -49,12 +49,6 @@
   let searchSuggestions = [];
   let abortController;
 
-  $: {
-    console.log("selectedLocation: ", selectedLocation);
-    console.log("selected radio: ", selectedRadio);
-    console.log("searchSuggestions: ", searchSuggestions);
-  }
-
   $: isValid = selectedLocation !== null;
 
   $: if (searchValue === "" && (selectedLocation || searchSuggestions.length)) {
@@ -68,14 +62,12 @@
   }
 
   function clearSearch() {
-    console.log("clear search");
     if (searchBox) {
       searchBox.clearSearch();
     }
   }
 
   function handleAbortFetch() {
-    console.log("abort fetch request");
     if (abortController) {
       abortController.abort();
     }
@@ -173,6 +165,7 @@
     bind:this="{searchBox}"
     bind:searchValue
     on:input="{debounce(handleSearchInput, inputDebounceMS)}"
+    on:select
     on:select="{handleSearchSelect}"
     description="{searchLabelText}"
     suggestions="{searchSuggestions}"
