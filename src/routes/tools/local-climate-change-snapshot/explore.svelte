@@ -38,7 +38,7 @@
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
-  import ExploreData from "./_explore/_ExploreData.svelte";
+  import ExploreData from "./_explore/ExploreData.svelte";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Stores & constants
