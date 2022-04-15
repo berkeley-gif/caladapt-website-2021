@@ -12,6 +12,12 @@
   /** the selected location's data as chosen by the user, this could also be set by the map */
   export let selectedLocation = null;
 
+  /** the value of the search box */
+  export let searchValue = "";
+
+  /** the selected radio button boundary type */
+  export let selectedRadio = "address";
+
   const buttonText = "Generate Snapshot".toUpperCase();
   const inputDebounceMS = 300;
   const searchLabelText = "Search for a place name or address";
@@ -39,12 +45,8 @@
     },
   ];
 
-  let selectedRadio = "address";
-
   let searchBox;
-  let searchValue = "";
   let searchSuggestions = [];
-
   let abortController;
 
   $: {
