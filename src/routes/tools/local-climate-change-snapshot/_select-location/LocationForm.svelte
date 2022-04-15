@@ -45,7 +45,6 @@
     },
   ];
 
-  let searchBox;
   let searchSuggestions = [];
   let abortController;
 
@@ -58,12 +57,9 @@
 
   function handleRadioChange() {
     handleAbortFetch();
-    clearSearch();
-  }
-
-  function clearSearch() {
-    if (searchBox) {
-      searchBox.clearSearch();
+    searchSuggestions = [];
+    if (searchValue && searchValue.length) {
+      handleGeocodeSearch();
     }
   }
 
@@ -71,6 +67,7 @@
     if (abortController) {
       abortController.abort();
     }
+    abortController = new AbortController();
   }
 
   function handleSearchSelect(event) {
@@ -80,7 +77,6 @@
   function handleSearchInput() {
     if (searchValue.length >= 3) {
       handleAbortFetch();
-      abortController = new AbortController();
       handleGeocodeSearch();
     } else {
       searchSuggestions = [];
@@ -161,7 +157,6 @@
 
 <form on:submit|preventDefault>
   <Search
-    bind:this="{searchBox}"
     bind:searchValue
     on:input="{debounce(handleSearchInput, inputDebounceMS)}"
     on:select
