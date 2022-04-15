@@ -1,22 +1,20 @@
 <script>
   import { goto } from "@sapper/app";
   import { Row, Column } from "carbon-components-svelte";
+  import { locationStore } from "~/routes/tools/_common/stores";
   import LocationMap from "./LocationMap.svelte";
   import LocationForm from "./LocationForm.svelte";
 
-  let searchValue = "";
-  let selectedLocation = null;
-  let selectedRadio = "address";
-
-  // $: {
-  //   console.log("searchValue: ", searchValue);
-  //   console.log("selectedLocation: ", selectedLocation);
-  //   console.log("selected radio: ", selectedRadio);
-  // }
+  let searchValue =
+    $locationStore && $locationStore.location
+      ? $locationStore.location.title
+      : "";
+  let selectedLocation = $locationStore.location;
+  let selectedRadio = $locationStore.boundaryId || "address";
 
   function handleSelectLocation({ detail }) {
-    // TODO: set location store
-    console.log(detail);
+    locationStore.updateLocation(detail);
+    locationStore.updateBoundary(selectedRadio);
   }
 
   function handleLocationFormSubmit() {
