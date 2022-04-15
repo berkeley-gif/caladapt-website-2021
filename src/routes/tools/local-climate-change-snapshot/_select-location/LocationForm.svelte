@@ -182,4 +182,13 @@
   </RadioButtonGroup>
 
   <Button disabled="{!isValid}" size="field" type="submit">{buttonText}</Button>
+
+  {#if isValid}
+    <p>
+      <strong>
+        Next, click the Generate Snapshot button to view climate data for
+        {searchValue}.
+      </strong>
+    </p>
+  {/if}
 </form>
