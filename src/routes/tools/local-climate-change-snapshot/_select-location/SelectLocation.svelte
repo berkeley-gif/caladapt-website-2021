@@ -35,6 +35,9 @@
     />
   </Column>
   <Column lg="{8}" md="{8}" sm="{4}">
-    <LocationMap />
+    <LocationMap
+      boundaryType="{selectedRadio}"
+      selectedLocation="{selectedLocation}"
+    />
   </Column>
 </Row>

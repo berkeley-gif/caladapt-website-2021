@@ -74,7 +74,6 @@
   }
 
   function handleSearchSelect(event) {
-    console.log("Search selection made: ", event.detail);
     selectedLocation = event.detail;
   }
 

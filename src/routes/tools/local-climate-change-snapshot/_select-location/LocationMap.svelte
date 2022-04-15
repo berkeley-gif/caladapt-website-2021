@@ -1,5 +1,13 @@
 <script>
   import { Grid, Row, Column } from "carbon-components-svelte";
+
+  export let boundaryType = "";
+  export let selectedLocation = null;
+
+  $: {
+    console.log("LocationMap boundaryType: ", boundaryType);
+    console.log("LocationMap selectedLocation: ", selectedLocation);
+  }
 </script>
 
 <style>
