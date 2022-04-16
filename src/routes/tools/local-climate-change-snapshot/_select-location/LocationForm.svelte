@@ -66,11 +66,9 @@
 
   function handleRadioChange() {
     handleAbortFetch();
+    searchValue = "";
     searchSuggestions = [];
     selectedLocation = null;
-    if (searchValue && searchValue.length) {
-      handleGeocodeSearch();
-    }
   }
 
   function handleAbortFetch() {
