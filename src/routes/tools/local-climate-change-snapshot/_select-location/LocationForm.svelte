@@ -2,6 +2,7 @@
   import { Search } from "@berkeley-gif/cal-adapt-svelte-components";
   import {
     Button,
+    InlineNotification,
     RadioButton,
     RadioButtonGroup,
   } from "carbon-components-svelte";
@@ -20,6 +21,7 @@
 
   const buttonText = "Generate Snapshot".toUpperCase();
   const inputDebounceMS = 300;
+  const minSearchLength = 3;
   const searchLabelText = "Search for a place name or address";
   const radioLegendText = "Select the type of location to search for";
   const radios = [
@@ -47,17 +49,25 @@
 
   let searchSuggestions = [];
   let abortController;
+  let notFound = false;
 
-  $: isValid = selectedLocation !== null;
+  $: isValid = selectedLocation !== null && !notFound;
 
-  $: if (searchValue === "" && (selectedLocation || searchSuggestions.length)) {
+  $: if (searchValue === "") {
+    notFound = false;
     selectedLocation = null;
     searchSuggestions = [];
+  }
+
+  $: {
+    console.log("searchSuggestions: ", searchSuggestions);
+    console.log("selectedLocation: ", selectedLocation);
   }
 
   function handleRadioChange() {
     handleAbortFetch();
     searchSuggestions = [];
+    selectedLocation = null;
     if (searchValue && searchValue.length) {
       handleGeocodeSearch();
     }
@@ -75,7 +85,7 @@
   }
 
   function handleSearchInput() {
-    if (searchValue.length >= 3) {
+    if (searchValue.length >= minSearchLength) {
       handleAbortFetch();
       handleGeocodeSearch();
     } else {
@@ -85,6 +95,7 @@
 
   async function handleGeocodeSearch() {
     let results;
+    notFound = false;
     try {
       results = await geocodeSearch(searchValue, {
         boundaryType: selectedRadio,
@@ -97,6 +108,7 @@
       searchSuggestions = parseSearchResults(results.features);
     } else {
       searchSuggestions = [];
+      notFound = true;
     }
   }
 
@@ -176,7 +188,14 @@
     {/each}
   </RadioButtonGroup>
 
-  <Button disabled="{!isValid}" size="field" type="submit">{buttonText}</Button>
+  {#if notFound}
+    <InlineNotification
+      lowContrast="{true}"
+      hideCloseButton="{true}"
+      kind="error"
+      subtitle="Location not found. Please try a different search."
+    />
+  {/if}
 
   {#if isValid}
     <p>
@@ -186,4 +205,6 @@
       </strong>
     </p>
   {/if}
+
+  <Button disabled="{!isValid}" size="field" type="submit">{buttonText}</Button>
 </form>
