@@ -29,7 +29,7 @@ export const mapboxGeocodeParams = {
   country: "us",
   bbox: "-125,31,-113,44",
   limit: 5,
-  proximity: "-122.25038599999999,37.53312300000002",
+  proximity: "-122.250386,37.533123",
   types: "postcode,place,locality,neighborhood,address",
   language: "en",
   access_token: accessToken,
