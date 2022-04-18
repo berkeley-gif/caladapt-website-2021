@@ -12,13 +12,17 @@
   let selectedLocation = $locationStore.location;
   let selectedRadio = $locationStore.boundaryId || "address";
 
+  $: console.log("$locationStore: ", $locationStore);
+
   function handleSelectLocation({ detail }) {
     locationStore.updateLocation(detail);
     locationStore.updateBoundary(selectedRadio);
   }
 
   function handleLocationFormSubmit() {
-    goto("/tools/local-climate-change-snapshot/explore");
+    if (selectedLocation) {
+      goto("/tools/local-climate-change-snapshot/explore");
+    }
   }
 </script>
 

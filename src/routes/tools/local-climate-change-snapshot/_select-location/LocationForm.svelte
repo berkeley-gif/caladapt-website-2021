@@ -50,6 +50,7 @@
   let searchSuggestions = [];
   let abortController;
   let notFound = false;
+  let showError = false;
 
   $: isValid = selectedLocation !== null && !notFound;
 
@@ -59,9 +60,19 @@
     searchSuggestions = [];
   }
 
+  $: if (searchValue && searchValue.length && showError) {
+    showError = false;
+  }
+
   $: {
     console.log("searchSuggestions: ", searchSuggestions);
     console.log("selectedLocation: ", selectedLocation);
+  }
+
+  function handleBtnClick() {
+    if (!searchValue) {
+      showError = true;
+    }
   }
 
   function handleRadioChange() {
@@ -191,12 +202,23 @@
   </RadioButtonGroup>
 
   <div class="location-form--help-text" aria-live="polite">
+    {#if showError}
+      <InlineNotification
+        lowContrast="{true}"
+        hideCloseButton="{true}"
+        kind="error"
+        title="Error:"
+        subtitle="Please select a location to continue."
+      />
+    {/if}
+
     {#if notFound}
       <InlineNotification
         lowContrast="{true}"
         hideCloseButton="{true}"
         kind="warning"
-        subtitle="Location not found. Please try a different search."
+        title="Location not found."
+        subtitle="Please try a different search."
       />
     {/if}
 
@@ -205,10 +227,13 @@
         lowContrast="{true}"
         hideCloseButton="{true}"
         kind="success"
-        subtitle="Location found. Click the Generate Snapshot button to continue."
+        title="Location found."
+        subtitle="Click the Generate Snapshot button to continue."
       />
     {/if}
   </div>
 
-  <Button disabled="{!isValid}" size="field" type="submit">{buttonText}</Button>
+  <Button on:click="{handleBtnClick}" size="field" type="submit"
+    >{buttonText}</Button
+  >
 </form>
