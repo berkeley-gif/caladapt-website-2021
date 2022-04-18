@@ -78,8 +78,6 @@
   function handleRadioChange() {
     handleAbortFetch();
     searchValue = "";
-    searchSuggestions = [];
-    selectedLocation = null;
   }
 
   function handleAbortFetch() {
@@ -161,10 +159,6 @@
 
     :global(legend.bx--label) {
       font-size: 1rem;
-    }
-
-    :global(.bx--search-input::placeholder) {
-      color: var(--gray-80);
     }
   }
 
