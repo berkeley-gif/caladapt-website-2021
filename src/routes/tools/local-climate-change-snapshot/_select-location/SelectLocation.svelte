@@ -38,6 +38,7 @@
   </Column>
   <Column lg="{8}" md="{8}" sm="{4}">
     <LocationMap
+      on:select="{handleSelectLocation}"
       boundaryType="{selectedRadio}"
       selectedLocation="{selectedLocation}"
     />
