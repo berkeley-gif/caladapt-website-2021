@@ -142,7 +142,7 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2rem;
 
     :global(.cac--search) {
       max-width: 80ch;
@@ -155,6 +155,10 @@
     :global(.bx--search-input::placeholder) {
       color: var(--gray-80);
     }
+  }
+
+  .location-form--help-text {
+    min-height: 5rem;
   }
 </style>
 
@@ -186,23 +190,25 @@
     {/each}
   </RadioButtonGroup>
 
-  {#if notFound}
-    <InlineNotification
-      lowContrast="{true}"
-      hideCloseButton="{true}"
-      kind="error"
-      subtitle="Location not found. Please try a different search."
-    />
-  {/if}
+  <div class="location-form--help-text" aria-live="polite">
+    {#if notFound}
+      <InlineNotification
+        lowContrast="{true}"
+        hideCloseButton="{true}"
+        kind="warning"
+        subtitle="Location not found. Please try a different search."
+      />
+    {/if}
 
-  {#if isValid}
-    <InlineNotification
-      lowContrast="{true}"
-      hideCloseButton="{true}"
-      kind="success"
-      subtitle="Location found. Click the Generate Snapshot button to continue."
-    />
-  {/if}
+    {#if isValid}
+      <InlineNotification
+        lowContrast="{true}"
+        hideCloseButton="{true}"
+        kind="success"
+        subtitle="Location found. Click the Generate Snapshot button to continue."
+      />
+    {/if}
+  </div>
 
   <Button disabled="{!isValid}" size="field" type="submit">{buttonText}</Button>
 </form>
