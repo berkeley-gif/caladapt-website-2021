@@ -38,7 +38,8 @@ export async function geocodeSearch(searchStr, options = {}) {
 }
 
 /**
- * sanitizeSearch: removes extraneous characters that the cal-adapt geocoding API won't match.
+ * sanitizeSearch: removes extraneous words and characters that the cal-adapt
+ * geocoding API won't match for a given boundary type.
  * @param {string} searchStr – search string
  * @param {string} boundaryType – geographic boundary type
  * @returns string
@@ -47,18 +48,18 @@ function sanitizeSearchStr(searchStr, boundaryType) {
   let regex;
   switch (boundaryType) {
     case "counties":
-      regex = /\scounty/i;
+      regex = /\bcounty\b/gi;
       break;
     case "censustracts":
-      regex = /census\stract\s/i;
+      regex = /\b(?:census|tract)\b/gi;
       break;
     case "hydrounits":
-      regex = /\swatershed/i;
+      regex = /\bwatershed\b/gi;
       break;
     default:
   }
   if (regex) {
     searchStr = searchStr.replace(regex, "");
   }
-  return searchStr.replace(/,\scalifornia/i, "");
+  return searchStr.replace(/,\s\bcalifornia\b/gi, "").trim();
 }
