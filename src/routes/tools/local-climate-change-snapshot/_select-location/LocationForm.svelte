@@ -196,12 +196,12 @@
   {/if}
 
   {#if isValid}
-    <p>
-      <strong>
-        Next, click the Generate Snapshot button to view climate data for
-        {searchValue}.
-      </strong>
-    </p>
+    <InlineNotification
+      lowContrast="{true}"
+      hideCloseButton="{true}"
+      kind="success"
+      subtitle="Location found. Click the Generate Snapshot button to continue."
+    />
   {/if}
 
   <Button disabled="{!isValid}" size="field" type="submit">{buttonText}</Button>
