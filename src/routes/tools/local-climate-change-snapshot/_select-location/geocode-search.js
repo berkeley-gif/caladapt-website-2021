@@ -18,13 +18,16 @@ export async function geocodeSearch(searchStr, options = {}) {
   let url;
   searchStr = sanitizeSearchStr(searchStr, boundaryType);
   if (boundaryType === "address") {
-    url = `${mapboxGeocodingEndpoint}/${searchStr}.json?${serialize(
-      mapboxGeocodeParams
-    )}`;
+    url = `${mapboxGeocodingEndpoint}/${searchStr}.json?${serialize({
+      ...mapboxGeocodeParams,
+      autocomplete: true,
+      types: "address,postcode,neighborhood",
+    })}`;
   } else {
     url = `${caladaptGeocodingEndpoint}/${boundaryType}/?${serialize({
       srs: 4326,
       search: searchStr,
+      pagesize: 5,
     })}`;
   }
   const response = await fetch(url, {
