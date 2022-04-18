@@ -17,7 +17,7 @@ export async function geocodeSearch(searchStr, options = {}) {
   const { boundaryType, signal } = options;
   let url;
   searchStr = sanitizeSearchStr(searchStr, boundaryType);
-  if (boundaryType === "address") {
+  if (boundaryType === "locagrid") {
     url = `${mapboxGeocodingEndpoint}/${searchStr}.json?${serialize({
       ...mapboxGeocodeParams,
       autocomplete: true,

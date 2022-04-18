@@ -17,7 +17,7 @@
   export let searchValue = "";
 
   /** the selected radio button boundary type */
-  export let selectedRadio = "address";
+  export let selectedRadio = "locagrid";
 
   const buttonText = "Generate Snapshot".toUpperCase();
   const inputDebounceMS = 300;
@@ -27,7 +27,7 @@
   const radios = [
     {
       label: "Address",
-      value: "address",
+      value: "locagrid",
     },
     {
       label: "County",
@@ -121,7 +121,7 @@
 
   function parseSearchResults(searchResults) {
     return searchResults.map(
-      selectedRadio === "address" ? mapAddressResults : mapBoundaryResults
+      selectedRadio === "locagrid" ? mapAddressResults : mapBoundaryResults
     );
   }
 

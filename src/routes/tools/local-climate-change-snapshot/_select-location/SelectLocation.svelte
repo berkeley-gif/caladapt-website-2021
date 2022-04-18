@@ -5,18 +5,16 @@
   import LocationMap from "./LocationMap.svelte";
   import LocationForm from "./LocationForm.svelte";
 
-  let searchValue =
-    $locationStore && $locationStore.location
-      ? $locationStore.location.title
-      : "";
-  let selectedLocation = $locationStore.location;
-  let selectedRadio = $locationStore.boundaryId || "address";
+  const { location, boundary } = locationStore;
+
+  let searchValue = $location ? $location.title : "";
+  let selectedLocation = $location;
+  let selectedRadio = $boundary ? $boundary.id : "locagrid";
 
   $: console.log("$locationStore: ", $locationStore);
 
   function handleSelectLocation({ detail }) {
     locationStore.updateLocation(detail);
-    locationStore.updateBoundary(selectedRadio);
   }
 
   function handleLocationFormSubmit() {
