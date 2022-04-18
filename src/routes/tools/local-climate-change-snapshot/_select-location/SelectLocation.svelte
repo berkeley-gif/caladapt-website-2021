@@ -11,10 +11,21 @@
   let selectedLocation = $location;
   let selectedRadio = $boundary ? $boundary.id : "locagrid";
 
-  $: console.log("$locationStore: ", $locationStore);
+  $: handleSelectBoundaryId(selectedRadio);
+  $: handleSelectLocation(selectedLocation);
 
-  function handleSelectLocation({ detail }) {
-    locationStore.updateLocation(detail);
+  $: {
+    console.log("$locationStore: ", $locationStore);
+  }
+
+  function handleSelectLocation(value) {
+    if (value) {
+      locationStore.updateLocation(value);
+    }
+  }
+
+  function handleSelectBoundaryId(value) {
+    locationStore.updateBoundary(value);
   }
 
   function handleLocationFormSubmit() {
@@ -27,7 +38,6 @@
 <Row>
   <Column lg="{8}" md="{8}" sm="{4}">
     <LocationForm
-      on:select="{handleSelectLocation}"
       on:submit="{handleLocationFormSubmit}"
       bind:selectedLocation
       bind:selectedRadio
@@ -37,8 +47,8 @@
   <Column lg="{8}" md="{8}" sm="{4}" noGutter="{true}">
     <LocationMap
       on:select="{handleSelectLocation}"
-      boundaryType="{selectedRadio}"
-      selectedLocation="{selectedLocation}"
+      bind:location="{selectedLocation}"
+      boundary="{$boundary}"
     />
   </Column>
 </Row>

@@ -1,13 +1,13 @@
 <script>
   import { Grid, Row, Column } from "carbon-components-svelte";
-  import { Map } from "~/components/tools/Map";
+  import { Location } from "~/components/tools/Location";
+  import { DEFAULT_BOUNDARIES } from "../../_common/constants";
 
-  export let boundaryType = "";
-  export let selectedLocation = null;
+  export let location;
+  export let boundary;
 
   $: {
-    console.log("LocationMap boundaryType: ", boundaryType);
-    console.log("LocationMap selectedLocation: ", selectedLocation);
+    console.log("LocationMap boundary: ", boundary);
   }
 </script>
 
@@ -20,7 +20,11 @@
 <Grid fullWidth="{true}" condensed="{true}">
   <Row>
     <Column aspectRatio="1x1" class="map-container">
-      <Map />
+      <Location
+        boundaryList="{DEFAULT_BOUNDARIES}"
+        location="{location}"
+        boundary="{boundary}"
+      />
     </Column>
   </Row>
 </Grid>
