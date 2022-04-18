@@ -233,7 +233,10 @@
     {/if}
   </div>
 
-  <Button on:click="{handleBtnClick}" size="field" type="submit"
-    >{buttonText}</Button
+  <Button
+    on:click="{handleBtnClick}"
+    aria-disabled="{!isValid}"
+    size="field"
+    type="submit">{buttonText}</Button
   >
 </form>
