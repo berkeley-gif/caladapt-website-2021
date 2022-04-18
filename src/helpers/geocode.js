@@ -8,10 +8,13 @@ import capoly from "./california-boundary-feature";
 
 const { apiEndpoint } = config.env.production;
 const { accessToken } = mapboxgl;
-const geocodingService = "https://api.mapbox.com/geocoding/v5/mapbox.places";
+
+export const caladaptGeocodingEndpoint = apiEndpoint;
+export const mapboxGeocodingEndpoint =
+  "https://api.mapbox.com/geocoding/v5/mapbox.places";
 
 export const reverseGeocode = async (coords) => {
-  const url = `${geocodingService}/${coords}.json`;
+  const url = `${mapboxGeocodingEndpoint}/${coords}.json`;
   const geocodeParams = {
     access_token: accessToken,
   };
@@ -22,18 +25,21 @@ export const reverseGeocode = async (coords) => {
   return response;
 };
 
+export const mapboxGeocodeParams = {
+  country: "us",
+  bbox: "-125,31,-113,44",
+  limit: 5,
+  proximity: "-122.250386,37.533123",
+  types: "postcode,place,locality,neighborhood,address",
+  language: "en",
+  access_token: accessToken,
+};
+
 export const geocode = async (searchStr) => {
-  const url = `${geocodingService}/${searchStr}.json`;
-  const geocodeParams = {
-    country: "us",
-    bbox: "-125,31,-113,44",
-    limit: 5,
-    proximity: "-122.25038599999999,37.53312300000002",
-    types: "postcode,place,locality,neighborhood,address",
-    language: "en",
-    access_token: accessToken,
-  };
-  const [response, error] = await handleXHR(fetchData(url, geocodeParams));
+  const url = `${mapboxGeocodingEndpoint}/${searchStr}.json`;
+  const [response, error] = await handleXHR(
+    fetchData(url, mapboxGeocodeParams)
+  );
   if (error) {
     throw new Error(error.message);
   }

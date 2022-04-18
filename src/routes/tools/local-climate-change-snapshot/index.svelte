@@ -34,11 +34,11 @@
 </script>
 
 <script>
-  import { Header, Resources } from "~/components/tools/Partials";
-  import SelectLocation from "./_SelectLocation.svelte";
+  import { Resources } from "~/components/tools/Partials";
+  import { Header } from "./_common";
+  import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
-  export let toolIntro;
   export let resources;
 </script>
 
@@ -50,14 +50,10 @@
   />
 </svelte:head>
 
-<Header
-  iconPaths="{tool.icons}"
-  title="{tool.title}"
-  description="{toolIntro}"
-/>
+<Header iconPaths="{tool.icons}" />
 
 <div class="bx--grid">
-  <div>
+  <div class="margin--v-48">
     <SelectLocation />
   </div>
 

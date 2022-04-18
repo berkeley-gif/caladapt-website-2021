@@ -31,11 +31,14 @@
 
   // Helpers
   import { logException } from "~/helpers/logging";
-  import { getInitialConfig, setInitialLocation } from "../_common/helpers";
+  import {
+    getInitialConfig,
+    setInitialLocation,
+  } from "~/routes/tools/_common/helpers";
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
-  import ExploreData from "./_ExploreData.svelte";
+  import ExploreData from "./_explore/ExploreData.svelte";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
   // Stores & constants
@@ -43,7 +46,7 @@
     unitsStore,
     locationStore,
     isFetchingStore,
-  } from "../_common/stores";
+  } from "~/routes/tools/_common/stores";
   import {
     categoryListStore,
     indicatorListStore,
