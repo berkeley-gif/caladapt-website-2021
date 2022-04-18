@@ -1,5 +1,6 @@
 <script>
   import { Grid, Row, Column } from "carbon-components-svelte";
+  import { Map } from "~/components/tools/Map";
 
   export let boundaryType = "";
   export let selectedLocation = null;
@@ -16,8 +17,10 @@
   }
 </style>
 
-<Grid>
+<Grid fullWidth="{true}" condensed="{true}">
   <Row>
-    <Column aspectRatio="1x1" class="map-container" />
+    <Column aspectRatio="1x1" class="map-container">
+      <Map />
+    </Column>
   </Row>
 </Grid>

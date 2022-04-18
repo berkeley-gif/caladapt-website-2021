@@ -36,7 +36,7 @@
       searchValue="{searchValue}"
     />
   </Column>
-  <Column lg="{8}" md="{8}" sm="{4}">
+  <Column lg="{8}" md="{8}" sm="{4}" noGutter="{true}">
     <LocationMap
       on:select="{handleSelectLocation}"
       boundaryType="{selectedRadio}"
