@@ -20,10 +20,6 @@
   const clickDebounceMs = 250;
   let abortController;
 
-  $: {
-    console.log("LocationMap boundary: ", boundary);
-  }
-
   async function handleClick({ detail: center }) {
     let boundaryResults;
     let boundaryFeature;

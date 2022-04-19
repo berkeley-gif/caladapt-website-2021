@@ -23,7 +23,7 @@
   export let selectedRadio = "locagrid";
 
   const buttonText = "Generate Snapshot".toUpperCase();
-  const inputDebounceMS = 300;
+  const inputDebounceMS = 350;
   const minSearchLength = 3;
   const searchLabelText = "Search for a place name or address";
   const radioLegendText = "Select the type of location to search for";
