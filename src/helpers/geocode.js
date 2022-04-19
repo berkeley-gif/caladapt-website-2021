@@ -13,18 +13,6 @@ export const caladaptGeocodingEndpoint = apiEndpoint;
 export const mapboxGeocodingEndpoint =
   "https://api.mapbox.com/geocoding/v5/mapbox.places";
 
-export const reverseGeocode = async (coords) => {
-  const url = `${mapboxGeocodingEndpoint}/${coords}.json`;
-  const geocodeParams = {
-    access_token: accessToken,
-  };
-  const [response, error] = await handleXHR(fetchData(url, geocodeParams));
-  if (error) {
-    throw new Error(error.message);
-  }
-  return response;
-};
-
 export const mapboxGeocodeParams = {
   country: "us",
   bbox: "-125,31,-113,44",
@@ -35,10 +23,37 @@ export const mapboxGeocodeParams = {
   access_token: accessToken,
 };
 
+/**
+ * geocode - uses MapBox Geocoding API to find geographic data for a street address or similar
+ * @param {string} searchStr - the street address, zipcode, locality, etc. to search for
+ * @returns {Object} GeoJSON FeatureCollection
+ */
 export const geocode = async (searchStr) => {
   const url = `${mapboxGeocodingEndpoint}/${searchStr}.json`;
   const [response, error] = await handleXHR(
     fetchData(url, mapboxGeocodeParams)
+  );
+  if (error) {
+    throw new Error(error.message);
+  }
+  return response;
+};
+
+/**
+ * reverseGeocode - uses MapBox Geocoding API to find a street address for a pair of geographic coordinates
+ * @param {[number, number]} coords - longitude, lattitude tuple
+ * @param {AbortSignal} signal - signal object from an AbortController instance
+ * @returns {Object} GeoJSON FeatureCollection
+ */
+export const reverseGeocode = async (coords, signal) => {
+  const url = `${mapboxGeocodingEndpoint}/${coords}.json`;
+  const geocodeParams = {
+    ...mapboxGeocodeParams,
+    types: "address",
+    limit: 1,
+  };
+  const [response, error] = await handleXHR(
+    fetchData(url, geocodeParams, "GET", signal)
   );
   if (error) {
     throw new Error(error.message);
