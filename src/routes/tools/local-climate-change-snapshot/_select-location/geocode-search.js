@@ -2,6 +2,7 @@ import {
   mapboxGeocodingEndpoint,
   mapboxGeocodeParams,
   caladaptGeocodingEndpoint,
+  formatFeature,
 } from "~/helpers/geocode";
 import { serialize } from "~/helpers/utilities";
 
@@ -65,4 +66,24 @@ function sanitizeSearchStr(searchStr, boundaryType) {
     searchStr = searchStr.replace(regex, "");
   }
   return searchStr.replace(/,\s\bcalifornia\b/gi, "").trim();
+}
+
+/**
+ * formatSearchResult: formats features returned by the Cal-Adapt and MapBox geocoders.
+ * @param {Object} result - the parsed JSON response from the geocoder. Assumes a features property
+ * @param {string} boundaryType - the geographic boundary, e.g. "counties", "watershed", etc.
+ * @returns Array - array of objects of formatted geojson features
+ */
+export function formatSearchResult(result, boundaryType) {
+  if (boundaryType === "locagrid") {
+    return result.features.map(({ id, place_name, ...rest }) => ({
+      id,
+      title: place_name,
+      ...rest,
+    }));
+  } else {
+    return result.features.map((feature) =>
+      formatFeature(feature, boundaryType)
+    );
+  }
 }

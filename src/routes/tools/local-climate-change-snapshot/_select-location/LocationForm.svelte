@@ -6,9 +6,8 @@
     RadioButton,
     RadioButtonGroup,
   } from "carbon-components-svelte";
-  import { getTitle } from "~/helpers/geocode";
   import { debounce } from "~/helpers/utilities";
-  import { geocodeSearch } from "./geocode-search";
+  import { geocodeSearch, formatSearchResult } from "./geocode-search";
 
   /** the selected location's data as chosen by the user, this could also be set by the map */
   export let selectedLocation = null;
@@ -112,33 +111,11 @@
       console.warn(error);
     }
     if (results && results.features && results.features.length) {
-      searchSuggestions = parseSearchResults(results.features);
+      searchSuggestions = formatSearchResult(results, selectedRadio);
     } else {
       searchSuggestions = [];
       notFound = true;
     }
-  }
-
-  function parseSearchResults(searchResults) {
-    return searchResults.map(
-      selectedRadio === "locagrid" ? mapAddressResults : mapBoundaryResults
-    );
-  }
-
-  function mapAddressResults({ id, place_name, ...rest }) {
-    return {
-      id,
-      title: place_name,
-      ...rest,
-    };
-  }
-
-  function mapBoundaryResults(feature) {
-    return {
-      id: feature.id,
-      title: getTitle(feature, selectedRadio, ""),
-      ...feature,
-    };
   }
 </script>
 
