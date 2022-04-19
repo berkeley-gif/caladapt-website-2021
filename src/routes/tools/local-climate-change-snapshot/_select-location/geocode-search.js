@@ -1,3 +1,4 @@
+import getBbox from "@turf/bbox";
 import {
   mapboxGeocodingEndpoint,
   mapboxGeocodeParams,
@@ -85,16 +86,31 @@ export async function reverseGeocodeBoundary([lng, lat], options = {}) {
  */
 export function formatSearchResult(result, boundaryType) {
   if (boundaryType === "locagrid") {
-    return result.features.map(({ id, place_name, ...rest }) => ({
-      id,
-      title: place_name,
-      ...rest,
-    }));
+    return result.features.map(formatLocaGridFeature);
   } else {
     return result.features.map((feature) =>
       formatFeature(feature, boundaryType)
     );
   }
+}
+
+/**
+ * formatLocaGridFeature - formats a GeoJSON feature returned by the MapBox geocoding API
+ * @param {Object} feature - a GeoJSON feature
+ * @returns {Object} - a GeoJSON feature with additional props
+ */
+export function formatLocaGridFeature(feature) {
+  const { id, place_name, geometry, bbox, ...rest } = feature;
+  return {
+    id,
+    title: place_name
+      ? place_name.replace(", United States", "")
+      : "Unknown address",
+    // note: bbox prop for a point geom is bogus but is added so that the map zoom works
+    bbox: bbox || getBbox(geometry),
+    geometry,
+    ...rest,
+  };
 }
 
 /**

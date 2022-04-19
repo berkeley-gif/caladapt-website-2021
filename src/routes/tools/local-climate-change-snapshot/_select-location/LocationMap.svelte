@@ -2,11 +2,13 @@
   import getBbox from "@turf/bbox";
   import { createEventDispatcher } from "svelte";
   import { Grid, Row, Column } from "carbon-components-svelte";
-  import { Location } from "~/components/tools/Location";
+  import { debounce } from "~/helpers/utilities";
   import { DEFAULT_BOUNDARIES } from "../../_common/constants";
+  import { Location } from "~/components/tools/Location";
   import {
     handleAbortFetch,
     formatFeature,
+    formatLocaGridFeature,
     reverseGeocodeBoundary,
     reverseGeocodeAddress,
   } from "./geocode-search";
@@ -15,6 +17,7 @@
   export let boundary;
 
   const dispatch = createEventDispatcher();
+  const clickDebounceMs = 250;
   let abortController;
 
   $: {
@@ -57,11 +60,7 @@
 
   function formatBoundaryFeature(feature) {
     if (boundary.id === "locagrid") {
-      // bbox prop for a point geom is bogus but is added so that the map zoom works
-      feature.bbox = getBbox(feature.geometry);
-      feature.title = feature.place_name_en || "Unknown address";
-      feature.title && feature.title.replace(", United States", "");
-      return feature;
+      return formatLocaGridFeature(feature);
     } else {
       return formatFeature(feature, boundary.id);
     }
@@ -90,7 +89,7 @@
   <Row>
     <Column aspectRatio="1x1" class="map-container">
       <Location
-        on:mapclick="{handleClick}"
+        on:mapclick="{debounce(handleClick, clickDebounceMs)}"
         boundaryList="{DEFAULT_BOUNDARIES}"
         location="{location}"
         boundary="{boundary}"
