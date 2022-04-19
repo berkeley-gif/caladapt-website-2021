@@ -28,6 +28,13 @@
     locationStore.updateBoundary(value);
   }
 
+  function handleMapClick({ detail }) {
+    if (detail) {
+      searchValue = detail.title;
+      selectedLocation = detail;
+    }
+  }
+
   function handleLocationFormSubmit() {
     if (selectedLocation) {
       goto("/tools/local-climate-change-snapshot/explore");
@@ -46,7 +53,7 @@
   </Column>
   <Column lg="{8}" md="{8}" sm="{4}" noGutter="{true}">
     <LocationMap
-      on:select="{handleSelectLocation}"
+      on:click="{handleMapClick}"
       bind:location="{selectedLocation}"
       boundary="{$boundary}"
     />
