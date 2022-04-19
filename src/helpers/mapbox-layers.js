@@ -9,7 +9,7 @@ const translinesExpr = ["to-number", ["get", "kV_Sort"]];
 //const powerplantsExpr = ["to-number", ["get", "MW"]];
 const cesScore = ["get", "ces_3_0_percentile_range"];
 
-const data = [
+export default [
   {
     id: "locagrid",
     type: "line",
@@ -484,5 +484,3 @@ const data = [
     },
   },
 ];
-
-export default data;
