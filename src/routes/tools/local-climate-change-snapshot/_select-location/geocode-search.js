@@ -11,6 +11,13 @@ export {
   formatFeature,
 } from "~/helpers/geocode";
 
+export function handleAbortFetch(abortController) {
+  if (abortController) {
+    abortController.abort();
+  }
+  return new AbortController();
+}
+
 /**
  * geocodeSearch - gets geographic data for a location search string
  * @param {string} searchStr – string to geocode

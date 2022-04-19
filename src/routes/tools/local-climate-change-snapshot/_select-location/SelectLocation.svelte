@@ -15,7 +15,7 @@
   $: handleSelectLocation(selectedLocation);
 
   $: {
-    console.log("$locationStore: ", $locationStore);
+    console.log("$locationStore update: ", $locationStore);
   }
 
   function handleSelectLocation(value) {

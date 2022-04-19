@@ -7,7 +7,11 @@
     RadioButtonGroup,
   } from "carbon-components-svelte";
   import { debounce } from "~/helpers/utilities";
-  import { geocodeSearch, formatSearchResult } from "./geocode-search";
+  import {
+    handleAbortFetch,
+    geocodeSearch,
+    formatSearchResult,
+  } from "./geocode-search";
 
   /** the selected location's data as chosen by the user, this could also be set by the map */
   export let selectedLocation = null;
@@ -75,15 +79,8 @@
   }
 
   function handleRadioChange() {
-    handleAbortFetch();
+    abortController = handleAbortFetch(abortController);
     searchValue = "";
-  }
-
-  function handleAbortFetch() {
-    if (abortController) {
-      abortController.abort();
-    }
-    abortController = new AbortController();
   }
 
   function handleSearchSelect(event) {
@@ -92,7 +89,7 @@
 
   function handleSearchInput() {
     if (searchValue.length >= minSearchLength) {
-      handleAbortFetch();
+      abortController = handleAbortFetch(abortController);
       handleGeocodeSearch();
     } else {
       searchSuggestions = [];

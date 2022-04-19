@@ -1,12 +1,14 @@
 <script>
+  import getBbox from "@turf/bbox";
   import { createEventDispatcher } from "svelte";
   import { Grid, Row, Column } from "carbon-components-svelte";
   import { Location } from "~/components/tools/Location";
   import { DEFAULT_BOUNDARIES } from "../../_common/constants";
   import {
+    handleAbortFetch,
+    formatFeature,
     reverseGeocodeBoundary,
     reverseGeocodeAddress,
-    formatFeature,
   } from "./geocode-search";
 
   export let location;
@@ -22,16 +24,21 @@
   async function handleClick({ detail: center }) {
     let boundaryResults;
     let boundaryFeature;
-    let locaGridPlaceName = "";
-    console.log(center); // [lng, lat]
 
-    handleAbortFetch();
+    abortController = handleAbortFetch(abortController);
 
-    try {
-      boundaryResults = await getBoundary(center);
-      console.log(boundaryResults);
-    } catch (error) {
-      console.warn(error);
+    if (boundary.id === "locagrid") {
+      try {
+        boundaryResults = await getLocaGridStreetAddress(center);
+      } catch (error) {
+        console.warn(error);
+      }
+    } else {
+      try {
+        boundaryResults = await getIntersectingBoundary(center);
+      } catch (error) {
+        console.warn(error);
+      }
     }
 
     if (
@@ -39,41 +46,28 @@
       boundaryResults.features &&
       boundaryResults.features.length
     ) {
-      boundaryFeature = boundaryResults.features[0];
-    } else {
-      dispatch("click", undefined);
-      return;
-    }
-
-    if (boundary.id === "locagrid") {
-      let address;
-      try {
-        address = await getLocaGridStreetAddress(center);
-        console.log(address);
-      } catch (error) {
-        console.warn(error);
-      }
-      if (address && address.features && address.features.length) {
-        locaGridPlaceName = address.features[0].place_name;
-      } else {
-        locaGridPlaceName = "Address could not be determined";
-      }
-    }
-
-    try {
-      boundaryFeature = formatFeature(
-        boundaryFeature,
-        boundary.id,
-        locaGridPlaceName
+      boundaryFeature = formatBoundaryFeature(
+        boundaryResults.features[0],
+        boundary.id
       );
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      dispatch("click", boundaryFeature);
+    }
+
+    dispatch("click", boundaryFeature);
+  }
+
+  function formatBoundaryFeature(feature) {
+    if (boundary.id === "locagrid") {
+      // bbox prop for a point geom is bogus but is added so that the map zoom works
+      feature.bbox = getBbox(feature.geometry);
+      feature.title = feature.place_name_en || "Unknown address";
+      feature.title && feature.title.replace(", United States", "");
+      return feature;
+    } else {
+      return formatFeature(feature, boundary.id);
     }
   }
 
-  async function getBoundary(coords) {
+  async function getIntersectingBoundary(coords) {
     const { id: boundaryType } = boundary;
     return await reverseGeocodeBoundary(coords, {
       boundaryType,
@@ -83,13 +77,6 @@
 
   async function getLocaGridStreetAddress(coords) {
     return await reverseGeocodeAddress(coords, abortController.signal);
-  }
-
-  function handleAbortFetch() {
-    if (abortController) {
-      abortController.abort();
-    }
-    abortController = new AbortController();
   }
 </script>
 
