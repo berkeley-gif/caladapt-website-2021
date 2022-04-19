@@ -12,6 +12,11 @@ export {
   formatFeature,
 } from "~/helpers/geocode";
 
+/**
+ * handleAbortFetch - used to cancel pending fetch requests
+ * @param {AbortController} abortController - AbortController instance
+ * @returns {AbortController}
+ */
 export function handleAbortFetch(abortController) {
   if (abortController) {
     abortController.abort();
