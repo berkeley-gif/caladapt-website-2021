@@ -13,7 +13,7 @@
 
 <style>
   :global(.map-container) {
-    background-color: var(--gray-40);
+    background-color: var(--white);
   }
 </style>
 
