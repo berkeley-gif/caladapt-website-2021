@@ -13,7 +13,7 @@
     reverseGeocodeAddress,
   } from "./geocode-search";
 
-  export let location;
+  export let selectedLocation;
   export let boundary;
 
   const dispatch = createEventDispatcher();
@@ -87,7 +87,7 @@
       <Location
         on:mapclick="{debounce(handleClick, clickDebounceMs)}"
         boundaryList="{DEFAULT_BOUNDARIES}"
-        location="{location}"
+        location="{selectedLocation}"
         boundary="{boundary}"
       />
     </Column>

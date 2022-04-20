@@ -52,7 +52,7 @@
   <Column lg="{8}" md="{8}" sm="{4}" noGutter="{true}">
     <LocationMap
       on:click="{handleMapClick}"
-      bind:location="{selectedLocation}"
+      bind:selectedLocation
       boundary="{$boundary}"
     />
   </Column>
