@@ -19,9 +19,7 @@
   }
 
   function handleSelectLocation(value) {
-    if (value) {
-      locationStore.updateLocation(value);
-    }
+    locationStore.updateLocation(value);
   }
 
   function handleSelectBoundaryId(value) {
