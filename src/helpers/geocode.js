@@ -27,12 +27,13 @@ export const mapboxGeocodeParams = {
 /**
  * geocode - uses MapBox Geocoding API to find geographic data for a street address or similar
  * @param {string} searchStr - the street address, zipcode, locality, etc. to search for
+ * @param {AbortSignal} signal - signal object from an AbortController instance
  * @returns {Object} GeoJSON FeatureCollection
  */
-export const geocode = async (searchStr) => {
+export const geocode = async (searchStr, signal) => {
   const url = `${mapboxGeocodingEndpoint}/${searchStr}.json`;
   const [response, error] = await handleXHR(
-    fetchData(url, mapboxGeocodeParams)
+    fetchData(url, mapboxGeocodeParams, "GET", signal)
   );
   if (error) {
     throw new Error(error.message);
