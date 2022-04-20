@@ -67,6 +67,10 @@
     showError = false;
   }
 
+  $: if (selectedLocation && notFound) {
+    notFound = false;
+  }
+
   $: {
     console.log("searchSuggestions: ", searchSuggestions);
     console.log("selectedLocation: ", selectedLocation);
