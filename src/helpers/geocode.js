@@ -17,7 +17,8 @@ export const mapboxGeocodeParams = {
   country: "us",
   bbox: "-125,31,-113,44",
   limit: 5,
-  proximity: "-122.250386,37.533123",
+  // proximity helps return more California results
+  proximity: "-122.2504,37.5331",
   types: "postcode,place,locality,neighborhood,address",
   language: "en",
   access_token: accessToken,
