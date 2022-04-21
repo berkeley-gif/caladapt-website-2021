@@ -13,10 +13,6 @@
   $: handleSelectBoundaryId(selectedRadio);
   $: handleSelectLocation(selectedLocation);
 
-  $: {
-    console.log("$locationStore update: ", $locationStore);
-  }
-
   function handleSelectLocation(value) {
     locationStore.updateLocation(value);
   }

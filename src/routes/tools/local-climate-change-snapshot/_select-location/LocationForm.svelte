@@ -7,6 +7,7 @@
     RadioButtonGroup,
   } from "carbon-components-svelte";
   import { debounce } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
   import {
     handleAbortFetch,
     geocodeSearch,
@@ -71,11 +72,6 @@
     notFound = false;
   }
 
-  $: {
-    console.log("searchSuggestions: ", searchSuggestions);
-    console.log("selectedLocation: ", selectedLocation);
-  }
-
   function handleBtnClick() {
     if (!searchValue) {
       showError = true;
@@ -110,6 +106,9 @@
       });
     } catch (error) {
       console.warn(error);
+      logException(
+        `lccs geocodeSearch error for ${searchValue} and ${selectedRadio}`
+      );
     }
     if (results && results.features && results.features.length) {
       searchSuggestions = formatSearchResult(results, selectedRadio);
