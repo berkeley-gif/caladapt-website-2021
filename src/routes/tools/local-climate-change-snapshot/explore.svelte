@@ -173,19 +173,23 @@
   async function initApp() {
     const { query } = $page;
     // Get initial configuration (from default or from url)
-    const { lat, lng, boundary, indicator, imperial } = getInitialConfig(
-      query,
-      DEFAULT_INITIAL_CONFIG
-    );
+    const {
+      lat,
+      lng,
+      boundary: boundaryId,
+      indicator,
+      imperial,
+    } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
     // Set intial values for stores
+    if (!$location || !$boundary) {
+      const loc = await setInitialLocation(+lng, +lat, boundaryId);
+      locationStore.updateLocation(loc);
+      locationStore.updateBoundary(boundaryId);
+    }
     categoryListStore.set(categories);
     indicatorListStore.set(indicators);
     indicatorStore.set(indicators.find((d) => d.id === indicator));
     unitsStore.set({ imperial });
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
-    return;
   }
 
   onMount(async () => {
