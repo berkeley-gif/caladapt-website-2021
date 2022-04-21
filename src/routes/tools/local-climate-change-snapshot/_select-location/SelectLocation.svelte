@@ -1,5 +1,4 @@
 <script>
-  import { goto } from "@sapper/app";
   import { Row, Column } from "carbon-components-svelte";
   import { locationStore } from "~/routes/tools/_common/stores";
   import LocationMap from "./LocationMap.svelte";
@@ -32,18 +31,12 @@
       selectedLocation = detail;
     }
   }
-
-  function handleLocationFormSubmit() {
-    if (selectedLocation) {
-      goto("/tools/local-climate-change-snapshot/explore");
-    }
-  }
 </script>
 
 <Row>
   <Column lg="{8}" md="{8}" sm="{4}">
     <LocationForm
-      on:submit="{handleLocationFormSubmit}"
+      on:submit
       bind:selectedLocation
       bind:selectedRadio
       searchValue="{searchValue}"

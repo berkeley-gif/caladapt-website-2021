@@ -34,12 +34,31 @@
 </script>
 
 <script>
+  import { goto } from "@sapper/app";
+  import { locationStore } from "~/routes/tools/_common/stores";
+  import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
   import { Header } from "./_common";
   import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
   export let resources;
+
+  const { location, boundary } = locationStore;
+
+  function handleSubmit() {
+    if ($location && $boundary) {
+      const {
+        center: [lng, lat],
+      } = $location;
+      const { id } = $boundary;
+      const params = { lng, lat, boundary: id };
+      const url = `/tools/local-climate-change-snapshot/explore?${serialize(
+        params
+      )}`;
+      goto(url);
+    }
+  }
 </script>
 
 <svelte:head>
@@ -54,7 +73,7 @@
 
 <div class="bx--grid">
   <div class="margin--v-48">
-    <SelectLocation />
+    <SelectLocation on:submit="{handleSubmit}" />
   </div>
 
   <div id="resources">
