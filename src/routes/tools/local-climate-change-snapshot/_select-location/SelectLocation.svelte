@@ -5,18 +5,32 @@
   import LocationMap from "./LocationMap.svelte";
   import LocationForm from "./LocationForm.svelte";
 
-  let searchValue =
-    $locationStore && $locationStore.location
-      ? $locationStore.location.title
-      : "";
-  let selectedLocation = $locationStore.location;
-  let selectedRadio = $locationStore.boundaryId || "address";
+  const { location, boundary } = locationStore;
 
-  $: console.log("$locationStore: ", $locationStore);
+  let searchValue = $location ? $location.title : "";
+  let selectedLocation = $location;
+  let selectedRadio = $boundary ? $boundary.id : "locagrid";
 
-  function handleSelectLocation({ detail }) {
-    locationStore.updateLocation(detail);
-    locationStore.updateBoundary(selectedRadio);
+  $: handleSelectBoundaryId(selectedRadio);
+  $: handleSelectLocation(selectedLocation);
+
+  $: {
+    console.log("$locationStore update: ", $locationStore);
+  }
+
+  function handleSelectLocation(value) {
+    locationStore.updateLocation(value);
+  }
+
+  function handleSelectBoundaryId(value) {
+    locationStore.updateBoundary(value);
+  }
+
+  function handleMapClick({ detail }) {
+    if (detail) {
+      searchValue = detail.title;
+      selectedLocation = detail;
+    }
   }
 
   function handleLocationFormSubmit() {
@@ -29,18 +43,17 @@
 <Row>
   <Column lg="{8}" md="{8}" sm="{4}">
     <LocationForm
-      on:select="{handleSelectLocation}"
       on:submit="{handleLocationFormSubmit}"
       bind:selectedLocation
       bind:selectedRadio
       searchValue="{searchValue}"
     />
   </Column>
-  <Column lg="{8}" md="{8}" sm="{4}">
+  <Column lg="{8}" md="{8}" sm="{4}" noGutter="{true}">
     <LocationMap
-      on:select="{handleSelectLocation}"
-      boundaryType="{selectedRadio}"
-      selectedLocation="{selectedLocation}"
+      on:click="{handleMapClick}"
+      bind:selectedLocation
+      boundary="{$boundary}"
     />
   </Column>
 </Row>

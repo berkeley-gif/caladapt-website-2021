@@ -6,9 +6,12 @@
     RadioButton,
     RadioButtonGroup,
   } from "carbon-components-svelte";
-  import { getTitle } from "~/helpers/geocode";
   import { debounce } from "~/helpers/utilities";
-  import { geocodeSearch } from "./geocode-search";
+  import {
+    handleAbortFetch,
+    geocodeSearch,
+    formatSearchResult,
+  } from "./geocode-search";
 
   /** the selected location's data as chosen by the user, this could also be set by the map */
   export let selectedLocation = null;
@@ -17,17 +20,17 @@
   export let searchValue = "";
 
   /** the selected radio button boundary type */
-  export let selectedRadio = "address";
+  export let selectedRadio = "locagrid";
 
   const buttonText = "Generate Snapshot".toUpperCase();
-  const inputDebounceMS = 300;
+  const inputDebounceMS = 350;
   const minSearchLength = 3;
   const searchLabelText = "Search for a place name or address";
   const radioLegendText = "Select the type of location to search for";
   const radios = [
     {
       label: "Address",
-      value: "address",
+      value: "locagrid",
     },
     {
       label: "County",
@@ -64,6 +67,10 @@
     showError = false;
   }
 
+  $: if (selectedLocation && notFound) {
+    notFound = false;
+  }
+
   $: {
     console.log("searchSuggestions: ", searchSuggestions);
     console.log("selectedLocation: ", selectedLocation);
@@ -76,15 +83,8 @@
   }
 
   function handleRadioChange() {
-    handleAbortFetch();
+    abortController = handleAbortFetch(abortController);
     searchValue = "";
-  }
-
-  function handleAbortFetch() {
-    if (abortController) {
-      abortController.abort();
-    }
-    abortController = new AbortController();
   }
 
   function handleSearchSelect(event) {
@@ -93,7 +93,7 @@
 
   function handleSearchInput() {
     if (searchValue.length >= minSearchLength) {
-      handleAbortFetch();
+      abortController = handleAbortFetch(abortController);
       handleGeocodeSearch();
     } else {
       searchSuggestions = [];
@@ -112,33 +112,11 @@
       console.warn(error);
     }
     if (results && results.features && results.features.length) {
-      searchSuggestions = parseSearchResults(results.features);
+      searchSuggestions = formatSearchResult(results, selectedRadio);
     } else {
       searchSuggestions = [];
       notFound = true;
     }
-  }
-
-  function parseSearchResults(searchResults) {
-    return searchResults.map(
-      selectedRadio === "address" ? mapAddressResults : mapBoundaryResults
-    );
-  }
-
-  function mapAddressResults({ id, place_name, ...rest }) {
-    return {
-      id,
-      title: place_name,
-      ...rest,
-    };
-  }
-
-  function mapBoundaryResults(feature) {
-    return {
-      id: feature.id,
-      title: getTitle(feature, selectedRadio, ""),
-      ...feature,
-    };
   }
 </script>
 

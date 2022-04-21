@@ -91,7 +91,6 @@ export const locationStore = (() => {
     subscribe,
     updateLocation: (location, isUpload = false) =>
       update((store) => {
-        if (!location) return;
         store.location = location;
         store.isUpload = isUpload;
         return store;
