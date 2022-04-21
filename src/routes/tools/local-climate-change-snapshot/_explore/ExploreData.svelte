@@ -1,6 +1,4 @@
 <script>
-  // Components
-  import LocationTitle from "./LocationTitle.svelte";
   import SelectCategory from "./SelectCategory.svelte";
   import SelectIndicator from "./SelectIndicator.svelte";
   import Chart from "./DataChart.svelte";
@@ -9,7 +7,6 @@
   import CategoryResources from "./CategoryResources.svelte";
 </script>
 
-<LocationTitle />
 <SelectCategory />
 <SelectIndicator />
 <Chart />

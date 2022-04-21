@@ -38,6 +38,7 @@
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
+  import { Header } from "./_common";
   import ExploreData from "./_explore/ExploreData.svelte";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
@@ -215,6 +216,12 @@
 <svelte:head>
   <title>{tool.title}</title>
 </svelte:head>
+
+<Header
+  iconPaths="{tool.icons}"
+  showDescription="{false}"
+  location="{$location}"
+/>
 
 <div id="explore-data">
   {#if appReady}

@@ -3,6 +3,13 @@
 
   export let iconPaths = [];
   export let showDescription = true;
+  export let location;
+
+  const defaultTitleText = "Local Climate Change Snapshot";
+
+  $: titleText = location
+    ? `${defaultTitleText}:<br>${location.title}`
+    : defaultTitleText;
 </script>
 
 <style>
@@ -30,8 +37,8 @@
       </Column>
     </Row>
     <Row>
-      <Column>
-        <h1>Local Climate Change Snapshot</h1>
+      <Column lg="{10}" md="{8}" sm="{4}">
+        <h1>{@html titleText}</h1>
       </Column>
     </Row>
     {#if showDescription}
