@@ -1,6 +1,7 @@
 <script>
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { InlineLoading } from "carbon-components-svelte";
+  import { InlineLoading, Button, Tile } from "carbon-components-svelte";
   import simplify from "@turf/simplify";
   import truncate from "@turf/truncate";
 
@@ -15,26 +16,13 @@
   export let style = "mapbox/streets-v11";
   export let padding = 50;
   export let zoom = 8;
+  export let useButton = true;
 
   const { accessToken } = mapboxgl;
   const MAX_IMG_HEIGHT = 250;
 
-  const image = new Image();
-  image.onload = () => {
-    loading = false;
-    loaded = true;
-  };
-  image.onerror = () => {
-    loading = false;
-    error = true;
-    logException(
-      `StaticMap image failed for ${location && location.title} at ${
-        location && location.center && location.center.join(",")
-      }`
-    );
-  };
-
-  let loading = true;
+  let imageWrapper;
+  let image;
   let loaded = false;
   let error = false;
   let width;
@@ -43,13 +31,30 @@
   height = Math.min(height, MAX_IMG_HEIGHT);
 
   $: valid = isValidNumber(width) && isValidNumber(height);
-  $: alt = location ? `map of ${location.title}` : "";
+  $: ariaLabel = useButton && location ? "Change location" : undefined;
+  $: altText = location ? `Locator map for ${location.title}` : "";
 
   $: if (valid && width && location && location.geometry) {
     handleLocation(location);
   }
 
   $: if (src) image.src = src;
+
+  onMount(() => {
+    imageWrapper = useButton ? Button : Tile;
+    image = new Image();
+    image.onload = () => {
+      loaded = true;
+    };
+    image.onerror = () => {
+      error = true;
+      logException(
+        `StaticMap image failed for ${location && location.title} at ${
+          location && location.center && location.center.join(",")
+        }`
+      );
+    };
+  });
 
   function isValidNumber(value) {
     return typeof value === "number" && !isNaN(value);
@@ -124,21 +129,27 @@
   );
 </script>
 
-<style>
-  button {
+<style lang="scss">
+  div > :global(.bx--btn.bx--btn--primary) {
     all: unset;
     cursor: pointer;
     min-height: 250px;
     height: auto;
     width: 100%;
+
+    &:hover {
+      box-shadow: var(--box-shadow);
+    }
+
+    &:focus {
+      outline: 2px solid var(--gray-100);
+    }
   }
 
-  button:hover {
-    box-shadow: var(--box-shadow);
-  }
-
-  button:focus {
-    outline: 2px solid var(--gray-100);
+  div > :global(.bx--tile) {
+    width: 100%;
+    height: 100%;
+    padding: 0;
   }
 
   img {
@@ -151,24 +162,26 @@
   }
 </style>
 
-<div bind:clientWidth="{width}">
-  <button on:click>
-    {#if loading}
-      <div class="loading-msg">
-        <InlineLoading description="Loading location map..." />
-      </div>
-    {:else if loaded}
+<div bind:clientWidth="{width}" aria-live="polite">
+  <svelte:component this="{imageWrapper}" on:click aria-label="{ariaLabel}">
+    {#if loaded}
       <img
         {...$$restProps}
         style="{$$restProps.style}"
         width="{width}"
         height="{height}"
         src="{src}"
-        alt="{alt}"
+        alt="{altText}"
         transition:fade
       />
     {:else if error}
-      <div class="error-text">An error occurred. Unable to load map.</div>
+      <div class="error-text">
+        An error occurred. Unable to show locator map.
+      </div>
+    {:else}
+      <div class="loading-msg">
+        <InlineLoading description="Loading location map..." />
+      </div>
     {/if}
-  </button>
+  </svelte:component>
 </div>
