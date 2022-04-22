@@ -92,7 +92,6 @@
     <Column aspectRatio="1x1" class="map-container">
       <Location
         on:mapclick="{debounce(handleClick, clickDebounceMs)}"
-        boundaryList="{DEFAULT_BOUNDARIES}"
         location="{selectedLocation}"
         boundary="{boundary}"
       />
