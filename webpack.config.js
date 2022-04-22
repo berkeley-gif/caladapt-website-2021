@@ -20,6 +20,7 @@ const alias = {
   content: path.resolve(__dirname, "content"),
   static: path.resolve(__dirname, "static"),
   svelte: path.resolve("node_modules", "svelte"),
+  scss: path.resolve(__dirname, "src/scss"),
 };
 const extensions = [".mjs", ".js", ".json", ".svelte", ".html"];
 const mainFields = ["svelte", "module", "browser", "main"];
