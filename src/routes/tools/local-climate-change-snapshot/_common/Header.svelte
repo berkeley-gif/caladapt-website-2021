@@ -1,5 +1,7 @@
 <script>
-  import { Grid, Row, Column } from "carbon-components-svelte";
+  import { goto } from "@sapper/app";
+  import { Grid, Row, Column, Button } from "carbon-components-svelte";
+  import { Pdf16, Location16 } from "carbon-icons-svelte";
   import { StaticMap } from "~/components/tools/Location";
 
   export let iconPaths = [];
@@ -11,6 +13,15 @@
   $: titleText = location
     ? `${defaultTitleText}:<br>${location.title}`
     : defaultTitleText;
+
+  function generateReport() {
+    // TODO...
+  }
+
+  function changeLocation() {
+    // TODO: set page scroll height to select location form & map.
+    goto("/tools/local-climate-change-snapshot/");
+  }
 </script>
 
 <style>
@@ -23,6 +34,13 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .header-btn-container {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    margin-top: 2rem;
   }
 </style>
 
@@ -40,9 +58,24 @@
     <Row>
       <Column lg="{10}" md="{8}" sm="{4}">
         <h1>{@html titleText}</h1>
+        {#if !showDescription}
+          <div class="header-btn-container">
+            <Button on:click="{generateReport}" size="field" icon="{Pdf16}"
+              >Generate Report</Button
+            >
+            <Button
+              on:click="{changeLocation}"
+              size="field"
+              icon="{Location16}"
+              kind="tertiary">Change Location</Button
+            >
+          </div>
+        {/if}
       </Column>
       <Column lg="{{ span: 4, offset: 2 }}" md="{8}" sm="{4}">
-        <StaticMap height="{250}" location="{location}" useButton="{false}" />
+        {#if !showDescription}
+          <StaticMap height="{250}" location="{location}" useButton="{false}" />
+        {/if}
       </Column>
     </Row>
     {#if showDescription}
