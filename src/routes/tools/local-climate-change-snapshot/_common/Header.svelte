@@ -44,8 +44,12 @@
     gap: 2rem;
     margin-top: 2rem;
 
-    @include tablet {
+    @include mobile-tablet {
       margin-bottom: 2rem;
+    }
+
+    @include mobile {
+      flex-direction: column;
     }
   }
 </style>
