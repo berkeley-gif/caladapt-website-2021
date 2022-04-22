@@ -34,17 +34,50 @@
 </script>
 
 <script>
-  import { goto } from "@sapper/app";
+  import { goto, stores as sapperStores } from "@sapper/app";
+  import { onMount } from "svelte";
   import { locationStore } from "~/routes/tools/_common/stores";
   import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
+  import { setInitialLocation } from "~/routes/tools/_common/helpers";
   import { Header } from "./_common";
   import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
   export let resources;
 
+  const { page } = sapperStores();
   const { location, boundary } = locationStore;
+
+  let selectedLocation = null;
+  let searchValue = "";
+  let selectedRadio = "locagrid";
+
+  onMount(() => {
+    initApp();
+  });
+
+  async function initApp() {
+    const {
+      query: { lat, lng, boundary: boundaryType },
+    } = $page;
+    let loc;
+    if (lat && lng && boundaryType) {
+      try {
+        loc = await setInitialLocation(+lng, +lat, boundaryType);
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+    if (loc) {
+      selectedLocation = loc;
+      searchValue = loc.title;
+      selectedRadio = boundaryType;
+      document
+        .querySelector("#select-location")
+        .scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   function handleSubmit() {
     if ($location && $boundary) {
@@ -73,7 +106,12 @@
 
 <div class="bx--grid">
   <div id="select-location" class="margin--v-48">
-    <SelectLocation on:submit="{handleSubmit}" />
+    <SelectLocation
+      on:submit="{handleSubmit}"
+      searchValue="{searchValue}"
+      selectedLocation="{selectedLocation}"
+      selectedRadio="{selectedRadio}"
+    />
   </div>
 
   <div id="resources">

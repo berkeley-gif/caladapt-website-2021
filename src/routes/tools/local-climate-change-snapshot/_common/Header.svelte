@@ -1,5 +1,4 @@
 <script>
-  import { goto } from "@sapper/app";
   import { Grid, Row, Column, Button } from "carbon-components-svelte";
   import { Pdf16, Location16 } from "carbon-icons-svelte";
   import { StaticMap } from "~/components/tools/Location";
@@ -18,12 +17,9 @@
   function noop() {}
 
   async function changeLocation() {
-    await goto("/tools/local-climate-change-snapshot/", {
-      noscroll: true,
-    });
-    // give the page a little time to re-render before scrolling
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    document.querySelector("#select-location").scrollIntoView();
+    // Note: using this method of page navigation as there appears to be a bug
+    // when using Sapper's goto method which doesn't correctly update the DOM.
+    window.location.pathname = "/tools/local-climate-change-snapshot/";
   }
 </script>
 

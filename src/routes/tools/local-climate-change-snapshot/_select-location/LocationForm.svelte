@@ -78,9 +78,11 @@
     }
   }
 
-  function handleRadioChange() {
-    abortController = handleAbortFetch(abortController);
-    searchValue = "";
+  function handleRadioChange(event) {
+    if (event.isTrusted) {
+      abortController = handleAbortFetch(abortController);
+      searchValue = "";
+    }
   }
 
   function handleSearchSelect(event) {
@@ -164,11 +166,14 @@
 
   <RadioButtonGroup
     bind:selected="{selectedRadio}"
-    on:change="{handleRadioChange}"
     legendText="{radioLegendText}"
   >
     {#each radios as { label, value }}
-      <RadioButton labelText="{label}" value="{value}" />
+      <RadioButton
+        on:change="{handleRadioChange}"
+        labelText="{label}"
+        value="{value}"
+      />
     {/each}
   </RadioButtonGroup>
 

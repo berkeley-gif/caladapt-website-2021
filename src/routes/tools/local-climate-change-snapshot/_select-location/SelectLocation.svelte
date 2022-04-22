@@ -4,11 +4,11 @@
   import LocationMap from "./LocationMap.svelte";
   import LocationForm from "./LocationForm.svelte";
 
-  const { location, boundary } = locationStore;
+  const { boundary } = locationStore;
 
-  let searchValue = $location ? $location.title : "";
-  let selectedLocation = $location;
-  let selectedRadio = $boundary ? $boundary.id : "locagrid";
+  export let searchValue = "";
+  export let selectedLocation = null;
+  export let selectedRadio = "locagrid";
 
   $: handleSelectBoundaryId(selectedRadio);
   $: handleSelectLocation(selectedLocation);
