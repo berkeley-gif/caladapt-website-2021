@@ -217,16 +217,18 @@
   <title>{tool.title}</title>
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" pageName="explore" location="{$location}" />
+<div id="lccs-explore">
+  <Header iconPaths="{tool.icons}" pageName="explore" location="{$location}" />
 
-<div id="explore-data">
-  {#if appReady}
-    <ExploreData />
-  {:else}
-    <Loading />
-  {/if}
+  <div id="explore-data">
+    {#if appReady}
+      <ExploreData />
+    {:else}
+      <Loading />
+    {/if}
+  </div>
+
+  <div class="spacing--v-96"></div>
+
+  <NotificationDisplay />
 </div>
-
-<div class="spacing--v-96"></div>
-
-<NotificationDisplay />

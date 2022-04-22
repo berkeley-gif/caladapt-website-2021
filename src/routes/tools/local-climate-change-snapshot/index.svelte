@@ -54,6 +54,7 @@
   let selectedRadio = "locagrid";
 
   onMount(() => {
+    cleanUpPrevDom();
     initApp();
   });
 
@@ -70,12 +71,23 @@
       }
     }
     if (loc) {
+      // TODO: if boundaryType is locagrid, make selectedLocation.geometry a point
+      // so that a marker renders on the map instead of a polygon.
       selectedLocation = loc;
       searchValue = loc.title;
       selectedRadio = boundaryType;
       document
         .querySelector("#select-location")
         .scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  function cleanUpPrevDom() {
+    // Addresses a bug with Sapper where the contents of the explore page get
+    // appended to the DOM of this page when using the browser's back button.
+    const oldDOM = document.getElementById("lccs-explore");
+    if (oldDOM) {
+      oldDOM.outerHTML = null;
     }
   }
 
