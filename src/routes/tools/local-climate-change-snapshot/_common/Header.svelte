@@ -1,5 +1,6 @@
 <script>
   import { Grid, Row, Column } from "carbon-components-svelte";
+  import { StaticMap } from "~/components/tools/Location";
 
   export let iconPaths = [];
   export let showDescription = true;
@@ -39,6 +40,9 @@
     <Row>
       <Column lg="{10}" md="{8}" sm="{4}">
         <h1>{@html titleText}</h1>
+      </Column>
+      <Column lg="{{ span: 4, offset: 2 }}" md="{8}" sm="{4}">
+        <StaticMap height="{250}" location="{location}" useButton="{false}" />
       </Column>
     </Row>
     {#if showDescription}
