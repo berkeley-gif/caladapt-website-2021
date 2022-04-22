@@ -217,11 +217,7 @@
   <title>{tool.title}</title>
 </svelte:head>
 
-<Header
-  iconPaths="{tool.icons}"
-  showDescription="{false}"
-  location="{$location}"
-/>
+<Header iconPaths="{tool.icons}" pageName="explore" location="{$location}" />
 
 <div id="explore-data">
   {#if appReady}

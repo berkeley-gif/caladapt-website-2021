@@ -5,8 +5,8 @@
   import { StaticMap } from "~/components/tools/Location";
 
   export let iconPaths = [];
-  export let showDescription = true;
-  export let location;
+  export let location = null;
+  export let pageName;
 
   const defaultTitleText = "Local Climate Change Snapshot";
 
@@ -18,7 +18,9 @@
   function noop() {}
 
   async function changeLocation() {
-    await goto("/tools/local-climate-change-snapshot/", { noscroll: true });
+    await goto("/tools/local-climate-change-snapshot/", {
+      noscroll: true,
+    });
     // give the page a little time to re-render before scrolling
     await new Promise((resolve) => setTimeout(resolve, 350));
     document.querySelector("#select-location").scrollIntoView();
@@ -69,7 +71,7 @@
     <Row>
       <Column lg="{10}" md="{8}" sm="{4}">
         <h1>{@html titleText}</h1>
-        {#if !showDescription}
+        {#if pageName === "explore"}
           <div class="header-btn-container">
             <Button on:click="{noop}" size="field" icon="{Pdf16}"
               >Generate Report</Button
@@ -84,12 +86,12 @@
         {/if}
       </Column>
       <Column lg="{{ span: 4, offset: 2 }}" md="{8}" sm="{4}">
-        {#if !showDescription}
+        {#if pageName === "explore"}
           <StaticMap height="{250}" location="{location}" useButton="{false}" />
         {/if}
       </Column>
     </Row>
-    {#if showDescription}
+    {#if pageName === "index"}
       <Row>
         <Column lg="{8}" md="{8}" sm="{4}">
           <p class="lead">

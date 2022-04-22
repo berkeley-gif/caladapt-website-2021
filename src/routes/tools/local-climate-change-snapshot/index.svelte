@@ -69,7 +69,7 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" />
+<Header pageName="index" iconPaths="{tool.icons}" />
 
 <div class="bx--grid">
   <div id="select-location" class="margin--v-48">
