@@ -24,7 +24,9 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   h1 {
     margin-top: 0;
   }
@@ -41,6 +43,10 @@
     align-items: baseline;
     gap: 2rem;
     margin-top: 2rem;
+
+    @include tablet {
+      margin-bottom: 2rem;
+    }
   }
 </style>
 
