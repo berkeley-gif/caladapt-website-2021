@@ -14,13 +14,14 @@
     ? `${defaultTitleText}:<br>${location.title}`
     : defaultTitleText;
 
-  function generateReport() {
-    // TODO...
-  }
+  // TODO: generate PDF from DOM
+  function noop() {}
 
-  function changeLocation() {
-    // TODO: set page scroll height to select location form & map.
-    goto("/tools/local-climate-change-snapshot/");
+  async function changeLocation() {
+    await goto("/tools/local-climate-change-snapshot/", { noscroll: true });
+    // give the page a little time to re-render before scrolling
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    document.querySelector("#select-location").scrollIntoView();
   }
 </script>
 
@@ -70,7 +71,7 @@
         <h1>{@html titleText}</h1>
         {#if !showDescription}
           <div class="header-btn-container">
-            <Button on:click="{generateReport}" size="field" icon="{Pdf16}"
+            <Button on:click="{noop}" size="field" icon="{Pdf16}"
               >Generate Report</Button
             >
             <Button

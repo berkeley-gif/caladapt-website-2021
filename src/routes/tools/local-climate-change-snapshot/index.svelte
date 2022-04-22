@@ -72,7 +72,7 @@
 <Header iconPaths="{tool.icons}" />
 
 <div class="bx--grid">
-  <div class="margin--v-48">
+  <div id="select-location" class="margin--v-48">
     <SelectLocation on:submit="{handleSubmit}" />
   </div>
 
