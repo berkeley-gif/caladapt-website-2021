@@ -61,17 +61,19 @@
   });
 
   async function initApp() {
-    const {
+    let loc;
+    let {
       query: { lat, lng, boundary: boundaryType },
     } = $page;
-    let loc;
+    lat = +lat;
+    lng = +lng;
     if (
       isValidNumber(lat) &&
       isValidNumber(lng) &&
       VALID_BOUNDARY_TYPES.has(boundaryType)
     ) {
       try {
-        loc = await setInitialLocation(+lng, +lat, boundaryType);
+        loc = await setInitialLocation(lng, lat, boundaryType);
       } catch (error) {
         console.warn(error);
       }
