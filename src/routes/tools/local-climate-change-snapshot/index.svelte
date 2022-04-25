@@ -36,6 +36,8 @@
 <script>
   import { goto, stores as sapperStores } from "@sapper/app";
   import { onMount } from "svelte";
+  import { VALID_BOUNDARY_TYPES } from "./_constants";
+  import { isValidNumber } from "./_helpers";
   import { locationStore } from "~/routes/tools/_common/stores";
   import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
@@ -63,7 +65,11 @@
       query: { lat, lng, boundary: boundaryType },
     } = $page;
     let loc;
-    if (lat && lng && boundaryType) {
+    if (
+      isValidNumber(lat) &&
+      isValidNumber(lng) &&
+      VALID_BOUNDARY_TYPES.has(boundaryType)
+    ) {
       try {
         loc = await setInitialLocation(+lng, +lat, boundaryType);
       } catch (error) {
@@ -76,6 +82,8 @@
       selectedLocation = loc;
       searchValue = loc.title;
       selectedRadio = boundaryType;
+      // User likely hit "change location", so scroll directly to the location
+      // selection form & map
       document
         .querySelector("#select-location")
         .scrollIntoView({ behavior: "smooth" });

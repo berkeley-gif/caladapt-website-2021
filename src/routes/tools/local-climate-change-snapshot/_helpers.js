@@ -12,6 +12,9 @@ import {
   SCENARIO_RANGES,
 } from "./_constants";
 
+export const isValidNumber = (value) =>
+  typeof value === "number" && !isNaN(value);
+
 // Regular Expression that matches the entirety of a series slug for the LCCS tool.
 // For example, in the following string:
 // "https://api.cal-adapt.org/api/series/tasmax_30y_ens32min_rcp85/"
