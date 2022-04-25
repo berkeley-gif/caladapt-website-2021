@@ -36,12 +36,10 @@
 <script>
   import { goto, stores as sapperStores } from "@sapper/app";
   import { onMount } from "svelte";
-  import { VALID_BOUNDARY_TYPES } from "./_constants";
-  import { isValidNumber } from "./_helpers";
+  import { getLocationFromQuery } from "./_helpers";
   import { locationStore } from "~/routes/tools/_common/stores";
   import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
-  import { setInitialLocation } from "~/routes/tools/_common/helpers";
   import { Header } from "./_common";
   import SelectLocation from "./_select-location/SelectLocation.svelte";
 
@@ -67,20 +65,12 @@
     } = $page;
     lat = +lat;
     lng = +lng;
-    if (
-      isValidNumber(lat) &&
-      isValidNumber(lng) &&
-      VALID_BOUNDARY_TYPES.has(boundaryType)
-    ) {
-      try {
-        loc = await setInitialLocation(lng, lat, boundaryType);
-      } catch (error) {
-        console.warn(error);
-      }
+    try {
+      loc = await getLocationFromQuery(lng, lat, boundaryType);
+    } catch (error) {
+      console.log(error);
     }
     if (loc) {
-      // TODO: if boundaryType is locagrid, make selectedLocation.geometry a point
-      // so that a marker renders on the map instead of a polygon.
       selectedLocation = loc;
       searchValue = loc.title;
       selectedRadio = boundaryType;
