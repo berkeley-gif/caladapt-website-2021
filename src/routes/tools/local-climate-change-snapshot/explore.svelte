@@ -89,6 +89,16 @@
   $: console.log("chart data", $chartDataStore);
   $: console.log("snapshot data", $snapshotDataStore);
 
+  function handleHeaderBtnClick(event) {
+    if (event.target.dataset.action === "change-location") {
+      // Note: using this method of page navigation as there appears to be a bug
+      // when using Sapper's goto method which doesn't correctly update the DOM.
+      window.location.pathname = "/tools/local-climate-change-snapshot/";
+    } else {
+      // TODO: handle generating PDF from the DOM
+    }
+  }
+
   async function update() {
     if (!appReady) return;
     try {
@@ -218,7 +228,12 @@
 </svelte:head>
 
 <div id="lccs-explore">
-  <Header iconPaths="{tool.icons}" pageName="explore" location="{$location}" />
+  <Header
+    on:click="{handleHeaderBtnClick}"
+    iconPaths="{tool.icons}"
+    pageName="explore"
+    location="{$location}"
+  />
 
   <div id="explore-data">
     {#if appReady}

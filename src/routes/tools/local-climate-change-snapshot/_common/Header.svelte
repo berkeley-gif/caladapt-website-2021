@@ -12,15 +12,6 @@
   $: titleText = location
     ? `${defaultTitleText}:<br>${location.title}`
     : defaultTitleText;
-
-  // TODO: generate PDF from DOM
-  function noop() {}
-
-  async function changeLocation() {
-    // Note: using this method of page navigation as there appears to be a bug
-    // when using Sapper's goto method which doesn't correctly update the DOM.
-    window.location.pathname = "/tools/local-climate-change-snapshot/";
-  }
 </script>
 
 <style lang="scss">
@@ -68,14 +59,18 @@
       <h1>{@html titleText}</h1>
       {#if pageName === "explore"}
         <div class="header-btn-container">
-          <Button on:click="{noop}" size="field" icon="{Pdf16}"
-            >Generate Report</Button
+          <Button
+            on:click
+            size="field"
+            icon="{Pdf16}"
+            data-action="generate-report">Generate Report</Button
           >
           <Button
-            on:click="{changeLocation}"
+            on:click
             size="field"
             icon="{Location16}"
-            kind="tertiary">Change Location</Button
+            kind="tertiary"
+            data-action="change-location">Change Location</Button
           >
         </div>
       {/if}
