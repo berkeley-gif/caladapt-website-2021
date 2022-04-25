@@ -35,6 +35,7 @@
     getInitialConfig,
     setInitialLocation,
   } from "~/routes/tools/_common/helpers";
+  import { isValidNumber } from "./_helpers";
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
@@ -64,7 +65,9 @@
     DEFAULT_SNAPSHOT_SLUG_EXP,
     AREABURNED_TIMESERIES_SLUG_EXP,
     DEFAULT_SWE_MONTH,
+    VALID_BOUNDARY_TYPES,
   } from "./_constants";
+  import { DEFAULT_LOCATION } from "../_common/constants";
 
   export let tool;
   export let categories;
@@ -187,20 +190,36 @@
     const {
       lat,
       lng,
-      boundary: boundaryId,
+      boundary: boundaryType,
       indicator,
       imperial,
     } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
     // Set intial values for stores
+
     if (!$location || !$boundary) {
-      const loc = await setInitialLocation(+lng, +lat, boundaryId);
-      locationStore.updateLocation(loc);
-      locationStore.updateBoundary(boundaryId);
+      await setLocationStoreOnLoad(+lat, +lng, boundaryType);
     }
     categoryListStore.set(categories);
     indicatorListStore.set(indicators);
     indicatorStore.set(indicators.find((d) => d.id === indicator));
     unitsStore.set({ imperial });
+  }
+
+  async function setLocationStoreOnLoad(lat, lng, boundaryType) {
+    let loc = DEFAULT_LOCATION;
+    if (
+      isValidNumber(lat) &&
+      isValidNumber(lng) &&
+      VALID_BOUNDARY_TYPES.has(boundaryType)
+    ) {
+      try {
+        loc = await setInitialLocation(lng, lat, boundaryType);
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+    locationStore.updateLocation(loc);
+    locationStore.updateBoundary(boundaryType);
   }
 
   onMount(async () => {
