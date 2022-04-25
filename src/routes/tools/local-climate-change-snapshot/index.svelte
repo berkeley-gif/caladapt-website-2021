@@ -66,13 +66,19 @@
     lat = +lat;
     lng = +lng;
     try {
-      loc = await getLocationFromQuery(lng, lat, boundaryType);
+      loc = await getLocationFromQuery({
+        lng,
+        lat,
+        boundaryType,
+        fallbackLocation: undefined,
+      });
     } catch (error) {
       console.log(error);
     }
     if (loc) {
       selectedLocation = loc;
       searchValue = loc.title;
+      // TODO: override when fallback geom is present.
       selectedRadio = boundaryType;
       // User likely hit "change location", so scroll directly to the location
       // selection form & map

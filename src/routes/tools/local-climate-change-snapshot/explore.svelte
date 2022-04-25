@@ -197,7 +197,7 @@
     if (!$location || !$boundary) {
       let loc;
       try {
-        loc = await getLocationFromQuery(lng, lat, boundaryType, true);
+        loc = await getLocationFromQuery({ lng, lat, boundaryType });
       } catch (error) {
         console.warn(error);
       }

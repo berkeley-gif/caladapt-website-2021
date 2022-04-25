@@ -24,13 +24,12 @@ export const isValidLocationParams = (lng, lat, boundaryType) => {
   );
 };
 
-export const getLocationFromQuery = async (
+export const getLocationFromQuery = async ({
   lng,
   lat,
   boundaryType,
-  useDefaultLocation = false
-) => {
-  const fallbackLocation = useDefaultLocation ? DEFAULT_LOCATION : undefined;
+  fallbackLocation = DEFAULT_LOCATION,
+}) => {
   let loc = fallbackLocation;
   if (isValidLocationParams(lng, lat, boundaryType)) {
     loc =
