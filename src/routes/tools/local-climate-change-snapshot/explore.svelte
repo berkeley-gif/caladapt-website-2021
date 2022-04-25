@@ -213,7 +213,9 @@
       VALID_BOUNDARY_TYPES.has(boundaryType)
     ) {
       try {
-        loc = await setInitialLocation(lng, lat, boundaryType);
+        loc =
+          (await setInitialLocation(lng, lat, boundaryType)) ||
+          DEFAULT_LOCATION;
       } catch (error) {
         console.warn(error);
       }
