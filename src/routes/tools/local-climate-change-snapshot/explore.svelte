@@ -94,8 +94,10 @@
 
   function handleHeaderBtnClick(event) {
     if (event.target.dataset.action === "change-location") {
-      // Note: using this method of page navigation as there appears to be a bug
-      // when using Sapper's goto method which doesn't correctly update the DOM.
+      // Note: we're using this method of page navigation (instead of Sapper's goto)
+      // as there appears to be a bug when using Sapper's goto method which
+      // appends content from this page to the index page.
+      // This may have to do with explore.svelte loading index.json.js
       window.location.pathname = "/tools/local-climate-change-snapshot/";
     } else {
       // TODO: handle generating PDF from the DOM
