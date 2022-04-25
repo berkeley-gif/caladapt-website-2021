@@ -35,6 +35,7 @@ export const getLocationFromQuery = async (
   if (isValidLocationParams(lng, lat, boundaryType)) {
     loc =
       (await setInitialLocation(lng, lat, boundaryType)) || fallbackLocation;
+    boundaryType = loc === fallbackLocation ? "locagrid" : boundaryType;
   }
   // If the boundaryType is "locagrid", make selectedLocation.geometry a point
   // so that a marker renders on the map instead of a polygon.

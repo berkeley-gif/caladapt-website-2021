@@ -31,10 +31,7 @@
 
   // Helpers
   import { logException } from "~/helpers/logging";
-  import {
-    getInitialConfig,
-    setInitialLocation,
-  } from "~/routes/tools/_common/helpers";
+  import { getInitialConfig } from "~/routes/tools/_common/helpers";
   import { getLocationFromQuery } from "./_helpers";
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
@@ -65,7 +62,6 @@
     DEFAULT_SNAPSHOT_SLUG_EXP,
     AREABURNED_TIMESERIES_SLUG_EXP,
     DEFAULT_SWE_MONTH,
-    VALID_BOUNDARY_TYPES,
   } from "./_constants";
 
   export let tool;
@@ -205,8 +201,17 @@
       } catch (error) {
         console.warn(error);
       }
-      locationStore.updateLocation(loc);
-      locationStore.updateBoundary(boundaryType);
+      if (loc) {
+        locationStore.updateLocation(loc);
+        locationStore.updateBoundary(
+          // course corrects when boundaryType differs from fallback location boundary type.
+          loc.geometry.type === "Point" ? "locagrid" : boundaryType
+        );
+      } else {
+        throw new Error(
+          "Unable to retrieve location. Please choose a different location."
+        );
+      }
     }
     categoryListStore.set(categories);
     indicatorListStore.set(indicators);
