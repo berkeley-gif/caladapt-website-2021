@@ -51,7 +51,7 @@ export const getLocationFromQuery = async ({
 // For example, in the following string:
 // "https://api.cal-adapt.org/api/series/tasmax_30y_ens32min_rcp85/"
 // this regex will match "tasmax_30y_ens32min_rcp85"
-export const slugRegExp = /(?<=\/)[\w]{7,}(?=\/)/;
+export const slugRegExp = /[^/]+([\w]{7,})[^/]/;
 
 /**
  * Observed data does not need to be averaged
