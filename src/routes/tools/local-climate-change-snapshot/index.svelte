@@ -41,6 +41,7 @@
   import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
   import { Header } from "./_common";
+  import { DEFAULT_LOCATION } from "../_common/constants";
   import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
@@ -70,7 +71,7 @@
         lng,
         lat,
         boundaryType,
-        fallbackLocation: undefined,
+        fallbackLocation: null,
       });
     } catch (error) {
       console.log(error);
@@ -78,10 +79,9 @@
     if (loc) {
       selectedLocation = loc;
       searchValue = loc.title;
-      // TODO: override when fallback geom is present.
       selectedRadio = boundaryType;
-      // User likely hit "change location", so scroll directly to the location
-      // selection form & map
+      // We most likely got here from the user clicking "change location" in the
+      // explore page, so scroll directly to the location selection form & map
       document
         .querySelector("#select-location")
         .scrollIntoView({ behavior: "smooth" });
