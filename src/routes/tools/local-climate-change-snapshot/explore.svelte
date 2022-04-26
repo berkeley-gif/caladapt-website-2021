@@ -183,7 +183,7 @@
 
   async function initApp() {
     const { query } = $page;
-    // Get initial configuration (from default or from url)
+    // Get initial configuration (from default config or url query params)
     let {
       lat,
       lng,
@@ -191,32 +191,39 @@
       indicator,
       imperial,
     } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
+
     lat = +lat;
     lng = +lng;
-    // Set intial values for stores
+
+    // set initial values for stores
     if (!$location || !$boundary) {
-      let loc;
-      try {
-        loc = await getLocationFromQuery({ lng, lat, boundaryType });
-      } catch (error) {
-        console.warn(error);
-      }
-      if (loc) {
-        locationStore.updateLocation(loc);
-        locationStore.updateBoundary(
-          // course corrects when boundaryType differs from fallback location boundary type.
-          loc.geometry.type === "Point" ? "locagrid" : boundaryType
-        );
-      } else {
-        throw new Error(
-          "Unable to retrieve location. Please choose a different location."
-        );
-      }
+      // a page refresh or URL share requires fetching location data
+      await setLocationStoreInitialValue(lng, lat, boundaryType);
     }
     categoryListStore.set(categories);
     indicatorListStore.set(indicators);
     indicatorStore.set(indicators.find((d) => d.id === indicator));
     unitsStore.set({ imperial });
+  }
+
+  async function setLocationStoreInitialValue(lng, lat, boundaryType) {
+    let loc;
+    try {
+      loc = await getLocationFromQuery({ lng, lat, boundaryType });
+    } catch (error) {
+      console.warn(error);
+    }
+    if (loc) {
+      locationStore.updateLocation(loc);
+      locationStore.updateBoundary(
+        // course corrects when boundaryType differs from fallback location boundary type.
+        loc.geometry.type === "Point" ? "locagrid" : boundaryType
+      );
+    } else {
+      throw new Error(
+        "Unable to retrieve location. Please choose a different location."
+      );
+    }
   }
 
   onMount(async () => {
