@@ -41,7 +41,6 @@
   import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
   import { Header } from "./_common";
-  import { DEFAULT_LOCATION } from "../_common/constants";
   import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
@@ -71,17 +70,20 @@
         lng,
         lat,
         boundaryType,
+        // We don't want to hydrate the location form and map with a
+        // pre-selected location, we want the user to choose one.
         fallbackLocation: null,
       });
     } catch (error) {
       console.log(error);
     }
     if (loc) {
+      // We most likely got here from the user clicking "change location" in the
+      // explore page, so set the location form & map props...
       selectedLocation = loc;
       searchValue = loc.title;
       selectedRadio = boundaryType;
-      // We most likely got here from the user clicking "change location" in the
-      // explore page, so scroll directly to the location selection form & map
+      // ...and then scroll directly to the location selection form & map
       document
         .querySelector("#select-location")
         .scrollIntoView({ behavior: "smooth" });
