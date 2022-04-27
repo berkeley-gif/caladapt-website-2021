@@ -264,7 +264,8 @@ $spacing-160: $layout-2xl;
 $p-default-max-width: 75ch;
 $p-lead-default-max-width: 55ch;
 
-// breakpoints correspond to those for Carbon Grid
+// Breakpoints correspond to those for Carbon Design Grid.
+// Use these when aligning layout changes with the .bx--grid
 // see: https://www.carbondesignsystem.com/guidelines/2x-grid/overview/
 $breakpoint-small: 20rem; // 320px
 $breakpoint-medium: 42rem; // 672px
