@@ -7,6 +7,8 @@
     RadioButtonGroup,
   } from "carbon-components-svelte";
   import { debounce } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
+  import { BOUNDARY_TYPE_SELECTIONS } from "../_constants";
   import {
     handleAbortFetch,
     geocodeSearch,
@@ -27,28 +29,6 @@
   const minSearchLength = 3;
   const searchLabelText = "Search for a place name or address";
   const radioLegendText = "Select the type of location to search for";
-  const radios = [
-    {
-      label: "Address",
-      value: "locagrid",
-    },
-    {
-      label: "County",
-      value: "counties",
-    },
-    {
-      label: "City",
-      value: "place",
-    },
-    {
-      label: "Census Tract",
-      value: "censustracts",
-    },
-    {
-      label: "Watershed (HUC10)",
-      value: "hydrounits",
-    },
-  ];
 
   let searchSuggestions = [];
   let abortController;
@@ -71,20 +51,17 @@
     notFound = false;
   }
 
-  $: {
-    console.log("searchSuggestions: ", searchSuggestions);
-    console.log("selectedLocation: ", selectedLocation);
-  }
-
   function handleBtnClick() {
     if (!searchValue) {
       showError = true;
     }
   }
 
-  function handleRadioChange() {
-    abortController = handleAbortFetch(abortController);
-    searchValue = "";
+  function handleRadioChange(event) {
+    if (event.isTrusted) {
+      abortController = handleAbortFetch(abortController);
+      searchValue = "";
+    }
   }
 
   function handleSearchSelect(event) {
@@ -110,6 +87,9 @@
       });
     } catch (error) {
       console.warn(error);
+      logException(
+        `lccs geocodeSearch error for ${searchValue} and ${selectedRadio}`
+      );
     }
     if (results && results.features && results.features.length) {
       searchSuggestions = formatSearchResult(results, selectedRadio);
@@ -165,11 +145,14 @@
 
   <RadioButtonGroup
     bind:selected="{selectedRadio}"
-    on:change="{handleRadioChange}"
     legendText="{radioLegendText}"
   >
-    {#each radios as { label, value }}
-      <RadioButton labelText="{label}" value="{value}" />
+    {#each BOUNDARY_TYPE_SELECTIONS as { label, value }}
+      <RadioButton
+        on:change="{handleRadioChange}"
+        labelText="{label}"
+        value="{value}"
+      />
     {/each}
   </RadioButtonGroup>
 

@@ -5,7 +5,6 @@ import {
   INITIAL_CONFIG,
   MONTHS_LIST,
   PRIORITY_10_MODELS,
-  DEFAULT_LOCATION,
   DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
 import { isLeapYear } from "~/helpers/utilities";
@@ -316,7 +315,7 @@ export const getInitialConfig = (
  */
 // Helper function to create an object with initial location for a Cal-Adapt tool
 export async function setInitialLocation(lng, lat, boundary) {
-  let loc = DEFAULT_LOCATION;
+  let loc;
 
   try {
     loc = await getFeature({ center: [lng, lat] }, boundary);
@@ -324,7 +323,7 @@ export async function setInitialLocation(lng, lat, boundary) {
     console.warn(error);
   }
 
-  if (boundary === "locagrid") {
+  if (loc && boundary === "locagrid") {
     let placeName = DEFAULT_LOCAGRIDCELL_TITLE;
     try {
       const result = await reverseGeocode(`${lng}, ${lat}`);

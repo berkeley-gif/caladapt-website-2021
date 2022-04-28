@@ -31,13 +31,12 @@
 
   // Helpers
   import { logException } from "~/helpers/logging";
-  import {
-    getInitialConfig,
-    setInitialLocation,
-  } from "~/routes/tools/_common/helpers";
+  import { getInitialConfig } from "~/routes/tools/_common/helpers";
+  import { getLocationFromQuery } from "./_helpers";
   import { getQueryParams, getProjections, getObserved } from "./_data";
 
   // Components
+  import { Header } from "./_common";
   import ExploreData from "./_explore/ExploreData.svelte";
   import { NotificationDisplay, notifier } from "~/components/notifications";
 
@@ -87,6 +86,18 @@
   $: console.log("data", $dataStore);
   $: console.log("chart data", $chartDataStore);
   $: console.log("snapshot data", $snapshotDataStore);
+
+  function handleHeaderBtnClick(event) {
+    if (event.target.dataset.action === "change-location") {
+      // Note: we're using this method of page navigation (instead of Sapper's goto)
+      // as there appears to be a bug when using Sapper's goto method which
+      // appends content from this page to the index page.
+      // This may have to do with explore.svelte loading index.json.js
+      window.location.pathname = "/tools/local-climate-change-snapshot/";
+    } else {
+      // TODO: handle generating PDF from the DOM
+    }
+  }
 
   async function update() {
     if (!appReady) return;
@@ -172,20 +183,47 @@
 
   async function initApp() {
     const { query } = $page;
-    // Get initial configuration (from default or from url)
-    const { lat, lng, boundary, indicator, imperial } = getInitialConfig(
-      query,
-      DEFAULT_INITIAL_CONFIG
-    );
-    // Set intial values for stores
+    // Get initial configuration (from default config or url query params)
+    let {
+      lat,
+      lng,
+      boundary: boundaryType,
+      indicator,
+      imperial,
+    } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
+
+    lat = +lat;
+    lng = +lng;
+
+    // set initial values for stores
+    if (!$location || !$boundary) {
+      // a page refresh or URL share requires fetching location data
+      await setLocationStoreInitialValue(lng, lat, boundaryType);
+    }
     categoryListStore.set(categories);
     indicatorListStore.set(indicators);
     indicatorStore.set(indicators.find((d) => d.id === indicator));
     unitsStore.set({ imperial });
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
-    return;
+  }
+
+  async function setLocationStoreInitialValue(lng, lat, boundaryType) {
+    let loc;
+    try {
+      loc = await getLocationFromQuery({ lng, lat, boundaryType });
+    } catch (error) {
+      console.warn(error);
+    }
+    if (loc) {
+      locationStore.updateLocation(loc);
+      locationStore.updateBoundary(
+        // course corrects when boundaryType differs from fallback location boundary type.
+        loc.geometry.type === "Point" ? "locagrid" : boundaryType
+      );
+    } else {
+      throw new Error(
+        "Unable to retrieve location. Please choose a different location."
+      );
+    }
   }
 
   onMount(async () => {
@@ -212,14 +250,23 @@
   <title>{tool.title}</title>
 </svelte:head>
 
-<div id="explore-data">
-  {#if appReady}
-    <ExploreData />
-  {:else}
-    <Loading />
-  {/if}
+<div id="lccs-explore">
+  <Header
+    on:click="{handleHeaderBtnClick}"
+    iconPaths="{tool.icons}"
+    pageName="explore"
+    location="{$location}"
+  />
+
+  <div id="explore-data">
+    {#if appReady}
+      <ExploreData />
+    {:else}
+      <Loading />
+    {/if}
+  </div>
+
+  <div class="spacing--v-96"></div>
+
+  <NotificationDisplay />
 </div>
-
-<div class="spacing--v-96"></div>
-
-<NotificationDisplay />

@@ -3,6 +3,33 @@ import { INITIAL_CONFIG } from "../_common/constants";
 
 export const TOOL_SLUG = "local-climate-change-snapshot";
 
+export const BOUNDARY_TYPE_SELECTIONS = [
+  {
+    label: "Address",
+    value: "locagrid",
+  },
+  {
+    label: "County",
+    value: "counties",
+  },
+  {
+    label: "City",
+    value: "place",
+  },
+  {
+    label: "Census Tract",
+    value: "censustracts",
+  },
+  {
+    label: "Watershed (HUC10)",
+    value: "hydrounits",
+  },
+];
+
+export const VALID_BOUNDARY_TYPES = new Set(
+  BOUNDARY_TYPE_SELECTIONS.map((d) => d.value)
+);
+
 /** Regex can be used to search the Cal-Adapt API to get a list of slugs using
  * Replace the text "indicator" in SLUG_EXP with indicator id before searching.
  * https://api.cal-adapt.org/api/series/?slug_re=^tasmax_(year|month).*ens32
@@ -38,9 +65,6 @@ export const INDICATORS_WITH_NO_ENSEMBLES = ["fire"];
 export const DEFAULT_INITIAL_CONFIG = {
   ...INITIAL_CONFIG,
   indicator: DEFAULT_CLIMATE_INDICATOR,
-  // TODO: remove boundary default prop
-  // using counties boundary makes it easier to compare data with tool on v2
-  boundary: "counties",
 };
 
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";

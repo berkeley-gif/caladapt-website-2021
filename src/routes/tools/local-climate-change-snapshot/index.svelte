@@ -34,12 +34,84 @@
 </script>
 
 <script>
+  import { goto, stores as sapperStores } from "@sapper/app";
+  import { onMount } from "svelte";
+  import { getLocationFromQuery } from "./_helpers";
+  import { locationStore } from "~/routes/tools/_common/stores";
+  import { serialize } from "~/helpers/utilities";
   import { Resources } from "~/components/tools/Partials";
   import { Header } from "./_common";
   import SelectLocation from "./_select-location/SelectLocation.svelte";
 
   export let tool;
   export let resources;
+
+  const { page } = sapperStores();
+  const { location, boundary } = locationStore;
+
+  let selectedLocation = null;
+  let searchValue = "";
+  let selectedRadio = "locagrid";
+
+  onMount(() => {
+    cleanUpPrevDom();
+    initApp();
+  });
+
+  async function initApp() {
+    let loc;
+    let {
+      query: { lat, lng, boundary: boundaryType },
+    } = $page;
+    lat = +lat;
+    lng = +lng;
+    try {
+      loc = await getLocationFromQuery({
+        lng,
+        lat,
+        boundaryType,
+        // We don't want to hydrate the location form and map with a
+        // pre-selected location, we want the user to choose one.
+        fallbackLocation: null,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    if (loc) {
+      // We most likely got here from the user clicking "change location" in the
+      // explore page, so set the location form & map props...
+      selectedLocation = loc;
+      searchValue = loc.title;
+      selectedRadio = boundaryType;
+      // ...and then scroll directly to the location selection form & map
+      document
+        .querySelector("#select-location")
+        .scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  function cleanUpPrevDom() {
+    // Addresses a bug with Sapper where the contents of the explore page get
+    // appended to the DOM of this page when using the browser's back button.
+    const oldDOM = document.getElementById("lccs-explore");
+    if (oldDOM) {
+      oldDOM.outerHTML = null;
+    }
+  }
+
+  function handleSubmit() {
+    if ($location && $boundary) {
+      const {
+        center: [lng, lat],
+      } = $location;
+      const { id } = $boundary;
+      const params = { lng, lat, boundary: id };
+      const url = `/tools/local-climate-change-snapshot/explore?${serialize(
+        params
+      )}`;
+      goto(url);
+    }
+  }
 </script>
 
 <svelte:head>
@@ -50,11 +122,16 @@
   />
 </svelte:head>
 
-<Header iconPaths="{tool.icons}" />
+<Header pageName="index" iconPaths="{tool.icons}" />
 
 <div class="bx--grid">
-  <div class="margin--v-48">
-    <SelectLocation />
+  <div id="select-location" class="margin--v-48">
+    <SelectLocation
+      on:submit="{handleSubmit}"
+      searchValue="{searchValue}"
+      selectedLocation="{selectedLocation}"
+      selectedRadio="{selectedRadio}"
+    />
   </div>
 
   <div id="resources">

@@ -1,8 +1,8 @@
 <script>
-  import getBbox from "@turf/bbox";
   import { createEventDispatcher } from "svelte";
   import { Grid, Row, Column } from "carbon-components-svelte";
   import { debounce } from "~/helpers/utilities";
+  import { logException } from "~/helpers/logging";
   import { DEFAULT_BOUNDARIES } from "../../_common/constants";
   import { Location } from "~/components/tools/Location";
   import {
@@ -31,12 +31,18 @@
         boundaryResults = await getLocaGridStreetAddress(center);
       } catch (error) {
         console.warn(error);
+        logException(
+          `lccs error: map click: locagrid at ${JSON.stringify(center)}`
+        );
       }
     } else {
       try {
         boundaryResults = await getIntersectingBoundary(center);
       } catch (error) {
         console.warn(error);
+        logException(
+          `lccs error: map click: ${boundary.id} at ${JSON.stringify(center)}`
+        );
       }
     }
 
@@ -86,7 +92,6 @@
     <Column aspectRatio="1x1" class="map-container">
       <Location
         on:mapclick="{debounce(handleClick, clickDebounceMs)}"
-        boundaryList="{DEFAULT_BOUNDARIES}"
         location="{selectedLocation}"
         boundary="{boundary}"
       />

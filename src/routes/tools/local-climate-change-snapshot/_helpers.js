@@ -1,22 +1,57 @@
 import { groups, merge, mean, rollups, extent } from "d3-array";
 
 // Helpers
-import { buildEnvelope } from "../_common/helpers";
+import { buildEnvelope, setInitialLocation } from "../_common/helpers";
 
 // Constants
-import { DEFAULT_STAT_PERIODS } from "../_common/constants";
+import { DEFAULT_STAT_PERIODS, DEFAULT_LOCATION } from "../_common/constants";
 import {
   ENVELOPE_SEARCH_EXP,
   AVERAGE_SEARCH_EXP,
   SCENARIOS,
   SCENARIO_RANGES,
+  VALID_BOUNDARY_TYPES,
 } from "./_constants";
+
+export const isValidNumber = (value) =>
+  typeof value === "number" && !isNaN(value);
+
+export const isValidLocationParams = (lng, lat, boundaryType) => {
+  return (
+    isValidNumber(lat) &&
+    isValidNumber(lng) &&
+    VALID_BOUNDARY_TYPES.has(boundaryType)
+  );
+};
+
+export const getLocationFromQuery = async ({
+  lng,
+  lat,
+  boundaryType,
+  fallbackLocation = DEFAULT_LOCATION,
+}) => {
+  let loc = fallbackLocation;
+  if (isValidLocationParams(lng, lat, boundaryType)) {
+    loc =
+      (await setInitialLocation(lng, lat, boundaryType)) || fallbackLocation;
+    boundaryType = loc === fallbackLocation ? "locagrid" : boundaryType;
+  }
+  // If the boundaryType is "locagrid", make selectedLocation.geometry a point
+  // so that a marker renders on the map instead of a polygon.
+  if (loc && boundaryType === "locagrid") {
+    loc.geometry = {
+      type: "Point",
+      coordinates: loc.center.slice(),
+    };
+  }
+  return loc;
+};
 
 // Regular Expression that matches the entirety of a series slug for the LCCS tool.
 // For example, in the following string:
 // "https://api.cal-adapt.org/api/series/tasmax_30y_ens32min_rcp85/"
 // this regex will match "tasmax_30y_ens32min_rcp85"
-export const slugRegExp = /(?<=\/)[\w]{7,}(?=\/)/;
+export const slugRegExp = /[^/]+([\w]{7,})[^/]/;
 
 /**
  * Observed data does not need to be averaged
