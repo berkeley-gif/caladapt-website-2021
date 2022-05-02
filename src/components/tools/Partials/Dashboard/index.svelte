@@ -63,7 +63,7 @@
   }
   // end overrides for tab content area
 
-  @include media("<=1000px") {
+  @include mq-custom-1000px {
     .dashboard {
       flex-direction: column;
 
