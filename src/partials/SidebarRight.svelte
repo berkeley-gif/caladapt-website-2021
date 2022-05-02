@@ -35,12 +35,14 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .sidebar-block {
     &:not(:first-of-type) {
       margin-top: 4rem;
     }
 
-    @media (max-width: 1000px) {
+    @include custom-1000 {
       margin-top: 3rem;
     }
   }
