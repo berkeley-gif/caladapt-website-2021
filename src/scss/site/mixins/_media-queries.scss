@@ -15,28 +15,28 @@
 // ```
 
 // use when applying media queries for desktop width viewports
-@mixin desktop {
+@mixin mq-desktop {
   @include media(">large") {
     @content;
   }
 }
 
 // use when applying media queries for both tablet & mobile width viewports
-@mixin mobile-tablet {
+@mixin mq-mobile-tablet {
   @include media("<=large") {
     @content;
   }
 }
 
 // use when applying media queries for tablet width viewports
-@mixin tablet {
+@mixin mq-tablet {
   @include media(">small", "<=large") {
     @content;
   }
 }
 
 // use when applying media queries for mobile device width viewports
-@mixin mobile {
+@mixin mq-mobile {
   @include media("<=small") {
     @content;
   }
