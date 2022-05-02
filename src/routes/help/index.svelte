@@ -41,7 +41,7 @@
       text-align: right;
     }
 
-    @include custom-1000 {
+    @include mq-custom-1000px {
       > div:nth-child(2) {
         text-align: left;
       }

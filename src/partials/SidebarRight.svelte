@@ -42,7 +42,7 @@
       margin-top: 4rem;
     }
 
-    @include custom-1000 {
+    @include mq-custom-1000px {
       margin-top: 3rem;
     }
   }

@@ -43,7 +43,7 @@
 }
 
 // custom media query for 1000px
-@mixin custom-1000 {
+@mixin mq-custom-1000px {
   @include media("<=custom-1000") {
     @content;
   }

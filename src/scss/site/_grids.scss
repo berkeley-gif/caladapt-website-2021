@@ -37,7 +37,7 @@
     grid-column: 2 / span 3;
     margin-bottom: var(--spacing-13, 10rem);
 
-    @include custom-1000 {
+    @include mq-custom-1000px {
       grid-column: 1;
     }
   }
@@ -52,7 +52,7 @@
     "sidebar-left content sidebar-right"
     "sidebar-left footer sidebar-right";
 
-  @include custom-1000 {
+  @include mq-custom-1000px {
     grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas:
@@ -95,7 +95,7 @@
     "content sidebar-right"
     "footer sidebar-right";
 
-  @include custom-1000 {
+  @include mq-custom-1000px {
     grid-template-columns: 100%;
     grid-template-areas:
       "sidebar-right"
@@ -111,7 +111,7 @@
     "content sidebar-right"
     "footer sidebar-right";
 
-  @include custom-1000 {
+  @include mq-custom-1000px {
     grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas:
@@ -135,7 +135,7 @@
       position: relative;
       width: calc(30% - 1rem);
 
-      @include custom-1000 {
+      @include mq-custom-1000px {
         width: calc(45% - 1rem);
       }
 

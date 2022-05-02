@@ -63,7 +63,7 @@
     top: 93%;
   }
 
-  @include custom-1000 {
+  @include mq-custom-1000px {
     .page-nav :global(.bx--side-nav__items) {
       flex-direction: column;
     }
