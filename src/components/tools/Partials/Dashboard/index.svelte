@@ -82,7 +82,7 @@
     }
   }
 
-  @include mobile-tablet {
+  @include mq-mobile-tablet {
     .dashboard {
       .content {
         padding-right: 0;
