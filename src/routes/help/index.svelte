@@ -31,6 +31,8 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .help-footer {
     .h4 {
       margin-bottom: 0.5rem;
@@ -39,7 +41,7 @@
       text-align: right;
     }
 
-    @media (max-width: 1000px) {
+    @include custom-1000 {
       > div:nth-child(2) {
         text-align: left;
       }
