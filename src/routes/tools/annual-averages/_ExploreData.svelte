@@ -14,6 +14,7 @@
     DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
+    makeBookmark,
     flattenData,
     groupDataByYear,
     formatDataForExport,
@@ -99,8 +100,14 @@
       bookmark = "Cannot create a bookmark for an uploaded boundary";
     } else {
       const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+      bookmark = makeBookmark({
+        climvar: $climvarStore,
+        scenario: $scenarioStore,
+        models: $modelsStore.join(","),
+        lng: lng.toFixed(6),
+        lat: lat.toFixed(6),
+        boundary: $boundary.id,
+      });
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
