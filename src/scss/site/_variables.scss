@@ -273,12 +273,17 @@ $breakpoint-large: 66rem; // 1056px
 $breakpoint-extra-large: 82rem; //  1312px;
 $breakpoint-max: 99rem; // 1584px;
 
+// custom legacy breakpoints that do not conform to the carbon grid but are used
+// frequently throughout the app
+$breakpoint-custom-1000: 62.5rem; // 1000px;
+
 $breakpoints: (
   small: $breakpoint-small,
   medium: $breakpoint-medium,
   large: $breakpoint-large,
   extra-large: $breakpoint-extra-large,
   max: $breakpoint-max,
+  custom-1000: $breakpoint-custom-1000,
 );
 
 // Sass variables as CSS Custom Properties to fix variables in .svelte components
