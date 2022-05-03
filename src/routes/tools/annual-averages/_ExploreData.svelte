@@ -97,19 +97,13 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a share link for an uploaded boundary";
-    } else {
-      const [lng, lat] = $location.center;
-      bookmark = serialize({
-        climvar: $climvarStore,
-        scenario: $scenarioStore,
-        models: $modelsStore.join(","),
-        lng: lng.toFixed(6),
-        lat: lat.toFixed(6),
-        boundary: $boundary.id,
-      });
-    }
+    bookmark = serialize({
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
+      boundary: $boundary.id,
+      fid: $location.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
