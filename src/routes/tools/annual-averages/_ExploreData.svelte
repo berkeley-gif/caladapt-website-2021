@@ -14,7 +14,7 @@
     DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
-    makeBookmark,
+    serialize,
     flattenData,
     groupDataByYear,
     formatDataForExport,
@@ -101,7 +101,7 @@
       shareLinkWarning = "Cannot create a share link for an uploaded boundary";
     } else {
       const [lng, lat] = $location.center;
-      bookmark = makeBookmark({
+      bookmark = serialize({
         climvar: $climvarStore,
         scenario: $scenarioStore,
         models: $modelsStore.join(","),

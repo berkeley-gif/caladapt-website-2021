@@ -12,7 +12,7 @@
     dataLayersAugmentedStore,
   } from "./_store";
   import { getCSSProp } from "~/helpers/utilities";
-  import { makeBookmark } from "../_common/helpers";
+  import { serialize } from "../_common/helpers";
 
   import { Legend, StyleControl } from "~/components/tools/Map";
   import SettingsPanel from "./_SettingsPanel.svelte";
@@ -88,7 +88,7 @@
         .filter((d) => d.checked && !d.disabled)
         .map((d) => d.id)
         .join(",") || "none";
-    bookmark = makeBookmark({
+    bookmark = serialize({
       lat: lat.toFixed(6),
       lng: lng.toFixed(6),
       zoom: zoom.toFixed(4),

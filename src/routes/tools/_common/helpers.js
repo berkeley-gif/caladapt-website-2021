@@ -8,20 +8,10 @@ import {
   DEFAULT_LOCATION,
   DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
-import { isLeapYear } from "~/helpers/utilities";
+import { isLeapYear, serialize } from "~/helpers/utilities";
 import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
 
-/**
- * Creates a string of URL query params for a share / bookmark link
- * Typically this is passed to the ShareLink component's "state" prop.
- * @param {object} values
- * @returns {string}
- */
-export function makeBookmark(values = {}) {
-  return Object.entries(values)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
-}
+export { serialize };
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
