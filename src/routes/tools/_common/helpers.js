@@ -9,7 +9,12 @@ import {
   DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
 import { isLeapYear, serialize } from "~/helpers/utilities";
-import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
+import {
+  getFeature,
+  reverseGeocode,
+  getTitle,
+  getFeatureById,
+} from "~/helpers/geocode";
 
 export { serialize };
 
@@ -301,19 +306,32 @@ export const getInitialConfig = (
  * Create initial location
  * @param {float} lng
  * @param {float} lat
- * @param {string} boundary - boundary id
+ * @param {string} boundary - boundary type, e.g. "locagrid", "counties", etc.
+ * @param {number} featureId - unique id of location feature
  * @return {object}
  */
 // Helper function to create an object with initial location for a Cal-Adapt tool
-export async function setInitialLocation(lng, lat, boundary) {
+export async function setInitialLocation(lng, lat, boundary, featureId) {
   let loc = DEFAULT_LOCATION;
 
-  try {
-    loc = await getFeature({ center: [lng, lat] }, boundary);
-  } catch (error) {
-    console.warn(error);
+  if (featureId) {
+    try {
+      loc = await getFeatureById(boundary, featureId);
+    } catch (error) {
+      console.warn(error);
+    }
+  } else if (lng && lat) {
+    try {
+      loc = await getFeature({ center: [lng, lat] }, boundary);
+    } catch (error) {
+      console.warn(error);
+    }
+  } else {
+    return loc;
   }
 
+  // FIXME: locagrid should use its own title which consists of the lng,lat of
+  // its centroid coords.
   if (boundary === "locagrid") {
     let placeName = DEFAULT_LOCAGRIDCELL_TITLE;
     try {
