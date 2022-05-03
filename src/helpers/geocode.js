@@ -68,15 +68,6 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
   return response;
 };
 
-export const getFeatureById = async (id, layerId) => {
-  const url = `${apiEndpoint}/${layerId}/${id}`;
-  const [response, error] = await handleXHR(fetchData(url, {}));
-  if (error) {
-    throw new Error(error.message);
-  }
-  return response;
-};
-
 export const getTitle = (feature, layerId, placeName) => {
   switch (layerId) {
     case "locagrid":
@@ -142,6 +133,19 @@ export const getFeature = async (feature, boundaryId) => {
         feature.place_name
       );
     }
+  }
+  return location;
+};
+
+export const getFeatureById = async (boundaryType, featureId) => {
+  let location = null;
+  const url = `${apiEndpoint}/${boundaryType}/${featureId}/`;
+  const [response, error] = await handleXHR(fetchData(url, {}));
+  if (error) {
+    throw new Error(error.message);
+  }
+  if (response) {
+    location = formatFeature(response, boundaryType);
   }
   return location;
 };
