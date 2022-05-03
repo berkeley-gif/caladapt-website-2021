@@ -1,3 +1,5 @@
+@import "./mixins/media-queries";
+
 .sidebar {
   .bx--side-nav__menu {
     a.bx--side-nav__link {
@@ -111,7 +113,7 @@
 }
 
 /* Responsive Structured List */
-@media (max-width: 700px) {
+@include media("<=medium") {
   .bx--structured-list-row {
     display: flex;
     flex-direction: column;

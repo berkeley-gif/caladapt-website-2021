@@ -1,0 +1,50 @@
+@import "../variables";
+@import "include-media/dist/include-media";
+
+// MEDIA QUERIES
+// These use the `include-media` Sass library. The intention is to use these mixins
+// when writing a media query block to help ensure consistency and semantics.
+// For more on `include-media` see:
+// * https://eduardoboucas.github.io/include-media/
+// * https://css-tricks.com/approaches-media-queries-sass/#aa-my-eduardo-boucass-technique
+// Breakpoint variables are configured to match Carbon Design's grid breakpoints.
+// Custom breakpoints may also be used: `@include media(a, b)`
+// For example:
+// ```
+// @include media(">=small", "<800px") { ... }
+// ```
+
+// use when applying media queries for desktop width viewports
+@mixin mq-desktop {
+  @include media(">large") {
+    @content;
+  }
+}
+
+// use when applying media queries for both tablet & mobile width viewports
+@mixin mq-mobile-tablet {
+  @include media("<=large") {
+    @content;
+  }
+}
+
+// use when applying media queries for tablet width viewports
+@mixin mq-tablet {
+  @include media(">small", "<=large") {
+    @content;
+  }
+}
+
+// use when applying media queries for mobile device width viewports
+@mixin mq-mobile {
+  @include media("<=small") {
+    @content;
+  }
+}
+
+// custom media query for 1000px
+@mixin mq-custom-1000px {
+  @include media("<=custom-1000") {
+    @content;
+  }
+}

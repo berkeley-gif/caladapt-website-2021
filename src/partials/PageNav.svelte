@@ -30,6 +30,8 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .page-nav {
     width: 100%;
     background: rgba(250, 251, 251, 1);
@@ -61,7 +63,7 @@
     top: 93%;
   }
 
-  @media (max-width: 1000px) {
+  @include mq-custom-1000px {
     .page-nav :global(.bx--side-nav__items) {
       flex-direction: column;
     }

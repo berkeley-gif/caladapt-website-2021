@@ -2,7 +2,7 @@
   width: 60px;
   display: inline-block;
 
-  @media (max-width: 1000px) {
+  @include mq-custom-1000px {
     width: 45px;
   }
 }

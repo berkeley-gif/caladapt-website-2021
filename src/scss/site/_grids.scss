@@ -1,3 +1,5 @@
+@import "./mixins/media-queries";
+
 .page-grid {
   display: grid;
   grid-gap: 10px;
@@ -35,7 +37,7 @@
     grid-column: 2 / span 3;
     margin-bottom: var(--spacing-13, 10rem);
 
-    @media (max-width: 1000px) {
+    @include mq-custom-1000px {
       grid-column: 1;
     }
   }
@@ -50,7 +52,7 @@
     "sidebar-left content sidebar-right"
     "sidebar-left footer sidebar-right";
 
-  @media (max-width: 1000px) {
+  @include mq-custom-1000px {
     grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas:
@@ -93,7 +95,7 @@
     "content sidebar-right"
     "footer sidebar-right";
 
-  @media (max-width: 1000px) {
+  @include mq-custom-1000px {
     grid-template-columns: 100%;
     grid-template-areas:
       "sidebar-right"
@@ -109,7 +111,7 @@
     "content sidebar-right"
     "footer sidebar-right";
 
-  @media (max-width: 1000px) {
+  @include mq-custom-1000px {
     grid-template-columns: 100%;
     grid-template-rows: auto;
     grid-template-areas:
@@ -133,7 +135,7 @@
       position: relative;
       width: calc(30% - 1rem);
 
-      @media (max-width: 1000px) {
+      @include mq-custom-1000px {
         width: calc(45% - 1rem);
       }
 

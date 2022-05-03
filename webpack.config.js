@@ -18,6 +18,7 @@ const sourceMap = dev ? "inline-cheap-module-source-map" : "source-map";
 const alias = {
   "~": path.resolve(__dirname, "src/"),
   content: path.resolve(__dirname, "content"),
+  scss: path.resolve(__dirname, "src/scss"),
   static: path.resolve(__dirname, "static"),
   svelte: path.resolve("node_modules", "svelte"),
 };

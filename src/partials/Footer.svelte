@@ -6,6 +6,8 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   footer {
     background-image: linear-gradient(
       to top,
@@ -24,7 +26,7 @@
     align-content: center;
     align-items: center;
 
-    @media (max-width: 66rem) {
+    @include media("<=large") {
       text-align: center;
       justify-content: center;
     }
@@ -44,7 +46,7 @@
       margin: 0.5rem;
     }
 
-    @media (max-width: 66rem) {
+    @include media("<=large") {
       justify-content: space-evenly;
     }
   }
