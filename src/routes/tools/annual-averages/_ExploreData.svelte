@@ -58,7 +58,8 @@
   let ShareLink;
   let LearnMoreModal;
 
-  let bookmark;
+  let bookmark = "";
+  let shareLinkWarning = "";
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
@@ -97,7 +98,7 @@
 
   async function loadShare() {
     if ($boundary.id === "custom") {
-      bookmark = "Cannot create a bookmark for an uploaded boundary";
+      shareLinkWarning = "Cannot create a share link for an uploaded boundary";
     } else {
       const [lng, lat] = $location.center;
       bookmark = makeBookmark({
@@ -164,6 +165,9 @@
 
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
+      // FIXME: this prevents the ShareLink from preventing a shareable URL
+      // because the boundary id will never be "custom" when a user clicks the
+      // share button.
       locationStore.updateBoundary("locagrid");
       locationStore.updateLocation(e.detail.location, true);
     } else {
@@ -348,6 +352,7 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
+  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component
