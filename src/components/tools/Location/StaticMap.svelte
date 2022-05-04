@@ -108,10 +108,14 @@
     };
     const bounds = "auto";
     const params = { access_token: accessToken, padding };
-    // The Mapbox Static Images API only accepts requests that are 8,192 or fewer characters long.
-    // Reduce coordinate precision
-    const truncatedGeojson = truncate(geojson, { precision: 4 });
-    // Simplify geometry
+    // The Mapbox Static Images API only accepts requests that are 8,192 or
+    // fewer characters long. So we...
+    // 1. reduce coordinate precision
+    const truncatedGeojson = truncate(geojson, {
+      precision: 4,
+      coordinates: 2,
+    });
+    // 2. simplify the geometry
     const overlay = createOverlay(truncatedGeojson);
     createSrcUrl({ overlay, bounds, params });
   }
