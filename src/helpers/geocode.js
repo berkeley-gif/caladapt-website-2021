@@ -137,10 +137,14 @@ export const getFeature = async (feature, boundaryId) => {
   return location;
 };
 
-export const getFeatureById = async (boundaryType, featureId) => {
+export const getFeatureById = async (
+  boundaryType,
+  featureId,
+  params = { srs: 4326 }
+) => {
   let location = null;
   const url = `${apiEndpoint}/${boundaryType}/${featureId}/`;
-  const [response, error] = await handleXHR(fetchData(url, {}));
+  const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
     throw new Error(error.message);
   }
