@@ -299,7 +299,6 @@
 <svelte:component
   this="{ChangeLocation}"
   bind:open="{showChangeLocation}"
-  enableUpload="{false}"
   location="{$location}"
   boundary="{$boundary}"
   boundaryList="{SMALL_SCALE_BOUNDARIES}"

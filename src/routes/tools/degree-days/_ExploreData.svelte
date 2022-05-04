@@ -463,7 +463,6 @@
   location="{$location}"
   boundary="{$boundary}"
   boundaryList="{SMALL_SCALE_BOUNDARIES}"
-  enableUpload="{false}"
   on:change="{changeLocation}"
 />
 
