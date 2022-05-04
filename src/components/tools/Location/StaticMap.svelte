@@ -66,6 +66,7 @@
     )}`;
   }
 
+  // FIXME: this creates invalid geometries for some boundaries, e.g. Tehama County
   function createOverlay(geojson, tolerance = 0.005) {
     const overlay = encodeURIComponent(JSON.stringify(geojson));
     if (overlay.length < 7500) {
