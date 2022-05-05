@@ -8,7 +8,7 @@ import {
   DEFAULT_LOCATION,
   DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
-import { isLeapYear, serialize } from "~/helpers/utilities";
+import { isLeapYear, isValidNumber, serialize } from "~/helpers/utilities";
 import {
   getFeature,
   reverseGeocode,
@@ -314,13 +314,13 @@ export const getInitialConfig = (
 export async function setInitialLocation(lng, lat, boundary, featureId) {
   let loc = DEFAULT_LOCATION;
 
-  if (featureId) {
+  if (isValidNumber(featureId)) {
     try {
       loc = await getFeatureById(boundary, featureId);
     } catch (error) {
       console.warn(error);
     }
-  } else if (lng && lat) {
+  } else if (isValidNumber(lng) && isValidNumber(lat)) {
     // Prior to PR#235 feature data was retrieved this way, but it is error prone.
     // For more info, see: https://trello.com/c/8JmopK9Q
     // NOTE: this code still exists in case a legacy bookmarked URL that only

@@ -149,7 +149,7 @@
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const loc = await setInitialLocation(+lng, +lat, boundary, fid);
+    const loc = await setInitialLocation(+lng, +lat, boundary, +fid);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
