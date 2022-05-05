@@ -303,14 +303,14 @@ export const getInitialConfig = (
 };
 
 /**
- * Create initial location
- * @param {float} lng
- * @param {float} lat
+ * setInitialLocation: Queries the Cal-Adapt API for boundary type feature(s).
+ * Typically used to create an object with initial location for a Cal-Adapt tool.
+ * @param {float} lng - feature's centroid longitude coordinate
+ * @param {float} lat - feature's centroid latitude coordinate
  * @param {string} boundary - boundary type, e.g. "locagrid", "counties", etc.
  * @param {number} featureId - unique id of location feature
- * @return {object}
+ * @return {object} - GeoJSON feature or feature collection on success
  */
-// Helper function to create an object with initial location for a Cal-Adapt tool
 export async function setInitialLocation(lng, lat, boundary, featureId) {
   let loc = DEFAULT_LOCATION;
 
@@ -321,6 +321,10 @@ export async function setInitialLocation(lng, lat, boundary, featureId) {
       console.warn(error);
     }
   } else if (lng && lat) {
+    // Prior to PR#235 feature data was retrieved this way, but it is error prone.
+    // For more info, see: https://trello.com/c/8JmopK9Q
+    // NOTE: this code still exists in case a legacy bookmarked URL that only
+    // has the lng,lat coords and not the featureId.
     try {
       loc = await getFeature({ center: [lng, lat] }, boundary);
     } catch (error) {
@@ -330,7 +334,7 @@ export async function setInitialLocation(lng, lat, boundary, featureId) {
     return loc;
   }
 
-  // FIXME: locagrid should use its own title which consists of the lng,lat of
+  // FIXME: locagrid should use its own title which consists of the lng, lat of
   // its centroid coords.
   if (boundary === "locagrid") {
     let placeName = DEFAULT_LOCAGRIDCELL_TITLE;
