@@ -137,6 +137,14 @@ export const getFeature = async (feature, boundaryId) => {
   return location;
 };
 
+/**
+ * Queries a boundary feature from the Cal-Adapt API using its unique feature id
+ * @param {string} boundaryType - locagrid, counties, censustracts, etc.
+ * @param {number} featureId - numeric value of feature id
+ * @param {object} params - additional parameters
+ * @param {number} params.srs - desired reference system to return coordinates in
+ * @returns {object} GeoJSON feature on success, Error on failure.
+ */
 export const getFeatureById = async (
   boundaryType,
   featureId,
