@@ -105,9 +105,7 @@
   $: formatFn = format(`.${$indicator.decimals}f`);
 
   $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
-  $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
-  $: frequencyLabel =
-    $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
+  $: frequencyLabel = setFrequencyLabel($frequencyStore);
   $: monthsLabel =
     $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
@@ -123,6 +121,11 @@
       chartTitle = $location.title;
     }
   });
+
+  function setFrequencyLabel(fstoreValue) {
+    let value = frequencyList.find((d) => d.id === fstoreValue).label;
+    return fstoreValue === "AS" ? value.replace("ly", "") : value;
+  }
 
   async function loadLearnMore({
     slugs = [],
