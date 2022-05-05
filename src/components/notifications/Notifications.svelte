@@ -52,7 +52,9 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   :global(.toasts) {
     list-style: none;
     position: fixed;
@@ -112,7 +114,7 @@
     }
   }
 
-  @media (min-width: 480px) {
+  @include media(">=480px") {
     @keyframes animate-in {
       0%,
       60%,

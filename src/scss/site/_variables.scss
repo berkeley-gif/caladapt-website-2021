@@ -1,3 +1,5 @@
+@import "carbon-components/scss/globals/scss/spacing";
+
 // Colors
 $white: #ffffff;
 $black: #090f20;
@@ -34,6 +36,18 @@ $teal-100: #001818;
 $rs-green: #5dfa25;
 $rs-blue: #25c7fa;
 $rs-teal: #88dcc4;
+
+// gcms
+$gcm-ACCESS1-0: rgba(31, 119, 180, 1);
+$gcm-CanESM2: rgba(188, 189, 34, 1);
+$gcm-CCSM4: rgba(44, 160, 44, 1);
+$gcm-CESM1-BGC: rgba(140, 86, 75, 1);
+$gcm-CMCC-CMS: rgba(227, 119, 194, 1);
+$gcm-CNRM-CM5: rgba(23, 190, 207, 1);
+$gcm-GFDL-CM3: rgba(255, 127, 14, 1);
+$gcm-HadGEM2-CC: rgba(69, 68, 68, 1);
+$gcm-HadGEM2-ES: rgba(214, 39, 40, 1);
+$gcm-MIROC5: rgba(148, 103, 189, 1);
 
 $card-gradient-01: linear-gradient(
   180deg,
@@ -250,17 +264,27 @@ $spacing-160: $layout-2xl;
 $p-default-max-width: 75ch;
 $p-lead-default-max-width: 55ch;
 
-// gcms
-$gcm-ACCESS1-0: rgba(31, 119, 180, 1);
-$gcm-CanESM2: rgba(188, 189, 34, 1);
-$gcm-CCSM4: rgba(44, 160, 44, 1);
-$gcm-CESM1-BGC: rgba(140, 86, 75, 1);
-$gcm-CMCC-CMS: rgba(227, 119, 194, 1);
-$gcm-CNRM-CM5: rgba(23, 190, 207, 1);
-$gcm-GFDL-CM3: rgba(255, 127, 14, 1);
-$gcm-HadGEM2-CC: rgba(69, 68, 68, 1);
-$gcm-HadGEM2-ES: rgba(214, 39, 40, 1);
-$gcm-MIROC5: rgba(148, 103, 189, 1);
+// Breakpoints correspond to those for Carbon Design Grid.
+// Use these when aligning layout changes with the .bx--grid
+// see: https://www.carbondesignsystem.com/guidelines/2x-grid/overview/
+$breakpoint-small: 20rem; // 320px
+$breakpoint-medium: 42rem; // 672px
+$breakpoint-large: 66rem; // 1056px
+$breakpoint-extra-large: 82rem; //  1312px;
+$breakpoint-max: 99rem; // 1584px;
+
+// custom legacy breakpoints that do not conform to the carbon grid but are used
+// frequently throughout the app
+$breakpoint-custom-1000: 62.5rem; // 1000px;
+
+$breakpoints: (
+  small: $breakpoint-small,
+  medium: $breakpoint-medium,
+  large: $breakpoint-large,
+  extra-large: $breakpoint-extra-large,
+  max: $breakpoint-max,
+  custom-1000: $breakpoint-custom-1000,
+);
 
 // Sass variables as CSS Custom Properties to fix variables in .svelte components
 :root {
