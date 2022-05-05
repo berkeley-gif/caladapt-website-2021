@@ -145,17 +145,14 @@
 
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
-    console.log("scenario change");
   }
 
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds);
-    console.log("models change");
   }
 
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
-    console.log("climvar change");
   }
 
   function changeLocation(e) {
@@ -163,13 +160,15 @@
       // FIXME: this prevents the ShareLink from preventing a shareable URL
       // because the boundary id will never be "custom" when a user clicks the
       // share button.
+      // NOTE: custom boundary upload was removed in #236 so currenty this code
+      // does nothing. When re-implementing the custom boundary upload, this
+      // should be fixed.
       locationStore.updateBoundary("locagrid");
       locationStore.updateLocation(e.detail.location, true);
     } else {
       locationStore.updateBoundary(e.detail.boundaryId);
       locationStore.updateLocation(e.detail.location);
     }
-    console.log("location change");
   }
 </script>
 
