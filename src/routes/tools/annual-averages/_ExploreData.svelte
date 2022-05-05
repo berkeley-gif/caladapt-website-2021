@@ -97,6 +97,9 @@
   }
 
   async function loadShare() {
+    // TODO: after the custom boundary upload feature is implemented / fixed,
+    // set ShareLink's `errorMsg` prop when $boundary.id === "custom" as
+    // custom boundaries don't get encoded in the URL query params.
     bookmark = serialize({
       climvar: $climvarStore,
       scenario: $scenarioStore,
