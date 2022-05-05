@@ -159,14 +159,14 @@
       period: DEFAULT_SELECTED_PERIOD,
     };
     // Get initial configuration (from default or from url)
-    const { lat, lng, boundary, scenario, climvar, period, imperial } =
+    const { lat, lng, fid, boundary, scenario, climvar, period, imperial } =
       getInitialConfig(query, config);
     // Set intial values for stores
     climvarStore.set(climvar);
     scenarioStore.set(scenario);
     unitsStore.set({ imperial });
     periodStore.set(period);
-    const loc = await setInitialLocation(+lng, +lat, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary, +fid);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
     return;
