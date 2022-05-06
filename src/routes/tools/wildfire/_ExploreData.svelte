@@ -176,6 +176,7 @@
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
+      ["feature id", $location.id],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate variable", $climvar.label],

@@ -211,7 +211,7 @@
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
-      ["featureId", $location.id],
+      ["feature id", $location.id],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate indicator", `${indicatorLabel}`],
