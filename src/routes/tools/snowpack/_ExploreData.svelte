@@ -124,7 +124,7 @@
 
   async function loadShare() {
     if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a bookmark for an uploaded boundary";
+      shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
       bookmark = serialize({
         climvar: $climvarStore,
