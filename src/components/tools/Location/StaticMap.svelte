@@ -7,7 +7,7 @@
 
   // Helpers
   import { mapboxgl } from "~/helpers/mapbox";
-  import { serialize, debounce } from "~/helpers/utilities";
+  import { serialize, debounce, isValidNumber } from "~/helpers/utilities";
   import { logException } from "~/helpers/logging";
 
   // Props
@@ -23,8 +23,7 @@
 
   let imageWrapper;
   let image;
-  let loaded = false;
-  let error = false;
+  let state = "pending";
   let width;
   let src;
 
@@ -33,21 +32,20 @@
   $: valid = isValidNumber(width) && isValidNumber(height);
   $: ariaLabel = useButton && location ? "Change location" : undefined;
   $: altText = location ? `Locator map for ${location.title}` : "";
-
   $: if (valid && width && location && location.geometry) {
     handleLocation(location);
   }
-
   $: if (src) image.src = src;
+  $: if (location) state = "pending";
 
   onMount(() => {
     imageWrapper = useButton ? Button : Tile;
     image = new Image();
     image.onload = () => {
-      loaded = true;
+      state = "loaded";
     };
     image.onerror = () => {
-      error = true;
+      state = "error";
       logException(
         `StaticMap image failed for ${location && location.title} at ${
           location && location.center && location.center.join(",")
@@ -55,10 +53,6 @@
       );
     };
   });
-
-  function isValidNumber(value) {
-    return typeof value === "number" && !isNaN(value);
-  }
 
   function createSrcUrl({ overlay, bounds, params }) {
     src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -122,11 +116,16 @@
   }
 
   const handleLocation = debounce(
-    function (feature) {
-      if (feature.geometry.type === "Point") {
-        getPointImgSrc(location);
-      } else {
-        getPolygonImgSrc(location);
+    (feature) => {
+      try {
+        if (feature.geometry.type === "Point") {
+          getPointImgSrc(location);
+        } else {
+          getPolygonImgSrc(location);
+        }
+      } catch (error) {
+        console.warn(error);
+        state = "error";
       }
     },
     200,
@@ -169,7 +168,7 @@
 
 <div bind:clientWidth="{width}" aria-live="polite">
   <svelte:component this="{imageWrapper}" on:click aria-label="{ariaLabel}">
-    {#if loaded}
+    {#if state === "loaded"}
       <img
         {...$$restProps}
         style="{$$restProps.style}"
@@ -179,7 +178,7 @@
         alt="{altText}"
         transition:fade
       />
-    {:else if error}
+    {:else if state === "error"}
       <div class="error-text">
         An error occurred. Unable to show locator map.
       </div>
