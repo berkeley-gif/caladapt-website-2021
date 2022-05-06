@@ -173,6 +173,7 @@
       lat,
       lng,
       boundary,
+      fid,
       scenario,
       climvar,
       models,
@@ -192,7 +193,7 @@
     modelSingleStore.set(modelSingle);
     simulationStore.set(simulation);
 
-    const loc = await setInitialLocation(+lng, +lat, boundary);
+    const loc = await setInitialLocation(+lng, +lat, boundary, +fid);
     locationStore.updateLocation(loc);
     locationStore.updateBoundary(boundary);
 
