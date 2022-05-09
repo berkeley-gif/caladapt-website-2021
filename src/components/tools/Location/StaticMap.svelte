@@ -21,7 +21,7 @@
   const { accessToken } = mapboxgl;
   const MAX_IMG_HEIGHT = 250;
 
-  let imageWrapper;
+  let MapWrapper;
   let image;
   let state = "pending";
   let width;
@@ -39,7 +39,7 @@
   $: if (location) state = "pending";
 
   onMount(() => {
-    imageWrapper = useButton ? Button : Tile;
+    MapWrapper = useButton ? Button : Tile;
     image = new Image();
     image.onload = () => {
       state = "loaded";
@@ -167,7 +167,7 @@
 </style>
 
 <div bind:clientWidth="{width}" aria-live="polite">
-  <svelte:component this="{imageWrapper}" on:click aria-label="{ariaLabel}">
+  <svelte:component this="{MapWrapper}" on:click aria-label="{ariaLabel}">
     {#if state === "loaded"}
       <img
         {...$$restProps}
