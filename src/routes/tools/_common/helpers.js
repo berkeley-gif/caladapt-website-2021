@@ -6,6 +6,7 @@ import {
   MONTHS_LIST,
   PRIORITY_10_MODELS,
   DEFAULT_LOCATION,
+  DEFAULT_BOUNDARIES,
   DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
 import { isLeapYear, isValidNumber, serialize } from "~/helpers/utilities";
@@ -17,6 +18,10 @@ import {
 } from "~/helpers/geocode";
 
 export { serialize };
+
+export const PERMITTED_BOUNDARY_TYPES = new Set(
+  DEFAULT_BOUNDARIES.map((d) => d.id)
+);
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -314,13 +319,17 @@ export const getInitialConfig = (
 export async function setInitialLocation(lng, lat, boundary, featureId) {
   let loc = DEFAULT_LOCATION;
 
-  if (isValidNumber(featureId)) {
+  if (isValidNumber(featureId) && PERMITTED_BOUNDARY_TYPES.has(boundary)) {
     try {
       loc = await getFeatureById(boundary, featureId);
     } catch (error) {
       console.warn(error);
     }
-  } else if (isValidNumber(lng) && isValidNumber(lat)) {
+  } else if (
+    isValidNumber(lng) &&
+    isValidNumber(lat) &&
+    PERMITTED_BOUNDARY_TYPES.has(boundary)
+  ) {
     // Prior to PR#235 feature data was retrieved this way, but it is error prone.
     // For more info, see: https://trello.com/c/8JmopK9Q
     // NOTE: this code still exists in case a legacy bookmarked URL that only
