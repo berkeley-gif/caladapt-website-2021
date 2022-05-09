@@ -35,7 +35,7 @@
   $: if (valid && width && location && location.geometry) {
     handleLocation(location);
   }
-  $: if (src) image.src = src;
+  $: if (image && src) image.src = src;
   $: if (location) state = "pending";
 
   function handleException() {
