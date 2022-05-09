@@ -38,20 +38,22 @@
   $: if (src) image.src = src;
   $: if (location) state = "pending";
 
+  function handleException() {
+    const exception = `StaticMap failed to render for ${
+      location && location.title
+    }. Fid: ${location && location.id}`;
+    state = "error";
+    logException(exception);
+    console.warn(exception);
+  }
+
   onMount(() => {
     MapWrapper = useButton ? Button : Tile;
     image = new Image();
     image.onload = () => {
       state = "loaded";
     };
-    image.onerror = () => {
-      state = "error";
-      logException(
-        `StaticMap image failed for ${location && location.title} at ${
-          location && location.center && location.center.join(",")
-        }`
-      );
-    };
+    image.onerror = handleException;
   });
 
   function createSrcUrl({ overlay, bounds, params }) {
@@ -123,9 +125,8 @@
         } else {
           getPolygonImgSrc(location);
         }
-      } catch (error) {
-        console.warn(error);
-        state = "error";
+      } catch {
+        handleException();
       }
     },
     200,
