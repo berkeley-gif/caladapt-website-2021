@@ -3,7 +3,12 @@
 // see: https://jestjs.io/docs/manual-mocks
 
 export function getTitle(feature = {}, boundaryType = "", placeName = "") {
-  return "New place name";
+  if (boundaryType === "locagrid") {
+    return feature.properties && feature.properties.name
+      ? `LOCA Grid Cell ${feature.properties.name}`
+      : "LOCA Grid Cell";
+  }
+  return placeName || "New place name";
 }
 
 export function formatFeature(

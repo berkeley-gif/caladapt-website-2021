@@ -16,7 +16,7 @@ describe("tools/_common/helpers", () => {
       geometry: {},
       properties: {},
       id: 1234,
-      title: "New place name",
+      title: "LOCA Grid Cell",
     };
     return expect(setInitialLocation(lng, lat, "locagrid")).resolves.toEqual(
       expected
