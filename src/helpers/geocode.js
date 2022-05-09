@@ -45,6 +45,7 @@ export const searchBoundaryLayer = async (searchStr, boundaryId) => {
   const searchParams = {
     srs: 4326,
     search: searchStr,
+    v: 1, // cache bust 2022-05-09
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
   if (error) {
@@ -60,6 +61,7 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
     precision: 4,
     //intersects: `{"type":"Point","coordinates":[${coords[0]},${coords[1]}]}`,
     intersects: `Point(${coords[0]} ${coords[1]})`,
+    v: 1, // cache bust 2022-05-09
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
   if (error) {
@@ -70,7 +72,11 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
 
 export const getFeatureById = async (id, layerId) => {
   const url = `${apiEndpoint}/${layerId}/${id}`;
-  const [response, error] = await handleXHR(fetchData(url, {}));
+  const [response, error] = await handleXHR(
+    fetchData(url, {
+      v: 1, // cache bust 2022-05-09
+    })
+  );
   if (error) {
     throw new Error(error.message);
   }
@@ -201,6 +207,7 @@ export const getNearestFeature = async (lng, lat, layerId) => {
     srs: 4326,
     precision: 4,
     distance_to: `POINT(${lng} ${lat})`,
+    v: 1, // cache bust 2022-05-09
   };
   const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
