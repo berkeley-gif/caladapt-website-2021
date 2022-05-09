@@ -80,7 +80,9 @@ export const getFeatureById = async (id, layerId) => {
 export const getTitle = (feature, layerId, placeName) => {
   switch (layerId) {
     case "locagrid":
-      return placeName.replace(", United States", "");
+      return feature.properties && feature.properties.name
+        ? `LOCA Grid Cell ${feature.properties.name}`
+        : "LOCA Grid Cell";
     case "counties":
       return `${feature.properties.name} County, ${feature.properties.state_name}`;
     case "censustracts":
