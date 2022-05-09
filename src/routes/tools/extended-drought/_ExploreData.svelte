@@ -100,13 +100,10 @@
     if ($boundary.id === "custom") {
       shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
-      const [lng, lat] = $location.center;
       bookmark = serialize({
         climvar: $climvarStore,
         scenario: $scenarioStore,
         period: $periodStore,
-        lng,
-        lat,
         fid: $location.id,
         boundary: $boundary.id,
       });
