@@ -2,6 +2,10 @@
 // These are intended to be used for unit tests with Jest.
 // see: https://jestjs.io/docs/manual-mocks
 
+export function getTitle(feature = {}, boundaryType = "", placeName = "") {
+  return "New place name";
+}
+
 export function formatFeature(
   feature = {},
   boundaryType = "locagrid",
@@ -69,8 +73,4 @@ export function reverseGeocode(coords = [0, 0]) {
       ],
     });
   });
-}
-
-export function getTitle(feature = {}, boundaryType = "", placeName = "") {
-  return "New place name";
 }
