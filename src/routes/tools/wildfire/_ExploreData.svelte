@@ -142,18 +142,14 @@
     if ($boundary.id === "custom") {
       shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
-      const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
       bookmark = serialize({
         climvar: $climvarStore,
         scenario: $scenarioStore,
-        models: modelsStr,
+        models: $modelsStore.join(","),
         modelSingle: $modelSingleStore,
         year: $yearStore,
         month: $monthStore,
         simulation: $simulationStore,
-        lng,
-        lat,
         boundary: $boundary.id,
         fid: $location.id,
       });
