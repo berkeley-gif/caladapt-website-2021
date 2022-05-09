@@ -324,20 +324,6 @@ export async function setInitialLocation(lng, lat, boundary) {
     console.warn(error);
   }
 
-  if (boundary === "locagrid") {
-    let placeName = DEFAULT_LOCAGRIDCELL_TITLE;
-    try {
-      const result = await reverseGeocode(`${lng}, ${lat}`);
-      if (result && result.features && result.features.length) {
-        placeName = result.features[0].place_name;
-      }
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      loc.title = getTitle(loc, boundary, placeName);
-    }
-  }
-
   return loc;
 }
 
