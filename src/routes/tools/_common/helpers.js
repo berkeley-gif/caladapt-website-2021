@@ -317,11 +317,11 @@ export const getInitialConfig = (
  * @return {object} - GeoJSON feature or feature collection on success
  */
 export async function setInitialLocation(lng, lat, boundary, featureId) {
-  let loc = DEFAULT_LOCATION;
+  let location = DEFAULT_LOCATION;
 
   if (isValidNumber(featureId) && PERMITTED_BOUNDARY_TYPES.has(boundary)) {
     try {
-      loc = await getFeatureById(boundary, featureId);
+      location = await getFeatureById(boundary, featureId);
     } catch (error) {
       console.warn(error);
     }
@@ -330,36 +330,20 @@ export async function setInitialLocation(lng, lat, boundary, featureId) {
     isValidNumber(lat) &&
     PERMITTED_BOUNDARY_TYPES.has(boundary)
   ) {
-    // Prior to PR#235 feature data was retrieved this way, but it is error prone.
-    // For more info, see: https://trello.com/c/8JmopK9Q
-    // NOTE: this code still exists in case a legacy bookmarked URL that only
-    // has the lng,lat coords and not the featureId.
+    // NOTE: prior to PR #235 feature data was retrieved this way, but it is
+    // error prone. For more info, see: https://trello.com/c/8JmopK9Q
+    // This code still exists in case a legacy bookmarked URL only
+    // contains the lng,lat center coords and not the featureId.
     try {
-      loc = await getFeature({ center: [lng, lat] }, boundary);
+      location = await getFeature({ center: [lng, lat] }, boundary);
     } catch (error) {
       console.warn(error);
     }
   } else {
-    return loc;
+    return location;
   }
 
-  // FIXME: locagrid should use its own title which consists of the lng, lat of
-  // its centroid coords.
-  if (boundary === "locagrid") {
-    let placeName = DEFAULT_LOCAGRIDCELL_TITLE;
-    try {
-      const result = await reverseGeocode(`${lng}, ${lat}`);
-      if (result && result.features && result.features.length) {
-        placeName = result.features[0].place_name;
-      }
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      loc.title = getTitle(loc, boundary, placeName);
-    }
-  }
-
-  return loc;
+  return location;
 }
 
 /**
