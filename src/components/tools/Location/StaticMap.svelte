@@ -1,12 +1,13 @@
 <script>
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { InlineLoading } from "carbon-components-svelte";
+  import { InlineLoading, Button, Tile } from "carbon-components-svelte";
   import simplify from "@turf/simplify";
   import truncate from "@turf/truncate";
 
   // Helpers
   import { mapboxgl } from "~/helpers/mapbox";
-  import { serialize, debounce } from "~/helpers/utilities";
+  import { serialize, debounce, isValidNumber } from "~/helpers/utilities";
   import { logException } from "~/helpers/logging";
 
   // Props
@@ -15,45 +16,45 @@
   export let style = "mapbox/streets-v11";
   export let padding = 50;
   export let zoom = 8;
+  export let useButton = true;
 
   const { accessToken } = mapboxgl;
   const MAX_IMG_HEIGHT = 250;
 
-  const image = new Image();
-  image.onload = () => {
-    loading = false;
-    loaded = true;
-  };
-  image.onerror = () => {
-    loading = false;
-    error = true;
-    logException(
-      `StaticMap image failed for ${location && location.title} at ${
-        location && location.center && location.center.join(",")
-      }`
-    );
-  };
-
-  let loading = true;
-  let loaded = false;
-  let error = false;
+  let MapWrapper;
+  let image;
+  let state = "pending";
   let width;
   let src;
 
   height = Math.min(height, MAX_IMG_HEIGHT);
 
   $: valid = isValidNumber(width) && isValidNumber(height);
-  $: alt = location ? `map of ${location.title}` : "";
-
+  $: ariaLabel = useButton && location ? "Change location" : undefined;
+  $: altText = location ? `Locator map for ${location.title}` : "";
   $: if (valid && width && location && location.geometry) {
     handleLocation(location);
   }
+  $: if (image && src) image.src = src;
+  $: if (location) state = "pending";
 
-  $: if (src) image.src = src;
-
-  function isValidNumber(value) {
-    return typeof value === "number" && !isNaN(value);
+  function handleException() {
+    const exception = `StaticMap failed to render for ${
+      location && location.title
+    }. Fid: ${location && location.id}`;
+    state = "error";
+    logException(exception);
+    console.warn(exception);
   }
+
+  onMount(() => {
+    MapWrapper = useButton ? Button : Tile;
+    image = new Image();
+    image.onload = () => {
+      state = "loaded";
+    };
+    image.onerror = handleException;
+  });
 
   function createSrcUrl({ overlay, bounds, params }) {
     src = `https://api.mapbox.com/styles/v1/${style}/static/geojson(${overlay})/${bounds}/${width}x${height}?${serialize(
@@ -61,6 +62,7 @@
     )}`;
   }
 
+  // FIXME: this creates invalid geometries for some boundaries, e.g. Tehama County
   function createOverlay(geojson, tolerance = 0.005) {
     const overlay = encodeURIComponent(JSON.stringify(geojson));
     if (overlay.length < 7500) {
@@ -103,20 +105,28 @@
     };
     const bounds = "auto";
     const params = { access_token: accessToken, padding };
-    // The Mapbox Static Images API only accepts requests that are 8,192 or fewer characters long.
-    // Reduce coordinate precision
-    const truncatedGeojson = truncate(geojson, { precision: 4 });
-    // Simplify geometry
+    // The Mapbox Static Images API only accepts requests that are 8,192 or
+    // fewer characters long. So we...
+    // 1. reduce coordinate precision
+    const truncatedGeojson = truncate(geojson, {
+      precision: 4,
+      coordinates: 2,
+    });
+    // 2. simplify the geometry
     const overlay = createOverlay(truncatedGeojson);
     createSrcUrl({ overlay, bounds, params });
   }
 
   const handleLocation = debounce(
-    function (feature) {
-      if (feature.geometry.type === "Point") {
-        getPointImgSrc(location);
-      } else {
-        getPolygonImgSrc(location);
+    (feature) => {
+      try {
+        if (feature.geometry.type === "Point") {
+          getPointImgSrc(location);
+        } else {
+          getPolygonImgSrc(location);
+        }
+      } catch {
+        handleException();
       }
     },
     200,
@@ -124,21 +134,27 @@
   );
 </script>
 
-<style>
-  button {
+<style lang="scss">
+  div > :global(.bx--btn.bx--btn--primary) {
     all: unset;
     cursor: pointer;
     min-height: 250px;
     height: auto;
     width: 100%;
+
+    &:hover {
+      box-shadow: var(--box-shadow);
+    }
+
+    &:focus {
+      outline: 2px solid var(--gray-100);
+    }
   }
 
-  button:hover {
-    box-shadow: var(--box-shadow);
-  }
-
-  button:focus {
-    outline: 2px solid var(--gray-100);
+  div > :global(.bx--tile) {
+    width: 100%;
+    height: 100%;
+    padding: 0;
   }
 
   img {
@@ -151,24 +167,26 @@
   }
 </style>
 
-<div bind:clientWidth="{width}">
-  <button on:click>
-    {#if loading}
-      <div class="loading-msg">
-        <InlineLoading description="Loading location map..." />
-      </div>
-    {:else if loaded}
+<div bind:clientWidth="{width}" aria-live="polite">
+  <svelte:component this="{MapWrapper}" on:click aria-label="{ariaLabel}">
+    {#if state === "loaded"}
       <img
         {...$$restProps}
         style="{$$restProps.style}"
         width="{width}"
         height="{height}"
         src="{src}"
-        alt="{alt}"
+        alt="{altText}"
         transition:fade
       />
-    {:else if error}
-      <div class="error-text">An error occurred. Unable to load map.</div>
+    {:else if state === "error"}
+      <div class="error-text">
+        An error occurred. Unable to show locator map.
+      </div>
+    {:else}
+      <div class="loading-msg">
+        <InlineLoading description="Loading location map..." />
+      </div>
     {/if}
-  </button>
+  </svelte:component>
 </div>
