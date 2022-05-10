@@ -309,7 +309,9 @@ export const getInitialConfig = (
  * @param {float} lat - feature's centroid latitude coordinate
  * @param {string} boundary - boundary type, e.g. "locagrid", "counties", etc.
  * @param {number} featureId - unique id of location feature
- * @return {object} - GeoJSON feature or feature collection on success
+ * @return {object} results
+ * @return {object} results.location - formatted location data
+ * @return {string} results.boundaryType - the boundary type (e.g. "locagrid")
  */
 export async function setInitialLocation(lng, lat, boundaryType, featureId) {
   let location = DEFAULT_LOCATION;
@@ -341,10 +343,16 @@ export async function setInitialLocation(lng, lat, boundaryType, featureId) {
       handleException();
     }
   } else {
-    return location;
+    return { location, boundaryType: "locagrid" };
   }
 
-  return location;
+  if (location === DEFAULT_LOCATION) {
+    // Override the boundaryType to make sure it's not something other than "locagrid"
+    // in the case that a feature look up failed above.
+    boundaryType = "locagrid";
+  }
+
+  return { location, boundaryType };
 }
 
 /**
