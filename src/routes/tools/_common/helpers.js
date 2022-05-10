@@ -307,11 +307,11 @@ export const getInitialConfig = (
  * Typically used to create an object with initial location for a Cal-Adapt tool.
  * @param {float} lng - feature's centroid longitude coordinate
  * @param {float} lat - feature's centroid latitude coordinate
- * @param {string} boundary - boundary type, e.g. "locagrid", "counties", etc.
+ * @param {string} boundaryType - Cal-Adapt API boundary type, e.g. "locagrid", "counties", etc.
  * @param {number} featureId - unique id of location feature
  * @return {object} results
  * @return {object} results.location - formatted location data
- * @return {string} results.boundaryType - the boundary type (e.g. "locagrid")
+ * @return {string} results.boundaryType - Cal-Adapt API boundary type
  */
 export async function setInitialLocation(lng, lat, boundaryType, featureId) {
   let location = DEFAULT_LOCATION;
