@@ -101,6 +101,7 @@
     returnPeriodStore,
     dataStore,
     aggregateFnStore,
+    indicatorStore,
   } from "./_store";
   import {
     getObserved,
@@ -123,8 +124,6 @@
   // Derived stores
   const { page } = sapperStores();
   const { location, boundary } = locationStore;
-  const { scenario } = scenarioStore;
-  const { intensity, events } = dataStore;
 
   // Local props
   let appReady = false;
@@ -273,25 +272,41 @@
     const {
       lat,
       lng,
+      fid,
       boundary,
       scenario,
       models,
       imperial,
       duration,
       threshType,
+      /* BUG: when these values are loaded on initApp in index.svelte, the
+          data fetching breaks.
+      */
+      // aggregation,
+      // indicator,
     } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
+    /* BUG: when these values are loaded on initApp in index.svelte, the
+        data fetching breaks.
+    */
     // Set intial values for stores
+    // aggregateFnStore.set(aggregation);
+    // indicatorStore.set(indicator);
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
     durationStore.set(+duration);
     thresholdTypeStore.set(threshType);
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     const { params } = getQueryParams({
-      location: loc,
-      boundary: { id: boundary },
+      location,
+      boundary: { id: boundaryType },
       imperial: true,
       stat: $aggregateFnStore,
     });

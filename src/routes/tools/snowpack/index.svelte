@@ -177,6 +177,7 @@
       lat,
       lng,
       boundary,
+      fid,
       scenario,
       climvar,
       models,
@@ -195,9 +196,14 @@
     yearStore.set(year);
     modelSingleStore.set(modelSingle);
     durationStore.set(+duration);
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     return;
   }
 

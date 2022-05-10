@@ -14,6 +14,7 @@
     DEFAULT_STAT_PERIODS,
   } from "../_common/constants";
   import {
+    serialize,
     flattenData,
     groupDataByYear,
     formatDataForExport,
@@ -57,7 +58,8 @@
   let ShareLink;
   let LearnMoreModal;
 
-  let bookmark;
+  let bookmark = "";
+  let shareLinkWarning = "";
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
@@ -95,13 +97,16 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      bookmark = "Cannot create a bookmark for an uploaded boundary";
-    } else {
-      const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
-    }
+    // TODO: after the custom boundary upload feature is implemented / fixed,
+    // set ShareLink's `errorMsg` prop when $boundary.id === "custom" as
+    // custom boundaries don't get encoded in the URL query params.
+    bookmark = serialize({
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
+      boundary: $boundary.id,
+      fid: $location.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -120,6 +125,7 @@
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
+      ["feature id", $location.id],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate indicator", $climvar.label],
@@ -142,28 +148,30 @@
 
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
-    console.log("scenario change");
   }
 
   function changeModels(e) {
     modelsStore.set(e.detail.selectedIds);
-    console.log("models change");
   }
 
   function changeClimvar(e) {
     climvarStore.set(e.detail.id);
-    console.log("climvar change");
   }
 
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
+      // FIXME: this prevents the ShareLink from preventing a shareable URL
+      // because the boundary id will never be "custom" when a user clicks the
+      // share button.
+      // NOTE: custom boundary upload was removed in #236 so currenty this code
+      // does nothing. When re-implementing the custom boundary upload, this
+      // should be fixed.
       locationStore.updateBoundary("locagrid");
       locationStore.updateLocation(e.detail.location, true);
     } else {
       locationStore.updateBoundary(e.detail.boundaryId);
       locationStore.updateLocation(e.detail.location);
     }
-    console.log("location change");
   }
 </script>
 
@@ -341,6 +349,7 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
+  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component

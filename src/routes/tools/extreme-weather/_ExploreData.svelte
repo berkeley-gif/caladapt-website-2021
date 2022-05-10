@@ -16,7 +16,6 @@
   import {
     climvarStore,
     locationStore,
-    extremesStore,
     thresholdStore,
     doyStore,
     baseline,

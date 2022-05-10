@@ -76,7 +76,8 @@
   let ShareLink;
   let LearnMoreModal;
 
-  let bookmark;
+  let bookmark = "";
+  let shareLinkWarning = "";
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
@@ -104,9 +105,7 @@
   $: formatFn = format(`.${$indicator.decimals}f`);
 
   $: indicatorTitle = $indicator.title.replace("Degree Days ", "");
-  $: frequencyLabel = frequencyList.find((d) => d.id === $frequencyStore).label;
-  $: frequencyLabel =
-    $frequencyStore === "A" ? frequencyLabel.replace("ly", "") : frequencyLabel;
+  $: frequencyLabel = setFrequencyLabel($frequencyStore);
   $: monthsLabel =
     $frequencyStore === "M" && $selectedMonthsStore ? getMonthsLabel() : "";
 
@@ -122,6 +121,11 @@
       chartTitle = $location.title;
     }
   });
+
+  function setFrequencyLabel(fstoreValue) {
+    let value = frequencyList.find((d) => d.id === fstoreValue).label;
+    return fstoreValue === "AS" ? value.replace("ly", "") : value;
+  }
 
   async function loadLearnMore({
     slugs = [],
@@ -139,20 +143,17 @@
 
   async function loadShare() {
     if ($boundary.id === "custom") {
-      bookmark = "Cannot create a bookmark for an uploaded boundary";
+      shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
-      const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
       bookmark = serialize({
         climvar: $climvarStore,
         frequency: $frequencyStore,
         indicator: $indicatorsStore,
         scenario: $scenarioStore,
         threshold: $thresholdStore,
-        models: modelsStr,
+        models: $modelsStore.join(","),
         months: $selectedMonthsStore,
-        lng,
-        lat,
+        fid: $location.id,
         boundary: $boundary.id,
       });
     }
@@ -215,6 +216,12 @@
 
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
+      // FIXME: this prevents the ShareLink from preventing a shareable URL
+      // because the boundary id will never be "custom" when a user clicks the
+      // share button.
+      // NOTE: custom boundary upload was removed in #236 so currenty this code
+      // does nothing. When re-implementing the custom boundary upload, this
+      // should be fixed.
       locationStore.updateBoundary("locagrid");
       locationStore.updateLocation(e.detail.location, true);
     } else {
@@ -455,6 +462,7 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
+  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component

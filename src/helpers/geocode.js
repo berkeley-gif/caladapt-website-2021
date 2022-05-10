@@ -70,19 +70,6 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
   return response;
 };
 
-export const getFeatureById = async (id, layerId) => {
-  const url = `${apiEndpoint}/${layerId}/${id}`;
-  const [response, error] = await handleXHR(
-    fetchData(url, {
-      v: 1, // cache bust 2022-05-09
-    })
-  );
-  if (error) {
-    throw new Error(error.message);
-  }
-  return response;
-};
-
 export const getTitle = (feature, layerId, placeName) => {
   switch (layerId) {
     case "locagrid":
@@ -150,6 +137,31 @@ export const getFeature = async (feature, boundaryId) => {
         feature.place_name
       );
     }
+  }
+  return location;
+};
+
+/**
+ * Queries a boundary feature from the Cal-Adapt API using its unique feature id
+ * @param {string} boundaryType - locagrid, counties, censustracts, etc.
+ * @param {number} featureId - numeric value of feature id
+ * @param {object} params - additional parameters
+ * @param {number} params.srs - desired reference system to return coordinates in
+ * @returns {object} formatted location data on success, Error on failure.
+ */
+export const getFeatureById = async (
+  boundaryType,
+  featureId,
+  params = { srs: 4326, v: 1 }
+) => {
+  let location = null;
+  const url = `${apiEndpoint}/${boundaryType}/${featureId}/`;
+  const [response, error] = await handleXHR(fetchData(url, params));
+  if (error) {
+    throw new Error(error.message);
+  }
+  if (response) {
+    location = formatFeature(response, boundaryType);
   }
   return location;
 };

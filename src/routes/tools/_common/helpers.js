@@ -6,22 +6,17 @@ import {
   MONTHS_LIST,
   PRIORITY_10_MODELS,
   DEFAULT_LOCATION,
-  DEFAULT_LOCAGRIDCELL_TITLE,
+  DEFAULT_BOUNDARIES,
 } from "./constants";
-import { isLeapYear } from "~/helpers/utilities";
-import { getFeature, reverseGeocode, getTitle } from "~/helpers/geocode";
+import { isLeapYear, isValidNumber, serialize } from "~/helpers/utilities";
+import { getFeature, getFeatureById } from "~/helpers/geocode";
+import { logException } from "~/helpers/logging";
 
-/**
- * Creates a string of URL query params for a share / bookmark link
- * Typically this is passed to the ShareLink component's "state" prop.
- * @param {object} values
- * @returns {string}
- */
-export function makeBookmark(values = {}) {
-  return Object.entries(values)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
-}
+export { serialize };
+
+export const PERMITTED_BOUNDARY_TYPES = new Set(
+  DEFAULT_BOUNDARIES.map((d) => d.id)
+);
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with
@@ -308,23 +303,56 @@ export const getInitialConfig = (
 };
 
 /**
- * Create initial location
- * @param {float} lng
- * @param {float} lat
- * @param {string} boundary - boundary id
- * @return {object}
+ * setInitialLocation: Queries the Cal-Adapt API for boundary type feature(s).
+ * Typically used to create an object with initial location for a Cal-Adapt tool.
+ * @param {float} lng - feature's centroid longitude coordinate
+ * @param {float} lat - feature's centroid latitude coordinate
+ * @param {string} boundaryType - Cal-Adapt API boundary type, e.g. "locagrid", "counties", etc.
+ * @param {number} featureId - unique id of location feature
+ * @return {object} results
+ * @return {object} results.location - formatted location data
+ * @return {string} results.boundaryType - Cal-Adapt API boundary type
  */
-// Helper function to create an object with initial location for a Cal-Adapt tool
-export async function setInitialLocation(lng, lat, boundary) {
-  let loc = DEFAULT_LOCATION;
+export async function setInitialLocation(lng, lat, boundaryType, featureId) {
+  let location = DEFAULT_LOCATION;
 
-  try {
-    loc = await getFeature({ center: [lng, lat] }, boundary);
-  } catch (error) {
-    console.warn(error);
+  function handleException() {
+    console.warn("setInitialLocation exception");
+    logException(`setInitialLocation error: lng:${lng}, lat:${lat},
+      boundary:${boundaryType}, featureId:${featureId}`);
   }
 
-  return loc;
+  if (isValidNumber(featureId) && PERMITTED_BOUNDARY_TYPES.has(boundaryType)) {
+    try {
+      location = await getFeatureById(boundaryType, featureId);
+    } catch {
+      handleException();
+    }
+  } else if (
+    isValidNumber(lng) &&
+    isValidNumber(lat) &&
+    PERMITTED_BOUNDARY_TYPES.has(boundaryType)
+  ) {
+    // NOTE: prior to PR #235 feature data was retrieved this way, but it is
+    // error prone. For more info, see: https://trello.com/c/8JmopK9Q
+    // This code still exists in case a legacy bookmarked URL only
+    // contains the lng,lat center coords and not the featureId.
+    try {
+      location = await getFeature({ center: [lng, lat] }, boundaryType);
+    } catch {
+      handleException();
+    }
+  } else {
+    return { location, boundaryType: "locagrid" };
+  }
+
+  if (location === DEFAULT_LOCATION) {
+    // Override the boundaryType to make sure it's not something other than "locagrid"
+    // in the case that a feature look up failed above.
+    boundaryType = "locagrid";
+  }
+
+  return { location, boundaryType };
 }
 
 /**

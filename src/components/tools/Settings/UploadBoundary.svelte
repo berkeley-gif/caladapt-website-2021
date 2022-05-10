@@ -11,7 +11,7 @@
   } from "./../../../helpers/utilities";
   import { formatFeature } from "./../../../helpers/geocode";
 
-  let fileUploader;
+  const dispatch = createEventDispatcher();
   const fileUploadProps = {
     labelTitle: "",
     labelDescription:
@@ -23,6 +23,8 @@
     errorSubject: "",
     errorBody: "",
   };
+
+  let fileUploader;
 
   $: if (fileUploader) {
     fileUploader.clearFiles();
@@ -36,8 +38,6 @@
     fileUploadProps.invalid = false;
     dispatch("clear");
   }
-
-  const dispatch = createEventDispatcher();
 
   async function processUpload(file) {
     console.log("....uploadng");

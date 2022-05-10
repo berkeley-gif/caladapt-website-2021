@@ -179,6 +179,7 @@
     const {
       lat,
       lng,
+      fid,
       boundary,
       indicator,
       scenario,
@@ -198,9 +199,14 @@
     thresholdStore.set(threshold);
     frequencyStore.set(frequency);
     selectedMonthsStore.set(months);
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     return;
   }
 
