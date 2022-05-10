@@ -296,12 +296,17 @@
     unitsStore.set({ imperial });
     durationStore.set(+duration);
     thresholdTypeStore.set(threshType);
-    const loc = await setInitialLocation(+lng, +lat, boundary, +fid);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     const { params } = getQueryParams({
-      location: loc,
-      boundary: { id: boundary },
+      location,
+      boundary: { id: boundaryType },
       imperial: true,
       stat: $aggregateFnStore,
     });
