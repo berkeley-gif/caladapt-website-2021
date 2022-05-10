@@ -7,15 +7,10 @@ import {
   PRIORITY_10_MODELS,
   DEFAULT_LOCATION,
   DEFAULT_BOUNDARIES,
-  DEFAULT_LOCAGRIDCELL_TITLE,
 } from "./constants";
 import { isLeapYear, isValidNumber, serialize } from "~/helpers/utilities";
-import {
-  getFeature,
-  reverseGeocode,
-  getTitle,
-  getFeatureById,
-} from "~/helpers/geocode";
+import { getFeature, getFeatureById } from "~/helpers/geocode";
+import { logException } from "~/helpers/logging";
 
 export { serialize };
 
@@ -316,28 +311,34 @@ export const getInitialConfig = (
  * @param {number} featureId - unique id of location feature
  * @return {object} - GeoJSON feature or feature collection on success
  */
-export async function setInitialLocation(lng, lat, boundary, featureId) {
+export async function setInitialLocation(lng, lat, boundaryType, featureId) {
   let location = DEFAULT_LOCATION;
 
-  if (isValidNumber(featureId) && PERMITTED_BOUNDARY_TYPES.has(boundary)) {
+  function handleException() {
+    console.warn("setInitialLocation exception");
+    logException(`setInitialLocation error: lng:${lng}, lat:${lat},
+      boundary:${boundaryType}, featureId:${featureId}`);
+  }
+
+  if (isValidNumber(featureId) && PERMITTED_BOUNDARY_TYPES.has(boundaryType)) {
     try {
-      location = await getFeatureById(boundary, featureId);
-    } catch (error) {
-      console.warn(error);
+      location = await getFeatureById(boundaryType, featureId);
+    } catch {
+      handleException();
     }
   } else if (
     isValidNumber(lng) &&
     isValidNumber(lat) &&
-    PERMITTED_BOUNDARY_TYPES.has(boundary)
+    PERMITTED_BOUNDARY_TYPES.has(boundaryType)
   ) {
     // NOTE: prior to PR #235 feature data was retrieved this way, but it is
     // error prone. For more info, see: https://trello.com/c/8JmopK9Q
     // This code still exists in case a legacy bookmarked URL only
     // contains the lng,lat center coords and not the featureId.
     try {
-      location = await getFeature({ center: [lng, lat] }, boundary);
-    } catch (error) {
-      console.warn(error);
+      location = await getFeature({ center: [lng, lat] }, boundaryType);
+    } catch {
+      handleException();
     }
   } else {
     return location;
