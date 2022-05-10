@@ -166,9 +166,14 @@
     scenarioStore.set(scenario);
     unitsStore.set({ imperial });
     periodStore.set(period);
-    const loc = await setInitialLocation(+lng, +lat, boundary, +fid);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     return;
   }
 
