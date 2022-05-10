@@ -147,7 +147,7 @@ export const getFeature = async (feature, boundaryId) => {
  * @param {number} featureId - numeric value of feature id
  * @param {object} params - additional parameters
  * @param {number} params.srs - desired reference system to return coordinates in
- * @returns {object} GeoJSON feature on success, Error on failure.
+ * @returns {object} formatted location data on success, Error on failure.
  */
 export const getFeatureById = async (
   boundaryType,
