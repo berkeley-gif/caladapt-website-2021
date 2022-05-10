@@ -205,7 +205,7 @@
     locationStore.updateBoundary(boundaryType);
     const thresh98p = await getDefaultThreshold({
       location,
-      boundary: { id: boundary },
+      boundary: { id: boundaryType },
       climvar: { id: climvar },
     });
     thresholdListStore.add(thresh98p, "98th Percentile");
