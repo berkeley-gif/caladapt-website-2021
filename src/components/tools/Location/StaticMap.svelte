@@ -21,7 +21,7 @@
   const { accessToken } = mapboxgl;
   const MAX_IMG_HEIGHT = 250;
 
-  let imageWrapper;
+  let MapWrapper;
   let image;
   let state = "pending";
   let width;
@@ -35,23 +35,25 @@
   $: if (valid && width && location && location.geometry) {
     handleLocation(location);
   }
-  $: if (src) image.src = src;
+  $: if (image && src) image.src = src;
   $: if (location) state = "pending";
 
+  function handleException() {
+    const exception = `StaticMap failed to render for ${
+      location && location.title
+    }. Fid: ${location && location.id}`;
+    state = "error";
+    logException(exception);
+    console.warn(exception);
+  }
+
   onMount(() => {
-    imageWrapper = useButton ? Button : Tile;
+    MapWrapper = useButton ? Button : Tile;
     image = new Image();
     image.onload = () => {
       state = "loaded";
     };
-    image.onerror = () => {
-      state = "error";
-      logException(
-        `StaticMap image failed for ${location && location.title} at ${
-          location && location.center && location.center.join(",")
-        }`
-      );
-    };
+    image.onerror = handleException;
   });
 
   function createSrcUrl({ overlay, bounds, params }) {
@@ -123,9 +125,8 @@
         } else {
           getPolygonImgSrc(location);
         }
-      } catch (error) {
-        console.warn(error);
-        state = "error";
+      } catch {
+        handleException();
       }
     },
     200,
@@ -167,7 +168,7 @@
 </style>
 
 <div bind:clientWidth="{width}" aria-live="polite">
-  <svelte:component this="{imageWrapper}" on:click aria-label="{ariaLabel}">
+  <svelte:component this="{MapWrapper}" on:click aria-label="{ariaLabel}">
     {#if state === "loaded"}
       <img
         {...$$restProps}
