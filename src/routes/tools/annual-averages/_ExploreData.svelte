@@ -20,6 +20,7 @@
     groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
+  import { throttle } from "~/helpers/utilities";
 
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
@@ -75,6 +76,18 @@
   let printSkipElements;
 
   let chartTitle = "";
+
+  // TODO: isolate this code in its own component?
+  // maybe use a resize observer instead of bind:clientWidth?
+  let _staticMapWidth = 0;
+  let staticMapWidth = 0;
+  let staticMapHeight = 0;
+  const setStaticMapWidth = throttle((value) => {
+    staticMapWidth = value;
+  }, 350);
+
+  $: _staticMapWidth, setStaticMapWidth(_staticMapWidth);
+  $: _staticMapWidth, (staticMapHeight = Math.round((_staticMapWidth * 3) / 4));
 
   afterUpdate(() => {
     if ($location && $location.title) {
@@ -286,11 +299,16 @@
   <div slot="settings" class="settings">
     <div class="block">
       <span class="bx--label">Select Location</span>
-      <StaticMap
-        location="{$location}"
-        height="{250}"
-        on:click="{loadLocation}"
-      />
+      <div bind:clientWidth="{_staticMapWidth}">
+        <StaticMap
+          on:click="{loadLocation}"
+          location="{$location}"
+          height="{staticMapHeight}"
+          width="{staticMapWidth}"
+          --border-color="var(--gray-60)"
+          --stroke="var(--gray-80)"
+        />
+      </div>
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({
