@@ -72,6 +72,8 @@
     "carbon-components": "^10.30.0",
     "carbon-components-svelte": "^0.42.2",
     "cross-env": "^7.0.3",
+    "d3-geo": "^2.0.2",
+    "d3-tile": "^1.0.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-jest": "^26.1.0",
