@@ -3,6 +3,7 @@
   import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
+  import StaticMap from "@berkeley-gif/cal-adapt-svelte-components/StaticMap/StaticMap.svelte";
 
   // Helpers
   import {
@@ -27,7 +28,6 @@
     SelectModels,
     SelectClimvar,
   } from "~/components/tools/Settings";
-  import { StaticMap } from "~/components/tools/Location";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { AvgRange } from "~/components/tools/Stats";
 
