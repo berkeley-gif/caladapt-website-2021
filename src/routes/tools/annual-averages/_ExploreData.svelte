@@ -3,7 +3,7 @@
   import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
-  import StaticMap from "@berkeley-gif/cal-adapt-svelte-components/StaticMap/StaticMap.svelte";
+  import { LocationMap } from "~/components/tools/Location/";
 
   // Helpers
   import {
@@ -20,7 +20,6 @@
     groupDataByYear,
     formatDataForExport,
   } from "../_common/helpers";
-  import { throttle } from "~/helpers/utilities";
 
   // Components
   import { Dashboard, LearnMoreButton } from "~/components/tools/Partials";
@@ -76,18 +75,6 @@
   let printSkipElements;
 
   let chartTitle = "";
-
-  // TODO: isolate this code in its own component?
-  // maybe use a resize observer instead of bind:clientWidth?
-  let _staticMapWidth = 0;
-  let staticMapWidth = 0;
-  let staticMapHeight = 0;
-  const setStaticMapWidth = throttle((value) => {
-    staticMapWidth = value;
-  }, 350);
-
-  $: _staticMapWidth, setStaticMapWidth(_staticMapWidth);
-  $: _staticMapWidth, (staticMapHeight = Math.round((_staticMapWidth * 3) / 4));
 
   afterUpdate(() => {
     if ($location && $location.title) {
@@ -299,16 +286,7 @@
   <div slot="settings" class="settings">
     <div class="block">
       <span class="bx--label">Select Location</span>
-      <div bind:clientWidth="{_staticMapWidth}">
-        <StaticMap
-          on:click="{loadLocation}"
-          location="{$location}"
-          height="{staticMapHeight}"
-          width="{staticMapWidth}"
-          --border-color="var(--gray-60)"
-          --stroke="var(--gray-80)"
-        />
-      </div>
+      <LocationMap on:click="{loadLocation}" location="{$location}" />
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({
