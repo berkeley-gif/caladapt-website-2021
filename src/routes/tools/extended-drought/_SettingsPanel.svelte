@@ -10,7 +10,7 @@
     RadioBtnGroup,
   } from "~/components/tools/Settings";
   import { LearnMoreButton } from "~/components/tools/Partials";
-  import { StaticMap } from "~/components/tools/Location";
+  import { LocationMap } from "~/components/tools/Location";
 
   import { locationStore } from "../_common/stores";
   import {
@@ -48,11 +48,7 @@
 <!-- Chart Settings -->
 <div class="block">
   <span class="bx--label">Select Location</span>
-  <StaticMap
-    location="{$location}"
-    height="{250}"
-    on:click="{() => showChangeLocation()}"
-  />
+  <LocationMap location="{$location}" on:click="{() => showChangeLocation()}" />
   <div class="center-row">
     <LearnMoreButton
       on:click="{() =>
