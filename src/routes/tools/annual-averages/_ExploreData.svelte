@@ -3,7 +3,6 @@
   import { Button, Loading } from "carbon-components-svelte";
   import { format } from "d3-format";
   import { Download16, Share16, Location16 } from "carbon-icons-svelte";
-  import { LocationMap } from "~/components/tools/Location/";
 
   // Helpers
   import {
@@ -28,6 +27,7 @@
     SelectModels,
     SelectClimvar,
   } from "~/components/tools/Settings";
+  import { LocationMap } from "~/components/tools/Location/";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { AvgRange } from "~/components/tools/Stats";
 
