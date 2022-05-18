@@ -4,10 +4,12 @@
 
   export let location;
 
+  const throttleMs = 350;
+
   // this prevents too many tile requests from being made when the viewport is resized
   const setWidthActual = throttle((value) => {
     width = value;
-  }, 350);
+  }, throttleMs);
 
   let _width = 0;
   let width = 0;
