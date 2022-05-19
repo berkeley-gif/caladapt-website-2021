@@ -16,10 +16,11 @@ import {
 export const isValidNumber = (value) =>
   typeof value === "number" && !isNaN(value);
 
-export const isValidLocationParams = (lng, lat, boundaryType) => {
+export const isValidLocationParams = (lng, lat, boundaryType, featureId) => {
   return (
     isValidNumber(lat) &&
     isValidNumber(lng) &&
+    isValidNumber(featureId) &&
     VALID_BOUNDARY_TYPES.has(boundaryType)
   );
 };
@@ -28,23 +29,29 @@ export const getLocationFromQuery = async ({
   lng,
   lat,
   boundaryType,
+  featureId,
   fallbackLocation = DEFAULT_LOCATION,
 }) => {
-  let loc = fallbackLocation;
-  if (isValidLocationParams(lng, lat, boundaryType)) {
-    loc =
-      (await setInitialLocation(lng, lat, boundaryType)) || fallbackLocation;
-    boundaryType = loc === fallbackLocation ? "locagrid" : boundaryType;
+  let location = fallbackLocation;
+  if (isValidLocationParams(lng, lat, boundaryType, featureId)) {
+    const initialLocation = await setInitialLocation(
+      lng,
+      lat,
+      boundaryType,
+      featureId
+    );
+    location = initialLocation.location;
+    boundaryType = initialLocation.boundaryType;
   }
   // If the boundaryType is "locagrid", make selectedLocation.geometry a point
   // so that a marker renders on the map instead of a polygon.
-  if (loc && boundaryType === "locagrid") {
-    loc.geometry = {
+  if (location && boundaryType === "locagrid") {
+    location.geometry = {
       type: "Point",
-      coordinates: loc.center.slice(),
+      coordinates: location.center.slice(),
     };
   }
-  return loc;
+  return { location, boundaryType };
 };
 
 // Regular Expression that matches the entirety of a series slug for the LCCS tool.
