@@ -35,7 +35,7 @@
     SelectModels,
     SelectThresholdNumeric,
   } from "~/components/tools/Settings";
-  import { StaticMap } from "~/components/tools/Location";
+  import { LocationMap } from "~/components/tools/Location/";
   import { LineAreaChart } from "~/components/tools/Charts";
   import { AvgRange } from "~/components/tools/Stats";
 
@@ -364,11 +364,7 @@
   <div slot="settings" class="settings">
     <div class="block">
       <span class="bx--label">Select Location</span>
-      <StaticMap
-        location="{$location}"
-        height="{250}"
-        on:click="{loadLocation}"
-      />
+      <LocationMap location="{$location}" on:click="{loadLocation}" />
       <LearnMoreButton
         on:click="{() =>
           loadLearnMore({

@@ -9,6 +9,7 @@ const defaultOptions = {
   token: mapboxgl.accessToken,
 };
 
+// BUG: do not use this for creating static location maps, it is error prone.
 export default function getStaticMapUrl(location, options) {
   let geometry = location.geometry;
   // Simplify geometry to shorten API request
