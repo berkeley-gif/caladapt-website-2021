@@ -71,7 +71,8 @@
   // reference to time slider component
   let timeSlider;
 
-  let bookmark;
+  let bookmark = "";
+  let shareLinkWarning = "";
 
   let learnMoreProps = {};
 
@@ -139,21 +140,18 @@
 
   async function loadShare() {
     if ($boundary.id === "custom") {
-      bookmark = "Cannot create a bookmark for an uploaded boundary";
+      shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
-      const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
       bookmark = serialize({
         climvar: $climvarStore,
         scenario: $scenarioStore,
-        models: modelsStr,
+        models: $modelsStore.join(","),
         modelSingle: $modelSingleStore,
         year: $yearStore,
         month: $monthStore,
         simulation: $simulationStore,
-        lng,
-        lat,
         boundary: $boundary.id,
+        fid: $location.id,
       });
     }
     showShare = true;
@@ -174,6 +172,7 @@
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
+      ["feature id", $location.id],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate variable", $climvar.label],
@@ -332,6 +331,7 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
+  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component
@@ -341,7 +341,6 @@
   boundary="{$boundary}"
   boundaryList="{DEFAULT_BOUNDARIES}"
   addStateBoundary="{true}"
-  enableUpload="{true}"
   on:change="{changeLocation}"
 />
 

@@ -91,20 +91,20 @@
         style="padding-left:0;padding-right:0;"
       >
         <Button
+          on:click="{() => (open = !open)}"
           kind="secondary"
           icon="{open ? Close32 : Menu32}"
           iconDescription="{open ? 'Close menu' : 'Open menu'}"
           tooltipPosition="left"
-          on:click="{() => (open = !open)}"
           class="menu-toggle"
           style="background-color: var(--gray-90); float:right;"
         />
 
         {#if open}
           <NavItems
+            on:click="{handleNavItemClick}"
             navItems="{navItems}"
             segment="{segment}"
-            handleClick="{handleNavItemClick}"
           />
         {/if}
       </div>

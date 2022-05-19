@@ -8,8 +8,8 @@ import scenarios from "~/helpers/climate-scenarios";
 import boundaries from "~/helpers/mapbox-layers";
 
 export const DEFAULT_LOCATION = {
-  id: "37907",
-  title: "240 32nd Street, Sacramento, California 95816",
+  id: 37907,
+  title: "LOCA Grid Cell -121.46875, 38.59375",
   geometry: {
     type: "Polygon",
     coordinates: [

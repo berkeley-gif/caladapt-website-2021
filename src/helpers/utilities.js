@@ -41,12 +41,13 @@ export function deserialize(paramsStr) {
  * @param {object} params
  * @return {string}
  */
-export function serialize(params) {
-  const parts = [];
-  Object.keys(params).forEach((key) => {
-    parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
-  });
-  return `${parts.join("&")}`;
+export function serialize(params = {}) {
+  return Object.entries(params)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join("&");
 }
 
 /**

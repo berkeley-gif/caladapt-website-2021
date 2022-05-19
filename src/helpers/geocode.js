@@ -68,6 +68,7 @@ export const searchBoundaryLayer = async (searchStr, boundaryId) => {
   const searchParams = {
     srs: 4326,
     search: searchStr,
+    v: 1, // cache bust 2022-05-09
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
   if (error) {
@@ -83,17 +84,9 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
     precision: 4,
     //intersects: `{"type":"Point","coordinates":[${coords[0]},${coords[1]}]}`,
     intersects: `Point(${coords[0]} ${coords[1]})`,
+    v: 1, // cache bust 2022-05-09
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
-  if (error) {
-    throw new Error(error.message);
-  }
-  return response;
-};
-
-export const getFeatureById = async (id, layerId) => {
-  const url = `${apiEndpoint}/${layerId}/${id}`;
-  const [response, error] = await handleXHR(fetchData(url, {}));
   if (error) {
     throw new Error(error.message);
   }
@@ -103,7 +96,9 @@ export const getFeatureById = async (id, layerId) => {
 export const getTitle = (feature, layerId, placeName) => {
   switch (layerId) {
     case "locagrid":
-      return placeName.replace(", United States", "");
+      return feature.properties && feature.properties.name
+        ? `LOCA Grid Cell ${feature.properties.name}`
+        : "LOCA Grid Cell";
     case "counties":
       return `${feature.properties.name} County, ${feature.properties.state_name}`;
     case "censustracts":
@@ -169,6 +164,31 @@ export const getFeature = async (feature, boundaryId) => {
   return location;
 };
 
+/**
+ * Queries a boundary feature from the Cal-Adapt API using its unique feature id
+ * @param {string} boundaryType - locagrid, counties, censustracts, etc.
+ * @param {number} featureId - numeric value of feature id
+ * @param {object} params - additional parameters
+ * @param {number} params.srs - desired reference system to return coordinates in
+ * @returns {object} formatted location data on success, Error on failure.
+ */
+export const getFeatureById = async (
+  boundaryType,
+  featureId,
+  params = { srs: 4326, v: 1 }
+) => {
+  let location = null;
+  const url = `${apiEndpoint}/${boundaryType}/${featureId}/`;
+  const [response, error] = await handleXHR(fetchData(url, params));
+  if (error) {
+    throw new Error(error.message);
+  }
+  if (response) {
+    location = formatFeature(response, boundaryType);
+  }
+  return location;
+};
+
 export const searchFeature = async (searchStr, boundaryId) => {
   const results = [];
   if (boundaryId && boundaryId !== "locagrid") {
@@ -222,6 +242,7 @@ export const getNearestFeature = async (lng, lat, layerId) => {
     srs: 4326,
     precision: 4,
     distance_to: `POINT(${lng} ${lat})`,
+    v: 1, // cache bust 2022-05-09
   };
   const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {

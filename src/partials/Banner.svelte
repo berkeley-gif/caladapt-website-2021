@@ -16,7 +16,9 @@
     /\//.test(str) ? `url(${str})` : str;
 </script>
 
-<style>
+<style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .banner {
     min-height: 16rem;
     color: var(--white);
@@ -28,7 +30,7 @@
     padding: var(--spacing-48) 0;
   }
 
-  @media (max-width: 672px) {
+  @include media("<=medium") {
     .banner {
       min-height: 14rem;
       background-image: var(--banner-img-mobile, var(--banner-img), none);

@@ -10,6 +10,7 @@
     groupDataByYear,
     groupDataByDay,
     formatDataForExport,
+    serialize,
   } from "../_common/helpers";
 
   // Components
@@ -53,7 +54,9 @@
   let ShareLink;
   let LearnMoreModal;
 
-  let bookmark;
+  let bookmark = "";
+  let shareLinkWarning = "";
+
   let learnMoreProps = {};
   let metadata;
   let csvData;
@@ -113,11 +116,16 @@
 
   async function loadShare() {
     if ($boundary.id === "custom") {
-      bookmark = "Cannot create a bookmark for an uploaded boundary";
+      shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
-      const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+      // TODO: add threshold value?
+      bookmark = serialize({
+        climvar: $climvarStore,
+        scenario: $scenarioStore,
+        models: $modelsStore.join(","),
+        boundary: $boundary.id,
+        fid: $location.id,
+      });
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
@@ -157,6 +165,7 @@
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
+      ["feature id", $location.id],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate indicator", `${$climvar.label} ${$indicator.label}`],
@@ -245,12 +254,12 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
+  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component
   this="{ChangeLocation}"
   bind:open="{showChangeLocation}"
-  enableUpload="{false}"
   location="{$location}"
   boundary="{$boundary}"
   boundaryList="{SMALL_SCALE_BOUNDARIES}"

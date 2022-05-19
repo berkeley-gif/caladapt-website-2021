@@ -142,16 +142,21 @@
   async function initApp() {
     const { query } = $page;
     // Get initial configuration (from default or from url)
-    const { lat, lng, boundary, scenario, climvar, models, imperial } =
+    const { lat, lng, boundary, fid, scenario, climvar, models, imperial } =
       getInitialConfig(query);
     // Set intial values for stores
     climvarStore.set(climvar);
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     return;
   }
 

@@ -23,12 +23,6 @@ export const DEFAULT_DURATION = 2;
 export const MIN_DURATION_DAYS = 1;
 export const MAX_DURATION_DAYS = 7;
 
-export const DEFAULT_INITIAL_CONFIG = {
-  ...INITIAL_CONFIG,
-  duration: DEFAULT_DURATION,
-  threshType: DEFAULT_THRESHOLD_TYPE,
-};
-
 export const DEFAULT_POLYGON_AGGREGATE_FUNCTION = "mean";
 export const POLYGON_AGGREGATE_FUNCTIONS = [
   {
@@ -40,6 +34,17 @@ export const POLYGON_AGGREGATE_FUNCTIONS = [
     label: "Maximum",
   },
 ];
+
+export const DEFAULT_INITIAL_CONFIG = {
+  ...INITIAL_CONFIG,
+  duration: DEFAULT_DURATION,
+  threshType: DEFAULT_THRESHOLD_TYPE,
+  /* BUG: when these values are loaded on initApp in index.svelte, the
+      data fetching breaks.
+  */
+  // aggregation: DEFAULT_POLYGON_AGGREGATE_FUNCTION,
+  // indicator: DEFAULT_CLIMATE_INDICATOR,
+};
 
 export const CLIMATE_VARIABLES = ["pr"];
 export const CLIMATE_INDICATORS = [

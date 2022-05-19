@@ -1,12 +1,14 @@
 <script>
   export let navItems = [];
   export let segment;
-  export let handleClick = () => {};
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .bx--header__nav {
     float: right;
+    display: block;
 
     &:before {
       background: transparent;
@@ -28,7 +30,7 @@
     border-bottom: 3px solid var(--accent);
   }
 
-  @media (max-width: 66rem) {
+  @include media("<large") {
     .bx--header__nav {
       display: block;
       height: auto;
@@ -59,6 +61,7 @@
     {#each navItems as item, i}
       <li>
         <a
+          on:click
           sapper:prefetch
           href="{item.path}"
           class="bx--header__menu-item"
@@ -66,7 +69,6 @@
           aria-current="{segment === item.label.toLowerCase()
             ? 'page'
             : undefined}"
-          on:click="{handleClick}"
         >
           <span class="bx--text-truncate--end">{item.label}</span>
         </a>

@@ -1,7 +1,7 @@
 <script>
   import { Grid, Row, Column, Button } from "carbon-components-svelte";
   import { Pdf16, Location16 } from "carbon-icons-svelte";
-  import { StaticMap } from "~/components/tools/Location";
+  import { LocationMap } from "~/components/tools/Location";
 
   export let iconPaths = [];
   export let location = null;
@@ -34,11 +34,11 @@
     gap: 2rem;
     margin-top: 2rem;
 
-    @include mobile-tablet {
+    @include mq-mobile-tablet {
       margin-bottom: 2rem;
     }
 
-    @include mobile {
+    @include mq-mobile {
       flex-direction: column;
     }
   }
@@ -77,7 +77,7 @@
     </Column>
     <Column lg="{{ span: 4, offset: 2 }}" md="{8}" sm="{4}">
       {#if pageName === "explore"}
-        <StaticMap height="{250}" location="{location}" useButton="{false}" />
+        <LocationMap location="{location}" useButton="{false}" />
       {/if}
     </Column>
   </Row>

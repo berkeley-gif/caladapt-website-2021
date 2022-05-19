@@ -10,6 +10,7 @@
     groupDataByYear,
     groupDataByDay,
     formatDataForExport,
+    serialize,
   } from "../_common/helpers";
 
   // Components
@@ -31,7 +32,6 @@
     climvarStore,
     indicatorStore,
     thresholdStore,
-    thresholdTypeStore,
     durationStore,
     dataStore,
     returnPeriodStore,
@@ -62,7 +62,9 @@
   let ShareLink;
   let LearnMoreModal;
 
-  let bookmark;
+  let bookmark = "";
+  let shareLinkWarning = "";
+
   let learnMoreProps = {};
   let metadata;
   let csvData;
@@ -144,11 +146,22 @@
 
   async function loadShare() {
     if ($boundary.id === "custom") {
-      bookmark = "Cannot create a bookmark for an uploaded boundary";
+      shareLinkWarning = "Cannot create a share link for a custom boundary";
     } else {
-      const [lng, lat] = $location.center;
-      const modelsStr = $modelsStore.join(",");
-      bookmark = `climvar=${$climvarStore}&scenario=${$scenarioStore}&duration=${$durationStore}&threshId=${$thresholdTypeStore}&models=${modelsStr}&lng=${lng}&lat=${lat}&boundary=${$boundary.id}`;
+      bookmark = serialize({
+        climvar: $climvarStore,
+        scenario: $scenarioStore,
+        duration: $durationStore,
+        /* BUG: when these values are loaded on initApp in index.svelte, the
+           data fetching breaks.
+        */
+        // threshType: $thresholdTypeStore,
+        // indicator: $indicator.id,
+        // aggregation: $aggregateFnStore,
+        models: $modelsStore.join(","),
+        boundary: $boundary.id,
+        fid: $location.id,
+      });
     }
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
@@ -198,6 +211,7 @@
     metadata = [
       ["boundary", $boundary.id],
       ["feature", $location.title],
+      ["feature id", $location.id],
       ["center", `${$location.center[0]}, ${$location.center[1]}`],
       ["scenario", $scenario.label],
       ["climate indicator", `${indicatorLabel}`],
@@ -213,6 +227,12 @@
 
   function changeLocation(e) {
     if (e.detail.boundaryId === "custom") {
+      // FIXME: this prevents the ShareLink from preventing a shareable URL
+      // because the boundary id will never be "custom" when a user clicks the
+      // share button.
+      // NOTE: custom boundary upload was removed in #236 so currenty this code
+      // does nothing. When re-implementing the custom boundary upload, this
+      // should be fixed.
       locationStore.updateBoundary("locagrid");
       locationStore.updateLocation(e.detail.location, true);
     } else {
@@ -294,12 +314,12 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
+  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component
   this="{ChangeLocation}"
   bind:open="{showChangeLocation}"
-  enableUpload="{false}"
   location="{$location}"
   boundary="{$boundary}"
   boundaryList="{SMALL_SCALE_BOUNDARIES}"

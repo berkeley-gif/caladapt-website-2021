@@ -22,6 +22,8 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .dashboard {
     display: flex;
     max-width: 99rem;
@@ -61,23 +63,26 @@
   }
   // end overrides for tab content area
 
-  @media (max-width: 1000px) {
+  @include mq-custom-1000px {
     .dashboard {
       flex-direction: column;
 
+      .sidebar,
       .content {
         width: 100%;
+      }
+
+      .content {
         padding-right: 1rem;
       }
 
       .sidebar {
-        width: 100%;
         padding-left: 2rem;
       }
     }
   }
 
-  @media (max-width: 672px) {
+  @include mq-mobile-tablet {
     .dashboard {
       .content {
         padding-right: 0;

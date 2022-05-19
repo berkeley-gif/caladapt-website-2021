@@ -188,19 +188,24 @@
   async function initApp() {
     const { query } = $page;
     // Get initial configuration (from default or from url)
-    const { lat, lng, boundary, scenario, climvar, models, imperial } =
+    const { lat, lng, fid, boundary, scenario, climvar, models, imperial } =
       getInitialConfig(query);
     // Set intial values for stores
     climvarStore.set(climvar);
     scenarioStore.set(scenario);
     modelsStore.set(models);
     unitsStore.set({ imperial });
-    const loc = await setInitialLocation(+lng, +lat, boundary);
-    locationStore.updateLocation(loc);
-    locationStore.updateBoundary(boundary);
+    const { location, boundaryType } = await setInitialLocation(
+      +lng,
+      +lat,
+      boundary,
+      +fid
+    );
+    locationStore.updateLocation(location);
+    locationStore.updateBoundary(boundaryType);
     const thresh98p = await getDefaultThreshold({
-      location: loc,
-      boundary: { id: boundary },
+      location,
+      boundary: { id: boundaryType },
       climvar: { id: climvar },
     });
     thresholdListStore.add(thresh98p, "98th Percentile");
