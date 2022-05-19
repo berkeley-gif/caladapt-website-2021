@@ -75,10 +75,7 @@
   <!-- Chart only settings -->
   <div class="block">
     <span class="bx--label">Select Location</span>
-    <LocationMap
-      location="{$location}"
-      on:click="{() => showChangeLocation()}"
-    />
+    <LocationMap location="{$location}" on:click="{showChangeLocation}" />
     <div class="center-row">
       <LearnMoreButton
         on:click="{() =>

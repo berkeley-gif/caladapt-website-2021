@@ -84,7 +84,7 @@
 
 <div class="block">
   <span class="bx--label">Select Station</span>
-  <LocationMap location="{$location}" on:click="{() => showChangeLocation()}" />
+  <LocationMap location="{$location}" on:click="{showChangeLocation}" />
   <LearnMoreButton
     on:click="{() =>
       showLearnMore({
