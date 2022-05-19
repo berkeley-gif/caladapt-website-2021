@@ -18,9 +18,7 @@ export const isValidNumber = (value) =>
 
 export const isValidLocationParams = (lng, lat, boundaryType, featureId) => {
   return (
-    isValidNumber(lat) &&
-    isValidNumber(lng) &&
-    isValidNumber(featureId) &&
+    ((isValidNumber(lat) && isValidNumber(lng)) || isValidNumber(featureId)) &&
     VALID_BOUNDARY_TYPES.has(boundaryType)
   );
 };
