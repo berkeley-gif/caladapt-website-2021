@@ -111,6 +111,7 @@ export const INITIAL_CONFIG = {
   lat: 38.58,
   lng: -121.46,
   imperial: true,
+  fid: 37907,
 };
 
 export const MONTHS_LIST = range(0, 12).map((d) => ({

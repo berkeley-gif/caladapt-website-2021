@@ -188,17 +188,19 @@
       lat,
       lng,
       boundary: boundaryType,
+      fid: featureId,
       indicator,
       imperial,
     } = getInitialConfig(query, DEFAULT_INITIAL_CONFIG);
 
     lat = +lat;
     lng = +lng;
+    featureId = +featureId;
 
     // set initial values for stores
     if (!$location || !$boundary) {
       // a page refresh or URL share requires fetching location data
-      await setLocationStoreInitialValue(lng, lat, boundaryType);
+      await setLocationStoreInitialValue(lng, lat, boundaryType, featureId);
     }
     categoryListStore.set(categories);
     indicatorListStore.set(indicators);
@@ -206,19 +208,28 @@
     unitsStore.set({ imperial });
   }
 
-  async function setLocationStoreInitialValue(lng, lat, boundaryType) {
-    let loc;
+  async function setLocationStoreInitialValue(
+    lng,
+    lat,
+    boundaryType,
+    featureId
+  ) {
+    let locationQueryResult;
     try {
-      loc = await getLocationFromQuery({ lng, lat, boundaryType });
+      locationQueryResult = await getLocationFromQuery({
+        lng,
+        lat,
+        boundaryType,
+        featureId,
+      });
     } catch (error) {
       console.warn(error);
     }
-    if (loc) {
-      locationStore.updateLocation(loc);
-      locationStore.updateBoundary(
-        // course corrects when boundaryType differs from fallback location boundary type.
-        loc.geometry.type === "Point" ? "locagrid" : boundaryType
-      );
+    if (locationQueryResult) {
+      const { location, boundaryType } = locationQueryResult;
+      locationStore.updateLocation(location);
+      // NOTE: this course corrects when boundaryType differs from fallback location boundary type.
+      locationStore.updateBoundary(boundaryType);
     } else {
       throw new Error(
         "Unable to retrieve location. Please choose a different location."

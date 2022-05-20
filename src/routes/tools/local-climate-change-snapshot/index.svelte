@@ -59,31 +59,37 @@
   });
 
   async function initApp() {
-    let loc;
+    let locationQueryResult;
     let {
-      query: { lat, lng, boundary: boundaryType },
+      query: { lat, lng, boundary, fid },
     } = $page;
     lat = +lat;
     lng = +lng;
+    fid = +fid;
+
     try {
-      loc = await getLocationFromQuery({
+      // Try loading a previous search result if one exists in the URL query params
+      locationQueryResult = await getLocationFromQuery({
         lng,
         lat,
-        boundaryType,
-        // We don't want to hydrate the location form and map with a
-        // pre-selected location, we want the user to choose one.
+        boundaryType: boundary,
+        featureId: fid,
+        // NOTE: we don't want to hydrate the LocationForm and LocationMap with a
+        // pre-selected/default location, we want the user to choose one instead.
         fallbackLocation: null,
       });
     } catch (error) {
       console.log(error);
     }
-    if (loc) {
+
+    if (locationQueryResult) {
       // We most likely got here from the user clicking "change location" in the
-      // explore page, so set the location form & map props...
-      selectedLocation = loc;
-      searchValue = loc.title;
-      selectedRadio = boundaryType;
-      // ...and then scroll directly to the location selection form & map
+      // explore page, so we set the props for the LocationForm & LocationMap...
+      const { location, boundaryType } = locationQueryResult;
+      selectedLocation = location;
+      searchValue = location ? location.title : "";
+      selectedRadio = boundaryType || "locagrid";
+      // ...and then we scroll to the SelectLocation container div
       document
         .querySelector("#select-location")
         .scrollIntoView({ behavior: "smooth" });
@@ -91,6 +97,7 @@
   }
 
   function cleanUpPrevDom() {
+    // HACK!!!
     // Addresses a bug with Sapper where the contents of the explore page get
     // appended to the DOM of this page when using the browser's back button.
     const oldDOM = document.getElementById("lccs-explore");
@@ -102,10 +109,11 @@
   function handleSubmit() {
     if ($location && $boundary) {
       const {
+        id: fid,
         center: [lng, lat],
       } = $location;
       const { id } = $boundary;
-      const params = { lng, lat, boundary: id };
+      const params = { lng, lat, boundary: id, fid };
       const url = `/tools/local-climate-change-snapshot/explore?${serialize(
         params
       )}`;
