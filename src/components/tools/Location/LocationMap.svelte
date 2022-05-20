@@ -3,7 +3,7 @@
   import { throttle } from "~/helpers/utilities";
 
   export let location = null;
-  export let useButton = false;
+  export let useButton = true;
 
   const throttleMs = 350;
 
@@ -25,9 +25,9 @@
     <StaticMap
       on:click
       location="{location}"
+      useButton="{useButton}"
       height="{height}"
       width="{width}"
-      useButton="{useButton}"
       --border-color="var(--gray-60)"
       --stroke="var(--gray-80)"
     />
