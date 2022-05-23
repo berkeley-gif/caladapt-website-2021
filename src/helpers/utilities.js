@@ -4,12 +4,13 @@ import config from "./api-config";
 import shp from "shpjs";
 import tj from "@mapbox/togeojson";
 import throttle from "lodash.throttle";
+import cloneDeep from "lodash.clonedeep";
 import { range } from "d3-array";
 import leftPad from "just-left-pad";
 
 const { apiEndpoint } = config.env.production;
 
-export { throttle, leftPad };
+export { cloneDeep, throttle, leftPad };
 
 export const parseDateIso = utcParse("%Y-%m-%dT%H:%M:%S%Z");
 
