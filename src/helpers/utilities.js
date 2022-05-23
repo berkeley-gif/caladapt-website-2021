@@ -443,6 +443,7 @@ export async function convertFileToGeojson(file) {
   const { name } = file;
   const extension = name.split(".")[1];
   let data;
+  // TODO: support WKT format?
   if (extension === "zip") {
     const archive = await file.arrayBuffer();
     data = await shp(archive);

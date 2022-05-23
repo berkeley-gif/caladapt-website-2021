@@ -17,7 +17,7 @@
     labelDescription:
       "Select a boundary from the dropdown list or upload your project area. Supported formats - zipped shapefile, GeoJSON, KML, WKT.",
     buttonLabel: "Upload File",
-    accept: [".zip", ".json", ".geojson", ".kml", ".wkt"],
+    accept: [".zip", ".json", ".geojson", ".kml"],
     iconDescription: "Clear file",
     id: "Upload",
     errorSubject: "",
