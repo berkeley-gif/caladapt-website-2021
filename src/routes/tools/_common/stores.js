@@ -90,6 +90,13 @@ export const locationStore = (() => {
   const { update, subscribe } = store;
   return {
     subscribe,
+    updateAll: ({ boundaryId, location, isUpload = false }) =>
+      update((store) => {
+        store.isUpload = isUpload;
+        store.location = location;
+        store.boundaryId = boundaryId;
+        return store;
+      }),
     updateLocation: (location, isUpload = false) =>
       update((store) => {
         store.location = location;
