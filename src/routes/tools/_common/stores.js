@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store";
 import scenarios from "~/helpers/climate-scenarios";
 import boundaries from "~/helpers/mapbox-layers";
-import { cloneDeep } from "~/helpers/utilities";
+import { createCustomBoundaryObject } from "./helpers";
 
 /**
  *
@@ -120,15 +120,7 @@ export const locationStore = (() => {
         let selected;
         if (boundaryType === "custom" && "geometry" in location) {
           // NOTE: there is no "custom" boundary type in boundaries so we create it here.
-          selected = cloneDeep(boundaries.find((d) => d.id === "locagrid"));
-          selected.id = "custom";
-          selected.source = {
-            type: "geojson",
-            data: {
-              type: "Feature",
-              geometry: { ...location.geometry },
-            },
-          };
+          selected = createCustomBoundaryObject(location);
         } else {
           selected = boundaries.find((d) => d.id === boundaryType);
         }
