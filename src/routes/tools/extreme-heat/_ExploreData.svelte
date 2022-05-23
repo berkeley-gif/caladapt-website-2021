@@ -178,14 +178,12 @@
     ).default;
   }
 
-  function changeLocation(e) {
-    if (e.detail.boundaryId === "custom") {
-      locationStore.updateBoundary("locagrid");
-      locationStore.updateLocation(e.detail.location, true);
-    } else {
-      locationStore.updateBoundary(e.detail.boundaryId);
-      locationStore.updateLocation(e.detail.location);
-    }
+  function changeLocation({ detail: { location, boundaryId } }) {
+    locationStore.updateAll({
+      location,
+      boundaryId,
+      isUpload: boundaryId === "custom",
+    });
   }
 </script>
 
