@@ -7,6 +7,7 @@ import {
   PRIORITY_10_MODELS,
   DEFAULT_LOCATION,
   DEFAULT_BOUNDARIES,
+  PERMITTED_BOUNDARY_TYPES,
 } from "./constants";
 import {
   cloneDeep,
@@ -18,10 +19,6 @@ import { getFeature, getFeatureById } from "~/helpers/geocode";
 import { logException } from "~/helpers/logging";
 
 export { serialize };
-
-export const PERMITTED_BOUNDARY_TYPES = new Set(
-  DEFAULT_BOUNDARIES.map((d) => d.id)
-);
 
 /**
  * createCustomBoundaryObject
