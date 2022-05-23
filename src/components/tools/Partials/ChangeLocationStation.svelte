@@ -12,11 +12,12 @@
   } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
 
-  import { SelectBoundary } from "~/components/tools/Settings";
+  import { SelectBoundary, UploadBoundary } from "~/components/tools/Settings";
   import { Location } from "~/components/tools/Location";
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
   export let location;
+  export let enableUpload = false;
   export let addStateBoundary = false;
   export let boundary;
   export let boundaryList;
@@ -217,6 +218,16 @@
     });
   }
 
+  function uploadBoundary(e) {
+    currentBoundary = { id: "custom" };
+    currentLoc = e.detail.location;
+  }
+
+  function clearUpload() {
+    currentLoc = location;
+    currentBoundary = boundary;
+  }
+
   function cancel() {
     currentLoc = location;
     currentBoundary = boundary;
@@ -317,6 +328,12 @@
           addStateBoundary="{addStateBoundary}"
           on:change="{updateBoundary}"
         />
+        {#if enableUpload}
+          <UploadBoundary
+            on:upload="{uploadBoundary}"
+            on:clear="{clearUpload}"
+          />
+        {/if}
       </div>
     {/if}
     <div class="change-location">

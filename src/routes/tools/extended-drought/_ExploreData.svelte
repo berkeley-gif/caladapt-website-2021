@@ -229,6 +229,7 @@
   boundary="{$boundary}"
   boundaryList="{DEFAULT_BOUNDARIES}"
   addStateBoundary="{true}"
+  enableUpload="{true}"
   on:change="{changeLocation}"
 />
 
