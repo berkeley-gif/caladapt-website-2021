@@ -59,7 +59,10 @@
   let LearnMoreModal;
 
   let bookmark = "";
-  let shareLinkWarning = "";
+  $: shareLinkWarning =
+    $boundary.id === "custom"
+      ? "Cannot create a share link for custom boundaries."
+      : "";
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
@@ -97,9 +100,6 @@
   }
 
   async function loadShare() {
-    // TODO: after the custom boundary upload feature is implemented / fixed,
-    // set ShareLink's `errorMsg` prop when $boundary.id === "custom" as
-    // custom boundaries don't get encoded in the URL query params.
     bookmark = serialize({
       climvar: $climvarStore,
       scenario: $scenarioStore,
