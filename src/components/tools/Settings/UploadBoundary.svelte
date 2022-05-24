@@ -11,6 +11,9 @@
   } from "~/helpers/utilities";
   import { formatFeature } from "~/helpers/geocode";
 
+  /** the files attribute from the file input  */
+  export let files = [];
+
   const dispatch = createEventDispatcher();
 
   const labelDescription = `Select a boundary from the dropdown list or upload
@@ -34,7 +37,7 @@
     status: statuses.uploading,
   };
 
-  let fileUploader;
+  let fileUploader; // ref to component
 
   $: if (fileUploader) {
     fileUploader.clearFiles();
@@ -150,6 +153,7 @@
     {...fileUploadProps}
     kind="tertiary"
     bind:this="{fileUploader}"
+    bind:files
     on:add="{({ detail }) => {
       processUpload(detail[0]);
     }}"
