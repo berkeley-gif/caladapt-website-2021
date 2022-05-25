@@ -1,14 +1,13 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { InlineLoading, Search, Modal } from "carbon-components-svelte";
+  // import Search from "@berkeley-gif/cal-adapt-svelte-components/Search/Search.svelte";
 
   import {
     getFeature,
     getNearestFeature,
     getStationById,
     searchFeature,
-    reverseGeocode,
-    getTitle,
   } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
   import { Location } from "~/components/tools/Location";
@@ -56,15 +55,14 @@
 
   async function mapClick({ detail: center }) {
     const { id } = currentBoundary;
-    let newLocation;
     try {
-      newLocation = await getFeature({ center }, id);
+      let newLocation = await getFeature({ center }, id);
+      if (newLocation) {
+        currentLocation = newLocation;
+      }
     } catch (error) {
       console.error(error.message);
       logGetFeatureErr(center, id);
-    }
-    if (newLocation) {
-      currentLocation = newLocation;
     }
   }
 
@@ -135,33 +133,7 @@
     clearSearch();
   }
 
-  async function assignLocationTitle(location, boundaryId) {
-    const { center } = location;
-    const { place_name } = (await reverseGeocode(`${center[0]}, ${center[1]}`))
-      .features[0];
-    location.title = getTitle(location, boundaryId, place_name);
-  }
-
   async function change() {
-    // get name for locagrid cell here via reverseGeocode
-    if (
-      currentBoundary &&
-      currentBoundary.id === "locagrid" &&
-      !currentLocation.title
-    ) {
-      try {
-        await assignLocationTitle(currentLocation, currentBoundary.id);
-      } catch (error) {
-        logException(
-          `AssignLocationTitle failed: ${
-            currentLocation &&
-            currentLocation.center &&
-            currentLocation.center.join(",")
-          }, ${currentBoundary && currentBoundary.id}`
-        );
-        console.error(error.message);
-      }
-    }
     open = false;
     dispatch("change", {
       ...(currentBoundary && { boundaryId: currentBoundary.id }),
@@ -274,16 +246,16 @@
 </style>
 
 <Modal
-  preventCloseOnClickOutside
-  primaryButtonText="Confirm"
-  secondaryButtonText="Cancel"
-  on:click:button--secondary="{cancel}"
   bind:open
-  modalHeading="{headingTitleText}"
-  shouldSubmitOnEnter="{false}"
+  on:click:button--secondary="{cancel}"
   on:submit="{change}"
   on:open
   on:close
+  preventCloseOnClickOutside
+  primaryButtonText="Confirm"
+  secondaryButtonText="Cancel"
+  modalHeading="{headingTitleText}"
+  shouldSubmitOnEnter="{false}"
 >
   <div>
     <p>{helpText}</p>
@@ -302,13 +274,13 @@
       <!-- Search -->
       <div class="search-control">
         <Search
+          bind:value="{searchValue}"
+          on:keydown="{search}"
+          on:clear="{clearSearch}"
           size="sm"
           id="location-search"
           labelText="{searchPlaceholder}"
           placeholder="{searchPlaceholder}"
-          on:keydown="{search}"
-          on:clear="{clearSearch}"
-          bind:value="{searchValue}"
         />
         {#if showSuggestions}
           <Suggestions {...{ geocodeResults, selectSuggestion, clearSearch }} />
@@ -321,6 +293,9 @@
       {/if}
       <!-- Map-->
       <Location
+        on:overlayclick="{isStationSelector ? overlayClick : noop}"
+        on:mapclick="{isStationSelector ? noop : mapClick}"
+        on:ready="{() => dispatch('ready')}"
         lng="{currentLocation.center[0]}"
         lat="{currentLocation.center[1]}"
         boundary="{currentBoundary}"
@@ -328,9 +303,6 @@
         location="{currentLocation}"
         imageOverlayShow="{false}"
         zoomToLocationOnLoad="{!isStationSelector}"
-        on:overlayclick="{isStationSelector ? overlayClick : noop}"
-        on:mapclick="{isStationSelector ? noop : mapClick}"
-        on:ready="{() => dispatch('ready')}"
       />
     </div>
   </div>
