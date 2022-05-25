@@ -72,7 +72,6 @@
   let timeSlider;
 
   let bookmark = "";
-  let shareLinkWarning = "";
 
   let learnMoreProps = {};
 
@@ -86,6 +85,11 @@
   let activeTab = 0;
   $: activeTab, mapboxMap && mapboxMap.resize();
   $: activeTab, timeSlider && timeSlider.cancelAnimation();
+
+  $: shareLinkWarning =
+    $boundary.id === "custom"
+      ? "Cannot create a share link for custom boundaries."
+      : "";
 
   $: formatFn = format(`.${$climvar.decimals}f`);
 
@@ -139,21 +143,17 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a share link for a custom boundary";
-    } else {
-      bookmark = serialize({
-        climvar: $climvarStore,
-        scenario: $scenarioStore,
-        models: $modelsStore.join(","),
-        modelSingle: $modelSingleStore,
-        year: $yearStore,
-        month: $monthStore,
-        simulation: $simulationStore,
-        boundary: $boundary.id,
-        fid: $location.id,
-      });
-    }
+    bookmark = serialize({
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
+      modelSingle: $modelSingleStore,
+      year: $yearStore,
+      month: $monthStore,
+      simulation: $simulationStore,
+      boundary: $boundary.id,
+      fid: $location.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
