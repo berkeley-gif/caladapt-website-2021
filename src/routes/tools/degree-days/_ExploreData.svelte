@@ -77,7 +77,6 @@
   let LearnMoreModal;
 
   let bookmark = "";
-  let shareLinkWarning = "";
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
@@ -142,21 +141,17 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a share link for a custom boundary";
-    } else {
-      bookmark = serialize({
-        climvar: $climvarStore,
-        frequency: $frequencyStore,
-        indicator: $indicatorsStore,
-        scenario: $scenarioStore,
-        threshold: $thresholdStore,
-        models: $modelsStore.join(","),
-        months: $selectedMonthsStore,
-        fid: $location.id,
-        boundary: $boundary.id,
-      });
-    }
+    bookmark = serialize({
+      climvar: $climvarStore,
+      frequency: $frequencyStore,
+      indicator: $indicatorsStore,
+      scenario: $scenarioStore,
+      threshold: $thresholdStore,
+      models: $modelsStore.join(","),
+      months: $selectedMonthsStore,
+      fid: $location.id,
+      boundary: $boundary.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -450,7 +445,6 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
-  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component

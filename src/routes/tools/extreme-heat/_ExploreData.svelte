@@ -55,7 +55,6 @@
   let LearnMoreModal;
 
   let bookmark = "";
-  let shareLinkWarning = "";
 
   let learnMoreProps = {};
   let metadata;
@@ -115,18 +114,14 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a share link for a custom boundary";
-    } else {
-      // TODO: add threshold value?
-      bookmark = serialize({
-        climvar: $climvarStore,
-        scenario: $scenarioStore,
-        models: $modelsStore.join(","),
-        boundary: $boundary.id,
-        fid: $location.id,
-      });
-    }
+    // TODO: add threshold value?
+    bookmark = serialize({
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
+      boundary: $boundary.id,
+      fid: $location.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -252,7 +247,6 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
-  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component
