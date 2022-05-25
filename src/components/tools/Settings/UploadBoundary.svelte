@@ -157,7 +157,10 @@
     on:click="{clearFiles}"
   />
 
-  {#if fileUploadProps.errorSubject}
-    <span>{fileUploadProps.errorSubject}: {fileUploadProps.errorBody}</span>
+  {#if fileUploadProps.errorSubject || fileUploadProps.errorBody}
+    <span
+      >{`${fileUploadProps.errorSubject}: ` || ""}{fileUploadProps.errorBody ||
+        ""}</span
+    >
   {/if}
 </div>
