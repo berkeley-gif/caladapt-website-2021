@@ -37,14 +37,11 @@
     status: statuses.uploading,
   };
 
-  let fileUploader; // ref to component
-
-  $: if (fileUploader) {
-    fileUploader.clearFiles();
-  }
+  // ref to FileLoader component
+  let ref;
 
   export function clearFiles() {
-    fileUploader.clearFiles();
+    ref.clearFiles();
     fileUploadProps.status = statuses.uploading;
     fileUploadProps.errorSubject = "";
     fileUploadProps.errorBody = "";
@@ -152,7 +149,7 @@
   <FileUploader
     {...fileUploadProps}
     kind="tertiary"
-    bind:this="{fileUploader}"
+    bind:this="{ref}"
     bind:files
     on:add="{({ detail }) => {
       processUpload(detail[0]);
