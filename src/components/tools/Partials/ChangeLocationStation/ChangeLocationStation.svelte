@@ -15,6 +15,7 @@
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
   import Boundary from "./Boundary.svelte";
+  import Suggestions from "./Suggestions.svelte";
 
   export let location;
   export let enableUpload = false;
@@ -269,46 +270,6 @@
       top: 10px;
       z-index: 3;
     }
-
-    .suggestions-wrapper {
-      background-color: var(--white);
-      border-radius: 4px;
-      position: absolute;
-      width: 100%;
-      left: 0;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      z-index: 1000;
-      overflow: hidden;
-      box-shadow: var(--box-shadow);
-
-      .suggestions .suggestion {
-        cursor: default;
-        display: block;
-        padding: 3px 12px;
-        color: var(--gray-80);
-      }
-
-      .suggestions .suggestion:hover {
-        background-color: var(--gray-20);
-        text-decoration: none;
-        cursor: pointer;
-      }
-
-      .suggestion-text {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        font-size: 0.8rem;
-      }
-
-      .suggestion-category {
-        display: block;
-        margin: 0.5rem;
-        font-size: 0.9rem;
-        font-weight: bold;
-      }
-    }
   }
 </style>
 
@@ -330,6 +291,7 @@
       <Boundary
         on:upload="{uploadBoundary}"
         on:change="{updateBoundary}"
+        on:clear="{clearUpload}"
         enableUpload="{enableUpload}"
         currentBoundary="{currentBoundary}"
         boundaryList="{boundaryList}"
@@ -349,35 +311,7 @@
           bind:value="{searchValue}"
         />
         {#if showSuggestions}
-          <div class="suggestions-wrapper">
-            {#each geocodeResults as item}
-              <span class="suggestion-category">{item.category}</span>
-              <ul class="suggestions">
-                {#if item.data.length > 0}
-                  {#each item.data as opt}
-                    <li>
-                      <div
-                        class="suggestion"
-                        on:click="{() =>
-                          selectSuggestion({
-                            ...opt,
-                            geocoder: item.geocoder,
-                          })}"
-                      >
-                        <div class="suggestion-text">{opt.title}</div>
-                      </div>
-                    </li>
-                  {/each}
-                {:else}
-                  <li>
-                    <div class="suggestion" on:click="{() => clearSearch()}">
-                      <div class="suggestion-nodata">No Results Found</div>
-                    </div>
-                  </li>
-                {/if}
-              </ul>
-            {/each}
-          </div>
+          <Suggestions {...{ geocodeResults, selectSuggestion, clearSearch }} />
         {/if}
       </div>
       {#if isSearching}
