@@ -442,20 +442,17 @@ export async function validateShape(file) {
 export async function convertFileToGeojson(file) {
   const { name } = file;
   const extension = name.split(".")[1];
-  let data;
-  // TODO: support WKT format?
   if (extension === "zip") {
     const archive = await file.arrayBuffer();
-    data = await shp(archive);
+    return await shp(archive);
   } else if (extension === "kml") {
     const text = await file.text();
     const xml = new DOMParser().parseFromString(text, "text/xml");
-    data = tj.kml(xml);
+    return tj.kml(xml);
   } else {
     const text = await file.text();
-    data = JSON.parse(text);
+    return JSON.parse(text);
   }
-  return data;
 }
 
 /**
