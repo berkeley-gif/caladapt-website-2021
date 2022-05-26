@@ -6,14 +6,13 @@
   import {
     getFeature,
     getNearestFeature,
-    getStationById,
     searchFeature,
   } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
-  import { Location } from "~/components/tools/Location";
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
   import Boundary from "./Boundary.svelte";
+  import LocationMap from "./Map.svelte";
   import Suggestions from "./Suggestions.svelte";
 
   export let location;
@@ -52,28 +51,6 @@
 
   let isSearching = false;
   let showSuggestions = false;
-
-  async function mapClick({ detail: center }) {
-    const { id } = currentBoundary;
-    try {
-      let newLocation = await getFeature({ center }, id);
-      if (newLocation) {
-        currentLocation = newLocation;
-      }
-    } catch (error) {
-      console.error(error.message);
-      logGetFeatureErr(center, id);
-    }
-  }
-
-  async function overlayClick({ detail: stationId }) {
-    try {
-      currentLocation = await getStationById(stationId, stationsLayer.id);
-    } catch (error) {
-      console.error(error.message);
-      logException(`getStationById failed: ${stationId}; ${stationsLayer.id}`);
-    }
-  }
 
   async function search({ key }) {
     if (key === "Escape") {
@@ -145,7 +122,7 @@
   // the value of the currentLocation reactive variable
   async function updateBoundary({ detail }) {
     if (!detail) return;
-    const currentBoundary = detail;
+    currentBoundary = detail;
     const { id } = currentBoundary;
     let intersectingFeature;
     let nearest;
@@ -201,6 +178,12 @@
     }
   }
 
+  function handleMapClick(e) {
+    if (e.detail && typeof e.detail === "object") {
+      currentLocation = e.detail;
+    }
+  }
+
   function uploadBoundary(e) {
     currentBoundary = { id: "custom" };
     currentLocation = e.detail.location;
@@ -218,8 +201,6 @@
     currentBoundary = boundary;
     open = false;
   }
-
-  function noop() {}
 </script>
 
 <style lang="scss">
@@ -232,7 +213,7 @@
       top: 10px;
       z-index: 3;
       box-shadow: var(--box-shadow);
-      width: 14rem;
+      width: 50ch;
     }
 
     .search-status {
@@ -271,7 +252,6 @@
       />
     {/if}
     <div class="change-location">
-      <!-- Search -->
       <div class="search-control">
         <Search
           bind:value="{searchValue}"
@@ -291,18 +271,27 @@
           <InlineLoading />
         </div>
       {/if}
-      <!-- Map-->
-      <Location
-        on:overlayclick="{isStationSelector ? overlayClick : noop}"
-        on:mapclick="{isStationSelector ? noop : mapClick}"
-        on:ready="{() => dispatch('ready')}"
-        lng="{currentLocation.center[0]}"
-        lat="{currentLocation.center[1]}"
-        boundary="{currentBoundary}"
-        stations="{stationsLayer}"
-        location="{currentLocation}"
-        imageOverlayShow="{false}"
-        zoomToLocationOnLoad="{!isStationSelector}"
+
+      <!-- <div class="search-control">
+        <Search
+          bind:searchValue
+          on:select
+          on:input
+          description="{searchPlaceholder}"
+          suggestions="{geocodeResults}"
+          debug="{true}"
+        />
+      </div> -->
+
+      {#if isSearching}
+        <div class="search-status">
+          <InlineLoading />
+        </div>
+      {/if}
+
+      <LocationMap
+        on:click="{handleMapClick}"
+        {...{ currentLocation, currentBoundary, stationsLayer }}
       />
     </div>
   </div>
