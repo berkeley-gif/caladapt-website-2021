@@ -79,6 +79,18 @@
 
   let chartTitle = "";
 
+  $: formatFn = format(`.${$climvar.decimals}f`);
+
+  $: if ($dataStore) {
+    dataByDate = groupDataByYear(flattenData($dataStore));
+  } else {
+    dataByDate = null;
+  }
+
+  $: if ($location) {
+    loadLocation();
+  }
+
   afterUpdate(() => {
     if ($location && $location.title) {
       chartTitle = $location.title;
@@ -115,7 +127,9 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
+      await import(
+        "~/components/tools/Partials/ChangeLocationStation/ChangeLocationStation.svelte"
+      )
     ).default;
   }
 
@@ -136,14 +150,6 @@
     DownloadChart = (
       await import("~/components/tools/Partials/DownloadChart.svelte")
     ).default;
-  }
-
-  $: formatFn = format(`.${$climvar.decimals}f`);
-
-  $: if ($dataStore) {
-    dataByDate = groupDataByYear(flattenData($dataStore));
-  } else {
-    dataByDate = null;
   }
 
   function changeScenario(e) {
