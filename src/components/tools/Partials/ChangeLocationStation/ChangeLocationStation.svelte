@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { InlineLoading, Search, Modal } from "carbon-components-svelte";
-  // import Search from "@berkeley-gif/cal-adapt-svelte-components/Search/Search.svelte";
+  import { InlineLoading, Modal } from "carbon-components-svelte";
+  import Search from "@berkeley-gif/cal-adapt-svelte-components/Search/Search.svelte";
 
   import {
     getFeature,
@@ -13,7 +13,6 @@
 
   import Boundary from "./Boundary.svelte";
   import LocationMap from "./Map.svelte";
-  import Suggestions from "./Suggestions.svelte";
 
   export let location;
   export let enableUpload = false;
@@ -24,6 +23,7 @@
   export let open = false;
 
   const dispatch = createEventDispatcher();
+  const MIN_SEARCH_TEXT_LENGTH = 3;
 
   let isStationSelector = Boolean(stationsLayer);
 
@@ -40,74 +40,32 @@
   let currentLocation = location;
   let currentBoundary = boundary;
 
-  let geocodeResults = [];
-
+  let suggestions = [];
   let searchValue = "";
   let searchPlaceholder = isStationSelector
     ? "Enter place name or address"
     : boundary
     ? boundary.metadata.placeholder
     : null;
-
   let isSearching = false;
-  let showSuggestions = false;
 
-  async function search({ key }) {
-    if (key === "Escape") {
-      clearSearch();
-      return;
-    }
-    if (key !== "Enter") return;
-    const layer = isStationSelector ? stationsLayer : currentBoundary;
-    isSearching = true;
-    showSuggestions = false;
-    geocodeResults.length = 0;
-    try {
-      geocodeResults = await searchFeature(searchValue, layer.id);
-      // Add groupname for results from all geocoders
-      geocodeResults &&
-        geocodeResults.forEach((item) => {
-          if (item.geocoder === "caladapt") {
-            item.category = layer.metadata.title;
-          } else {
-            item.category = "Places & Addresses";
-          }
-        });
-    } catch (error) {
-      console.error(error.message);
-      logException(
-        `searchFeature failed: ${searchValue}, ${layer && layer.id}`
-      );
-    } finally {
-      isSearching = false;
-      showSuggestions = true;
-    }
-  }
-
-  function clearSearch() {
-    geocodeResults.length = 0;
+  function handleClearSearch() {
+    suggestions = [];
     searchValue = "";
-    showSuggestions = false;
   }
 
-  async function selectSuggestion(opt) {
-    if (opt && opt.geocoder === "mapbox") {
-      try {
-        currentLocation = isStationSelector
-          ? await getNearestFeature(
-              opt.center[0],
-              opt.center[1],
-              stationsLayer.id
-            )
-          : await getFeature(opt, currentBoundary.id);
-      } catch (error) {
-        logGetFeatureErr(opt.center, currentBoundary && currentBoundary.id);
-        console.error(error.message);
-      }
+  function handleSearchInput() {
+    if (searchValue.length >= MIN_SEARCH_TEXT_LENGTH) {
+      // TODO: geocode on search input
+      // make sure to debounce this
+      console.log(searchValue);
     } else {
-      currentLocation = opt;
+      suggestions = [];
     }
-    clearSearch();
+  }
+
+  function handleSearchSelect({ detail }) {
+    currentLocation = detail;
   }
 
   async function change() {
@@ -258,34 +216,20 @@
     <div class="change-location">
       <div class="search-control">
         <Search
-          bind:value="{searchValue}"
-          on:keydown="{search}"
-          on:clear="{clearSearch}"
-          size="sm"
-          id="location-search"
-          labelText="{searchPlaceholder}"
-          placeholder="{searchPlaceholder}"
+          bind:searchValue
+          on:select="{handleSearchSelect}"
+          on:input="{handleSearchInput}"
+          on:clear="{handleClearSearch}"
+          description="{searchPlaceholder}"
+          suggestions="{suggestions}"
         />
-        {#if showSuggestions}
-          <Suggestions {...{ geocodeResults, selectSuggestion, clearSearch }} />
-        {/if}
       </div>
+
       {#if isSearching}
         <div class="search-status">
           <InlineLoading />
         </div>
       {/if}
-
-      <!-- <div class="search-control">
-        <Search
-          bind:searchValue
-          on:select
-          on:input
-          description="{searchPlaceholder}"
-          suggestions="{geocodeResults}"
-          debug="{true}"
-        />
-      </div> -->
 
       {#if isSearching}
         <div class="search-status">
