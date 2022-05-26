@@ -122,24 +122,27 @@
   // the value of the currentLocation reactive variable
   async function updateBoundary({ detail }) {
     if (!detail) return;
+
+    const {
+      id,
+      metadata: { placeholder },
+    } = detail;
     currentBoundary = detail;
-    const { id } = currentBoundary;
-    let intersectingFeature;
-    let nearest;
-    let defaultLocation;
-    searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
+    searchPlaceholder = `Enter ${placeholder}`;
+
     // Set current location after current boundary has changed
     // first attempt an intersection spatial query
     try {
-      intersectingFeature = await getFeature(currentLocation, id);
+      let intersectingFeature = await getFeature(currentLocation, id);
+      if (intersectingFeature) {
+        currentLocation = intersectingFeature;
+        return;
+      }
     } catch (error) {
       logGetFeatureErr(currentLocation && currentLocation.center, id);
       console.error(error.message);
     }
-    if (intersectingFeature) {
-      currentLocation = intersectingFeature;
-      return;
-    }
+
     // if intersection fails, try a nearest neighbor spatial query
     // most likey this is for when id === "place"
     if (id === "place") {
@@ -147,7 +150,11 @@
         const {
           center: [lng, lat],
         } = currentLocation;
-        nearest = await getNearestFeature(lng, lat, id);
+        let nearest = await getNearestFeature(lng, lat, id);
+        if (nearest) {
+          currentLocation = nearest;
+          return;
+        }
       } catch (error) {
         logException(
           `getNearestFeature failed: ${
@@ -158,23 +165,20 @@
         );
         console.error(error.message);
       }
-      if (nearest) {
-        currentLocation = nearest;
-        return;
-      }
     }
+
     // as a last resort use the default location's center to set the current location
     try {
-      defaultLocation = await getFeature(
+      let defaultLocation = await getFeature(
         { center: DEFAULT_LOCATION.center },
         id
       );
+      if (defaultLocation) {
+        currentLocation = defaultLocation;
+      }
     } catch (error) {
       logGetFeatureErr(DEFAULT_LOCATION.center, id);
       console.error(error.message);
-    }
-    if (defaultLocation) {
-      currentLocation = defaultLocation;
     }
   }
 
