@@ -1,16 +1,14 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { InlineLoading, Modal } from "carbon-components-svelte";
-  import Search from "@berkeley-gif/cal-adapt-svelte-components/Search/Search.svelte";
 
   import { getFeature, getNearestFeature } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
-  import { debounce } from "~/helpers/utilities";
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
-  import { formatSearchResult, geocodeSearch, handleAbortFetch } from "./utils";
 
   import Boundary from "./Boundary.svelte";
   import LocationMap from "./Map.svelte";
+  import Search from "./Search.svelte";
 
   export let location;
   export let enableUpload = false;
@@ -22,10 +20,8 @@
 
   const dispatch = createEventDispatcher();
 
-  const MIN_SEARCH_TEXT_LENGTH = 3;
-  const SEARCH_INPUT_DEBOUNCE_MS = 350;
-
   let isStationSelector = Boolean(stationsLayer);
+  let stationsLayerId = isStationSelector ? stationsLayer.id : null;
 
   let helpText = isStationSelector
     ? `Select a station on the map or enter an address in the search box to 
@@ -40,70 +36,12 @@
   let currentLocation = location;
   let currentBoundary = boundary;
 
-  let suggestions = [];
-  let searchValue = "";
-  let searchPlaceholder = isStationSelector
+  let isSearching = false;
+  $: searchPlaceholder = isStationSelector
     ? "Enter place name or address"
     : boundary
     ? boundary.metadata.placeholder
-    : null;
-  let isSearching = false;
-
-  let abortController;
-
-  function handleClearSearch() {
-    suggestions = [];
-    searchValue = "";
-  }
-
-  function handleSearchInput() {
-    if (searchValue.length >= MIN_SEARCH_TEXT_LENGTH) {
-      abortController = handleAbortFetch(abortController);
-      handleGeocodeSearch();
-    } else {
-      suggestions = [];
-    }
-  }
-
-  async function handleGeocodeSearch() {
-    const { id: boundaryType } = currentBoundary;
-    try {
-      let results = await geocodeSearch(searchValue, {
-        boundaryType,
-        signal: abortController.signal,
-      });
-      if (results && results.features && results.features.length) {
-        suggestions = formatSearchResult(results, boundaryType);
-      } else {
-        suggestions = [];
-      }
-    } catch (error) {
-      console.warn(error);
-      logException(
-        `lccs geocodeSearch error for ${searchValue} and ${boundaryType}`
-      );
-    }
-  }
-
-  async function handleSearchSelect({ detail }) {
-    if (currentBoundary.id === "locagrid") {
-      try {
-        currentLocation = isStationSelector
-          ? await getNearestFeature(
-              detail.center[0],
-              detail.center[1],
-              stationsLayer.id
-            )
-          : await getFeature(detail, currentBoundary.id);
-      } catch (error) {
-        logGetFeatureErr(detail.center, currentBoundary && currentBoundary.id);
-        console.error(error.message);
-      }
-    } else {
-      currentLocation = detail;
-    }
-    suggestions = [];
-  }
+    : "";
 
   async function change() {
     open = false;
@@ -111,6 +49,10 @@
       ...(currentBoundary && { boundaryId: currentBoundary.id }),
       location: currentLocation,
     });
+  }
+
+  function handleSearchSelect({ detail }) {
+    currentLocation = detail;
   }
 
   // NOTE: a side effect of the boundary type being updated is that it changes
@@ -253,12 +195,11 @@
     <div class="change-location">
       <div class="search-control">
         <Search
-          bind:searchValue
           on:select="{handleSearchSelect}"
-          on:input="{debounce(handleSearchInput, SEARCH_INPUT_DEBOUNCE_MS)}"
-          on:clear="{handleClearSearch}"
-          description="{searchPlaceholder}"
-          suggestions="{suggestions}"
+          isStationSelector="{isStationSelector}"
+          currentBoundary="{currentBoundary}"
+          searchPlaceholder="{searchPlaceholder}"
+          stationsLayerId="{stationsLayerId}"
         />
       </div>
 
