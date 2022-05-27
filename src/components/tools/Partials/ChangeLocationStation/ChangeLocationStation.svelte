@@ -17,7 +17,6 @@
   const dispatch = createEventDispatcher();
 
   let isStationSelector = Boolean(stationsLayer);
-  let stationsLayerId = isStationSelector ? stationsLayer.id : null;
 
   let helpText = isStationSelector
     ? `Select a station on the map or enter an address in the search box to 
@@ -44,13 +43,14 @@
     }
   }
 
-  async function change() {
-    // TODO: add if (currentLocation) {}
-    open = false;
-    dispatch("change", {
-      ...(currentBoundary && { boundaryId: currentBoundary.id }),
-      location: currentLocation,
-    });
+  async function handleSubmit() {
+    if (currentLocation && currentBoundary) {
+      open = false;
+      dispatch("change", {
+        ...(currentBoundary && { boundaryId: currentBoundary.id }),
+        location: currentLocation,
+      });
+    }
   }
 
   function handleSearchSelect({ detail }) {
@@ -62,15 +62,15 @@
     updatePlaceholderText(currentBoundary);
   }
 
-  function handleMapClick(e) {
-    if (e.detail && typeof e.detail === "object") {
-      currentLocation = e.detail;
+  function handleMapClick({ detail }) {
+    if (detail && typeof detail === "object") {
+      currentLocation = detail;
     }
   }
 
-  function uploadBoundary(e) {
+  function uploadBoundary({ detail }) {
     currentBoundary = { id: "custom" };
-    currentLocation = e.detail.location;
+    currentLocation = detail.location;
   }
 
   function clearUpload() {
@@ -96,7 +96,7 @@
 <Modal
   bind:open
   on:click:button--secondary="{cancel}"
-  on:submit="{change}"
+  on:submit="{handleSubmit}"
   on:open
   on:close
   preventCloseOnClickOutside
@@ -126,7 +126,7 @@
         isStationSelector="{isStationSelector}"
         currentBoundary="{currentBoundary}"
         searchPlaceholder="{searchPlaceholder}"
-        stationsLayerId="{stationsLayerId}"
+        stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
       />
 
       <LocationMap
