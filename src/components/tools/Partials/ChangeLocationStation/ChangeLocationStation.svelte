@@ -2,11 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { InlineLoading, Modal } from "carbon-components-svelte";
 
-  import { getFeature, getNearestFeature } from "~/helpers/geocode";
-  import { logException, logGetFeatureErr } from "~/helpers/logging";
-  import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
-
-  import Boundary from "./Boundary.svelte";
+  import SelectBoundary from "./Boundary.svelte";
   import LocationMap from "./Map.svelte";
   import Search from "./Search.svelte";
 
@@ -37,11 +33,17 @@
   let currentBoundary = boundary;
 
   let isSearching = false;
-  $: searchPlaceholder = isStationSelector
+  let searchPlaceholder = isStationSelector
     ? "Enter place name or address"
-    : boundary
-    ? boundary.metadata.placeholder
+    : boundary && boundary.metadata
+    ? updatePlaceholderText(boundary.metadata.placeholder)
     : "";
+
+  function updatePlaceholderText(boundary) {
+    if (boundary && boundary.metadata) {
+      searchPlaceholder = `Enter ${boundary.metadata.placeholder}`;
+    }
+  }
 
   async function change() {
     open = false;
@@ -55,68 +57,9 @@
     currentLocation = detail;
   }
 
-  // NOTE: a side effect of the boundary type being updated is that it changes
-  // the value of the currentLocation reactive variable
-  async function updateBoundary({ detail }) {
-    if (!detail) return;
-
-    const {
-      id,
-      metadata: { placeholder },
-    } = detail;
+  function handleChangeBoundary({ detail }) {
     currentBoundary = detail;
-    searchPlaceholder = `Enter ${placeholder}`;
-
-    // Set current location after current boundary has changed
-    // first attempt an intersection spatial query
-    try {
-      let intersectingFeature = await getFeature(currentLocation, id);
-      if (intersectingFeature) {
-        currentLocation = intersectingFeature;
-        return;
-      }
-    } catch (error) {
-      logGetFeatureErr(currentLocation && currentLocation.center, id);
-      console.error(error.message);
-    }
-
-    // if intersection fails, try a nearest neighbor spatial query
-    // most likey this is for when id === "place"
-    if (id === "place") {
-      try {
-        const {
-          center: [lng, lat],
-        } = currentLocation;
-        let nearest = await getNearestFeature(lng, lat, id);
-        if (nearest) {
-          currentLocation = nearest;
-          return;
-        }
-      } catch (error) {
-        logException(
-          `getNearestFeature failed: ${
-            currentLocation &&
-            currentLocation.center &&
-            currentLocation.center.join(",")
-          }`
-        );
-        console.error(error.message);
-      }
-    }
-
-    // as a last resort use the default location's center to set the current location
-    try {
-      let defaultLocation = await getFeature(
-        { center: DEFAULT_LOCATION.center },
-        id
-      );
-      if (defaultLocation) {
-        currentLocation = defaultLocation;
-      }
-    } catch (error) {
-      logGetFeatureErr(DEFAULT_LOCATION.center, id);
-      console.error(error.message);
-    }
+    updatePlaceholderText(currentBoundary);
   }
 
   function handleMapClick(e) {
@@ -182,12 +125,14 @@
   <div>
     <p>{helpText}</p>
     {#if !isStationSelector}
-      <Boundary
+      <SelectBoundary
         on:upload="{uploadBoundary}"
-        on:change="{updateBoundary}"
         on:clear="{clearUpload}"
+        on:change:boundary="{handleChangeBoundary}"
+        on:change:location="{handleSearchSelect}"
         enableUpload="{enableUpload}"
         currentBoundary="{currentBoundary}"
+        currentLocation="{currentLocation}"
         boundaryList="{boundaryList}"
         addStateBoundary="{addStateBoundary}"
       />
