@@ -5,6 +5,7 @@
 
   import { getFeature, getNearestFeature } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
+  import { debounce } from "~/helpers/utilities";
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
   import { formatSearchResult, geocodeSearch, handleAbortFetch } from "./utils";
 
@@ -20,7 +21,9 @@
   export let open = false;
 
   const dispatch = createEventDispatcher();
+
   const MIN_SEARCH_TEXT_LENGTH = 3;
+  const SEARCH_INPUT_DEBOUNCE_MS = 350;
 
   let isStationSelector = Boolean(stationsLayer);
 
@@ -55,8 +58,6 @@
 
   function handleSearchInput() {
     if (searchValue.length >= MIN_SEARCH_TEXT_LENGTH) {
-      // TODO: geocode on search input
-      // make sure to debounce this
       abortController = handleAbortFetch(abortController);
       handleGeocodeSearch();
     } else {
@@ -254,7 +255,7 @@
         <Search
           bind:searchValue
           on:select="{handleSearchSelect}"
-          on:input="{handleSearchInput}"
+          on:input="{debounce(handleSearchInput, SEARCH_INPUT_DEBOUNCE_MS)}"
           on:clear="{handleClearSearch}"
           description="{searchPlaceholder}"
           suggestions="{suggestions}"
