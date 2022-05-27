@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { InlineLoading } from "carbon-components-svelte";
   import Search from "@berkeley-gif/cal-adapt-svelte-components/Search/Search.svelte";
 
   import { debounce } from "~/helpers/utilities";
@@ -18,6 +19,7 @@
   const MIN_SEARCH_TEXT_LENGTH = 3;
   const SEARCH_INPUT_DEBOUNCE_MS = 350;
 
+  let isSearching = false;
   let suggestions = [];
   let searchValue = "";
   let abortController;
@@ -39,6 +41,7 @@
   async function handleGeocodeSearch() {
     const { id: boundaryType } = currentBoundary;
     try {
+      isSearching = true;
       let results = await geocodeSearch(searchValue, {
         boundaryType,
         signal: abortController.signal,
@@ -53,6 +56,8 @@
       logException(
         `lccs geocodeSearch error for ${searchValue} and ${boundaryType}`
       );
+    } finally {
+      isSearching = false;
     }
   }
 
@@ -82,23 +87,44 @@
 </script>
 
 <style>
-  div {
+  .search-box-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
     position: absolute;
-    left: 10px;
-    top: 10px;
+    left: 0.75rem;
+    top: 0.75rem;
+    right: 3rem;
+
     z-index: 3;
-    box-shadow: var(--box-shadow);
+  }
+
+  .search-box {
     width: 50ch;
+  }
+
+  .search-status {
+    width: 2rem;
   }
 </style>
 
-<div>
-  <Search
-    bind:searchValue
-    on:select="{handleSearchSelect}"
-    on:input="{debounce(handleSearchInput, SEARCH_INPUT_DEBOUNCE_MS)}"
-    on:clear="{handleClearSearch}"
-    description="{searchPlaceholder}"
-    suggestions="{suggestions}"
-  />
+<div class="search-box-wrapper">
+  <div class="search-box">
+    <Search
+      bind:searchValue
+      on:select="{handleSearchSelect}"
+      on:input="{debounce(handleSearchInput, SEARCH_INPUT_DEBOUNCE_MS)}"
+      on:clear="{handleClearSearch}"
+      description="{searchPlaceholder}"
+      suggestions="{suggestions}"
+    />
+  </div>
+
+  <div class="search-status">
+    {#if isSearching}
+      <InlineLoading />
+    {/if}
+  </div>
 </div>

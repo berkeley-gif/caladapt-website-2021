@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { InlineLoading, Modal } from "carbon-components-svelte";
+  import { Modal } from "carbon-components-svelte";
 
   import SelectBoundary from "./Boundary.svelte";
   import LocationMap from "./Map.svelte";
@@ -32,7 +32,6 @@
   let currentLocation = location;
   let currentBoundary = boundary;
 
-  let isSearching = false;
   let searchPlaceholder = isStationSelector
     ? "Enter place name or address"
     : boundary && boundary.metadata
@@ -46,6 +45,7 @@
   }
 
   async function change() {
+    // TODO: add if (currentLocation) {}
     open = false;
     dispatch("change", {
       ...(currentBoundary && { boundaryId: currentBoundary.id }),
@@ -87,26 +87,9 @@
   }
 </script>
 
-<style lang="scss">
+<style>
   .change-location {
     position: relative;
-
-    .search-control {
-      position: absolute;
-      left: 10px;
-      top: 10px;
-      z-index: 3;
-      box-shadow: var(--box-shadow);
-      width: 50ch;
-    }
-
-    .search-status {
-      position: absolute;
-      z-index: 2;
-      left: 13rem;
-      top: 10px;
-      z-index: 3;
-    }
   }
 </style>
 
@@ -138,27 +121,13 @@
       />
     {/if}
     <div class="change-location">
-      <div class="search-control">
-        <Search
-          on:select="{handleSearchSelect}"
-          isStationSelector="{isStationSelector}"
-          currentBoundary="{currentBoundary}"
-          searchPlaceholder="{searchPlaceholder}"
-          stationsLayerId="{stationsLayerId}"
-        />
-      </div>
-
-      {#if isSearching}
-        <div class="search-status">
-          <InlineLoading />
-        </div>
-      {/if}
-
-      {#if isSearching}
-        <div class="search-status">
-          <InlineLoading />
-        </div>
-      {/if}
+      <Search
+        on:select="{handleSearchSelect}"
+        isStationSelector="{isStationSelector}"
+        currentBoundary="{currentBoundary}"
+        searchPlaceholder="{searchPlaceholder}"
+        stationsLayerId="{stationsLayerId}"
+      />
 
       <LocationMap
         on:click="{handleMapClick}"
