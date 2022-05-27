@@ -24,6 +24,8 @@
   let searchValue = "";
   let abortController;
 
+  $: currentBoundary, handleClearSearch();
+
   function handleClearSearch() {
     suggestions = [];
     searchValue = "";
@@ -119,6 +121,7 @@
       on:clear="{handleClearSearch}"
       description="{searchPlaceholder}"
       suggestions="{suggestions}"
+      outlineColor="var(--gray-90)"
     />
   </div>
 
