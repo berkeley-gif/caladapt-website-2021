@@ -6,12 +6,25 @@
   import LocationMap from "./Map.svelte";
   import Search from "./Search.svelte";
 
+  /** @type {!Object} the locationStore's location object */
   export let location;
-  export let enableUpload = false;
-  export let addStateBoundary = false;
+
+  /** @type {?Object} the locationStore's boundary object */
   export let boundary;
+
+  /** @type {?Array} specify the list of boundaries to be displayed in the dropdown */
   export let boundaryList;
+
+  /** @type {?Object} specify which station layer to use. Overrides boundaryList */
   export let stationsLayer;
+
+  /** @type {!boolean} specify whether the CA state boundary should be included in the boundaryList */
+  export let addStateBoundary = false;
+
+  /** @type {!boolean} specify whether a user may upload custom boundary data */
+  export let enableUpload = false;
+
+  /** @type {!boolean} specify whether or not the modal is shown */
   export let open = false;
 
   const dispatch = createEventDispatcher();
@@ -110,6 +123,7 @@
 >
   <div>
     <p>{helpText}</p>
+    <!-- tools that use stations only have that type of boundary and no others -->
     {#if !isStationSelector}
       <SelectBoundary
         on:upload="{uploadBoundary}"
