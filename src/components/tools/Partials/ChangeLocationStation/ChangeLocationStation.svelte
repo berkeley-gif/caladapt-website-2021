@@ -44,7 +44,10 @@
   }
 
   async function handleSubmit() {
-    if (currentLocation && currentBoundary) {
+    if (
+      (isStationSelector && currentLocation) ||
+      (!isStationSelector && currentBoundary && currentLocation)
+    ) {
       open = false;
       dispatch("change", {
         ...(currentBoundary && { boundaryId: currentBoundary.id }),
