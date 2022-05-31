@@ -154,7 +154,7 @@
       return;
     }
     // if intersection fails, try a nearest neighbor spatial query
-    // most likey this is for when id === "place"
+    // most likey this is for when id === "place" or for a station layer
     if (id === "place") {
       try {
         const {

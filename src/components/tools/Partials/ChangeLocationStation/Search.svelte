@@ -46,13 +46,13 @@
     const { id: boundaryType } = currentLayer;
     try {
       isSearching = true;
+
       let results = await geocodeSearch(searchValue, {
         boundaryType,
         signal: abortController.signal,
         isStationLayer: isStationSelector,
       });
-      // FIXME: do we need to format search results?
-      // maybe pass isStationSelector to handle stations separately?
+
       if (results && results.features && results.features.length) {
         suggestions = formatSearchResult(
           results,
