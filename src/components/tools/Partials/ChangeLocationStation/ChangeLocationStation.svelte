@@ -124,7 +124,7 @@
       <Search
         on:select="{handleSearchSelect}"
         isStationSelector="{isStationSelector}"
-        currentBoundary="{currentBoundary}"
+        currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
         searchPlaceholder="{searchPlaceholder}"
         stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
       />

@@ -10,7 +10,7 @@
   import { formatSearchResult, geocodeSearch, handleAbortFetch } from "./utils";
 
   export let isStationSelector = false;
-  export let currentBoundary = null;
+  export let currentLayer = null;
   export let searchPlaceholder = "";
   export let stationsLayerId = null;
 
@@ -24,7 +24,9 @@
   let searchValue = "";
   let abortController;
 
-  $: currentBoundary, handleClearSearch();
+  $: console.log(currentLayer);
+
+  $: currentLayer, handleClearSearch();
 
   function handleClearSearch() {
     suggestions = [];
@@ -41,15 +43,22 @@
   }
 
   async function handleGeocodeSearch() {
-    const { id: boundaryType } = currentBoundary;
+    const { id: boundaryType } = currentLayer;
     try {
       isSearching = true;
       let results = await geocodeSearch(searchValue, {
         boundaryType,
         signal: abortController.signal,
+        isStationLayer: isStationSelector,
       });
+      // FIXME: do we need to format search results?
+      // maybe pass isStationSelector to handle stations separately?
       if (results && results.features && results.features.length) {
-        suggestions = formatSearchResult(results, boundaryType);
+        suggestions = formatSearchResult(
+          results,
+          boundaryType,
+          isStationSelector
+        );
       } else {
         suggestions = [];
       }
@@ -65,7 +74,7 @@
 
   async function handleSearchSelect({ detail }) {
     let result;
-    if (currentBoundary.id === "locagrid") {
+    if (currentLayer.id === "locagrid") {
       try {
         result = isStationSelector
           ? await getNearestFeature(
@@ -73,9 +82,9 @@
               detail.center[1],
               stationsLayerId
             )
-          : await getFeature(detail, currentBoundary.id);
+          : await getFeature(detail, currentLayer.id);
       } catch (error) {
-        logGetFeatureErr(detail.center, currentBoundary && currentBoundary.id);
+        logGetFeatureErr(detail.center, currentLayer && currentLayer.id);
         console.error(error.message);
       }
     } else {
