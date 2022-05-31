@@ -74,7 +74,7 @@
 
   async function handleSearchSelect({ detail }) {
     let result;
-    if (currentLayer.id === "locagrid") {
+    if (isStationSelector || currentLayer.id === "locagrid") {
       try {
         result = isStationSelector
           ? await getNearestFeature(
@@ -83,6 +83,7 @@
               stationsLayerId
             )
           : await getFeature(detail, currentLayer.id);
+        searchValue = result.title;
       } catch (error) {
         logGetFeatureErr(detail.center, currentLayer && currentLayer.id);
         console.error(error.message);
