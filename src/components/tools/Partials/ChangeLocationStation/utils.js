@@ -30,23 +30,29 @@ export function handleAbortFetch(abortController) {
   return new AbortController();
 }
 
+// in most tools these are the default geocode search passed to the MapBox Geocoding API
+const DEFAULT_GEOCODE_SEARCH_TYPES = "address,postcode,neighborhood";
+
 /**
  * geocodeSearch - gets geographic data for a location search string
  * @param {string} searchStr – string to geocode
  * @param {Object} options - additional options
  * @param {string} options.boundaryType - type of geography, e.g. address, counties, etc.
+ * @param {boolean} options.isStationLayer - does the boundaryType belong to a "stations" group?
  * @param {AbortSignal} options.signal - signal object from an AbortController instance
  * @returns {Object} - GeoJSON FeatureCollection
  */
 export async function geocodeSearch(searchStr, options = {}) {
-  const { boundaryType, signal } = options;
+  const { boundaryType, signal, isStationLayer } = options;
   let url;
   searchStr = sanitizeSearchStr(searchStr, boundaryType);
-  if (boundaryType === "locagrid") {
+  if (boundaryType === "locagrid" || isStationLayer) {
     url = `${mapboxGeocodingEndpoint}/${searchStr}.json?${serialize({
       ...mapboxGeocodeParams,
       autocomplete: true,
-      types: "address,postcode,neighborhood",
+      types: isStationLayer
+        ? DEFAULT_GEOCODE_SEARCH_TYPES.concat(",place,locality")
+        : DEFAULT_GEOCODE_SEARCH_TYPES,
     })}`;
   } else {
     url = `${caladaptGeocodingEndpoint}/${boundaryType}/?${serialize({
@@ -93,11 +99,16 @@ export async function reverseGeocodeBoundary([lng, lat], options = {}) {
  * formatSearchResult: formats features returned by the Cal-Adapt and MapBox geocoders.
  * @param {Object} result - the parsed JSON response from the geocoder. Assumes a features property
  * @param {string} boundaryType - the geographic boundary, e.g. "counties", "watershed", etc.
+ * @param {boolean} options.isStationLayer - does the boundaryType belong to a "stations" group?
  * @returns {Array} - array of objects of formatted geojson features
  */
-export function formatSearchResult(result, boundaryType) {
-  if (boundaryType === "locagrid") {
-    return result.features.map(formatLocaGridFeature);
+export function formatSearchResult(
+  result,
+  boundaryType,
+  isStationLayer = false
+) {
+  if (boundaryType === "locagrid" || isStationLayer) {
+    return result.features.map(formatPointFeature);
   } else {
     return result.features.map((feature) =>
       formatFeature(feature, boundaryType)
@@ -106,11 +117,11 @@ export function formatSearchResult(result, boundaryType) {
 }
 
 /**
- * formatLocaGridFeature - formats a GeoJSON feature returned by the MapBox geocoding API
+ * formatPointFeature - formats a GeoJSON feature returned by the MapBox geocoding API
  * @param {Object} feature - a GeoJSON feature
  * @returns {Object} - a GeoJSON feature with additional props
  */
-export function formatLocaGridFeature(feature) {
+export function formatPointFeature(feature) {
   const { id, place_name, geometry, bbox, ...rest } = feature;
   return {
     id,
