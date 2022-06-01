@@ -122,7 +122,12 @@
     {/if}
     <LocationMap
       on:click="{handleMapClick}"
-      {...{ currentLocation, currentBoundary, stationsLayer }}
+      {...{
+        currentLocation,
+        currentBoundary,
+        stationsLayer,
+        isStationSelector,
+      }}
     >
       <Search
         on:select="{handleSearchSelect}"

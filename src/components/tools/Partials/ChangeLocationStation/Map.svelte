@@ -7,20 +7,18 @@
   export let currentLocation = null;
   export let currentBoundary = null;
   export let stationsLayer = null;
+  export let isStationSelector = false;
 
   const dispatch = createEventDispatcher();
 
   let lng;
   let lat;
 
-  $: isStationSelector = Boolean(stationsLayer);
-  $: {
-    if (currentLocation && currentLocation.center) {
-      [lng, lat] = currentLocation.center;
-    }
+  $: if (currentLocation && currentLocation.center) {
+    [lng, lat] = currentLocation.center;
   }
 
-  async function mapClick({ detail: center }) {
+  async function handleMapClick({ detail: center }) {
     const { id } = currentBoundary;
     try {
       let newLocation = await getFeature({ center }, id);
@@ -33,7 +31,7 @@
     }
   }
 
-  async function overlayClick({ detail: stationId }) {
+  async function handleOverlayClick({ detail: stationId }) {
     try {
       let newStation = await getStationById(stationId, stationsLayer.id);
       if (newStation) {
@@ -44,13 +42,11 @@
       logException(`getStationById failed: ${stationId}; ${stationsLayer.id}`);
     }
   }
-
-  function noop() {}
 </script>
 
 <Location
-  on:overlayclick="{isStationSelector ? overlayClick : noop}"
-  on:mapclick="{isStationSelector ? noop : mapClick}"
+  on:overlayclick="{handleOverlayClick}"
+  on:mapclick="{handleMapClick}"
   on:ready="{() => dispatch('ready')}"
   lng="{lng}"
   lat="{lat}"
