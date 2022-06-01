@@ -1,4 +1,4 @@
-// TODO: this code was copied from the in-progress work for the LCCS tool migration in the develop branch.
+// TODO: some of this code was copied from the in-progress work for the LCCS tool migration in the develop branch.
 // It should probably be abstracted so that it could be shared between the LCCS and the ChangeLocationStation component,
 // once the LCCS tool is migrated and merged into production.
 // see: https://github.com/berkeley-gif/caladapt-website-2021/blob/develop/src/routes/tools/local-climate-change-snapshot/_select-location/geocode-search.js
@@ -13,10 +13,7 @@ import {
 } from "~/helpers/geocode";
 import { serialize } from "~/helpers/utilities";
 
-export {
-  reverseGeocode as reverseGeocodeAddress,
-  formatFeature,
-} from "~/helpers/geocode";
+export { formatFeature } from "~/helpers/geocode";
 
 /**
  * handleAbortFetch - used to cancel pending fetch requests
@@ -69,30 +66,6 @@ export async function geocodeSearch(searchStr, options = {}) {
   });
   const result = await response.json();
   return result;
-}
-
-/**
- * reverseGeocodeBoundary - handles querying the Cal-Adapt API for a boundary feature
- * @param {[number, number]} coordinates
- * @param {Object} options
- * @param {string} options.boundaryType - type of geography, e.g. address, counties, etc.
- * @param {AbortSignal} options.signal - signal object from an AbortController instance
- * @returns {Object} - GeoJSON FeatureCollection
- */
-export async function reverseGeocodeBoundary([lng, lat], options = {}) {
-  const { boundaryType, signal } = options;
-  const url = `${caladaptGeocodingEndpoint}/${boundaryType}/?${serialize({
-    srs: 4326,
-    precision: 4,
-    intersects: `Point(${lng} ${lat})`,
-  })}`;
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-    ...(signal && { signal }),
-  });
-  return await response.json();
 }
 
 /**
