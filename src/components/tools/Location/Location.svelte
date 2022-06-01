@@ -111,7 +111,16 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  @mixin sidebar-transition {
+    transition: {
+      property: transform, width;
+      duration: 350ms;
+      timing-function: ease-in-out;
+      delay: 0;
+    }
+  }
+
   .location {
     position: relative;
     width: 100%;
@@ -120,31 +129,30 @@
   }
 
   .location-content {
+    @include sidebar-transition;
     width: 100%;
     height: 100%;
-    transition: all 0.4s ease-in-out 0s;
   }
 
   .location-content.shrink {
     width: calc(100% - 200px);
-    transition: all 0.4s ease 0s;
   }
 
   .location-sidebar {
+    @include sidebar-transition;
     position: absolute;
     width: 200px;
     height: 100%;
     top: 0;
-    right: -250px;
+    right: 0;
+    transform: translateX(200px);
     overflow-y: auto;
-    transition: all 0.4s ease-in-out 0s;
     border: 1px solid #cad3d2;
     z-index: 2;
   }
 
   .location-sidebar.expand {
-    right: 0;
-    transition: all 0.4s ease 0s;
+    transform: translateX(0);
   }
 </style>
 
