@@ -1,6 +1,5 @@
 <script>
   // Node modules
-  import { afterUpdate } from "svelte";
   import { createEventDispatcher } from "svelte";
 
   // Components
