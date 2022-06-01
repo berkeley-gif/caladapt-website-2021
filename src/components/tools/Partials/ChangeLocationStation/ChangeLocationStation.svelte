@@ -104,38 +104,38 @@
   modalHeading="{headingTitleText}"
   shouldSubmitOnEnter="{false}"
 >
-  <div>
-    <p>{helpText}</p>
-    <!-- tools that use stations only have that type of boundary and no others -->
-    {#if !isStationSelector}
-      <SelectBoundary
-        on:upload="{uploadBoundary}"
-        on:clear="{clearUpload}"
-        on:change:boundary="{handleChangeBoundary}"
-        on:change:location="{handleSearchSelect}"
-        enableUpload="{enableUpload}"
-        currentBoundary="{currentBoundary}"
-        currentLocation="{currentLocation}"
-        boundaryList="{boundaryList}"
-        addStateBoundary="{addStateBoundary}"
-      />
-    {/if}
-    <LocationMap
-      on:click="{handleMapClick}"
-      {...{
-        currentLocation,
-        currentBoundary,
-        stationsLayer,
-        isStationSelector,
-      }}
-    >
-      <Search
-        on:select="{handleSearchSelect}"
-        isStationSelector="{isStationSelector}"
-        currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
-        currentBoundary="{currentBoundary}"
-        stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
-      />
-    </LocationMap>
-  </div>
+  <p>{helpText}</p>
+
+  <!-- tools that use stations only have that type of boundary and no others -->
+  {#if !isStationSelector}
+    <SelectBoundary
+      on:upload="{uploadBoundary}"
+      on:clear="{clearUpload}"
+      on:change:boundary="{handleChangeBoundary}"
+      on:change:location="{handleSearchSelect}"
+      enableUpload="{enableUpload}"
+      currentBoundary="{currentBoundary}"
+      currentLocation="{currentLocation}"
+      boundaryList="{boundaryList}"
+      addStateBoundary="{addStateBoundary}"
+    />
+  {/if}
+
+  <LocationMap
+    on:click="{handleMapClick}"
+    {...{
+      currentLocation,
+      currentBoundary,
+      stationsLayer,
+      isStationSelector,
+    }}
+  >
+    <Search
+      on:select="{handleSearchSelect}"
+      isStationSelector="{isStationSelector}"
+      currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
+      currentBoundary="{currentBoundary}"
+      stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
+    />
+  </LocationMap>
 </Modal>
