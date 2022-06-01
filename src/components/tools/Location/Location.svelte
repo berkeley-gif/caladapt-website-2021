@@ -163,6 +163,7 @@
     top: 0;
     bottom: 0;
     display: flex;
+    pointer-events: none;
   }
 
   .loading-container :global(.bx--inline-loading) {
