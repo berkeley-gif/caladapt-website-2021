@@ -78,6 +78,8 @@
 
   function clearUpload() {
     currentLocation = location;
+    // this resets the boundary to whatever it initially was prior to uploading
+    // a custom boundary.
     if (currentBoundary.id === "custom") {
       currentBoundary = boundary;
     }
