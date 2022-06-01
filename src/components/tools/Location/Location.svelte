@@ -1,5 +1,6 @@
 <script>
   // Node modules
+  import { afterUpdate } from "svelte";
   import { createEventDispatcher } from "svelte";
 
   // Components
@@ -117,7 +118,7 @@
       property: transform, width;
       duration: 350ms;
       timing-function: ease-in-out;
-      delay: 0;
+      delay: 0s;
     }
   }
 

@@ -1,5 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
+  import "wicg-inert"; // see: https://github.com/WICG/inert
   import { Nav, Footer, BackToTop, SiteAlert } from "~/partials";
   import { hasWideLayout } from "~/helpers/layout";
 
