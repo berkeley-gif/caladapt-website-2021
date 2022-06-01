@@ -92,12 +92,6 @@
   }
 </script>
 
-<style>
-  .change-location {
-    position: relative;
-  }
-</style>
-
 <Modal
   bind:open
   on:click:button--secondary="{cancel}"
@@ -126,7 +120,10 @@
         addStateBoundary="{addStateBoundary}"
       />
     {/if}
-    <div class="change-location">
+    <LocationMap
+      on:click="{handleMapClick}"
+      {...{ currentLocation, currentBoundary, stationsLayer }}
+    >
       <Search
         on:select="{handleSearchSelect}"
         isStationSelector="{isStationSelector}"
@@ -134,11 +131,6 @@
         currentBoundary="{currentBoundary}"
         stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
       />
-
-      <LocationMap
-        on:click="{handleMapClick}"
-        {...{ currentLocation, currentBoundary, stationsLayer }}
-      />
-    </div>
+    </LocationMap>
   </div>
 </Modal>

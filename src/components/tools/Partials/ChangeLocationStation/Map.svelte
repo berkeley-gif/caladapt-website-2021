@@ -59,4 +59,6 @@
   location="{currentLocation}"
   imageOverlayShow="{false}"
   zoomToLocationOnLoad="{!isStationSelector}"
-/>
+>
+  <slot />
+</Location>

@@ -176,12 +176,15 @@
           sidebarOpen = !sidebarOpen;
         }}"
       />
+
       <NavigationControl />
       <AttributionControl options="{attributionOptions}" />
       <ScalingControl />
+
       {#if boundary}
         <BoundaryVectorLayer boundary="{boundary}" />
       {/if}
+
       {#if location}
         {#if location.geometry.type === "Point"}
           <Marker
@@ -192,12 +195,14 @@
           <BoundarySelection data="{location.geometry}" />
         {/if}
       {/if}
+
       {#if imageOverlayShow}
         <ImageOverlay
           coordinates="{imageOverlayCoords}"
           overlay="{imageOverlayUrl}"
         />
       {/if}
+
       {#if stations}
         <VectorLayer
           layer="{stations}"
@@ -205,9 +210,13 @@
           on:overlayclick="{handleOverlayClick}"
         />
       {/if}
+
       {#each overlays as overlay (overlay.id)}
         <VectorLayer layer="{overlay}" />
       {/each}
+
+      <!-- misc slot for anything else such as a search box -->
+      <slot />
     </Map>
   </div>
 </div>

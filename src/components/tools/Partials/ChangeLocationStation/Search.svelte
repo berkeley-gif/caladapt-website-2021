@@ -124,7 +124,7 @@
   }
 
   .search-box {
-    width: 50ch;
+    width: 100%;
   }
 
   .search-status {
