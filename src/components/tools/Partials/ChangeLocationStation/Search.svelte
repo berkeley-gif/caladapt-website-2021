@@ -75,7 +75,8 @@
     } catch (error) {
       console.warn(error);
       logException(
-        `lccs geocodeSearch error for ${searchValue} and ${boundaryType}`
+        `ChangeLocationStation/Search geocodeSearch error for 
+        ${searchValue} and ${boundaryType}`
       );
     } finally {
       isSearching = false;
