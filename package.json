@@ -59,7 +59,8 @@
     "mapbox-gl": "^2.0.1",
     "polka": "^1.0.0-next.20",
     "shpjs": "^3.6.3",
-    "sirv": "^1.0.0"
+    "sirv": "^1.0.0",
+    "wicg-inert": "^3.1.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
