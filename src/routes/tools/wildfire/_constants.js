@@ -18,6 +18,7 @@ export const DEFAULT_INITIAL_CONFIG = {
   climvar: DEFAULT_CLIMVAR,
   lng: DEFAULT_CENTER[0],
   lat: DEFAULT_CENTER[1],
+  fid: 41258,
   imperial: false,
 };
 

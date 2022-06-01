@@ -1,6 +1,7 @@
 import { writable, derived } from "svelte/store";
-import scenarios from "../../../helpers/climate-scenarios";
-import boundaries from "../../../helpers/mapbox-layers";
+import scenarios from "~/helpers/climate-scenarios";
+import boundaries from "~/helpers/mapbox-layers";
+import { createCustomBoundaryObject } from "./helpers";
 
 /**
  *
@@ -89,6 +90,13 @@ export const locationStore = (() => {
   const { update, subscribe } = store;
   return {
     subscribe,
+    updateAll: ({ boundaryId, location, isUpload = false }) =>
+      update((store) => {
+        store.isUpload = isUpload;
+        store.location = location;
+        store.boundaryId = boundaryId;
+        return store;
+      }),
     updateLocation: (location, isUpload = false) =>
       update((store) => {
         store.location = location;
@@ -107,7 +115,15 @@ export const locationStore = (() => {
     },
     get boundary() {
       return derived(store, ($store) => {
-        const selected = boundaries.find((d) => d.id === $store.boundaryId);
+        const boundaryType = $store.boundaryId;
+        const location = $store.location;
+        let selected;
+        if (boundaryType === "custom" && "geometry" in location) {
+          // NOTE: there is no "custom" boundary type in boundaries so we create it here.
+          selected = createCustomBoundaryObject(location);
+        } else {
+          selected = boundaries.find((d) => d.id === boundaryType);
+        }
         return selected;
       });
     },

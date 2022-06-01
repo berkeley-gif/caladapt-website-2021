@@ -12,11 +12,12 @@
   } from "~/helpers/geocode";
   import { logException, logGetFeatureErr } from "~/helpers/logging";
 
-  import { SelectBoundary } from "~/components/tools/Settings";
+  import { SelectBoundary, UploadBoundary } from "~/components/tools/Settings";
   import { Location } from "~/components/tools/Location";
   import { DEFAULT_LOCATION } from "~/routes/tools/_common/constants";
 
   export let location;
+  export let enableUpload = false;
   export let addStateBoundary = false;
   export let boundary;
   export let boundaryList;
@@ -26,25 +27,48 @@
   const dispatch = createEventDispatcher();
 
   let isStationSelector = Boolean(stationsLayer);
+
   let helpText = isStationSelector
     ? `Select a station on the map or enter an address in the search box to 
         select the nearest station.`
     : `Click on the map or enter an address in the search box. To explore data
         for a larger extent (e.g. county), select a boundary first.`;
+
   let headingTitleText = isStationSelector
     ? "Change Station"
     : "Change Location";
-  let currentLoc = location;
+
+  let currentLocation = location;
   let currentBoundary = boundary;
+
   let geocodeResults = [];
+
   let searchValue = "";
   let searchPlaceholder = isStationSelector
     ? "Enter place name or address"
     : boundary
     ? boundary.metadata.placeholder
     : null;
+
   let isSearching = false;
   let showSuggestions = false;
+
+  let uploadBoundaryRef; // reference to the UploadBoundary component, if present
+  let uploadBoundaryFiles = [];
+
+  // Reset the UploadBoundary component state when opening / closing or
+  // when selecting a different boundary type.
+  $: currentBoundary, open, maybeClearUploadBoundary();
+
+  function maybeClearUploadBoundary() {
+    if (
+      uploadBoundaryRef &&
+      uploadBoundaryFiles.length &&
+      currentBoundary.id !== "custom"
+    ) {
+      uploadBoundaryRef.clearFiles();
+    }
+  }
 
   async function mapClick({ detail: center }) {
     const { id } = currentBoundary;
@@ -56,13 +80,13 @@
       logGetFeatureErr(center, id);
     }
     if (newLocation) {
-      currentLoc = newLocation;
+      currentLocation = newLocation;
     }
   }
 
   async function overlayClick({ detail: stationId }) {
     try {
-      currentLoc = await getStationById(stationId, stationsLayer.id);
+      currentLocation = await getStationById(stationId, stationsLayer.id);
     } catch (error) {
       console.error(error.message);
       logException(`getStationById failed: ${stationId}; ${stationsLayer.id}`);
@@ -108,7 +132,7 @@
   }
 
   // NOTE: a side effect of the boundary type being updated is that it changes
-  // the value of the currentLoc reactive variable
+  // the value of the currentLocation reactive variable
   async function updateBoundary(event) {
     if (!event.detail) return;
     currentBoundary = event.detail;
@@ -120,13 +144,13 @@
     // Set current location after current boundary has changed
     // first attempt an intersection spatial query
     try {
-      intersectingFeature = await getFeature(currentLoc, id);
+      intersectingFeature = await getFeature(currentLocation, id);
     } catch (error) {
-      logGetFeatureErr(currentLoc && currentLoc.center, id);
+      logGetFeatureErr(currentLocation && currentLocation.center, id);
       console.error(error.message);
     }
     if (intersectingFeature) {
-      currentLoc = intersectingFeature;
+      currentLocation = intersectingFeature;
       return;
     }
     // if intersection fails, try a nearest neighbor spatial query
@@ -135,18 +159,20 @@
       try {
         const {
           center: [lng, lat],
-        } = currentLoc;
+        } = currentLocation;
         nearest = await getNearestFeature(lng, lat, id);
       } catch (error) {
         logException(
           `getNearestFeature failed: ${
-            currentLoc && currentLoc.center && currentLoc.center.join(",")
+            currentLocation &&
+            currentLocation.center &&
+            currentLocation.center.join(",")
           }`
         );
         console.error(error.message);
       }
       if (nearest) {
-        currentLoc = nearest;
+        currentLocation = nearest;
         return;
       }
     }
@@ -161,14 +187,14 @@
       console.error(error.message);
     }
     if (defaultLocation) {
-      currentLoc = defaultLocation;
+      currentLocation = defaultLocation;
     }
   }
 
   async function selectSuggestion(opt) {
     if (opt && opt.geocoder === "mapbox") {
       try {
-        currentLoc = isStationSelector
+        currentLocation = isStationSelector
           ? await getNearestFeature(
               opt.center[0],
               opt.center[1],
@@ -180,7 +206,7 @@
         console.error(error.message);
       }
     } else {
-      currentLoc = opt;
+      currentLocation = opt;
     }
     clearSearch();
   }
@@ -197,14 +223,16 @@
     if (
       currentBoundary &&
       currentBoundary.id === "locagrid" &&
-      !currentLoc.title
+      !currentLocation.title
     ) {
       try {
-        await assignLocationTitle(currentLoc, currentBoundary.id);
+        await assignLocationTitle(currentLocation, currentBoundary.id);
       } catch (error) {
         logException(
           `AssignLocationTitle failed: ${
-            currentLoc && currentLoc.center && currentLoc.center.join(",")
+            currentLocation &&
+            currentLocation.center &&
+            currentLocation.center.join(",")
           }, ${currentBoundary && currentBoundary.id}`
         );
         console.error(error.message);
@@ -213,12 +241,24 @@
     open = false;
     dispatch("change", {
       ...(currentBoundary && { boundaryId: currentBoundary.id }),
-      location: currentLoc,
+      location: currentLocation,
     });
   }
 
+  function uploadBoundary(e) {
+    currentBoundary = { id: "custom" };
+    currentLocation = e.detail.location;
+  }
+
+  function clearUpload() {
+    currentLocation = location;
+    if (currentBoundary.id === "custom") {
+      currentBoundary = boundary;
+    }
+  }
+
   function cancel() {
-    currentLoc = location;
+    currentLocation = location;
     currentBoundary = boundary;
     open = false;
   }
@@ -317,6 +357,14 @@
           addStateBoundary="{addStateBoundary}"
           on:change="{updateBoundary}"
         />
+        {#if enableUpload}
+          <UploadBoundary
+            bind:this="{uploadBoundaryRef}"
+            bind:files="{uploadBoundaryFiles}"
+            on:upload="{uploadBoundary}"
+            on:clear="{clearUpload}"
+          />
+        {/if}
       </div>
     {/if}
     <div class="change-location">
@@ -370,11 +418,11 @@
       {/if}
       <!-- Map-->
       <Location
-        lng="{currentLoc.center[0]}"
-        lat="{currentLoc.center[1]}"
+        lng="{currentLocation.center[0]}"
+        lat="{currentLocation.center[1]}"
         boundary="{currentBoundary}"
         stations="{stationsLayer}"
-        location="{currentLoc}"
+        location="{currentLocation}"
         imageOverlayShow="{false}"
         zoomToLocationOnLoad="{!isStationSelector}"
         on:overlayclick="{isStationSelector ? overlayClick : noop}"

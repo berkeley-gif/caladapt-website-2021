@@ -64,7 +64,10 @@
   let timeSlider;
 
   let bookmark = "";
-  let shareLinkWarning = "";
+  $: shareLinkWarning =
+    $boundary.id === "custom"
+      ? "Cannot create a share link for custom boundaries."
+      : "";
 
   let learnMoreProps = {};
 
@@ -123,21 +126,17 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a share link for a custom boundary";
-    } else {
-      bookmark = serialize({
-        climvar: $climvarStore,
-        scenario: $scenarioStore,
-        models: $modelsStore.join(","),
-        modelSingle: $modelSingleStore,
-        year: $yearStore,
-        month: $monthStore,
-        duration: $durationStore,
-        boundary: $boundary.id,
-        fid: $location.id,
-      });
-    }
+    bookmark = serialize({
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
+      modelSingle: $modelSingleStore,
+      year: $yearStore,
+      month: $monthStore,
+      duration: $durationStore,
+      boundary: $boundary.id,
+      fid: $location.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -172,20 +171,12 @@
     activeTab = event.detail;
   }
 
-  function changeLocation(e) {
-    if (e.detail.boundaryId === "custom") {
-      // FIXME: this prevents the ShareLink from preventing a shareable URL
-      // because the boundary id will never be "custom" when a user clicks the
-      // share button.
-      // NOTE: custom boundary upload was removed in #236 so currenty this code
-      // does nothing. When re-implementing the custom boundary upload, this
-      // should be fixed.
-      locationStore.updateBoundary("locagrid");
-      locationStore.updateLocation(e.detail.location, true);
-    } else {
-      locationStore.updateBoundary(e.detail.boundaryId);
-      locationStore.updateLocation(e.detail.location);
-    }
+  function changeLocation({ detail: { location, boundaryId } }) {
+    locationStore.updateAll({
+      location,
+      boundaryId,
+      isUpload: boundaryId === "custom",
+    });
   }
 
   function handleSliderChange(e) {
@@ -319,6 +310,7 @@
   boundary="{$boundary}"
   boundaryList="{DEFAULT_BOUNDARIES}"
   addStateBoundary="{true}"
+  enableUpload="{true}"
   on:change="{changeLocation}"
 />
 
