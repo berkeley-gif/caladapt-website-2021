@@ -11,7 +11,7 @@
 
   export let isStationSelector = false;
   export let currentLayer = null;
-  export let searchPlaceholder = "";
+  export let currentBoundary = null;
   export let stationsLayerId = null;
 
   const dispatch = createEventDispatcher();
@@ -19,14 +19,24 @@
   const MIN_SEARCH_TEXT_LENGTH = 3;
   const SEARCH_INPUT_DEBOUNCE_MS = 350;
 
-  let isSearching = false;
-  let suggestions = [];
-  let searchValue = "";
   let abortController;
-
-  $: console.log(currentLayer);
+  let isSearching = false;
+  let searchValue = "";
+  let searchPlaceholder = "Enter place name or address";
+  let suggestions = [];
 
   $: currentLayer, handleClearSearch();
+  $: currentBoundary, updatePlaceholderText();
+
+  function updatePlaceholderText() {
+    if (
+      currentBoundary &&
+      currentBoundary.metadata &&
+      currentBoundary.metadata.placeholder
+    ) {
+      searchPlaceholder = `Enter ${currentBoundary.metadata.placeholder}`;
+    }
+  }
 
   function handleClearSearch() {
     suggestions = [];

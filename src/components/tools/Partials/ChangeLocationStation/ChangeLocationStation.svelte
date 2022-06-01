@@ -44,18 +44,6 @@
   let currentLocation = location;
   let currentBoundary = boundary;
 
-  let searchPlaceholder = isStationSelector
-    ? "Enter place name or address"
-    : boundary && boundary.metadata
-    ? updatePlaceholderText(boundary.metadata.placeholder)
-    : "";
-
-  function updatePlaceholderText(boundary) {
-    if (boundary && boundary.metadata) {
-      searchPlaceholder = `Enter ${boundary.metadata.placeholder}`;
-    }
-  }
-
   async function handleSubmit() {
     if (
       (isStationSelector && currentLocation) ||
@@ -75,7 +63,6 @@
 
   function handleChangeBoundary({ detail }) {
     currentBoundary = detail;
-    updatePlaceholderText(currentBoundary);
   }
 
   function handleMapClick({ detail }) {
@@ -142,7 +129,7 @@
         on:select="{handleSearchSelect}"
         isStationSelector="{isStationSelector}"
         currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
-        searchPlaceholder="{searchPlaceholder}"
+        currentBoundary="{currentBoundary}"
         stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
       />
 
