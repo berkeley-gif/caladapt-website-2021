@@ -154,6 +154,19 @@
   .location-sidebar.expand {
     transform: translateX(0);
   }
+
+  .loading-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+  }
+
+  .loading-container :global(.bx--inline-loading) {
+    justify-content: center;
+  }
 </style>
 
 <div class="location">
@@ -166,10 +179,8 @@
       on:toggleLayer="{toggleMapLayer}"
     />
   </div>
+
   <div class="location-content" class:shrink="{sidebarOpen}">
-    {#if isMapLoading}
-      <InlineLoading description="Loading map..." />
-    {/if}
     <Map
       bind:this="{mapComponent}"
       {...options}
@@ -226,5 +237,11 @@
       <!-- misc slot for anything else such as a search box -->
       <slot />
     </Map>
+
+    <div class="loading-container">
+      {#if isMapLoading}
+        <InlineLoading description="Loading map..." />
+      {/if}
+    </div>
   </div>
 </div>
