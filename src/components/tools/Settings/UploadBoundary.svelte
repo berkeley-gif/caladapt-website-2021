@@ -12,7 +12,7 @@
   } from "~/helpers/utilities";
   import { formatFeature } from "~/helpers/geocode";
 
-  /** the files attribute from the file input  */
+  /** @type {?File[]} - the files attribute from the file input  */
   export let files = [];
 
   const dispatch = createEventDispatcher();
@@ -95,6 +95,7 @@
     }
   }
 
+  /** @type {(file: File) => void } */
   async function processUpload(file) {
     handleLoading();
 
@@ -137,10 +138,11 @@
     }
   }
 
-  function isValidGeoJson(geojson) {
-    if (typeof geojson === "object" && "type" in geojson) {
+  /** @type { (data: any) => boolean } */
+  function isValidGeoJson(data) {
+    if (typeof data === "object" && "type" in data) {
       try {
-        return isWgs84(geojson);
+        return isWgs84(data);
       } catch (error) {
         console.log(error);
       }
@@ -148,8 +150,9 @@
     return false;
   }
 
-  function isWgs84(data) {
-    const [xMin, yMin, xMax, yMax] = bbox(data);
+  /** @type { (geojson: GeoJSON ) => boolean } */
+  function isWgs84(geojson) {
+    const [xMin, yMin, xMax, yMax] = bbox(geojson);
     if (xMin < -180 || xMax > 180) {
       return false;
     }
