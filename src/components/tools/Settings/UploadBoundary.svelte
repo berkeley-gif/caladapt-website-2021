@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { FileUploader } from "carbon-components-svelte";
+  import bbox from "@turf/bbox";
 
   // Helpers
   import {
@@ -106,12 +107,12 @@
       return;
     }
 
-    // Try converting the uploaded boundary to JSON format
+    // Try converting the uploaded boundary to JSON format (if it's not already)
     const [geojson, geojsonError] = await handle(convertFileToGeojson(file));
-    const isValidGeoJson = typeof geojson === "object" && "type" in geojson;
+    const isValid = isValidGeoJson(geojson);
 
     if (geojsonError) {
-      if (isValidGeoJson) {
+      if (isValid) {
         handleValidityError(
           `We can fetch data for this area, but the boundary may not display on
           the location map.`,
@@ -124,14 +125,38 @@
       }
     }
 
-    if (isValidGeoJson) {
+    if (isValid) {
       const feature = handleGeoJsonSuccess(geojson);
       if (feature) {
         const location = formatFeature(feature, "custom");
         location.title = file.name;
         dispatch("upload", { location });
       }
+    } else {
+      handleValidityError(`Uploaded data must be in WGS84.`);
     }
+  }
+
+  function isValidGeoJson(geojson) {
+    if (typeof geojson === "object" && "type" in geojson) {
+      try {
+        return isWgs84(geojson);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    return false;
+  }
+
+  function isWgs84(data) {
+    const [xMin, yMin, xMax, yMax] = bbox(data);
+    if (xMin < -180 || xMax > 180) {
+      return false;
+    }
+    if (yMin < -90 || yMax > 90) {
+      return false;
+    }
+    return true;
   }
 </script>
 
