@@ -130,6 +130,7 @@
 
   .location-content {
     @include sidebar-transition;
+    position: relative;
     width: 100%;
     height: 100%;
   }
@@ -171,17 +172,10 @@
 </style>
 
 <div class="location">
-  <div class="location-sidebar" class:expand="{sidebarOpen}">
-    <Sidebar
-      open="{sidebarOpen}"
-      on:close="{() => {
-        sidebarOpen = false;
-      }}"
-      on:toggleLayer="{toggleMapLayer}"
-    />
-  </div>
-
   <div class="location-content" class:shrink="{sidebarOpen}">
+    <!-- misc slot for anything else such as a search box -->
+    <slot />
+
     <Map
       bind:this="{mapComponent}"
       {...options}
@@ -234,9 +228,6 @@
       {#each overlays as overlay (overlay.id)}
         <VectorLayer layer="{overlay}" />
       {/each}
-
-      <!-- misc slot for anything else such as a search box -->
-      <slot />
     </Map>
 
     <div class="loading-container">
@@ -244,5 +235,15 @@
         <InlineLoading description="Loading map..." />
       {/if}
     </div>
+  </div>
+
+  <div class="location-sidebar" class:expand="{sidebarOpen}">
+    <Sidebar
+      open="{sidebarOpen}"
+      on:close="{() => {
+        sidebarOpen = false;
+      }}"
+      on:toggleLayer="{toggleMapLayer}"
+    />
   </div>
 </div>
