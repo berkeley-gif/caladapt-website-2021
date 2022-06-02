@@ -1,6 +1,9 @@
 <script>
   import { stores } from "@sapper/app";
-  import "wicg-inert"; // see: https://github.com/WICG/inert
+
+  // inert polyfill only needs to be imported once app wide
+  // see: https://github.com/WICG/inert
+  import "wicg-inert";
   import { Nav, Footer, BackToTop, SiteAlert } from "~/partials";
   import { hasWideLayout } from "~/helpers/layout";
 
