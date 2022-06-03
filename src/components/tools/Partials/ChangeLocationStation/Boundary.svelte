@@ -14,14 +14,19 @@
 
   const dispatch = createEventDispatcher();
 
-  let helpText = isStationSelector
-    ? `Select a station on the map or enter an address in the search box to 
-        select the nearest station.`
-    : `Click on the map or enter an address in the search box. To explore data
-        for a larger extent (e.g. county), select a boundary first.`;
-
   let uploadBoundaryRef = null;
   let uploadBoundaryFiles = [];
+
+  $: helpText = isStationSelector
+    ? `Select a station on the map or enter an address in the search box to 
+        select the nearest station.`
+    : `Click on the map or enter a ${
+        currentBoundary ? currentBoundary.metadata.placeholder : "address"
+      } in the search box.${
+        currentBoundary && currentBoundary.id === "locagrid"
+          ? " To explore data for a larger extent (e.g. county), select a boundary first."
+          : ""
+      }`;
 
   // Reset the UploadBoundary component state when opening / closing or
   // when selecting a different boundary type.
