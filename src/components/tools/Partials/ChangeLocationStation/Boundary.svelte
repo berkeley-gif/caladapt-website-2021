@@ -16,21 +16,42 @@
 
   let uploadBoundaryRef = null;
   let uploadBoundaryFiles = [];
+  let helpText = "";
 
-  $: helpText = isStationSelector
-    ? `Select a station on the map or enter an address in the search box to 
-        select the nearest station.`
-    : `Click on the map or enter a ${
-        currentBoundary ? currentBoundary.metadata.placeholder : "address"
-      } in the search box.${
-        currentBoundary && currentBoundary.id === "locagrid"
-          ? " To explore data for a larger extent (e.g. county), select a boundary first."
-          : ""
-      }`;
+  $: if (currentBoundary || isStationSelector) {
+    setHelpText();
+    // Reset the UploadBoundary component state when opening / closing or
+    // when selecting a different boundary type.
+    maybeClearUploadBoundary();
+  }
 
-  // Reset the UploadBoundary component state when opening / closing or
-  // when selecting a different boundary type.
-  $: currentBoundary, maybeClearUploadBoundary();
+  function setHelpText() {
+    if (isStationSelector) {
+      helpText = `Select a station on the map or enter an address in the search
+       box to select the nearest station.`;
+    } else {
+      helpText = getNonStationHelpText();
+    }
+  }
+
+  function getNonStationHelpText() {
+    let str = "";
+    let term = "address";
+    if (
+      currentBoundary &&
+      currentBoundary.metadata &&
+      typeof currentBoundary.metadata.placeholder === "string"
+    ) {
+      term = currentBoundary.metadata.placeholder;
+    }
+    str = `Click on the map or enter a ${term} in the search box.`;
+    if (currentBoundary && currentBoundary.id === "locagrid") {
+      const extraHelp =
+        "To explore data for a larger extent (e.g. county), selecta boundary first.";
+      str = `${str} ${extraHelp}`;
+    }
+    return str;
+  }
 
   function maybeClearUploadBoundary() {
     if (
