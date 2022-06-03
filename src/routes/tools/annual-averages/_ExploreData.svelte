@@ -87,10 +87,6 @@
     dataByDate = null;
   }
 
-  $: if ($location) {
-    loadLocation();
-  }
-
   afterUpdate(() => {
     if ($location && $location.title) {
       chartTitle = $location.title;
