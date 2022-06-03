@@ -96,7 +96,7 @@
 <style>
   div {
     margin: 1.5rem 0;
-    max-width: 75%;
+    max-width: 50ch;
   }
 </style>
 

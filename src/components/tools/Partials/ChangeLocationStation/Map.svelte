@@ -44,17 +44,27 @@
   }
 </script>
 
-<Location
-  on:overlayclick="{handleOverlayClick}"
-  on:mapclick="{handleMapClick}"
-  on:ready="{() => dispatch('ready')}"
-  lng="{lng}"
-  lat="{lat}"
-  boundary="{currentBoundary}"
-  stations="{stationsLayer}"
-  location="{currentLocation}"
-  imageOverlayShow="{false}"
-  zoomToLocationOnLoad="{!isStationSelector}"
->
-  <slot />
-</Location>
+<style>
+  div {
+    width: 75%;
+    margin-bottom: 3rem;
+  }
+</style>
+
+<div>
+  <Location
+    on:overlayclick="{handleOverlayClick}"
+    on:mapclick="{handleMapClick}"
+    on:ready="{() => dispatch('ready')}"
+    lng="{lng}"
+    lat="{lat}"
+    boundary="{currentBoundary}"
+    stations="{stationsLayer}"
+    location="{currentLocation}"
+    imageOverlayShow="{false}"
+    zoomToLocationOnLoad="{!isStationSelector}"
+    --map-height="350px"
+  >
+    <slot />
+  </Location>
+</div>

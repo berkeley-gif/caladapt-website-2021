@@ -34,7 +34,7 @@
   let helpText = isStationSelector
     ? `Select a station on the map or enter an address in the search box to 
         select the nearest station.`
-    : `Click on the map or enter an address in the search box. To explore data
+    : `Click on the map or enter an address in the search box.<br>To explore data
         for a larger extent (e.g. county), select a boundary first.`;
 
   let headingTitleText = isStationSelector
@@ -103,8 +103,9 @@
   secondaryButtonText="Cancel"
   modalHeading="{headingTitleText}"
   shouldSubmitOnEnter="{false}"
+  size="lg"
 >
-  <p>{helpText}</p>
+  <p style="max-width:55ch;">{@html helpText}</p>
 
   <!-- tools that use stations only have that type of boundary and no others -->
   {#if !isStationSelector}
