@@ -94,6 +94,10 @@
     align-items: flex-start;
     gap: 2rem;
   }
+
+  div > :global(*) {
+    width: calc(50% - 1rem);
+  }
 </style>
 
 <Modal
