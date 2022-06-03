@@ -51,18 +51,14 @@
     }
   }
 
-  function handleSearchSelect({ detail }) {
-    currentLocation = detail;
+  function handleChangeLocation({ detail }) {
+    if (detail && typeof detail === "object") {
+      currentLocation = detail;
+    }
   }
 
   function handleChangeBoundary({ detail }) {
     currentBoundary = detail;
-  }
-
-  function handleMapClick({ detail }) {
-    if (detail && typeof detail === "object") {
-      currentLocation = detail;
-    }
   }
 
   function uploadBoundary({ detail }) {
@@ -118,7 +114,7 @@
       on:upload="{uploadBoundary}"
       on:clear="{clearUpload}"
       on:change:boundary="{handleChangeBoundary}"
-      on:change:location="{handleSearchSelect}"
+      on:change:location="{handleChangeLocation}"
       enableUpload="{enableUpload}"
       currentBoundary="{currentBoundary}"
       currentLocation="{currentLocation}"
@@ -128,7 +124,7 @@
     />
 
     <LocationMap
-      on:click="{handleMapClick}"
+      on:click="{handleChangeLocation}"
       {...{
         currentLocation,
         currentBoundary,
@@ -137,7 +133,7 @@
       }}
     >
       <Search
-        on:select="{handleSearchSelect}"
+        on:select="{handleChangeLocation}"
         isStationSelector="{isStationSelector}"
         currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
         currentBoundary="{currentBoundary}"
