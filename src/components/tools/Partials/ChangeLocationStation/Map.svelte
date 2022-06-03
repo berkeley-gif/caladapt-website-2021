@@ -48,7 +48,6 @@
   div {
     height: 100%;
     width: 75%;
-    margin-bottom: 3rem;
   }
 </style>
 

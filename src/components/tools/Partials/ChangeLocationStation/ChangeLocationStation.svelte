@@ -91,8 +91,8 @@
     padding-right: 1rem;
   }
 
-  .contents-wrapper {
-    height: 100%;
+  div {
+    height: 50vh;
     width: 100%;
     display: flex;
     align-items: flex-start;
@@ -113,7 +113,7 @@
   shouldSubmitOnEnter="{false}"
   size="lg"
 >
-  <div class="contents-wrapper">
+  <div>
     <SelectBoundary
       on:upload="{uploadBoundary}"
       on:clear="{clearUpload}"

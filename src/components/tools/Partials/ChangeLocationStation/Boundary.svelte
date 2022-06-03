@@ -107,7 +107,11 @@
 
 <style>
   div > :global(*) {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.25rem;
+  }
+
+  div > :global(*):last-child {
+    margin-bottom: 0;
   }
 </style>
 
