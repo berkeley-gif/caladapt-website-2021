@@ -46,6 +46,7 @@
 
 <style>
   div {
+    height: 100%;
     width: 75%;
     margin-bottom: 3rem;
   }
@@ -63,7 +64,6 @@
     location="{currentLocation}"
     imageOverlayShow="{false}"
     zoomToLocationOnLoad="{!isStationSelector}"
-    --map-height="350px"
   >
     <slot />
   </Location>

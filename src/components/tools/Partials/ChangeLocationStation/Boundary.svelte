@@ -10,8 +10,15 @@
   export let boundaryList = [];
   export let addStateBoundary = false;
   export let enableUpload = false;
+  export let isStationSelector = false;
 
   const dispatch = createEventDispatcher();
+
+  let helpText = isStationSelector
+    ? `Select a station on the map or enter an address in the search box to 
+        select the nearest station.`
+    : `Click on the map or enter an address in the search box. To explore data
+        for a larger extent (e.g. county), select a boundary first.`;
 
   let uploadBoundaryRef = null;
   let uploadBoundaryFiles = [];
@@ -94,25 +101,29 @@
 </script>
 
 <style>
-  div {
-    margin: 1.5rem 0;
-    max-width: 50ch;
+  div > :global(*) {
+    margin-bottom: 1.5rem;
   }
 </style>
 
 <div>
-  <SelectBoundary
-    on:change="{updateBoundary}"
-    selectedId="{currentBoundary.id}"
-    items="{boundaryList}"
-    addStateBoundary="{addStateBoundary}"
-  />
-  {#if enableUpload}
-    <UploadBoundary
-      bind:this="{uploadBoundaryRef}"
-      bind:files="{uploadBoundaryFiles}"
-      on:upload
-      on:clear
+  <p>{helpText}</p>
+
+  {#if !isStationSelector}
+    <SelectBoundary
+      on:change="{updateBoundary}"
+      selectedId="{currentBoundary.id}"
+      items="{boundaryList}"
+      addStateBoundary="{addStateBoundary}"
     />
+
+    {#if enableUpload}
+      <UploadBoundary
+        bind:this="{uploadBoundaryRef}"
+        bind:files="{uploadBoundaryFiles}"
+        on:upload
+        on:clear
+      />
+    {/if}
   {/if}
 </div>

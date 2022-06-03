@@ -31,12 +31,6 @@
 
   let isStationSelector = Boolean(stationsLayer);
 
-  let helpText = isStationSelector
-    ? `Select a station on the map or enter an address in the search box to 
-        select the nearest station.`
-    : `Click on the map or enter an address in the search box.<br>To explore data
-        for a larger extent (e.g. county), select a boundary first.`;
-
   let headingTitleText = isStationSelector
     ? "Change Station"
     : "Change Location";
@@ -92,6 +86,20 @@
   }
 </script>
 
+<style>
+  :global(.bx--modal-container .bx--modal-content) {
+    padding-right: 1rem;
+  }
+
+  .contents-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+</style>
+
 <Modal
   bind:open
   on:click:button--secondary="{cancel}"
@@ -105,10 +113,7 @@
   shouldSubmitOnEnter="{false}"
   size="lg"
 >
-  <p style="max-width:55ch;">{@html helpText}</p>
-
-  <!-- tools that use stations only have that type of boundary and no others -->
-  {#if !isStationSelector}
+  <div class="contents-wrapper">
     <SelectBoundary
       on:upload="{uploadBoundary}"
       on:clear="{clearUpload}"
@@ -119,24 +124,25 @@
       currentLocation="{currentLocation}"
       boundaryList="{boundaryList}"
       addStateBoundary="{addStateBoundary}"
-    />
-  {/if}
-
-  <LocationMap
-    on:click="{handleMapClick}"
-    {...{
-      currentLocation,
-      currentBoundary,
-      stationsLayer,
-      isStationSelector,
-    }}
-  >
-    <Search
-      on:select="{handleSearchSelect}"
       isStationSelector="{isStationSelector}"
-      currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
-      currentBoundary="{currentBoundary}"
-      stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
     />
-  </LocationMap>
+
+    <LocationMap
+      on:click="{handleMapClick}"
+      {...{
+        currentLocation,
+        currentBoundary,
+        stationsLayer,
+        isStationSelector,
+      }}
+    >
+      <Search
+        on:select="{handleSearchSelect}"
+        isStationSelector="{isStationSelector}"
+        currentLayer="{isStationSelector ? stationsLayer : currentBoundary}"
+        currentBoundary="{currentBoundary}"
+        stationsLayerId="{isStationSelector ? stationsLayer.id : null}"
+      />
+    </LocationMap>
+  </div>
 </Modal>
