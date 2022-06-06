@@ -16,7 +16,9 @@
 
   const dispatch = createEventDispatcher();
 
-  const MIN_SEARCH_TEXT_LENGTH = 3;
+  // should be 3 for street address & place names, and 1 for cal-adapt names
+  const MAPBOX_MIN_SEARCH_TEXT_LENGTH = 3;
+  const CAL_ADAPT_MIN_SEARCH_TEXT_LENGTH = 1;
   const SEARCH_INPUT_DEBOUNCE_MS = 350;
 
   let abortController;
@@ -24,6 +26,11 @@
   let searchValue = "";
   let searchPlaceholder = "Enter place name or address";
   let suggestions = [];
+
+  $: MIN_SEARCH_TEXT_LENGTH =
+    (currentBoundary && currentBoundary.id === "locagrid") || isStationSelector
+      ? MAPBOX_MIN_SEARCH_TEXT_LENGTH
+      : CAL_ADAPT_MIN_SEARCH_TEXT_LENGTH;
 
   $: currentLayer, handleClearSearch();
   $: currentBoundary, updatePlaceholderText();
