@@ -1,6 +1,6 @@
 <script>
   // Node modules
-  import { createEventDispatcher } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
 
   // Components
   import { Button, Checkbox } from "carbon-components-svelte";
@@ -14,7 +14,8 @@
 
   // Local variables
   //-----------------
-  let dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
+  let containerRef = null;
 
   // Inlcudes Electric Infrastructure layers only
   // Natural gas layers no longer available online for public download
@@ -34,6 +35,17 @@
       layer.name = d.metadata.title;
       return layer;
     });
+
+  afterUpdate(() => {
+    // make the Sidebar contents invisible to assistive tech without
+    // affecting its visual appearance.
+    // see: https://github.com/WICG/inert
+    if (open) {
+      containerRef.inert = false;
+    } else {
+      containerRef.inert = true;
+    }
+  });
 
   // Functions
   //------------
@@ -87,7 +99,7 @@
   }
 </style>
 
-<div class="map-ui">
+<div bind:this="{containerRef}" class="map-ui">
   <div class="layers-ui">
     <div class="header">
       <Button

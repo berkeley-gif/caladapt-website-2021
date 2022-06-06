@@ -111,7 +111,16 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  @mixin sidebar-transition {
+    transition: {
+      property: transform, width;
+      duration: 350ms;
+      timing-function: ease-in-out;
+      delay: 0s;
+    }
+  }
+
   .location {
     position: relative;
     width: 100%;
@@ -120,48 +129,53 @@
   }
 
   .location-content {
+    @include sidebar-transition;
+    position: relative;
     width: 100%;
     height: 100%;
-    transition: all 0.4s ease-in-out 0s;
   }
 
   .location-content.shrink {
     width: calc(100% - 200px);
-    transition: all 0.4s ease 0s;
   }
 
   .location-sidebar {
+    @include sidebar-transition;
     position: absolute;
     width: 200px;
     height: 100%;
     top: 0;
-    right: -250px;
+    right: 0;
+    transform: translateX(200px);
     overflow-y: auto;
-    transition: all 0.4s ease-in-out 0s;
     border: 1px solid #cad3d2;
     z-index: 2;
   }
 
   .location-sidebar.expand {
+    transform: translateX(0);
+  }
+
+  .loading-container {
+    position: absolute;
+    left: 0;
     right: 0;
-    transition: all 0.4s ease 0s;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    pointer-events: none;
+  }
+
+  .loading-container :global(.bx--inline-loading) {
+    justify-content: center;
   }
 </style>
 
 <div class="location">
-  <div class="location-sidebar" class:expand="{sidebarOpen}">
-    <Sidebar
-      open="{sidebarOpen}"
-      on:close="{() => {
-        sidebarOpen = false;
-      }}"
-      on:toggleLayer="{toggleMapLayer}"
-    />
-  </div>
   <div class="location-content" class:shrink="{sidebarOpen}">
-    {#if isMapLoading}
-      <InlineLoading description="Loading map..." />
-    {/if}
+    <!-- misc slot for anything else such as a search box -->
+    <slot />
+
     <Map
       bind:this="{mapComponent}"
       {...options}
@@ -176,12 +190,15 @@
           sidebarOpen = !sidebarOpen;
         }}"
       />
+
       <NavigationControl />
       <AttributionControl options="{attributionOptions}" />
       <ScalingControl />
+
       {#if boundary}
         <BoundaryVectorLayer boundary="{boundary}" />
       {/if}
+
       {#if location}
         {#if location.geometry.type === "Point"}
           <Marker
@@ -192,12 +209,14 @@
           <BoundarySelection data="{location.geometry}" />
         {/if}
       {/if}
+
       {#if imageOverlayShow}
         <ImageOverlay
           coordinates="{imageOverlayCoords}"
           overlay="{imageOverlayUrl}"
         />
       {/if}
+
       {#if stations}
         <VectorLayer
           layer="{stations}"
@@ -205,9 +224,26 @@
           on:overlayclick="{handleOverlayClick}"
         />
       {/if}
+
       {#each overlays as overlay (overlay.id)}
         <VectorLayer layer="{overlay}" />
       {/each}
     </Map>
+
+    <div class="loading-container">
+      {#if isMapLoading}
+        <InlineLoading description="Loading map..." />
+      {/if}
+    </div>
+  </div>
+
+  <div class="location-sidebar" class:expand="{sidebarOpen}">
+    <Sidebar
+      open="{sidebarOpen}"
+      on:close="{() => {
+        sidebarOpen = false;
+      }}"
+      on:toggleLayer="{toggleMapLayer}"
+    />
   </div>
 </div>
