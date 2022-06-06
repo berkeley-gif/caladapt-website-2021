@@ -118,11 +118,14 @@ export function formatPointFeature(feature) {
 function sanitizeSearchStr(searchStr, boundaryType) {
   let regex;
   switch (boundaryType) {
-    case "counties":
-      regex = /\bcounty\b/gi;
-      break;
     case "censustracts":
       regex = /\b(?:census|tract)\b/gi;
+      break;
+    case "cdistricts":
+      regex = /\b(?:congressional|district)\b/gi;
+      break;
+    case "counties":
+      regex = /\bcounty\b/gi;
       break;
     case "hydrounits":
       regex = /\bwatershed\b/gi;
