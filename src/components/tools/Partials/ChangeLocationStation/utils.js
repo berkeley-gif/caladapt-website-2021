@@ -130,6 +130,24 @@ function sanitizeSearchStr(searchStr, boundaryType) {
     case "hydrounits":
       regex = /\bwatershed\b/gi;
       break;
+    case "wecc-load-area":
+      regex = /\b(?:wecc|load|area)\b/gi;
+      break;
+    case "climregions":
+      regex = /\b(?:wrcc|climate|region)\b/gi;
+      break;
+    case "ccc4aregions":
+      regex = /\b(?:california's|fourth|assessment|climate|region)\b/gi;
+      break;
+    case "irwm":
+      regex = /\b(?:irwm|region)\b/gi;
+      break;
+    case "states":
+      regex = /\b(?:state|of)\b/gi;
+      break;
+    case "hadisdstations":
+      regex = /\b(?:weather|station|at)\b/gi;
+      break;
     default:
   }
   if (regex) {
