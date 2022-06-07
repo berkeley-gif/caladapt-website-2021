@@ -93,8 +93,15 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
   return response;
 };
 
-export const getTitle = (feature, layerId, placeName) => {
-  switch (layerId) {
+/**
+ * getTitle: Creates title attribute text for a feature and boundary type.
+ * @param {object} feature – GeoJSON feature
+ * @param {object} boundaryType - geographic boundary type (e.g. "locagrid", "counties", etc.)
+ * @param {string} placeName - fallback title
+ * @returns {string} - title text
+ */
+export const getTitle = (feature, boundaryType, placeName = "") => {
+  switch (boundaryType) {
     case "locagrid":
       return feature.properties && feature.properties.name
         ? `LOCA Grid Cell ${feature.properties.name}`
@@ -129,6 +136,56 @@ export const getTitle = (feature, layerId, placeName) => {
       return placeName;
   }
 };
+
+/**
+ * sanitizeSearchStr: removes extraneous words and characters for a given
+ * boundary type that the Cal-Adapt geocoding API won't match. Helpful for when
+ * needing to search for a boundary by name or identifier, e.g. in the
+ * ChangeLocationStation component.
+ * @param {string} searchStr – search string
+ * @param {string} boundaryType – geographic boundary type (e.g. "locagrid", "counties", etc.)
+ * @returns {string} - edited search string
+ */
+export function sanitizeSearchStr(searchStr, boundaryType) {
+  let regex;
+  switch (boundaryType) {
+    case "censustracts":
+      regex = /\b(?:census|tract)\b/gi;
+      break;
+    case "cdistricts":
+      regex = /\b(?:congressional|district)\b/gi;
+      break;
+    case "counties":
+      regex = /\bcounty\b/gi;
+      break;
+    case "hydrounits":
+      regex = /\bwatershed\b/gi;
+      break;
+    case "wecc-load-area":
+      regex = /\b(?:wecc|load|area)\b/gi;
+      break;
+    case "climregions":
+      regex = /\b(?:wrcc|climate|region)\b/gi;
+      break;
+    case "ccc4aregions":
+      regex = /\b(?:california's|fourth|assessment|climate|region)\b/gi;
+      break;
+    case "irwm":
+      regex = /\b(?:irwm|region)\b/gi;
+      break;
+    case "states":
+      regex = /\b(?:state|of)\b/gi;
+      break;
+    case "hadisdstations":
+      regex = /\b(?:weather|station|at)\b/gi;
+      break;
+    default:
+  }
+  if (regex) {
+    searchStr = searchStr.replace(regex, "");
+  }
+  return searchStr.replace(/,\s\bcalifornia\b/gi, "").trim();
+}
 
 export const formatFeature = (feature, boundaryId, placeName = "") => {
   const center = feature.center || getCenter(feature.geometry);

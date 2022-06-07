@@ -10,6 +10,7 @@ import {
   mapboxGeocodeParams,
   caladaptGeocodingEndpoint,
   formatFeature,
+  sanitizeSearchStr,
 } from "~/helpers/geocode";
 import { serialize } from "~/helpers/utilities";
 
@@ -106,52 +107,4 @@ export function formatPointFeature(feature) {
     geometry,
     ...rest,
   };
-}
-
-/**
- * sanitizeSearch: removes extraneous words and characters that the cal-adapt
- * geocoding API won't match for a given boundary type.
- * @param {string} searchStr – search string
- * @param {string} boundaryType – geographic boundary type
- * @returns {string}
- */
-function sanitizeSearchStr(searchStr, boundaryType) {
-  let regex;
-  switch (boundaryType) {
-    case "censustracts":
-      regex = /\b(?:census|tract)\b/gi;
-      break;
-    case "cdistricts":
-      regex = /\b(?:congressional|district)\b/gi;
-      break;
-    case "counties":
-      regex = /\bcounty\b/gi;
-      break;
-    case "hydrounits":
-      regex = /\bwatershed\b/gi;
-      break;
-    case "wecc-load-area":
-      regex = /\b(?:wecc|load|area)\b/gi;
-      break;
-    case "climregions":
-      regex = /\b(?:wrcc|climate|region)\b/gi;
-      break;
-    case "ccc4aregions":
-      regex = /\b(?:california's|fourth|assessment|climate|region)\b/gi;
-      break;
-    case "irwm":
-      regex = /\b(?:irwm|region)\b/gi;
-      break;
-    case "states":
-      regex = /\b(?:state|of)\b/gi;
-      break;
-    case "hadisdstations":
-      regex = /\b(?:weather|station|at)\b/gi;
-      break;
-    default:
-  }
-  if (regex) {
-    searchStr = searchStr.replace(regex, "");
-  }
-  return searchStr.replace(/,\s\bcalifornia\b/gi, "").trim();
 }
