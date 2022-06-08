@@ -109,6 +109,30 @@
   function handleOverlayClick(e) {
     dispatch("overlayclick", e.detail);
   }
+
+  /** @type {(e: KeyboardEvent) => void}*/
+  function handleKeydown(e) {
+    const { key, shiftKey } = e;
+    if (key === "Tab" && !shiftKey) {
+      maybeMoveFocusOutsideOfMap();
+    }
+  }
+
+  // This addresses a "tab trap" a11y problem with the MapBoxGL map instance below.
+  // Note: this solution is tightly coupled to the ChangeLocationStation
+  // component's modal and should probably be more generic.
+  function maybeMoveFocusOutsideOfMap() {
+    const container = mapComponent.getContainer();
+    const tabableElements = Array.from(
+      container.querySelectorAll("button")
+    ).filter((el) => el.offsetParent !== null);
+    const last = tabableElements[tabableElements.length - 1];
+    if (document.activeElement === last) {
+      document
+        .querySelector(".bx--modal-footer > .bx--btn.bx--btn--secondary")
+        .focus();
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -178,12 +202,13 @@
 
     <Map
       bind:this="{mapComponent}"
-      {...options}
-      style="{style}"
       on:click="{handleClick}"
       on:ready="{() => {
         isMapLoading = false;
       }}"
+      on:keydown="{handleKeydown}"
+      {...options}
+      style="{style}"
     >
       <LayerToggle
         on:layerToggleClick="{() => {
