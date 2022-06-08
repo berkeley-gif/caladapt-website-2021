@@ -1,19 +1,11 @@
 <script>
-  // Node modules
   import { afterUpdate, createEventDispatcher } from "svelte";
-
-  // Components
   import { Button, Checkbox } from "carbon-components-svelte";
+  import { Close20 } from "carbon-icons-svelte";
+  import layers from "~/helpers/mapbox-layers";
 
-  // Helpers
-  import layers from "./../../../helpers/mapbox-layers";
+  export let open = false;
 
-  // Props
-  //-------
-  export let open = true;
-
-  // Local variables
-  //-----------------
   const dispatch = createEventDispatcher();
   let containerRef = null;
 
@@ -62,63 +54,71 @@
 </script>
 
 <style>
-  .map-ui {
+  .sidebar-container {
+    height: 100%;
     overflow-y: auto;
-    z-index: 3;
+    overflow-x: hidden;
+    border-right: 1px solid var(--gray-60);
+    border-top: 1px solid var(--gray-60);
+    border-bottom: 1px solid var(--gray-60);
   }
 
-  .header {
-    padding: 10px 5px;
-    background: #cad3d2;
+  header,
+  .group {
+    padding: 6px;
   }
 
-  .header span {
-    margin: 0 0 0 5px;
+  header,
+  form > .group {
+    border-bottom: 1px solid #ccc;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h2,
+  h3 {
+    margin: 0;
+    font-size: 0.9rem;
     font-weight: 600;
-    font-size: 1rem;
+  }
+
+  h2 {
     text-transform: uppercase;
   }
 
-  .group {
-    border-bottom: 1px solid #ccc;
-    padding: 5px;
+  h3 {
+    margin-bottom: 6px;
   }
 
-  .group-title {
-    font-weight: 600;
-    padding-bottom: 5px;
-    font-size: 0.9rem;
-    display: block;
-  }
-
-  .group-source span {
-    font-size: 0.8rem;
-    display: block;
-    margin: 5px 0;
+  p {
+    margin: 12px 0;
     line-height: 1.2;
+    font-size: 0.8rem;
   }
 </style>
 
-<div bind:this="{containerRef}" class="map-ui">
-  <div class="layers-ui">
-    <div class="header">
-      <Button
-        style="padding: 0 5px;min-height: 0;"
-        type="button"
-        ariaLabel="Close"
-        title="Close"
-        class="close"
-        on:click="{() => {
-          open = false;
-          dispatch('close');
-        }}"
-      >
-        <span aria-hidden="true">&times;</span>
-      </Button>
-      <span>Map Layers</span>
-    </div>
+<div bind:this="{containerRef}" class="sidebar-container">
+  <header>
+    <h2>Map Layers</h2>
+    <Button
+      size="small"
+      icon="{Close20}"
+      iconDescription="Close the sidebar"
+      on:click="{() => {
+        open = false;
+        dispatch('close');
+      }}"
+    />
+  </header>
+
+  <form>
     <!-- Environmental Layers -->
-    <div class="group environmental">
+    <fieldset class="group environmental">
+      <h3 class="group-title">Environmental</h3>
       {#each environmental as opt, i}
         <Checkbox
           labelText="{opt.metadata.title}"
@@ -127,10 +127,11 @@
           on:check="{({ detail }) => toggleLayer(detail, opt.id)}"
         />
       {/each}
-    </div>
+    </fieldset>
+
     <!-- Electric Infrastructure Layers -->
-    <div class="group utilities">
-      <span class="group-title">Electric Infrastructure</span>
+    <fieldset class="group utilities">
+      <h3 class="group-title">Electric Infrastructure</h3>
       {#each utilities as opt, i}
         <Checkbox
           labelText="{opt.metadata.title}"
@@ -139,31 +140,32 @@
           on:check="{({ detail }) => toggleLayer(detail, opt.id)}"
         />
       {/each}
-      <div class="group-source">
-        Source: <a
-          href="https://cecgis-caenergy.opendata.arcgis.com/"
-          target="_blank">CEC GIS Open Data</a
+
+      <p>
+        <strong>Source:</strong>
+        <a href="https://cecgis-caenergy.opendata.arcgis.com/" target="_blank"
+          >CEC GIS Open Data</a
         >
-      </div>
-    </div>
-    <!-- Natural Gas Layers -->
-    <div class="group utilities">
-      <span class="group-title">Natural Gas</span>
-      <div class="group-source">
-        <span>
-          View data for natural gas transmission & hazardous liuid pipelines,
-          LNG plants and breakout tanks at <a
-            href="https://pvnpms.phmsa.dot.gov/PublicViewer/"
-            target="_blank">NPMS Public Map Viewer</a
-          >
-        </span>
-        <span>
-          For more information in accessing underlying data see <a
-            href="https://www.npms.phmsa.dot.gov/DataMayAccess.aspx"
-            target="_blank">What NPMS data may I access?</a
-          >
-        </span>
-      </div>
-    </div>
+      </p>
+    </fieldset>
+  </form>
+
+  <!-- Natural Gas Layers -->
+  <div class="group utilities">
+    <h3 class="group-title">Natural Gas</h3>
+    <p>
+      View data for natural gas transmission & hazardous liuid pipelines, LNG
+      plants and breakout tanks at <a
+        href="https://pvnpms.phmsa.dot.gov/PublicViewer/"
+        target="_blank">NPMS Public Map Viewer</a
+      >
+    </p>
+
+    <p>
+      For more information in accessing underlying data see <a
+        href="https://www.npms.phmsa.dot.gov/DataMayAccess.aspx"
+        target="_blank">What NPMS data may I access?</a
+      >
+    </p>
   </div>
 </div>

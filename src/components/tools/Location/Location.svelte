@@ -165,15 +165,12 @@
 
   .location-sidebar {
     @include sidebar-transition;
-    position: absolute;
     width: 200px;
-    height: 100%;
+    position: absolute;
     top: 0;
     right: 0;
+    bottom: 0;
     transform: translateX(200px);
-    overflow-y: auto;
-    border: 1px solid #cad3d2;
-    z-index: 2;
   }
 
   .location-sidebar.expand {
