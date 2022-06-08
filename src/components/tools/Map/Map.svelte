@@ -186,7 +186,7 @@
   }
 </style>
 
-<div class="map-container" bind:this="{container}" on:keydown on:keyup>
+<div bind:this="{container}" on:keydown on:keyup>
   {#if map}
     <slot />
   {/if}
