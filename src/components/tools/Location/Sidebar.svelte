@@ -18,18 +18,20 @@
   const utilities = layers
     .filter((d) => d.metadata.group === "Electric Infrastructure")
     .map((d) => {
-      const layer = d;
-      layer.name = d.metadata.title;
-      return layer;
+      return {
+        ...d,
+        name: d.metadata.title,
+      };
     });
 
   // Environmental layers
   const environmental = layers
     .filter((d) => d.metadata.group === "Environmental")
     .map((d) => {
-      const layer = d;
-      layer.name = d.metadata.title;
-      return layer;
+      return {
+        ...d,
+        name: d.metadata.title,
+      };
     });
 
   afterUpdate(() => {
@@ -44,13 +46,7 @@
   });
 
   function toggleLayer(show, id) {
-    let layer;
-    layers.forEach((d) => {
-      if (d.id === id) {
-        layer = d;
-        return;
-      }
-    });
+    const layer = layers.find((d) => d.id === id);
     dispatch("toggleLayer", { layer, show });
   }
 
