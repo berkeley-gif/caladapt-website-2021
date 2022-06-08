@@ -45,7 +45,6 @@
   let dispatch = createEventDispatcher();
   let mapComponent;
   let sidebarOpen = false;
-  let sidebarRef = null;
   let options = {
     lng,
     lat,
@@ -269,7 +268,6 @@
 
   <div class="location-sidebar" class:expand="{sidebarOpen}">
     <Sidebar
-      bind:this="{sidebarRef}"
       open="{sidebarOpen}"
       on:close="{handleSidebarClose}"
       on:toggleLayer="{toggleMapLayer}"
