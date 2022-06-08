@@ -1,10 +1,14 @@
 <script>
-  import { afterUpdate, createEventDispatcher } from "svelte";
+  import { afterUpdate, createEventDispatcher, tick } from "svelte";
   import { Button, Checkbox } from "carbon-components-svelte";
   import { Close20 } from "carbon-icons-svelte";
   import layers from "~/helpers/mapbox-layers";
 
   export let open = false;
+
+  $: if (open) {
+    focusSidebar();
+  }
 
   const dispatch = createEventDispatcher();
   let containerRef = null;
@@ -39,8 +43,6 @@
     }
   });
 
-  // Functions
-  //------------
   function toggleLayer(show, id) {
     let layer;
     layers.forEach((d) => {
@@ -51,16 +53,37 @@
     });
     dispatch("toggleLayer", { layer, show });
   }
+
+  async function focusSidebar() {
+    await tick();
+    containerRef.focus();
+  }
+
+  function handleClose() {
+    open = false;
+    dispatch("close");
+  }
 </script>
 
-<style>
+<style lang="scss">
+  $border-color: var(--gray-60);
+
+  @mixin border-style {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $border-color;
+  }
+
   .sidebar-container {
+    @include border-style;
+    border-left: none;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    border-right: 1px solid var(--gray-60);
-    border-top: 1px solid var(--gray-60);
-    border-bottom: 1px solid var(--gray-60);
+  }
+
+  .sidebar-container:focus {
+    outline: 2px solid var(--gray-80);
   }
 
   header,
@@ -70,7 +93,7 @@
 
   header,
   form > .group {
-    border-bottom: 1px solid #ccc;
+    @include border-style;
   }
 
   header {
@@ -101,17 +124,14 @@
   }
 </style>
 
-<div bind:this="{containerRef}" class="sidebar-container">
+<div bind:this="{containerRef}" class="sidebar-container" tabindex="0">
   <header>
     <h2>Map Layers</h2>
     <Button
       size="small"
       icon="{Close20}"
       iconDescription="Close the sidebar"
-      on:click="{() => {
-        open = false;
-        dispatch('close');
-      }}"
+      on:click="{handleClose}"
     />
   </header>
 

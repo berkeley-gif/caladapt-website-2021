@@ -1,6 +1,6 @@
 <script>
   // Node modules
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
 
   // Components
   import {
@@ -45,6 +45,7 @@
   let dispatch = createEventDispatcher();
   let mapComponent;
   let sidebarOpen = false;
+  let sidebarRef = null;
   let options = {
     lng,
     lat,
@@ -118,10 +119,10 @@
     }
   }
 
-  // This addresses a "tab trap" a11y problem with the MapBoxGL map instance below.
-  // Note: this solution is tightly coupled to the ChangeLocationStation
-  // component's modal and should probably be more generic.
   function maybeMoveFocusOutsideOfMap() {
+    // This addresses a "tab trap" a11y problem with the MapBoxGL map instance below.
+    // Note: this solution is tightly coupled to the ChangeLocationStation
+    // component's modal and should probably be more generic.
     const container = mapComponent.getContainer();
     const tabableElements = Array.from(
       container.querySelectorAll("button")
@@ -132,6 +133,13 @@
         .querySelector(".bx--modal-footer > .bx--btn.bx--btn--secondary")
         .focus();
     }
+  }
+
+  async function handleSidebarClose() {
+    sidebarOpen = false;
+    await tick();
+    // For a11y focus the layer toggle button
+    document.querySelector("button.mapboxgl-ctrl-toggle-layers").focus();
   }
 </script>
 
@@ -261,10 +269,9 @@
 
   <div class="location-sidebar" class:expand="{sidebarOpen}">
     <Sidebar
+      bind:this="{sidebarRef}"
       open="{sidebarOpen}"
-      on:close="{() => {
-        sidebarOpen = false;
-      }}"
+      on:close="{handleSidebarClose}"
       on:toggleLayer="{toggleMapLayer}"
     />
   </div>
