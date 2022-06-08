@@ -80,6 +80,7 @@
 
   .sidebar-container:focus {
     outline: 2px solid var(--gray-80);
+    outline-offset: -2px;
   }
 
   header,
