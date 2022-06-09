@@ -38,11 +38,6 @@
   $: beforeIdCentroids =
     mapStyle && mapStyle.includes("satellite") ? undefined : "state-label";
 
-  // TODO: remove before deploying to prod
-  $: if (mapReady && typeof window !== undefined) {
-    window.map = mbGlMap;
-  }
-
   $: if (mapReady && styleUrl && styleUrl !== curStyleUrl) {
     curStyleUrl = styleUrl;
     mbGlMap.setStyle(curStyleUrl);
