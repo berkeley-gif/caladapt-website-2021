@@ -712,3 +712,28 @@
     </div>
   </div>
 </div>
+
+<div class="spacing--v-48"></div>
+
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <p>
+        <strong>Disclaimer</strong>: This website was prepared as a result of
+        work sponsored by the California Energy Commission (CEC) and the
+        California Strategic Growth Council (SGC). It does not necessarily
+        represent the views of the CEC, SGC, the agencies' employees or the
+        State of California. The CEC, SGC, the State of California, its
+        employees, contractors and subcontractors make no warranty, express or
+        implied, and assume no legal liability for the information on this
+        website or made available via the website; nor does any party represent
+        that the use of this information will not infringe upon privately owned
+        rights. The website has not been approved or disapproved by the CEC or
+        SGC, nor has the CEC or SGC passed upon the accuracy or adequacy of the
+        information on the website.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="spacing--v-48"></div>
