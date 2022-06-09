@@ -119,6 +119,11 @@
     line-height: 1.2;
     font-size: 0.8rem;
   }
+
+  // TODO: figure out why focus styles aren't being applied to all links by default...
+  a:focus {
+    outline: 2px solid currentColor;
+  }
 </style>
 
 <div bind:this="{containerRef}" class="sidebar-container" tabindex="0">
