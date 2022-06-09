@@ -243,10 +243,12 @@
           <li>
             Building tools for exploring and downloading high-quality,
             peer-reviewed climate data from California’s scientific and research
-            community. Cal-Adapt presents research developed under California’s
-            climate change assessments, with Cal-Adapt 2.0 focusing on <a
-              href="https://www.climateassessment.ca.gov/"
-              target="_blank">California’s Fourth Climate Change Assessment</a
+            community. Cal-Adapt presents research developed under <a
+              href="https://opr.ca.gov/climate/icarp/climate-assessment/"
+              >California’s climate change assessments</a
+            >, with Cal-Adapt 2.0 focusing on
+            <a href="https://www.climateassessment.ca.gov/" target="_blank"
+              >California’s Fourth Climate Change Assessment</a
             >, including datasets portraying sea level rise, wildfires,
             droughts, storms, and extreme heat events.
           </li>
@@ -628,18 +630,14 @@
                   data.
                 </p>
                 <div class="team-members">
-                  {#each staff.current as opt}
+                  {#each staff.current as { name, org }}
                     <div class="card">
                       <div class="card-body">
                         <p class="card-title">
-                          {#if opt.url}
-                            <a href="{opt.url}" target="_blank">{opt.name}</a>
-                          {:else}
-                            {opt.name}
-                          {/if}
+                          {name}
                         </p>
                         <p class="card-org font-weight--light">
-                          {opt.org}
+                          {org}
                         </p>
                       </div>
                     </div>
@@ -649,23 +647,24 @@
                   <strong>Previous contributors:</strong>
                 </p>
                 <ul class="team-list team-list-prev">
-                  {#each staff.prior as opt, i}
+                  {#each staff.prior as { name }, i}
+                    {@const l = staff.prior.length - 1}
                     <li class="team-list-prev-name">
-                      {opt.name}{i < staff.prior.length - 1 ? "," : ""}
+                      {name}{i < l ? "," : "."}
                     </li>
                   {/each}
                 </ul>
               </TabContent>
               <TabContent>
                 <div class="team-members">
-                  {#each managers as opt}
+                  {#each managers as { name, org }}
                     <div class="card">
                       <div class="card-body">
                         <p class="card-title">
-                          {opt.name}
+                          {name}
                         </p>
                         <p class="card-org font-weight--light">
-                          {opt.org}
+                          {org}
                         </p>
                       </div>
                     </div>
@@ -681,13 +680,11 @@
                   future, please email nethomas@berkeley.edu.
                 </p>
                 <ul class="team-list team-list-advisory">
-                  {#each advisors.current as opt}
+                  {#each advisors.current as { name, org }}
                     <li class="card">
                       <div class="card-body">
-                        <p class="card-title">{opt.name}</p>
-                        {#if opt.org}
-                          <p class="card-org small text-gray-70">{opt.org}</p>
-                        {/if}
+                        <p class="card-title">{name}</p>
+                        <p class="card-org small text-gray-70">{org}</p>
                       </div>
                     </li>
                   {/each}
@@ -696,9 +693,10 @@
                   <strong>Previous contributors:</strong>
                 </p>
                 <ul class="team-list team-list-prev">
-                  {#each advisors.prior as opt, i}
+                  {#each advisors.prior as { name }, i}
+                    {@const l = advisors.prior.length - 1}
                     <li class="team-list-prev-name">
-                      {opt.name}{i < advisors.prior.length - 1 ? "," : ""}
+                      {name}{i < l ? "," : "."}
                     </li>
                   {/each}
                 </ul>
@@ -710,3 +708,28 @@
     </div>
   </div>
 </div>
+
+<div class="spacing--v-48"></div>
+
+<div class="bx--grid">
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <p>
+        <strong>Disclaimer</strong>: This website was prepared as a result of
+        work sponsored by the California Energy Commission (CEC) and the
+        California Strategic Growth Council (SGC). It does not necessarily
+        represent the views of the CEC, SGC, the agencies' employees or the
+        State of California. The CEC, SGC, the State of California, its
+        employees, contractors and subcontractors make no warranty, express or
+        implied, and assume no legal liability for the information on this
+        website or made available via the website; nor does any party represent
+        that the use of this information will not infringe upon privately owned
+        rights. The website has not been approved or disapproved by the CEC or
+        SGC, nor has the CEC or SGC passed upon the accuracy or adequacy of the
+        information on the website.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="spacing--v-48"></div>
