@@ -1,6 +1,6 @@
 <script>
   // Node modules
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
 
   // Components
   import {
@@ -109,6 +109,37 @@
   function handleOverlayClick(e) {
     dispatch("overlayclick", e.detail);
   }
+
+  /** @type {(e: KeyboardEvent) => void}*/
+  function handleKeydown(e) {
+    const { key, shiftKey } = e;
+    if (key === "Tab" && !shiftKey) {
+      maybeMoveFocusOutsideOfMap();
+    }
+  }
+
+  function maybeMoveFocusOutsideOfMap() {
+    // This addresses a "tab trap" a11y problem with the MapBoxGL map instance below.
+    // Note: this solution is tightly coupled to the ChangeLocationStation
+    // component's modal and should probably be more generic.
+    const container = mapComponent.getContainer();
+    const tabableElements = Array.from(
+      container.querySelectorAll("button")
+    ).filter((el) => el.offsetParent !== null);
+    const last = tabableElements[tabableElements.length - 1];
+    if (document.activeElement === last) {
+      document
+        .querySelector(".bx--modal-footer > .bx--btn.bx--btn--secondary")
+        .focus();
+    }
+  }
+
+  async function handleSidebarClose() {
+    sidebarOpen = false;
+    await tick();
+    // For a11y focus the layer toggle button
+    document.querySelector("button.mapboxgl-ctrl-toggle-layers").focus();
+  }
 </script>
 
 <style lang="scss">
@@ -141,15 +172,12 @@
 
   .location-sidebar {
     @include sidebar-transition;
-    position: absolute;
     width: 200px;
-    height: 100%;
+    position: absolute;
     top: 0;
     right: 0;
+    bottom: 0;
     transform: translateX(200px);
-    overflow-y: auto;
-    border: 1px solid #cad3d2;
-    z-index: 2;
   }
 
   .location-sidebar.expand {
@@ -178,12 +206,13 @@
 
     <Map
       bind:this="{mapComponent}"
-      {...options}
-      style="{style}"
       on:click="{handleClick}"
       on:ready="{() => {
         isMapLoading = false;
       }}"
+      on:keydown="{handleKeydown}"
+      {...options}
+      style="{style}"
     >
       <LayerToggle
         on:layerToggleClick="{() => {
@@ -240,9 +269,7 @@
   <div class="location-sidebar" class:expand="{sidebarOpen}">
     <Sidebar
       open="{sidebarOpen}"
-      on:close="{() => {
-        sidebarOpen = false;
-      }}"
+      on:close="{handleSidebarClose}"
       on:toggleLayer="{toggleMapLayer}"
     />
   </div>

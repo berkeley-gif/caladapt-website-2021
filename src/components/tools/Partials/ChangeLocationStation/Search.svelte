@@ -16,7 +16,8 @@
 
   const dispatch = createEventDispatcher();
 
-  const MIN_SEARCH_TEXT_LENGTH = 3;
+  const MAPBOX_MIN_SEARCH_TEXT_LENGTH = 3;
+  const CAL_ADAPT_MIN_SEARCH_TEXT_LENGTH = 1;
   const SEARCH_INPUT_DEBOUNCE_MS = 350;
 
   let abortController;
@@ -24,6 +25,15 @@
   let searchValue = "";
   let searchPlaceholder = "Enter place name or address";
   let suggestions = [];
+
+  // To avoid making too many requests to the MapBox Geocoder API use a slightly
+  // longer min text length before making a request.
+  // The Cal-Adapt geocoder *should* search using a single character as some
+  // boundary types have identifiers that are numeric and could be single digits.
+  $: MIN_SEARCH_TEXT_LENGTH =
+    (currentBoundary && currentBoundary.id === "locagrid") || isStationSelector
+      ? MAPBOX_MIN_SEARCH_TEXT_LENGTH
+      : CAL_ADAPT_MIN_SEARCH_TEXT_LENGTH;
 
   $: currentLayer, handleClearSearch();
   $: currentBoundary, updatePlaceholderText();

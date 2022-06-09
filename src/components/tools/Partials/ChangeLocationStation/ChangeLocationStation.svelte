@@ -95,8 +95,12 @@
     gap: 2rem;
   }
 
-  div > :global(*) {
-    width: calc(50% - 1rem);
+  div > :global(div:first-child) {
+    width: calc(40% - 1rem);
+  }
+
+  div > :global(div:last-child) {
+    width: calc(60% - 1rem);
   }
 </style>
 

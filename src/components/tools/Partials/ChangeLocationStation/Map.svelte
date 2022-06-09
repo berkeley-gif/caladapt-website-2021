@@ -52,8 +52,8 @@
 
 <div>
   <Location
-    on:overlayclick="{handleOverlayClick}"
-    on:mapclick="{handleMapClick}"
+    on:overlayclick="{isStationSelector ? handleOverlayClick : null}"
+    on:mapclick="{currentBoundary ? handleMapClick : null}"
     on:ready="{() => dispatch('ready')}"
     lng="{lng}"
     lat="{lat}"

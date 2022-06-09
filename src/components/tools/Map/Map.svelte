@@ -36,6 +36,10 @@
   let popup;
   let popupElem;
 
+  export function getContainer() {
+    return container;
+  }
+
   export function setCenter(center, zoom) {
     if (map) {
       map.setCenter(center);
@@ -182,7 +186,7 @@
   }
 </style>
 
-<div bind:this="{container}">
+<div bind:this="{container}" on:keydown on:keyup>
   {#if map}
     <slot />
   {/if}
