@@ -243,10 +243,12 @@
           <li>
             Building tools for exploring and downloading high-quality,
             peer-reviewed climate data from California’s scientific and research
-            community. Cal-Adapt presents research developed under California’s
-            climate change assessments, with Cal-Adapt 2.0 focusing on <a
-              href="https://www.climateassessment.ca.gov/"
-              target="_blank">California’s Fourth Climate Change Assessment</a
+            community. Cal-Adapt presents research developed under <a
+              href="https://opr.ca.gov/climate/icarp/climate-assessment/"
+              >California’s climate change assessments</a
+            >, with Cal-Adapt 2.0 focusing on
+            <a href="https://www.climateassessment.ca.gov/" target="_blank"
+              >California’s Fourth Climate Change Assessment</a
             >, including datasets portraying sea level rise, wildfires,
             droughts, storms, and extreme heat events.
           </li>
