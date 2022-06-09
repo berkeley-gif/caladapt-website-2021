@@ -1,10 +1,11 @@
 module.exports = {
   extends: ["eslint:recommended", "prettier"],
-  parser: "babel-eslint",
+  parser: "@babel/eslint-parser",
   parserOptions: {
     ecmaVersion: 2019,
     sourceType: "module",
     allowImportExportEverywhere: true,
+    requireConfigFile: false,
   },
   env: {
     es6: true,
