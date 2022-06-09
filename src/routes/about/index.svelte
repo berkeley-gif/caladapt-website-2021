@@ -630,18 +630,14 @@
                   data.
                 </p>
                 <div class="team-members">
-                  {#each staff.current as opt}
+                  {#each staff.current as { name, org }}
                     <div class="card">
                       <div class="card-body">
                         <p class="card-title">
-                          {#if opt.url}
-                            <a href="{opt.url}" target="_blank">{opt.name}</a>
-                          {:else}
-                            {opt.name}
-                          {/if}
+                          {name}
                         </p>
                         <p class="card-org font-weight--light">
-                          {opt.org}
+                          {org}
                         </p>
                       </div>
                     </div>
@@ -651,23 +647,24 @@
                   <strong>Previous contributors:</strong>
                 </p>
                 <ul class="team-list team-list-prev">
-                  {#each staff.prior as opt, i}
+                  {#each staff.prior as { name }, i}
+                    {@const l = staff.prior.length - 1}
                     <li class="team-list-prev-name">
-                      {opt.name}{i < staff.prior.length - 1 ? "," : ""}
+                      {name}{i < l ? "," : "."}
                     </li>
                   {/each}
                 </ul>
               </TabContent>
               <TabContent>
                 <div class="team-members">
-                  {#each managers as opt}
+                  {#each managers as { name, org }}
                     <div class="card">
                       <div class="card-body">
                         <p class="card-title">
-                          {opt.name}
+                          {name}
                         </p>
                         <p class="card-org font-weight--light">
-                          {opt.org}
+                          {org}
                         </p>
                       </div>
                     </div>
@@ -683,13 +680,11 @@
                   future, please email nethomas@berkeley.edu.
                 </p>
                 <ul class="team-list team-list-advisory">
-                  {#each advisors.current as opt}
+                  {#each advisors.current as { name, org }}
                     <li class="card">
                       <div class="card-body">
-                        <p class="card-title">{opt.name}</p>
-                        {#if opt.org}
-                          <p class="card-org small text-gray-70">{opt.org}</p>
-                        {/if}
+                        <p class="card-title">{name}</p>
+                        <p class="card-org small text-gray-70">{org}</p>
                       </div>
                     </li>
                   {/each}
@@ -698,9 +693,10 @@
                   <strong>Previous contributors:</strong>
                 </p>
                 <ul class="team-list team-list-prev">
-                  {#each advisors.prior as opt, i}
+                  {#each advisors.prior as { name }, i}
+                    {@const l = advisors.prior.length - 1}
                     <li class="team-list-prev-name">
-                      {opt.name}{i < advisors.prior.length - 1 ? "," : ""}
+                      {name}{i < l ? "," : "."}
                     </li>
                   {/each}
                 </ul>
