@@ -116,3 +116,8 @@
 </div>
 
 <div class="spacing--v-96"></div>
+
+<!-- TODO: remove this before deploying to production -->
+{#if process.env.revealNewHomepage}
+  <p class="sr-only">Go to <a href="/new-homepage/">new homepage design</a></p>
+{/if}
