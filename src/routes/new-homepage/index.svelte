@@ -10,8 +10,9 @@
       description: `Access climate data via visualizations, downloads, and
         the Cal-Adapt API for your research, outreach, and adaptation planning
         needs.`,
-      bgColor: "var(--white)",
-      textColor: null,
+      bgColor:
+        "linear-gradient(180deg, #0F9699 0%, #0F9982 0.01%, #035466 100%)",
+      textColor: "var(--white)",
       ctaText: "Learn More",
     },
     {
@@ -19,16 +20,16 @@
       linkPath: "https://analytics.cal-adapt.org",
       description: `Utilize cloud storage and computation to analyze Petabytes
         of stored data supported by scientific guidance.`,
-      bgColor: "var(--white)",
-      textColor: null,
+      bgColor: "linear-gradient(180deg, #248DB3 0%, #096180 100%)",
+      textColor: "var(--white)",
       ctaText: "Visit Site",
     },
     {
       titleText: "Data Development Grants",
       linkPath: "/new-homepage/#",
       description: "Description forthcoming.",
-      bgColor: "var(--white)",
-      textColor: null,
+      bgColor: "linear-gradient(180deg, #19953E 0%, #196B5B 100%)",
+      textColor: "var(--white)",
       ctaText: "Learn More",
     },
   ];
@@ -65,7 +66,7 @@
   titleFontSize="2rem"
   titleFontWeight="600"
   useOffset="{false}"
-  bannerImg="linear-gradient(180deg, #0A768C 0%, #063E8C 100%)"
+  bannerImg="linear-gradient(180deg, #003850 0%, #067C74 100%)"
   overlayOpacity="0"
 />
 
