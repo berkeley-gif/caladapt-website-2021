@@ -12,7 +12,6 @@
         needs.`,
       bgColor:
         "linear-gradient(180deg, #0F9699 0%, #0F9982 0.01%, #035466 100%)",
-      textColor: "var(--white)",
       ctaText: "Learn More",
     },
     {
@@ -21,7 +20,6 @@
       description: `Utilize cloud storage and computation to analyze Petabytes
         of stored data supported by scientific guidance.`,
       bgColor: "linear-gradient(180deg, #248DB3 0%, #096180 100%)",
-      textColor: "var(--white)",
       ctaText: "Visit Site",
     },
     {
@@ -29,7 +27,6 @@
       linkPath: "/new-homepage/#",
       description: "Description forthcoming.",
       bgColor: "linear-gradient(180deg, #19953E 0%, #196B5B 100%)",
-      textColor: "var(--white)",
       ctaText: "Learn More",
     },
   ];
@@ -38,11 +35,11 @@
 
   const updatesLinks = [
     {
-      title: "Update number one.",
+      title: "Update number one",
       linkPath: "/new-homepage/#",
     },
     {
-      title: "Update number two.",
+      title: "Update number two",
       linkPath: "/new-homepage/#",
     },
     {
@@ -76,19 +73,25 @@
   <Row>
     <Column lg="{{ span: 12 }}">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each cardsData as card, index}
+        {#each cardsData as card}
           <Card
             {...{
               ...card,
               height: cardHeight,
               useRule: true,
+              textColor: "var(--white)",
             }}
           />
         {/each}
       </CardsContainer>
     </Column>
+
     <Column lg="{{ span: 3, offset: 1 }}">
       <h2 class="h4">Latest Updates</h2>
+      <p>
+        Learn more about the latest changes and improvements to Cal-Adapt on our
+        blog.
+      </p>
       <ul style="margin-left: 1rem">
         {#each updatesLinks as { title, linkPath }}
           <li><a href="{linkPath}">{title}</a></li>
