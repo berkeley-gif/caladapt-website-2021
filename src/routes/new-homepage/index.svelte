@@ -10,7 +10,8 @@
       description: `Access climate data via visualizations, downloads, and
         the Cal-Adapt API for your research, outreach, and adaptation planning
         needs.`,
-      bgColor: "var(--card-gradient-01)",
+      bgColor: "var(--white)",
+      textColor: null,
       ctaText: "Learn More",
     },
     {
@@ -18,14 +19,16 @@
       linkPath: "https://analytics.cal-adapt.org",
       description: `Utilize cloud storage and computation to analyze Petabytes
         of stored data supported by scientific guidance.`,
-      bgColor: "var(--card-gradient-02)",
+      bgColor: "var(--white)",
+      textColor: null,
       ctaText: "Visit Site",
     },
     {
       titleText: "Data Development Grants",
       linkPath: "/new-homepage/#",
       description: "Description forthcoming.",
-      bgColor: "var(--card-gradient-03)",
+      bgColor: "var(--white)",
+      textColor: null,
       ctaText: "Learn More",
     },
   ];
@@ -62,7 +65,8 @@
   titleFontSize="2rem"
   titleFontWeight="600"
   useOffset="{false}"
-  bgColor="#888"
+  bannerImg="linear-gradient(180deg, #0A768C 0%, #063E8C 100%)"
+  overlayOpacity="0"
 />
 
 <div class="spacing--v-32"></div>
@@ -71,12 +75,11 @@
   <Row>
     <Column lg="{{ span: 12 }}">
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
-        {#each cardsData as cardDatum, index}
+        {#each cardsData as card, index}
           <Card
             {...{
-              ...cardDatum,
+              ...card,
               height: cardHeight,
-              textColor: "white",
               useRule: true,
             }}
           />
