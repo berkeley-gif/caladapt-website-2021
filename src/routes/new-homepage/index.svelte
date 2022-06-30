@@ -89,7 +89,7 @@
     </Column>
     <Column lg="{{ span: 3, offset: 1 }}">
       <h2 class="h4">Latest Updates</h2>
-      <ul>
+      <ul style="margin-left: 1rem">
         {#each updatesLinks as { title, linkPath }}
           <li><a href="{linkPath}">{title}</a></li>
         {/each}
