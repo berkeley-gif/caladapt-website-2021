@@ -7,23 +7,29 @@
     {
       titleText: "Tools, How to Guide, & Data Download",
       linkPath: "/",
-      description: "Description forthcoming",
+      description: `Access climate data via visualizations, downloads, and
+        the Cal-Adapt API for your research, outreach, and adaptation planning
+        needs.`,
       bgColor: "var(--card-gradient-01)",
+      ctaText: "Learn More",
     },
     {
-      titleText: "Analytics Engine",
+      titleText: "Cal-Adapt: Analytics Engine",
       linkPath: "https://analytics.cal-adapt.org",
-      description: "Description forthcoming",
+      description: `Utilize cloud storage and computation to analyze Petabytes
+        of stored data supported by scientific guidance.`,
       bgColor: "var(--card-gradient-02)",
+      ctaText: "Visit Site",
     },
     {
       titleText: "Data Development Grants",
       linkPath: "/new-homepage/#",
-      description: "Description forthcoming",
+      description: "Description forthcoming.",
       bgColor: "var(--card-gradient-03)",
+      ctaText: "Learn More",
     },
   ];
-  const cardHeight = 18;
+  const cardHeight = 20;
   const cardWidth = 18;
 
   const updatesLinks = [
@@ -47,12 +53,12 @@
 </svelte:head>
 
 <Banner
-  titleText="Cal-Adapt provides a way to explore peer-reviewed data that 
-    portrays how climate change might affect California at the state and local
-    levels."
-  subtitleText="We make this data available through downloads, visualizations, 
-    and the Cal-Adapt API for your research, outreach, and adaptation planning
-    needs."
+  titleText="Cal-Adapt provides public access to climate data that contribute to
+    California’s Climate Change Assessments."
+  subtitleText="Cal-Adapt provides interactive, easy-to-use visualization and
+    data download tools for a broad range of stakeholders; a “pro” version for
+    users with highly technical, data-intensive needs; and links to state-funded
+    grants that support development of data for Cal-Adapt."
   titleFontSize="2rem"
   titleFontWeight="600"
   useOffset="{false}"
@@ -70,7 +76,6 @@
             {...{
               ...cardDatum,
               height: cardHeight,
-              ctaText: "Learn more",
               textColor: "white",
               useRule: true,
             }}
