@@ -8,7 +8,7 @@ export function hasWideLayout(path) {
   const SUB_LEVEL_WIDE_LAYOUTS = ["help", "tools"];
   const SUB_LEVEL_NARROW_LAYOUTS = ["blog", "events"];
   const homepage = /^\/$/;
-  const newHomePage = /^\/new-homepage\/$/;
+  const newHomePage = /^\/homepage-redesign-preview\/$/;
   const mainPage = /^\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/i;
   const subPage = /^\/[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*/i;
 
