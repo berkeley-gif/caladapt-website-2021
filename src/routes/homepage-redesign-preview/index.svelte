@@ -3,6 +3,8 @@
   import { Banner, SidebarRight } from "~/partials";
   import { Card, CardsContainer } from "~/components/cards";
 
+  const dummyLink = "/homepage-redesign-preview/#";
+
   const cardsData = [
     {
       titleText: "Tools, How to Guide, & Data Download",
@@ -24,7 +26,7 @@
     },
     {
       titleText: "Data Development Grants",
-      linkPath: "/new-homepage/#",
+      linkPath: dummyLink,
       description: "Description forthcoming.",
       bgColor: "linear-gradient(180deg, #19953E 0%, #196B5B 100%)",
       ctaText: "Learn More",
@@ -33,18 +35,18 @@
   const cardHeight = 20;
   const cardWidth = 18;
 
-  const updatesLinks = [
+  const updateLinksPlaceholders = [
     {
       title: "Update number one",
-      linkPath: "/new-homepage/#",
+      linkPath: dummyLink,
     },
     {
       title: "Update number two",
-      linkPath: "/new-homepage/#",
+      linkPath: dummyLink,
     },
     {
       title: "Update number three",
-      linkPath: "/new-homepage/#",
+      linkPath: dummyLink,
     },
   ];
 </script>
@@ -93,7 +95,7 @@
         blog.
       </p>
       <ul style="margin-left: 1rem">
-        {#each updatesLinks as { title, linkPath }}
+        {#each updateLinksPlaceholders as { title, linkPath }}
           <li><a href="{linkPath}">{title}</a></li>
         {/each}
       </ul>
