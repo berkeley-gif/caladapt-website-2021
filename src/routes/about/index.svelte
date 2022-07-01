@@ -245,7 +245,7 @@
             peer-reviewed climate data from California’s scientific and research
             community. Cal-Adapt presents research developed under <a
               href="https://opr.ca.gov/climate/icarp/climate-assessment/"
-              >California’s climate change assessments</a
+              target="_blank">California’s climate change assessments</a
             >, with Cal-Adapt 2.0 focusing on
             <a href="https://www.climateassessment.ca.gov/" target="_blank"
               >California’s Fourth Climate Change Assessment</a
