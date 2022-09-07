@@ -41,6 +41,10 @@ export const DEFAULT_BOUNDARIES = boundaries
     };
   });
 
+export const PERMITTED_BOUNDARY_TYPES = new Set(
+  DEFAULT_BOUNDARIES.map((d) => d.id)
+);
+
 export const SMALL_SCALE_BOUNDARIES = boundaries
   .filter((d) =>
     [

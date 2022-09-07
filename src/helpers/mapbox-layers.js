@@ -9,6 +9,7 @@ const translinesExpr = ["to-number", ["get", "kV_Sort"]];
 //const powerplantsExpr = ["to-number", ["get", "MW"]];
 const cesScore = ["get", "ces_3_0_percentile_range"];
 
+// NOTE: "custom" boundaries are not included in this list but are an option in some tools.
 export default [
   {
     id: "locagrid",

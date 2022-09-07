@@ -3,12 +3,7 @@ import { merge } from "d3-array";
 
 // Helpers
 import config from "~/helpers/api-config";
-import {
-  handleXHR,
-  fetchData,
-  transformResponse,
-  isLeapYear,
-} from "~/helpers/utilities";
+import { handleXHR, fetchData, transformResponse } from "~/helpers/utilities";
 import {
   OBSERVED,
   OBSERVED_FILTER_YEAR,
@@ -119,7 +114,7 @@ const fetchEvents = async ({ slug, params, method = "GET" }) => {
 const fetchSeries = async ({ series, params, method = "GET", isRate }) => {
   try {
     const { slugs } = series;
-    const promises = slugs.map((slug) => fetchEvents({ slug, params }));
+    const promises = slugs.map((slug) => fetchEvents({ slug, params, method }));
     const responses = await Promise.all(promises);
     const mergedResponses = merge(responses);
     const values = mergedResponses.map((d) => {

@@ -59,7 +59,10 @@
   let LearnMoreModal;
 
   let bookmark = "";
-  let shareLinkWarning = "";
+  $: shareLinkWarning =
+    $boundary.id === "custom"
+      ? "Cannot create a share link for custom boundaries."
+      : "";
 
   let learnMoreProps = {};
   let chartDescription = `<p>The colored lines on this visualization represent 
@@ -75,6 +78,14 @@
   let printSkipElements;
 
   let chartTitle = "";
+
+  $: formatFn = format(`.${$climvar.decimals}f`);
+
+  $: if ($dataStore) {
+    dataByDate = groupDataByYear(flattenData($dataStore));
+  } else {
+    dataByDate = null;
+  }
 
   afterUpdate(() => {
     if ($location && $location.title) {
@@ -97,9 +108,6 @@
   }
 
   async function loadShare() {
-    // TODO: after the custom boundary upload feature is implemented / fixed,
-    // set ShareLink's `errorMsg` prop when $boundary.id === "custom" as
-    // custom boundaries don't get encoded in the URL query params.
     bookmark = serialize({
       climvar: $climvarStore,
       scenario: $scenarioStore,
@@ -115,7 +123,9 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
+      await import(
+        "~/components/tools/Partials/ChangeLocationStation/ChangeLocationStation.svelte"
+      )
     ).default;
   }
 
@@ -138,14 +148,6 @@
     ).default;
   }
 
-  $: formatFn = format(`.${$climvar.decimals}f`);
-
-  $: if ($dataStore) {
-    dataByDate = groupDataByYear(flattenData($dataStore));
-  } else {
-    dataByDate = null;
-  }
-
   function changeScenario(e) {
     scenarioStore.set(e.detail.id);
   }
@@ -158,20 +160,12 @@
     climvarStore.set(e.detail.id);
   }
 
-  function changeLocation(e) {
-    if (e.detail.boundaryId === "custom") {
-      // FIXME: this prevents the ShareLink from preventing a shareable URL
-      // because the boundary id will never be "custom" when a user clicks the
-      // share button.
-      // NOTE: custom boundary upload was removed in #236 so currenty this code
-      // does nothing. When re-implementing the custom boundary upload, this
-      // should be fixed.
-      locationStore.updateBoundary("locagrid");
-      locationStore.updateLocation(e.detail.location, true);
-    } else {
-      locationStore.updateBoundary(e.detail.boundaryId);
-      locationStore.updateLocation(e.detail.location);
-    }
+  function changeLocation({ detail: { location, boundaryId } }) {
+    locationStore.updateAll({
+      location,
+      boundaryId,
+      isUpload: boundaryId === "custom",
+    });
   }
 </script>
 
@@ -355,6 +349,7 @@
   boundary="{$boundary}"
   boundaryList="{DEFAULT_BOUNDARIES}"
   addStateBoundary="{true}"
+  enableUpload="{true}"
   on:change="{changeLocation}"
 />
 

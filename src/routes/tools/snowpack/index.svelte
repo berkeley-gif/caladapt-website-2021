@@ -58,6 +58,7 @@
     DEFAULT_SELECTED_MONTH,
     DEFAULT_SELECTED_YEAR,
     DEFAULT_SELECTED_MODEL_SINGLE,
+    DEFAULT_FEATURE_ID,
   } from "./_constants";
   import { INITIAL_CONFIG } from "../_common/constants";
   import { getInitialConfig, setInitialLocation } from "../_common/helpers";
@@ -171,6 +172,7 @@
       climvar: DEFAULT_CLIMVAR,
       lng: DEFAULT_CENTER[0],
       lat: DEFAULT_CENTER[1],
+      fid: DEFAULT_FEATURE_ID,
     };
     // Get initial configuration (from default or from url)
     const {

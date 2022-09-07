@@ -1,6 +1,6 @@
 <script>
   // Node modules
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
 
   // Components
   import {
@@ -107,9 +107,49 @@
   function handleOverlayClick(e) {
     dispatch("overlayclick", e.detail);
   }
+
+  /** @type {(e: KeyboardEvent) => void}*/
+  function handleKeydown(e) {
+    const { key, shiftKey } = e;
+    if (key === "Tab" && !shiftKey) {
+      maybeMoveFocusOutsideOfMap();
+    }
+  }
+
+  function maybeMoveFocusOutsideOfMap() {
+    // This addresses a "tab trap" a11y problem with the MapBoxGL map instance below.
+    // Note: this solution is tightly coupled to the ChangeLocationStation
+    // component's modal and should probably be more generic.
+    const container = mapComponent.getContainer();
+    const tabableElements = Array.from(
+      container.querySelectorAll("button")
+    ).filter((el) => el.offsetParent !== null);
+    const last = tabableElements[tabableElements.length - 1];
+    if (document.activeElement === last) {
+      document
+        .querySelector(".bx--modal-footer > .bx--btn.bx--btn--secondary")
+        .focus();
+    }
+  }
+
+  async function handleSidebarClose() {
+    sidebarOpen = false;
+    await tick();
+    // For a11y focus the layer toggle button
+    document.querySelector("button.mapboxgl-ctrl-toggle-layers").focus();
+  }
 </script>
 
-<style>
+<style lang="scss">
+  @mixin sidebar-transition {
+    transition: {
+      property: transform, width;
+      duration: 350ms;
+      timing-function: ease-in-out;
+      delay: 0s;
+    }
+  }
+
   .location {
     position: relative;
     width: 100%;
@@ -118,68 +158,74 @@
   }
 
   .location-content {
+    @include sidebar-transition;
+    position: relative;
     width: 100%;
     height: 100%;
-    transition: all 0.4s ease-in-out 0s;
   }
 
   .location-content.shrink {
     width: calc(100% - 200px);
-    transition: all 0.4s ease 0s;
   }
 
   .location-sidebar {
-    position: absolute;
+    @include sidebar-transition;
     width: 200px;
-    height: 100%;
+    position: absolute;
     top: 0;
-    right: -250px;
-    overflow-y: auto;
-    transition: all 0.4s ease-in-out 0s;
-    border: 1px solid #cad3d2;
-    z-index: 2;
+    right: 0;
+    bottom: 0;
+    transform: translateX(200px);
   }
 
   .location-sidebar.expand {
+    transform: translateX(0);
+  }
+
+  .loading-container {
+    position: absolute;
+    left: 0;
     right: 0;
-    transition: all 0.4s ease 0s;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    pointer-events: none;
+  }
+
+  .loading-container :global(.bx--inline-loading) {
+    justify-content: center;
   }
 </style>
 
 <div class="location">
-  <div class="location-sidebar" class:expand="{sidebarOpen}">
-    <Sidebar
-      open="{sidebarOpen}"
-      on:close="{() => {
-        sidebarOpen = false;
-      }}"
-      on:toggleLayer="{toggleMapLayer}"
-    />
-  </div>
   <div class="location-content" class:shrink="{sidebarOpen}">
-    {#if isMapLoading}
-      <InlineLoading description="Loading map..." />
-    {/if}
+    <!-- misc slot for anything else such as a search box -->
+    <slot />
+
     <Map
       bind:this="{mapComponent}"
-      {...options}
-      style="{style}"
       on:click="{handleClick}"
       on:ready="{() => {
         isMapLoading = false;
       }}"
+      on:keydown="{handleKeydown}"
+      {...options}
+      style="{style}"
     >
       <LayerToggle
         on:layerToggleClick="{() => {
           sidebarOpen = !sidebarOpen;
         }}"
       />
+
       <NavigationControl />
       <AttributionControl options="{attributionOptions}" />
       <ScalingControl />
+
       {#if boundary}
         <BoundaryVectorLayer boundary="{boundary}" />
       {/if}
+
       {#if location}
         {#if location.geometry.type === "Point"}
           <Marker
@@ -190,12 +236,14 @@
           <BoundarySelection data="{location.geometry}" />
         {/if}
       {/if}
+
       {#if imageOverlayShow}
         <ImageOverlay
           coordinates="{imageOverlayCoords}"
           overlay="{imageOverlayUrl}"
         />
       {/if}
+
       {#if stations}
         <VectorLayer
           layer="{stations}"
@@ -203,9 +251,24 @@
           on:overlayclick="{handleOverlayClick}"
         />
       {/if}
+
       {#each overlays as overlay (overlay.id)}
         <VectorLayer layer="{overlay}" />
       {/each}
     </Map>
+
+    <div class="loading-container">
+      {#if isMapLoading}
+        <InlineLoading description="Loading map..." />
+      {/if}
+    </div>
+  </div>
+
+  <div class="location-sidebar" class:expand="{sidebarOpen}">
+    <Sidebar
+      open="{sidebarOpen}"
+      on:close="{handleSidebarClose}"
+      on:toggleLayer="{toggleMapLayer}"
+    />
   </div>
 </div>

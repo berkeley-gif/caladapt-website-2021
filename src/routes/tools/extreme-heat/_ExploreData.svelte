@@ -55,7 +55,6 @@
   let LearnMoreModal;
 
   let bookmark = "";
-  let shareLinkWarning = "";
 
   let learnMoreProps = {};
   let metadata;
@@ -115,18 +114,14 @@
   }
 
   async function loadShare() {
-    if ($boundary.id === "custom") {
-      shareLinkWarning = "Cannot create a share link for a custom boundary";
-    } else {
-      // TODO: add threshold value?
-      bookmark = serialize({
-        climvar: $climvarStore,
-        scenario: $scenarioStore,
-        models: $modelsStore.join(","),
-        boundary: $boundary.id,
-        fid: $location.id,
-      });
-    }
+    // TODO: add threshold value?
+    bookmark = serialize({
+      climvar: $climvarStore,
+      scenario: $scenarioStore,
+      models: $modelsStore.join(","),
+      boundary: $boundary.id,
+      fid: $location.id,
+    });
     showShare = true;
     ShareLink = (await import("~/components/tools/Partials/ShareLink.svelte"))
       .default;
@@ -135,7 +130,9 @@
   async function loadLocation() {
     showChangeLocation = true;
     ChangeLocation = (
-      await import("~/components/tools/Partials/ChangeLocationStation.svelte")
+      await import(
+        "~/components/tools/Partials/ChangeLocationStation/ChangeLocationStation.svelte"
+      )
     ).default;
   }
 
@@ -178,14 +175,12 @@
     ).default;
   }
 
-  function changeLocation(e) {
-    if (e.detail.boundaryId === "custom") {
-      locationStore.updateBoundary("locagrid");
-      locationStore.updateLocation(e.detail.location, true);
-    } else {
-      locationStore.updateBoundary(e.detail.boundaryId);
-      locationStore.updateLocation(e.detail.location);
-    }
+  function changeLocation({ detail: { location, boundaryId } }) {
+    locationStore.updateAll({
+      location,
+      boundaryId,
+      isUpload: boundaryId === "custom",
+    });
   }
 </script>
 
@@ -254,12 +249,12 @@
   this="{ShareLink}"
   bind:open="{showShare}"
   state="{bookmark}"
-  errorMsg="{shareLinkWarning}"
 />
 
 <svelte:component
   this="{ChangeLocation}"
   bind:open="{showChangeLocation}"
+  enableUpload="{false}"
   location="{$location}"
   boundary="{$boundary}"
   boundaryList="{SMALL_SCALE_BOUNDARIES}"

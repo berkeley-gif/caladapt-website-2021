@@ -7,16 +7,38 @@ import {
   PRIORITY_10_MODELS,
   DEFAULT_LOCATION,
   DEFAULT_BOUNDARIES,
+  PERMITTED_BOUNDARY_TYPES,
 } from "./constants";
-import { isLeapYear, isValidNumber, serialize } from "~/helpers/utilities";
+import {
+  cloneDeep,
+  isLeapYear,
+  isValidNumber,
+  serialize,
+} from "~/helpers/utilities";
 import { getFeature, getFeatureById } from "~/helpers/geocode";
 import { logException } from "~/helpers/logging";
 
 export { serialize };
 
-export const PERMITTED_BOUNDARY_TYPES = new Set(
-  DEFAULT_BOUNDARIES.map((d) => d.id)
-);
+/**
+ * createCustomBoundaryObject
+ * @param {object} location - the formatted location datum
+ * @returns {object} - boundary object for custom boundary type
+ */
+export function createCustomBoundaryObject(location) {
+  const boundary = cloneDeep(DEFAULT_BOUNDARIES[0]);
+  boundary.id = "custom";
+  boundary.metadata.title = location.title;
+  boundary.metadata.placeholder = "custom";
+  boundary.source = {
+    type: "geojson",
+    data: {
+      type: "Feature",
+      geometry: { ...location.geometry },
+    },
+  };
+  return boundary;
+}
 
 /**
  * Groups data for 2 or more timeseries by year, outputs a single timeseries with

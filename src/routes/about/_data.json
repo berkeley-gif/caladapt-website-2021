@@ -217,24 +217,20 @@
         "org": "Senior Web Application Developer"
       },
       {
-        "name": "Shruti Mukhtyar",
-        "org": "Web Application Developer"
-      },
-      {
         "name": "Eric Lehmer",
         "org": "Web Application Developer"
-      },
-      {
-        "name": "Chris Henrick",
-        "org": "Web Application Developer",
-        "url": "https://clhenrick.io"
-      },
-      {
-        "name": "Lucy Andrews",
-        "org": "Graduate Student Researcher"
       }
     ],
     "prior": [
+      {
+        "name": "Shruti Mukhtyar"
+      },
+      {
+        "name": "Chris Henrick"
+      },
+      {
+        "name": "Lucy Andrews"
+      },
       {
         "name": "Kevin Koy"
       },

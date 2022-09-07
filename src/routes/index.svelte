@@ -6,10 +6,15 @@
     const events = await this.fetch(`events.json`)
       .then((r) => r.json())
       .then((events) => events);
-    const cardsData = await this.fetch("index.json")
+    const data = await this.fetch("index.json")
       .then((r) => r.json())
-      .then((cards) => cards);
-    return { posts, events, cardsData };
+      .then((data) => data);
+    return {
+      posts,
+      events,
+      cardsData: data.cardsData,
+      revealNewHomepage: data.revealNewHomepage,
+    };
   }
 </script>
 
@@ -22,6 +27,7 @@
   export let events;
   export let posts;
   export let cardsData;
+  export let revealNewHomepage;
 
   const icons = [
     "sun",
@@ -113,6 +119,20 @@
       </div>
     </div>
   </div>
+
+  <!-- TODO: remove this before deploying to production -->
+  {#if revealNewHomepage}
+    <div class="bx--row">
+      <div class="bx--col">
+        <div class="spacing--v-48"></div>
+        <p>
+          View the <a rel="external" href="/homepage-redesign-preview/"
+            >new homepage design.</a
+          >
+        </p>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <div class="spacing--v-96"></div>
