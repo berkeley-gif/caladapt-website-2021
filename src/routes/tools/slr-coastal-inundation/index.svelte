@@ -197,7 +197,7 @@
 
 <Header
   iconPaths="{tool.icons}"
-  title="{`${tool.title} (beta)`}"
+  title="{tool.title}"
   description="{description}"
 />
 
