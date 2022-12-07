@@ -9,7 +9,7 @@ import boundaries from "~/helpers/mapbox-layers";
 
 export const DEFAULT_LOCATION = {
   id: 37907,
-  title: "LOCA Grid Cell -121.46875, 38.59375",
+  title: "LOCA Grid Cell 38.59375, -121.46875",
   geometry: {
     type: "Polygon",
     coordinates: [
