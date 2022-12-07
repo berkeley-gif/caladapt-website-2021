@@ -13,6 +13,9 @@ export const caladaptGeocodingEndpoint = apiEndpoint;
 export const mapboxGeocodingEndpoint =
   "https://api.mapbox.com/geocoding/v5/mapbox.places";
 
+// Cache busting variable. Increment to get refreshed content from API. Last increment: 2022-12-06
+const v = 2;
+
 export const mapboxGeocodeParams = {
   country: "us",
   bbox: "-125,31,-113,44",
@@ -68,7 +71,7 @@ export const searchBoundaryLayer = async (searchStr, boundaryId) => {
   const searchParams = {
     srs: 4326,
     search: searchStr,
-    v: 2, // cache bust 2022-12-06
+    v: v,
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
   if (error) {
@@ -84,7 +87,7 @@ export const getBoundaryPolygon = async (coords, boundaryId) => {
     precision: 4,
     //intersects: `{"type":"Point","coordinates":[${coords[0]},${coords[1]}]}`,
     intersects: `Point(${coords[0]} ${coords[1]})`,
-    v: 2, // cache bust 2022-12-06
+    v: v,
   };
   const [response, error] = await handleXHR(fetchData(url, searchParams));
   if (error) {
@@ -232,7 +235,7 @@ export const getFeature = async (feature, boundaryId) => {
 export const getFeatureById = async (
   boundaryType,
   featureId,
-  params = { srs: 4326, v: 2 }
+  params = { srs: 4326, v: v }
 ) => {
   let location = null;
   const url = `${apiEndpoint}/${boundaryType}/${featureId}/`;
@@ -299,7 +302,7 @@ export const getNearestFeature = async (lng, lat, layerId) => {
     srs: 4326,
     precision: 4,
     distance_to: `POINT(${lng} ${lat})`,
-    v: 2, // cache bust 2022-12-06
+    v: v,
   };
   const [response, error] = await handleXHR(fetchData(url, params));
   if (error) {
