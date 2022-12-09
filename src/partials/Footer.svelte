@@ -131,7 +131,7 @@
     </a>
   </div>
   <div class="footer-copyright">
-    <small>&copy; 2021 California Energy Commission</small>
+    <small>&copy; 2022 California Energy Commission</small>
     <small>State of California, Gavin Newsom, Governor.</small>
   </div>
 </footer>
