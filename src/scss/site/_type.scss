@@ -53,6 +53,10 @@ p.lead {
   max-width: $p-lead-default-max-width;
 }
 
+p.homepage {
+  max-width: $p-homepage-max-width;
+}
+
 p.feedback {
   font-style: italic;
   float: right;
