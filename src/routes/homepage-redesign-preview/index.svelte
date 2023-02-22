@@ -113,7 +113,7 @@
     const events = await this.fetch(`events.json`)
       .then((r) => r.json())
       .then((events) => events);
-    const data = await this.fetch("index.json")
+    const data = await this.fetch("indexV2.json")
       .then((r) => r.json())
       .then((data) => data);
     return {
@@ -153,6 +153,23 @@
     margin-top: 2.5rem;
     text-transform: uppercase;
   }
+
+  .ae-logo-box {
+    padding: 14px;
+
+    img {
+      display: block;
+      margin: auto;
+    }
+  }
+
+  .ae-logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
+  }
 </style>
 
 <svelte:head>
@@ -188,16 +205,20 @@
   <div class="bx--row">
     <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
       <div class="spacing--v-24"></div>
+
+      <!-- Fourth Assessment Block -->
       <h2>Explore interactive maps and charts</h2>
       <div class="spacing--v-24"></div>
-      <p class="homepage">
+      <p class="full-width">
         Visualize and download <strong>downscaled CMIP5 climate data</strong>
         and other datasets developed for California’s
-        <a href="#" target="_blank">4th Climate Change Assessment.</a>
+        <a href="/blog/slr-cis-tool" target="_blank"
+          >Fourth Climate Change Assessment.</a
+        >
         Read our <a href="/get-started" target="_blank">Get Started</a> guide to
         learn more about working with climate data.
       </p>
-      <p class="homepage">
+      <p class="full-width">
         Designed for a <strong>broad range of users.</strong>
       </p>
       <div class="spacing--v-24"></div>
@@ -215,8 +236,35 @@
         {/each}
       </CardsContainer>
 
+      <!-- Analytics / Fifth Assessment Block -->
       <div class="spacing--v-24"></div>
       <h2>Analyze next generation climate data</h2>
+      <div class="spacing--v-24"></div>
+
+      <div class="bx--grid">
+        <div class="bx--row">
+          <div class="bx--col-lg-4 bg-gradient-analytics-engine ae-logo-box">
+            <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
+          </div>
+          <div class="bx--col-lg-12 ae-logo-text">
+            <p class="full-width">
+              A climate data platform developed for California's Fifth Climate
+              Change Assessment.
+            </p>
+            <p class="full-width">
+              Use cloud computing resources to access <strong
+                >downscaled CMIP6 climate data</strong
+              >
+              and analytics <strong>co-produced</strong> by stakeholders, policy
+              makers, scientists and developers.
+            </p>
+            <p class="full-width">
+              Built for users with <strong>prior computing</strong> experience
+              and <strong>data intensive needs.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Sidebar on desktop only -->
