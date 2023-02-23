@@ -149,6 +149,8 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .btn-container {
     margin-top: 2.5rem;
     text-transform: uppercase;
@@ -169,6 +171,10 @@
     align-items: center;
     justify-content: center;
     align-items: flex-start;
+
+    @include media("<=medium") {
+      padding-top: 24px;
+    }
   }
 </style>
 
@@ -243,7 +249,9 @@
 
       <div class="bx--grid">
         <div class="bx--row">
-          <div class="bx--col-lg-4 bg-gradient-analytics-engine ae-logo-box">
+          <div
+            class="bx--col-lg-4 bg-gradient-analytics-engine ae-logo-box lift"
+          >
             <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
           </div>
           <div class="bx--col-lg-12 ae-logo-text">
