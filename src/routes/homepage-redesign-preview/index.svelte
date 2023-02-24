@@ -130,6 +130,7 @@
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { Card, CardsContainer } from "~/components/cards";
   import { Banner, SidebarRight } from "~/partials";
+  import { InlineNotification } from "carbon-components-svelte";
 
   export let events;
   export let posts;
@@ -150,6 +151,24 @@
 
 <style lang="scss">
   @import "scss/site/mixins/media-queries";
+
+  .alert :global(.bx--inline-notification) {
+    margin: 0;
+    max-width: 100%;
+    background: $teal-10;
+
+    &::before {
+      border: none;
+    }
+  }
+
+  .alert :global(.bx--inline-notification__text-wrapper) {
+    flex-direction: column;
+  }
+
+  .bx--inline-notification__subtitle {
+    margin-bottom: 0;
+  }
 
   .btn-container {
     margin-top: 2.5rem;
@@ -210,7 +229,18 @@
 <div class="bx--grid">
   <div class="bx--row">
     <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
-      <div class="spacing--v-24"></div>
+      <div class="alert">
+        <InlineNotification
+          lowContrast
+          hideCloseButton
+          kind="info"
+          title="Looking for climate data for California's Fifth Climate Change Assessment?"
+        >
+          <p class="bx--inline-notification__subtitle">
+            Visit the <a href="/data">Cal-Adapt Analytics Engine</a>
+          </p>
+        </InlineNotification>
+      </div>
 
       <!-- Fourth Assessment Block -->
       <h2>Explore interactive maps and charts</h2>
