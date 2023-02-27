@@ -134,6 +134,10 @@
         <!-- optional slot for a CTA button -->
         <slot name="button" />
       </div>
+      <div class="bx--col-lg-6">
+        <!-- optional slot for a CTA card -->
+        <slot name="cta-card" />
+      </div>
     </div>
   </div>
 </div>

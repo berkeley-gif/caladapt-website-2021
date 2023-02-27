@@ -1,7 +1,7 @@
-import getCardsDataV2 from "./_cards_v2";
+import getCardsData_temp from "./_cards_temp";
 
 export function get(req, res, next) {
-  const cardsData = getCardsDataV2();
+  const cardsData = getCardsData_temp();
   if (cardsData) {
     res.writeHead(200, {
       "Content-Type": "application/json",
