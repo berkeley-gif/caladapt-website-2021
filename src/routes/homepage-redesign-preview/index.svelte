@@ -137,8 +137,9 @@
         titleText: "Cal-Adapt is evolving!",
         linkPath: `/help/`,
         description:
-          "Partner with Cal-Adapt Enterprise in our mission to support California's climate change initiatives and preview our future plans.",
+          "Learn about the Cal-Adapt enterprise and our mission to support California's climate change initiatives and preview our future plans.",
         height: 18,
+        ctaText: "Read More",
       }}
     >
       <div class="icon-circle bg-teal-60" slot="icon_slot">
@@ -189,7 +190,7 @@
             {...{
               ...cardDatum,
               height: cardHeight,
-              ctaText: "Learn more",
+              ctaText: "Learn More",
               textColor: "white",
               useRule: true,
             }}
