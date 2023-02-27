@@ -126,11 +126,11 @@
   iconPaths="{icons}"
   useOffset="{false}"
 >
-  <div class="btn-container" slot="button">
+  <!--   <div class="btn-container" slot="button">
     <Button icon="{ArrowRight16}" href="/about" sapper:prefetch
       >More about Cal-Adapt</Button
     >
-  </div>
+  </div> -->
   <div class="cta-card" slot="cta-card">
     <Card
       {...{
