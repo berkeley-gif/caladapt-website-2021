@@ -200,7 +200,7 @@
       <p class="full-width">
         Designed for a <strong>broad range of users.</strong>
       </p>
-      <div class="spacing--v-24"></div>
+
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
         {#each cardsData as cardDatum, index}
           <Card
