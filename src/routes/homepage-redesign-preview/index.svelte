@@ -188,7 +188,7 @@
 
       <!-- Fourth Assessment Block -->
       <h2>Explore interactive maps and charts</h2>
-      <p class="full-width">
+      <p class="lg-width">
         Visualize and download <strong>downscaled CMIP5 climate data</strong>
         and other datasets developed for California’s
         <a href="/blog/slr-cis-tool" target="_blank"
@@ -197,7 +197,7 @@
         Read our <a href="/get-started" target="_blank">Get Started</a> guide to
         learn more about working with climate data.
       </p>
-      <p class="full-width">
+      <p class="lg-width">
         Designed for a <strong>broad range of users.</strong>
       </p>
 
@@ -228,18 +228,18 @@
             <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
           </div>
           <div class="bx--col-lg-12 ae-logo-text">
-            <p class="full-width">
+            <p class="lg-width">
               A climate data platform developed for California's Fifth Climate
               Change Assessment.
             </p>
-            <p class="full-width">
+            <p class="lg-width">
               Use cloud computing resources to access <strong
                 >downscaled CMIP6 climate data</strong
               >
               and analytics <strong>co-produced</strong> by stakeholders, policy
               makers, scientists and developers.
             </p>
-            <p class="full-width">
+            <p class="lg-width">
               Built for users with <strong>prior computing</strong> experience
               and <strong>data intensive needs.</strong>
             </p>
