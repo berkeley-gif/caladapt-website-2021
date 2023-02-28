@@ -31,7 +31,7 @@
     const events = await this.fetch(`events.json`)
       .then((r) => r.json())
       .then((events) => events);
-    const data = await this.fetch("index_temp.json")
+    const data = await this.fetch("index.json")
       .then((r) => r.json())
       .then((data) => data);
     return {
@@ -116,8 +116,6 @@
   }
 
   .cta-card {
-    width: 350px;
-
     @include media(">large") {
       float: right;
     }
