@@ -156,6 +156,8 @@
           "Learn about the Cal-Adapt enterprise and our mission to support California's climate change initiatives and preview our future plans.",
         height: 18,
         ctaText: "Read More",
+        bgColor: "rgba(255,255,255,0.5)",
+        border: "none",
       }}
     >
       <div class="icon-circle bg-teal-60" slot="icon_slot">
