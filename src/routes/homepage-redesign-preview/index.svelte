@@ -124,13 +124,6 @@
       margin-top: 24px;
     }
   }
-
-  .icon-circle {
-    svg {
-      fill: red;
-      color: red;
-    }
-  }
 </style>
 
 <svelte:head>
