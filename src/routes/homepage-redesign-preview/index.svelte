@@ -159,7 +159,7 @@
       }}
     >
       <div class="icon-circle bg-teal-60" slot="icon_slot">
-        <svelte:component this="{InformationFilled32}" fill="red" />
+        <svelte:component this="{InformationFilled32}" />
       </div>
     </Card>
   </div>
