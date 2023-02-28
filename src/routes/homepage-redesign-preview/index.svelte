@@ -186,7 +186,6 @@
 
       <!-- Fourth Assessment Block -->
       <h2>Explore interactive maps and charts</h2>
-      <div class="spacing--v-24"></div>
       <p class="full-width">
         Visualize and download <strong>downscaled CMIP5 climate data</strong>
         and other datasets developed for California’s
