@@ -94,6 +94,15 @@
     text-transform: uppercase;
   }
 
+  .twoCol {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 33% 67%;
+    grid-gap: 2rem;
+    padding: 0;
+    margin: 0;
+  }
+
   .ae-logo-box {
     padding: 14px;
 
@@ -216,34 +225,27 @@
       </CardsContainer>
 
       <!-- Analytics / Fifth Assessment Block -->
-      <div class="spacing--v-24"></div>
       <h2>Analyze next generation climate data</h2>
-      <div class="spacing--v-24"></div>
-
-      <div class="bx--grid">
-        <div class="bx--row">
-          <div
-            class="bx--col-lg-4 bg-gradient-analytics-engine ae-logo-box lift"
-          >
-            <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
-          </div>
-          <div class="bx--col-lg-12 ae-logo-text">
-            <p class="lg-width">
-              A climate data platform developed for California's Fifth Climate
-              Change Assessment.
-            </p>
-            <p class="lg-width">
-              Use cloud computing resources to access <strong
-                >downscaled CMIP6 climate data</strong
-              >
-              and analytics <strong>co-produced</strong> by stakeholders, policy
-              makers, scientists and developers.
-            </p>
-            <p class="lg-width">
-              Built for users with <strong>prior computing</strong> experience
-              and <strong>data intensive needs.</strong>
-            </p>
-          </div>
+      <div class="twoCol">
+        <div class="bg-gradient-analytics-engine ae-logo-box lift">
+          <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
+        </div>
+        <div class="ae-logo-text">
+          <p class="lg-width">
+            A climate data platform developed for California's Fifth Climate
+            Change Assessment.
+          </p>
+          <p class="lg-width">
+            Use cloud computing resources to access <strong
+              >downscaled CMIP6 climate data</strong
+            >
+            and analytics <strong>co-produced</strong> by stakeholders, policy makers,
+            scientists and developers.
+          </p>
+          <p class="lg-width">
+            Built for users with <strong>prior computing</strong> experience and
+            <strong>data intensive needs.</strong>
+          </p>
         </div>
       </div>
     </div>
