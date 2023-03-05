@@ -94,7 +94,8 @@
     text-transform: uppercase;
   }
 
-  .twoCol {
+  // The following code creates a grid that has 1/3 and 2/3 column template
+  .one-two-column-grid {
     width: 100%;
     display: grid;
     grid-template-columns: 33% 67%;
@@ -226,7 +227,7 @@
 
       <!-- Analytics / Fifth Assessment Block -->
       <h2>Analyze next generation climate data</h2>
-      <div class="twoCol">
+      <div class="one-two-column-grid">
         <div class="bg-gradient-analytics-engine ae-logo-box lift">
           <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
         </div>
