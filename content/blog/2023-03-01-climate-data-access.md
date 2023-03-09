@@ -43,6 +43,6 @@ Energy sector users can access cloud computing resources and early versions of a
 
 With support from the [Amazon Sustainability Data Initiative](https://sustainability.aboutamazon.com/environment/the-cloud/amazon-sustainability-data-initiative), users can also directly access Fifth Assessment data on a [public S3 bucket](https://cadcat.s3.amazonaws.com/index.html) on Amazon Web Services (AWS). This python script (link to python script) demonstrates how to access data on AWS.
 
-## New Cal-Adapt web tool for downloading Fifth Assessment data
+## New Cal-Adapt web tool for downloading climate data
 
 The Cal-Adapt team is developing a new interactive web tool for downloading Fifth Assessment data and is looking for users to help us beta test it. If you are interested in helping to shape its development, please get in touch with the Cal-Adapt support team at support@cal-adapt.org.
