@@ -39,8 +39,8 @@
       label: "Our Partners",
     },
     {
-      id: "background",
-      label: "Background",
+      id: "roadmap",
+      label: "Our Roadmap",
     },
     {
       id: "team",
@@ -516,11 +516,11 @@
     </div>
   </div>
 
-  <!-- Background -->
+  <!-- Our Roadmap -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
-      <div id="background" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <h2>Background</h2>
+      <div id="roadmap" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Our Roadmap</h2>
         <p>
           The <a href="http://www.energy.ca.gov/" target="_blank"
             >California Energy Commission</a
@@ -547,7 +547,30 @@
           accessibility. Cal-Adapt's design and functionality have been
           developed in collaboration with a variety of beta testers and advisory
           committee members who provided valuable feedback throughout several
-          iterations of updates.
+          iterations of updates. Read our
+          <a
+            href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf"
+            target="_blank">technical report for the Fourth Assessment</a
+          >
+          for more detailed information on the background and development of Cal-Adapt.
+        </p>
+        <p>
+          Cal-Adapt is evolving substantially, expanding beyond its current
+          capabilities to support <a
+            href="https://opr.ca.gov/climate/icarp/climate-assessment/"
+            target="_blank">California’s Fifth Climate Change Assessment</a
+          >
+          and offer a more comprehensive and powerful solution for highly technical
+          & data-intensive needs, with a focus on the energy sector. The expanded
+          Cal-Adapt enterprise will continue to provide essential visualization,
+          analytical and computational resources to support a broad range of stakeholders
+          in using large climate datasets to inform their decision-making and planning
+          processes. For additional details on state agency vision and roles in this
+          expanded enterprise, please see this
+          <a
+            href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239123&DocumentContentId=72578"
+            target="_blank">CEC Staff memo</a
+          >.
         </p>
         <p>
           Cal-Adapt has been recognized by California’s legislature as a key
