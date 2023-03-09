@@ -1,8 +1,8 @@
 ---
-title: “An expanded Cal-Adapt enterprise Assessment"
+title: An expanded Cal-Adapt enterprise Assessment
 author: Cal-Adapt
 image: caladapt_post.png
-tags: other, “Fifth Assessment”
+tags: other, Fifth Assessment
 snippet: Expanded Cal-Adapt enterprise includes a more comprehensive and powerful solution for highly technical & data-intensive needs, with a focus on the energy sector.
 ---
 
@@ -23,10 +23,10 @@ The California Governor’s [Office of Planning and Research](https://opr.ca.gov
 
 The climate projections data supporting this research is now available for California. This data is aligned with the next generation climate models from [Coupled Model Intercomparison Project Phase 6](https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6) (CMIP6) and has been downscaled to higher spatial resolutions ranging from 3 to 45 kms.
 
-## Accessing climate data for Fifth Assessment
+## Accessing climate data
 
 Energy sector users can access cloud computing resources and early versions of analytical tools to work with Fifth Assessment data through the [Cal-Adapt Analytics Engine](https://analytics.cal-adapt.org/). It is also available for public access through [AWS](https://cadcat.s3.amazonaws.com/index.html). Learn more [about the Fifth assessment data and how to access it](https://analytics.cal-adapt.org/).
 
-## New Cal-Adapt web tool for downloading Fifth Assessment data
+## New Cal-Adapt web tool for downloading climate data
 
 The Cal-Adapt team is developing a new interactive web tool for downloading Fifth Assessment data and is looking for users to help us beta test it. If you are interested in helping to shape its development, please get in touch with the Cal-Adapt support team at support@cal-adapt.org.
