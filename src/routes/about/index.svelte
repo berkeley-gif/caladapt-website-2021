@@ -547,12 +547,7 @@
           accessibility. Cal-Adapt's design and functionality have been
           developed in collaboration with a variety of beta testers and advisory
           committee members who provided valuable feedback throughout several
-          iterations of updates. Read our
-          <a
-            href="https://www.energy.ca.gov/sites/default/files/2019-11/Projections_CCCA4-CEC-2018-015_ADA.pdf"
-            target="_blank">technical report for the Fourth Assessment</a
-          >
-          for more detailed information on the background and development of Cal-Adapt.
+          iterations of updates.
         </p>
         <p>
           Cal-Adapt is evolving substantially, expanding beyond its current
@@ -572,6 +567,13 @@
             target="_blank">CEC Staff memo</a
           >.
         </p>
+        <figure class="image">
+          <img
+            width="100%"
+            src="/img/blog/caladapt_roadmap.png"
+            alt="Evolution of Cal-Adapt enterprise"
+          />
+        </figure>
         <p>
           Cal-Adapt has been recognized by California’s legislature as a key
           resource to support local hazard mitigation efforts and has helped
