@@ -1,12 +1,12 @@
 ---
 title: Access to next generation climate data
 author: Cal-Adapt
-image: download.png
+image: data.jpg
 tags: data, Fifth Assessment
 snippet: Access downscaled future climate projections and historical climate for models & scenarios at three spatial domains.
 ---
 
-Preliminary climate data that may support California’s Fifth Climate Change Assessment (Fifth Assessment) is available for California. This data is aligned with the latest generation of climate models from [Coupled Model Intercomparison Project Phase 6](https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6) (CMIP6).
+Preliminary climate data that may support [California’s Fifth Climate Change Assessment](https://opr.ca.gov/climate/icarp/climate-assessment/) (Fifth Assessment) is available for California. This data is aligned with the latest generation of climate models from [Coupled Model Intercomparison Project Phase 6](https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6) (CMIP6) used by the [Intergovernmental Panel on Climate Change](https://www.ipcc.ch/assessment-report/ar6/) (IPCC) global sixth assessment report.
 
 ## Models and scenarios
 
@@ -15,10 +15,10 @@ Several Global Climate Models (GCMs) from the CMIP6 archive have been selected f
 - 9-km  - Western Electricity Coordinating Council (WECC) region
 - 3-km  - California
 
-Scenarios that feed into the [Intergovernmental Panel on Climate Change](https://www.ipcc.ch/assessment-report/ar6/) (IPCC) global sixth assessment report are called [Shared Scenario Pathways](https://www.carbonbrief.org/explainer-how-shared-socioeconomic-pathways-explore-future-climate-change/) (SSPs). These replace the previous Representative Concentration Pathways (RCPs) used in CMIP5 which were focused specifically on greenhouse gas concentrations. The SSPs incorporate socioeconomic factors impacting potential greenhouse gas reduction scenarios. To explore a range of scenarios and models, data are available for three SSPs:
+Scenarios in CMIP6 are called [Shared Scenario Pathways](https://www.carbonbrief.org/explainer-how-shared-socioeconomic-pathways-explore-future-climate-change/) (SSPs). These replace the previous Representative Concentration Pathways (RCPs) used in CMIP5 which were focused specifically on greenhouse gas concentrations. The SSPs incorporate socioeconomic factors impacting potential greenhouse gas reduction scenarios. To explore a range of scenarios and models, data are available for three SSPs:
 - SSP2-4.5: a middle of the road global emissions scenario
 - SSP3-7.0: high global emissions scenario
-vSSP5-8.5: very high global emissions scenario
+- SSP5-8.5: very high global emissions scenario
 
 ## Data availability and use
 
@@ -43,6 +43,6 @@ Energy sector users can access cloud computing resources and early versions of a
 
 With support from the [Amazon Sustainability Data Initiative](https://sustainability.aboutamazon.com/environment/the-cloud/amazon-sustainability-data-initiative), users can also directly access Fifth Assessment data on a [public S3 bucket](https://cadcat.s3.amazonaws.com/index.html) on Amazon Web Services (AWS). This python script (link to python script) demonstrates how to access data on AWS.
 
-## New Cal-Adapt web tool for downloading climate data
+## New Cal-Adapt data download tool
 
-The Cal-Adapt team is developing a new interactive web tool for downloading Fifth Assessment data and is looking for users to help us beta test it. If you are interested in helping to shape its development, please get in touch with the Cal-Adapt support team at support@cal-adapt.org.
+The Cal-Adapt team is developing a new interactive web tool for downloading Fifth Assessment data and is looking for users to beta test it. If you are interested in helping to shape its development, please get in touch with the Cal-Adapt support team at support@cal-adapt.org.
