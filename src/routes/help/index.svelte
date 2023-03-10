@@ -18,6 +18,10 @@
 
   export let categories;
 
+  const subtitleText = [
+    `If you're brand new to Cal-Adapt or working with California’s Fourth Climate Change Assessment data we recommend visiting our Get Started articles. `,
+    `We also have tutorials and webinars that demonstrate how to use our tools.`,
+  ];
   const icons = {
     "get-started": User32,
     tutorials: Video32,
@@ -55,9 +59,7 @@
 
 <Banner
   titleText="How can we help?"
-  subtitleText="If you're brand new to Cal-Adapt or working with California’s Fourth Climate Change Assessment data we recommend visiting our Get Started articles. 
-  
-  We also have tutorials and webinars that demonstrate how to use our tools."
+  subtitleText="{subtitleText}"
   bannerImg="/img/banners/help_1500x400.jpg"
   bannerImgMobile="/img/banners/help_500x500.jpg"
   overlayOpacity="{0.7}"
