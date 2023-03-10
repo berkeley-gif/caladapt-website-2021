@@ -14,7 +14,7 @@
   import User32 from "carbon-icons-svelte/lib/User32";
   import Video32 from "carbon-icons-svelte/lib/Video32";
   import { Card, CardsContainer } from "~/components/cards";
-  import { Banner } from "~/partials";
+  import { Banner, AlertLink } from "~/partials";
 
   export let categories;
 
@@ -55,15 +55,30 @@
 
 <Banner
   titleText="How can we help?"
-  subtitleText="If you're brand new to Cal-Adapt we recommend visiting our 
-    Getting Started articles. We also have tutorials and webinars that demonstrate 
-    how to use our tools."
+  subtitleText="If you're brand new to Cal-Adapt or working with California’s Fourth Climate Change Assessment data we recommend visiting our Get Started articles. 
+  
+  We also have tutorials and webinars that demonstrate how to use our tools."
   bannerImg="/img/banners/help_1500x400.jpg"
   bannerImgMobile="/img/banners/help_500x500.jpg"
   overlayOpacity="{0.7}"
 />
 
 <div class="spacing--v-48"></div>
+
+<div class="bx--grid">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9">
+      <!-- Fifth Assessment Notification -->
+      <AlertLink
+        titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
+        linkUrl="/data"
+        linkTitle="Cal-Adapt Analytics Engine"
+      />
+    </div>
+    <div class="bx--col-lg-5"></div>
+  </div>
+</div>
 
 <div class="bx--grid">
   <div class="bx--row">

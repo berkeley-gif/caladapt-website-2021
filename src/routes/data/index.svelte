@@ -2,7 +2,7 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { inview } from "svelte-inview/dist/";
-  import { Banner, PageNav } from "~/partials";
+  import { Banner, PageNav, AlertLink } from "~/partials";
 
   let selectedItem;
   let pageNavItems = [
@@ -65,6 +65,21 @@
       />
     </div>
     <div class="bx--col-lg-3"></div>
+  </div>
+</div>
+
+<div class="bx--grid">
+  <div class="bx--row margin--v-32">
+    <div class="bx--col-lg-2"></div>
+    <div class="bx--col-lg-9">
+      <!-- Fifth Assessment Notification -->
+      <AlertLink
+        titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
+        linkUrl="/data"
+        linkTitle="Cal-Adapt Analytics Engine"
+      />
+    </div>
+    <div class="bx--col-lg-5"></div>
   </div>
 </div>
 

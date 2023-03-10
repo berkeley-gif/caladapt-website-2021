@@ -47,7 +47,7 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { Card, CardsContainer } from "~/components/cards";
-  import { Banner, SidebarRight } from "~/partials";
+  import { Banner, SidebarRight, AlertLink } from "~/partials";
   import { InlineNotification } from "carbon-components-svelte";
   import InformationFilled32 from "carbon-icons-svelte/lib/InformationFilled32";
 
@@ -175,18 +175,11 @@
   <div class="bx--row">
     <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
       <!-- Fifth Assessment Notification -->
-      <div class="alert">
-        <InlineNotification
-          lowContrast
-          hideCloseButton
-          kind="info"
-          title="Looking for climate data for California's Fifth Climate Change Assessment?"
-        >
-          <p class="bx--inline-notification__subtitle">
-            Visit the <a href="/data">Cal-Adapt Analytics Engine</a>
-          </p>
-        </InlineNotification>
-      </div>
+      <AlertLink
+        titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
+        linkUrl="/data"
+        linkTitle="Cal-Adapt Analytics Engine"
+      />
 
       <!-- Fourth Assessment Block -->
       <h2>Explore interactive maps and charts</h2>

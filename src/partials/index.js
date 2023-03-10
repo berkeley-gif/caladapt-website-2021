@@ -1,3 +1,4 @@
+export { default as AlertLink } from "./AlertLink.svelte";
 export { default as BackToTop } from "./BackToTop.svelte";
 export { default as Banner } from "./Banner.svelte";
 export { default as Embed } from "./Embed.svelte";
