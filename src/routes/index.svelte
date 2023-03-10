@@ -118,6 +118,13 @@
     align-items: center;
     justify-content: center;
     align-items: flex-start;
+    grid-column: span 2;
+  }
+
+  .ae-logo-text {
+    @include media("<=medium") {
+      grid-column: span 1;
+    }
   }
 
   .cta-card {
@@ -176,8 +183,8 @@
       <!-- Fifth Assessment Notification -->
       <AlertLink
         titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
-        linkUrl="/data"
-        linkTitle="Cal-Adapt Analytics Engine"
+        linkUrl="/blog/climate-data-access"
+        linkTitle="blog post on accessing next generation climate data"
       />
 
       <!-- Fourth Assessment Block -->

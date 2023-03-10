@@ -75,7 +75,7 @@
       <AlertLink
         titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
         linkUrl="/data"
-        linkTitle="Cal-Adapt Analytics Engine"
+        linkTitle="blog post on accessing next generation climate data"
       />
     </div>
     <div class="bx--col-lg-5"></div>
