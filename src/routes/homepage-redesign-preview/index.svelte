@@ -119,17 +119,9 @@
     align-items: center;
     justify-content: center;
     align-items: flex-start;
-
-    @include media("<=medium") {
-      padding-top: 24px;
-    }
   }
 
   .cta-card {
-    @include media(">large") {
-      float: right;
-    }
-
     @include media("<=medium") {
       margin-top: 24px;
     }
