@@ -6,12 +6,7 @@ export function get(req, res, next) {
     res.writeHead(200, {
       "Content-Type": "application/json",
     });
-    res.end(
-      JSON.stringify({
-        cardsData,
-        revealNewHomepage: process.cal_adapt_features.revealNewHomepage,
-      })
-    );
+    res.end(JSON.stringify(cardsData));
   } else {
     next();
   }

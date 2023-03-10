@@ -39,7 +39,6 @@
       events,
       //cardsData: data.cardsData,
       cardsData: cardsDataTemp,
-      revealNewHomepage: data.revealNewHomepage,
     };
   }
 </script>
@@ -55,7 +54,6 @@
   export let events;
   export let posts;
   export let cardsData;
-  export let revealNewHomepage;
 
   const icons = [
     "sun",
