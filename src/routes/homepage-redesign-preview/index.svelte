@@ -98,7 +98,7 @@
   .one-two-column-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: 33% 67%;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     grid-gap: 2rem;
     padding: 0;
     margin: 0;
