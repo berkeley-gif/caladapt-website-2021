@@ -25,3 +25,36 @@
     #074e67 100%
   );
 }
+
+.bg-gradient-analytics-engine {
+  background: -webkit-linear-gradient(
+    297deg,
+    rgb(247, 133, 59) 0%,
+    rgb(247, 103, 112) 40%,
+    rgb(185, 100, 162) 100%
+  );
+  background: -o-linear-gradient(
+    297deg,
+    rgb(247, 133, 59) 0%,
+    rgb(247, 103, 112) 40%,
+    rgb(185, 100, 162) 100%
+  );
+  background: -ms-linear-gradient(
+    297deg,
+    rgb(247, 133, 59) 0%,
+    rgb(247, 103, 112) 40%,
+    rgb(185, 100, 162) 100%
+  );
+  background: -moz-linear-gradient(
+    297deg,
+    rgb(247, 133, 59) 0%,
+    rgb(247, 103, 112) 40%,
+    rgb(185, 100, 162) 100%
+  );
+  background: linear-gradient(
+    153deg,
+    rgb(247, 133, 59) 0%,
+    rgb(247, 103, 112) 40%,
+    rgb(185, 100, 162) 100%
+  );
+}
