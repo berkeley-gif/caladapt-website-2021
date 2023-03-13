@@ -33,9 +33,7 @@ Dynamically downscaled, hourly data is best suited for applications requiring da
 The availability of GCMs, temporal resolutions and climate variables depends on the downscaling approach used. For the most up to date information on what’s available please refer to <a href="https://github.com/cal-adapt/climakitae/blob/main/climakitae/data/variable_descriptions.csv" target="_blank">this table</a>.  At the time of writing the following variables are available for both downscaling approaches:
 - Air temperature at two meters
 - Precipitation
-- Wind speed at ten meters
 - Relative humidity
-- Solar radiation
 
 ## Data access
 
