@@ -75,7 +75,7 @@
       <!-- Fifth Assessment Notification -->
       <AlertLink
         titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
-        linkUrl="/data"
+        linkUrl="/blog/climate-data-access"
         linkTitle="blog post on accessing next generation climate data"
       />
     </div>
