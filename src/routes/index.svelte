@@ -1,4 +1,29 @@
 <script context="module">
+  // This is a temporary variable. We can get rid of it once the landing page changes have been finalized and approved
+  const cardsDataTemp = [
+    {
+      titleText: "Local Climate Change Snapshot Tool",
+      linkPath: "/tools/local-climate-change-snapshot",
+      description:
+        "Quickly view a variety of climate data for a city, county, or other place.",
+      bgColor: "var(--card-gradient-02)",
+    },
+    {
+      titleText: "Explore all Climate Tools",
+      linkPath: "/tools",
+      description:
+        "Explore data on temperature, precipitation, snowpack, wildfire, and more.",
+      bgColor: "var(--card-gradient-03)",
+    },
+    {
+      titleText: "Download Data",
+      linkPath: "/data",
+      description:
+        "Download Fourth Assessment climate data in NetCDF, GeoTIFF and CSV formats.",
+      bgColor: "var(--card-gradient-03)",
+    },
+  ];
+
   export async function preload() {
     const posts = await this.fetch(`blog.json`)
       .then((r) => r.json())
@@ -12,8 +37,8 @@
     return {
       posts,
       events,
-      cardsData: data.cardsData,
-      revealNewHomepage: data.revealNewHomepage,
+      //cardsData: data.cardsData,
+      cardsData: cardsDataTemp,
     };
   }
 </script>
@@ -23,11 +48,13 @@
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { Card, CardsContainer } from "~/components/cards";
   import { Banner, SidebarRight } from "~/partials";
+  import { AlertLink } from "~/components/alert-link";
+
+  import InformationFilled32 from "carbon-icons-svelte/lib/InformationFilled32";
 
   export let events;
   export let posts;
   export let cardsData;
-  export let revealNewHomepage;
 
   const icons = [
     "sun",
@@ -42,9 +69,51 @@
 </script>
 
 <style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   .btn-container {
     margin-top: 2.5rem;
     text-transform: uppercase;
+  }
+
+  // The following code creates a grid that has 1/3 and 2/3 column template
+  .one-two-column-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    grid-gap: 2rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ae-logo-box {
+    padding: 14px;
+
+    img {
+      display: block;
+      margin: auto;
+    }
+  }
+
+  .ae-logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
+    grid-column: span 2;
+  }
+
+  .ae-logo-text {
+    @include media("<=medium") {
+      grid-column: span 1;
+    }
+  }
+
+  .cta-card {
+    @include media("<=medium") {
+      margin-top: 24px;
+    }
   }
 </style>
 
@@ -54,12 +123,8 @@
 
 <!-- Banner -->
 <Banner
-  titleText="Cal-Adapt provides a way to explore peer-reviewed data that 
-    portrays how climate change might affect California at the state and local
-    levels."
-  subtitleText="We make this data available through downloads, visualizations, 
-    and the Cal-Adapt API for your research, outreach, and adaptation planning
-    needs."
+  titleText="Explore and analyze climate data from California’s Climate Change Assessments"
+  subtitleText="Cal-Adapt provides the public, researchers, government agencies and industry stakeholders with essential data & tools for climate adaptation planning, building resiliency, and fostering community engagement."
   bannerImg="/img/banners/yosemite_1600x540.jpg"
   bannerImgMobile="/img/banners/yosemite_700x800.jpg"
   overlayOpacity="{0.4}"
@@ -68,10 +133,28 @@
   iconPaths="{icons}"
   useOffset="{false}"
 >
-  <div class="btn-container" slot="button">
+  <!--   <div class="btn-container" slot="button">
     <Button icon="{ArrowRight16}" href="/about" sapper:prefetch
       >More about Cal-Adapt</Button
     >
+  </div> -->
+  <div class="cta-card" slot="cta-card">
+    <Card
+      {...{
+        titleText: "Cal-Adapt is evolving!",
+        linkPath: `/help/`,
+        description:
+          "Learn about the Cal-Adapt enterprise and our mission to support California's climate change initiatives and preview our future plans.",
+        height: 18,
+        ctaText: "Read More",
+        bgColor: "rgba(255,255,255,0.5)",
+        border: "none",
+      }}
+    >
+      <div class="icon-circle bg-teal-60" slot="icon_slot">
+        <svelte:component this="{InformationFilled32}" />
+      </div>
+    </Card>
   </div>
 </Banner>
 
@@ -80,19 +163,66 @@
 <div class="bx--grid">
   <div class="bx--row">
     <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
+      <!-- Fifth Assessment Notification -->
+      <AlertLink
+        titleText="Looking for climate data for California's Fifth Climate Change Assessment?"
+        linkUrl="/blog/climate-data-access"
+        linkTitle="blog post on accessing next generation climate data"
+      />
+
+      <!-- Fourth Assessment Block -->
+      <h2>Explore interactive maps and charts</h2>
+      <p class="lg-width">
+        Visualize and download <strong>downscaled CMIP5 climate data</strong>
+        and other datasets developed for California’s
+        <a href="/blog/slr-cis-tool" target="_blank"
+          >Fourth Climate Change Assessment.</a
+        >
+        Read our <a href="/get-started" target="_blank">Get Started</a> guide to
+        learn more about working with climate data.
+      </p>
+      <p class="lg-width">
+        Designed for a <strong>broad range of users.</strong>
+      </p>
+
       <CardsContainer gridGap="{2}" cardWidth="{cardWidth}">
         {#each cardsData as cardDatum, index}
           <Card
             {...{
               ...cardDatum,
               height: cardHeight,
-              ctaText: "Learn more",
+              ctaText: "Learn More",
               textColor: "white",
               useRule: true,
             }}
           />
         {/each}
       </CardsContainer>
+
+      <!-- Analytics / Fifth Assessment Block -->
+      <h2>Analyze next generation climate data</h2>
+      <div class="one-two-column-grid">
+        <div class="bg-gradient-analytics-engine ae-logo-box lift">
+          <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
+        </div>
+        <div class="ae-logo-text">
+          <p class="lg-width">
+            A climate data platform developed for California's Fifth Climate
+            Change Assessment.
+          </p>
+          <p class="lg-width">
+            Use cloud computing resources to access <strong
+              >downscaled CMIP6 climate data</strong
+            >
+            and analytics <strong>co-produced</strong> by stakeholders, policy makers,
+            scientists and developers.
+          </p>
+          <p class="lg-width">
+            Built for users with <strong>prior computing</strong> experience and
+            <strong>data intensive needs.</strong>
+          </p>
+        </div>
+      </div>
     </div>
 
     <!-- Sidebar on desktop only -->
@@ -119,20 +249,6 @@
       </div>
     </div>
   </div>
-
-  <!-- TODO: remove this before deploying to production -->
-  {#if revealNewHomepage}
-    <div class="bx--row">
-      <div class="bx--col">
-        <div class="spacing--v-48"></div>
-        <p>
-          View the <a rel="external" href="/homepage-redesign-preview/"
-            >new homepage design.</a
-          >
-        </p>
-      </div>
-    </div>
-  {/if}
 </div>
 
 <div class="spacing--v-96"></div>

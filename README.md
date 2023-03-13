@@ -4,6 +4,14 @@ Source code for the 2021 redesign of [cal-adapt.org](https://cal-adapt.org).
 
 This project was bootstrapped with the [Sapper framework](https://sapper.svelte.dev/) for [SvelteJS](https://svelte.dev).
 
+## Node version
+
+This project uses Node 14. Run the following command before installing or running your development environment:
+
+```
+nvm use 14
+```
+
 ## Running the project
 
 Once you have cloned the project, install dependencies and run the project in development mode:
