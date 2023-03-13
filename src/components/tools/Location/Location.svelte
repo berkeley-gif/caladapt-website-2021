@@ -25,20 +25,19 @@
   export let zoom = 5;
   export let minZoom = 0;
   export let maxZoom = 22;
-  export let flyToOnLoad = true;
   export let attributionControl = false;
   export let style = "mapbox://styles/cal-adapt/cjivy3e8o6d9y2rnnhsqo0sj0";
   export let attributionOptions = {
     customAttribution: ["Cal-Adapt"],
   };
-  export let boundary;
-  export let location;
-  export let resize;
-  export let imageOverlayUrl;
-  export let imageOverlayShow;
-  export let imageOverlayCoords;
+  export let boundary = null;
+  export let location = null;
+  export let resize = false;
+  export let imageOverlayUrl = null;
+  export let imageOverlayShow = false;
+  export let imageOverlayCoords = null;
   export let zoomToLocationOnLoad = true;
-  export let stations;
+  export let stations = null;
 
   // Local variables
   //-----------------
@@ -51,7 +50,6 @@
     zoom,
     minZoom,
     maxZoom,
-    flyToOnLoad,
     attributionControl,
     style,
   };

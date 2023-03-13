@@ -11,16 +11,6 @@ const tools = [
       'img/icons/rainfall.svg',
       'img/icons/wildfire.svg',
     ],
-  },
-  {
-    title: 'Annual Averages',
-    desc: `Projected annual averages of maximum & minimum temperatures and precipitation.`,
-    categories: ['Temperature', 'Precipitation'],
-    slug: 'annual-averages',
-    icons: [
-      'img/icons/sun.svg',
-      'img/icons/rainfall.svg',
-    ],
     datasets: [
       {
         slug: 'cb0c5f49-59d2-4f8e-8d9c-a047833f6081',
@@ -34,6 +24,54 @@ const tools = [
         slug: 'b8bee9f9-31c1-40d9-89a3-2dad814ba7da',
         logo: 'gif_80x80.png'
       }
+    ],
+    related: [
+      'annual-averages',
+      'extreme-heat',
+      'extreme-precipitation',
+      'maps-of-projected-change',
+      'extended-drought',
+      'wildfire',
+    ],
+    resources: [
+      'California Adaptation Clearinghouse', 
+      "California's 4th Climate Change Assessment",
+    ],
+  },
+  {
+    title: 'Annual Averages',
+    desc: `Projected annual averages of maximum & minimum temperatures and precipitation.`,
+    categories: ['Temperature', 'Precipitation'],
+    slug: 'annual-averages',
+    icons: [
+      'img/icons/sun.svg',
+      'img/icons/rainfall.svg',
+    ],
+    datasets: [
+      {
+        slug: '18e1cb9a-4de0-4e8f-a777-297272c3f4d8',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'bac951c9-a781-40e1-b65d-5a14578157e9',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'b8bee9f9-31c1-40d9-89a3-2dad814ba7da',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'e3463df5-5ecc-42fb-a947-07868a8eee8c',
+        logo: 'gif_80x80.png'
+      },
+      {
+        slug: 'bfa874e7-90b4-4948-a3ba-b5611e63cf2a',
+        logo: 'uc-merced-snri.png'
+      },
+      {
+        slug: 'e852c07a-9241-4123-98f9-8ed553ed1781',
+        logo: 'gif_80x80.png'
+      },
     ],
     related: [
       'maps-of-projected-change',
