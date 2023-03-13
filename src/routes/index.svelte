@@ -47,7 +47,8 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { Card, CardsContainer } from "~/components/cards";
-  import { Banner, SidebarRight, AlertLink } from "~/partials";
+  import { Banner, SidebarRight } from "~/partials";
+  import { AlertLink } from "~/components/alert-link";
 
   import InformationFilled32 from "carbon-icons-svelte/lib/InformationFilled32";
 
@@ -69,24 +70,6 @@
 
 <style lang="scss">
   @import "scss/site/mixins/media-queries";
-
-  .alert :global(.bx--inline-notification) {
-    margin: 0;
-    max-width: 100%;
-    background: $teal-10;
-
-    &::before {
-      border: none;
-    }
-  }
-
-  .alert :global(.bx--inline-notification__text-wrapper) {
-    flex-direction: column;
-  }
-
-  .bx--inline-notification__subtitle {
-    margin-bottom: 0;
-  }
 
   .btn-container {
     margin-top: 2.5rem;

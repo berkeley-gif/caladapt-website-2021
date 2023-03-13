@@ -14,7 +14,8 @@
   import User32 from "carbon-icons-svelte/lib/User32";
   import Video32 from "carbon-icons-svelte/lib/Video32";
   import { Card, CardsContainer } from "~/components/cards";
-  import { Banner, AlertLink } from "~/partials";
+  import { Banner } from "~/partials";
+  import { AlertLink } from "~/components/alert-link";
 
   export let categories;
 

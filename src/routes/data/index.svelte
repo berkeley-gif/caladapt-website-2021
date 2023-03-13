@@ -2,7 +2,8 @@
   import { Button } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
   import { inview } from "svelte-inview/dist/";
-  import { Banner, PageNav, AlertLink } from "~/partials";
+  import { Banner, PageNav } from "~/partials";
+  import { AlertLink } from "~/components/alert-link";
 
   let selectedItem;
   let pageNavItems = [
