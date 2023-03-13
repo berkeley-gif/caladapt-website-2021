@@ -556,7 +556,7 @@
             target="_blank">California’s Fifth Climate Change Assessment</a
           >
           and offer a more comprehensive and powerful solution for highly technical
-          & data-intensive needs, with a focus on the energy sector. The expanded
+          and data-intensive needs, with a focus on the energy sector. The expanded
           Cal-Adapt enterprise will continue to provide essential visualization,
           analytical and computational resources to support a broad range of stakeholders
           in using large climate datasets to inform their decision-making and planning
