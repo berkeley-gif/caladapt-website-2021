@@ -39,8 +39,8 @@
       label: "Our Partners",
     },
     {
-      id: "background",
-      label: "Background",
+      id: "roadmap",
+      label: "Our Roadmap",
     },
     {
       id: "team",
@@ -516,11 +516,11 @@
     </div>
   </div>
 
-  <!-- Background -->
+  <!-- Our Roadmap -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
-      <div id="background" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <h2>Background</h2>
+      <div id="roadmap" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Our Roadmap</h2>
         <p>
           The <a href="http://www.energy.ca.gov/" target="_blank"
             >California Energy Commission</a
@@ -549,6 +549,31 @@
           committee members who provided valuable feedback throughout several
           iterations of updates.
         </p>
+        <p>
+          Cal-Adapt is evolving substantially, expanding beyond its current
+          capabilities to support <a
+            href="https://opr.ca.gov/climate/icarp/climate-assessment/"
+            target="_blank">California’s Fifth Climate Change Assessment</a
+          >
+          and offer a more comprehensive and powerful solution for highly technical
+          and data-intensive needs, with a focus on the energy sector. The expanded
+          Cal-Adapt enterprise will continue to provide essential visualization,
+          analytical and computational resources to support a broad range of stakeholders
+          in using large climate datasets to inform their decision-making and planning
+          processes. For additional details on state agency vision and roles in this
+          expanded enterprise, please see this
+          <a
+            href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239123&DocumentContentId=72578"
+            target="_blank">CEC Staff memo</a
+          >.
+        </p>
+        <figure class="image">
+          <img
+            width="100%"
+            src="/img/blog/caladapt_roadmap.png"
+            alt="Evolution of Cal-Adapt enterprise"
+          />
+        </figure>
         <p>
           Cal-Adapt has been recognized by California’s legislature as a key
           resource to support local hazard mitigation efforts and has helped
