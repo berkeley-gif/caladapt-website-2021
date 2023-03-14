@@ -207,8 +207,14 @@
         </div>
         <div class="ae-logo-text">
           <p class="lg-width">
-            A climate data platform developed for California's Fifth Climate
-            Change Assessment.
+            A <a href="https://analytics.cal-adapt.org/" target="_blank"
+              >climate data platform</a
+            >
+            developed for California's
+            <a
+              href="https://opr.ca.gov/climate/icarp/climate-assessment/"
+              target="_blank">Fifth Climate Change Assessment</a
+            >.
           </p>
           <p class="lg-width">
             Use cloud computing resources to access <strong
