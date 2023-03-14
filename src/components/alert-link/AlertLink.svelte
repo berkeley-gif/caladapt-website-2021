@@ -36,7 +36,7 @@
     title="{titleText}"
   >
     <p class="bx--inline-notification__subtitle">
-      Visit the <a href="{linkUrl}">{linkTitle}</a>
+      Visit the <a href="{linkUrl}" target="_blank">{linkTitle}</a>
     </p>
   </InlineNotification>
 </div>

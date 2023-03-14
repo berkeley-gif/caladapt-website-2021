@@ -105,7 +105,7 @@
   }
 
   .ae-logo-text {
-    @include media("<=medium") {
+    @include mq-mobile-tablet {
       grid-column: span 1;
     }
   }
@@ -142,7 +142,7 @@
     <Card
       {...{
         titleText: "Cal-Adapt is evolving!",
-        linkPath: `/help/`,
+        linkPath: `/blog/expanded-caladapt-enterprise`,
         description:
           "Learn about the Cal-Adapt enterprise and our mission to support California's climate change initiatives and preview our future plans.",
         height: 18,
@@ -175,11 +175,11 @@
       <p class="lg-width">
         Visualize and download <strong>downscaled CMIP5 climate data</strong>
         and other datasets developed for California’s
-        <a href="/blog/slr-cis-tool" target="_blank"
+        <a href="https://climateassessment.ca.gov/" target="_blank"
           >Fourth Climate Change Assessment.</a
         >
-        Read our <a href="/get-started" target="_blank">Get Started</a> guide to
-        learn more about working with climate data.
+        Read our <a href="/help/get-started" target="_blank">Get Started</a> guide
+        to learn more about working with climate data.
       </p>
       <p class="lg-width">
         Designed for a <strong>broad range of users.</strong>
@@ -200,15 +200,22 @@
       </CardsContainer>
 
       <!-- Analytics / Fifth Assessment Block -->
+      <div class="spacing--v-24"></div>
       <h2>Analyze next generation climate data</h2>
       <div class="one-two-column-grid">
-        <div class="bg-gradient-analytics-engine ae-logo-box lift">
+        <div class="bg-gradient-analytics-engine ae-logo-box shadow">
           <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
         </div>
         <div class="ae-logo-text">
           <p class="lg-width">
-            A climate data platform developed for California's Fifth Climate
-            Change Assessment.
+            A <a href="https://analytics.cal-adapt.org/" target="_blank"
+              >climate data platform</a
+            >
+            developed for California's
+            <a
+              href="https://opr.ca.gov/climate/icarp/climate-assessment/"
+              target="_blank">Fifth Climate Change Assessment</a
+            >.
           </p>
           <p class="lg-width">
             Use cloud computing resources to access <strong
@@ -237,7 +244,7 @@
 
   <div class="bx--row">
     <div class="bx--col">
-      <div class="spacing--v-48"></div>
+      <div class="spacing--v-24"></div>
       <p class="lead">
         Get the latest Cal-Adapt news, updates &amp; events delivered to your
         inbox. Subscribe to the Cal-Adapt Newsletter.
