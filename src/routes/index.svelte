@@ -203,7 +203,7 @@
       <div class="spacing--v-24"></div>
       <h2>Analyze next generation climate data</h2>
       <div class="one-two-column-grid">
-        <div class="bg-gradient-analytics-engine ae-logo-box lift">
+        <div class="bg-gradient-analytics-engine ae-logo-box shadow">
           <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
         </div>
         <div class="ae-logo-text">
