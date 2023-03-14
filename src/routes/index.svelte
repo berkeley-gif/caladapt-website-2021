@@ -105,7 +105,7 @@
   }
 
   .ae-logo-text {
-    @include media("<=medium") {
+    @include mq-mobile-tablet {
       grid-column: span 1;
     }
   }
@@ -200,6 +200,7 @@
       </CardsContainer>
 
       <!-- Analytics / Fifth Assessment Block -->
+      <div class="spacing--v-24"></div>
       <h2>Analyze next generation climate data</h2>
       <div class="one-two-column-grid">
         <div class="bg-gradient-analytics-engine ae-logo-box lift">
@@ -243,7 +244,7 @@
 
   <div class="bx--row">
     <div class="bx--col">
-      <div class="spacing--v-48"></div>
+      <div class="spacing--v-24"></div>
       <p class="lead">
         Get the latest Cal-Adapt news, updates &amp; events delivered to your
         inbox. Subscribe to the Cal-Adapt Newsletter.
