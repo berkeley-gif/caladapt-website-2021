@@ -142,7 +142,7 @@
     <Card
       {...{
         titleText: "Cal-Adapt is evolving!",
-        linkPath: `/help/`,
+        linkPath: `/blog/expanded-caladapt-enterprise`,
         description:
           "Learn about the Cal-Adapt enterprise and our mission to support California's climate change initiatives and preview our future plans.",
         height: 18,
@@ -175,11 +175,11 @@
       <p class="lg-width">
         Visualize and download <strong>downscaled CMIP5 climate data</strong>
         and other datasets developed for California’s
-        <a href="/blog/slr-cis-tool" target="_blank"
+        <a href="https://climateassessment.ca.gov/" target="_blank"
           >Fourth Climate Change Assessment.</a
         >
-        Read our <a href="/get-started" target="_blank">Get Started</a> guide to
-        learn more about working with climate data.
+        Read our <a href="/help/get-started" target="_blank">Get Started</a> guide
+        to learn more about working with climate data.
       </p>
       <p class="lg-width">
         Designed for a <strong>broad range of users.</strong>
