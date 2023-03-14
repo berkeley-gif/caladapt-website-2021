@@ -66,8 +66,6 @@
   overlayOpacity="{0.7}"
 />
 
-<div class="spacing--v-48"></div>
-
 <div class="bx--grid">
   <div class="bx--row margin--v-32">
     <div class="bx--col-lg-2"></div>
@@ -82,6 +80,8 @@
     <div class="bx--col-lg-5"></div>
   </div>
 </div>
+
+<div class="spacing--v-48"></div>
 
 <div class="bx--grid">
   <div class="bx--row">
