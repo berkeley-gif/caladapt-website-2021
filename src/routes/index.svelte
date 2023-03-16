@@ -115,6 +115,10 @@
       margin-top: 24px;
     }
   }
+
+  .grants-cta {
+    padding: 80px 0 80px 0;
+  }
 </style>
 
 <svelte:head>
@@ -228,6 +232,24 @@
             Built for users with <strong>prior computing</strong> experience and
             <strong>data intensive needs.</strong>
           </p>
+        </div>
+      </div>
+
+      <!-- Grants block -->
+      <div class="spacing--v-48"></div>
+      <div
+        class="grants-cta bx--grid--full-width"
+        style="background-color: var(--gray-30);"
+      >
+        <div class="bx--grid">
+          <div class="bx--row">
+            <div class="bx--col-lg-16">
+              <h3>
+                Discover how our data development grants and research projects
+                are helping to shape the next generation of Cal-Adapt
+              </h3>
+            </div>
+          </div>
         </div>
       </div>
     </div>
