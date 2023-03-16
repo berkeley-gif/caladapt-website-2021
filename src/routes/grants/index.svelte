@@ -6,9 +6,6 @@
     const events = await this.fetch(`events.json`)
       .then((r) => r.json())
       .then((events) => events);
-    const data = await this.fetch("index.json")
-      .then((r) => r.json())
-      .then((data) => data);
     return {
       posts,
       events,
@@ -105,9 +102,10 @@
         for California and the evolving Cal-Adapt enterprise.
       </p>
 
+      <!-- Memo list -->
       <div class="spacing--v-24"></div>
       <h5>Relevant Memos</h5>
-      <StructuredList>
+      <StructuredList selection="false">
         <StructuredListHead>
           <StructuredListRow head>
             <StructuredListCell head>Agency</StructuredListCell>
@@ -130,6 +128,7 @@
         </StructuredListBody>
       </StructuredList>
 
+      <!-- Climate Research list -->
       <h5>Ongoing Climate Research</h5>
       <StructuredList>
         <StructuredListHead>

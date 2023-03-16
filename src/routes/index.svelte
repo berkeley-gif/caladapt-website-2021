@@ -245,7 +245,9 @@
           <div class="bx--row">
             <div class="bx--col-lg-16">
               <h3>
-                Discover how our data development grants and research projects
+                Discover how our <a href="/grants"
+                  >data development grants and research projects</a
+                >
                 are helping to shape the next generation of Cal-Adapt
               </h3>
             </div>
@@ -264,6 +266,7 @@
     </div>
   </div>
 
+  <!-- Newsletter -->
   <div class="bx--row">
     <div class="bx--col">
       <div class="spacing--v-24"></div>
