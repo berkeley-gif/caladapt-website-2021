@@ -563,7 +563,7 @@
           processes. For additional details on state agency vision and roles in this
           expanded enterprise, please see this
           <a
-            href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239123&DocumentContentId=72578"
+            href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239954&DocumentContentId=73401"
             target="_blank">CEC Staff memo</a
           >.
         </p>
