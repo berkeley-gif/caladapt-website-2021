@@ -283,7 +283,7 @@
         <figure class="quote">
           <blockquote cite="https://www.climateassessment.ca.gov/">
             <p>
-              California is one of the most “climate-challenged” regions of
+              California is one of the most 'climate-challenged' regions of
               North America; its historical climate is extremely variable, and
               climate change is making extreme conditions more frequent and
               severe. California’s temperatures are already warming, heat waves
