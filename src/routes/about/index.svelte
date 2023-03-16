@@ -35,6 +35,10 @@
       label: "Our Audience",
     },
     {
+      id: "leadership",
+      label: "Cal-Adapt Leadership",
+    },
+    {
       id: "partners",
       label: "Our Partners",
     },
@@ -358,15 +362,15 @@
     </div>
   </div>
 
-  <!-- Partners -->
+  <!-- Leadership -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
-      <div id="partners" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <h2>Our Partners</h2>
+      <div id="leadership" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Cal-Adapt Leadership</h2>
 
-        <h3 class="h5">Funding and Oversight</h3>
         <div class="bx--row">
           <div class="bx--col-lg-8 bx--col-md-4">
+            <h3 class="h5">Funding and Oversight</h3>
             <div class="collaborator">
               <img
                 src="img/logos/cec_900x790.png"
@@ -374,6 +378,73 @@
               />
               <a href="http://www.energy.ca.gov/" target="_blank"
                 >California Energy Commission</a
+              >
+            </div>
+          </div>
+          <div class="bx--col-lg-8 bx--col-md-4">
+            <h3 class="h5">Programmatic Lead</h3>
+            <div class="collaborator">
+              <img
+                src="img/logos/eagle-rock-analytics-logo-black_3.png"
+                alt="logo for Eagle Rock Analytics"
+              />
+              <a href="http://www.eaglerockanalytics.com/" target="_blank"
+                >Eagle Rock Analytics</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-padding">
+      <div class="sidebar-figure-container">
+        <figure class="quote">
+          <blockquote
+            cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
+          >
+            <p>
+              The California Energy Commission will develop the Cal-Adapt Web
+              site that will synthesize existing California climate change
+              scenarios and climate impact research and to encourage its use in
+              a way that is beneficial for local decision-makers.
+            </p>
+          </blockquote>
+          <figcaption>
+            <cite
+              >— A key recommendation of the 2009 California Climate Adaptation
+              Strategy</cite
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <hr />
+    </div>
+  </div>
+
+  <!-- Partners -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="partners" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Our Partners</h2>
+
+        <h3 class="h5">State Agencies</h3>
+        <div class="bx--row">
+          <div class="bx--col-lg-8 bx--col-md-4">
+            <div class="collaborator">
+              <img
+                src="img/logos/opr-logo.png"
+                alt="logo for Governor's
+                s Office of Planning & Research"
+              />
+              <a href="https://opr.ca.gov/" target="_blank"
+                >Governor's Office of Planning &amp; Research</a
               >
             </div>
           </div>
@@ -402,19 +473,6 @@
               />
               <a href="http://gif.berkeley.edu/" target="_blank"
                 >Geospatial Innovation Facility</a
-              >
-            </div>
-          </div>
-
-          <div class="bx--col-lg-8 bx--col-md-4">
-            <h3 class="h5">Science Advisor</h3>
-            <div class="collaborator">
-              <img
-                src="img/logos/eagle-rock-analytics-logo-black_3.png"
-                alt="logo for Eagle Rock Analytics"
-              />
-              <a href="http://www.eaglerockanalytics.com/" target="_blank"
-                >Eagle Rock Analytics</a
               >
             </div>
           </div>
@@ -482,29 +540,6 @@
             />
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-padding">
-      <div class="sidebar-figure-container">
-        <figure class="quote">
-          <blockquote
-            cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
-          >
-            <p>
-              The California Energy Commission will develop the Cal-Adapt Web
-              site that will synthesize existing California climate change
-              scenarios and climate impact research and to encourage its use in
-              a way that is beneficial for local decision-makers.
-            </p>
-          </blockquote>
-          <figcaption>
-            <cite
-              >— A key recommendation of the 2009 California Climate Adaptation
-              Strategy</cite
-            >
-          </figcaption>
-        </figure>
       </div>
     </div>
   </div>
