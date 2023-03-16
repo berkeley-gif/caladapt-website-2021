@@ -21,8 +21,8 @@
       level. We make this data available through downloads, visualizations,
       and the Cal-Adapt API for your research, outreach, and adaptation
       planning needs.`,
-    `Cal-Adapt is a collaboration between state agency funding programs, 
-    university and private sector researchers.`,
+    `Cal-Adapt is a collaboration between state agency funding programs, university, 
+    national lab and private sector researchers.`,
   ];
 
   let items = [
