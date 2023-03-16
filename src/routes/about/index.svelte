@@ -42,10 +42,10 @@
       id: "roadmap",
       label: "Our Roadmap",
     },
-    {
+    /*     {
       id: "team",
       label: "Our Team",
-    },
+    }, */
   ];
   let href = "/about";
   let selected;
@@ -145,7 +145,7 @@
     }
   }
 
-  .tabs-container {
+  /*   .tabs-container {
     margin-bottom: 4rem;
 
     :global(.bx--tabs__nav) {
@@ -205,7 +205,7 @@
     @include media("<=medium") {
       grid-template-columns: repeat(auto-fill, minmax(calc(50% - 1rem), 1fr));
     }
-  }
+  } */
 </style>
 
 <svelte:head>
@@ -616,7 +616,7 @@
 <div class="spacing--v-48"></div>
 
 <!-- Our Team -->
-<div
+<!-- <div
   class="bx--grid bx--grid--full-width"
   style="background-color: var(--gray-20);"
 >
@@ -732,7 +732,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="spacing--v-48"></div>
 
