@@ -22,7 +22,7 @@ Work on the <a href="https://opr.ca.gov/climate/icarp/climate-assessment/" targe
 The California Governor’s <a href="https://opr.ca.gov/" target="_blank">Office of Planning and Research</a> (OPR) is leading implementation of the Fifth Assessment in partnership with the <a href="https://www.energy.ca.gov/" target="_blank">California Energy Commission</a>, <a href="https://resources.ca.gov/" target="_blank">California Natural Resources Agency</a>, and <a href="https://sgc.ca.gov/" target="_blank">California Strategic Growth Council</a>.
 
 ## Data access
-Preliminary climate data to be considered for the Fifth Assessment are available for California. This data is aligned with the next generation climate models from <a href="https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6" target="_blank">Coupled Model Intercomparison Project Phase 6</a> (CMIP6) and has been downscaled to higher spatial resolutions ranging from 3 to 45 kms. Learn more <a href="/blog/climate-data-access" target="_blank">about this data and how to access it</a>.
+Preliminary climate data to be considered for the Fifth Assessment are available for California. This data is aligned with the next generation climate models from <a href="https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6" target="_blank">Coupled Model Intercomparison Project Phase 6</a> (CMIP6). These data have been downscaled to include higher spatial resolution for California (3 km x 3 km grid) and to offer higher temporal resolution and a broader spatial domain for some datasets. Learn more <a href="/blog/climate-data-access" target="_blank">about accessing the data</a>.
 
 ## New Cal-Adapt data download tool
 
