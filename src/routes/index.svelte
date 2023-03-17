@@ -234,26 +234,6 @@
           </p>
         </div>
       </div>
-
-      <!-- Grants block -->
-      <div class="spacing--v-48"></div>
-      <div
-        class="grants-cta bx--grid--full-width"
-        style="background-color: var(--gray-30);"
-      >
-        <div class="bx--grid">
-          <div class="bx--row">
-            <div class="bx--col-lg-16">
-              <h3>
-                Discover how our <a href="/grants"
-                  >data development grants and research projects</a
-                >
-                are helping to shape the next generation of Cal-Adapt
-              </h3>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Sidebar on desktop only -->
@@ -265,7 +245,32 @@
       />
     </div>
   </div>
+</div>
 
+<div class="bx--grid bx--grid--full-width" style="padding: 0;">
+  <!-- Grants block -->
+  <div class="spacing--v-48"></div>
+  <div
+    class="grants-cta bx--grid--full-width"
+    style="background-color: var(--gray-30);"
+  >
+    <div class="bx--grid">
+      <div class="bx--row">
+        <div class="bx--col-lg-12">
+          <h3>
+            Discover how our <a href="/grants"
+              >data development grants and research projects</a
+            >
+            are helping to shape the next generation of Cal-Adapt
+          </h3>
+        </div>
+        <div class="bx--col-lg-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bx--grid">
   <!-- Newsletter -->
   <div class="bx--row">
     <div class="bx--col">
