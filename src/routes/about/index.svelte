@@ -21,8 +21,8 @@
       level. We make this data available through downloads, visualizations,
       and the Cal-Adapt API for your research, outreach, and adaptation
       planning needs.`,
-    `Cal-Adapt is a collaboration between state agency funding programs, 
-    university and private sector researchers.`,
+    `Cal-Adapt is a collaboration between state agency funding programs, university, 
+    national lab and private sector researchers.`,
   ];
 
   let items = [
@@ -35,6 +35,10 @@
       label: "Our Audience",
     },
     {
+      id: "leadership",
+      label: "Cal-Adapt Leadership",
+    },
+    {
       id: "partners",
       label: "Our Partners",
     },
@@ -42,10 +46,10 @@
       id: "roadmap",
       label: "Our Roadmap",
     },
-    {
+    /*     {
       id: "team",
       label: "Our Team",
-    },
+    }, */
   ];
   let href = "/about";
   let selected;
@@ -145,7 +149,7 @@
     }
   }
 
-  .tabs-container {
+  /*   .tabs-container {
     margin-bottom: 4rem;
 
     :global(.bx--tabs__nav) {
@@ -205,7 +209,7 @@
     @include media("<=medium") {
       grid-template-columns: repeat(auto-fill, minmax(calc(50% - 1rem), 1fr));
     }
-  }
+  } */
 </style>
 
 <svelte:head>
@@ -283,7 +287,7 @@
         <figure class="quote">
           <blockquote cite="https://www.climateassessment.ca.gov/">
             <p>
-              California is one of the most “climate-challenged” regions of
+              California is one of the most 'climate-challenged' regions of
               North America; its historical climate is extremely variable, and
               climate change is making extreme conditions more frequent and
               severe. California’s temperatures are already warming, heat waves
@@ -358,15 +362,15 @@
     </div>
   </div>
 
-  <!-- Partners -->
+  <!-- Leadership -->
   <div class="bx--row">
     <div class="bx--offset-lg-2 bx--col-lg-8">
-      <div id="partners" use:inview="{entryOptions}" on:enter="{handleEntry}">
-        <h2>Our Partners</h2>
+      <div id="leadership" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Cal-Adapt Leadership</h2>
 
-        <h3 class="h5">Funding and Oversight</h3>
         <div class="bx--row">
           <div class="bx--col-lg-8 bx--col-md-4">
+            <h3 class="h5">Funding and Oversight</h3>
             <div class="collaborator">
               <img
                 src="img/logos/cec_900x790.png"
@@ -374,6 +378,73 @@
               />
               <a href="http://www.energy.ca.gov/" target="_blank"
                 >California Energy Commission</a
+              >
+            </div>
+          </div>
+          <div class="bx--col-lg-8 bx--col-md-4">
+            <h3 class="h5">Programmatic Lead</h3>
+            <div class="collaborator">
+              <img
+                src="img/logos/eagle-rock-analytics-logo-black_3.png"
+                alt="logo for Eagle Rock Analytics"
+              />
+              <a href="http://www.eaglerockanalytics.com/" target="_blank"
+                >Eagle Rock Analytics</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-padding">
+      <div class="sidebar-figure-container">
+        <figure class="quote">
+          <blockquote
+            cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
+          >
+            <p>
+              The California Energy Commission will develop the Cal-Adapt Web
+              site that will synthesize existing California climate change
+              scenarios and climate impact research and to encourage its use in
+              a way that is beneficial for local decision-makers.
+            </p>
+          </blockquote>
+          <figcaption>
+            <cite
+              >— A key recommendation of the 2009 California Climate Adaptation
+              Strategy</cite
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <hr />
+    </div>
+  </div>
+
+  <!-- Partners -->
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8">
+      <div id="partners" use:inview="{entryOptions}" on:enter="{handleEntry}">
+        <h2>Our Partners</h2>
+
+        <h3 class="h5">State Agencies</h3>
+        <div class="bx--row">
+          <div class="bx--col-lg-8 bx--col-md-4">
+            <div class="collaborator">
+              <img
+                src="img/logos/opr-logo.png"
+                alt="logo for Governor's
+                s Office of Planning & Research"
+              />
+              <a href="https://opr.ca.gov/" target="_blank"
+                >Governor's Office of Planning &amp; Research</a
               >
             </div>
           </div>
@@ -402,19 +473,6 @@
               />
               <a href="http://gif.berkeley.edu/" target="_blank"
                 >Geospatial Innovation Facility</a
-              >
-            </div>
-          </div>
-
-          <div class="bx--col-lg-8 bx--col-md-4">
-            <h3 class="h5">Science Advisor</h3>
-            <div class="collaborator">
-              <img
-                src="img/logos/eagle-rock-analytics-logo-black_3.png"
-                alt="logo for Eagle Rock Analytics"
-              />
-              <a href="http://www.eaglerockanalytics.com/" target="_blank"
-                >Eagle Rock Analytics</a
               >
             </div>
           </div>
@@ -484,29 +542,6 @@
         </div>
       </div>
     </div>
-
-    <div class="bx--offset-lg-1 bx--col-lg-4 bx--col-padding">
-      <div class="sidebar-figure-container">
-        <figure class="quote">
-          <blockquote
-            cite="https://resources.ca.gov/CNRALegacyFiles/docs/climate/Statewide_Adaptation_Strategy.pdf"
-          >
-            <p>
-              The California Energy Commission will develop the Cal-Adapt Web
-              site that will synthesize existing California climate change
-              scenarios and climate impact research and to encourage its use in
-              a way that is beneficial for local decision-makers.
-            </p>
-          </blockquote>
-          <figcaption>
-            <cite
-              >— A key recommendation of the 2009 California Climate Adaptation
-              Strategy</cite
-            >
-          </figcaption>
-        </figure>
-      </div>
-    </div>
   </div>
 
   <!-- Rule -->
@@ -563,7 +598,7 @@
           processes. For additional details on state agency vision and roles in this
           expanded enterprise, please see this
           <a
-            href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239123&DocumentContentId=72578"
+            href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239954&DocumentContentId=73401"
             target="_blank">CEC Staff memo</a
           >.
         </p>
@@ -616,7 +651,7 @@
 <div class="spacing--v-48"></div>
 
 <!-- Our Team -->
-<div
+<!-- <div
   class="bx--grid bx--grid--full-width"
   style="background-color: var(--gray-20);"
 >
@@ -732,29 +767,34 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="spacing--v-48"></div>
 
-<div class="bx--grid">
-  <div class="bx--row">
-    <div class="bx--offset-lg-2 bx--col-lg-8">
-      <p>
-        <strong>Disclaimer</strong>: This website was prepared as a result of
-        work sponsored by the California Energy Commission (CEC) and the
-        California Strategic Growth Council (SGC). It does not necessarily
-        represent the views of the CEC, SGC, the agencies' employees or the
-        State of California. The CEC, SGC, the State of California, its
-        employees, contractors and subcontractors make no warranty, express or
-        implied, and assume no legal liability for the information on this
-        website or made available via the website; nor does any party represent
-        that the use of this information will not infringe upon privately owned
-        rights. The website has not been approved or disapproved by the CEC or
-        SGC, nor has the CEC or SGC passed upon the accuracy or adequacy of the
-        information on the website.
-      </p>
+<div
+  class="bx--grid bx--grid--full-width"
+  style="background-color: var(--gray-20);"
+>
+  <div class="bx--grid">
+    <div class="bx--row">
+      <div class="bx--offset-lg-2 bx--col-lg-8">
+        <div class="spacing--v-48"></div>
+        <p>
+          <strong>Disclaimer</strong>: This website was prepared as a result of
+          work sponsored by the California Energy Commission (CEC) and the
+          California Strategic Growth Council (SGC). It does not necessarily
+          represent the views of the CEC, SGC, the agencies' employees or the
+          State of California. The CEC, SGC, the State of California, its
+          employees, contractors and subcontractors make no warranty, express or
+          implied, and assume no legal liability for the information on this
+          website or made available via the website; nor does any party
+          represent that the use of this information will not infringe upon
+          privately owned rights. The website has not been approved or
+          disapproved by the CEC or SGC, nor has the CEC or SGC passed upon the
+          accuracy or adequacy of the information on the website.
+        </p>
+        <div class="spacing--v-48"></div>
+      </div>
     </div>
   </div>
 </div>
-
-<div class="spacing--v-48"></div>
