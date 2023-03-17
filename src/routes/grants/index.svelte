@@ -11,13 +11,17 @@
       events,
     };
   }
+
+  import memosList from "../../../content/grants/memos";
+  import researchList from "../../../content/grants/research";
 </script>
 
 <script>
   import {
     Button,
+    Row,
+    Column,
     StructuredList,
-    StructuredListHead,
     StructuredListRow,
     StructuredListCell,
     StructuredListBody,
@@ -27,48 +31,6 @@
 
   export let events;
   export let posts;
-
-  const memoItems = [
-    {
-      agency: "CEC",
-      type: `memo`,
-      number: "12",
-      title: "A Really cool memo",
-    },
-    {
-      agency: "CEC",
-      type: `memo`,
-      number: "12",
-      title: "A Really cool memo",
-    },
-    {
-      agency: "CEC",
-      type: `memo`,
-      number: "12",
-      title: "A Really cool memo",
-    },
-  ];
-
-  const researchItems = [
-    {
-      agency: "CEC",
-      type: `memo`,
-      number: "12",
-      title: "A Really cool memo",
-    },
-    {
-      agency: "CEC",
-      type: `memo`,
-      number: "12",
-      title: "A Really cool memo",
-    },
-    {
-      agency: "CEC",
-      type: `memo`,
-      number: "12",
-      title: "A Really cool memo",
-    },
-  ];
 </script>
 
 <style>
@@ -87,15 +49,14 @@
 
 <Banner
   titleText="Data Development Grants & Research Projects"
-  bannerImg="linear-gradient(to bottom, var(--gray-90), var(--teal-70))"
+  bannerImg="linear-gradient(to bottom, var(--gray-90), var(--blue-40))"
   overlayColor="transparent"
-  useOffset="{false}"
 />
 <div class="spacing--v-32"></div>
 
 <div class="bx--grid">
   <div class="bx--row">
-    <div class="bx--col-lg-12 bx--col-md-8 bx--col-sm-4">
+    <div class="bx--offset-lg-2 bx--col-lg-8 bx--col-padding">
       <p>
         The California Energy Commission supports a variety of research projects
         that are helping shape the development of next generation climate data
@@ -105,57 +66,49 @@
       <!-- Memo list -->
       <div class="spacing--v-24"></div>
       <h5>Relevant Memos</h5>
-      <StructuredList selection="false">
-        <StructuredListHead>
-          <StructuredListRow head>
-            <StructuredListCell head>Agency</StructuredListCell>
-            <StructuredListCell head>Type</StructuredListCell>
-            <StructuredListCell head>Number</StructuredListCell>
-            <StructuredListCell head>Title</StructuredListCell>
-          </StructuredListRow>
-        </StructuredListHead>
-        <StructuredListBody>
-          {#each memoItems as item}
-            <StructuredListRow label for="row-{item.format}">
-              <StructuredListCell
-                >{item.agency.toUpperCase()}</StructuredListCell
-              >
-              <StructuredListCell>{item.type}</StructuredListCell>
-              <StructuredListCell>{item.number}</StructuredListCell>
-              <StructuredListCell>{item.title}</StructuredListCell>
-            </StructuredListRow>
-          {/each}
-        </StructuredListBody>
-      </StructuredList>
+      <Row>
+        <Column>
+          <StructuredList style="margin-bottom:0;">
+            <StructuredListBody>
+              {#each memosList as item}
+                <StructuredListRow>
+                  <StructuredListCell
+                    >{item.agency.toUpperCase()}</StructuredListCell
+                  >
+                  <StructuredListCell>{item.type}</StructuredListCell>
+                  <StructuredListCell>{item.number}</StructuredListCell>
+                  <StructuredListCell>{item.title}</StructuredListCell>
+                </StructuredListRow>
+              {/each}
+            </StructuredListBody>
+          </StructuredList>
+        </Column>
+      </Row>
 
       <!-- Climate Research list -->
       <h5>Ongoing Climate Research</h5>
-      <StructuredList>
-        <StructuredListHead>
-          <StructuredListRow head>
-            <StructuredListCell head>Agency</StructuredListCell>
-            <StructuredListCell head>Type</StructuredListCell>
-            <StructuredListCell head>Number</StructuredListCell>
-            <StructuredListCell head>Title</StructuredListCell>
-          </StructuredListRow>
-        </StructuredListHead>
-        <StructuredListBody>
-          {#each researchItems as item}
-            <StructuredListRow label for="row-{item.format}">
-              <StructuredListCell
-                >{item.agency.toUpperCase()}</StructuredListCell
-              >
-              <StructuredListCell>{item.type}</StructuredListCell>
-              <StructuredListCell>{item.number}</StructuredListCell>
-              <StructuredListCell>{item.title}</StructuredListCell>
-            </StructuredListRow>
-          {/each}
-        </StructuredListBody>
-      </StructuredList>
+      <Row>
+        <Column>
+          <StructuredList style="margin-bottom:0;">
+            <StructuredListBody>
+              {#each researchList as item}
+                <StructuredListRow>
+                  <StructuredListCell
+                    >{item.agency.toUpperCase()}</StructuredListCell
+                  >
+                  <StructuredListCell>{item.type}</StructuredListCell>
+                  <StructuredListCell>{item.number}</StructuredListCell>
+                  <StructuredListCell>{item.title}</StructuredListCell>
+                </StructuredListRow>
+              {/each}
+            </StructuredListBody>
+          </StructuredList>
+        </Column>
+      </Row>
     </div>
 
     <!-- Sidebar desktop only -->
-    <div class="bx--col-lg-4 bx--col-md-0 bx--col-sm-0">
+    <div class="bx--offset-lg-1 bx--col-lg-5 bx--col-padding">
       <SidebarRight
         display="{['events', 'posts']}"
         events="{events}"
@@ -165,7 +118,7 @@
   </div>
 
   <div class="bx--row">
-    <div class="bx--col">
+    <div class="bx--offset-lg-2 bx--col">
       <div class="spacing--v-48"></div>
       <p class="lead">
         Get the latest Cal-Adapt news, updates &amp; events delivered to your
