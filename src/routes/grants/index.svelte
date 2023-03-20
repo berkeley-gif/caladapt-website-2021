@@ -100,6 +100,7 @@
         </Column>
       </Row>
 
+      <div class="spacing--v-32"></div>
       <!-- Climate Research list -->
       <h2>Ongoing Climate Research</h2>
       <Row>
