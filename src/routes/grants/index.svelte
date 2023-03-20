@@ -21,9 +21,11 @@
     Button,
     Row,
     Column,
+    Link,
     StructuredList,
     StructuredListRow,
     StructuredListCell,
+    StructuredListHead,
     StructuredListBody,
   } from "carbon-components-svelte";
   import { ArrowRight16 } from "carbon-icons-svelte";
@@ -69,15 +71,24 @@
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
+            <StructuredListHead>
+              <StructuredListRow head tabIndex="{0}">
+                <StructuredListCell head>Agency</StructuredListCell>
+                <StructuredListCell head>Type</StructuredListCell>
+                <StructuredListCell head>Number</StructuredListCell>
+                <StructuredListCell head>Title</StructuredListCell>
+              </StructuredListRow>
+            </StructuredListHead>
             <StructuredListBody>
               {#each memosList as item}
                 <StructuredListRow>
-                  <StructuredListCell
-                    >{item.agency.toUpperCase()}</StructuredListCell
-                  >
+                  <StructuredListCell>{item.agency}</StructuredListCell>
                   <StructuredListCell>{item.type}</StructuredListCell>
                   <StructuredListCell>{item.number}</StructuredListCell>
-                  <StructuredListCell>{item.title}</StructuredListCell>
+                  <StructuredListCell
+                    ><Link href="{item.url}" target="_blank">{item.title}</Link
+                    ></StructuredListCell
+                  >
                 </StructuredListRow>
               {/each}
             </StructuredListBody>
@@ -90,15 +101,24 @@
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
+            <StructuredListHead>
+              <StructuredListRow head tabIndex="{0}">
+                <StructuredListCell head>Agency</StructuredListCell>
+                <StructuredListCell head>Type</StructuredListCell>
+                <StructuredListCell head>Number</StructuredListCell>
+                <StructuredListCell head>Title</StructuredListCell>
+              </StructuredListRow>
+            </StructuredListHead>
             <StructuredListBody>
               {#each researchList as item}
                 <StructuredListRow>
-                  <StructuredListCell
-                    >{item.agency.toUpperCase()}</StructuredListCell
-                  >
+                  <StructuredListCell>{item.agency}</StructuredListCell>
                   <StructuredListCell>{item.type}</StructuredListCell>
                   <StructuredListCell>{item.number}</StructuredListCell>
-                  <StructuredListCell>{item.title}</StructuredListCell>
+                  <StructuredListCell
+                    ><Link href="{item.url}" target="_blank">{item.title}</Link
+                    ></StructuredListCell
+                  >
                 </StructuredListRow>
               {/each}
             </StructuredListBody>
