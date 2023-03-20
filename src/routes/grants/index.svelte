@@ -67,7 +67,7 @@
 
       <!-- Memo list -->
       <div class="spacing--v-24"></div>
-      <h5>Relevant Memos</h5>
+      <h2>Relevant Memos</h2>
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
@@ -97,7 +97,7 @@
       </Row>
 
       <!-- Climate Research list -->
-      <h5>Ongoing Climate Research</h5>
+      <h2>Ongoing Climate Research</h2>
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
