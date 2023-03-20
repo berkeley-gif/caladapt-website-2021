@@ -6,14 +6,16 @@
     const events = await this.fetch(`events.json`)
       .then((r) => r.json())
       .then((events) => events);
+    const grants = await this.fetch(`grants.json`)
+      .then((r) => r.json())
+      .then((grants) => grants);
     return {
       posts,
       events,
+      memosData: grants.memosData,
+      researchData: grants.researchData,
     };
   }
-
-  import memosList from "../../../content/grants/memos";
-  import researchList from "../../../content/grants/research";
 </script>
 
 <script>
@@ -33,6 +35,8 @@
 
   export let events;
   export let posts;
+  export let memosData;
+  export let researchData;
 </script>
 
 <style>
@@ -80,7 +84,7 @@
               </StructuredListRow>
             </StructuredListHead>
             <StructuredListBody>
-              {#each memosList as item}
+              {#each memosData as item}
                 <StructuredListRow>
                   <StructuredListCell>{item.agency}</StructuredListCell>
                   <StructuredListCell>{item.type}</StructuredListCell>
@@ -110,7 +114,7 @@
               </StructuredListRow>
             </StructuredListHead>
             <StructuredListBody>
-              {#each researchList as item}
+              {#each researchData as item}
                 <StructuredListRow>
                   <StructuredListCell>{item.agency}</StructuredListCell>
                   <StructuredListCell>{item.type}</StructuredListCell>
