@@ -11,7 +11,7 @@ Cal-Adapt is evolving substantially, expanding beyond its current capabilities t
 - A revamped suite of web tools, analytical tools and computational resources for working with the next generation climate data 
 - A new Historical Observations data platform
 
-The expanded Cal-Adapt enterprise will continue to provide essential visualization, analytical and computational resources to support a broad range of stakeholders in using large climate datasets to inform their decision-making and planning processes. For additional details on state agency vision and roles in this expanded enterprise, please see this <a href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239123&DocumentContentId=72578" target="_blank">CEC Staff memo</a>.
+The expanded Cal-Adapt enterprise will continue to provide essential visualization, analytical and computational resources to support a broad range of stakeholders in using large climate datasets to inform their decision-making and planning processes. For additional details on state agency vision and roles in this expanded enterprise, please see this <a href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239954&DocumentContentId=73401" target="_blank">CEC Staff memo</a>.
 
 <img src="/img/blog/caladapt_roadmap.png" style="width:100%;margin:1rem auto;" alt="Evolution of the Cal-Adapt enterprise">
 

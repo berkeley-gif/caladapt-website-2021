@@ -6,7 +6,7 @@ tags: data, Fifth Assessment
 snippet: Access downscaled future climate projections and historical climate for models & scenarios at three spatial domains.
 ---
 
-Preliminary climate data that may support <a href="https://opr.ca.gov/climate/icarp/climate-assessment/" target="_blank">California’s Fifth Climate Change Assessment</a> (Fifth Assessment) is available for California. This data is aligned with the latest generation of climate models from <a href="https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6" target="_blank">Coupled Model Intercomparison Project Phase 6</a> (CMIP6) used by the <a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank">Intergovernmental Panel on Climate Change</a> (IPCC) global sixth assessment report.
+Preliminary climate data to be considered for <a href="https://opr.ca.gov/climate/icarp/climate-assessment/" target="_blank">California’s Fifth Climate Change Assessment</a> (Fifth Assessment) are available. This data is aligned with the latest generation of climate models from <a href="https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip6" target="_blank">Coupled Model Intercomparison Project Phase 6</a> (CMIP6) used by the <a href="https://www.ipcc.ch/assessment-report/ar6/" target="_blank">Intergovernmental Panel on Climate Change</a> (IPCC) global sixth assessment report.
 
 ## Models and scenarios
 
