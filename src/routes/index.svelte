@@ -116,7 +116,7 @@
       >More about Cal-Adapt</Button
     >
   </div> -->
-  <div class="cta-card bx--aspect-ratio bx--aspect-ratio--4x3" slot="cta-card">
+  <div class="cta-card" slot="cta-card">
     <Card
       {...{
         titleText: "Cal-Adapt is evolving!",
