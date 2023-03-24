@@ -39,13 +39,29 @@
   export let researchData;
 </script>
 
-<style>
+<style lang="scss">
+  @import "scss/site/mixins/media-queries";
+
   p:not(.lead) {
     font-size: 1.125rem;
   }
 
   :global(.bx--structured-list) {
     background-color: #fff;
+  }
+
+  :global(.bx--structured-list-thead) {
+    @include media("<=400px") {
+      display: none;
+    }
+  }
+
+  :global(.bx--structured-list
+      .bx--structured-list-row
+      .bx--structured-list-td:first-of-type) {
+    @include media("<=400px") {
+      padding-left: 0.5rem;
+    }
   }
 </style>
 
