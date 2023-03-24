@@ -105,7 +105,7 @@
   }
 
   .ae-logo-text {
-    @include mq-mobile-tablet {
+    @include media("<=1329px") {
       grid-column: span 1;
     }
   }
@@ -142,7 +142,7 @@
       >More about Cal-Adapt</Button
     >
   </div> -->
-  <div class="cta-card" slot="cta-card">
+  <div class="cta-card bx--aspect-ratio bx--aspect-ratio--4x3" slot="cta-card">
     <Card
       {...{
         titleText: "Cal-Adapt is evolving!",
@@ -212,10 +212,11 @@
         </div>
         <div class="ae-logo-text">
           <p class="lg-width">
-            A <a href="https://analytics.cal-adapt.org/" target="_blank"
-              >climate data platform</a
+            The <a href="https://analytics.cal-adapt.org/" target="_blank"
+              >Cal-Adapt Analytics Engine</a
             >
-            developed for California's
+            is a <strong>climate data platform</strong> developed for
+            California's
             <a
               href="https://opr.ca.gov/climate/icarp/climate-assessment/"
               target="_blank">Fifth Climate Change Assessment</a
