@@ -13,7 +13,12 @@ Cal-Adapt is evolving substantially, expanding beyond its current capabilities t
 
 The expanded Cal-Adapt enterprise will continue to provide essential visualization, analytical and computational resources to support a broad range of stakeholders in using large climate datasets to inform their decision-making and planning processes. For additional details on state agency vision and roles in this expanded enterprise, please see this <a href="https://efiling.energy.ca.gov/GetDocument.aspx?tn=239954&DocumentContentId=73401" target="_blank">CEC Staff memo</a>.
 
-<img src="/img/blog/caladapt_roadmap.png" style="width:100%;margin:1rem auto;" alt="Evolution of the Cal-Adapt enterprise">
+<a href="/img/blog/caladapt_roadmap.png" target="_blank" aria-describedby="roadmap-graphic">
+    <figure class="image">
+        <img class="shadow" src="/img/blog/caladapt_roadmap.png" alt="caladapt roadmap">
+        <figcaption id="roadmap-graphic">Evolution of the Cal-Adapt enterprise</figcaption>
+    </figure>
+</a>
 
 ## Support for the Fifth Assessment
 
