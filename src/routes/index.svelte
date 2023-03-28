@@ -181,9 +181,11 @@
       <div class="spacing--v-24"></div>
       <h2>Analyze next generation climate data</h2>
       <div class="one-two-column-grid">
-        <div class="bg-gradient-analytics-engine ae-logo-box shadow">
-          <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
-        </div>
+        <a href="https://analytics.cal-adapt.org/" target="_blank">
+          <div class="bg-gradient-analytics-engine ae-logo-box shadow lift">
+            <img width="90%" src="img/logos/cae_logo_white.png" alt="" />
+          </div>
+        </a>
         <div class="ae-logo-text">
           <p class="lg-width">
             The <a href="https://analytics.cal-adapt.org/" target="_blank"
