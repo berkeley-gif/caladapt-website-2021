@@ -85,9 +85,9 @@
         for California and the evolving Cal-Adapt enterprise.
       </p>
 
-      <!-- Memo list -->
       <div class="spacing--v-24"></div>
-      <h2>Relevant Memos</h2>
+      <!-- Climate Research list -->
+      <h2>Ongoing Climate Research</h2>
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
@@ -95,12 +95,12 @@
               <StructuredListRow head tabIndex="{0}">
                 <StructuredListCell head>Agency</StructuredListCell>
                 <StructuredListCell head>Type</StructuredListCell>
-                <StructuredListCell head>Number</StructuredListCell>
+                <StructuredListCell head>Project Number</StructuredListCell>
                 <StructuredListCell head>Title</StructuredListCell>
               </StructuredListRow>
             </StructuredListHead>
             <StructuredListBody>
-              {#each memosData as item}
+              {#each researchData as item}
                 <StructuredListRow>
                   <StructuredListCell>{item.agency}</StructuredListCell>
                   <StructuredListCell>{item.type}</StructuredListCell>
@@ -117,8 +117,8 @@
       </Row>
 
       <div class="spacing--v-32"></div>
-      <!-- Climate Research list -->
-      <h2>Ongoing Climate Research</h2>
+      <!-- Memo list -->
+      <h2>Relevant Memos</h2>
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
@@ -131,7 +131,7 @@
               </StructuredListRow>
             </StructuredListHead>
             <StructuredListBody>
-              {#each researchData as item}
+              {#each memosData as item}
                 <StructuredListRow>
                   <StructuredListCell>{item.agency}</StructuredListCell>
                   <StructuredListCell>{item.type}</StructuredListCell>
