@@ -602,13 +602,22 @@
             target="_blank">CEC Staff memo</a
           >.
         </p>
-        <figure class="image">
-          <img
-            width="100%"
-            src="/img/blog/caladapt_roadmap.png"
-            alt="Evolution of Cal-Adapt enterprise"
-          />
-        </figure>
+        <a
+          href="/img/blog/caladapt_roadmap.png"
+          target="_blank"
+          aria-describedby="roadmap-graphic"
+        >
+          <figure class="image">
+            <img
+              class="shadow"
+              src="/img/blog/caladapt_roadmap.png"
+              alt="caladapt roadmap"
+            />
+            <figcaption id="roadmap-graphic">
+              Evolution of the Cal-Adapt enterprise
+            </figcaption>
+          </figure>
+        </a>
         <p>
           Cal-Adapt has been recognized by California’s legislature as a key
           resource to support local hazard mitigation efforts and has helped
