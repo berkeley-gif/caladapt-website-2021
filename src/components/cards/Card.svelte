@@ -18,6 +18,7 @@
   export let iconPaths = [];
   export let textColor = null;
   export let bgColor = null;
+  export let border = "";
   export let useRule = false;
 
   $: isVariant = Boolean(
@@ -30,14 +31,16 @@
 </script>
 
 <style lang="scss">
+  $default-border: 1px solid var(--gray-20);
+
   li {
     display: flex;
     flex-direction: column;
     height: var(--card-height, auto);
     box-sizing: border-box;
     position: relative;
-    border: 1px solid var(--gray-20);
     background: var(--card-bg-color, var(--white));
+    border: var(--card-border, $default-border);
 
     // a11y fix for Safari
     // see: https://developer.mozilla.org/en-US/docs/Web/CSS/list-style#accessibility_concerns
@@ -55,7 +58,7 @@
 
 <li
   class="shadow lift"
-  style="--card-height:{varCardHeight};--text-color:{textColor}; --card-bg-color:{bgColor};"
+  style="--card-height:{varCardHeight};--text-color:{textColor}; --card-bg-color:{bgColor}; --card-border:{border};"
 >
   {#if imgSrc}
     <CardImage imgSrc="{imgSrc}" />
