@@ -3,6 +3,7 @@
   import Email24 from "carbon-icons-svelte/lib/Email24";
 
   export let useWideLayout = false;
+  const currentYear = new Date().getFullYear();
 </script>
 
 <style lang="scss">
@@ -131,7 +132,7 @@
     </a>
   </div>
   <div class="footer-copyright">
-    <small>&copy; 2022 California Energy Commission</small>
+    <small>&copy; {currentYear} California Energy Commission</small>
     <small>State of California, Gavin Newsom, Governor.</small>
   </div>
 </footer>
