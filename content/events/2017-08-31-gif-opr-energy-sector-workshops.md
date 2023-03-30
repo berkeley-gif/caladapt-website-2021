@@ -59,7 +59,7 @@ Feel free to send any questions regarding the Cal-Adapt Workshop to <nethomas@be
 
 <h2 id="materials">Workshop Materials</h2>
 Thank you to all the participants for the extremely helpful feedback! Here are the materials from the workshop:
-* Presentation - <a href="/docs/gif-opr-energy-sector-workshop-materials/Final_Cal_Adapt2.0.pdf" target="_blank">Introduction</a>
-* Presentation - <a href="/docs/gif-opr-energy-sector-workshop-materials/wilhelm_energy_sector_examples_091217.pdf" target="_blank">Examples of How Energy Sector Resilience Efforts Have Used Cal-Adapt</a>
+* Presentation - <a href="/files/gif-opr-energy-sector-workshop-materials/Final_Cal_Adapt2.0.pdf" target="_blank">Introduction</a>
+* Presentation - <a href="/files/gif-opr-energy-sector-workshop-materials/wilhelm_energy_sector_examples_091217.pdf" target="_blank">Examples of How Energy Sector Resilience Efforts Have Used Cal-Adapt</a>
 * Presentation - <a href="https://youtu.be/XhaLdjRn2sk" target="_blank">Video</a>
-* Breakout Sessions - <a href="/docs/gif-opr-energy-sector-workshop-materials/Break_out Notes.docx" target="_blank">Notes</a>
+* Breakout Sessions - <a href="/files/gif-opr-energy-sector-workshop-materials/Break_out Notes.docx" target="_blank">Notes</a>
