@@ -181,7 +181,7 @@ Static files are served using [sirv](https://github.com/lukeed/sirv).
 
 The `files` directory is used to host pdfs, Word docs or other files that CEC wants Cal-Adapt to host and are typically not accessible elsewhere on the web. This directory which would normally be in the `static` directory (similar to the `static/img` or `static/data`) is not checked into this github repo.
 
-Files that need to be hosted are directly copied to the Cal-Adapt server at `/var/www/cal-adapt.org/files`. These files can be linked on blogs/events/other content pages as needed e.g. `/files/01_Memo_Evaluation of Downscaled GCMs Using WRF_CEC_final.pdf`.
+Files that need to be hosted are directly copied to the Cal-Adapt server at `/var/www/cal-adapt.org/files`. These files can be linked on blogs/events/other content pages as needed e.g. `/files/01_Memo_Evaluation_of_Downscaled_GCMs_Using_WRF_CEC_final.pdf`. **Note:** Filenames should not have blank spaces.
 
 ## Bundler configuration
 
