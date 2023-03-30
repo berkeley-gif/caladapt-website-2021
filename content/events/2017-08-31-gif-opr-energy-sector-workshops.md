@@ -8,7 +8,7 @@ image: Sacramento_Skyline.png
 teaser: New features and capabilities of Cal-Adapt v2.0 by UC Berkeley’s Geospatial Innovation Facility and an overview of the State Adaptation Clearinghouse by the Governor’s Office of Planning and Research.
 ---
 
-<u><a href="#materials">LINKS TO WORKSHOP MATERIALS</a></u><br/>
+<u><a href="/events/gif-opr-energy-sector-workshops/#materials">LINKS TO WORKSHOP MATERIALS</a></u><br/>
 
 UC Berkeley’s <a href="http://gif.berkeley.edu/" target="_blank">Geospatial Innovation Facility</a> (GIF) and the <a href="https://www.opr.ca.gov/" target="_blank">Governor’s Office of Planning and Research</a> (OPR) are pleased to invite you to a duo of energy sector-focused workshops for eliciting needs related to climate adaptation on September 12 in Sacramento at the California Energy Commission (Imbrecht Hearing Room). The day will include two user-focused workshops:
 * Morning session (9:30 AM to noon) on Cal-Adapt 2.0
@@ -59,7 +59,7 @@ Feel free to send any questions regarding the Cal-Adapt Workshop to <nethomas@be
 
 <h2 id="materials">Workshop Materials</h2>
 Thank you to all the participants for the extremely helpful feedback! Here are the materials from the workshop:
-* Presentation - <a href="/docs/gif-opr-energy-sector-workshop-materials/Final_Cal_Adapt2.0.pdf" target="_blank">Introduction</a>
-* Presentation - <a href="/docs/gif-opr-energy-sector-workshop-materials/wilhelm_energy_sector_examples_091217.pdf" target="_blank">Examples of How Energy Sector Resilience Efforts Have Used Cal-Adapt</a>
+* Presentation - <a href="/files/gif-opr-energy-sector-workshop-materials/Final_Cal_Adapt2.0.pdf" target="_blank">Introduction</a>
+* Presentation - <a href="/files/gif-opr-energy-sector-workshop-materials/wilhelm_energy_sector_examples_091217.pdf" target="_blank">Examples of How Energy Sector Resilience Efforts Have Used Cal-Adapt</a>
 * Presentation - <a href="https://youtu.be/XhaLdjRn2sk" target="_blank">Video</a>
-* Breakout Sessions - <a href="/docs/gif-opr-energy-sector-workshop-materials/Break_out Notes.docx" target="_blank">Notes</a>
+* Breakout Sessions - <a href="/files/gif-opr-energy-sector-workshop-materials/Break_out_Notes.docx" target="_blank">Notes</a>

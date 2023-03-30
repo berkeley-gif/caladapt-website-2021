@@ -11,7 +11,7 @@ export default [
     type: `Research Memo`,
     number: "EPC-20-006",
     title: "2022 - Nov: Memorandum on the Evaluation of Dynamically Downscaled GCMs Using WRF",
-    url: "https://www.energy.ca.gov/sites/default/files/2022-09/20220907_CDAWG_MemoDynamicalDownscaling_EPC-20-006_May2022-ADA.pdfs"
+    url: "https://www.energy.ca.gov/sites/default/files/2022-09/20220907_CDAWG_MemoDynamicalDownscaling_EPC-20-006_May2022-ADA.pdf"
   },
   {
     agency: "California Energy Commission",
