@@ -235,7 +235,7 @@
       <div class="bx--row">
         <div class="bx--col-lg-12">
           <h3>
-            Discover how our <a href="/grants" target="_blank"
+            Discover how our <a href="/grants"
               >data development grants and research projects</a
             >
             are helping to shape the next generation of Cal-Adapt
