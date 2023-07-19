@@ -14,25 +14,25 @@ Here's a quick overview of what you can expect:
 
 **Workshop**: Using Climate Data & Tools for Decision-Making with Cal-Adapt
 
-July 31, 1:00 – 2:45 pm
+* July 31, 1:00 – 2:45 pm
 
-In-person
+* In-person
 
 Dive into the world of climate data and tools with Cal-Adapt. Discover how high-quality, local climate data combined with user-friendly tools can empower adaptation solution designers. Engage in hands-on demonstrations and interactive working sessions to witness the tools in action. Our expert speakers include Nancy Thomas, Grace Di Cecco, Nancy Freitas, and Justine Bui.
 
 **Workshop**: Advancing Decision Support for Climate Adaptation in Agriculture and Natural Resources
 
-July 31, 3:00 – 5:00 pm
+* July 31, 3:00 – 5:00 pm
 
-In-person and on Zoom
+* In-person and on Zoom
 
 Understand the impact of climate change on agricultural and natural systems. Learn how decision support tools can bridge the gap between climate data and adaptation planning. Engage in discussions with renowned researchers such as Tapan Pathak, Andy Lyons, Bob Klein, Janet Hartin, Michael Wolff, and Romain Maendly.
 
 **Session**: Actionable Data & Tools to Enable Climate-Informed Decision-Making in California
 
-Wednesday, August 2nd, 10:15-11:45 AM
+* Wednesday, August 2nd, 10:15-11:45 am
 
-In-person
+* In-person
 
 Explore the key features of Cal-Adapt and how it is revolutionizing decision making in California. Discover the new capabilities of the Analytics Engine, including threshold-based analytics and asset vulnerability assessments. Our speakers, Nancy Thomas, Owen Doherty, Nancy Freitas, and Justine Bui, will share real-world use cases and insights from the co-production process.
 
