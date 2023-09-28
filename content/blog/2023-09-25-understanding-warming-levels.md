@@ -13,7 +13,7 @@ First we’ll explain how climate projection data are produced based on scenario
 
 <figure class="image">
   <img src="/img/blog/annual_anthro_emissions.png" alt="Figure of annual anthropogenic emissions over the 2015-2100 period">
-  <figcaption>Annual anthropogenic (human-caused) emissions over the 2015–2100 period. IPCC Sixth Assessment Report — emissions scenarios differ wildly.</figcaption>
+  <figcaption><a href="https://www.ipcc.ch/report/ar6/wg1/figures/summary-for-policymakers/figure-spm-4" target="_blank">Annual anthropogenic (human-caused) emissions over the 2015–2100 period</a>. IPCC Sixth Assessment Report — emissions scenarios differ wildly.</figcaption>
 </figure>
 
 Traditionally, if you were interested in a particular time-frame (e.g. the 2040’s or the 2080’s) a large fraction of the uncertainty in climate projections will have to do with the scenario you believe is most likely to occur, especially later in the century.
@@ -22,7 +22,7 @@ In a global warming level approach you instead consider what the regional respon
 
 <figure class="image">
   <img src="/img/blog/global_surf_temp.png" alt="Figure of global surface temperature changes in °C relative to 1850-1900">
-  <figcaption>Global surface temperature changes in °C relative to 1850–1900. IPCC Sixth Assessment Report.</figcaption>
+  <figcaption><a href="https://www.ipcc.ch/report/ar6/wg1/figures/summary-for-policymakers/figure-spm-8" target="_blank">Global surface temperature changes in °C relative to 1850–1900</a>. IPCC Sixth Assessment Report.</figcaption>
 </figure>
 
 There are three main reasons that a global warming levels approach might be worthwhile:
@@ -36,7 +36,7 @@ There are three main reasons that a global warming levels approach might be wort
 
 <figure class="image">
   <img src="/img/blog/sim_annual_mean_temp.png" alt="Figure of simulated annual mean temperature change (°C), panel (c) precipitation change (%)">
-  <figcaption>Simulated annual mean temperature change (°C), panel (c) precipitation change (%). IPCC Sixth Assessment Report.</figcaption>
+  <figcaption><a href="https://www.ipcc.ch/report/ar6/wg1/figures/summary-for-policymakers/figure-spm-5/" target="_blank">Simulated annual mean temperature change (°C), panel (c) precipitation change (%)</a>. IPCC Sixth Assessment Report.</figcaption>
 </figure>
 
 Finally, having benefited from isolating sources of uncertainty, adaptive planning, and increased sample size, users can readily translate these projections back onto a time horizon. While the simulations may reach 2˚C or 3˚C benchmarks at different times, users can plan for the 2˚C or 3˚C world to occur at the point in time that the IPCC considers most likely for the selected emissions scenario. As the science advances and more data is gathered, this can be updated without redoing the entire analysis every time.
