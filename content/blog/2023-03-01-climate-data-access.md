@@ -39,7 +39,7 @@ The availability of GCMs, temporal resolutions and climate variables depends on 
 
 Energy sector users can access cloud computing resources and early versions of analytical tools to work with climate data through the <a href="https://analytics.cal-adapt.org/" target="_blank">Cal-Adapt Analytics Engine</a>. 
 
-With support from the <a href="https://sustainability.aboutamazon.com/environment/the-cloud/amazon-sustainability-data-initiative" target="_blank">Amazon Sustainability Data Initiative</a>, users can also directly access Fifth Assessment data on a <a href="https://cadcat.s3.amazonaws.com/index.html" target="_blank">public S3 bucket</a> on Amazon Web Services (AWS). Learn how to access and download data from AWS using Python in this <a href="https://analytics.cal-adapt.org/docs/faq/#how-can-i-download-the-climate-data-used-in-the-analytics-engine" target="_blank">detailed walkthrough</a>.
+With support from the <a href="https://sustainability.aboutamazon.com/environment/the-cloud/amazon-sustainability-data-initiative" target="_blank">Amazon Sustainability Data Initiative</a>, users can also directly access Fifth Assessment data on a <a href="https://cadcat.s3.amazonaws.com/index.html" target="_blank">public S3 bucket</a> on Amazon Web Services (AWS). Learn how to access and download data from AWS using Python in this <a href="https://analytics.cal-adapt.org/faq/#how-can-i-download-the-climate-data-used-in-the-analytics-engine" target="_blank">detailed walkthrough</a>.
 
 ## New Cal-Adapt data download tool
 
