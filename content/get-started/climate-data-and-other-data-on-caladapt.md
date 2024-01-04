@@ -13,7 +13,7 @@ order: 2
 
 Cal-Adapt hosts climate change projections and related data, much of which was generated for California’s Fourth Climate Change Assessment. Most of the projections on Cal-Adapt were derived by statistically downscaling the outputs of global climate models (GCMs). You can learn more about general circulation models and downscaling at <a href="https://www.carbonbrief.org/qa-how-do-climate-models-work" target="_blank">Carbon Brief's Q&A: How do climate models work?</a>
 
-The main datasets hosted on Cal-Adapt are listed in the table below. For more information on how to access these datasets, see the FAQ article [How Can I Download Data?](/help/faqs/how-can-i-download-data/)
+The main datasets hosted on Cal-Adapt are listed in the table below. For more information on how to access these datasets, see the FAQ article [How Can I Download Data?](/help/faqs/how-can-i-download-data-from-caladapt/)
 
 <div class="table-wrapper">
 
