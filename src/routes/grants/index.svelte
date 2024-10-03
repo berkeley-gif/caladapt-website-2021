@@ -13,7 +13,6 @@
       posts,
       events,
       memosData: grants.memosData,
-      researchData: grants.researchData,
     };
   }
 </script>
@@ -36,7 +35,6 @@
   export let events;
   export let posts;
   export let memosData;
-  export let researchData;
 </script>
 
 <style lang="scss">
@@ -85,40 +83,9 @@
         for California and the evolving Cal-Adapt enterprise.
       </p>
 
-      <div class="spacing--v-24"></div>
-      <!-- Climate Research list -->
-      <h2>Ongoing Climate Research</h2>
-      <Row>
-        <Column>
-          <StructuredList style="margin-bottom:0;">
-            <StructuredListHead>
-              <StructuredListRow head tabIndex="{0}">
-                <StructuredListCell head>Agency</StructuredListCell>
-                <StructuredListCell head>Type</StructuredListCell>
-                <StructuredListCell head>Project Number</StructuredListCell>
-                <StructuredListCell head>Title</StructuredListCell>
-              </StructuredListRow>
-            </StructuredListHead>
-            <StructuredListBody>
-              {#each researchData as item}
-                <StructuredListRow>
-                  <StructuredListCell>{item.agency}</StructuredListCell>
-                  <StructuredListCell>{item.type}</StructuredListCell>
-                  <StructuredListCell>{item.number}</StructuredListCell>
-                  <StructuredListCell
-                    ><Link href="{item.url}" target="_blank">{item.title}</Link
-                    ></StructuredListCell
-                  >
-                </StructuredListRow>
-              {/each}
-            </StructuredListBody>
-          </StructuredList>
-        </Column>
-      </Row>
-
       <div class="spacing--v-32"></div>
       <!-- Memo list -->
-      <h2>Relevant Memos</h2>
+      <h2>Publicly Docketed Memos Regarding Cal-Adapt</h2>
       <Row>
         <Column>
           <StructuredList style="margin-bottom:0;">
@@ -155,6 +122,15 @@
         events="{events}"
         posts="{[posts[0]]}"
       />
+    </div>
+  </div>
+
+  <div class="bx--row">
+    <div class="bx--offset-lg-2 bx--col-lg-8 bx--col-padding">
+      Additional memos can be found on the <a
+        href="https://www.energy.ca.gov/programs-and-topics/topics/research-and-development/climate-data-and-analysis-working-group-c-dawg"
+        target="_blank">Climate Data and Analysis Working Group (C-DAWG)</a
+      >
     </div>
   </div>
 
