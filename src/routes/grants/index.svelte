@@ -87,7 +87,8 @@
         Memos on California Energy Commission Funded Climate Research and Data
         Products
       </h2>
-      See the<a
+      See the
+      <a
         href="https://www.energy.ca.gov/programs-and-topics/topics/research-and-development/climate-data-and-analysis-working-group-c-dawg"
         target="_blank">Climate Data and Analysis Working Group (C-DAWG)</a
       >
