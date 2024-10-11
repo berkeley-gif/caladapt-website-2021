@@ -83,6 +83,16 @@
         for California and the evolving Cal-Adapt enterprise.
       </p>
 
+      <h2>
+        Memos on California Energy Commission Funded Climate Research and Data
+        Products
+      </h2>
+      See the<a
+        href="https://www.energy.ca.gov/programs-and-topics/topics/research-and-development/climate-data-and-analysis-working-group-c-dawg"
+        target="_blank">Climate Data and Analysis Working Group (C-DAWG)</a
+      >
+      main page for a regularly updated list set of memos and links.
+
       <div class="spacing--v-32"></div>
       <!-- Memo list -->
       <h2>Publicly Docketed Memos Regarding Cal-Adapt</h2>
@@ -122,15 +132,6 @@
         events="{events}"
         posts="{[posts[0]]}"
       />
-    </div>
-  </div>
-
-  <div class="bx--row">
-    <div class="bx--offset-lg-2 bx--col-lg-8 bx--col-padding">
-      Additional memos can be found on the <a
-        href="https://www.energy.ca.gov/programs-and-topics/topics/research-and-development/climate-data-and-analysis-working-group-c-dawg"
-        target="_blank">Climate Data and Analysis Working Group (C-DAWG)</a
-      >
     </div>
   </div>
 
