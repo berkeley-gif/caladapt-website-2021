@@ -91,7 +91,7 @@
         href="https://www.energy.ca.gov/programs-and-topics/topics/research-and-development/climate-data-and-analysis-working-group-c-dawg"
         target="_blank">Climate Data and Analysis Working Group (C-DAWG)</a
       >
-      main page for a regularly updated list set of memos and links.
+      main page for a regularly updated set of memos and links.
 
       <div class="spacing--v-32"></div>
       <!-- Memo list -->
